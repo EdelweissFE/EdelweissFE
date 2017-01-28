@@ -1,0 +1,42 @@
+*node, 
+**id, x, [y], [z]
+1,  0.0, 0.0,
+2,  1.0, 0.0,
+3,  1.0, 1.0,
+4,  0.0, 1.0
+5,  2.0, 0.0
+6,  2.0, 1.0
+
+*material, name=modLeon, statevars=26, yieldflagindex=6, charelemlength=100
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 
+0.12 , 0.003, 2.0, 0.000001, 15.0, 0.078, 1
+
+*element, type=uelCPS4, section=section1
+100, 1, 2, 3, 4
+101, 2, 5, 6, 3
+
+*nSet, nSet=left
+1,2,
+*nSet, nSet=right
+5, 6
+
+*elSet, elSet=myElset2
+100, 101
+
+*section, name=section1, thickness=1.0, material=modLeon, type=planeUelUmat
+myElset2
+
+*job, name=testjob, domain=2d, 
+**fields: mechanical, nonlocal damage, thermal
+
+***properties, name=myProps, type=double
+
+***section
+**elSet=myElset1, properties=myProps;myIntProps,
+
+*step, solver=solver, jobName=testjob
+name=boundaryLeft,  type=dirichlet, nSet=left, field=mechanical, 1=0.0, 2=0.0
+name=dispRight,     type=dirichlet, nSet=right, field=mechanical, 1=0.01
+**load, nSet=myNset1, elSet=myElset2, field=
+
+***export
