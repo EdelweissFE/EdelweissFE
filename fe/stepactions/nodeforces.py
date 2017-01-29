@@ -9,9 +9,9 @@ Created on Tue Jan 24 19:33:06 2017
 from fe.utils.misc import stringDict
 import numpy as np
 
-def generateNodeForces(actionDefinitionLines, jobInfo, modelInfo, time, 
-                                                               stepActions, 
-                                                               U, P):
+def generateNodeForces(actionDefinitionLines, jobInfo, modelInfo, 
+                       time, stepActions, U, P):
+    
     nodeForceIndices = []
     nodeForceDelta = []
     

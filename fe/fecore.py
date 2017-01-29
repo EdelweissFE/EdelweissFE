@@ -9,7 +9,6 @@ Created on Tue Jan  17 19:10:42 2017
 import numpy as np
 from collections import OrderedDict, defaultdict
 from fe.config.elementlibrary import elementlibrary
-
 from fe.elements.node import Node
 from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.stepactions import stepActionModules
@@ -84,8 +83,7 @@ def assignSections(inputfile, elementSets):
                        el.setProperties(uelProperties, material['name'], material['statevars'])
 
 def assignFieldDofIndices(nodes, domainSize):
-    """ Loop over all nodes,
-    to generate the global field-dof indices."""
+    """ Loop over all nodes to generate the global field-dof indices."""
     
     fieldIdxBase = 0
     fieldIndices = OrderedDict()
@@ -104,12 +102,12 @@ def assignFieldDofIndices(nodes, domainSize):
     
 def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
     """ Parses all the defined actions for the current step, 
-        and calls the respective modules, which generate step-actions based on
-        computed results, model info and job information.
-        The step-actions are stored in a dictionary, which is handled to 
-        solveStep() in the feCore main routine afterwords.
-        The step action modules decide if old step-action definitions are 
-        overwritten or extended."""
+    and calls the respective modules, which generate step-actions based on
+    computed results, model info and job information.
+    The step-actions are stored in a dictionary, which is handed to 
+    solveStep() in the feCore main routine afterwards.
+    The step action modules decide if old step-action definitions are 
+    overwritten or extended."""
     
     actions = defaultdict(list)
     for actionDefLine in step['data']:
@@ -132,10 +130,10 @@ def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
     
 def finitElementSimulation(inputfile, verbose=False):
     """ This is the core of the finite element analysis:
-        It assembles the model, and controls the respective solver based
-        on the defined simulation steps.
-        For each step, the step-actions (dirichlet, nodeforces) are collected by
-        corresponing external modules."""
+    It assembles the model, and controls the respective solver based
+    on the defined simulation steps.
+    For each step, the step-actions (dirichlet, nodeforces) are collected by
+    external modules."""
     
     identificiation ="feCore"
     

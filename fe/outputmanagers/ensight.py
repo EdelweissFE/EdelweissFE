@@ -242,7 +242,7 @@ class EnsightChunkWiseCase:
                     ensightVariable.writeToFile(f)
                     writeC80(f, 'END TIME STEP')
                     
-    def finalize(self):
+    def finalize(self, replaceTimeValuesByEnumeration=True):
         caseFName = self.caseFileNamePrefix+'.case'
         with open(caseFName ,mode='w') as cf:
             cf.write("FORMAT\n")
@@ -255,8 +255,11 @@ class EnsightChunkWiseCase:
                 cf.write("filename start number: " + str(timeSet.fileNameStartNumber) +"\n")
                 cf.write("filename increment: " +str(timeSet.fileNameNumberIncrement) +"\n")
                 cf.write("time values: ")
-                for timeVal in timeSet.timeValues:
-                    cf.write(str(timeVal) +"\n")
+                for i, timeVal in enumerate(timeSet.timeValues):
+                    if not replaceTimeValuesByEnumeration:
+                        cf.write('{:1.8e}'.format(timeVal) +"\n")
+                    else:
+                        cf.write('{:}'.format(i) +"\n")
                 
             if self.writeTransientSingleFiles:
                 cf.write("FILE\n")
@@ -265,10 +268,8 @@ class EnsightChunkWiseCase:
                     cf.write("number of steps: {:} \n".format(len(timeSet.timeValues)))
             
             cf.write("GEOMETRY\n")
-            for geometryName, tAndFSetNum in self.geometryTrends.items():
-                geometryTSn = ''
-                geometryFSn = ''              
-                cf.write("model: {:} {:} {:} \n".format(geometryTSn, geometryFSn, self.caseFileNamePrefix+geometryName+".geo"))
+            for geometryName, tAndFSetNum in self.geometryTrends.items():         
+                cf.write("model: {:} \n".format(self.caseFileNamePrefix+geometryName+".geo"))
                 
             cf.write("VARIABLE\n")
             for variableName, (tAndFSetNum, variableType) in self.variableTrends.items():
@@ -313,29 +314,30 @@ class OutputManager:
         
         for defLine in definitionLines:
             definition = stringDict(defLine)
-            varType = definition['create']
-            
-            if varType == 'perNode':
-                if 'elSet' in definition:
-                    setName = definition['elSet'].strip()
-                    perNodeJob = {}
-                    perNodeJob['name'] = definition['name']
-                    perNodeJob['part'] =  self.elSetToEnsightPartMappings[setName]
-                    field = definition['field']
-                    perNodeJob['result'] = definition['type']
-                    perNodeJob['varSize'] = variableTypes[ fe.config.phenomena.phenomena[field] ]
-                    perNodeJob['indices'] = np.asarray([node.fields[field] for node in perNodeJob['part'].nodes]).ravel()
-                    perNodeJob['dimensions'] = fe.config.phenomena.getFieldSize(field, self.domainSize)
-                    self.perNodeJobs.append(perNodeJob)
-                    
-            if varType == 'perElement':
-                perElementJob = {}
-                perElementJob['part'] =  self.elSetToEnsightPartMappings[definition['elSet']]
-                perElementJob['result'] = definition['result']
-                perElementJob['indices'] = np.fromstring(definition.get('indices',''), dtype=int, sep=';')
-                perElementJob['location'] = int(definition['location'])
-                perElementJob['name'] = definition.get('name', perElementJob['result'])
-                self.perElementJobs.append(perElementJob)
+            if 'create' in definition:
+                varType = definition['create']
+                
+                if varType == 'perNode':
+                    if 'elSet' in definition:
+                        setName = definition['elSet'].strip()
+                        perNodeJob = {}
+                        perNodeJob['name'] = definition['name']
+                        perNodeJob['part'] =  self.elSetToEnsightPartMappings[setName]
+                        field = definition['field']
+                        perNodeJob['result'] = definition['type']
+                        perNodeJob['varSize'] = variableTypes[ fe.config.phenomena.phenomena[field] ]
+                        perNodeJob['indices'] = np.asarray([node.fields[field] for node in perNodeJob['part'].nodes]).ravel()
+                        perNodeJob['dimensions'] = fe.config.phenomena.getFieldSize(field, self.domainSize)
+                        self.perNodeJobs.append(perNodeJob)
+                        
+                if varType == 'perElement':
+                    perElementJob = {}
+                    perElementJob['part'] =  self.elSetToEnsightPartMappings[definition['elSet']]
+                    perElementJob['result'] = definition['result']
+                    perElementJob['indices'] = np.fromstring(definition.get('indices',''), dtype=int, sep=';')
+                    perElementJob['location'] = int(definition['location'])
+                    perElementJob['name'] = definition.get('name', perElementJob['result'])
+                    self.perElementJobs.append(perElementJob)
         
         
     def finalizeIncrement(self, U, P, increment):

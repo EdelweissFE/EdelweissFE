@@ -64,7 +64,11 @@ extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],
 # 1.b.)
 # create a UMAT-extension definition for each UMAT in list.
 
-cythonElements = ['uelCPS4', 'uelCPS4nonLocal']
+cythonElements = [  'uelCPE4',
+                    'uelCPE4R',
+                    'uelCPS4', 
+                    'uelCPS4nonLocal']
+
 cythonElements= [el for el in cythonElements if exists(join(rootDirectory, el))]        
 
 extensions += [Extension("*",
@@ -79,13 +83,6 @@ extensions += [Extension("*",
                         libraries= [el]+[lib for d, lib in extraLibs]+[lib for d, lib in extraLibs] 
                         )                    # linkList = extralibs + UMAT.lib  
                         for el in cythonElements]                   
-
-# 2)
-# automatically cythonize all remaining (e.g. voigt.pyx) extensions
-# extensions.append(Extension("*", ["workbench/utility/*.pyx"],                                    
-#                                 include_dirs=[numpy.get_include()],                         
-#                                 language="c++",
-#                                 extra_compile_args=compFlags))
       	
 # 3) compile!
 setup(ext_modules = cythonize(extensions,

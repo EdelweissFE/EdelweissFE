@@ -21,13 +21,11 @@ def generateDirichlet(actionDefinitionLines, jobInfo, modelInfo, time,
         field = action['field']
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
-#                directionIndices = [node['fields'][field][x] for node in nodeSets[action['nSet']]]
                 directionIndices = [node.fields[field][x] for node in nodeSets[action['nSet']]]
                 dirichletIndices += directionIndices
                 dirichletDelta += [float(action[direction])] * len(directionIndices)
                         
     dirichlet = {}
-#        if 'dirichlet' in stepActions:
     dirichlet['indices'] =    np.array(dirichletIndices)
     dirichlet['delta'] =      np.array(dirichletDelta)
     

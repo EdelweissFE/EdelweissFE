@@ -35,7 +35,6 @@ class OutputManager:
             entry['result'] = defDict['result']
             entry['type'] = defDict.get('type', 'U')
             entry['resultFun'] = self.resultFunctions[ defDict['result']] 
-#            entry['resultIndices'] = nodes[entry['nodeNum']]['fields'][defDict['field']]
             entry['resultIndices'] = nodes[entry['nodeNum']].fields[defDict['field']]
             entry['export'] = defDict.get('export', False)
             if entry['export']:

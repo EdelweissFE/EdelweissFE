@@ -14,14 +14,13 @@ from fe.utils.incrementgenerator import IncrementGenerator
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 
 class NIST:
-    """
-    This is the Nonlinear Implicit STatic -- solver.
+    """ This is the Nonlinear Implicit STatic -- solver.
     Designed to interface with Abaqus UELs
     Public methods are: __init__(), initializeUP() and solveStep(...).
-    OutputManagers are updated at the end of each increment.
-    """
+    OutputManagers are updated at the end of each increment. """
     
     identification = "NISTSolver"
+    
     defaultMaxInc = 1.0
     defaultMinInc = 1e-4
     defaultMaxNumInc = 1000
@@ -52,16 +51,16 @@ class NIST:
         
         
     def initialize(self):
-        """ Initialize the solver and return the 2 vectors for flow (U) and effort (P)
-        """
+        """ Initialize the solver and return the 2 vectors for flow (U) and effort (P) """
+        
         U = np.zeros(self.nDof)
         P = np.zeros(self.nDof)
         return U, P
         
     def solveStep(self, step, time, stepActions, U, P):
-        """ public interface to solve for a ABAQUS like step
-            returns: boolean Success, U vector, P vector, and the new current total time 
-        """
+        """ Public interface to solve for an ABAQUS like step
+        returns: boolean Success, U vector, P vector, and the new current total time """
+            
         V = self.V
         J = self.J
         I = self.I
@@ -149,7 +148,10 @@ class NIST:
                 K = coo_matrix( (V, (I,J)), shape=(numberOfDofs, numberOfDofs)).tocsr()
                 K_ = self.applyDirichletK(K, dirichlet)
                 
-                # SOLVE ! and compute the new flow correction
+                #  ___  ___             ___  
+                # /__  /  /  /   |  /  /__  
+                # __/ /__/  /__  |./  /__
+                
                 ddU = spsolve(K_, R, )
                 dU += ddU
                 
@@ -175,23 +177,25 @@ class NIST:
     
     def computeElements(self, U, dU, time, dT, pNewDT, P, V, I, J):
         """ Loop over all elements, and evalute them. 
-            Note that ABAQUS style is employed: element(Un+1, dUn+1) 
-            instead of element(Un, dUn+1)
-            -> is called by solveStep() in each iteration
-        """
+        Note that ABAQUS style is employed: element(Un+1, dUn+1) 
+        instead of element(Un, dUn+1)
+        -> is called by solveStep() in each iteration """
+            
         P[:] = 0.0
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
             # element stiffness is directly stored in the V vector
             Ke = V[idxInVIJ : idxInVIJ+el.sizeKe].reshape(el.nDofPerEl,el.nDofPerEl, order='F')
             Pe = np.zeros(el.nDofPerEl)
-            # indices for all element dofs in the global U and P vectors
+            # indices for all element dofs in the global U and P vectors, taken from I
             idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
             Ue = U[ idcsInPUdU ]
             dUe = dU[ idcsInPUdU  ]
+            
             el.computeYourself(Ke, Pe, Ue + dUe, dUe, time, dT, pNewDT)
             if pNewDT <= 1.0:
                 break 
+            
             # global effort vector is assembled directly
             P[ idcsInPUdU ] += Pe
             
@@ -199,9 +203,9 @@ class NIST:
     
     def applyDirichletK(self, K, dirichlet):
         """ Apply the dirichlet bcs on the global stiffnes matrix
-            -> is called by solveStep() before solving the global sys.
-            http://stackoverflow.com/questions/12129948/scipy-sparse-set-row-to-zeros
-        """
+        -> is called by solveStep() before solving the global sys.
+        http://stackoverflow.com/questions/12129948/scipy-sparse-set-row-to-zeros"""
+            
         for row in dirichlet['indices']:
             K.data[K.indptr[row]:K.indptr[row+1]] = 0.0
             K[row, row] = 1.0
@@ -210,25 +214,24 @@ class NIST:
               
     def applyDirichlet(self, stepProgress, U, R, dirichlet):
         """ Apply the dirichlet bcs on the Residual vector
-            -> is called by solveStep() before solving the global sys.
-        """
+        -> is called by solveStep() before solving the global sys."""
+            
         indices = dirichlet['indices']
         R[indices] = dirichlet['delta'] * stepProgress
         return R
     
     def checkConvergency(self, R, ddU, iterationCounter):
         """ Check the convergency, indivudually for each field,
-            similar to ABAQUS based on the current total residual and the flow correction
-            -> is called by solveStep() to decice wether to continue iterating or stop
-        """
+        similar to ABAQUS based on the current total residual and the flow correction
+        -> is called by solveStep() to decice wether to continue iterating or stop"""
         
         iterationMessage = ''
         convergedAtAll  = True
         
-        if iterationCounter <15:
-            i =0
-        else:
-            i =1
+        if iterationCounter <15: # standard tolerance set
+            i = 0
+        else: # alternative tolerance set
+            i = 1
         
         for field, fieldIndices in self.fieldIndices.items():
             effortResidual = np.linalg.norm(R[fieldIndices] , np.inf)
@@ -249,11 +252,11 @@ class NIST:
     
     def generateVIJ(self, elements):
         """ Initializes the V vector and generates I, J entries for each element,
-            based on i) its (global) nodes ii) its dofLayout. Furthermore, 
-            a dictionary with the mapping of each element to its index in VIJ 
-            is created.
-            -> is called by __init__()
-        """
+        based on i) its (global) nodes ii) its dofLayout. Furthermore, 
+        a dictionary with the mapping of each element to its index in VIJ 
+        is created.
+        -> is called by __init__() """
+        
         sizeVIJ = self.nDof * self.nDof
         V = np.zeros(sizeVIJ)
         I = np.zeros_like(V, dtype=np.int)

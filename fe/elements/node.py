@@ -10,7 +10,8 @@ from fe.config.phenomena import phenomena
 from collections import OrderedDict
 
 class Node:
-    """ Base class for a finite element node """
+    """ Base class for a finite element node,
+    currently nothing more than a dictioniary for label and coordinates"""
     
     def __init__(self, label, coordinates,):
         

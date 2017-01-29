@@ -13,13 +13,8 @@ class OutputManager:
     identification = "NodeSetMonitor"
     printTemplate = "nSet {:}, {:} {:}: {:}"
     resultFunctions = {
-#    '1' : lambda x: x[0],
-#                       '2' : lambda x: x[1],
-#                       '3' : lambda x: x[2],
-#                       'all' : lambda x: x,
                        'sum' : lambda x: np.sum(x),
                        'mean' : lambda x: np.mean(x),
-#                       'magnitude' : lambda x: np.linalg.norm(x),
                        }
     
     def __init__(self, definitionLines, jobInfo, modelInfo, journal):
@@ -37,7 +32,6 @@ class OutputManager:
             direct = entry['dir'] = int(defDict['direction'])-1
             entry['type'] = defDict.get('type', 'U')
             entry['resultFun'] = self.resultFunctions[ defDict['result']] 
-#            entry['resultIndices'] = [node['fields'][field][direct] for node in nodes]
             entry['resultIndices'] = [node.fields[field][direct] for node in nodes]
             entry['export'] = defDict.get('export', False)
             if entry['export']:

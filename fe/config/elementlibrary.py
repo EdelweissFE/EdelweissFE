@@ -5,8 +5,16 @@ Created on Tue Jan  17 19:10:42 2017
 
 @author: matthias
 """
+
+# plane strain continuum elements
+from  fe.elements.uelcpe4.element import Element as uelCPE4
+from  fe.elements.uelcpe4r.element import Element as uelCPE4R
+
+#plane stress continuum elements
 from  fe.elements.uelcps4.element import Element as uelCPS4
 from  fe.elements.uelcps4nonlocal.element import Element as uelCPS4NonLocal
 
-elementlibrary = {"uelCPS4" :         uelCPS4,
-                  "uelCPS4NonLocal" : uelCPS4NonLocal,}
+elementlibrary = {  "uelCPE4" :         uelCPE4,
+                    "uelCPE4R" :        uelCPE4R,
+                    "uelCPS4" :         uelCPS4,
+                    "uelCPS4NonLocal" : uelCPS4NonLocal,}

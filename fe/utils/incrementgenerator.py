@@ -64,7 +64,7 @@ class IncrementGenerator:
                    startTimeOfIncrementInTotal)
         
     def discardAndChangeIncrement(self, scaleFactor):
-        """change increment size between minIncrement and 
+        """ Change increment size between minIncrement and 
         maxIncrement by a given scale factor."""
         
         if self.increment == self.minIncrement:
