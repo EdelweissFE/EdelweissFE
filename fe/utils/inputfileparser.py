@@ -14,7 +14,6 @@ dTypes = {int : "integer",
           str: "string",          
           "numpy": "numpy array",
           "numpy int": "numpy int array",
-#          flagDict : "boolean options"
           }
     
 typeMappings = {    '*element':         ("definition of element(s)",
@@ -23,6 +22,7 @@ typeMappings = {    '*element':         ("definition of element(s)",
 
                     '*elSet':           ("definition of an element set",
                         {   'elSet':    (str, "name"),
+                            'generate': (str, "set True to generate from data line 1: start-element, end-element, step"),
                             'data':     (int, "Abaqus like element set definiton lines"), }),
 
                     '*node':            ("definition of nodes",
@@ -43,7 +43,7 @@ typeMappings = {    '*element':         ("definition of element(s)",
                     '*material':        ("definition of a material",
                         { 'name':       (str, "name of the property"),
                          'id':          (str, "name of the property"),
-                         'type':        (str, "(optional), define the type, e.g. material, thickness, "),
+#                         'type':        (str, "(optional), define the type, e.g. material, thickness, "),
                          'statevars':   (int, "number of statevars"),
                          'data':        ("numpy", "material properties, multiline possible")}),
                                          
@@ -59,7 +59,7 @@ typeMappings = {    '*element':         ("definition of element(s)",
                          'startTime':       (float,"(optional) start time of job, standard = 0.0"), 
                          }),
                                          
-                     '*step':            ("definition of *job steps", 
+                     '*step':               ("definition of *job steps", 
                         {'stepLength':      (float, "time period of step"),
                          'jobName':         (str, "(optional), name of job, standard=defaultJob"),
                          'maxInc':          (float, "maximum size of increment"),
@@ -80,7 +80,8 @@ def getMapType(kw, varName):
     
 
 def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
-    """ parse an Abaqus like input file to generate an dictionary with its content"""
+    """ Parse an Abaqus like input file to generate an dictionary with its content """
+    
     if not existingFileDict:
         fileDict = { key : [] for key in typeMappings.keys()}
     else:

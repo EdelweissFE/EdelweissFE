@@ -25,6 +25,7 @@ class NIST:
     defaultMinInc = 1e-4
     defaultMaxNumInc = 1000
     defaultMaxIter = 10
+    defaultCriticalIter = 5
     
     def __init__(self, jobInfo, modelInfo, journal, outputmanagers=None):
         self.nodes =        modelInfo['nodes']
@@ -74,6 +75,7 @@ class NIST:
                                     step.get('maxNumInc', self.defaultMaxNumInc), 
                                     self.journal)
         maxIter = step.get('maxIter', self.defaultMaxIter)
+        criticalIter = step.get('crititcalIter', self.defaultCriticalIter)
         
         dU = np.zeros(numberOfDofs)
         Pext = np.zeros(numberOfDofs)
@@ -104,7 +106,7 @@ class NIST:
             stepTimes = np.array([stepTime, totalTime])
             
             if extrapolation == 'linear' and lastIncrementSize:
-                dU *=  (incrementSize/lastIncrementSize) 
+                dU *= (incrementSize/lastIncrementSize) 
                 dU = self.applyDirichlet(incrementSize, U, dU, dirichlet)      
                 extrapolatedIncrement = True
             else:
@@ -148,9 +150,9 @@ class NIST:
                 K = coo_matrix( (V, (I,J)), shape=(numberOfDofs, numberOfDofs)).tocsr()
                 K_ = self.applyDirichletK(K, dirichlet)
                 
-                #  ___  ___             ___  
-                # /__  /  /  /   |  /  /__  
-                # __/ /__/  /__  |./  /__
+                #   ___   __            __  
+                #  /__   / |  |   \ /  /_  
+                # ___/  |_/  /_   |/  /__
                 
                 ddU = spsolve(K_, R, )
                 dU += ddU
@@ -160,13 +162,16 @@ class NIST:
             if converged:
                 U += dU
                 lastIncrementSize = incrementSize
+                if iterationCounter >= criticalIter:
+                    incGen.preventIncrementIncrease()
+                    
                 for el in self.elements.values():
                     el.acceptLastState()
                 self.journal.message("Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1) 
                 for man in self.outputmanagers:
                     man.finalizeIncrement(U, P, increment)
             else: 
-                incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT < 1.0 else 0.25)
+                incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
                 lastIncrementSize = False
                 
         

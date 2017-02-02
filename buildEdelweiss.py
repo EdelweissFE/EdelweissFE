@@ -67,7 +67,11 @@ extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],
 cythonElements = [  'uelCPE4',
                     'uelCPE4R',
                     'uelCPS4', 
-                    'uelCPS4nonLocal']
+                    'uelCPS4nonLocal',
+                    
+                    'uelCPS8R', 
+                    'uelCPS8RNonLocal', 
+                    ]
 
 cythonElements= [el for el in cythonElements if exists(join(rootDirectory, el))]        
 

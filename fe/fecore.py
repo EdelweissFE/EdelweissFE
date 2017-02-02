@@ -8,18 +8,18 @@ Created on Tue Jan  17 19:10:42 2017
 
 import numpy as np
 from collections import OrderedDict, defaultdict
-from fe.config.elementlibrary import elementlibrary
 from fe.elements.node import Node
+from fe.config.elementlibrary import elementlibrary
 from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
-from fe.solvers.nonlinearImplicitStatic import NIST
+from fe.solvers.nonlinearimplicitstatic import NIST
 from fe.journal.journal import Journal
 from time import process_time
 
 
 def collectNodesAndElementsFromInput(inputfile, domainSize):
-    """ Collects nodes, elements, nodeSets and elementSets from
+    """ Collects nodes, elements, node sets and element sets from
     the input file. """
     
     nodeDefinitions = OrderedDict()
@@ -53,7 +53,11 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
     elementSets['all'] = [elements[e] for e in elements]
     for elSetDefinition in inputfile['*elSet']:
         name = elSetDefinition['elSet']
-        els = [elements[e] for l in elSetDefinition['data'] for e in l]
+        if elSetDefinition.get('generate', False):
+            generateDef = elSetDefinition['data'][0][0:3]
+            els = [elements[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
+        else:
+            els = [elements[e] for l in elSetDefinition['data'] for e in l]
         elementSets[name] = els
         
     nodeSets = {}

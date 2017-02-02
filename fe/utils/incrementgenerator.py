@@ -23,11 +23,13 @@ class IncrementGenerator:
         
         self.finishedStepProgress = 0.0
         self.increment = maxIncrement
+        self.allowedToIncreasedNext = True
         
         self.currentTime =      currentTime
         self.stepLength =       stepLength
         self.dT = 0.0
         self.journal = journal
+        
         
     def generateIncrement(self):
         """ Returns the hexatuple consisting of 
@@ -39,10 +41,11 @@ class IncrementGenerator:
         
         while self.finishedStepProgress < (1.0-1e-15) and self.totalIncrements < self.maxNumberIncrements:
         
-            if(self.nPassedGoodIncrements >= 3):
+            if(self.nPassedGoodIncrements >= 3) and self.allowedToIncreasedNext:
                 self.increment *= 1.5
                 if self.increment > self.maxIncrement:
                     self.increment = self.maxIncrement
+            self.allowedToIncreasedNext = True
                 
             remainder = 1.0 - self.finishedStepProgress 
             if remainder < self.increment:
@@ -62,6 +65,11 @@ class IncrementGenerator:
                    dT, 
                    startTimeOfIncrementInStep, 
                    startTimeOfIncrementInTotal)
+            
+    def preventIncrementIncrease(self,):
+        """ May be called before an increment is requested, to prevent from 
+        automatically increasing, e.g. in case of bad convergency """
+        self.allowedToIncreasedNext = False
         
     def discardAndChangeIncrement(self, scaleFactor):
         """ Change increment size between minIncrement and 
