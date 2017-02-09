@@ -18,7 +18,7 @@ msvcFlags = []
 compFlags = gccFlags
 
 # rootDirectory where the umats are located
-rootDirectory = expanduser("~/constitutiveModelling")
+rootDirectory = expanduser("~/Dropbox/PHD/GITrepositoryLinux")
 
 # 0.)
 # list of directories, where the extra libs to link are located (e.g. the directory
@@ -37,7 +37,7 @@ umats = [
 #         "Meschke",
          "ModLeon",
         "ModLeonNonLocal",
-        "ModLeonPlaneStress",
+        # "ModLeonPlaneStress",
         # "ModLeonPlaneStressWrapped",
         # "ModLeonAdaptive",
         # "ModLeonAnalytical",
@@ -65,11 +65,11 @@ extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],
 # create a UMAT-extension definition for each UMAT in list.
 
 cythonElements = [  'uelCPE4',
-                    'uelCPE4R',
+                    # 'uelCPE4R',
                     'uelCPS4', 
                     'uelCPS4nonLocal',
                     
-                    'uelCPS8R', 
+                    # 'uelCPS8R', 
                     'uelCPS8RNonLocal', 
                     ]
 

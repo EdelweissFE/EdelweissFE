@@ -34,12 +34,15 @@ create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=3, name=alphaD
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
 
-*step, solver=solver, jobName=testjob, maxInc=2e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, solver=solver, jobName=testjob, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 NISTSolverOptions, extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 2=0
 dirichlet, name=1,     nSet=1,      field=mechanical, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=mechanical, 1=-0, 2=-2
-***step, solver=solver, jobName=testjob, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25
-**dirichlet, name=left,      type=dirichlet, nSet=left, field=mechanical, 1=0.0, 
-**dirichlet, name=1,      type=dirichlet, nSet=1, field=mechanical, 1=0.0, 2=0.0
-**dirichlet, name=right,     type=dirichlet, nSet=right, field=mechanical, 1=0.05
+dirichlet, name=right, nSet=right,  field=mechanical, 1=0, 2=-0.1
+**nodeForces, name=right, nSet=right,  field=mechanical, 1=0, 2=4
+
+
+*step, solver=solver, jobName=testjob, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25
+dirichlet, name=left,      type=dirichlet, nSet=left, field=mechanical, 1=0.0, 
+dirichlet, name=1,      type=dirichlet, nSet=1, field=mechanical, 1=0.0, 2=0.0
+dirichlet, name=right,     type=dirichlet, nSet=right, field=mechanical, 1=0.05

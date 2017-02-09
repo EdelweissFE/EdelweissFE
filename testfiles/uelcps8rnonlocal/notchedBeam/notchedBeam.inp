@@ -1,7 +1,8 @@
 *include, input=mesh.inp
+
 *material, name=modleonNonLocal, id=modleon, statevars=26, yieldflagindex=6, charelemlength=100
 **25850, 0.18, 10.33, 31.0, 35.96, 2.00, 0.85, 0.08, 0.003, 2.0, 0.000001, 15, 20, 1.05, 0.001, 1
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 1e0, 1, 0.000268, 1
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 1e2, 1.05, 0.000368, 0
 
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
