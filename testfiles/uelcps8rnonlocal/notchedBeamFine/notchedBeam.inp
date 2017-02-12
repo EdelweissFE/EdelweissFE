@@ -6,7 +6,7 @@
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*job, name=cpe4job, domain=2d, solver=NIST
+*job, name=cpe4job, domain=2d, 
 
 *output, type=nodesetmonitor, jobName=cpe4job
 nSet=topNodes, field=mechanical, type=P, result=sum, direction=2
@@ -20,8 +20,8 @@ create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=3, name=alphaD
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
 
-*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
-NISTSolverOptions, extrapolation=linear, numThreads=20
+*step, solver=solver, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+NISTSolverOptions, extrapolation=linear, numThreads=2
 dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=mechanical, 2=0
-dirichlet, name=top, nSet=topNodes, field=mechanical, 2=-.07
+dirichlet, name=top, nSet=topNodes, field=mechanical, 2=-.1

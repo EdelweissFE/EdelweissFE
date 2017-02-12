@@ -3,16 +3,15 @@ from fe.materials.umatlibrary cimport umatType, getUmat
 cimport numpy as np
 from libcpp.string cimport string
 
-
 cdef public bint notificationToMSG(const string cppString):
-    print(cppString.decode('UTF-8'))
+#    print(cppString.decode('UTF-8'))
     return True
     
 cdef public bint warningToMSG(const string cppString):
-    print(cppString.decode('UTF-8'))
+#    print(cppString.decode('UTF-8'))
     return False
 
-cdef extern from "uelCPS8RNonLocalSimpleUmat.h":
+cdef extern from "uelCPS8RNonLocalSimpleUmat.h" nogil:
     void uelCPS8RNonLocalSimpleUmat(
             double rightHandSide[],           
             double KMatrix[],                            
@@ -25,15 +24,15 @@ cdef extern from "uelCPS8RNonLocalSimpleUmat.h":
             const double dU_[],       
             const double time[2],                                       
             const double &dTime,                                        
-            const int& elementNumber,                  
-            double &pNewdT,         
+            const int &elementNumber,                  
+            double& pNewdT,         
             const int integerProperties[],
             const int &nIntegerProperties, 
             umatType umat,
             int nStateVarsUmat)
     
 cdef void callUel(
-        double[::1,:] Ke,
+        double[::1] Ke,
         double[::1] Pe,
         double[::1] stateVars,
         double[::1] UNew,
@@ -43,13 +42,13 @@ cdef void callUel(
         int[::1] intProperties,
         double[::1] pNewdT,
         double[::1] time,
-        double dTime,
-        int elNumber,
+        double& dTime,
+        int& elNumber,
         umatType umat,
-        int nStateVarsUmat):
+        int nStateVarsUmat) nogil:
     
     uelCPS8RNonLocalSimpleUmat(    &Pe[0],           
-            &Ke[0][0],                            
+            &Ke[0],                            
             &stateVars[0],                                         
             stateVars.shape[0], 
             &properties[0],
@@ -75,54 +74,66 @@ cdef class Element:
                              ["mechanical", "nonlocal damage"],
                              ["mechanical", "nonlocal damage"],
                              ["mechanical", "nonlocal damage"],
-                             ["mechanical", "nonlocal damage"],                              
-                             ] # fields identical for each node
+                             ["mechanical", "nonlocal damage"],] # fields identical for each node
     
     nNodes =                8
     nGaussPt =              4
     nDofPerEl =             24
     sizeKe =                nDofPerEl * nDofPerEl
-    dofIndicesPermutation  = np.array([0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22] + [2,5,8,11,14,17,20,23], dtype=int)  
+    dofIndicesPermutation = np.array([0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22] + [2,5,8,11,14,17,20,23], dtype=int)  
     ensightType =           "quad8"
     
-    cdef public nodes, nodeCoordinates, intProperties, elNumber
+    cdef public nodes, 
+    cdef public int elNumber
     
-    cdef np.ndarray uelProperties, 
-    cdef np.ndarray stateVars, stateVarsTemp
+    cdef double[::1] uelProperties, stateVars, stateVarsTemp, nodeCoordinates
     cdef umatType umat
     cdef int nStateVars, nStateVarsUmat
+    
+    cdef int[::1] intProperties
     
     def __init__(self, nodes, elNumber):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
-        self.intProperties = np.zeros(1, dtype=np.intc)
         self.elNumber = elNumber
-    
+        
     def setProperties(self, uelProperties, umatName, nStateVarsUmat):
         self.uelProperties = uelProperties
         self.nStateVarsUmat = nStateVarsUmat
-        self.nStateVars = self.nGaussPt * (nStateVarsUmat + 13)
+        self.nStateVars = self.nGaussPt * (nStateVarsUmat + 12)
         self.stateVars = np.zeros(self.nStateVars)
+        self.stateVarsTemp = np.zeros(self.nStateVars)
         self.umat = getUmat(umatName.lower())
+        self.intProperties = np.empty(0, dtype=np.intc)#self.intProperties
         
-    def computeYourself(self, Ke, Pe, U, dU, time, dTime, pNewdT):
-        self.stateVarsTemp = np.copy(self.stateVars)
-        callUel(Ke,Pe,
-            self.stateVarsTemp,
-            U,
-            dU,
-            self.nodeCoordinates,
-            self.uelProperties,
-            self.intProperties,
-            pNewdT,
-            time,
-            dTime,
-            self.elNumber,
-            self.umat,
-            self.nStateVarsUmat)
+    def computeYourself(self, 
+                         double[::1] Ke, 
+                         double[::1] Pe, 
+                         const double[::1] U, 
+                         const double[::1] dU, 
+                         const double[::1] time, 
+                         double dTime, 
+                         double[::1] pNewdT):
+        
+        with nogil: # release the gil for parallel computing
+            self.stateVarsTemp[:] = self.stateVars
+            callUel(Ke,Pe,
+                self.stateVarsTemp,
+                U,
+                dU,
+                self.nodeCoordinates,
+                self.uelProperties,
+                self.intProperties,
+                pNewdT,
+                time,
+                dTime,
+                self.elNumber,
+                self.umat,
+                self.nStateVarsUmat)
     
     def acceptLastState(self,):
-        self.stateVars = self.stateVarsTemp
+        self.stateVars[:] = self.stateVarsTemp
+        
     def resetToLastValidState(self,):
         pass
     
@@ -132,4 +143,4 @@ cdef class Element:
                     
     def getResult(self, **kw):    
         stateVarIndices = self.resultIndices[kw['result']](self.nStateVarsUmat, kw)
-        return self.stateVars[stateVarIndices]
+        return np.asarray(self.stateVars)[stateVarIndices]

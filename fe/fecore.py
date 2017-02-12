@@ -13,7 +13,8 @@ from fe.config.elementlibrary import elementlibrary
 from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
-from fe.solvers.nonlinearimplicitstatic import NIST
+from fe.config.solvers import solverLibrary
+#from fe.solvers.nonlinearimplicitstaticc2 import NISTParallel as NIST
 from fe.journal.journal import Journal
 from time import process_time
 
@@ -183,7 +184,7 @@ def finitElementSimulation(inputfile, verbose=False):
         
     
     # generate an instance for the desired solver
-    solver = NIST(jobInfo, modelInfo, journal, outputmanagers)
+    solver = solverLibrary[job.get('solver', 'NIST')](jobInfo, modelInfo, journal, outputmanagers)
     U, P = solver.initialize()
     stepActions = {}
     try:

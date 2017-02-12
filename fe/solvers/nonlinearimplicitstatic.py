@@ -5,11 +5,10 @@ Created on Sun Jan  8 20:37:35 2017
 
 @author: matthias
 """
-
 import numpy as np
 from scipy.sparse import coo_matrix
-#from scipy.sparse.linalg import spsolve
-from scikits.umfpack import spsolve 
+from scipy.sparse.linalg import spsolve
+#from scikits.umfpack import spsolve 
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 
@@ -25,7 +24,7 @@ class NIST:
     defaultMinInc = 1e-4
     defaultMaxNumInc = 1000
     defaultMaxIter = 10
-    defaultCriticalIter = 5
+    defaultCriticalIter = 6
     
     def __init__(self, jobInfo, modelInfo, journal, outputmanagers=None):
         self.nodes =        modelInfo['nodes']
@@ -43,13 +42,20 @@ class NIST:
         self.journal = journal
         self.outputmanagers = outputmanagers or []
         
+        
+        self.sizeVIJ = 0
+        self.sizeNDofElementWise = 0
+        
+        for el in self.elements.values():
+            self.sizeNDofElementWise += el.nDofPerEl
+            self.sizeVIJ += el.sizeKe
+        print(self.sizeNDofElementWise)
         V, I, J, elementToIndexInVIJMap = self.generateVIJ(self.elements, )
         
         self.V = V
         self.I = I
         self.J = J
         self.elementToIndexInVIJMap = elementToIndexInVIJMap # element  -> V[ .... idx ..  ]
-        
         
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for flow (U) and effort (P) """
@@ -116,8 +122,8 @@ class NIST:
             while True:
                 
                 pNewDT[0] = 1e36
-                P, V, pNewDT = self.computeElements(U, dU, stepTimes, dT, pNewDT, P, V, I, J)
-                if pNewDT < 1.0:
+                P, V, pNewDT = self.computeElements(U, dU, stepTimes, dT, pNewDT, P, V, I, J,)
+                if pNewDT[0] < 1.0:
                     self.journal.message("An element requests for a cutback", self.identification, level=2)
                     break
                     
@@ -187,18 +193,27 @@ class NIST:
         -> is called by solveStep() in each iteration """
             
         P[:] = 0.0
+        
+#        PFlattened = np.zeros(self.sizeNDofElementWise, dtype=np.double)
+#        currentIdxInPFlattened = 0
+#        print(PElementWise.shape)
+        UN1 = dU + U
+        
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
+#            nDofPerEl = el.nDofPerEl
             # element stiffness is directly stored in the V vector
-            Ke = V[idxInVIJ : idxInVIJ+el.sizeKe].reshape(el.nDofPerEl,el.nDofPerEl, order='F')
-            Pe = np.zeros(el.nDofPerEl)
-            # indices for all element dofs in the global U and P vectors, taken from I
+            Ke = V[idxInVIJ : idxInVIJ+el.sizeKe]#.reshape(el.nDofPerEl,el.nDofPerEl, order='F')
+            Pe = np.zeros(el.nDofPerEl)#PFlattened[currentIdxInPFlattened : currentIdxInPFlattened + el.nDofPerEl]
             idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
-            Ue = U[ idcsInPUdU ]
-            dUe = dU[ idcsInPUdU  ]
             
-            el.computeYourself(Ke, Pe, Ue + dUe, dUe, time, dT, pNewDT)
-            if pNewDT <= 1.0:
+            el.computeYourself(Ke, 
+                               Pe, 
+                               UN1[ idcsInPUdU ] , 
+                               dU [ idcsInPUdU ] , 
+                               time, dT, pNewDT)
+            
+            if pNewDT[0] <= 1.0:
                 break 
             
             # global effort vector is assembled directly
@@ -262,8 +277,7 @@ class NIST:
         is created.
         -> is called by __init__() """
         
-        sizeVIJ = self.nDof * self.nDof
-        V = np.zeros(sizeVIJ)
+        V = np.zeros(self.sizeVIJ)
         I = np.zeros_like(V, dtype=np.int)
         J = np.zeros_like(V, dtype=np.int)
         idxInVIJ = 0
@@ -280,6 +294,5 @@ class NIST:
             I[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel()
             J[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel('F')
             idxInVIJ += el.sizeKe
-            
         return V, I, J, elementToIndexInVIJMap
              

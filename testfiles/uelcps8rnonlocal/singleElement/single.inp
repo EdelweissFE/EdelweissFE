@@ -1,12 +1,12 @@
 *include, input=mesh.inp
 *material, name=modleonNonLocal, id=modleon, statevars=26, yieldflagindex=6, charelemlength=100
 **25850, 0.18, 10.33, 31.0, 35.96, 2.00, 0.85, 0.08, 0.003, 2.0, 0.000001, 15, 20, 1.05, 0.001, 1
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 3e1, 1.05, 0.000368, 1
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 1e2, 1.05, 0.000368, 1
 
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*job, name=cpe4job, domain=2d, solver=NIST
+*job, name=cpe4job, domain=2d, 
 
 *output, type=nodesetmonitor, jobName=cpe4job
 nSet=topNodes, field=mechanical, type=P, result=sum, direction=2
@@ -20,8 +20,8 @@ create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=3, name=alphaD
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
 
-*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
-NISTSolverOptions, extrapolation=linear, numThreads=20
-dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=mechanical, 2=0
-dirichlet, name=top, nSet=topNodes, field=mechanical, 2=-.07
+*step, solver=solver, jobName=cpe4job, maxInc=2e-1, minInc=5e-3, maxNumInc=1000, maxIter=25, 
+NISTSolverOptions, extrapolation=linear, numThreads=4
+dirichlet, name=left,  nSet=1,   field=mechanical, 2=0.0, 1=0.0
+dirichlet, name=right, nSet=2,  field=mechanical, 1=0, 2=0
+dirichlet, name=top, nSet=topNodes, field=mechanical, 1=-.06

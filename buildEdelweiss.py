@@ -11,8 +11,7 @@ import numpy
 
 directives = {'boundscheck': False,
               'wraparound':False}
-
-gccFlags = ["-std=c++11", "-w", "-g3"]
+gccFlags = ["-std=c++11", "-w", "-g3"] 
 msvcFlags = []
 
 compFlags = gccFlags
@@ -87,6 +86,15 @@ extensions += [Extension("*",
                         libraries= [el]+[lib for d, lib in extraLibs]+[lib for d, lib in extraLibs] 
                         )                    # linkList = extralibs + UMAT.lib  
                         for el in cythonElements]                   
+
+# solvers
+extensions += [Extension("fe/*/*",
+                sources = ["fe/*/*.pyx"],
+                        include_dirs=[ numpy.get_include()],
+                        language='c++',
+                        extra_compile_args=['-fopenmp'],
+                        extra_link_args=['-fopenmp'],)
+                        ]
       	
 # 3) compile!
 setup(ext_modules = cythonize(extensions,

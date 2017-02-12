@@ -5,14 +5,14 @@ from libcpp.string cimport string
 
 
 cdef public bint notificationToMSG(const string cppString):
-    print(cppString.decode('UTF-8'))
+#    print(cppString.decode('UTF-8'))
     return True
     
 cdef public bint warningToMSG(const string cppString):
-    print(cppString.decode('UTF-8'))
+#    print(cppString.decode('UTF-8'))
     return False
 
-cdef extern from "uelCPE4RSimpleUmat.h":
+cdef extern from "uelCPE4RSimpleUmat.h" nogil:
     void uelCPE4RSimpleUmat(
             double rightHandSide[],           
             double KMatrix[],                            
@@ -33,7 +33,7 @@ cdef extern from "uelCPE4RSimpleUmat.h":
             int nStateVarsUmat)
     
 cdef void callUel(
-        double[::1,:] Ke,
+        double[::1] Ke,
         double[::1] Pe,
         double[::1] stateVars,
         double[::1] UNew,
@@ -46,10 +46,10 @@ cdef void callUel(
         double dTime,
         int elNumber,
         umatType umat,
-        int nStateVarsUmat):
+        int nStateVarsUmat) nogil:
     
     uelCPE4RSimpleUmat(    &Pe[0],           
-            &Ke[0][0],                            
+            &Ke[0],                            
             &stateVars[0],                                         
             stateVars.shape[0], 
             &properties[0],
@@ -79,44 +79,57 @@ cdef class Element:
     dofIndicesPermutation  = np.arange(0, 8, 1)
     ensightType =           "quad4"
     
-    cdef public nodes, nodeCoordinates, intProperties, elNumber
+    cdef public nodes, 
+    cdef public int elNumber
     
-    cdef np.ndarray uelProperties, 
-    cdef np.ndarray stateVars, stateVarsTemp
+    cdef double[::1] uelProperties, stateVars, stateVarsTemp, nodeCoordinates
     cdef umatType umat
     cdef int nStateVars, nStateVarsUmat
+    
+    cdef int[::1] intProperties
     
     def __init__(self, nodes, elNumber):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
-        self.intProperties = np.zeros(1, dtype=np.intc)
         self.elNumber = elNumber
-    
+        
     def setProperties(self, uelProperties, umatName, nStateVarsUmat):
         self.uelProperties = uelProperties
         self.nStateVarsUmat = nStateVarsUmat
-        self.nStateVars = self.nGaussPt * (nStateVarsUmat + 13)  
+        self.nStateVars = self.nGaussPt * (nStateVarsUmat + 12)
         self.stateVars = np.zeros(self.nStateVars)
+        self.stateVarsTemp = np.zeros(self.nStateVars)
         self.umat = getUmat(umatName.lower())
+        self.intProperties = np.empty(0, dtype=np.intc)#self.intProperties
         
-    def computeYourself(self, Ke, Pe, U, dU, time, dTime, pNewdT):
-        self.stateVarsTemp = np.copy(self.stateVars)
-        callUel(Ke,Pe,
-            self.stateVarsTemp,
-            U,
-            dU,
-            self.nodeCoordinates,
-            self.uelProperties,
-            self.intProperties,
-            pNewdT,
-            time,
-            dTime,
-            self.elNumber,
-            self.umat,
-            self.nStateVarsUmat)
+    def computeYourself(self, 
+                         double[::1] Ke, 
+                         double[::1] Pe, 
+                         const double[::1] U, 
+                         const double[::1] dU, 
+                         const double[::1] time, 
+                         double dTime, 
+                         double[::1] pNewdT):
+        
+        with nogil: # release the gil for parallel computing
+            self.stateVarsTemp[:] = self.stateVars
+            callUel(Ke,Pe,
+                self.stateVarsTemp,
+                U,
+                dU,
+                self.nodeCoordinates,
+                self.uelProperties,
+                self.intProperties,
+                pNewdT,
+                time,
+                dTime,
+                self.elNumber,
+                self.umat,
+                self.nStateVarsUmat)
     
     def acceptLastState(self,):
-        self.stateVars = self.stateVarsTemp
+        self.stateVars[:] = self.stateVarsTemp
+        
     def resetToLastValidState(self,):
         pass
     
@@ -126,4 +139,4 @@ cdef class Element:
                     
     def getResult(self, **kw):    
         stateVarIndices = self.resultIndices[kw['result']](self.nStateVarsUmat, kw)
-        return self.stateVars[stateVarIndices]
+        return np.asarray(self.stateVars)[stateVarIndices]
