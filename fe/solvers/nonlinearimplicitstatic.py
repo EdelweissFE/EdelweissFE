@@ -8,7 +8,6 @@ Created on Sun Jan  8 20:37:35 2017
 import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
-#from scikits.umfpack import spsolve 
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 
@@ -33,6 +32,7 @@ class NIST:
         self.elementSets =  modelInfo['elementSets']
         self.fieldIndices = jobInfo['fieldIndices']
         
+        # create headers for formatted output of solver
         nFields = len(self.fieldIndices.keys())
         self.iterationHeader = ("{:^25}"*nFields).format(*self.fieldIndices.keys())
         self.iterationHeader2 = (" {:<10}  {:<10}  ").format('||R||∞','||ddU||∞') *nFields
@@ -42,7 +42,6 @@ class NIST:
         self.journal = journal
         self.outputmanagers = outputmanagers or []
         
-        
         self.sizeVIJ = 0
         self.sizeNDofElementWise = 0
         
@@ -50,8 +49,10 @@ class NIST:
             self.sizeNDofElementWise += el.nDofPerEl
             self.sizeVIJ += el.sizeKe
         print(self.sizeNDofElementWise)
+
+        # create indices map to elements; V, I, J are of type 1d ndarray
+        # elementToIndexInVIJMap is a dictionary with elementObj as key and entry in Matrix as value
         V, I, J, elementToIndexInVIJMap = self.generateVIJ(self.elements, )
-        
         self.V = V
         self.I = I
         self.J = J
@@ -75,17 +76,20 @@ class NIST:
         stepLength = step.get('stepLength', 1.0)
         extrapolation = stepActions['NISTSolverOptions'].get('extrapolation', 'linear')
         
-        incGen = IncrementGenerator(time, stepLength, 
+        incGen = IncrementGenerator(time, 
+                                    stepLength, 
                                     step.get('maxInc', self.defaultMaxInc), 
                                     step.get('minInc', self.defaultMinInc), 
                                     step.get('maxNumInc', self.defaultMaxNumInc), 
                                     self.journal)
+        
         maxIter = step.get('maxIter', self.defaultMaxIter)
         criticalIter = step.get('crititcalIter', self.defaultCriticalIter)
         
         dU = np.zeros(numberOfDofs)
         Pext = np.zeros(numberOfDofs)
         
+        # get indices where dirichlet BC are given
         dirichlet = stepActions['dirichlet']
         dirichletIndices = dirichlet['indices']
         
@@ -113,12 +117,12 @@ class NIST:
             
             if extrapolation == 'linear' and lastIncrementSize:
                 dU *= (incrementSize/lastIncrementSize) 
-                dU = self.applyDirichlet(incrementSize, U, dU, dirichlet)      
+                dU = self.applyDirichlet(incrementSize, dU, dirichlet)      
                 extrapolatedIncrement = True
             else:
                 extrapolatedIncrement = False
                 dU[:] = 0.0        
-                  
+
             while True:
                 
                 pNewDT[0] = 1e36
@@ -138,7 +142,7 @@ class NIST:
                 
                 if iterationCounter == 0 and not extrapolatedIncrement and dirichlet :
                     # first iteraion? apply dirichlet bcs and unconditionally solve
-                    R = self.applyDirichlet(incrementSize, U, R, dirichlet)
+                    R = self.applyDirichlet(incrementSize, R, dirichlet)
                 else:
                     # iteration cycle 1 or higher, time to check the convergency
                     R[dirichletIndices] = 0.0 # only entries not affected by dirichlet bcs contribute to the Residual
@@ -177,6 +181,7 @@ class NIST:
                 for man in self.outputmanagers:
                     man.finalizeIncrement(U, P, increment)
             else: 
+                # get new increment by down-scaling of current increment
                 incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
                 lastIncrementSize = False
                 
@@ -232,7 +237,7 @@ class NIST:
         K.eliminate_zeros()
         return K
               
-    def applyDirichlet(self, stepProgress, U, R, dirichlet):
+    def applyDirichlet(self, stepProgress, R, dirichlet):
         """ Apply the dirichlet bcs on the Residual vector
         -> is called by solveStep() before solving the global sys."""
             
@@ -248,7 +253,7 @@ class NIST:
         iterationMessage = ''
         convergedAtAll  = True
         
-        if iterationCounter <15: # standard tolerance set
+        if iterationCounter < 15: # standard tolerance set
             i = 0
         else: # alternative tolerance set
             i = 1
@@ -265,6 +270,7 @@ class NIST:
                                  flowCorrection,
                                  '✓' if convergedFlow else ' ',
                                  )
+            # converged if Residual and flowCorrection is smaller than tolerance
             convergedAtAll = convergedAtAll and convergedFlow and convergedEffort
             
         self.journal.message(iterationMessage, self.identification)     

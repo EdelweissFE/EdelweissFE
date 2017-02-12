@@ -11,6 +11,9 @@ import numpy as np
 
 def generateNodeForces(actionDefinitionLines, jobInfo, modelInfo, 
                        time, stepActions, U, P):
+    """ create nodeForces dictionary with nodeForce in 
+        keytype 'indices': array of global dof indices
+                'delta':   prescribed deltaValue """
     
     nodeForceIndices = []
     nodeForceDelta = []

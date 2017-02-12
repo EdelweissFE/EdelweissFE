@@ -11,14 +11,17 @@ import numpy as np
 def generateDirichlet(actionDefinitionLines, jobInfo, modelInfo, time, 
                                                                stepActions, 
                                                                U, P):
+    """ create dirichlet dictionary with node boundary condition in 
+        keytype 'indices': array of global dof indices
+                'delta':   prescribed deltaValue """
+                
     dirichletIndices = []
     dirichletDelta = []
     
     nodeSets = modelInfo['nodeSets']
-    
     for dirichletLine in actionDefinitionLines:
-        action = stringDict(dirichletLine)        
-        field = action['field']
+        action = stringDict(dirichletLine)  
+        field = action['field']     # either: mechanical, thermal or nonlocaldamage
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
                 directionIndices = [node.fields[field][x] for node in nodeSets[action['nSet']]]

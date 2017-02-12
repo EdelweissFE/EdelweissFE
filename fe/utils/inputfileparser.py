@@ -16,6 +16,12 @@ dTypes = {int : "integer",
           "numpy int": "numpy int array",
           }
     
+
+# dictionary of possible input file entries, syntax:
+#   typeMappings['kw'] = tuple('definition', dict(tuple(dataType, string))
+#   e.g. get first keyword:
+#   typeMappings['kw'][1]['type']
+
 typeMappings = {    '*element':         ("definition of element(s)",
                         {   'type':     (str, "assign one of the types definied in the elementlibrary"),
                             'data':     ("numpy int", "Abaqus like element definiton lines"), }),
@@ -38,7 +44,8 @@ typeMappings = {    '*element':         ("definition of element(s)",
                         {   'name':     (str, "name"),
                             'thickness':(float, "associated element set"),
                             'material': (str, "associated id of defined material"), 
-                            'data':     (str, "list of associated element sets")}),
+                            'data':     (str, "list of associated element sets"),
+                            'type':     (str, "for thickness from statevars or direct from element")}),
 
                     '*material':        ("definition of a material",
                         { 'name':       (str, "name of the property"),
@@ -74,7 +81,8 @@ typeMappings = {    '*element':         ("definition of element(s)",
                 }
                 
 def getMapType(kw, varName):
-    kwDict = typeMappings.get(kw, (None,{}) )[1]    
+    """ convert datatypes from dictionary typeMappings int to integer"""
+    kwDict = typeMappings.get(kw, (None,{}) )[1]   # return dictionary containing attribute to keyword or a default tuple (None,{}) if keyword doesn't exist
     mType = kwDict.get(varName, [str])[0]
     return mType
     

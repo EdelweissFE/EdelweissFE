@@ -15,20 +15,20 @@ class IncrementGenerator:
     
     def __init__(self, currentTime, stepLength, maxIncrement, minIncrement, maxNumberIncrements, journal):
         
-        self.nPassedGoodIncrements = int(0)
-        self.totalIncrements = int(0)
-        self.maxIncrement = maxIncrement
-        self.minIncrement = minIncrement
-        self.maxNumberIncrements = maxNumberIncrements
+        self.nPassedGoodIncrements =    int(0)
+        self.totalIncrements =          int(0)
+        self.maxIncrement =             maxIncrement
+        self.minIncrement =             minIncrement
+        self.maxNumberIncrements =      maxNumberIncrements
         
-        self.finishedStepProgress = 0.0
-        self.increment = maxIncrement
-        self.allowedToIncreasedNext = True
+        self.finishedStepProgress =     0.0
+        self.increment =                maxIncrement
+        self.allowedToIncreasedNext =   True
         
-        self.currentTime =      currentTime
-        self.stepLength =       stepLength
-        self.dT = 0.0
-        self.journal = journal
+        self.currentTime =              currentTime
+        self.stepLength =               stepLength
+        self.dT =                       0.0
+        self.journal =                  journal
         
         
     def generateIncrement(self):
@@ -36,7 +36,7 @@ class IncrementGenerator:
             (increment number, increment fraction, finished step progress, 
             dT, increment start time of step, increment start time total)"""
         
-        #zero increment
+        #zero increment; return value for first function call
         yield (0, 0.0, 0.0, 0.0, 0.0, self.currentTime )
         
         while self.finishedStepProgress < (1.0-1e-15) and self.totalIncrements < self.maxNumberIncrements:
