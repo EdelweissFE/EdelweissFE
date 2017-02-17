@@ -45,7 +45,7 @@ typeMappings = {    '*element':         ("definition of element(s)",
                             'thickness':(float, "associated element set"),
                             'material': (str, "associated id of defined material"), 
                             'data':     (str, "list of associated element sets"),
-                            'type':     (str, "for thickness from statevars or direct from element")}),
+                            'type':     (str, "type of the section")}),
 
                     '*material':        ("definition of a material",
                         { 'name':       (str, "name of the property"),

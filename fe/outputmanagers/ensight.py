@@ -338,8 +338,7 @@ class OutputManager:
                     perElementJob['location'] = int(definition['location'])
                     perElementJob['name'] = definition.get('name', perElementJob['result'])
                     self.perElementJobs.append(perElementJob)
-        
-        
+            
     def finalizeIncrement(self, U, P, increment):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         

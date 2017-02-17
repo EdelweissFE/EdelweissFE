@@ -20,18 +20,22 @@ class Journal:
                      1: "   {:<78}{:>18} ",
                      2:"     {:<76}{:>18} ",}
     
-    def __init__(self, outputFile=None, suppressFromLevel=3):
+    def __init__(self, verbose=True, outputFile=None, suppressFromLevel=3):
         self.suppressLvl = suppressFromLevel
+        self.verbose = verbose
     
     def message(self, message, senderIdentification, level=1):
         if level < self.suppressLvl:
-            print(self.leveledOutput[level].format(message, senderIdentification))
+            if self.verbose:
+                print(self.leveledOutput[level].format(message, senderIdentification))
     
     def errorMessage(self, errorMessage, senderIdentification):
-        print(self.errorMessageTemplate.format(errorMessage, senderIdentification))
+        if self.verbose:
+            print(self.errorMessageTemplate.format(errorMessage, senderIdentification))
         
     def printSeperationLine(self, ):
-        print('+'+'-'*98+'+')
+        if self.verbose:
+            print('+'+'-'*98+'+')
     
     def setVerbose(self,):
         self.suppressLvl = 3

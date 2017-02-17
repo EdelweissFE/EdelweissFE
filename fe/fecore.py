@@ -14,7 +14,6 @@ from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
 from fe.config.solvers import solverLibrary
-#from fe.solvers.nonlinearimplicitstaticc2 import NISTParallel as NIST
 from fe.journal.journal import Journal
 from time import process_time
 
@@ -23,8 +22,7 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
     """ Collects nodes, elements, node sets and element sets from
     the input file. """
     
-    # returns an orderedDictionary of nodeObjects with attributes 
-    #      label, coordinates and fields from phenomena
+    # returns an OrderedDict of {node label: node} 
     nodeDefinitions = OrderedDict()
     for nodeDefs in inputfile['*node']:
         for defLine in nodeDefs['data']:
@@ -33,8 +31,7 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
             coordinates[:] = defLine[1:]
             nodeDefinitions[label] = Node(label, coordinates, )
 
-    # returns an orderedDictionary of elementObjects with attributes 
-    #      nodeObjects and fields for each node in *.pyx             
+    # returns an OrderedDict of {element Label: element}   
     elements = OrderedDict()
     for elDefs in inputfile['*element']:
         elementType = elDefs['type']
@@ -46,10 +43,8 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
             elNodes =  [ nodeDefinitions[n] for n in defLine[1:] ]
             newEl = ElementClass(elNodes, label)
             for iNode, node in enumerate(elNodes):
-                # update node.fields dictionary with available fields from phenomena.py 
-                #for each node from  .pyx file
-                # Exemplary Output:
-                # node.fields OrderedDict([('mechanical', True), ('thermal', False), ('nonlocal damage', True)])
+                # update node.fields dictionary with available fields from phenomena, e.g
+                # OrderedDict : {'mechanical': True, 'thermal': False , ... }
                 node.fields.update( [ (f, True) for f in newEl.fields[iNode] ]  )
             elements[label] = newEl
             
@@ -91,8 +86,6 @@ def assignSections(inputfile, elementSets):
     """ Assign properties and section properties to all elements by
     the given section definitions."""
     
-    # elset is missing and type not defined in inputfileparser
-    
     for secDef in inputfile['*section']:
         if secDef['type'] == "planeUelUmat":
             material = [mat for mat in inputfile['*material'] if mat['id'] == secDef['material']][0]
@@ -106,10 +99,11 @@ def assignFieldDofIndices(nodes, domainSize):
     """ Loop over all nodes to generate the global field-dof indices.
     output is a tuple of:
         - number of total DOFS
-        - orderedDict( (mechanical, arrayValues), 
-                       (nonlocalDmage, arrayValues)
-                       (thermal, araryValues))
-    """
+        - orderedDict( (mechanical, indices), 
+                       (nonlocalDamage, indices)
+                       (thermal, indices)
+                       ...)."""
+        
     fieldIdxBase = 0
     fieldIndices = OrderedDict()
     for node in nodes.values():
@@ -137,11 +131,7 @@ def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
     
     # create a default dictionary of type list with key defined by module action
     # and values definitions in the form of list e.g.:
-    #    defaultdict(<class 'list'>, 
-    #               {'NISTSolverOptions': [['extrapolation=linear']], 
-    #               'dirichlet': [['name=left', 'nSet=left', 'field=mechanical', '1=0.0', '2=0'], 
-    #                             ['name=1', 'nSet=1', 'field=mechanical', '1=0.0', '2=0.0'], 
-    #                            ['name=right', 'nSet=right', 'field=mechanical', '1=-0', '2=-2']]})
+    # defaultdict (list) { 'dirichlet' [ dirichlet defintion 1, dirichlet definition 2, ... ]}
     actions = defaultdict(list)
     for actionDefLine in step['data']:
         moduleName = actionDefLine[0]
@@ -157,7 +147,6 @@ def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
                                                                time, 
                                                                stepActions, 
                                                                U, P)
-    
     return  stepActions
         
     
@@ -186,7 +175,7 @@ def finitElementSimulation(inputfile, verbose=False):
     numberOfDofs, fieldIndices = assignFieldDofIndices(nodes, domainSize)
     
     # instance of journal class with default supressFromLevel 3
-    journal = Journal()
+    journal = Journal(verbose = verbose)
     journal.message("total size of eq. system: {:}".format(numberOfDofs), identification, 0)
     journal.printSeperationLine()
 
@@ -207,7 +196,6 @@ def finitElementSimulation(inputfile, verbose=False):
                  'nodeSets': nodeSets,
                  'elementSets': elementSets,}
     
-    # jobName either get from input file name=XXX or otherwise name defaultJob
     jobName = job.get('name', 'defaultJob')
     # collect all job steps in a list of stepDictionaries
     jobSteps = [step for step in inputfile['*step'] if step.get('jobName', 'defaultJob') == jobName ]
@@ -216,12 +204,11 @@ def finitElementSimulation(inputfile, verbose=False):
     outputmanagers = []
     for outputDef in [output for output in inputfile['*output']     
                                 if output.get('jobName', 'defaultJob') == jobName ]:
-        # create class pointer either to e.g. nodemonitor, nodesetmonitor or ensight
         OutputManager = outputManagersLibrary.get(outputDef['type'].lower(), None)
         if OutputManager is not None:
             outputmanagers.append( OutputManager(outputDef['data'], jobInfo, modelInfo, journal))
     
-    # generate an instance for the desired solver
+    # generate an instance of the desired solver
     solver = solverLibrary[job.get('solver', 'NIST')](jobInfo, modelInfo, journal, outputmanagers)
     U, P = solver.initialize()
     stepActions = {}

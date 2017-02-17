@@ -10,5 +10,4 @@ from fe.solvers.nonlinearimplicitstatic import NIST
 from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
 
 solverLibrary = {'NIST' : NIST,
-                 'NISTParallel' : NISTParallel,
-        }
+                 'NISTParallel' : NISTParallel,}

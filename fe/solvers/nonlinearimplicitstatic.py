@@ -23,7 +23,7 @@ class NIST:
     defaultMinInc = 1e-4
     defaultMaxNumInc = 1000
     defaultMaxIter = 10
-    defaultCriticalIter = 6
+    defaultCriticalIter = 5
     
     def __init__(self, jobInfo, modelInfo, journal, outputmanagers=None):
         self.nodes =        modelInfo['nodes']
@@ -46,12 +46,10 @@ class NIST:
         self.sizeNDofElementWise = 0
         
         for el in self.elements.values():
-            self.sizeNDofElementWise += el.nDofPerEl
             self.sizeVIJ += el.sizeKe
-        print(self.sizeNDofElementWise)
 
-        # create indices map to elements; V, I, J are of type 1d ndarray
-        # elementToIndexInVIJMap is a dictionary with elementObj as key and entry in Matrix as value
+        # create indices map to elements; V, I, J are of type np vectors
+        # elementToIndexInVIJMap is a dictionary of {element : index in VIJ vectors} 
         V, I, J, elementToIndexInVIJMap = self.generateVIJ(self.elements, )
         self.V = V
         self.I = I
@@ -145,7 +143,7 @@ class NIST:
                     R = self.applyDirichlet(incrementSize, R, dirichlet)
                 else:
                     # iteration cycle 1 or higher, time to check the convergency
-                    R[dirichletIndices] = 0.0 # only entries not affected by dirichlet bcs contribute to the Residual
+                    R[dirichletIndices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
                     converged = self.checkConvergency(R, ddU, iterationCounter)
                     
                 if converged:
@@ -178,6 +176,7 @@ class NIST:
                 for el in self.elements.values():
                     el.acceptLastState()
                 self.journal.message("Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1) 
+                
                 for man in self.outputmanagers:
                     man.finalizeIncrement(U, P, increment)
             else: 
@@ -198,18 +197,12 @@ class NIST:
         -> is called by solveStep() in each iteration """
             
         P[:] = 0.0
-        
-#        PFlattened = np.zeros(self.sizeNDofElementWise, dtype=np.double)
-#        currentIdxInPFlattened = 0
-#        print(PElementWise.shape)
         UN1 = dU + U
         
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
-#            nDofPerEl = el.nDofPerEl
-            # element stiffness is directly stored in the V vector
-            Ke = V[idxInVIJ : idxInVIJ+el.sizeKe]#.reshape(el.nDofPerEl,el.nDofPerEl, order='F')
-            Pe = np.zeros(el.nDofPerEl)#PFlattened[currentIdxInPFlattened : currentIdxInPFlattened + el.nDofPerEl]
+            Ke = V[idxInVIJ : idxInVIJ+el.sizeKe]
+            Pe = np.zeros(el.nDofPerEl)
             idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
             
             el.computeYourself(Ke, 
@@ -270,7 +263,7 @@ class NIST:
                                  flowCorrection,
                                  '✓' if convergedFlow else ' ',
                                  )
-            # converged if Residual and flowCorrection is smaller than tolerance
+            # converged if residual and flowCorrection are smaller than tolerance
             convergedAtAll = convergedAtAll and convergedFlow and convergedEffort
             
         self.journal.message(iterationMessage, self.identification)     
