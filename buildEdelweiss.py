@@ -9,9 +9,9 @@ from Cython.Build import cythonize
 from os.path import expanduser, join, exists
 import numpy 
 
-directives = {'boundscheck': False,
-              'wraparound':False,
-              'nonecheck' : False}
+directives = {'boundscheck':    False,
+              'wraparound':     False,
+              'nonecheck' :     False}
 
 gccFlags = ["-std=c++11", "-w", "-g3"] 
 msvcFlags = []
@@ -91,8 +91,7 @@ for el, elementExtraLibs in cythonElements.items():
                             language="c++",
                             extra_compile_args=compFlags,
                             include_dirs=[
-                                join(rootDirectory,el, "include"),                 
-                                          numpy.get_include()],
+                                join(rootDirectory,el, "include"), numpy.get_include()],
                             library_dirs= [join(rootDirectory,el, "lib")] + extraLibDirs,
                             libraries= libs
                             ))

@@ -158,10 +158,7 @@ class NIST:
                 K = coo_matrix( (V, (I,J)), shape=(numberOfDofs, numberOfDofs)).tocsr()
                 K_ = self.applyDirichletK(K, dirichlet)
                 
-                #   ___   __            __  
-                #  /__   / |  |   \ /  /_  
-                # ___/  |_/  /_   |/  /__
-                
+                # solve !                
                 ddU = spsolve(K_, R, )
                 dU += ddU
                 

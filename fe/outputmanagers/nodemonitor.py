@@ -5,12 +5,17 @@ Created on Sat Jan 14 21:10:50 2017
 
 @author: matthias
 """
+from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
 from collections import defaultdict
 import numpy as np
 
-class OutputManager:
+class OutputManager(OutputManagerBase):
+    
+    """ Simple monitor for nodes"""
+    
     identification = "NodeMonitor"
+    
     printTemplate = "node {:}, {:} {:} {:}: {:}"
     resultFunctions = {'1' : lambda x: x[0],
                        '2' : lambda x: x[1],
@@ -21,7 +26,7 @@ class OutputManager:
                        'magnitude' : lambda x: np.linalg.norm(x),
                        }
     
-    def __init__(self, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
         self.journal = journal
         self.monitorJobs = []
         
@@ -40,6 +45,9 @@ class OutputManager:
             if entry['export']:
                 entry['history'] = []
             self.monitorJobs.append(entry)
+    
+    def initializeStep(self, step, stepActions):
+        pass
     
     def finalizeIncrement(self, U, P, increment):
         for nJob in self.monitorJobs:

@@ -31,7 +31,7 @@ cdef extern from "umatModLeon.h":
                             const int*,const int&,const int)
     
 cdef extern from "umatModLeonNonLocal.h":
-    void umatModLeonNonLocal(       double[],double[],double[],double&,double&,
+    void umatModLeonNonLocal(double[],double[],double[],double&,double&,
                             double&,double&,double[],double[],double&, 
                             const double*,const double*,const double*,
                             const double&,const double&,const double&,

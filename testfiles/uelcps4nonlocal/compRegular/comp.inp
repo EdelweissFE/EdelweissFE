@@ -15,7 +15,7 @@ weak
 *output, type=nodesetmonitor, jobName=cpe4job
 nSet=top, field=mechanical, type=P, result=sum, direction=2
 
-*output, type=ensight, jobName=cpe4job
+*output, type=ensight, jobName=cpe4job, name=esExport
 create=perNode,    elSet=all, field=mechanical, type=U, name=displacement
 create=perNode,    elSet=all, field=nonlocal damage, type=U, name=alphaDNonLocal
 create=perElement, elSet=all, field=mechanical, result=stress, location=1
@@ -25,6 +25,7 @@ create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=
 create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
 
 *step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+EnsightOptions, managerName=esExport, ,intermediateSaveInterval=10, 
 NISTSolverOptions, extrapolation=linear, numThreads=2
 dirichlet, name=1,  nSet=1,   field=mechanical, 1=0.0, 2=0.0
 dirichlet, name=bottom, nSet=bottom,  field=mechanical, 2=0,

@@ -13,7 +13,7 @@ from fe.config.elementlibrary import elementlibrary
 from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
-from fe.config.solvers import solverLibrary
+from fe.config.solvers import solverLibrary, defaultSolver
 from fe.journal.journal import Journal
 from time import process_time
 
@@ -126,7 +126,7 @@ def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
     The step-actions are stored in a dictionary, which is handed to 
     solveStep() in the feCore main routine afterwards.
     The step action modules decide if old step-action definitions are 
-    overwritten or extended. Returns a dictionary with keys defined in 
+    overwritten or extended. Returns a dictionary with keys as defined in 
     stepactions."""
     
     # create a default dictionary of type list with key defined by module action
@@ -157,7 +157,7 @@ def finitElementSimulation(inputfile, verbose=False):
     For each step, the step-actions (dirichlet, nodeforces) are collected by
     external modules."""
     
-    identification ="feCore"
+    identification = "feCore"
     
     # create job dictionary from input file like e.g.
     # job  = {'data': [], 'inputFile': 'testBeam.inp', 'domain': '2d', 'name': 'testjob'}
@@ -191,10 +191,10 @@ def finitElementSimulation(inputfile, verbose=False):
     jobInfo.update(job)
 
     # compact storage of the model
-    modelInfo = {'nodes' : nodes,
-                 'elements': elements,
-                 'nodeSets': nodeSets,
-                 'elementSets': elementSets,}
+    modelInfo = {'nodes' :          nodes,
+                 'elements':        elements,
+                 'nodeSets':        nodeSets,
+                 'elementSets':     elementSets,}
     
     jobName = job.get('name', 'defaultJob')
     # collect all job steps in a list of stepDictionaries
@@ -204,19 +204,26 @@ def finitElementSimulation(inputfile, verbose=False):
     outputmanagers = []
     for outputDef in [output for output in inputfile['*output']     
                                 if output.get('jobName', 'defaultJob') == jobName ]:
-        OutputManager = outputManagersLibrary.get(outputDef['type'].lower(), None)
-        if OutputManager is not None:
-            outputmanagers.append( OutputManager(outputDef['data'], jobInfo, modelInfo, journal))
+        OutputManager = outputManagersLibrary[outputDef['type'].lower()]
+        managerName = outputDef.get('name', 'defaultName')
+        definitionLines = outputDef['data']
+        outputmanagers.append(OutputManager(managerName, definitionLines, jobInfo, modelInfo, journal))
     
     # generate an instance of the desired solver
-    solver = solverLibrary[job.get('solver', 'NIST')](jobInfo, modelInfo, journal, outputmanagers)
-    U, P = solver.initialize()
+    Solver =    solverLibrary.get(job['solver'], defaultSolver)
+    solver =    Solver(jobInfo, modelInfo, journal, outputmanagers)
+    U, P =      solver.initialize()
     stepActions = {}
+    
     try:
         for step in jobSteps:
             # collect all step actions in a dictionary with key of actionType
             # and concerned values 
             stepActions = collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P)
+            
+            for manager in outputmanagers: 
+                manager.initializeStep(step, stepActions)
+                
             # solve the step 
             tic =  process_time()
             success, U, P, time = solver.solveStep(step, time, stepActions, U, P,)

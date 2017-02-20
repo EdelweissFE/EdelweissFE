@@ -6,8 +6,7 @@ Created on Sat Jan  21 12:18:10 2017
 """
 
 class IncrementGenerator:
-    """
-    Version 2 of the increment generator, 
+    """ Version 2 of the increment generator, 
     based on Version 1 of the  Abaqus-Workbench.
     Implementation as generator class !"""
     
@@ -29,7 +28,6 @@ class IncrementGenerator:
         self.stepLength =               stepLength
         self.dT =                       0.0
         self.journal =                  journal
-        
         
     def generateIncrement(self):
         """ Returns the hexatuple consisting of 

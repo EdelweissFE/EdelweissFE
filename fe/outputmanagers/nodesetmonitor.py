@@ -5,11 +5,13 @@ Created on Wed Jan 25 17:39:30 2017
 
 @author: matthias
 """
+from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import stringDict
 from collections import defaultdict
 import numpy as np
-class OutputManager:
+
+class OutputManager(OutputManagerBase):
     identification = "NodeSetMonitor"
     printTemplate = "nSet {:}, {:} {:}: {:}"
     resultFunctions = {
@@ -17,7 +19,7 @@ class OutputManager:
                        'mean' : lambda x: np.mean(x),
                        }
     
-    def __init__(self, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
         self.journal = journal
         self.monitorJobs = []
 
@@ -37,6 +39,9 @@ class OutputManager:
             if entry['export']:
                 entry['history'] = []
             self.monitorJobs.append(entry)
+    
+    def initializeStep(self, step, stepActions):
+        pass
     
     def finalizeIncrement(self, U, P, increment):
         for nJob in self.monitorJobs:

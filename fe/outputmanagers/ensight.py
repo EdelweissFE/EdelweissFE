@@ -5,6 +5,8 @@ Created on Sun Jan 15 14:22:48 2017
 
 @author: matthias
 """
+from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+
 import os
 import datetime
 import numpy as np
@@ -279,13 +281,38 @@ class EnsightChunkWiseCase:
                     tAndFSetNum,
                     variableName,
                    self.caseFileNamePrefix+ variableName))
+                
+def createUnstructuredPartFromElementSet(setName, elementSet, partID):
+    """ Determines the element and node list for an Ensightpart from an 
+    element set. The reduced, unique node set is generated, as well as 
+    the element to node index mapping for the ensight part."""
+    
+    nodeCounter = 0
+    partNodes = OrderedDict() # node -> index in nodelist
+    elementDict = defaultdict(OrderedDict)
+    for element in elementSet:
+        elNodeIndices = []
+        for node in element.nodes:
+            # if the node is already in the dict, get its index, 
+            # else insert it, and get the current idx = counter. increase the counter
+            idx = partNodes.setdefault(node, nodeCounter)
+            elNodeIndices.append(idx)
+            if idx == nodeCounter:
+                # the node was just inserted, so increase the counter of inserted nodes
+                nodeCounter+=1
+        elementDict[element.ensightType][element] = elNodeIndices 
+    
+    return EnsightUnstructuredPart(setName, partID, partNodes.keys(), elementDict)
 
-
-class OutputManager:
+class OutputManager(OutputManagerBase):
     identification = "Ensight Export"
     
-    def __init__(self, definitionLines, jobInfo, modelInfo, journal):
-        self.finishedSteps =0
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
+        self.name = name
+        
+        self.finishedSteps = 0
+        self.intermediateSaveInterval = 0
+        self.intermediateSaveIntervalCounter = 0
         self.domainSize = jobInfo['domainSize']
         self.journal = journal
         
@@ -302,7 +329,7 @@ class OutputManager:
         elSetParts = []
         partCounter = 1
         for setName, elSet in elementSets.items():
-            elSetPart = self.createUnstructuredPartFromElementSet(setName, elSet, partCounter)
+            elSetPart = createUnstructuredPartFromElementSet(setName, elSet, partCounter)
             self.elSetToEnsightPartMappings[setName] = elSetPart
             elSetParts.append(elSetPart)
             partCounter += 1
@@ -338,6 +365,12 @@ class OutputManager:
                     perElementJob['location'] = int(definition['location'])
                     perElementJob['name'] = definition.get('name', perElementJob['result'])
                     self.perElementJobs.append(perElementJob)
+
+    def initializeStep(self, step, stepActions):
+        if 'EnsightOptions' in stepActions and self.name in stepActions['EnsightOptions']:
+            options = stepActions['EnsightOptions'][self.name]
+            self.intermediateSaveInterval = int(options.get('intermediateSaveInterval', 
+                                                            self.intermediateSaveInterval))
             
     def finalizeIncrement(self, U, P, increment):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -374,33 +407,18 @@ class OutputManager:
             partsDict = {part.partNumber : varDict}
             enSightVar = EnsightPerElementVariable(name, dimension, partsDict)
             self.ensightCase.writeVariableTrendChunk(enSightVar, 1)
-            del enSightVar            
+            del enSightVar  
         
+        # intermediate save of the case
+        if self.intermediateSaveInterval:
+            if self.intermediateSaveIntervalCounter == self.intermediateSaveInterval:
+                self.ensightCase.finalize()
+                self.intermediateSaveIntervalCounter = 0
+            self.intermediateSaveIntervalCounter +=1
+            
     def finalizeStep(self,):
         self.finishedSteps += 1
         
     def finalizeJob(self,):
         self.ensightCase.finalize()
         
-    def createUnstructuredPartFromElementSet(self, setName, elementSet, partID):
-        """ Determines the element and node list for an Ensightpart from an 
-        element set. The reduced, unique node set is generated, as well as 
-        the element to node index mapping for the ensight part."""
-        
-        nodeCounter = 0
-        partNodes = OrderedDict() # node -> index in nodelist
-        elementDict = defaultdict(OrderedDict)
-        for element in elementSet:
-            elNodeIndices = []
-            for node in element.nodes:
-                # if the node is already in the dict, get its index, 
-                # else insert it, and get the current idx = counter. increase the counter
-                idx = partNodes.setdefault(node, nodeCounter)
-                elNodeIndices.append(idx)
-                if idx == nodeCounter:
-                    # the node was just inserted, so increase the counter of inserted nodes
-                    nodeCounter+=1
-            elementDict[element.ensightType][element] = elNodeIndices 
-        
-        ensightPart = EnsightUnstructuredPart(setName, partID, partNodes.keys(), elementDict)
-        return ensightPart

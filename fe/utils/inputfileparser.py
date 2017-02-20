@@ -55,6 +55,7 @@ typeMappings = {    '*element':         ("definition of element(s)",
                                          
                      '*output':        ("define an output module",
                         { 
+                         'name':        (str, "(optional), name of manager, standard=None"),
                          'jobName':     (str, "(optional), name of job, standard=defaultJob"),
                          'type':        (str, "output module "),
                          'data':        (str, "defintions lines for the output module")}),

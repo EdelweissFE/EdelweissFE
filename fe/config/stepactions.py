@@ -9,8 +9,9 @@ Created on Mon Jan 23 13:05:53 2017
 from fe.stepactions.dirichlet import generateDirichlet
 from fe.stepactions.nodeforces import generateNodeForces
 from fe.stepactions.nistsolveroptions import generateNISTSolverOptions
+from fe.stepactions.ensightoptions import generateEnsightOptions
 
-stepActionModules = { 'dirichlet' : generateDirichlet,
-                      'nodeForces': generateNodeForces,
-                      'NISTSolverOptions': generateNISTSolverOptions,
-        }
+stepActionModules = { 'dirichlet' :             generateDirichlet,
+                      'nodeForces':             generateNodeForces,
+                      'NISTSolverOptions':      generateNISTSolverOptions,
+                      'EnsightOptions':         generateEnsightOptions,}

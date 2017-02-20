@@ -14,4 +14,4 @@ outputManagersLibrary = {
                     'nodemonitor' : nodeMonitor,
                     'nodesetmonitor': nodeSetMonitor,
                     'ensight': ensight
-        }
+                    }

@@ -24,6 +24,5 @@ if __name__ == "__main__":
         inputFiles.append(parseInputFile(file))
         
     #2 ) all computations and imports
-
     for inputFile in inputFiles:
         finitElementSimulation(inputFile, verbose = args.verbose)
