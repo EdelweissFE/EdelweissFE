@@ -9,9 +9,11 @@ Created on Thu Jan 26 09:27:14 2017
 from fe.outputmanagers.nodemonitor import OutputManager as nodeMonitor
 from fe.outputmanagers.nodesetmonitor import OutputManager as nodeSetMonitor
 from fe.outputmanagers.ensight import OutputManager as ensight
+from fe.outputmanagers.meshplot import OutputManager as meshPlot
 
 outputManagersLibrary = {
                     'nodemonitor' : nodeMonitor,
                     'nodesetmonitor': nodeSetMonitor,
-                    'ensight': ensight
+                    'ensight': ensight,
+                    'meshplot': meshPlot,
                     }

@@ -137,9 +137,11 @@ cdef class Element:
     def resetToLastValidState(self,):
         pass
     
-    resultIndices = {'stress': lambda nStateVarsUmat,kw, : np.arange(6) + (kw['location'])*nStateVarsUmat ,
-                    'strain': lambda nStateVarsUmat,kw, : np.arange(6) + (kw['location'])*nStateVarsUmat +6,
-                    'sdv':    lambda nStateVarsUmat,kw, : kw['indices'] +((kw['location'])-1)*nStateVarsUmat }  
+    resultIndices = {
+                    'sdv':    lambda nStateVarsUmat,kw : kw['indices'] +(int(kw['location'])-1)*(nStateVarsUmat+12),
+                    'stress': lambda nStateVarsUmat,kw : np.arange(6) + (int(kw['location'])-1)*(nStateVarsUmat+12) + nStateVarsUmat,
+                    'strain': lambda nStateVarsUmat,kw : np.arange(6) + (int(kw['location'])-1)*(nStateVarsUmat+12) + nStateVarsUmat +6,
+                    'all':     lambda nStateVarsUmat,kw: np.arange(4*(nStateVarsUmat+12))}  
                     
     def getResult(self, **kw):    
         stateVarIndices = self.resultIndices[kw['result']](self.nStateVarsUmat, kw)
