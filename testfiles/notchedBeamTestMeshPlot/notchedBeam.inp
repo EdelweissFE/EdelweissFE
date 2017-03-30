@@ -1,0 +1,36 @@
+*include, input=mesh.inp
+
+*material, name=modleonNonLocal, id=modleon, statevars=6, yieldflagindex=6, charelemlength=100
+**25850, 0.18, 10.33, 31.0, 35.96, 2.00, 0.85, 0.08, 0.003, 2.0, 0.000001, 15, 20, 1.05, 0.001, 1
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 3e1, 1.05, 0.000368, 1
+
+*section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
+all
+
+*job, name=cpe4job, domain=2d, solver=NIST
+
+*output, type=nodesetmonitor, jobName=cpe4job
+nSet=topNodes, field=mechanical, type=P, result=sum, direction=2
+
+*output, type=ensight, jobName=cpe4job, name=Ensight1
+create=perNode,    elSet=all, field=mechanical, type=U, name=displacement
+create=perNode,    elSet=all, field=nonlocal damage, type=U, name=alphaDNonLocal
+create=perElement, elSet=all, field=mechanical, result=stress, location=1
+create=perElement, elSet=all, field=mechanical, result=strain, location=1
+create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=1, name=alphaP
+create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=3, name=alphaD
+create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
+
+*output, type=meshPlot, jobName=cpe4job, 
+figure=1, axSpec=221, create=perNode, field=mechanical, type=U, result=2, name=u2,
+figure=1, axSpec=223, create=perNode, field=mechanical, type=U, result=1, name=u1
+figure=1, axSpec=224, create=perNode, field=mechanical, type=U, result=magnitude, name=umag
+figure=1, axSpec=222, create=perElement, field=mechanical, result=all, location=1, indices=1, name=e1
+figure=2, axSpec=221, create=perElement, field=mechanical, result=stress, location=3, indices=1, name=s1
+figure=2, axSpec=222, create=perElement, field=mechanical, result=sdv, location=3, indices=5, name=omega
+ 
+*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1000
+NISTSolverOptions, extrapolation=linear, numThreads=2
+dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=mechanical, 2=0
+dirichlet, name=top, nSet=topNodes, field=mechanical, 2=-1.02
