@@ -203,6 +203,7 @@ class EnsightChunkWiseCase:
         self.timeAndFileSets = {}
         self.geometryTrends = {}
         self.variableTrends = {}
+        self.fileHandles = {}
 
     def setCurrentTime(self, timeAndFileSetNumber, timeValue):
         if not timeAndFileSetNumber in self.timeAndFileSets:
@@ -212,40 +213,52 @@ class EnsightChunkWiseCase:
         
     def writeGeometryTrendChunk(self, ensightGeometry, timeAndFileSetNumber=1):
         
-        fileName = ('{:}'*3).format(self.caseFileNamePrefix,
-                                    ensightGeometry.name,
-                                    ".geo",
-                                    )
+        if ensightGeometry.name not in self.fileHandles:
+            fileName = ('{:}'*3).format(self.caseFileNamePrefix,
+                                        ensightGeometry.name,
+                                        ".geo",
+                                        )
+            self.fileHandles[ensightGeometry.name] = open(fileName, mode='wb')
+        
+        f = self.fileHandles[ensightGeometry.name]
+        
+
         if not ensightGeometry.name in self.geometryTrends:
             self.geometryTrends[ensightGeometry.name] = timeAndFileSetNumber
-            with open(fileName ,mode='wb') as f:
-                writeC80(f, 'C Binary')
+            writeC80(f, 'C Binary')
                 
         if self.writeTransientSingleFiles:
-                with open(fileName, mode='ab') as f:
-                    writeC80(f, 'BEGIN TIME STEP')
-                    ensightGeometry.writeToFile(f)
-                    writeC80(f, 'END TIME STEP')
+            writeC80(f, 'BEGIN TIME STEP')
+            ensightGeometry.writeToFile(f)
+            writeC80(f, 'END TIME STEP')
         
     def writeVariableTrendChunk(self, ensightVariable, timeAndFileSetNumber=2):
         
-        fileName = ('{:}'*3).format(self.caseFileNamePrefix,
-                                    ensightVariable.name,
-                                    ".var",
-                                    )
+        if ensightVariable.name not in self.fileHandles:
+            fileName = ('{:}'*3).format(self.caseFileNamePrefix,
+                            ensightVariable.name,
+                            ".var")
+            self.fileHandles[ensightVariable.name] = open(fileName, mode='wb')
+        
+        f = self.fileHandles[ensightVariable.name]
+
+        
         if not ensightVariable.name in self.variableTrends:
             self.variableTrends[ensightVariable.name] = timeAndFileSetNumber, ensightVariable.varType
-            with open(fileName ,mode='wb') as f:
-                writeC80(f, 'C Binary')
+            writeC80(f, 'C Binary')
                 
         if self.writeTransientSingleFiles:
-                with open(fileName, mode='ab') as f:
-                    writeC80(f, 'BEGIN TIME STEP')
-                    ensightVariable.writeToFile(f)
-                    writeC80(f, 'END TIME STEP')
+            writeC80(f, 'BEGIN TIME STEP')
+            ensightVariable.writeToFile(f)
+            writeC80(f, 'END TIME STEP')
                     
-    def finalize(self, replaceTimeValuesByEnumeration=True):
+    def finalize(self, replaceTimeValuesByEnumeration=True, closeFileHandes=True):
         caseFName = self.caseFileNamePrefix+'.case'
+        
+        if closeFileHandes:
+            for f in self.fileHandles.values():
+                f.close()
+        
         with open(caseFName ,mode='w') as cf:
             cf.write("FORMAT\n")
             cf.write("type: ensight gold\n")
@@ -412,7 +425,7 @@ class OutputManager(OutputManagerBase):
         # intermediate save of the case
         if self.intermediateSaveInterval:
             if self.intermediateSaveIntervalCounter == self.intermediateSaveInterval:
-                self.ensightCase.finalize()
+                self.ensightCase.finalize(closeFileHandes=False)
                 self.intermediateSaveIntervalCounter = 0
             self.intermediateSaveIntervalCounter +=1
             
