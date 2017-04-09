@@ -32,7 +32,7 @@ auxLibraries = {'bftMechanics' : join(rootDirectory, 'bftMechanics/lib'),}
 cythonElements = {  'uelCPE4' :         ['bftMechanics'],
                     'uelCPE4R':         ['bftMechanics'],
                     'uelCPS4':          ['bftMechanics'], 
-                    'uelCPS4nonLocal':  ['bftMechanics'],
+                    'uelCPS4NonLocal':  ['bftMechanics'],
                                         
                     'uelCPE8RNonLocal': ['bftMechanics'], 
                     'uelCPS8R':         ['bftMechanics'], 
