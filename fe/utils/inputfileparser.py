@@ -75,6 +75,11 @@ typeMappings = {    '*element':         ("definition of element(s)",
                          'maxNumInc':       (int, "maximum number of increments"),
                          'maxIter':         (int, "maximum number of increments"),
                          'data':            (str, "define step actions, which are handled by the corresponding stepaction modules") }),
+    
+                    '*updateConfiguration': ("update an configuration",
+                        {'configuration':   (str, " name of the modified settings category"),
+                         'data':            (str, "key=value pairs"),
+                         }),
                                          
                     '*include': ("(optional) load extra .inp file (fragment), use relative path to current .inp",
                         {'input':           (str, "filename")}),
