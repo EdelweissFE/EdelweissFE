@@ -17,6 +17,7 @@ from  fe.elements.uelcps4nonlocal.element import Element as uelCPS4NonLocal
 # 8 node
 # from  fe.elements.uelcps8r.element import Element as uelCPS8R
 from  fe.elements.uelcps8rnonlocal.element import Element as uelCPS8RNonLocal
+from  fe.elements.uelcps8nonlocal.element import Element as uelCPS8NonLocal
 from  fe.elements.uelcpe8rnonlocal.element import Element as uelCPE8RNonLocal
 
 elementlibrary = {  "uelCPE4" :         uelCPE4,
@@ -26,5 +27,6 @@ elementlibrary = {  "uelCPE4" :         uelCPE4,
                     
                     # "uelCPS8R" :        uelCPS8R,
                     "uelCPS8RNonLocal": uelCPS8RNonLocal,
+                    "uelCPS8NonLocal": uelCPS8NonLocal,
                     "uelCPE8RNonLocal": uelCPE8RNonLocal,
                     }

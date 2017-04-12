@@ -211,7 +211,6 @@ class NIST:
                                UN1[ idcsInPUdU ], 
                                dU [ idcsInPUdU ], 
                                time, dT, pNewDT)
-            
             if pNewDT[0] <= 1.0:
                 break 
             
