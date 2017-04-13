@@ -11,21 +11,24 @@ from collections import OrderedDict, defaultdict
 from fe.elements.node import Node
 from fe.config.elementlibrary import elementlibrary
 from fe.config.phenomena import getFieldSize, domainMapping
+from fe.config.generators import generatorLibrary
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
 from fe.config.solvers import solverLibrary, defaultSolver
 from fe.utils.misc import isInteger
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
-from time import process_time
+from time import time as getCurrentTime
 
 
-def collectNodesAndElementsFromInput(inputfile, domainSize):
+def collectNodesAndElementsFromInput(inputfile, modelInfo):
     """ Collects nodes, elements, node sets and element sets from
     the input file. """
     
+    domainSize = modelInfo['domainSize']
+    
     # returns an OrderedDict of {node label: node} 
-    nodeDefinitions = OrderedDict()
+    nodeDefinitions = modelInfo['nodes']
     for nodeDefs in inputfile['*node']:
         for defLine in nodeDefs['data']:
             label = int(defLine[0])
@@ -34,7 +37,7 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
             nodeDefinitions[label] = Node(label, coordinates, )
 
     # returns an OrderedDict of {element Label: element}   
-    elements = OrderedDict()
+    elements = modelInfo['elements']
     for elDefs in inputfile['*element']:
         elementType = elDefs['type']
         ElementClass = elementlibrary[elementType]
@@ -50,16 +53,9 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
                 node.fields.update( [ (f, True) for f in newEl.fields[iNode] ]  )
             elements[label] = newEl
             
-    #delete all fields of a node, which are not active
-    for node in nodeDefinitions.values():
-        for field, enabled in list(node.fields.items()):
-            if not enabled:
-                del node.fields[field]
-
     # generate dictionary of elementObjects belonging to a specified elementset
     # or generate elementset by generate definition in inputfile
-    elementSets = {}
-    elementSets['all'] = [elements[e] for e in elements]
+    elementSets = modelInfo['elementSets']
     for elSetDefinition in inputfile['*elSet']:
         name = elSetDefinition['elSet']
         
@@ -80,8 +76,7 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
 
     # generate dictionary of nodeObjects belonging to a specified nodeset
     # or generate nodeset by generate definition in inputfile
-    nodeSets = {}
-    nodeSets['all'] = [nodeDefinitions[n] for n in nodeDefinitions]
+    nodeSets = modelInfo['nodeSets']
     for nSetDefinition in inputfile['*nSet']:
         name = nSetDefinition['nSet']
         
@@ -99,7 +94,7 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
                 for nSet in line:
                     nodeSets[name] += nodeSets[nSet]
     
-    return nodeDefinitions, elements, nodeSets, elementSets
+    return modelInfo
     
 def assignSections(inputfile, elementSets):
     """ Assign properties and section properties to all elements by
@@ -126,6 +121,11 @@ def assignFieldDofIndices(nodes, domainSize):
     fieldIdxBase = 0
     fieldIndices = OrderedDict()
     for node in nodes.values():
+            #delete all fields of a node, which are not active
+        for field, enabled in list(node.fields.items()):
+            if not enabled:
+                del node.fields[field]
+                
         for field in node.fields.keys():
             fieldSize = getFieldSize(field, domainSize)
             node.fields[field] = [i + fieldIdxBase for i in range(fieldSize)]
@@ -178,23 +178,35 @@ def finitElementSimulation(inputfile, verbose=False):
     
     identification = "feCore"
     
+    journal = Journal(verbose = verbose)
+    
     # create job dictionary from input file like e.g.
-    # job  = {'data': [], 'inputFile': 'testBeam.inp', 'domain': '2d', 'name': 'testjob'}
     job = inputfile['*job'][0]
 
     modelDomain = job['domain']
     domainSize = domainMapping[modelDomain]
-
-    nodes, elements, nodeSets, elementSets = collectNodesAndElementsFromInput(inputfile, domainSize)
-
-    # assign element properties to section
-    assignSections(inputfile, elementSets)
     
+    modelInfo = {'nodes' :          OrderedDict(),
+                 'elements':        OrderedDict(),
+                 'nodeSets':        {},
+                 'elementSets':     {},
+                 'domainSize' :     domainSize}
+                
+    # compact storage of the model
+    for generatorDefinition in inputfile['*modelGenerator']:
+        gen = generatorDefinition['generator']
+        modelInfo = generatorLibrary[gen](generatorDefinition, modelInfo, journal)
+        
+    modelInfo = collectNodesAndElementsFromInput(inputfile, modelInfo)
+        
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
-    numberOfDofs, fieldIndices = assignFieldDofIndices(nodes, domainSize)
+    numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], domainSize)
     
-    # instance of journal class with default supressFromLevel 3
-    journal = Journal(verbose = verbose)
+    modelInfo['nodeSets']['all'] = list( modelInfo['nodes'].values() )
+    modelInfo['elementSets']['all'] = list ( modelInfo['elements'].values() )
+    
+    assignSections(inputfile, modelInfo['elementSets'])
+    
     journal.message("total size of eq. system: {:}".format(numberOfDofs), identification, 0)
     journal.printSeperationLine()
 
@@ -213,12 +225,7 @@ def finitElementSimulation(inputfile, verbose=False):
     for updateConfig in inputfile['*updateConfiguration']:
         updateConfiguration(updateConfig, jobInfo)
 
-    # compact storage of the model
-    modelInfo = {'nodes' :          nodes,
-                 'elements':        elements,
-                 'nodeSets':        nodeSets,
-                 'elementSets':     elementSets,}
-    
+
     jobName = job.get('name', 'defaultJob')
     # collect all job steps in a list of stepDictionaries
     jobSteps = [step for step in inputfile['*step'] if step.get('jobName', 'defaultJob') == jobName ]
@@ -248,9 +255,9 @@ def finitElementSimulation(inputfile, verbose=False):
                 manager.initializeStep(step, stepActions)
                 
             # solve the step 
-            tic =  process_time()
+            tic =  getCurrentTime()
             success, U, P, time = solver.solveStep(step, time, stepActions, U, P,)
-            toc = process_time()
+            toc = getCurrentTime()
             
             stepTime = toc - tic
             jobInfo['computationTime'] += stepTime
