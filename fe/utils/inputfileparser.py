@@ -29,7 +29,8 @@ typeMappings = {    '*element':         ("definition of element(s)",
                     '*elSet':           ("definition of an element set",
                         {   'elSet':    (str, "name"),
                             'generate': (str, "set True to generate from data line 1: start-element, end-element, step"),
-                            'data':     (int, "Abaqus like element set definiton lines"), }),
+                            'data':     (str, "Abaqus like element set definiton lines"),
+                                        }),
 
                     '*node':            ("definition of nodes",
                         {   
@@ -38,7 +39,8 @@ typeMappings = {    '*element':         ("definition of element(s)",
                     '*nSet':            ("definition of an element set",
                         {   'nSet':     (str, "name"),
                             'generate': (str, "set True to generate from data line 1: start-node, end-node, step"),
-                            'data':     (int, "Abaqus like node set definiton lines"), }),
+                            'data':     (str, "Abaqus like node set definiton lines"), 
+                                        }),
 
                     '*section':         ("definition of an section",
                         {   'name':     (str, "name"),
@@ -139,7 +141,9 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
                 data = lineElements
                 mType = getMapType(keyword, "data")
                 if mType is not None:
-                    if mType == "numpy":
+                    if mType == str:
+                        pass
+                    elif mType == "numpy":
                         data = np.array([x for x in data], dtype = np.double)
                     elif mType == "numpy int":
                         data = np.array([x for x in data], dtype = np.int)

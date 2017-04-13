@@ -35,13 +35,14 @@ cythonElements = {  'uelCPE4' :         ['bftMechanics'],
                     'uelCPS4':          ['bftMechanics'], 
                     'uelCPS4nonLocal':  ['bftMechanics'],
                                         
-                    'uelCPE8RNonLocal': ['bftMechanics'], 
-                    'uelCPS8R':         ['bftMechanics'], 
-                    'uelCPS8RNonLocal': ['bftMechanics'], 
+                    # 'uelCPE8RNonLocal': ['bftMechanics'], 
+                    # 'uelCPS8R':         ['bftMechanics'], 
+                    # 'uelCPS8RNonLocal': ['bftMechanics'], 
                     }
 
 # 3) cython extension module for umat material library
 umats = [
+        "linearElastic",
 #         "Meschke",
          "ModLeon",
          "ModLeonNonLocal",
@@ -85,7 +86,7 @@ for el, elementExtraLibs in cythonElements.items():
     # no filtering, all aux. libs must exist!
     extraLibDirs = [auxLibraries[d] for d in elementExtraLibs] 
     libs = [el]  + elementExtraLibs
-
+    print(el)
     extensions.append( Extension("*",
                             sources=[join("fe/elements", el.lower(), "element.pyx")],
                             language="c++",
