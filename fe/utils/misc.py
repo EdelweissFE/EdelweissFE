@@ -20,5 +20,12 @@ def stringDict(listOfStringAssigments):
         val = parts[1] if len(parts)>1 else 'True'
         resultDict[opt] = val
     return resultDict
+
+def isInteger(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
     
     

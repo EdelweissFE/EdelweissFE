@@ -425,7 +425,7 @@ class OutputManager(OutputManagerBase):
         # intermediate save of the case
         if self.intermediateSaveInterval:
             if self.intermediateSaveIntervalCounter == self.intermediateSaveInterval:
-                self.ensightCase.finalize(closeFileHandes=False)
+                self.ensightCase.finalize(replaceTimeValuesByEnumeration=False, closeFileHandes=False)
                 self.intermediateSaveIntervalCounter = 0
             self.intermediateSaveIntervalCounter +=1
             
@@ -433,5 +433,5 @@ class OutputManager(OutputManagerBase):
         self.finishedSteps += 1
         
     def finalizeJob(self,):
-        self.ensightCase.finalize()
+        self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
         

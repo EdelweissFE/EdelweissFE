@@ -14,6 +14,7 @@ from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
 from fe.config.solvers import solverLibrary, defaultSolver
+from fe.utils.misc import isInteger
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from time import process_time
@@ -61,12 +62,21 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
     elementSets['all'] = [elements[e] for e in elements]
     for elSetDefinition in inputfile['*elSet']:
         name = elSetDefinition['elSet']
-        if elSetDefinition.get('generate', False):
-            generateDef = elSetDefinition['data'][0][0:3]
-            els = [elements[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
+        
+        #decide if entries are labels or existing nodeSets:
+        if isInteger(elSetDefinition['data'][0][0]):
+            elNumbers = [int(num) for line in elSetDefinition['data'] for num in line]
+            if elSetDefinition.get('generate', False):
+                generateDef = elNumbers[0:3]
+                els = [elements[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
+            else:
+                els = [elements[elNum] for elNum  in elNumbers]
+            elementSets[name] = els
         else:
-            els = [elements[elNum] for elNumbers in elSetDefinition['data'] for elNum in elNumbers]
-        elementSets[name] = els
+            elementSets[name]  = []
+            for line in elSetDefinition['data']:
+                for elSet in line:
+                    elementSets[name] += elementSets[elSet]
 
     # generate dictionary of nodeObjects belonging to a specified nodeset
     # or generate nodeset by generate definition in inputfile
@@ -74,12 +84,20 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
     nodeSets['all'] = [nodeDefinitions[n] for n in nodeDefinitions]
     for nSetDefinition in inputfile['*nSet']:
         name = nSetDefinition['nSet']
-        if nSetDefinition.get('generate', False):
-            generateDef = nSetDefinition['data'][0][0:3]
-            nodes = [nodeDefinitions[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
+        
+        if isInteger(nSetDefinition['data'][0][0]):
+            nodes = [int(n) for line in  nSetDefinition['data'] for n in line]
+            if nSetDefinition.get('generate', False):
+                generateDef = nodes #nSetDefinition['data'][0][0:3]
+                nodes = [nodeDefinitions[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
+            else:
+                nodes = [nodeDefinitions[n] for n in nodes]
+            nodeSets[name] = nodes 
         else:
-            nodes = [nodeDefinitions[n] for l in nSetDefinition['data'] for n in l]
-        nodeSets[name] = nodes 
+            nodeSets[name]  = []
+            for line in nSetDefinition['data']:
+                for nSet in line:
+                    nodeSets[name] += nodeSets[nSet]
     
     return nodeDefinitions, elements, nodeSets, elementSets
     
