@@ -20,7 +20,6 @@ compFlags = gccFlags
 
 """
 Definition of libraries, library dirs and additional aux. libraries
-Non-existing libs. are automatically removed!
 """
 
 # 0) rootDirectory where the libraries are located
@@ -33,7 +32,7 @@ auxLibraries = {'bftMechanics' : join(rootDirectory, 'bftMechanics/lib'),}
 cythonElements = {  'uelCPE4' :         ['bftMechanics'],
                     'uelCPE4R':         ['bftMechanics'],
                     'uelCPS4':          ['bftMechanics'], 
-                    'uelCPS4nonLocal':  ['bftMechanics'],
+                    'uelCPS4NonLocal':  ['bftMechanics'],
                                         
                     # 'uelCPE8RNonLocal': ['bftMechanics'], 
                     # 'uelCPS8R':         ['bftMechanics'], 
@@ -65,8 +64,6 @@ Build Extension for the UMAT material library
 """
 
 #filtering
-umats = [umat for umat in umats if exists(join(rootDirectory, umat))]     
-umatAuxLibs = [ libName for libName in umatAuxLibs if exists(auxLibraries[libName]) ]
 extensions = [Extension("*", ["fe/materials/umatlibrary.pyx"],                                    
                                  include_dirs=[numpy.get_include()] + [join(rootDirectory,umat, "include") for umat in umats], 
                                  library_dirs= [join(rootDirectory,umat, "lib") for umat in umats] 
@@ -97,15 +94,23 @@ for el, elementExtraLibs in cythonElements.items():
                             libraries= libs
                             ))
 """
-... And all remaining .pyx files
+The parallel NISTP solver with OpenMP
 """
-
-extensions += [Extension("fe/*/*",
-                sources = ["fe/*/*.pyx"],
+extensions += [Extension("*",
+                sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
                         include_dirs=[ numpy.get_include()],
                         language='c++',
                         extra_compile_args=['-fopenmp'],
                         extra_link_args=['-fopenmp'],)
+                        ]  
+    
+"""
+... And all remaining .pyx files which require no special setup
+"""
+extensions += [Extension("fe/*/*",
+                sources = ["fe/*/*.pyx"],
+                        include_dirs=[numpy.get_include()],
+                        language='c++',)
                         ]
       	
 """

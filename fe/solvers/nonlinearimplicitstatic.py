@@ -204,8 +204,8 @@ class NIST:
             
             el.computeYourself(Ke, 
                                Pe, 
-                               UN1[ idcsInPUdU ] , 
-                               dU [ idcsInPUdU ] , 
+                               UN1[ idcsInPUdU ], 
+                               dU [ idcsInPUdU ], 
                                time, dT, pNewDT)
             
             if pNewDT[0] <= 1.0:
@@ -249,10 +249,10 @@ class NIST:
             i = 1
         
         for field, fieldIndices in self.fieldIndices.items():
-            effortResidual = np.linalg.norm(R[fieldIndices] , np.inf)
-            flowCorrection = np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-            convergedEffort = True if (effortResidual < effortResidualTolerance[field][i])  else False
-            convergedFlow = True if (flowCorrection < flowCorrectionTolerance[field])  else False
+            effortResidual =    np.linalg.norm(R[fieldIndices] , np.inf)
+            flowCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
+            convergedEffort =   True if (effortResidual < effortResidualTolerance[field][i])  else False
+            convergedFlow =     True if (flowCorrection < flowCorrectionTolerance[field])  else False
                                      
             iterationMessage += self.iterationMessageTemplate.format(
                                  effortResidual, 
@@ -290,5 +290,6 @@ class NIST:
             I[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel()
             J[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel('F')
             idxInVIJ += el.sizeKe
+            
         return V, I, J, elementToIndexInVIJMap
              
