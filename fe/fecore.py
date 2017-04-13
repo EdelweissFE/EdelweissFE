@@ -15,6 +15,7 @@ from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
 from fe.config.solvers import solverLibrary, defaultSolver
 from fe.utils.misc import isInteger
+from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from time import process_time
 
@@ -207,6 +208,10 @@ def finitElementSimulation(inputfile, verbose=False):
                
     # add or update additional job info such as inputfile, domain, name
     jobInfo.update(job)
+    
+    jobInfo = loadConfiguration(jobInfo)
+    for updateConfig in inputfile['*updateConfiguration']:
+        updateConfiguration(updateConfig, jobInfo)
 
     # compact storage of the model
     modelInfo = {'nodes' :          nodes,
