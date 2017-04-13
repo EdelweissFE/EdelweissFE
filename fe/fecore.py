@@ -64,13 +64,12 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
         
         #decide if entries are labels or existing nodeSets:
         if isInteger(elSetDefinition['data'][0][0]):
-            # numbers are given
-            elSetDefinition['data'] = np.array([x for x in elSetDefinition['data']], dtype = np.int)
+            elNumbers = [int(num) for line in elSetDefinition['data'] for num in line]
             if elSetDefinition.get('generate', False):
-                generateDef = elSetDefinition['data'][0][0:3]
+                generateDef = elNumbers[0:3]
                 els = [elements[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
             else:
-                els = [elements[elNum] for elNumbers in elSetDefinition['data'] for elNum in elNumbers]
+                els = [elements[elNum] for elNum  in elNumbers]
             elementSets[name] = els
         else:
             elementSets[name]  = []
@@ -86,13 +85,12 @@ def collectNodesAndElementsFromInput(inputfile, domainSize):
         name = nSetDefinition['nSet']
         
         if isInteger(nSetDefinition['data'][0][0]):
-            
-            nSetDefinition['data'] = np.array([x for x in nSetDefinition['data']], dtype = np.int)
+            nodes = [int(n) for line in  nSetDefinition['data'] for n in line]
             if nSetDefinition.get('generate', False):
-                generateDef = nSetDefinition['data'][0][0:3]
+                generateDef = nodes #nSetDefinition['data'][0][0:3]
                 nodes = [nodeDefinitions[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
             else:
-                nodes = [nodeDefinitions[n] for l in nSetDefinition['data'] for n in l]
+                nodes = [nodeDefinitions[n] for n in nodes]
             nodeSets[name] = nodes 
         else:
             nodeSets[name]  = []

@@ -76,7 +76,7 @@ cdef umatType getUmat(str name):
     
     if name == "modleon":
         return umatModLeon
-    if name == "linearElastic":
+    if name == "linearelastic":
         return umatLinearElastic
     # elif name == "modleonplanestress":
         # return umatModLeonPS
