@@ -18,8 +18,12 @@ flowCorrectionTolerance = {             'mechanical' :      1e-5,
                                         'nonlocal damage':  1e-5,
                                         }
                                                                    
-effortResidualTolerance = {             'mechanical' :      (1e-10, 1e-6),
-                                        'nonlocal damage':  (1e-10, 1e-6)
+effortResidualTolerance = {             'mechanical' :      1e-7,
+                                        'nonlocal damage':  1e-7,
+                                        }
+
+effortResidualToleranceAlternative = {  'mechanical' :       1e-3,
+                                        'nonlocal damage':   1e-6,
                                         }
                                         
                                         #domain             #dimensions

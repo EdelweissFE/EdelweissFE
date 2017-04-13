@@ -1,6 +1,6 @@
 *include, input=mesh.inp
-*material, name=modleonNonLocal, id=modleon, statevars=26, yieldflagindex=6, charelemlength=100
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5e1, 1.05, 0.000368, 1
+*material, name=modleonNonLocal, id=modleon, statevars=5, yieldflagindex=6, charelemlength=100
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 2, 1.05, 1e-3, 1
 
 *elSet, elSet=weak
 158
@@ -12,6 +12,11 @@ weak
 
 *job, name=cpe4job, domain=2d, solver=NISTParallel
 
+*updateConfiguration, configuration=flowCorrectionTolerance
+mechanical=1e-6
+*updateConfiguration, configuration=effortResidualTolerance
+mechanical=1e-6
+
 *output, type=nodesetmonitor, jobName=cpe4job
 nSet=top, field=mechanical, type=P, result=sum, direction=2
 
@@ -20,12 +25,12 @@ create=perNode,    elSet=all, field=mechanical, type=U, name=displacement
 create=perNode,    elSet=all, field=nonlocal damage, type=U, name=alphaDNonLocal
 create=perElement, elSet=all, field=mechanical, result=stress, location=1
 create=perElement, elSet=all, field=mechanical, result=strain, location=1
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=1, name=alphaP
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=3, name=alphaD
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
+create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=0, name=alphaP
+create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=2, name=alphaD
+create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=4, name=omega
 
 *step, jobName=cpe4job, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, 
 NISTSolverOptions, extrapolation=linear, numThreads=2
 dirichlet, name=1,  nSet=1,   field=mechanical, 1=0.0, 2=0.0
 dirichlet, name=bottom, nSet=bottom,  field=mechanical, 2=0,
-dirichlet, name=top, nSet=top, field=mechanical, 2=-.5
+dirichlet, name=top, nSet=top, field=mechanical, 2=-2

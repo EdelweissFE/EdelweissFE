@@ -9,7 +9,7 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
-from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
+#from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
@@ -31,6 +31,10 @@ class NIST:
         self.nodeSets =     modelInfo['nodeSets']
         self.elementSets =  modelInfo['elementSets']
         self.fieldIndices = jobInfo['fieldIndices']
+        
+        self.flowCorrectionTolerances = jobInfo['flowCorrectionTolerance']
+        self.effortResidualTolerances = jobInfo['effortResidualTolerance']
+        self.effortResidualTolerancesAlt = jobInfo['effortResidualToleranceAlternative']
         
         # create headers for formatted output of solver
         nFields = len(self.fieldIndices.keys())
@@ -244,15 +248,15 @@ class NIST:
         convergedAtAll  = True
         
         if iterationCounter < 15: # standard tolerance set
-            i = 0
+            effortResidualTolerances = self.effortResidualTolerances
         else: # alternative tolerance set
-            i = 1
+            effortResidualTolerances = self.effortResidualTolerancesAlt
         
         for field, fieldIndices in self.fieldIndices.items():
             effortResidual =    np.linalg.norm(R[fieldIndices] , np.inf)
             flowCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-            convergedEffort =   True if (effortResidual < effortResidualTolerance[field][i])  else False
-            convergedFlow =     True if (flowCorrection < flowCorrectionTolerance[field])  else False
+            convergedEffort =   True if (effortResidual < effortResidualTolerances[field])  else False
+            convergedFlow =     True if (flowCorrection < self.flowCorrectionTolerances[field])  else False
                                      
             iterationMessage += self.iterationMessageTemplate.format(
                                  effortResidual, 
