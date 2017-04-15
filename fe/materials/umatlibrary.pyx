@@ -7,79 +7,16 @@ Created on Sat Jan  21 20:17:58 2017
 """
 from libcpp.string cimport string
 
-
-cdef public bint notificationToMSG(const string cppString):
-#    print(cppString.decode('UTF-8'))
+cdef public bint notificationToMSG(const string* cppString):
+    # printing is not possible, as the GIL is usually released for parallel computing
     return True
     
 cdef public bint warningToMSG(const string cppString):
-#    print(cppString.decode('UTF-8'))
+    # printing is not possible, as the GIL is usually released for parallel computing
     return False
 
-cdef extern from "umatModLeon.h":
-    void umatModLeon(       double[],double[],double[],double&,double&,
-                            double&,double&,double[],double[],double&, 
-                            const double*,const double*,const double*,
-                            const double&,const double&,const double&,
-                            const double*,const double*,
-                            const char*,
-                            const int&,const int&,const int&,
-                            const int&,const double*,const int&,
-                            const double*,const double*,double&,
-                            const double&,const double*,const double*,
-                            const int&,const int&,const int&,const int&,
-                            const int*,const int&,const int)
-    
-cdef extern from "umatModLeonNonLocal.h":
-    void umatModLeonNonLocal(double[],double[],double[],double&,double&,
-                            double&,double&,double[],double[],double&, 
-                            const double*,const double*,const double*,
-                            const double&,const double&,const double&,
-                            const double*,const double*,
-                            const char*,
-                            const int&,const int&,const int&,
-                            const int&,const double*,const int&,
-                            const double*,const double*,double&,
-                            const double&,const double*,const double*,
-                            const int&,const int&,const int&,const int&,
-                            const int*,const int&,const int)
-    
-cdef extern from "umatLinearElastic.h":
-    void umatLinearElastic(double[],double[],double[],double&,double&,
-                            double&,double&,double[],double[],double&, 
-                            const double*,const double*,const double*,
-                            const double&,const double&,const double&,
-                            const double*,const double*,
-                            const char*,
-                            const int&,const int&,const int&,
-                            const int&,const double*,const int&,
-                            const double*,const double*,double&,
-                            const double&,const double*,const double*,
-                            const int&,const int&,const int&,const int&,
-                            const int*,const int&,const int)
-        
-#cdef extern from "umatModLeonPS.h":
-#     void umatModLeonPS(     double[],double[],double[],double&,double&,
-#                             double&,double&,double[],double[],double&, 
-#                             const double*,const double*,const double*,
-#                             const double&,const double&,const double&,
-#                             const double*,const double*,
-#                             const char*,
-#                             const int&,const int&,const int&,
-#                             const int&,const double*,const int&,
-#                             const double*,const double*,double&,
-#                             const double&,const double*,const double*,
-#                             const int&,const int&,const int&,const int&,
-#                             const int*,const int&,const int)    
+cdef extern from "userLibrary.h" namespace "userLibrary":
+    pUmatType getUmatByName(const string& name)
 
-cdef umatType getUmat(str name):
-    
-    if name == "modleon":
-        return umatModLeon
-    if name == "linearelastic":
-        return umatLinearElastic
-    # elif name == "modleonplanestress":
-        # return umatModLeonPS
-    elif name == "modleonnonlocal":
-        return umatModLeonNonLocal
-    
+cdef pUmatType getUmat(str name):
+    return getUmatByName(name.upper().encode('UTF-8'))

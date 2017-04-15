@@ -29,47 +29,56 @@ rootDirectory = expanduser("~/constitutiveModelling")
 auxLibraries = {'bftMechanics' : join(rootDirectory, 'bftMechanics/lib'),}
 
 # 2) cython extension modules for elements
-cythonElements = {  'uelCPE4' :         ['bftMechanics'],
-                    'uelCPE4R':         ['bftMechanics'],
-                    'uelCPS4':          ['bftMechanics'], 
-                    'uelCPS4NonLocal':  ['bftMechanics'],
+cythonElements = {  
+#                    'uelCPE4' :         ['bftMechanics'],
+#                    'uelCPE4R':         ['bftMechanics'],
+                    'uelCPS4':          ['bftUserLibrary'], 
+#                    'uelCPS4NonLocal':  ['bftMechanics'],
                                         
-                    'uelCPE8RNonLocal': ['bftMechanics'], 
-                    'uelCPS8R':         ['bftMechanics'], 
-                    'uelCPS8RNonLocal': ['bftMechanics'], 
-                    'uelCPS8NonLocal':  ['bftMechanics'], 
+#                    'uelCPE8RNonLocal': ['bftMechanics'], 
+#                    'uelCPS8R':         ['bftMechanics'], 
+#                    'uelCPS8RNonLocal': ['bftMechanics'], 
+#                    'uelCPS8NonLocal':  ['bftMechanics'], 
                     }
 
 # 3) cython extension module for umat material library
-umats = [
-        "linearElastic",
-#         "Meschke",
-         "ModLeon",
-         "ModLeonNonLocal",
-#         "ModLeonPlaneStress",
-#         "ModLeonPlaneStressWrapped",
-#         "ModLeonAdaptive",
-#         "ModLeonAnalytical",
-#         "ModLeonSemiExplicit",
-#         "ModLeonSemiExplicitAdaptive",
-#         "ShotLeon",
-#         "SchaedlichSchweiger",
-#         "Schuetz",
-#         "linearElasticSolidificationCreep",
-#         "Unteregger",
-        ]
-umatAuxLibs = ['bftMechanics',]
+#umats = [
+##        "linearElastic",
+##         "Meschke",
+#         "ModLeon",
+#         "ModLeonNonLocal",
+##         "ModLeonPlaneStress",
+##         "ModLeonPlaneStressWrapped",
+##         "ModLeonAdaptive",
+##         "ModLeonAnalytical",
+##         "ModLeonSemiExplicit",
+##         "ModLeonSemiExplicitAdaptive",
+##         "ShotLeon",
+##         "SchaedlichSchweiger",
+##         "Schuetz",
+##         "linearElasticSolidificationCreep",
+##         "Unteregger",
+#        ]
+#umatAuxLibs = ['bftMechanics',]
 
 """
 Build Extension for the UMAT material library
 """
 
 #filtering
+#extensions = [Extension("*", ["fe/materials/umatlibrary.pyx"],                                    
+#                                 include_dirs=[numpy.get_include()] + [join(rootDirectory,umat, "include") for umat in umats], 
+#                                 library_dirs= [join(rootDirectory,umat, "lib") for umat in umats] 
+#                                     + [auxLibraries[lib] for lib in umatAuxLibs],
+#                                 libraries= [umat for umat in umats]+[lib for lib in umatAuxLibs],    
+#                                 language="c++",
+#                                 extra_compile_args=compFlags)]
+
 extensions = [Extension("*", ["fe/materials/umatlibrary.pyx"],                                    
-                                 include_dirs=[numpy.get_include()] + [join(rootDirectory,umat, "include") for umat in umats], 
-                                 library_dirs= [join(rootDirectory,umat, "lib") for umat in umats] 
-                                     + [auxLibraries[lib] for lib in umatAuxLibs],
-                                 libraries= [umat for umat in umats]+[lib for lib in umatAuxLibs],    
+                                 include_dirs=[numpy.get_include()] + [join(rootDirectory,'bftUserLibrary', "include")], 
+                                 library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                                 runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                                 libraries= ['bftUserLibrary'],
                                  language="c++",
                                  extra_compile_args=compFlags)]
 
@@ -82,18 +91,28 @@ cythonElements= {el : elExtraLibs for el, elExtraLibs in cythonElements.items() 
 for el, elementExtraLibs in cythonElements.items():
     
     # no filtering, all aux. libs must exist!
-    extraLibDirs = [auxLibraries[d] for d in elementExtraLibs] 
-    libs = [el]  + elementExtraLibs
-    print(el)
+#    extraLibDirs = [auxLibraries[d] for d in elementExtraLibs] 
+#    libs = [el]  + elementExtraLibs
+    
+#    extensions.append( Extension("*",
+#                            sources=[join("fe/elements", el.lower(), "element.pyx")],
+#                            language="c++",
+#                            extra_compile_args=compFlags,
+#                            include_dirs=[
+#                                join(rootDirectory,el, "include"), numpy.get_include()],
+#                            library_dirs= [join(rootDirectory,el, "lib")] + extraLibDirs,
+#                            ))
+    
     extensions.append( Extension("*",
-                            sources=[join("fe/elements", el.lower(), "element.pyx")],
-                            language="c++",
-                            extra_compile_args=compFlags,
-                            include_dirs=[
-                                join(rootDirectory,el, "include"), numpy.get_include()],
-                            library_dirs= [join(rootDirectory,el, "lib")] + extraLibDirs,
-                            libraries= libs
-                            ))
+                        sources=[join("fe/elements", el.lower(), "element.pyx")],
+                        language="c++",
+                        extra_compile_args=compFlags,
+                        
+                        include_dirs=[
+                            join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()],
+                         runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                         libraries= ['bftUserLibrary'],
+                        ))
 """
 The parallel NISTP solver with OpenMP
 """

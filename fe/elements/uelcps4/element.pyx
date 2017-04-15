@@ -1,5 +1,6 @@
 import numpy as np
-from fe.materials.umatlibrary cimport umatType, getUmat
+from fe.materials.umatlibrary cimport pUmatType, getUmat
+from fe.config.ueltypedefs cimport pSimpleUelWithUmatType
 cimport numpy as np
 from libcpp.string cimport string
 
@@ -11,67 +12,16 @@ cdef public bint notificationToMSG(const string cppString):
 cdef public bint warningToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
     return False
-
-cdef extern from "uelCPS4SimpleUmat.h" nogil:
-    void uelCPS4SimpleUmat(
-            double rightHandSide[],           
-            double KMatrix[],                            
-            double stateVars[],                                         
-            const int &nStateVars, 
-            const double properties[],
-            const int &nProperties,
-            const double coordinates[],                 
-            const double U_[],                                  
-            const double dU_[],       
-            const double time[2],                                       
-            const double &dTime,                                        
-            const int& elementNumber,                  
-            double &pNewdT,         
-            const int integerProperties[],
-            const int &nIntegerProperties, 
-            umatType umat,
-            int nStateVarsUmat)
-    
-cdef void callUel(
-        double[::1] Ke,
-        double[::1] Pe,
-        double[::1] stateVars,
-        double[::1] UNew,
-        double[::1] dU,
-        double[::1] coordinates,
-        double[::1] properties,
-        int[::1] intProperties,
-        double[::1] pNewdT,
-        double[::1] time,
-        double dTime,
-        int elNumber,
-        umatType umat,
-        int nStateVarsUmat) nogil:
-    
-    uelCPS4SimpleUmat(    &Pe[0],           
-            &Ke[0],                            
-            &stateVars[0],                                         
-            stateVars.shape[0], 
-            &properties[0],
-            properties.shape[0],
-            &coordinates[0],                 
-            &UNew[0],                                  
-            &dU[0],       
-            &time[0],                                       
-            dTime,                                        
-            elNumber,                  
-            pNewdT[0],         
-            &intProperties[0],
-            intProperties.shape[0], 
-            umat,
-            nStateVarsUmat
-            )
+              
+cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
+    pSimpleUelWithUmatType getSimpleUelWithUmatById(int id)
 
 cdef class Element:
     fields =                [["mechanical"],
                              ["mechanical"],
                              ["mechanical"],
                              ["mechanical"],] # fields identical for each node
+                             
     nNodes =                4
     nGaussPt =              4
     nDofPerEl =             8
@@ -83,7 +33,8 @@ cdef class Element:
     cdef public int elNumber
     
     cdef double[::1] uelProperties, stateVars, stateVarsTemp, nodeCoordinates
-    cdef umatType umat
+    cdef pUmatType umat
+    cdef pSimpleUelWithUmatType uel
     cdef int nStateVars, nStateVarsUmat
     
     cdef int[::1] intProperties
@@ -100,6 +51,7 @@ cdef class Element:
         self.stateVars = np.zeros(self.nStateVars)
         self.stateVarsTemp = np.zeros(self.nStateVars)
         self.umat = getUmat(umatName.lower())
+        self.uel = getSimpleUelWithUmatById(402)
         self.intProperties = np.empty(0, dtype=np.intc)#self.intProperties
         
     def computeYourself(self, 
@@ -113,7 +65,7 @@ cdef class Element:
         
         with nogil: # release the gil for parallel computing
             self.stateVarsTemp[:] = self.stateVars
-            callUel(Ke,Pe,
+            self.callUel(Ke,Pe,
                 self.stateVarsTemp,
                 U,
                 dU,
@@ -126,7 +78,42 @@ cdef class Element:
                 self.elNumber,
                 self.umat,
                 self.nStateVarsUmat)
-    
+
+    cdef void callUel(self,     
+        double[::1] Ke,
+        double[::1] Pe,
+        double[::1] stateVars,
+        double[::1] UNew,
+        double[::1] dU,
+        double[::1] coordinates,
+        double[::1] properties,
+        int[::1] intProperties,
+        double[::1] pNewdT,
+        double[::1] time,
+        double dTime,
+        int elNumber,
+        pUmatType umat,
+        int nStateVarsUmat) nogil:
+        
+            self.uel(&Pe[0],           
+                    &Ke[0],                            
+                    &stateVars[0],                                         
+                    stateVars.shape[0], 
+                    &properties[0],
+                    properties.shape[0],
+                    &coordinates[0],                 
+                    &UNew[0],                                  
+                    &dU[0],       
+                    &time[0],                                       
+                    dTime,                                        
+                    elNumber,                  
+                    pNewdT[0],         
+                    &intProperties[0],
+                    intProperties.shape[0], 
+                    umat,
+                    nStateVarsUmat
+                    )
+            
     def acceptLastState(self,):
         self.stateVars[:] = self.stateVarsTemp
         
