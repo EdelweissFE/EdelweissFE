@@ -14,8 +14,8 @@ from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.generators import generatorLibrary
 from fe.config.stepactions import stepActionModules
 from fe.config.outputmanagers import outputManagersLibrary
-from fe.config.solvers import solverLibrary, defaultSolver
-from fe.utils.misc import isInteger
+from fe.config.solvers import solverLibrary
+from fe.utils.misc import isInteger, filterByJobName
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from time import time as getCurrentTime
@@ -228,19 +228,18 @@ def finitElementSimulation(inputfile, verbose=False):
 
     jobName = job.get('name', 'defaultJob')
     # collect all job steps in a list of stepDictionaries
-    jobSteps = [step for step in inputfile['*step'] if step.get('jobName', 'defaultJob') == jobName ]
+    jobSteps = filterByJobName(inputfile['*step'], jobName)
                 
     # collect all output managers in a list of objects     
     outputmanagers = []
-    for outputDef in [output for output in inputfile['*output']     
-                                if output.get('jobName', 'defaultJob') == jobName ]:
+    for outputDef in filterByJobName(inputfile['*output'], jobName):
         OutputManager = outputManagersLibrary[outputDef['type'].lower()]
         managerName = outputDef.get('name', 'defaultName')
         definitionLines = outputDef['data']
         outputmanagers.append(OutputManager(managerName, definitionLines, jobInfo, modelInfo, journal))
     
     # generate an instance of the desired solver
-    Solver =    solverLibrary.get(job['solver'], defaultSolver)
+    Solver =    solverLibrary[job.get('solver','NIST')]
     solver =    Solver(jobInfo, modelInfo, journal, outputmanagers)
     U, P =      solver.initialize()
     stepActions = {}

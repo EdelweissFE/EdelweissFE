@@ -60,7 +60,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                                  nG[2*x+1,2*y], nG[2*x+2,2*y+1], nG[2*x+1,2*y+2], nG[2*x, 2*y+1],
                                  ] , currentElementLabel  ) 
                 
-            modelInfo['elements'][ currentElementLabel] =newEl
+            modelInfo['elements'][ currentElementLabel] = newEl
             for i, node in enumerate(newEl.nodes):
                 node.fields.update( [ (f, True) for f in newEl.fields[i] ]  )
             currentElementLabel +=1

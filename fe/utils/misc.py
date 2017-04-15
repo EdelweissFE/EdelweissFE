@@ -28,4 +28,5 @@ def isInteger(s):
     except ValueError:
         return False
     
-    
+def filterByJobName(canditates, jobName):
+    return [cand for cand in canditates if cand.get('jobName', 'defaultJob') == jobName]    

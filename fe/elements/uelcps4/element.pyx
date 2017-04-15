@@ -21,13 +21,13 @@ cdef class Element:
                              ["mechanical"],
                              ["mechanical"],
                              ["mechanical"],] # fields identical for each node
-                             
     nNodes =                4
     nGaussPt =              4
     nDofPerEl =             8
     sizeKe =                nDofPerEl * nDofPerEl
     dofIndicesPermutation  = np.arange(0, 8, 1)
     ensightType =           "quad4"
+    uelIdentification =     402
     
     cdef public nodes, 
     cdef public int elNumber
@@ -51,7 +51,7 @@ cdef class Element:
         self.stateVars = np.zeros(self.nStateVars)
         self.stateVarsTemp = np.zeros(self.nStateVars)
         self.umat = getUmat(umatName.lower())
-        self.uel = getSimpleUelWithUmatById(402)
+        self.uel = getSimpleUelWithUmatById(self.uelIdentification)
         self.intProperties = np.empty(0, dtype=np.intc)#self.intProperties
         
     def computeYourself(self, 
@@ -95,24 +95,11 @@ cdef class Element:
         pUmatType umat,
         int nStateVarsUmat) nogil:
         
-            self.uel(&Pe[0],           
-                    &Ke[0],                            
-                    &stateVars[0],                                         
-                    stateVars.shape[0], 
-                    &properties[0],
-                    properties.shape[0],
-                    &coordinates[0],                 
-                    &UNew[0],                                  
-                    &dU[0],       
-                    &time[0],                                       
-                    dTime,                                        
-                    elNumber,                  
-                    pNewdT[0],         
-                    &intProperties[0],
-                    intProperties.shape[0], 
-                    umat,
-                    nStateVarsUmat
-                    )
+            self.uel(&Pe[0], &Ke[0], &stateVars[0], stateVars.shape[0], &properties[0], 
+                     properties.shape[0], &coordinates[0], &UNew[0], &dU[0], &time[0], 
+                     dTime, elNumber, pNewdT[0], &intProperties[0], intProperties.shape[0], 
+                     umat, nStateVarsUmat)
+
             
     def acceptLastState(self,):
         self.stateVars[:] = self.stateVarsTemp
