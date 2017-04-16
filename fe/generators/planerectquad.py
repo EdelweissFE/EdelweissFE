@@ -7,7 +7,7 @@ Created on Wed Apr 12 15:41:51 2017
 """
 
 from fe.elements.node import Node
-from fe.config.elementlibrary import elementlibrary
+from fe.config.elementlibrary import getElementByName
 from fe.utils.misc import stringDict 
 
 import numpy as np
@@ -24,7 +24,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     l = float(options.get('l', 1.0))
     nX =int(options.get('nX', 10))
     nY =int(options.get('nY', 10))
-    elType = elementlibrary[options['elType']]
+    elType = getElementByName(options['elType'])
     
     
     if elType.nNodes == 4:

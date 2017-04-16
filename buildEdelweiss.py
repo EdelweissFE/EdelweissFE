@@ -26,8 +26,7 @@ Definition of libraries, library dirs and additional aux. libraries
 rootDirectory = expanduser("~/constitutiveModelling")
 
 # 2) cython extension modules for elements
-bftUserLibraryElements = [  
-                            'uelCPE4',
+bftUserLibraryElements = [  'uelCPE4',
                             'uelCPE4R',
                             'uelCPS4',
                             'uelCPS4NonLocal',
