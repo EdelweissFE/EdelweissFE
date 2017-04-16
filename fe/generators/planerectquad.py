@@ -7,7 +7,7 @@ Created on Wed Apr 12 15:41:51 2017
 """
 
 from fe.elements.node import Node
-from fe.config.elementlibrary import elementlibrary
+from fe.config.elementlibrary import getElementByName
 from fe.utils.misc import stringDict 
 
 import numpy as np
@@ -24,7 +24,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     l = float(options.get('l', 1.0))
     nX =int(options.get('nX', 10))
     nY =int(options.get('nY', 10))
-    elType = elementlibrary[options['elType']]
+    elType = getElementByName(options['elType'])
     
     
     if elType.nNodes == 4:
@@ -60,7 +60,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                                  nG[2*x+1,2*y], nG[2*x+2,2*y+1], nG[2*x+1,2*y+2], nG[2*x, 2*y+1],
                                  ] , currentElementLabel  ) 
                 
-            modelInfo['elements'][ currentElementLabel] =newEl
+            modelInfo['elements'][ currentElementLabel] = newEl
             for i, node in enumerate(newEl.nodes):
                 node.fields.update( [ (f, True) for f in newEl.fields[i] ]  )
             currentElementLabel +=1

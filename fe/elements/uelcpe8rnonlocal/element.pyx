@@ -32,7 +32,7 @@ cdef class Element:
     sizeKe =                nDofPerEl * nDofPerEl
     dofIndicesPermutation = np.array([0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22] + [2,5,8,11,14,17,20,23], dtype=int)  
     ensightType =           "quad8"
-    uelIdentification =     815
+    uelIdentification =     818
     
     cdef public nodes, 
     cdef public int elNumber
@@ -104,7 +104,6 @@ cdef class Element:
                      properties.shape[0], &coordinates[0], &UNew[0], &dU[0], &time[0], 
                      dTime, elNumber, pNewdT[0], &intProperties[0], intProperties.shape[0], 
                      umat, nStateVarsUmat)
-
     
     def acceptLastState(self,):
         self.stateVars[:] = self.stateVarsTemp
@@ -112,11 +111,9 @@ cdef class Element:
     def resetToLastValidState(self,):
         pass
     
-    resultIndices = {
-                    'sdv':    lambda nStateVarsUmat,kw : kw['indices'] +(int(kw['location'])-1)*(nStateVarsUmat+12),
-                    'stress': lambda nStateVarsUmat,kw : np.arange(6) + (int(kw['location'])-1)*(nStateVarsUmat+12) + nStateVarsUmat,
-                    'strain': lambda nStateVarsUmat,kw : np.arange(6) + (int(kw['location'])-1)*(nStateVarsUmat+12) + nStateVarsUmat +6,
-                    'all':     lambda nStateVarsUmat,kw: np.arange(4*(nStateVarsUmat+12))}  
+    resultIndices = {'stress': lambda nStateVarsUmat,kw, : np.arange(6) + (kw['location'])*nStateVarsUmat ,
+                    'strain': lambda nStateVarsUmat,kw, : np.arange(6) + (kw['location'])*nStateVarsUmat +6,
+                    'sdv':    lambda nStateVarsUmat,kw, : kw['indices'] +((kw['location'])-1)*nStateVarsUmat }  
                     
     def getResult(self, **kw):    
         stateVarIndices = self.resultIndices[kw['result']](self.nStateVarsUmat, kw)

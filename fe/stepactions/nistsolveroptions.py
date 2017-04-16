@@ -7,7 +7,7 @@ Created on Tue Jan 24 19:35:09 2017
 """
 from fe.utils.misc import stringDict
 
-def generateNISTSolverOptions(actionDefinitionLines, jobInfo, modelInfo, time, 
+def generateAction(actionDefinitionLines, jobInfo, modelInfo, time, 
                                                                stepActions, 
                                                                U, P):
     oldOptions = stepActions.get('NISTSolverOptions', {})

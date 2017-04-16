@@ -6,7 +6,7 @@ Created on Sat Jan  21 20:28:33 2017
 @author: matthias
 """
 
-ctypedef void (*umatType)( double[],double[],double[],double&,double&,
+ctypedef void (*pUmatType)( double[],double[],double[],double&,double&,
                             double&,double&,double[],double[],double&, 
                             const double*,const double*,const double*,
                             const double&,const double&,const double&,
@@ -19,5 +19,4 @@ ctypedef void (*umatType)( double[],double[],double[],double&,double&,
                             const int&,const int&,const int&,const int&,
                             const int*,const int&,const int)
 
-cdef umatType getUmat(str name)
-
+cdef pUmatType getUmat(str name)

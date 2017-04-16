@@ -27,12 +27,12 @@ cdef class Element:
                              ["mechanical", "nonlocal damage"],] # fields identical for each node
     
     nNodes =                8
-    nGaussPt =              4
+    nGaussPt =              9
     nDofPerEl =             24
     sizeKe =                nDofPerEl * nDofPerEl
     dofIndicesPermutation = np.array([0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22] + [2,5,8,11,14,17,20,23], dtype=int)  
     ensightType =           "quad8"
-    uelIdentification =     815
+    uelIdentification =     812
     
     cdef public nodes, 
     cdef public int elNumber
@@ -104,7 +104,6 @@ cdef class Element:
                      properties.shape[0], &coordinates[0], &UNew[0], &dU[0], &time[0], 
                      dTime, elNumber, pNewdT[0], &intProperties[0], intProperties.shape[0], 
                      umat, nStateVarsUmat)
-
     
     def acceptLastState(self,):
         self.stateVars[:] = self.stateVarsTemp

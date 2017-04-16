@@ -8,7 +8,7 @@ Created on Mon Jan 23 13:03:09 2017
 from fe.utils.misc import stringDict
 import numpy as np
 
-def generateDirichlet(actionDefinitionLines, jobInfo, modelInfo, time, 
+def generateAction(actionDefinitionLines, jobInfo, modelInfo, time, 
                                                                stepActions, 
                                                                U, P):
     """ create dirichlet dictionary with node boundary condition in 
