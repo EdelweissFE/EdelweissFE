@@ -18,10 +18,13 @@ if __name__ == "__main__":
     
     fileList=args.file
     inputFiles = []
-    
     #1 ) parse all files
-    for file in fileList:      
-        inputFiles.append(parseInputFile(file))
+    try:
+        for file in fileList:     
+                inputFiles.append(parseInputFile(file))
+    except (KeyError, ValueError) as e:
+        print(e)
+        exit(1)
         
     #2 ) all computations and imports
     for inputFile in inputFiles:

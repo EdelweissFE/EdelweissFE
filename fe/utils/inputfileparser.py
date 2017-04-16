@@ -9,104 +9,94 @@ import numpy as np
 from os.path import dirname, join
 import textwrap
 
-dTypes = {int : "integer",
-          float: "float",
-          str: "string",          
-          "numpy": "numpy array",
-          "numpy int": "numpy int array",
+typeMappings = {  
+            "integer": int,
+            "float" : float,
+            "string" : lambda x:x, 
+            "numpy float array": lambda x: np.asarray( x, dtype=np.double),
+            "numpy integer array":lambda x: np.asarray( x, dtype=np.int), 
           }
     
-
-# dictionary of possible input file entries, syntax:
-#   typeMappings['kw'] = tuple('definition', dict(tuple(dataType, string))
-#   e.g. get first keyword:
-#   typeMappings['kw'][1]['type']
-
-typeMappings = {    '*element':         ("definition of element(s)",
-                        {   'type':     (str, "assign one of the types definied in the elementlibrary"),
-                            'data':     ("numpy int", "Abaqus like element definiton lines"), }),
+inputLanguage = {    '*element':         ("definition of element(s)",
+                        {   'type':     ('string', "assign one of the types definied in the elementlibrary"),
+                            'data':     ('numpy integer array', "Abaqus like element definiton lines"), }),
 
                     '*elSet':           ("definition of an element set",
-                        {   'elSet':    (str, "name"),
-                            'generate': (str, "set True to generate from data line 1: start-element, end-element, step"),
-                            'data':     (str, "Abaqus like element set definiton lines"),
+                        {   'elSet':    ('string', "name"),
+                            'generate': ('string', "set True to generate from data line 1: start-element, end-element, step"),
+                            'data':     ('string', "Abaqus like element set definiton lines"),
                                         }),
 
                     '*node':            ("definition of nodes",
                         {   
-                            'data':     ("numpy", "Abaqus like node definiton lines: label, x, [y], [z]"), }),
+                            'data':     ('numpy float array', "Abaqus like node definiton lines: label, x, [y], [z]"), }),
 
                     '*nSet':            ("definition of an element set",
-                        {   'nSet':     (str, "name"),
-                            'generate': (str, "set True to generate from data line 1: start-node, end-node, step"),
-                            'data':     (str, "Abaqus like node set definiton lines"), 
+                        {   'nSet':     ('string', "name"),
+                            'generate': ('string', "set True to generate from data line 1: start-node, end-node, step"),
+                            'data':     ('string', "Abaqus like node set definiton lines"), 
                                         }),
 
                     '*section':         ("definition of an section",
-                        {   'name':     (str, "name"),
-                            'thickness':(float, "associated element set"),
-                            'material': (str, "associated id of defined material"), 
-                            'data':     (str, "list of associated element sets"),
-                            'type':     (str, "type of the section")}),
+                        {   'name':     ('string', "name"),
+                            'thickness':('float', "associated element set"),
+                            'material': ('string', "associated id of defined material"), 
+                            'data':     ('string', "list of associated element sets"),
+                            'type':     ('string', "type of the section")}),
 
                     '*material':        ("definition of a material",
-                        { 'name':       (str, "name of the property"),
-                         'id':          (str, "name of the property"),
-                         'statevars':   (int, "number of statevars"),
-                         'data':        ("numpy", "material properties, multiline possible")}),
+                        { 'name':       ('string', "name of the property"),
+                         'id':          ('string', "name of the property"),
+                         'statevars':   ('integer', "number of statevars"),
+                         'data':        ('numpy float array', "material properties, multiline possible")}),
                                          
                      '*output':        ("define an output module",
                         { 
-                         'name':        (str, "(optional), name of manager, standard=None"),
-                         'jobName':     (str, "(optional), name of job, standard=defaultJob"),
-                         'type':        (str, "output module "),
-                         'data':        (str, "defintions lines for the output module")}),
+                         'name':        ('string', "(optional), name of manager, standard=None"),
+                         'jobName':     ('string', "(optional), name of job, standard=defaultJob"),
+                         'type':        ('string', "output module "),
+                         'data':        ('string', "defintions lines for the output module")}),
                                          
                     '*job':                 ("definition of an analysis job",
-                        {'name':            (str, "(optional) name of job, standard = defaultJob"),
-                         'solver':          (str, "(optional) define solver, standard = NIST"),
-                         'domain':          (str, "define spatial domain: 1d, 2d, 3d"),
-                         'startTime':       (float,"(optional) start time of job, standard = 0.0"), 
+                        {'name':            ('string', "(optional) name of job, standard = defaultJob"),
+                         'solver':          ('string', "(optional) define solver, standard = NIST"),
+                         'domain':          ('string', "define spatial domain: 1d, 2d, 3d"),
+                         'startTime':       ('float',"(optional) start time of job, standard = 0.0"), 
                          }),
                                          
                      '*step':               ("definition of *job steps", 
-                        {'stepLength':      (float, "time period of step"),
-                         'jobName':         (str, "(optional), name of job, standard=defaultJob"),
-                         'maxInc':          (float, "maximum size of increment"),
-                         'minInc':          (float, "minimum size of increment"),
-                         'maxNumInc':       (int, "maximum number of increments"),
-                         'maxIter':         (int, "maximum number of increments"),
-                         'data':            (str, "define step actions, which are handled by the corresponding stepaction modules") }),
+                        {'stepLength':      ('float', "time period of step"),
+                         'jobName':         ('string', "(optional), name of job, standard=defaultJob"),
+                         'maxInc':          ('float', "maximum size of increment"),
+                         'minInc':          ('float', "minimum size of increment"),
+                         'maxNumInc':       ('integer', "maximum number of increments"),
+                         'maxIter':         ('integer', "maximum number of increments"),
+                         'data':            ('string', "define step actions, which are handled by the corresponding stepaction modules") }),
     
                     '*updateConfiguration': ("update an configuration",
-                        {'configuration':   (str, " name of the modified settings category"),
-                         'data':            (str, "key=value pairs"),
+                        {'configuration':   ('string', " name of the modified settings category"),
+                         'data':            ('string', "key=value pairs"),
                          }),
-                    '*modelGenerator': ("update an configuration",
-                        {'generator':   (str, " name of the modified settings category"),
-                         'name':   (str, " name of the modified settings category"),
-#                         'data':            (str, "key=value pairs"),
+
+                    '*modelGenerator':      ("define a model generator, loaded from a module",
+                        {'generator':       ('string', "generator module"),
+                         'name':            ('string', "(optional) name of the generator"),
+                         'data':            ('string', "key=value pairs"),
                          }),
                                          
                     '*include': ("(optional) load extra .inp file (fragment), use relative path to current .inp",
-                        {'input':           (str, "filename")}),
+                        {'input':           ('string', "filename")}),
                         
                 }
-                
-def getMapType(kw, varName):
-    """ convert datatypes from dictionary typeMappings int to integer"""
-    kwDict = typeMappings.get(kw, (None,{}) )[1]   # return dictionary containing attribute to keyword or a default tuple (None,{}) if keyword doesn't exist
-    mType = kwDict.get(varName, [str])[0]
-    return mType
-    
 
 def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
     """ Parse an Abaqus like input file to generate an dictionary with its content """
     
     if not existingFileDict:
-        fileDict = { key : [] for key in typeMappings.keys()}
+        fileDict = { key : [] for key in inputLanguage.keys()}
     else:
         fileDict = existingFileDict
+        
     keyword = currentKeyword
     with open(fileName) as f:
         for l in f:
@@ -129,11 +119,17 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
                     opts = ass.split("=")
                     optKey = opts[0].strip()
                     val = opts[1].strip()
-                    mType = getMapType(keyword, optKey)
-                    if mType is not None:
-                        objectentry[optKey] = mType(val)
-                    else:
-                        objectentry[optKey] = val
+                    
+                    doc, options = inputLanguage[keyword]
+                    if optKey not in options:
+                        raise KeyError('option "{:}" not valid for {:}'.format(optKey, keyword))
+
+                    optionDataType, optionDoc = options[optKey]
+                    try:
+                        objectentry[optKey] = typeMappings[optionDataType] (val)
+                    except ValueError:
+                        raise (ValueError('{:}, option {:}: cannot convert "{:}" to {:}'
+                                          .format(keyword, optKey, val, optionDataType)))
                         
                 #special treatment for *include:
                 if keyword == "*include":
@@ -148,30 +144,22 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
                 
             else:
                 # line is a dataline
+                if 'data' not in inputLanguage [keyword][1]:
+                    raise KeyError('{:} expects no data lines'.format(keyword))
+                
                 data = lineElements
-                mType = getMapType(keyword, "data")
-                if mType is not None:
-                    if mType == str:
-                        pass
-                    elif mType == "numpy":
-                        data = np.array([x for x in data], dtype = np.double)
-                    elif mType == "numpy int":
-                        data = np.array([x for x in data], dtype = np.int)
+                dataType =  inputLanguage [keyword][1]['data'][0]
+                
+                try:
+                    if 'numpy' in dataType:
+                        data =  typeMappings[dataType](data) 
                     else:    
-                        data = [mType(d) for d in data]
+                        data =  [typeMappings[dataType](d) for d in data] 
+                except ValueError:
+                    raise (ValueError('{:} data line: cannot convert {:} to {:}'.format(keyword, data, dataType)))
+
                 fileDict[keyword][-1]['data'].append(data)
     
-    # 'post processing' of the assembled filedict
-#    for key, (desc, optionsDict) in typeMappings.items():
-        # merge datalines, which are flags to a dictionary
-#        if optionsDict['data'][0] == flagDict if 'data' in optionsDict else False:
-#            for entry in fileDict[key]:
-#                newDic  = {}
-#                for l in entry['data']:
-#                    for d in l:
-#                        newDic.update(d)
-#                entry['data'] = [[newDic]]
-                
     return fileDict
 
 def printKeywords():
@@ -180,21 +168,15 @@ def printKeywords():
     kwDataString = "        {:22}{:20}"    
     
     wrapper = textwrap.TextWrapper(width=80,replace_whitespace=False)
-    for kw, (kwDoc,optiondict) in sorted(typeMappings.items()):
+    for kw, (kwDoc,optiondict) in sorted(inputLanguage.items()):
         wrapper.initial_indent = kwString.format(str(kw))
         wrapper.subsequent_indent = " "*len(wrapper.initial_indent)
         print(wrapper.fill(kwDoc))
         print('')
-        
         for key in sorted(optiondict.keys()):
             optionName = key
             dType, description = optiondict[key]
-            wrapper.initial_indent = kwDataString.format(str(optionName),dTypes[dType])
+            wrapper.initial_indent = kwDataString.format(str(optionName),dType)
             wrapper.subsequent_indent = " "*len(wrapper.initial_indent)
             print(wrapper.fill(description))
         print("\n")
-    
-def mergeDictDataLines(multiLineData):
-    d = {key:val for (key, val) in multiLineData}
-    return d
-    
