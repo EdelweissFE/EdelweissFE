@@ -195,7 +195,7 @@ class EnsightPerElementVariable:
 
 class EnsightChunkWiseCase:
     
-    def __init__(self, directory, caseName, writeTransientSingleFiles = True):
+    def __init__(self, caseName, directory = '', writeTransientSingleFiles = True):
         self.directory = directory
         self.caseName = caseName
         self.caseFileNamePrefix = os.path.join(directory, caseName)  
@@ -204,6 +204,8 @@ class EnsightChunkWiseCase:
         self.geometryTrends = {}
         self.variableTrends = {}
         self.fileHandles = {}
+        
+        os.mkdir( self.caseFileNamePrefix )
 
     def setCurrentTime(self, timeAndFileSetNumber, timeValue):
         if not timeAndFileSetNumber in self.timeAndFileSets:
@@ -214,10 +216,8 @@ class EnsightChunkWiseCase:
     def writeGeometryTrendChunk(self, ensightGeometry, timeAndFileSetNumber=1):
         
         if ensightGeometry.name not in self.fileHandles:
-            fileName = ('{:}'*3).format(self.caseFileNamePrefix,
-                                        ensightGeometry.name,
-                                        ".geo",
-                                        )
+            fileName = os.path.join (self.caseFileNamePrefix, ensightGeometry.name + ".geo",)
+            
             self.fileHandles[ensightGeometry.name] = open(fileName, mode='wb')
         
         f = self.fileHandles[ensightGeometry.name]
@@ -235,9 +235,9 @@ class EnsightChunkWiseCase:
     def writeVariableTrendChunk(self, ensightVariable, timeAndFileSetNumber=2):
         
         if ensightVariable.name not in self.fileHandles:
-            fileName = ('{:}'*3).format(self.caseFileNamePrefix,
-                            ensightVariable.name,
-                            ".var")
+            
+            fileName = os.path.join(self.caseFileNamePrefix, ensightVariable.name + ".var")
+            
             self.fileHandles[ensightVariable.name] = open(fileName, mode='wb')
         
         f = self.fileHandles[ensightVariable.name]
@@ -284,7 +284,7 @@ class EnsightChunkWiseCase:
             
             cf.write("GEOMETRY\n")
             for geometryName, tAndFSetNum in self.geometryTrends.items():         
-                cf.write("model: {:} \n".format(self.caseFileNamePrefix+geometryName+".geo"))
+                cf.write("model: {:} \n".format(os.path.join ( self.caseFileNamePrefix, geometryName + ".geo" ) ))
                 
             cf.write("VARIABLE\n")
             for variableName, (tAndFSetNum, variableType) in self.variableTrends.items():
@@ -293,7 +293,7 @@ class EnsightChunkWiseCase:
                     tAndFSetNum,
                     tAndFSetNum,
                     variableName,
-                   self.caseFileNamePrefix+ variableName))
+                   os.path.join( self.caseFileNamePrefix, variableName)  ))
                 
 def createUnstructuredPartFromElementSet(setName, elementSet, partID):
     """ Determines the element and node list for an Ensightpart from an 
@@ -329,10 +329,10 @@ class OutputManager(OutputManagerBase):
         self.domainSize = jobInfo['domainSize']
         self.journal = journal
         
-        exportName = '{:}_{:}'.format(jobInfo.get('name', 'ensightExport'),  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+        exportName = '{:}_{:}'.format(name,  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
         
         self.elSetToEnsightPartMappings = {}
-        self.ensightCase = EnsightChunkWiseCase('.', exportName)
+        self.ensightCase = EnsightChunkWiseCase(exportName)
         
         self.perNodeJobs = []
         self.perElementJobs = []
@@ -378,7 +378,7 @@ class OutputManager(OutputManagerBase):
                     perElementJob['location'] = int(definition['location'])
                     perElementJob['name'] = definition.get('name', perElementJob['result'])
                     self.perElementJobs.append(perElementJob)
-
+                    
     def initializeStep(self, step, stepActions):
         if 'EnsightOptions' in stepActions and self.name in stepActions['EnsightOptions']:
             options = stepActions['EnsightOptions'][self.name]
