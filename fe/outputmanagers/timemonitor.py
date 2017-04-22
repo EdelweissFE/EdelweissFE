@@ -28,9 +28,8 @@ class OutputManager(OutputManagerBase):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeVals.append(totalTime + dT)
 
-            
-    def finalizeStep(self,):
+    def finalizeStep(self, U, P,):
         pass
     
-    def finalizeJob(self,):
+    def finalizeJob(self, U, P,):
         np.savetxt('{:}.csv'.format(self.exportFile), np.asarray( self.timeVals).T)

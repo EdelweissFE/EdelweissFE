@@ -429,9 +429,9 @@ class OutputManager(OutputManagerBase):
                 self.intermediateSaveIntervalCounter = 0
             self.intermediateSaveIntervalCounter +=1
             
-    def finalizeStep(self,):
+    def finalizeStep(self, U, P,):
         self.finishedSteps += 1
         
-    def finalizeJob(self,):
+    def finalizeJob(self, U, P,):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
         

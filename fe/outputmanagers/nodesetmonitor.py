@@ -60,10 +60,10 @@ class OutputManager(OutputManagerBase):
             if nJob['export']:
                 nJob['history'].append(result)    
             
-    def finalizeStep(self,):
+    def finalizeStep(self, U, P,):
         pass
     
-    def finalizeJob(self,):
+    def finalizeJob(self, U, P,):
         exportfiles = defaultdict(list)
         
         for nJob in self.monitorJobs:

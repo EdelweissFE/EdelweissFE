@@ -263,7 +263,7 @@ def finitElementSimulation(inputfile, verbose=False):
             
             # let all outputmanagers finalize the step
             for manager in outputmanagers:
-                manager.finalizeStep()
+                manager.finalizeStep(U, P,)
                 
             if not success:
                 journal.errorMessage("Aborting job execution", identification)
@@ -275,6 +275,6 @@ def finitElementSimulation(inputfile, verbose=False):
     finally:
         # let all output managers finalize the job
         for manager in outputmanagers:
-            manager.finalizeJob()
+            manager.finalizeJob(U, P,)
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
         

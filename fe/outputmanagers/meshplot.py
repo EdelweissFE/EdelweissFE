@@ -207,10 +207,10 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step, stepActions):
         pass
 
-    def finalizeStep(self,):
+    def finalizeStep(self, U, P,):
         pass
         
-    def finalizeJob(self,):
+    def finalizeJob(self, U, P,):
         for perNodeJob in self.perNodeJobs:
             self.plotObj.setFigAxesLabel(perNodeJob['axSpec'], perNodeJob['figure'], perNodeJob['name'])
             if perNodeJob['type'] == 'U':

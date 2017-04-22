@@ -27,9 +27,9 @@ class OutputManagerBase(ABC):
         pass
     
     @abstractmethod
-    def finalizeStep(self,):
+    def finalizeStep(self, U, P):
         pass
     
     @abstractmethod
-    def finalizeJob(self,):
+    def finalizeJob(self, U, P):
         pass

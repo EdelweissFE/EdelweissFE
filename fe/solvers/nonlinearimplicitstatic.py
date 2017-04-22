@@ -182,7 +182,11 @@ class NIST:
                     man.finalizeIncrement(U, P, increment)
             else: 
                 # get new increment by down-scaling of current increment
-                incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
+                if extrapolatedIncrement and iterationCounter == 0:
+                    incGen.discardAndChangeIncrement(0.25)
+                else:
+#                    incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
+                    incGen.discardAndChangeIncrement(0.25)
                 lastIncrementSize = False
                 
         
