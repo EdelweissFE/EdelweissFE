@@ -9,7 +9,6 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
-#from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.

@@ -6,7 +6,7 @@ all
 
 *job, name=cpe4job, domain=2d, solver=NISTParallel
 
-*modelGenerator, generator=planeRectangularQuadSpecimen, name=gen
+*modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=50
 y0=0, h=100
 elType=uelCPS4
