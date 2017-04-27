@@ -8,13 +8,27 @@ Created on Sun Jan  8 20:37:35 2017
 from fe.solvers.nonlinearimplicitstatic import NIST
 
 import numpy as np
-#cimport numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 from cython.parallel cimport parallel, threadid, prange
+from fe.elements.AbstractBaseElements.CPPBackendedElement cimport BackendedElement
+from libc.stdlib cimport malloc, free
+from libcpp.string cimport string
 
+cdef public bint notificationToMSG(const string cppString):
+#    print(cppString.decode('UTF-8'))
+    return True
+    
+cdef public bint warningToMSG(const string cppString):
+#    print(cppString.decode('UTF-8'))
+    return False
+
+
+cdef extern from "NISTParallelizableBackendElement.h":
+    cdef cppclass NISTParallelizableBackendElement nogil:
+        void computeYourself(double* Pe, double* Ke,  const double* UNew, const double* dU,  const double time[], double dTime, double &pNewDT )
 
 class NISTParallel(NIST):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
@@ -53,47 +67,70 @@ class NISTParallel(NIST):
         P[:] = 0.0
         UN1 = dU + U # ABAQUS style!
         
-        cdef int i, elSizeKe, elNDofPerEl, elNumber, elIdxInVIJ, threadID      
+        cdef int elNDofPerEl, elNumber, elIdxInVIJ, threadID      
         cdef int desiredThreads = self.numThreads
         cdef int nElements = len(self.elements.values())
         cdef list elList = list(self.elements.values())
         
         cdef double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
-        cdef double[:, ::1] Pe = np.empty((desiredThreads,  self.maximumNDofPerEl), ) # Table of Pes - one per thread. 
-        cdef double[:, ::1] UN1_ = np.empty((desiredThreads,  self.maximumNDofPerEl), ) # Table of Pes - one per thread. 
-        cdef double[:, ::1] dU_ = np.empty((desiredThreads,  self.maximumNDofPerEl), ) # Table of Pes - one per thread. 
+        
+        cdef double[::1] UN1_ = UN1
+        cdef double[::1] dU_ = dU 
+        
+        cdef double[:, ::1] UN1e = np.empty((desiredThreads,  self.maximumNDofPerEl), )
+        cdef double[:, ::1] dUe = np.empty((desiredThreads,  self.maximumNDofPerEl), )
+        cdef double[::1] Pe = np.zeros_like(V) # Table of Pes - one per thread. 
         # its size is determined by the 'largest' element (nDofPerEL)
         # note that no Pe can be created inside prange - thus it has to be prepared here
         
-        for i in prange(nElements, 
-                        schedule='static', 
-                        num_threads=desiredThreads, 
-                        nogil=True):
-            
-            threadID = threadid()
-            
-            with gil:
-                el = elList[i]                                                  # python list access - slow
-                elIdxInVIJ = self.elementToIndexInVIJMap[el]                    # python dict access - slow
-                elSizeKe = el.sizeKe
-                elNDofPerEl = el.nDofPerEl
-                Pe[threadID, :] = 0.0                                           # prep with zero .. not really necessary
-                   
-                # we expect that the element to be called releases the GIL!
-                el.computeYourself(
-                        V   [elIdxInVIJ : elIdxInVIJ + elSizeKe],               # memory view access - fast
-                        Pe  [threadID, 0 : elNDofPerEl],                        # memory view access - fast
-                        UN1 [ I[ elIdxInVIJ : elIdxInVIJ + elNDofPerEl ]],      # adv. numpy  access - slow
-                        dU  [ I[ elIdxInVIJ : elIdxInVIJ + elNDofPerEl ]],      # adv. numpy  access - slow
-                        time, dT, 
-                        pNewDTVector[threadID, :])                              # memory view access - fast
-                
-                if pNewDTVector[threadID, 0] <= 1.0:
-                    break 
-                
-                # global effort vector is assembled directly
-                P[ I[elIdxInVIJ : elIdxInVIJ+elNDofPerEl] ] += Pe[threadID, 0 : elNDofPerEl]
+        cdef BackendedElement backendBasedCythonElement
+        cdef NISTParallelizableBackendElement** cppBackendElements = <NISTParallelizableBackendElement**> malloc ( nElements * sizeof(NISTParallelizableBackendElement*) )
+        cdef int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
+        cdef int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
         
-        pNewDT[0] = np.min(pNewDTVector)      
+        cdef int i, j
+        for j in range(nElements):
+            backendBasedCythonElement= elList[j]
+            cppBackendElements[j] = backendBasedCythonElement.backendElement
+            elIndicesInVIJ[j] = self.elementToIndexInVIJMap[backendBasedCythonElement] 
+            elNDofs[j] = backendBasedCythonElement.nDofPerEl 
+        
+        cdef int currentIdxInVIJ
+        for i in prange(nElements, 
+                    schedule='dynamic', 
+                    num_threads=desiredThreads, 
+                    nogil=True):
+        
+            threadID = threadid()
+            elIdxInVIJ = elIndicesInVIJ[i]          
+            elNDofPerEl = elNDofs[i]# python dict access - slow
+            
+            for j in range (elNDofPerEl):
+                currentIdxInVIJ = I [ elIndicesInVIJ[i]    +  j ]
+                UN1e[threadID, j] = UN1_[ currentIdxInVIJ ]
+                dUe[threadID, j] = dU_[ currentIdxInVIJ ]
+            
+            (<NISTParallelizableBackendElement*>  cppBackendElements[i] )[0].computeYourself( &Pe[elIdxInVIJ],
+                                    &V[elIdxInVIJ],
+                                    &UN1e[threadID, 0],
+                                    &dUe[threadID, 0],
+                                    &time[0],
+                                    dT,
+                                    pNewDTVector[threadID, 0])
+            
+            if pNewDTVector[threadID, 0] <= 1.0:
+                break
+
+        pNewDT[0] = np.min(pNewDTVector) 
+        
+        if pNewDT[0] >= 1.0:
+            for i in range(nElements):
+                elIdxInVIJ = elIndicesInVIJ[i]
+                elNDofPerEl = elNDofs[i]
+                for j in range (elNDofPerEl):
+                    P[ I[elIdxInVIJ + j ] ] += Pe[ elIdxInVIJ + j ]
+                
+        free( elIndicesInVIJ )
+        free( elNDofs )
 
         return P, V, pNewDT

@@ -27,14 +27,14 @@ rootDirectory = expanduser("~/constitutiveModelling")
 
 # 2) cython extension modules for elements
 bftUserLibraryElements = [  
-                            # 'uelCPE4',
-                            # 'uelCPE4R',
-                            'uelCPS4',
-                            'uelCPS4NonLocal',
-                            # 'uelCPE8RNonLocal',
-                            # 'uelCPS8R',
-                            # 'uelCPS8RNonLocal',
-                            # 'uelCPS8NonLocal',
+                             'uelCPE4',
+                             'uelCPE4R',
+                             'uelCPS4',
+                             'uelCPS4NonLocal',
+                             'uelCPE8RNonLocal',
+                             'uelCPS8R',
+                             'uelCPS8RNonLocal',
+                             'uelCPS8NonLocal',
                             ]
 
 """
@@ -56,28 +56,23 @@ Build Extensions for UEL Libraries, linked to the bftUserLibrary
 for el in bftUserLibraryElements:
     
     extensions.append( Extension("*",
-                        sources=[join("fe/elements", el.lower(), "element.pyx")] + ['fe/utils/cythonElementBackends/src/NISTParallelizableBackendElement.cpp'],
+                        sources=[join("fe/elements", el.lower(), "element.pyx")] ,
                         language="c++",
                         extra_compile_args=compFlags,
                         include_dirs=[
-                            join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()] + ['fe/utils/cythonElementBackends/include'],
+                            join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()] ,
                          runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
                          libraries= ['bftUserLibrary'],
                         ))
 """
 The parallel NISTParallel solver with OpenMP
 """
-extensions += [Extension("*",
-                sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
-                        include_dirs=[ numpy.get_include()],
-                        language='c++',
-                        extra_compile_args=['-fopenmp'],
-                        extra_link_args=['-fopenmp'],)
-                        ]  
 
 extensions += [Extension("*",
-                sources = ["fe/solvers/nonlinearimplicitstaticparallelv2.pyx"] + ['fe/utils/cythonElementBackends/src/NISTParallelizableBackendElement.cpp'],
-                        include_dirs=[ numpy.get_include()]+['fe/utils/cythonElementBackends/include'],
+                sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
+                        include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()] ,
+                         runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                         libraries= ['bftUserLibrary'],
                         language='c++',
                         extra_compile_args=['-fopenmp'],
                         extra_link_args=['-fopenmp'],)
@@ -87,10 +82,7 @@ extensions += [Extension("*",
 extensions += [Extension("*",
                 sources = ["fe/elements/AbstractBaseElements/CPPBackendedElement.pyx"],
                         include_dirs=[ numpy.get_include()]+['fe/utils/cythonElementBackends/include'],
-                        language='c++',
-#                        extra_compile_args=['-fopenmp'],
-#                        extra_link_args=['-fopenmp'],)
-                        )
+                        language='c++',)
                         ]  
     
 """
