@@ -60,11 +60,13 @@ class NISTParallel(NIST):
         
         cdef double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
         cdef double[:, ::1] Pe = np.empty((desiredThreads,  self.maximumNDofPerEl), ) # Table of Pes - one per thread. 
+        cdef double[:, ::1] UN1_ = np.empty((desiredThreads,  self.maximumNDofPerEl), ) # Table of Pes - one per thread. 
+        cdef double[:, ::1] dU_ = np.empty((desiredThreads,  self.maximumNDofPerEl), ) # Table of Pes - one per thread. 
         # its size is determined by the 'largest' element (nDofPerEL)
-        # not that no Pe can be created inside prange - thus it has to be prepared here
+        # note that no Pe can be created inside prange - thus it has to be prepared here
         
         for i in prange(nElements, 
-                        schedule='dynamic', 
+                        schedule='static', 
                         num_threads=desiredThreads, 
                         nogil=True):
             

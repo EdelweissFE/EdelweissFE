@@ -9,6 +9,7 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
+from time import time as getCurrentTime
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
@@ -98,6 +99,9 @@ class NIST:
         pNewDT = np.zeros(1)
         lastIncrementSize = False
         
+        computationTimeInElements = 0.0
+        computationTimeInEqSystem = 0.0
+        
         for increment in incGen.generateIncrement():
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             
@@ -127,7 +131,13 @@ class NIST:
             while True:
                 
                 pNewDT[0] = 1e36
+                
+                
+                tic =  getCurrentTime()
                 P, V, pNewDT = self.computeElements(U, dU, stepTimes, dT, pNewDT, P, V, I, J,)
+                toc =  getCurrentTime()
+                computationTimeInElements += (toc-tic)
+                
                 if pNewDT[0] < 1.0:
                     self.journal.message("An element requests for a cutback", self.identification, level=2)
                     break
@@ -162,7 +172,11 @@ class NIST:
                 K_ = self.applyDirichletK(K, dirichlet)
                 
                 # solve !                
+                
+                tic =  getCurrentTime()
                 ddU = spsolve(K_, R, )
+                toc =  getCurrentTime()
+                computationTimeInEqSystem += (toc-tic)
                 dU += ddU
                 
                 iterationCounter += 1
@@ -191,6 +205,9 @@ class NIST:
         
         stepSuccess = stepProgress >= (1-1e-15)
         finishedTime = stepProgress * stepLength
+        
+        self.journal.message("Time in elements:       {:} s".format(computationTimeInElements), self.identification, level=0)
+        self.journal.message("Time in equation system {:} s".format(computationTimeInEqSystem), self.identification, level=0)
             
         return stepSuccess, U, P, finishedTime
     

@@ -8,6 +8,8 @@ Created on Fri Feb 10 19:20:25 2017
 
 from fe.solvers.nonlinearimplicitstatic import NIST
 from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
+from fe.solvers.nonlinearimplicitstaticparallelv2 import NISTParallel as NISTParallel2
 
 solverLibrary = {'NIST' : NIST,
-                 'NISTParallel' : NISTParallel,}
+                 'NISTParallel' : NISTParallel,
+                 'NISTParallel2' : NISTParallel2,}
