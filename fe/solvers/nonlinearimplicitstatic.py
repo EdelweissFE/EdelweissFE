@@ -101,6 +101,11 @@ class NIST:
         
         computationTimeInElements = 0.0
         computationTimeInEqSystem = 0.0
+        computationTimeCheckConvergency= 0.0
+        computationTimeInApplyBoundary = 0.0
+        computationTimeInOutput = 0.0
+        computationTimeInApplyBoundaryRes = 0.0
+        computationTimeCooMatrix = 0.0
         
         for increment in incGen.generateIncrement():
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -151,13 +156,23 @@ class NIST:
                     
                 R = Pint - Pext
                 
+                
+                
                 if iterationCounter == 0 and not extrapolatedIncrement and dirichlet :
                     # first iteraion? apply dirichlet bcs and unconditionally solve
+                    tic =  getCurrentTime()
                     R = self.applyDirichlet(incrementSize, R, dirichlet)
+                    toc =  getCurrentTime()
+                    computationTimeInApplyBoundaryRes += toc -tic
                 else:
                     # iteration cycle 1 or higher, time to check the convergency
                     R[dirichletIndices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
+
+                
+                    tic =  getCurrentTime()
                     converged = self.checkConvergency(R, ddU, iterationCounter)
+                    toc =  getCurrentTime()
+                    computationTimeCheckConvergency += toc -tic
                     
                 if converged:
                     break
@@ -168,9 +183,16 @@ class NIST:
                 
                 # not converged yet!
                 # prepare global stiffness matrix
-                K = coo_matrix( (V, (I,J)), shape=(numberOfDofs, numberOfDofs)).tocsr()
-                K_ = self.applyDirichletK(K, dirichlet)
                 
+                tic =  getCurrentTime()
+                K = coo_matrix( (V, (I,J)), shape=(numberOfDofs, numberOfDofs)).tocsr()
+                toc =  getCurrentTime()
+                computationTimeCooMatrix += toc -tic
+                
+                tic =  getCurrentTime()
+                K_ = self.applyDirichletK(K, dirichlet)
+                toc =  getCurrentTime()
+                computationTimeInApplyBoundary += toc - tic
                 # solve !                
                 
                 tic =  getCurrentTime()
@@ -191,8 +213,12 @@ class NIST:
                     el.acceptLastState()
                 self.journal.message("Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1) 
                 
+                tic =  getCurrentTime()
                 for man in self.outputmanagers:
                     man.finalizeIncrement(U, P, increment)
+                toc =  getCurrentTime()
+                computationTimeInOutput += toc - tic
+                
             else: 
                 # get new increment by down-scaling of current increment
                 if extrapolatedIncrement and iterationCounter == 0:
@@ -207,7 +233,12 @@ class NIST:
         finishedTime = stepProgress * stepLength
         
         self.journal.message("Time in elements:       {:} s".format(computationTimeInElements), self.identification, level=0)
+        self.journal.message("Time in Coo matrix:     {:} s".format(computationTimeCooMatrix), self.identification, level=0)
         self.journal.message("Time in equation system {:} s".format(computationTimeInEqSystem), self.identification, level=0)
+        self.journal.message("Time in apply boundary  {:} s".format(computationTimeInApplyBoundary), self.identification, level=0)
+        self.journal.message("Time in apply boundaryR {:} s".format(computationTimeInApplyBoundaryRes), self.identification, level=0)
+        self.journal.message("Time in check convergen {:} s".format(computationTimeCheckConvergency), self.identification, level=0)
+        self.journal.message("Time in outputmanagers  {:} s".format(computationTimeInOutput), self.identification, level=0)
             
         return stepSuccess, U, P, finishedTime
     

@@ -13,6 +13,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from fe.utils.misc import stringDict
 import fe.config.phenomena
+from time import time as getCurrentTime
 
 def writeCFloat(f, ndarray):
     np.asarray(ndarray, dtype=np.float32).tofile(f)
@@ -339,6 +340,8 @@ class OutputManager(OutputManagerBase):
                     
         elementSets = modelInfo['elementSets']
         
+        self.timeInElementQuery = 0.0
+        
         elSetParts = []
         partCounter = 1
         for setName, elSet in elementSets.items():
@@ -377,6 +380,13 @@ class OutputManager(OutputManagerBase):
                     perElementJob['indices'] = np.fromstring(definition.get('indices',''), dtype=int, sep=';')
                     perElementJob['location'] = int(definition['location'])
                     perElementJob['name'] = definition.get('name', perElementJob['result'])
+                    
+                    part = perElementJob['part']
+                    perElementJob['targets'] = {}
+#                    varDict = {}
+                    for ensElType, elements in part.elementTree.items():
+                        perElementJob['targets'][ensElType] = [el.getResult(**perElementJob) for el in  elements.keys()]
+                    
                     self.perElementJobs.append(perElementJob)
                     
     def initializeStep(self, step, stepActions):
@@ -411,7 +421,12 @@ class OutputManager(OutputManagerBase):
             part = perElementJob['part']
             varDict = {}
             for ensElType, elements in part.elementTree.items():
-                varDict[ensElType] = np.asarray([el.getResult(**perElementJob) for el in  elements.keys()])
+                tic = getCurrentTime()
+                varDict[ensElType] = np.asarray(perElementJob['targets'][ensElType])
+#                varDict[ensElType] = np.asarray([el.getResult(**perElementJob) for el in  elements.keys()])
+                
+                toc = getCurrentTime()
+                self.timeInElementQuery += toc - tic
                 if len(varDict[ensElType].shape)==1:
                     dimension=1
                 else:
@@ -434,4 +449,5 @@ class OutputManager(OutputManagerBase):
         
     def finalizeJob(self, U, P,):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
+        self.journal.message("time in element query {:} s".format(self.timeInElementQuery ), self.identification, 0)
         
