@@ -99,13 +99,16 @@ cdef class Element(BackendedElement):
     def resetToLastValidState(self,):
         pass
     
-    resultIndices = {'stress': lambda nStateVarsUmat,kw, : np.arange(6) + (kw['location'])*nStateVarsUmat ,
-                    'strain': lambda nStateVarsUmat,kw, : np.arange(6) + (kw['location'])*nStateVarsUmat +6,
-                    'sdv':    lambda nStateVarsUmat,kw, : kw['indices'] +((kw['location'])-1)*nStateVarsUmat }  
-                    
+    resultIndices = {'stress': lambda nStateVarsUmat,kw : slice( kw['gaussPt']*nStateVarsUmat,
+                                                                 kw['gaussPt']*nStateVarsUmat + 6) ,
+                    'strain': lambda nStateVarsUmat,kw, : slice( kw['gaussPt']*nStateVarsUmat + 6,
+                                                                 kw['gaussPt']*nStateVarsUmat + 12),
+                    'sdv':    lambda nStateVarsUmat,kw, : slice( kw['idxStart'] + (kw['gaussPt']-1)* nStateVarsUmat, 
+                                                                 kw['idxStop' ] + (kw['gaussPt']-1)* nStateVarsUmat)}
     def getResult(self, **kw):    
-        stateVarIndices = self.resultIndices[kw['result']](self.nStateVarsUmat, kw)
-        return np.asarray(self.stateVars)[stateVarIndices]
+        sVars = np.asarray(self.stateVars)
+        idxSlice = self.resultIndices[ kw['result'] ](self.nStateVarsUmat, kw)     
+        return sVars[idxSlice]
     
     def __dealloc__(self):
         del self.backendElement

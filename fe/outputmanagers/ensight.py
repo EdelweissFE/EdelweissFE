@@ -377,15 +377,25 @@ class OutputManager(OutputManagerBase):
                     perElementJob = {}
                     perElementJob['part'] =  self.elSetToEnsightPartMappings[definition['elSet']]
                     perElementJob['result'] = definition['result']
-                    perElementJob['indices'] = np.fromstring(definition.get('indices',''), dtype=int, sep=';')
-                    perElementJob['location'] = int(definition['location'])
+                    
+                    if 'index' in definition:
+                        idcs = definition['index']
+                        if ':' in definition['index']:
+                            idcs=[int (i) for i in idcs.split(':')]
+                            perElementJob['idxStart'], perElementJob['idxStop'] = idcs
+                        else:
+                            idx = int (idcs )
+                            perElementJob['idxStart'], perElementJob['idxStop'] = idx, idx+1
+                        
+                    if 'gaussPt' in definition:
+                        perElementJob['gaussPt'] = int( definition['gaussPt'] )
+                        
                     perElementJob['name'] = definition.get('name', perElementJob['result'])
                     
                     part = perElementJob['part']
-                    perElementJob['targets'] = {}
-#                    varDict = {}
+                    perElementJob['permanentElResultMemory'] = {}
                     for ensElType, elements in part.elementTree.items():
-                        perElementJob['targets'][ensElType] = [el.getResult(**perElementJob) for el in  elements.keys()]
+                        perElementJob['permanentElResultMemory'][ensElType] = [el.getResult(**perElementJob) for el in  elements.keys()]
                     
                     self.perElementJobs.append(perElementJob)
                     
@@ -422,7 +432,7 @@ class OutputManager(OutputManagerBase):
             varDict = {}
             for ensElType, elements in part.elementTree.items():
                 tic = getCurrentTime()
-                varDict[ensElType] = np.asarray(perElementJob['targets'][ensElType])
+                varDict[ensElType] = np.asarray(perElementJob['permanentElResultMemory'][ensElType])
 #                varDict[ensElType] = np.asarray([el.getResult(**perElementJob) for el in  elements.keys()])
                 
                 toc = getCurrentTime()

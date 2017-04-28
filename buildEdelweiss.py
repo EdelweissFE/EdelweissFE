@@ -81,7 +81,7 @@ extensions += [Extension("*",
 
 extensions += [Extension("*",
                 sources = ["fe/elements/AbstractBaseElements/CPPBackendedElement.pyx"],
-                        include_dirs=[ numpy.get_include()]+['fe/utils/cythonElementBackends/include'],
+                        include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()],
                         language='c++',)
                         ]  
     
