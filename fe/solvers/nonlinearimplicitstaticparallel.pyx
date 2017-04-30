@@ -13,9 +13,10 @@ from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 from cython.parallel cimport parallel, threadid, prange
-from fe.elements.AbstractBaseElements.CPPBackendedElement cimport BackendedElement
+from fe.elements.uelbaseelement.element cimport BaseElement
 from libc.stdlib cimport malloc, free
 from libcpp.string cimport string
+from time import time as getCurrentTime
 
 cdef public bint notificationToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
@@ -26,8 +27,8 @@ cdef public bint warningToMSG(const string cppString):
     return False
 
 
-cdef extern from "NISTParallelizableBackendElement.h":
-    cdef cppclass NISTParallelizableBackendElement nogil:
+cdef extern from "UelInterfaceElement.h":
+    cdef cppclass UelInterfaceElement nogil:
         void computeYourself(double* Pe, double* Ke,  const double* UNew, const double* dU,  const double time[], double dTime, double &pNewDT )
 
 class NISTParallel(NIST):
@@ -42,9 +43,11 @@ class NISTParallel(NIST):
         super().__init__(jobInfo, modelInfo, journal, outputmanagers)
         
         self.maximumNDofPerEl = 0
+        self.sizePe = 0
         for el in self.elements.values():
             self.maximumNDofPerEl = el.nDofPerEl if el.nDofPerEl > self.maximumNDofPerEl else self.maximumNDofPerEl
-        
+            self.sizePe += el.nDofPerEl
+            
     def solveStep(self, step, time, stepActions, U, P):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
@@ -53,84 +56,98 @@ class NISTParallel(NIST):
         return super().solveStep(step, time, stepActions, U, P)
     
     def computeElements(self, U, dU, double[::1] time, double dT,
-                        double[::1] pNewDT, 
+                        pNewDT, 
                         P, 
-                        double[::1] V, 
+                        V, 
                         long[::1] I, 
                         long[::1] J):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration 
-        UNOPTIMIZED PROTOTYPE."""
-            
-        P[:] = 0.0
+        -> is called by solveStep() in each iteration"""
+
         UN1 = dU + U # ABAQUS style!
         
-        cdef int elNDofPerEl, elNumber, elIdxInVIJ, threadID      
+        cdef int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
         cdef int desiredThreads = self.numThreads
         cdef int nElements = len(self.elements.values())
         cdef list elList = list(self.elements.values())
         
+        cdef double[::1] V_mView = V
         cdef double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
-        
-        cdef double[::1] UN1_ = UN1
-        cdef double[::1] dU_ = dU 
-        
+        cdef double[::1] UN1_mView = UN1
+        cdef double[::1] dU_mView = dU 
+
+        # oversized Buffers for parallel computing:
+        # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
         cdef double[:, ::1] UN1e = np.empty((desiredThreads,  self.maximumNDofPerEl), )
         cdef double[:, ::1] dUe = np.empty((desiredThreads,  self.maximumNDofPerEl), )
-        cdef double[::1] Pe = np.zeros_like(V) # Table of Pes - one per thread. 
-        # its size is determined by the 'largest' element (nDofPerEL)
-        # note that no Pe can be created inside prange - thus it has to be prepared here
+        # oversized buffer for Pe ( size = sum(elements.ndof) )
+        cdef double[::1] Pe = np.empty(self.sizePe) 
         
-        cdef BackendedElement backendBasedCythonElement
-        cdef NISTParallelizableBackendElement** cppBackendElements = <NISTParallelizableBackendElement**> malloc ( nElements * sizeof(NISTParallelizableBackendElement*) )
+        cdef BaseElement backendBasedCythonElement
+        # lists (cpp elements + indices and nDofs), which can be accessed parallely
+        cdef UelInterfaceElement** cppBackendElements = <UelInterfaceElement**> malloc ( nElements * sizeof(UelInterfaceElement*) )
         cdef int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
+        cdef int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
         cdef int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
         
-        cdef int i, j
-        for j in range(nElements):
-            backendBasedCythonElement= elList[j]
-            cppBackendElements[j] = backendBasedCythonElement.backendElement
-            elIndicesInVIJ[j] = self.elementToIndexInVIJMap[backendBasedCythonElement] 
-            elNDofs[j] = backendBasedCythonElement.nDofPerEl 
+        cdef int i, j=0
+        for i in range(nElements):
+            # prepare all lists for upcoming parallel element computing
+            backendBasedCythonElement=  elList[i]
+            cppBackendElements[i] =     backendBasedCythonElement.cppBackendElement
+            elIndicesInVIJ[i] =         self.elementToIndexInVIJMap[backendBasedCythonElement] 
+            elNDofs[i] =                backendBasedCythonElement.nDofPerEl 
+            # each element gets its place in the Pe buffer
+            elIndexInPe[i] = j
+            j += elNDofs[i]
         
-        cdef int currentIdxInVIJ
         for i in prange(nElements, 
                     schedule='dynamic', 
                     num_threads=desiredThreads, 
                     nogil=True):
         
-            threadID = threadid()
-            elIdxInVIJ = elIndicesInVIJ[i]          
-            elNDofPerEl = elNDofs[i]# python dict access - slow
+            threadID =      threadid()
+            elIdxInVIJ =    elIndicesInVIJ[i]      
+            elIdxInPe =     elIndexInPe[i]
+            elNDofPerEl =   elNDofs[i]
             
             for j in range (elNDofPerEl):
-                currentIdxInVIJ = I [ elIndicesInVIJ[i]    +  j ]
-                UN1e[threadID, j] = UN1_[ currentIdxInVIJ ]
-                dUe[threadID, j] = dU_[ currentIdxInVIJ ]
+                # copy global U & dU to buffer memories for element eval.
+                currentIdxInU =     I [ elIndicesInVIJ[i] +  j ]
+                UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
+                dUe[threadID, j] =  dU_mView[ currentIdxInU ]
             
-            (<NISTParallelizableBackendElement*>  cppBackendElements[i] )[0].computeYourself( &Pe[elIdxInVIJ],
-                                    &V[elIdxInVIJ],
-                                    &UN1e[threadID, 0],
-                                    &dUe[threadID, 0],
-                                    &time[0],
-                                    dT,
-                                    pNewDTVector[threadID, 0])
+            (<UelInterfaceElement*> 
+                 cppBackendElements[i] )[0].computeYourself( 
+                                                &Pe[elIdxInPe],
+                                                &V_mView[elIdxInVIJ],
+                                                &UN1e[threadID, 0],
+                                                &dUe[threadID, 0],
+                                                &time[0],
+                                                dT,
+                                                pNewDTVector[threadID, 0])
             
             if pNewDTVector[threadID, 0] <= 1.0:
                 break
 
         pNewDT[0] = np.min(pNewDTVector) 
         
+        cdef double[::1] P_mView = P
         if pNewDT[0] >= 1.0:
+            #successful elements evaluation: condense oversize Pe buffer -> P
+            P_mView[:] = 0.0
             for i in range(nElements):
-                elIdxInVIJ = elIndicesInVIJ[i]
-                elNDofPerEl = elNDofs[i]
-                for j in range (elNDofPerEl):
-                    P[ I[elIdxInVIJ + j ] ] += Pe[ elIdxInVIJ + j ]
+                elIdxInVIJ =    elIndicesInVIJ[i]
+                elIdxInPe =     elIndexInPe[i]
+                elNDofPerEl =   elNDofs[i]
+                for j in range (elNDofPerEl): 
+                    P_mView[ I[elIdxInVIJ + j] ] += Pe[ elIdxInPe + j ]
                 
         free( elIndicesInVIJ )
         free( elNDofs )
+        free( elIndexInPe )
+        free( cppBackendElements )
 
         return P, V, pNewDT

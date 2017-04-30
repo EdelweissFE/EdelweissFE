@@ -1,27 +1,26 @@
 *include, input=mesh.inp
-*material, name=modleonNonLocal, id=modleon, statevars=5, yieldflagindex=6, charelemlength=100
-**25850, 0.18, 10.33, 31.0, 35.96, 2.00, 0.85, 0.08, 0.003, 2.0, 0.000001, 15, 20, 1.05, 0.001, 1
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.000368, 1
+*material, name=modleonNonLocal, id=modleon, statevars=5
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
 
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*job, name=cpe4job, domain=2d, solver=NISTParallel
+*job, name=cps8rnljob, domain=2d, solver=NISTParallel
 
-*output, type=nodesetmonitor, jobName=cpe4job
-nSet=topNodes, field=mechanical, type=P, result=sum, direction=2
+*output, type=nodesetmonitor, jobName=cps8rnljob
+nSet=topNodes, field=displacement, type=P, result=sum, direction=2
 
-*output, type=ensight, jobName=cpe4job
-create=perNode,    elSet=all, field=mechanical, type=U, name=displacement
+*output, type=ensight, jobName=cps8rnljob
+create=perNode,    elSet=all, field=displacement, type=U, name=displacement
 create=perNode,    elSet=all, field=nonlocal damage, type=U, name=alphaDNonLocal
-create=perElement, elSet=all, field=mechanical, result=stress, location=1
-create=perElement, elSet=all, field=mechanical, result=strain, location=1
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=0, name=alphaP
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=2, name=alphaD
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=4, name=omega
+create=perElement, elSet=all, result=stress, gaussPt=1
+create=perElement, elSet=all, result=strain, gaussPt=1
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
-*step, solver=solver, jobName=cpe4job, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, 
+*step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, 
 NISTSolverOptions, extrapolation=linear, numThreads=2
-dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=mechanical, 2=0
-dirichlet, name=top, nSet=topNodes, field=mechanical, 2=-.5
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 2=0
+dirichlet, name=top, nSet=topNodes, field=displacement, 2=-.5

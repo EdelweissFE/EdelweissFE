@@ -8,21 +8,21 @@ Created on Tue Jan  10 19:10:42 2017
 from collections import OrderedDict
 
                                         #field              field type
-phenomena = OrderedDict([               ("mechanical" ,     "vector"),
+phenomena = OrderedDict([               ("displacement" ,     "vector"),
                                         ("thermal",         "scalar"),
                                         ("nonlocal damage", "scalar"),])
                                         
                                         
                                         #field              #tolerance
-flowCorrectionTolerance = {             'mechanical' :      1e-5,
+flowCorrectionTolerance = {             'displacement' :      1e-5,
                                         'nonlocal damage':  1e-5,
                                         }
                                                                    
-effortResidualTolerance = {             'mechanical' :      1e-7,
+effortResidualTolerance = {             'displacement' :      1e-7,
                                         'nonlocal damage':  1e-7,
                                         }
 
-effortResidualToleranceAlternative = {  'mechanical' :       1e-3,
+effortResidualToleranceAlternative = {  'displacement' :       1e-3,
                                         'nonlocal damage':   1e-6,
                                         }
                                         

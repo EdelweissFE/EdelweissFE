@@ -1,4 +1,4 @@
-*material, name=modleon, id=modleon, statevars=26,
+*material, name=modleon, id=modleon, statevars=5
 30000, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.125, 1
 
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
@@ -7,20 +7,20 @@ all
 *job, name=cpe4job, domain=2d, 
 
 *output, type=nodesetmonitor, jobName=cpe4job
-nSet=right, field=mechanical, type=P, result=sum, direction=2
+nSet=right, field=displacement, type=P, result=sum, direction=2
 
 *output, type=ensight, jobName=cpe4job
-create=perNode,    elSet=all, field=mechanical, type=U, name=displacement
-create=perElement, elSet=all, field=mechanical, result=stress, location=1
-create=perElement, elSet=all, field=mechanical, result=strain, location=1
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=1, name=alphaP
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=3, name=alphaD
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=5, name=omega
+create=perNode,    elSet=all, field=displacement, type=U, name=displacement
+create=perElement, elSet=all, result=stress, gaussPt=1
+create=perElement, elSet=all, result=strain, gaussPt=1
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
-*step, solver=solver, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 NISTSolverOptions, extrapolation=linear
-dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=mechanical, 2=.5
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 2=.5
 
 *nSet, nSet=left, 
 1, 8, 15, 22, 32, 50, 63

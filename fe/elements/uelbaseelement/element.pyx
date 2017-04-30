@@ -1,9 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 27 08:35:06 2017
+
+@author: matthias
+"""
+
 import numpy as np
 from fe.materials.umatlibrary cimport pUmatType, getUmat
 from fe.config.ueltypedefs cimport pSimpleUelWithUmatType
 cimport numpy as np
 from libcpp.string cimport string
-from fe.elements.AbstractBaseElements.CPPBackendedElement cimport BackendedElement
+cimport fe.elements.uelbaseelement.element 
 
 cdef public bint notificationToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
@@ -13,63 +21,32 @@ cdef public bint warningToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
     return False
 
-cdef extern from "NISTParallelizableBackendElement.h":
-    cdef cppclass NISTParallelizableBackendElement:
-        NISTParallelizableBackendElement(int elNumber, 
-                                        const double* coordinates, 
-                                        double *stateVars,
-                                        int nStateVars, 
-                                        const double* properties,
-                                        int nProperties,
-                                        const int* intProperties,
-                                        int nIntProperties,
-                                        pUmatType umat,
-                                        int nStateVarsUmat,
-                                        pSimpleUelWithUmatType uel) 
-
-        void computeYourself(double* Pe, double* Ke,  const double* UNew, const double* dU,  const double time[], double dTime, double &pNewDT )
-        void acceptLastState() 
-              
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     pSimpleUelWithUmatType getSimpleUelWithUmatById(int id)
 
-cdef class Element(BackendedElement):
-    fields =                [["mechanical", "nonlocal damage"], # node 1
-                             ["mechanical", "nonlocal damage"], # node 2
-                             ["mechanical", "nonlocal damage"], # node 3
-                             ["mechanical", "nonlocal damage"],]# node 4
-    nNodes =                4
-    nGaussPt =              4
-    nDofPerEl =             12
-    sizeKe =                12 * 12
-    dofIndicesPermutation = np.array([0,1,3,4,6,7,9,10,2,5,8,11])
-    ensightType =           "quad4"
-    uelIdentification =     412
+cdef class BaseElement:
     
-    cdef public nodes, 
-    cdef public int elNumber
-    
-    cdef double[::1] uelProperties, stateVars, stateVarsTemp, nodeCoordinates
-    cdef pUmatType umat
-    cdef pSimpleUelWithUmatType uel
-    cdef int nStateVars, nStateVarsUmat
-    
-    cdef int[::1] intProperties
-    
-    def __init__(self, nodes, elNumber):
+    def __init__(self, nodes, elNumber, int nGaussPt, int uelID):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
         self.elNumber = elNumber
+        self.numGaussPts = nGaussPt
+        self.uelID = uelID
         
     def setProperties(self, uelProperties, umatName, nStateVarsUmat):
         self.uelProperties = uelProperties
         self.nStateVarsUmat = nStateVarsUmat
-        self.nStateVars = self.nGaussPt * (nStateVarsUmat + 12)
+        self.nStateVars = self.numGaussPts * (nStateVarsUmat + 12)
         self.stateVars = np.zeros(self.nStateVars)
         self.umat = getUmat(umatName.lower())
-        self.uel = getSimpleUelWithUmatById(self.uelIdentification)
+        self.uel = getSimpleUelWithUmatById(self.uelID)
         self.intProperties = np.empty(0, dtype=np.intc)
-        self.backendElement = new NISTParallelizableBackendElement(self.elNumber ,
+        
+        if self.cppBackendElement != NULL:
+            # properties of element are changing - delete old cpp element
+            del self.cppBackendElement
+        
+        self.cppBackendElement = new UelInterfaceElement(self.elNumber ,
                                                               &self.nodeCoordinates[0], 
                                                               &self.stateVars[0],
                                                               self.nStateVars,
@@ -90,11 +67,11 @@ cdef class Element(BackendedElement):
                          double dTime, 
                          double[::1] pNewdT):
         
-        self.backendElement.computeYourself(&Pe[0], &Ke[0], &U[0], &dU[0], &time[0], 
+        self.cppBackendElement.computeYourself(&Pe[0], &Ke[0], &U[0], &dU[0], &time[0], 
              dTime,  pNewdT[0])
     
     def acceptLastState(self,):
-        self.backendElement.acceptLastState()
+        self.cppBackendElement.acceptLastState()
         
     def resetToLastValidState(self,):
         pass
@@ -105,10 +82,10 @@ cdef class Element(BackendedElement):
                                                                  kw['gaussPt']*nStateVarsUmat + 12),
                     'sdv':    lambda nStateVarsUmat,kw, : slice( kw['idxStart'] + (kw['gaussPt']-1)* nStateVarsUmat, 
                                                                  kw['idxStop' ] + (kw['gaussPt']-1)* nStateVarsUmat)}
-    def getResult(self, **kw):    
+    def getPermanentResultPtr(self, **kw):    
         sVars = np.asarray(self.stateVars)
         idxSlice = self.resultIndices[ kw['result'] ](self.nStateVarsUmat, kw)     
         return sVars[idxSlice]
     
     def __dealloc__(self):
-        del self.backendElement
+        del self.cppBackendElement

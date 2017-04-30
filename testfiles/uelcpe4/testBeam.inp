@@ -12,24 +12,24 @@ weak
 *job, name=cpe4job, domain=2d, 
 
 *output, type=nodesetmonitor, jobName=cpe4job
-nSet=right, field=mechanical, type=P, result=sum, direction=1
+nSet=right, field=displacement, type=P, result=sum, direction=1
 
-*output, type=ensight, jobName=cpe4job
-create=perNode,    elSet=all, field=mechanical, type=U, name=displacement
-create=perElement, elSet=all, field=mechanical, result=stress, location=1
-create=perElement, elSet=all, field=mechanical, result=strain, location=1
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=0, name=alphaP
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=2, name=alphaD
-create=perElement, elSet=all, field=mechanical, result=sdv, location=1, indices=4, name=omega
+*output, type=ensight, jobName=cpe4job, name=ensightExport
+create=perNode,    elSet=all, field=displacement, type=U, name=displacement
+create=perElement, elSet=all, field=displacement, result=stress, gaussPt=1
+create=perElement, elSet=all, field=displacement, result=strain, gaussPt=1
+create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=0, name=alphaP
+create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=2, name=alphaD
+create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=4, name=omega
 
 *step, jobName=cpe4job, maxInc=5e-3, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
 NISTSolverOptions, extrapolation=linear
-dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 
-dirichlet, name=1,     nSet=1,      field=mechanical, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=mechanical, 1=-2
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
+dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 1=-2
 
 *step, jobName=cpe4job, maxInc=5e-3, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=500
 NISTSolverOptions, extrapolation=linear
-dirichlet, name=left,  nSet=left,   field=mechanical, 1=0.0, 
-dirichlet, name=1,     nSet=1,      field=mechanical, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=mechanical, 1=-5
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
+dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 1=-5

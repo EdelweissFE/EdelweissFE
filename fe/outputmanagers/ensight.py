@@ -13,7 +13,6 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from fe.utils.misc import stringDict
 import fe.config.phenomena
-from time import time as getCurrentTime
 
 def writeCFloat(f, ndarray):
     np.asarray(ndarray, dtype=np.float32).tofile(f)
@@ -340,8 +339,6 @@ class OutputManager(OutputManagerBase):
                     
         elementSets = modelInfo['elementSets']
         
-        self.timeInElementQuery = 0.0
-        
         elSetParts = []
         partCounter = 1
         for setName, elSet in elementSets.items():
@@ -395,7 +392,7 @@ class OutputManager(OutputManagerBase):
                     part = perElementJob['part']
                     perElementJob['permanentElResultMemory'] = {}
                     for ensElType, elements in part.elementTree.items():
-                        perElementJob['permanentElResultMemory'][ensElType] = [el.getResult(**perElementJob) for el in  elements.keys()]
+                        perElementJob['permanentElResultMemory'][ensElType] = [el.getPermanentResultPtr(**perElementJob) for el in  elements.keys()]
                     
                     self.perElementJobs.append(perElementJob)
                     
@@ -431,12 +428,7 @@ class OutputManager(OutputManagerBase):
             part = perElementJob['part']
             varDict = {}
             for ensElType, elements in part.elementTree.items():
-                tic = getCurrentTime()
                 varDict[ensElType] = np.asarray(perElementJob['permanentElResultMemory'][ensElType])
-#                varDict[ensElType] = np.asarray([el.getResult(**perElementJob) for el in  elements.keys()])
-                
-                toc = getCurrentTime()
-                self.timeInElementQuery += toc - tic
                 if len(varDict[ensElType].shape)==1:
                     dimension=1
                 else:
@@ -459,5 +451,4 @@ class OutputManager(OutputManagerBase):
         
     def finalizeJob(self, U, P,):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
-        self.journal.message("time in element query {:} s".format(self.timeInElementQuery ), self.identification, 0)
         

@@ -1,0 +1,28 @@
+import numpy as np
+from fe.elements.uelbaseelement.element import BaseElement
+
+class Element(BaseElement):
+    fields =                [["displacement"],
+                             ["displacement"],
+                             ["displacement"],
+                             ["displacement"],
+                             ["displacement"],
+                             ["displacement"],
+                             ["displacement"],
+                             ["displacement"],                              
+                             ] # fields identical for each node
+    
+    nNodes =                8
+    nGaussPt =              4
+    nDofPerEl =             16
+    sizeKe =                nDofPerEl * nDofPerEl
+    dofIndicesPermutation  = np.arange(0, 16, 1)
+    ensightType =           "quad8"
+    uelIdentification =     805
+    
+    def __init__(self, nodes, elNumber):
+        super().__init__(nodes, elNumber, self.nGaussPt, self.uelIdentification)
+        
+    def setProperties(self, uelProperties, umatName, nStateVarsUmat):
+        super().setProperties(uelProperties, umatName, nStateVarsUmat)
+                
