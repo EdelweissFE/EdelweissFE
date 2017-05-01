@@ -126,7 +126,10 @@ class Plotter:
     
     def exportFigure(self, ):
         pass
-
+    
+    def show(self,):
+        plt.show()
+            
 class OutputManager(OutputManagerBase):
     identification = "meshPlot"
     #printTemplate = "node {:}, {:} {:} {:}: {:}"
@@ -194,10 +197,17 @@ class OutputManager(OutputManagerBase):
                     perElementJob['axSpec'] =       int(definition.get('axSpec','111'))
                     perElementJob['figure'] =       int(definition.get('figure','1'))
                     perElementJob['result'] =       definition['result']
-                    perElementJob['indices'] =      np.fromstring(definition.get('indices',''), dtype=int, sep=';')
+                    if 'index' in definition:
+                        idcs = definition['index']
+                        if ':' in definition['index']:
+                            idcs=[int (i) for i in idcs.split(':')]
+                            perElementJob['idxStart'], perElementJob['idxStop'] = idcs
+                        else:
+                            idx = int (idcs )
+                            perElementJob['idxStart'], perElementJob['idxStop'] = idx, idx+1
                     perElementJob['plotMeshGrid'] = definition.get('plotMeshGrid', 'unDeformed')
                     perElementJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
-                    perElementJob['location'] =     int(definition['location'])
+                    perElementJob['gaussPt'] =      int(definition['gaussPt'])
                     perElementJob['name'] =         definition.get('name', perElementJob['result'])
                     self.perElementJobs.append(perElementJob)
         
@@ -214,9 +224,9 @@ class OutputManager(OutputManagerBase):
         for perNodeJob in self.perNodeJobs:
             self.plotObj.setFigAxesLabel(perNodeJob['axSpec'], perNodeJob['figure'], perNodeJob['name'])
             if perNodeJob['type'] == 'U':
-                location = self.U
+                location = U
             else:
-                location = self.P
+                location = P
                 
             indices = perNodeJob['resultIndices']
             result = np.asarray([perNodeJob['resultFun'](row) for row in location[indices]])
@@ -233,15 +243,15 @@ class OutputManager(OutputManagerBase):
             if perElementJob['plotNodeLabels']:
                 self.plotObj.plotNodeLabels(self.nodes.keys())
             
-            resultArray = np.asarray([el.getResult(**perElementJob) for el in  self.elements.values()])
-            resultIndex = perElementJob['indices']
+            resultArray = np.asarray([el.getPermanentResultPtr(**perElementJob) for el in  self.elements.values()])
+            resultIndex = perElementJob['idxStart']
             if perElementJob['result'] == 'sdv':
                 self.plotObj.contourPlotFieldVariable(resultArray)
             else:
                 self.plotObj.contourPlotFieldVariable(np.asarray([ result[resultIndex] for result in resultArray  ]))
               
+        self.plotObj.show()
+        
     def finalizeIncrement(self, U, P, increment):
-        self.U = U
-        self.P = P
         pass
                 
