@@ -452,3 +452,21 @@ class OutputManager(OutputManagerBase):
     def finalizeJob(self, U, P,):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
         
+def printDocumentation():
+    print("""Export a job to an Ensight Gold Case
+data line: create=perNode|perElement
+ - perNode: elSet: set, for which the per node job is created
+            name: variable export name
+            type: U|P (flow|effort)
+            field: result field
+ - perElement: elSet: set, for which the per element job is created
+               name: variable export name
+               result: element dependent result name (e.g. sdv, stress, strain),
+                       passed to element
+               index: index (or slice) for the result extraction, 
+                      passed to element
+               (gaussPt): optional, id of gaussPt, passed to element
+               
+EnsightOptions in step actions:
+ - intermediateSaveInterval=N : intermediate save every N increments
+ """)
