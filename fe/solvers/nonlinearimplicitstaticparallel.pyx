@@ -26,11 +26,15 @@ cdef public bint warningToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
     return False
 
-
-cdef extern from "UelInterfaceElement.h":
-    cdef cppclass UelInterfaceElement nogil:
-        void computeYourself(double* Pe, double* Ke,  const double* UNew, const double* dU,  const double time[], double dTime, double &pNewDT )
-
+cdef extern from "userLibrary.h":
+        cdef cppclass BftUel nogil:
+            void computeYourself( const double* QTotal,
+                                                const double* dQ,
+                                                double* Pe,
+                                                double* Ke,
+                                                const double* time,
+                                                double dT,
+                                                double& pNewdT,)
 class NISTParallel(NIST):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
     Designed to interface with Abaqus UELs
@@ -87,7 +91,7 @@ class NISTParallel(NIST):
         
         cdef BaseElement backendBasedCythonElement
         # lists (cpp elements + indices and nDofs), which can be accessed parallely
-        cdef UelInterfaceElement** cppBackendElements = <UelInterfaceElement**> malloc ( nElements * sizeof(UelInterfaceElement*) )
+        cdef BftUel** cppBackendElements = <BftUel**> malloc ( nElements * sizeof(BftUel*) )
         cdef int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
         cdef int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
         cdef int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
@@ -96,7 +100,8 @@ class NISTParallel(NIST):
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing
             backendBasedCythonElement=  elList[i]
-            cppBackendElements[i] =     backendBasedCythonElement.cppBackendElement
+            backendBasedCythonElement.initializeStateVarsTemp()
+            cppBackendElements[i] =     backendBasedCythonElement.bftUel
             elIndicesInVIJ[i] =         self.elementToIndexInVIJMap[backendBasedCythonElement] 
             elNDofs[i] =                backendBasedCythonElement.nDofPerEl 
             # each element gets its place in the Pe buffer
@@ -119,12 +124,12 @@ class NISTParallel(NIST):
                 UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
                 dUe[threadID, j] =  dU_mView[ currentIdxInU ]
             
-            (<UelInterfaceElement*> 
+            (<BftUel*> 
                  cppBackendElements[i] )[0].computeYourself( 
-                                                &Pe[elIdxInPe],
-                                                &V_mView[elIdxInVIJ],
                                                 &UN1e[threadID, 0],
                                                 &dUe[threadID, 0],
+                                                &Pe[elIdxInPe],
+                                                &V_mView[elIdxInVIJ],
                                                 &time[0],
                                                 dT,
                                                 pNewDTVector[threadID, 0])

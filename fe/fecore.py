@@ -101,11 +101,15 @@ def assignSections(inputfile, elementSets):
     for secDef in inputfile['*section']:
         if secDef['type'] == "planeUelUmat":
             material = [mat for mat in inputfile['*material'] if mat['id'] == secDef['material']][0]
-            uelProperties = np.append(np.asarray(secDef['thickness']) , values = np.hstack(material['data']) )
+            uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
+            umatProperties = np.hstack(material['data'])
             for line in secDef['data']: 
                for elSet in line: 
                    for el in elementSets[elSet]:
-                       el.setProperties(uelProperties, material['name'], material['statevars'])
+                       el.setProperties(uelProperties, 
+                                        material['name'], 
+                                        material['statevars'],
+                                        umatProperties)
 
 def assignFieldDofIndices(nodes, domainSize):
     """ Loop over all nodes to generate the global field-dof indices.

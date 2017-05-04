@@ -153,7 +153,6 @@ class NIST:
                 R = Pint - Pext
                 
                 
-                
                 if iterationCounter == 0 and not extrapolatedIncrement and dirichlet :
                     # first iteraion? apply dirichlet bcs and unconditionally solve
                     R = self.applyDirichlet(incrementSize, R, dirichlet)
@@ -263,7 +262,7 @@ class NIST:
     def applyDirichlet(self, stepProgress, R, dirichlet):
         """ Apply the dirichlet bcs on the Residual vector
         -> is called by solveStep() before solving the global sys."""
-            
+        
         indices = dirichlet['indices']
         R[indices] = dirichlet['delta'] * stepProgress
         return R

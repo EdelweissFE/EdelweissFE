@@ -16,7 +16,3 @@ class Element(BaseElement):
     
     def __init__(self, nodes, elNumber):
         super().__init__(nodes, elNumber, self.nGaussPt, self.uelIdentification)
-        
-    def setProperties(self, uelProperties, umatName, nStateVarsUmat):
-        super().setProperties(uelProperties, umatName, nStateVarsUmat)
-                
