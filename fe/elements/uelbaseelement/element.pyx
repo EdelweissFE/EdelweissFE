@@ -22,7 +22,14 @@ cdef public bint warningToMSG(const string cppString):
     return False
 
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
-    pSimpleUelWithUmatType getSimpleUelWithUmatById(int id)
+    BftBaseUel* createBftBaseUel(int id, const double* elementCoordinates,
+                                      double* stateVars,
+                                              int nStateVars,
+                                            const double* properties,
+                                            int nProperties,
+                                            int noEl,
+                                            const pUmatType umat,
+                                            int nStateVarsUmat)
 
 cdef class BaseElement:
     
@@ -38,26 +45,28 @@ cdef class BaseElement:
         self.nStateVarsUmat = nStateVarsUmat
         self.nStateVars = self.numGaussPts * (nStateVarsUmat + 12)
         self.stateVars = np.zeros(self.nStateVars)
+        self.stateVarsTemp = np.zeros(self.nStateVars)
         self.umat = getUmat(umatName.lower())
-        self.uel = getSimpleUelWithUmatById(self.uelID)
         self.intProperties = np.empty(0, dtype=np.intc)
         
-        if self.cppBackendElement != NULL:
-            # properties of element are changing - delete old cpp element
-            del self.cppBackendElement
+        if self.bftBaseUel != NULL:
+            del self.bftBaseUel
         
-        self.cppBackendElement = new UelInterfaceElement(self.elNumber ,
-                                                              &self.nodeCoordinates[0], 
-                                                              &self.stateVars[0],
-                                                              self.nStateVars,
-                                                              &self.uelProperties[0], 
-                                                              self.uelProperties.shape[0], 
-                                                              &self.intProperties[0], 
-                                                              self.intProperties.shape[0], 
-                                                              self.umat, 
-                                                              self.nStateVarsUmat, 
-                                                              self.uel)
-        
+        self.bftBaseUel = createBftBaseUel(self.uelID, 
+                                                &self.nodeCoordinates[0], 
+                                                &self.stateVarsTemp[0], 
+                                                self.nStateVars,
+                                                &self.uelProperties[0], 
+                                                self.uelProperties.shape[0],
+                                                self.elNumber,
+                                                self.umat, 
+                                                self.nStateVarsUmat,)
+        if self.bftBaseUel == NULL:
+            print("Element not found: {:}".format(self.uelID))
+
+    def initializeStateVarsTemp(self, ):
+        self.stateVarsTemp[:] = self.stateVars
+
     def computeYourself(self, 
                          double[::1] Ke, 
                          double[::1] Pe, 
@@ -66,12 +75,13 @@ cdef class BaseElement:
                          const double[::1] time, 
                          double dTime, 
                          double[::1] pNewdT):
-        
-        self.cppBackendElement.computeYourself(&Pe[0], &Ke[0], &U[0], &dU[0], &time[0], 
-             dTime,  pNewdT[0])
-    
+        self.initializeStateVarsTemp()
+        self.bftBaseUel.computeYourself(&U[0], &dU[0],
+                                            &Pe[0], &Ke[0],
+                                             &time[0],
+                                            dTime,  pNewdT[0])
     def acceptLastState(self,):
-        self.cppBackendElement.acceptLastState()
+        self.stateVars[:] = self.stateVarsTemp
         
     def resetToLastValidState(self,):
         pass
@@ -88,4 +98,4 @@ cdef class BaseElement:
         return sVars[idxSlice]
     
     def __dealloc__(self):
-        del self.cppBackendElement
+        del self.bftBaseUel
