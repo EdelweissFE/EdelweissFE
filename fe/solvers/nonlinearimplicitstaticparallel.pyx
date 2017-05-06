@@ -13,7 +13,7 @@ from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 from cython.parallel cimport parallel, threadid, prange
-from fe.elements.uelbaseelement.element cimport BaseElement
+from fe.elements.uelbaseelement.element cimport BaseElement, BftUel
 from libc.stdlib cimport malloc, free
 from libcpp.string cimport string
 from time import time as getCurrentTime
@@ -23,18 +23,9 @@ cdef public bint notificationToMSG(const string cppString):
     return True
     
 cdef public bint warningToMSG(const string cppString):
-#    print(cppString.decode('UTF-8'))
+#     print(cppString.decode('UTF-8'))
     return False
 
-cdef extern from "userLibrary.h":
-        cdef cppclass BftUel nogil:
-            void computeYourself( const double* QTotal,
-                                                const double* dQ,
-                                                double* Pe,
-                                                double* Ke,
-                                                const double* time,
-                                                double dT,
-                                                double& pNewdT,)
 class NISTParallel(NIST):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
     Designed to interface with Abaqus UELs
@@ -91,7 +82,7 @@ class NISTParallel(NIST):
         
         cdef BaseElement backendBasedCythonElement
         # lists (cpp elements + indices and nDofs), which can be accessed parallely
-        cdef BftUel** cppBackendElements = <BftUel**> malloc ( nElements * sizeof(BftUel*) )
+        cdef BftUel** cppElements = <BftUel**> malloc ( nElements * sizeof(BftUel*) )
         cdef int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
         cdef int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
         cdef int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
@@ -101,7 +92,7 @@ class NISTParallel(NIST):
             # prepare all lists for upcoming parallel element computing
             backendBasedCythonElement=  elList[i]
             backendBasedCythonElement.initializeStateVarsTemp()
-            cppBackendElements[i] =     backendBasedCythonElement.bftUel
+            cppElements[i] =     backendBasedCythonElement.bftUel
             elIndicesInVIJ[i] =         self.elementToIndexInVIJMap[backendBasedCythonElement] 
             elNDofs[i] =                backendBasedCythonElement.nDofPerEl 
             # each element gets its place in the Pe buffer
@@ -125,14 +116,13 @@ class NISTParallel(NIST):
                 dUe[threadID, j] =  dU_mView[ currentIdxInU ]
             
             (<BftUel*> 
-                 cppBackendElements[i] )[0].computeYourself( 
-                                                &UN1e[threadID, 0],
-                                                &dUe[threadID, 0],
-                                                &Pe[elIdxInPe],
-                                                &V_mView[elIdxInVIJ],
-                                                &time[0],
-                                                dT,
-                                                pNewDTVector[threadID, 0])
+                 cppElements[i] )[0].computeYourself(&UN1e[threadID, 0],
+                                                    &dUe[threadID, 0],
+                                                    &Pe[elIdxInPe],
+                                                    &V_mView[elIdxInVIJ],
+                                                    &time[0],
+                                                    dT,
+                                                    pNewDTVector[threadID, 0])
             
             if pNewDTVector[threadID, 0] <= 1.0:
                 break
@@ -153,6 +143,6 @@ class NISTParallel(NIST):
         free( elIndicesInVIJ )
         free( elNDofs )
         free( elIndexInPe )
-        free( cppBackendElements )
+        free( cppElements )
 
         return P, V, pNewDT

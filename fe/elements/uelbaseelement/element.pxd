@@ -8,7 +8,7 @@ Created on Thu Apr 27 08:35:06 2017
 
 from fe.materials.umatlibrary cimport pUmatType
 
-cdef extern from "userLibrary.h":
+cdef extern from "bftUel.h":
         cdef cppclass BftUel nogil:
             void computeYourself( const double* QTotal,
                                                 const double* dQ,
@@ -17,7 +17,8 @@ cdef extern from "userLibrary.h":
                                                 const double* time,
                                                 double dT,
                                                 double& pNewdT,)
-            
+            void setInitialConditions(int state, const double* values, int nValues)
+
 cdef class BaseElement:
     
     cdef BftUel* bftUel

@@ -215,7 +215,7 @@ class NIST:
         finishedTime = stepProgress * stepLength
         
         self.journal.message("Time in elements:       {:} s".format(computationTimeInElements), self.identification, level=1)
-        self.journal.message("Time in matrix const.  :{:} s".format(computationTimeMatrixConstruction), self.identification, level=1)
+        self.journal.message("Time in matrix const.:  {:} s".format(computationTimeMatrixConstruction), self.identification, level=1)
         self.journal.message("Time in linear solver:  {:} s".format(computationTimeInEqSystem), self.identification, level=1)
             
         return stepSuccess, U, P, finishedTime

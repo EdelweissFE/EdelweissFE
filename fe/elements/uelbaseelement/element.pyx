@@ -76,7 +76,8 @@ cdef class BaseElement:
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars
         
-#    def setInitialCondition(self, ...):
+    def setInitialCondition(self, ):
+        pass
 #        self.bftUel.setInitialConditions( )
 
     def computeYourself(self, 
