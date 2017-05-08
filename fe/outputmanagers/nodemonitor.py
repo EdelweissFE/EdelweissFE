@@ -9,6 +9,7 @@ from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
 from collections import defaultdict
 import numpy as np
+import sympy as sp
 
 class OutputManager(OutputManagerBase):
     
@@ -16,15 +17,7 @@ class OutputManager(OutputManagerBase):
     
     identification = "NodeMonitor"
     
-    printTemplate = "node {:}, {:} {:} {:}: {:}"
-    resultFunctions = {'1' : lambda x: x[0],
-                       '2' : lambda x: x[1],
-                       '3' : lambda x: x[2],
-                       'all' : lambda x: x,
-                       'sum' : lambda x: np.sum(x),
-                       'mean' : lambda x: np.mean(x),
-                       'magnitude' : lambda x: np.linalg.norm(x),
-                       }
+    printTemplate = "node {:}, {:} {:}: {:}"
     
     def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
         self.journal = journal
@@ -37,40 +30,39 @@ class OutputManager(OutputManagerBase):
             defDict = stringDict(defline)
             entry['nodeNum'] = int(defDict['node'])
             entry['field'] = defDict['field']
-            entry['result'] = defDict['result']
-            entry['type'] = defDict.get('type', 'U')
-            entry['resultFun'] = self.resultFunctions[ defDict['result']] 
+            entry['result'] = defDict.get('result', 'U')
             entry['resultIndices'] = nodes[entry['nodeNum']].fields[defDict['field']]
             entry['export'] = defDict.get('export', False)
             if entry['export']:
                 entry['history'] = []
+                
+            f = defDict.get('f(x)', 'x')
+            entry['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , 'numpy')
+            
             self.monitorJobs.append(entry)
     
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step, stepActions, stepOptions):
         pass
     
     def finalizeIncrement(self, U, P, increment):
         for nJob in self.monitorJobs:
-            if nJob['type'] == 'U':
-                location = U
-            else:
-                location = P
+            
+            location = U if nJob['result'] == 'U' else P
                 
             indices = nJob['resultIndices']
-            result = nJob['resultFun'] (location[indices])
+            result = nJob['f(x)'] (location[indices])
             self.journal.message(self.printTemplate.format(nJob['nodeNum'], 
                                                            nJob['field'], 
-                                                           nJob['type'], 
                                                            nJob['result'],
                                                            result),
                                  self.identification)
             if nJob['export']:
                 nJob['history'].append(result)    
             
-    def finalizeStep(self,):
+    def finalizeStep(self, U, P):
         pass
     
-    def finalizeJob(self,):
+    def finalizeJob(self,U, P):
         exportfiles = defaultdict(list)
         
         for nJob in self.monitorJobs:

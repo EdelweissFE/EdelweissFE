@@ -14,16 +14,15 @@ nX=50
 nY=100
 
 *output, type=ensight, jobName=cpe4job, name=esExport
-create=perNode,    elSet=all, field=displacement, type=U, name=displacement
-create=perElement, elSet=all, field=displacement, result=stress, gaussPt=1
-create=perElement, elSet=all, field=displacement, result=strain, gaussPt=1
-create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=0, name=alphaP
-create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=2, name=alphaD
-create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=4, name=omega
+create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=stress, gaussPt=1
+create=perElement, elSet=all, result=strain, gaussPt=1
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
-**EnsightOptions, managerName=esExport, ,intermediateSaveInterval=10, 
-NISTSolverOptions, extrapolation=off, numThreads=2
+options, category=NISTSolver, extrapolation=off, numThreads=2
 dirichlet, name=1,  nSet=gen_leftBottom,   field=displacement, 2=0.0, 1=0.0
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0,
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.05

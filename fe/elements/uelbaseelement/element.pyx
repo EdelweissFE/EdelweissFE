@@ -68,10 +68,7 @@ cdef class BaseElement:
                                                 &self.umatProperties[0],
                                                 self.umatProperties.shape[0])
         if self.bftUel == NULL:
-            print("Element not found: {:}".format(self.uelID))
-            return False
-        
-        return True
+            raise Exception("Element not found: {:}".format(self.uelID))
 
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars

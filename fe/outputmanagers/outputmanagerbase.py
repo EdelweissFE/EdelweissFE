@@ -12,14 +12,14 @@ class OutputManagerBase(ABC):
     """ This is the abstract base class for all output managers.
     User defined output managers must implement the abstract methods."""
     
-    identificatiom = "OutputManager"
+    identification = "OutputManagerBase"
     
     @abstractmethod
     def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
         pass
     
     @abstractmethod
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step, stepActions, stepOptions):
         pass
     
     @abstractmethod

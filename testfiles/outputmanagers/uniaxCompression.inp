@@ -1,0 +1,39 @@
+*material, name=modleon, id=modleon, statevars=5, 
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
+
+*section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
+all
+
+*job, name=cps4job, domain=2d, solver=NISTParallel
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=50
+y0=0, h=100
+elType=uelCPS4
+nX=50
+nY=100
+
+*output, type=ensight, jobName=cps4job, name=myEnsightExport
+create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=stress, gaussPt=1
+create=perElement, elSet=all, result=strain, gaussPt=1
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+
+*output, type=nodeMonitor, jobName=cps4job, name=myNodeMonitor
+node=99, field=displacement, result=U, f(x)=x[0]
+
+*output, type=nodeSetMonitor, jobName=cps4job, name=myNodeSetMonitor
+nSet=gen_top, field=displacement, result=P, f(x)=sum(x), direction=2
+
+*output, type=plotAlongNSetPath, jobName=cps4job, name=myNodeSetPlotter
+nSet=gen_top, field=displacement, result=U, direction=2, label=U along top surface, normalize=True
+
+*step, jobName=cps4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=Ensight, intermediateSaveInterval=100,
+options, category=myEnsightExport, intermediateSaveInterval=10, 
+options, category=NISTSolver, extrapolation=off, numThreads=2
+dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0
+dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,
+nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2

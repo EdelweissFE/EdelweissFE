@@ -9,23 +9,16 @@ all
 *job, name=cps4nljob, domain=2d, solver=NISTParallel
 
 *output, type=nodesetmonitor, jobName=cps4nljob
-nSet=topNodes, field=displacement, type=P, result=sum, direction=2
-
-***output, type=ensight, jobName=cps4nljob, name=Ensight1
-**create=perNode,    elSet=all, field=displacement, type=U, name=displacement
-**create=perNode,    elSet=all, field=nonlocal damage, type=U, name=alphaDNonLocal
-**create=perElement, elSet=all, result=stress, gaussPt=1
-**create=perElement, elSet=all, result=strain, gaussPt=1
-**create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
-**create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
-**create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+nSet=topNodes, field=displacement, result=P, direction=2, f(x)=sum(x)
 
 *output, type=meshPlot, jobName=cps4nljob, 
-figure=1, axSpec=211, create=perNode,   field=nonlocal damage, type=U, result=1, name=alphaNL
+figure=1, axSpec=211, create=perNode, field=nonlocal damage, result=U, f(x)=x[0], name=alphaNL
 figure=1, axSpec=212, create=perElement, result=sdv, index=4, name=omega, gaussPt=1
+
+figure=2, axSpec=211, create=perNode, field=displacement, result=U, f(x)=sqrt( x @ x ), name=u
  
 *step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1000
-NISTSolverOptions, extrapolation=linear, numThreads=2
+options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0
 dirichlet, name=top, nSet=topNodes, field=displacement, 2=-1.02

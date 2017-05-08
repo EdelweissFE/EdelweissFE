@@ -8,11 +8,11 @@ all
 *job, name=cps8rnljob, domain=2d, solver=NISTParallel
 
 *output, type=nodesetmonitor, jobName=cps8rnljob
-nSet=topNodes, field=displacement, type=P, result=sum, direction=2
+nSet=topNodes, field=displacement, result=P, f(x)=sum(x), direction=2
 
-*output, type=ensight, jobName=cps8rnljob
-create=perNode,    elSet=all, field=displacement, type=U, name=displacement
-create=perNode,    elSet=all, field=nonlocal damage, type=U, name=alphaDNonLocal
+*output, type=ensight, jobName=cps8rnljob, name=ensightExport
+create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+create=perNode,    elSet=all, field=nonlocal damage, result=U, name=alphaDNonLocal
 create=perElement, elSet=all, result=stress, gaussPt=1
 create=perElement, elSet=all, result=strain, gaussPt=1
 create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
@@ -20,7 +20,7 @@ create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
 create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
 *step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, 
-NISTSolverOptions, extrapolation=linear, numThreads=2
+options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0
 dirichlet, name=top, nSet=topNodes, field=displacement, 2=-.5

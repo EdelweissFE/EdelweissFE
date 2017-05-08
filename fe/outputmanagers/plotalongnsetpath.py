@@ -35,7 +35,7 @@ class OutputManager(OutputManagerBase):
             nodes = modelInfo['nodeSets'][nSetName]
             field = entry['field'] = defDict['field']
             direct = entry['dir'] = int(defDict.get('direction', 1) )-1
-            entry['type'] = defDict.get('type', 'U')
+            entry['result'] = defDict.get('result', 'U')
             entry['label'] = defDict.get('label', 'result along path')
             entry['resultIndices'] = [node.fields[field][direct] for node in nodes]
             entry['normalize'] = defDict.get('normalize', False)
@@ -49,7 +49,7 @@ class OutputManager(OutputManagerBase):
             for dist in distancesBetweenNodes :
                 entry['pathDistances'].append( entry['pathDistances'][-1] + dist)
     
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step, stepActions, stepOptions):
         pass
     
     def finalizeIncrement(self, U, P, increment):
@@ -60,10 +60,7 @@ class OutputManager(OutputManagerBase):
     
     def finalizeJob(self, U, P,):
         for nJob in self.monitorJobs:
-            if nJob['type'] == 'U':
-                location = U
-            else:
-                location = P
+            location = U if nJob['result'] == 'U' else P
                 
             indices = nJob['resultIndices']
             result =  location[indices]  

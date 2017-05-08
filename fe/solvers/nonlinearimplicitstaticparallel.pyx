@@ -43,12 +43,12 @@ class NISTParallel(NIST):
             self.maximumNDofPerEl = el.nDofPerEl if el.nDofPerEl > self.maximumNDofPerEl else self.maximumNDofPerEl
             self.sizePe += el.nDofPerEl
             
-    def solveStep(self, step, time, stepActions, U, P):
+    def solveStep(self, step, time, stepActions, stepOptions, U, P):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
         
-        self.numThreads = int(stepActions['NISTSolverOptions'].get('numThreads', 1))
-        return super().solveStep(step, time, stepActions, U, P)
+        self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', 1))
+        return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
     def computeElements(self, U, dU, double[::1] time, double dT,
                         pNewDT, 

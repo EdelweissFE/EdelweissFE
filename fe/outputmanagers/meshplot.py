@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 from matplotlib import colors
 import matplotlib
+import sympy as sp
 
 class Triangulation:
     """ class that provides the division of quadrilateral elements into triangles """
@@ -147,7 +148,6 @@ class OutputManager(OutputManagerBase):
         self.finishedSteps =0
         self.domainSize = jobInfo['domainSize']
         self.journal = journal
-        print(self.journal)
 
         self.nodes = modelInfo['nodes']
         self.elements = modelInfo['elements']
@@ -180,13 +180,15 @@ class OutputManager(OutputManagerBase):
                     perNodeJob = {}
                     perNodeJob['name'] =            definition.get('name', 'defaultJob')
                     field =                         definition['field']
-                    perNodeJob['type'] =            definition.get('type', 'U')
-                    perNodeJob['result'] =          definition['type']
+                    perNodeJob['result'] =          definition.get('result')
                     perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
                     perNodeJob['figure'] =          int(definition.get('figure','1'))
                     perNodeJob['plotMeshGrid'] =    definition.get('plotMeshGrid', 'unDeformed')
                     perNodeJob['indices'] =         np.asarray([node.fields[field] for node in self.nodes.values()]).ravel()
-                    perNodeJob['resultFun'] =       self.resultFunctions[ definition['result']] 
+                    
+                    f = definition.get('f(x)', 'x')
+                    perNodeJob['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , 'numpy')
+            
                     perNodeJob['resultIndices'] =   [node.fields[definition['field']] for node in self.nodes.values()]
                     perNodeJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
                     perNodeJob['dimensions'] =      fe.config.phenomena.getFieldSize(field, self.domainSize)
@@ -214,7 +216,7 @@ class OutputManager(OutputManagerBase):
         # Create an Instance of Plotter class
         self.plotObj = Plotter(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
     
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step, stepActions, stepOptions):
         pass
 
     def finalizeStep(self, U, P,):
@@ -223,14 +225,10 @@ class OutputManager(OutputManagerBase):
     def finalizeJob(self, U, P,):
         for perNodeJob in self.perNodeJobs:
             self.plotObj.setFigAxesLabel(perNodeJob['axSpec'], perNodeJob['figure'], perNodeJob['name'])
-            if perNodeJob['type'] == 'U':
-                location = U
-            else:
-                location = P
+            location = U if perNodeJob['result'] == 'U' else P
                 
             indices = perNodeJob['resultIndices']
-            result = np.asarray([perNodeJob['resultFun'](row) for row in location[indices]])
-
+            result = np.asarray([perNodeJob['f(x)'](row) for row in location[indices]])
             if perNodeJob['plotMeshGrid']=='unDeformed':
                 self.plotObj.plotMeshGrid()
             if perNodeJob['plotNodeLabels']:

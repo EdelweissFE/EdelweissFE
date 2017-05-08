@@ -11,10 +11,10 @@ from fe.elements.node import Node
 from fe.config.elementlibrary import getElementByName
 from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.generators import getGeneratorByName
-from fe.config.stepactions import getStepActionGeneratorByName
+from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerByName
 from fe.config.solvers import solverLibrary
-from fe.utils.misc import isInteger, filterByJobName
+from fe.utils.misc import isInteger, filterByJobName, stringDict
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from time import time as getCurrentTime
@@ -140,7 +140,7 @@ def assignFieldDofIndices(nodes, domainSize):
         
     return fieldIdxBase, fieldIndices
     
-def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
+def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions):
     """ Parses all the defined actions for the current step, 
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
@@ -153,24 +153,32 @@ def collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P):
     # create a default dictionary of type list with key defined by module action
     # and values definitions in the form of list e.g.:
     # defaultdict (list) { 'dirichlet' [ dirichlet defintion 1, dirichlet definition 2, ... ]}
-    actions = defaultdict(list)
-    for actionDefLine in step['data']:
-        moduleName = actionDefLine[0]
-        actionDefinition = actionDefLine[1:]
-        actions[moduleName].append(actionDefinition)
     
-    for moduleName, actionDefinitionLines in actions.items():
-        #generating step-actions by external modules
-        generateStepAction = getStepActionGeneratorByName(moduleName)
-        stepActions[moduleName] =  generateStepAction(actionDefinitionLines, 
-                                                               jobInfo, 
-                                                               modelInfo, 
-                                                               time, 
-                                                               stepActions, 
-                                                               U, P)
-    return  stepActions
-        
-    
+    for line in step['data']:
+        if line[0].startswith('options'):
+            # line is a option 
+            options = stringDict(line[1:])
+            category = options['category']
+            stepOptions[category].update(options)
+        else:
+            #line is an action
+            module = line[0]
+            try:
+                if not line[1].startswith('name='):
+                    raise
+                moduleName = line[1].split('=')[1]
+                definitionRemainder = line[2:]
+            except:
+                moduleName = 'unnamed {:} {:}'.format(module, 1 )
+                definitionRemainder = line[1:]
+           
+            if moduleName in stepActions[module]:
+                stepActions[module][moduleName].updateStepAction(definitionRemainder)
+            else:
+                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, definitionRemainder, jobInfo, modelInfo, None)
+                                                               
+    return  stepActions, stepOptions
+
 def finitElementSimulation(inputfile, verbose=False):
     """ This is the core of the finite element analysis:
     It assembles the model, and controls the respective solver based
@@ -244,20 +252,22 @@ def finitElementSimulation(inputfile, verbose=False):
     Solver =    solverLibrary[job.get('solver','NIST')]
     solver =    Solver(jobInfo, modelInfo, journal, outputmanagers)
     U, P =      solver.initialize()
-    stepActions = {}
+    
+    stepActions = defaultdict(dict)
+    stepOptions = defaultdict(dict)
     
     try:
         for step in jobSteps:
             # collect all step actions in a dictionary with key of actionType
             # and concerned values 
-            stepActions = collectStepActions(step, jobInfo, modelInfo, time, stepActions, U, P)
+            stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions)
             
             for manager in outputmanagers: 
-                manager.initializeStep(step, stepActions)
+                manager.initializeStep(step, stepActions, stepOptions)
                 
             # solve the step 
             tic =  getCurrentTime()
-            success, U, P, time = solver.solveStep(step, time, stepActions, U, P,)
+            success, U, P, time = solver.solveStep(step, time, stepActions, stepOptions, U, P,)
             toc = getCurrentTime()
             
             stepTime = toc - tic

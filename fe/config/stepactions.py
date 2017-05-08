@@ -8,6 +8,6 @@ Created on Mon Jan 23 13:05:53 2017
 
 import importlib
 
-def getStepActionGeneratorByName(name):
+def stepActionFactory(name):
     module = importlib.import_module("fe.stepactions."+name.lower())    
-    return module.generateAction
+    return module.StepAction

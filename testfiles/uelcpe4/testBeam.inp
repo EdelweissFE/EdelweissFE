@@ -12,24 +12,18 @@ weak
 *job, name=cpe4job, domain=2d, 
 
 *output, type=nodesetmonitor, jobName=cpe4job
-nSet=right, field=displacement, type=P, result=sum, direction=1
+nSet=left, field=displacement, result=P, f(x)=sum(x), direction=2
 
 *output, type=ensight, jobName=cpe4job, name=ensightExport
-create=perNode,    elSet=all, field=displacement, type=U, name=displacement
-create=perElement, elSet=all, field=displacement, result=stress, gaussPt=1
-create=perElement, elSet=all, field=displacement, result=strain, gaussPt=1
-create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=0, name=alphaP
-create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=2, name=alphaD
-create=perElement, elSet=all, field=displacement, result=sdv, gaussPt=1, index=4, name=omega
+create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=stress, gaussPt=1
+create=perElement, elSet=all, result=strain, gaussPt=1
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
+create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
-*step, jobName=cpe4job, maxInc=5e-3, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
-NISTSolverOptions, extrapolation=linear
+*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
+options, category=NISTSolver,       extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
 dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=displacement, 1=-2
-
-*step, jobName=cpe4job, maxInc=5e-3, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=500
-NISTSolverOptions, extrapolation=linear
-dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
-dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=displacement, 1=-5
+dirichlet, name=right, nSet=right,  field=displacement, 2=-.1

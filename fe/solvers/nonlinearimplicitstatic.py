@@ -67,7 +67,7 @@ class NIST:
         P = np.zeros(self.nDof)
         return U, P
         
-    def solveStep(self, step, time, stepActions, U, P):
+    def solveStep(self, step, time, stepActions, stepOptions, U, P):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
             
@@ -76,7 +76,7 @@ class NIST:
         I = self.I
         numberOfDofs = self.nDof
         stepLength = step.get('stepLength', 1.0)
-        extrapolation = stepActions['NISTSolverOptions'].get('extrapolation', 'linear')
+        extrapolation = stepOptions['NISTSolver'].get('extrapolation', 'linear')
         
         incGen = IncrementGenerator(time, 
                                     stepLength, 
@@ -90,10 +90,7 @@ class NIST:
         
         dU = np.zeros(numberOfDofs)
         Pext = np.zeros(numberOfDofs)
-        
-        # get indices where dirichlet BC are given
-        dirichlet = stepActions['dirichlet']
-        dirichletIndices = dirichlet['indices']
+        dirichlets = stepActions['dirichlet'].values()
         
         # initialize pNewDt as np.array, for bypassing to external c++ code (UEL)
         pNewDT = np.zeros(1)
@@ -102,6 +99,7 @@ class NIST:
         computationTimeInElements = 0.0
         computationTimeInEqSystem = 0.0
         computationTimeMatrixConstruction = 0.0
+        self.computationTimeInDirichlet = 0.0
         
         for increment in incGen.generateIncrement():
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -123,7 +121,7 @@ class NIST:
             
             if extrapolation == 'linear' and lastIncrementSize:
                 dU *= (incrementSize/lastIncrementSize) 
-                dU = self.applyDirichlet(incrementSize, dU, dirichlet)      
+                dU = self.applyDirichlet(increment, dU, dirichlets)      
                 extrapolatedIncrement = True
             else:
                 extrapolatedIncrement = False
@@ -145,20 +143,19 @@ class NIST:
                 Pint  = P
                 Pext[:] = 0.0
                 
-                if 'nodeForces' in stepActions:
-                    # modify the load (effort) vector by external forces (effort)
-                    nodeForces = stepActions['nodeForces']
-                    Pext[nodeForces['indices']] += nodeForces['delta']
+                for action in stepActions['nodeforces'].values():
+                    Pext = action.applyOnP(Pext, increment) 
                     
                 R = Pint - Pext
                 
                 
-                if iterationCounter == 0 and not extrapolatedIncrement and dirichlet :
+                if iterationCounter == 0 and not extrapolatedIncrement and dirichlets :
                     # first iteraion? apply dirichlet bcs and unconditionally solve
-                    R = self.applyDirichlet(incrementSize, R, dirichlet)
+                    R = self.applyDirichlet(increment, R, dirichlets)
                 else:
                     # iteration cycle 1 or higher, time to check the convergency
-                    R[dirichletIndices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
+                    for dirichlet in dirichlets:
+                        R[dirichlet.indices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
 
                     converged = self.checkConvergency(R, ddU, iterationCounter)
                     
@@ -177,7 +174,7 @@ class NIST:
                 toc =  getCurrentTime()
                 computationTimeMatrixConstruction += toc - tic
                 
-                K_ = self.applyDirichletK(K, dirichlet)
+                K_ = self.applyDirichletK(K, dirichlets)
                 # solve !                
                 
                 tic =  getCurrentTime()
@@ -206,8 +203,7 @@ class NIST:
                 if extrapolatedIncrement and iterationCounter == 0:
                     incGen.discardAndChangeIncrement(0.25)
                 else:
-#                    incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
-                    incGen.discardAndChangeIncrement(0.25)
+                    incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
                 lastIncrementSize = False
                 
         
@@ -216,6 +212,7 @@ class NIST:
         
         self.journal.message("Time in elements:       {:} s".format(computationTimeInElements), self.identification, level=1)
         self.journal.message("Time in matrix const.:  {:} s".format(computationTimeMatrixConstruction), self.identification, level=1)
+        self.journal.message("Time in dirichlet:      {:} s".format(self.computationTimeInDirichlet), self.identification, level=1)
         self.journal.message("Time in linear solver:  {:} s".format(computationTimeInEqSystem), self.identification, level=1)
             
         return stepSuccess, U, P, finishedTime
@@ -248,29 +245,33 @@ class NIST:
             
         return P, V, pNewDT
     
-    def applyDirichletK(self, K, dirichlet):
+    def applyDirichletK(self, K, dirichlets):
         """ Apply the dirichlet bcs on the global stiffnes matrix
         -> is called by solveStep() before solving the global sys.
         http://stackoverflow.com/questions/12129948/scipy-sparse-set-row-to-zeros"""
             
-        for row in dirichlet['indices']:
-            K.data[K.indptr[row]:K.indptr[row+1]] = 0.0
-            K[row, row] = 1.0
+        for dirichlet in dirichlets:
+            for row in dirichlet.indices:
+                K.data[K.indptr[row]:K.indptr[row+1]] = 0.0
+                K[row, row] = 1.0
         K.eliminate_zeros()
         return K
               
-    def applyDirichlet(self, stepProgress, R, dirichlet):
+    def applyDirichlet(self, increment, R, dirichlets):
         """ Apply the dirichlet bcs on the Residual vector
         -> is called by solveStep() before solving the global sys."""
-        
-        indices = dirichlet['indices']
-        R[indices] = dirichlet['delta'] * stepProgress
+        tic = getCurrentTime()
+        for dirichlet in dirichlets:
+            indices = dirichlet.indices#['indices']
+            R[indices] = dirichlet.getDelta(increment)
+        toc = getCurrentTime()
+        self.computationTimeInDirichlet += toc-tic
         return R
     
     def checkConvergency(self, R, ddU, iterationCounter):
         """ Check the convergency, indivudually for each field,
         similar to ABAQUS based on the current total residual and the flow correction
-        -> is called by solveStep() to decice wether to continue iterating or stop"""
+        -> is called by solveStep() to decide wether to continue iterating or stop"""
         
         iterationMessage = ''
         convergedAtAll  = True

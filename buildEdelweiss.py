@@ -27,7 +27,6 @@ extensions = [Extension("*",
                          runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
                         language='c++',)
                         ]  
-    
 
 """
 Build Extension for the UMAT material library, linked to the bftUserLibrary

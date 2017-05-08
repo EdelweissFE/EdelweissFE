@@ -6,31 +6,45 @@ Created on Tue Jan 24 19:33:06 2017
 @author: matthias
 """
 
+from fe.stepactions.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict
 import numpy as np
+import sympy as sp
 
-def generateAction(actionDefinitionLines, jobInfo, modelInfo, 
-                       time, stepActions, U, P):
-    """ create nodeForces dictionary with nodeForce in 
+class StepAction(StepActionBase):
+    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+        """ create dirichlet dictionary with node boundary condition in 
         keytype 'indices': array of global dof indices
                 'delta':   prescribed deltaValue """
-    
-    nodeForceIndices = []
-    nodeForceDelta = []
-    
-    nodeSets = modelInfo['nodeSets']
-    
-    for dirichletLine in actionDefinitionLines:
-        action = stringDict(dirichletLine)        
+                
+        self.name = name
+        nodeForceIndices = []
+        nodeForceDelta = []
+        
+        nodeSets = modelInfo['nodeSets']
+        
+        action = stringDict(definition)        
         field = action['field']
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
                 directionIndices = [node.fields[field][x] for node in nodeSets[action['nSet']]]
                 nodeForceIndices += directionIndices
                 nodeForceDelta += [float(action[direction])] * len(directionIndices)
-                        
-    nodeForces = {}
-    nodeForces['indices'] =    np.array(nodeForceIndices)
-    nodeForces['delta'] =      np.array(nodeForceDelta)
+                            
+        self.indices = np.array(nodeForceIndices)
+        self.deltaP = np.array(nodeForceDelta)
+        
+        if 'f(t)' in action:
+            t = sp.symbols('t')
+            self.amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
+        else:
+            self.amplitude = lambda x:x
+        
     
-    return nodeForces
+    def updateStepAction(self, definitionLines, jobInfo, modelInfo, journal):
+        pass
+    
+    def applyOnP(self, P, increment):
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        P[self.indices] += self.deltaP * self.amplitude( stepProgress )
+        return P

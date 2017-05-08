@@ -364,7 +364,7 @@ class OutputManager(OutputManagerBase):
                         perNodeJob['name'] = definition['name']
                         perNodeJob['part'] =  self.elSetToEnsightPartMappings[setName]
                         field = definition['field']
-                        perNodeJob['result'] = definition['type']
+                        perNodeJob['result'] = definition['result']
                         perNodeJob['varSize'] = variableTypes[ fe.config.phenomena.phenomena[field] ]
                         perNodeJob['indices'] = np.asarray([node.fields[field] for node in perNodeJob['part'].nodes]).ravel()
                         perNodeJob['dimensions'] = fe.config.phenomena.getFieldSize(field, self.domainSize)
@@ -396,9 +396,9 @@ class OutputManager(OutputManagerBase):
                     
                     self.perElementJobs.append(perElementJob)
                     
-    def initializeStep(self, step, stepActions):
-        if 'EnsightOptions' in stepActions and self.name in stepActions['EnsightOptions']:
-            options = stepActions['EnsightOptions'][self.name]
+    def initializeStep(self, step, stepActions, stepOptions):
+        if self.name in stepOptions or 'EnsightOptions' in stepOptions :
+            options = stepOptions.get(self.name, False) or stepOptions['EnsightOptions']
             self.intermediateSaveInterval = int(options.get('intermediateSaveInterval', 
                                                             self.intermediateSaveInterval))
             

@@ -10,14 +10,11 @@ from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
 from collections import defaultdict
 import numpy as np
+import sympy as sp
 
 class OutputManager(OutputManagerBase):
     identification = "NodeSetMonitor"
     printTemplate = "nSet {:}, {:} {:}: {:}"
-    resultFunctions = {
-                       'sum' : lambda x: np.sum(x),
-                       'mean' : lambda x: np.mean(x),
-                       }
     
     def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
         self.journal = journal
@@ -32,29 +29,30 @@ class OutputManager(OutputManagerBase):
             nodes = modelInfo['nodeSets'][nSetName]
             field = entry['field'] = defDict['field']
             direct = entry['dir'] = int(defDict['direction'])-1
-            entry['type'] = defDict.get('type', 'U')
-            entry['resultFun'] = self.resultFunctions[ defDict['result']] 
+            entry['result'] = defDict.get('result', 'U')
             entry['resultIndices'] = [node.fields[field][direct] for node in nodes]
             entry['export'] = defDict.get('export', False)
+            
+            f = defDict.get('f(x)', 'x')
+            entry['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , 'numpy')
+            
             if entry['export']:
                 entry['history'] = []
             self.monitorJobs.append(entry)
     
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step, stepActions, stepOptions):
         pass
     
     def finalizeIncrement(self, U, P, increment):
         for nJob in self.monitorJobs:
-            if nJob['type'] == 'U':
-                location = U
-            else:
-                location = P
+            
+            location = U if nJob['result'] == 'U' else P
                 
             indices = nJob['resultIndices']
-            result = nJob['resultFun'] ( location[indices]  )
+            result = nJob['f(x)'] ( location[indices]  )
             self.journal.message(self.printTemplate.format(nJob['nSetName'], 
-                                                           nJob['field'], 
-                                                           nJob['type'], 
+                                                           nJob['field'],  
+                                                           nJob['result'], 
                                                            result),
                                  self.identification)
             if nJob['export']:

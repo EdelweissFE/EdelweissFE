@@ -4,23 +4,23 @@
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*job, name=cpe4job, domain=2d, 
+*job, name=cps8rnljob, domain=2d, 
 
-*output, type=nodesetmonitor, jobName=cpe4job
-nSet=right, field=displacement, type=P, result=sum, direction=2
+*output, type=nodesetmonitor, jobName=cps8rnljob
+nSet=right, field=displacement, result=P, direction=1, f(x)=sum(x)
 
-*output, type=ensight, jobName=cpe4job
-create=perNode,    elSet=all, field=displacement, type=U, name=displacement
+*output, type=ensight, jobName=cps8rnljob
+create=perNode,    elSet=all, field=displacement, result=U, name=displacement
 create=perElement, elSet=all, result=stress, gaussPt=1
 create=perElement, elSet=all, result=strain, gaussPt=1
 create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
 create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
 create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
-*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
-NISTSolverOptions, extrapolation=linear
+*step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=displacement, 2=.5
+dirichlet, name=right, nSet=right,  field=displacement, 1=-1
 
 *nSet, nSet=left, 
 1, 8, 15, 22, 32, 50, 63
