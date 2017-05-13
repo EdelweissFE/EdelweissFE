@@ -9,7 +9,9 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
+from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest
 from time import time as getCurrentTime
+from collections import defaultdict
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
@@ -65,19 +67,25 @@ class NIST:
         
         U = np.zeros(self.nDof)
         P = np.zeros(self.nDof)
+        
         return U, P
         
     def solveStep(self, step, time, stepActions, stepOptions, U, P):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
+    
+        self.computationTimes = defaultdict(lambda : 0.0)
             
         V = self.V
         J = self.J
         I = self.I
+        
+        R = np.copy(P)
+        
         numberOfDofs = self.nDof
         stepLength = step.get('stepLength', 1.0)
         extrapolation = stepOptions['NISTSolver'].get('extrapolation', 'linear')
-        
+
         incGen = IncrementGenerator(time, 
                                     stepLength, 
                                     step.get('maxInc', self.defaultMaxInc), 
@@ -89,142 +97,135 @@ class NIST:
         criticalIter = step.get('crititcalIter', self.defaultCriticalIter)
         
         dU = np.zeros(numberOfDofs)
-        Pext = np.zeros(numberOfDofs)
+        
         dirichlets = stepActions['dirichlet'].values()
+        distributedLoads = stepActions['distributedload'].values()
+        concentratedLoads = stepActions['nodeforces'].values()
+        geostatics = stepActions['geostatic'].values()
+        isGeostaticStep = any([g.active for g in geostatics] )
         
         # initialize pNewDt as np.array, for bypassing to external c++ code (UEL)
-        pNewDT = np.zeros(1)
         lastIncrementSize = False
         
-        computationTimeInElements = 0.0
-        computationTimeInEqSystem = 0.0
-        computationTimeMatrixConstruction = 0.0
-        self.computationTimeInDirichlet = 0.0
-        
-        for increment in incGen.generateIncrement():
-            incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-            
-            self.journal.printSeperationLine()
-            self.journal.message("increment {:}: {:8f}, {:8f}; time {:10f} to {:10f}".format(incNumber,
-                                                                                        incrementSize, 
-                                                                                        stepProgress,
-                                                                                        totalTime,
-                                                                                        totalTime + dT),
-                                self.identification, level=1)
-            self.journal.message(self.iterationHeader, self.identification, level=2)
-            self.journal.message(self.iterationHeader2, self.identification, level=2)
-            
-            converged = False
-            ddU = None
-            iterationCounter = 0
-            stepTimes = np.array([stepTime, totalTime])
-            
-            if extrapolation == 'linear' and lastIncrementSize:
-                dU *= (incrementSize/lastIncrementSize) 
-                dU = self.applyDirichlet(increment, dU, dirichlets)      
-                extrapolatedIncrement = True
-            else:
-                extrapolatedIncrement = False
-                dU[:] = 0.0        
-
-            while True:
+        try:
+            for increment in incGen.generateIncrement():
+                incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
                 
-                pNewDT[0] = 1e36
+                self.journal.printSeperationLine()
+                self.journal.message("increment {:}: {:8f}, {:8f}; time {:10f} to {:10f}".format(incNumber,
+                                                                                            incrementSize, 
+                                                                                            stepProgress,
+                                                                                            totalTime,
+                                                                                            totalTime + dT),
+                                    self.identification, level=1)
+                self.journal.message(self.iterationHeader, self.identification, level=2)
+                self.journal.message(self.iterationHeader2, self.identification, level=2)
                 
-                tic =  getCurrentTime()
-                P, V, pNewDT = self.computeElements(U, dU, stepTimes, dT, pNewDT, P, V, I, J,)
-                toc =  getCurrentTime()
-                computationTimeInElements += (toc-tic)
+                ddU = None
+                iterationCounter = 0
+                stepTimes = np.array([stepTime, totalTime])
                 
-                if pNewDT[0] < 1.0:
-                    self.journal.message("An element requests for a cutback", self.identification, level=2)
-                    break
-                    
-                Pint  = P
-                Pext[:] = 0.0
-                
-                for action in stepActions['nodeforces'].values():
-                    Pext = action.applyOnP(Pext, increment) 
-                    
-                R = Pint - Pext
-                
-                
-                if iterationCounter == 0 and not extrapolatedIncrement and dirichlets :
-                    # first iteraion? apply dirichlet bcs and unconditionally solve
-                    R = self.applyDirichlet(increment, R, dirichlets)
+                if extrapolation == 'linear' and lastIncrementSize:
+                    dU *= (incrementSize/lastIncrementSize) 
+                    dU = self.applyDirichlet(increment, dU, dirichlets)      
+                    extrapolatedIncrement = True
                 else:
-                    # iteration cycle 1 or higher, time to check the convergency
-                    for dirichlet in dirichlets:
-                        R[dirichlet.indices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
-
-                    converged = self.checkConvergency(R, ddU, iterationCounter)
-                    
-                if converged:
-                    break
-                
-                if iterationCounter == maxIter-1:
-                    self.journal.message("Reached max. iterations in current increment, cutting back", self.identification, 1)
-                    break
-                
-                # not converged yet!
-                # prepare global stiffness matrix
-                
-                tic =  getCurrentTime()
-                K = coo_matrix( (V, (I,J)), shape=(numberOfDofs, numberOfDofs)).tocsr()
-                toc =  getCurrentTime()
-                computationTimeMatrixConstruction += toc - tic
-                
-                K_ = self.applyDirichletK(K, dirichlets)
-                # solve !                
-                
-                tic =  getCurrentTime()
-                ddU = spsolve(K_, R, )
-                toc =  getCurrentTime()
-                computationTimeInEqSystem += (toc-tic)
-                dU += ddU
-                
-                iterationCounter += 1
-                        
-            if converged:
-                U += dU
-                lastIncrementSize = incrementSize
-                if iterationCounter >= criticalIter:
-                    incGen.preventIncrementIncrease()
-                    
-                for el in self.elements.values():
-                    el.acceptLastState()
-                self.journal.message("Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1) 
-                
-                for man in self.outputmanagers:
-                    man.finalizeIncrement(U, P, increment)
-                
-            else: 
-                # get new increment by down-scaling of current increment
-                if extrapolatedIncrement and iterationCounter == 0:
-                    incGen.discardAndChangeIncrement(0.25)
-                else:
-                    incGen.discardAndChangeIncrement(pNewDT[0] if pNewDT[0] < 1.0 else 0.25)
-                lastIncrementSize = False
-                
-        
-        stepSuccess = stepProgress >= (1-1e-15)
-        finishedTime = stepProgress * stepLength
-        
-        self.journal.message("Time in elements:       {:} s".format(computationTimeInElements), self.identification, level=1)
-        self.journal.message("Time in matrix const.:  {:} s".format(computationTimeMatrixConstruction), self.identification, level=1)
-        self.journal.message("Time in dirichlet:      {:} s".format(self.computationTimeInDirichlet), self.identification, level=1)
-        self.journal.message("Time in linear solver:  {:} s".format(computationTimeInEqSystem), self.identification, level=1)
-            
-        return stepSuccess, U, P, finishedTime
+                    extrapolatedIncrement = False
+                    dU[:] = 0.0        
     
-    def computeElements(self, U, dU, time, dT, pNewDT, P, V, I, J):
+                try:
+                    while True:
+                        
+                        for geostatic in geostatics:
+                            geostatic.apply()
+                        
+                        P, V = self.computeElements(U, dU, stepTimes, dT, P, V, I, J,)
+                            
+                        for cLoad in concentratedLoads: 
+                            P = cLoad.applyOnP(P, increment) 
+                        self.computeDistributedLoads(distributedLoads, P, I, stepTimes, dT, increment)   
+                        
+                        R[:] = P
+                        
+                        if iterationCounter == 0 and not extrapolatedIncrement and dirichlets :
+                            # first iteration? apply dirichlet bcs and unconditionally solve
+                            R = self.applyDirichlet(increment, R, dirichlets)
+                        else:
+                            # iteration cycle 1 or higher, time to check the convergency
+                            for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
+                            
+                            # check convergency 
+                            if self.checkConvergency(R, ddU, iterationCounter):
+                                break
+                            
+                        if iterationCounter == maxIter-1:
+                            raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
+                        
+                        
+                        K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
+                        K = self.applyDirichletK(K, dirichlets)
+                        ddU = self.linearSolve(K, R, )
+                        dU += ddU
+                        iterationCounter += 1
+                    
+                except CutbackRequest as e:
+                    self.journal.message(str(e), self.identification, 1)
+                    incGen.discardAndChangeIncrement( e.cutbackSize if e.cutbackSize > 0.25 else 0.25 )
+                    lastIncrementSize = False
+                    
+                except ReachedMaxIterations as e:
+                    self.journal.message(str(e), self.identification, 1)
+                    incGen.discardAndChangeIncrement(0.25)
+                    lastIncrementSize = False
+                    
+                else: 
+                    #converged
+                    U += dU
+                    lastIncrementSize = incrementSize
+                    if iterationCounter >= criticalIter: 
+                        incGen.preventIncrementIncrease()
+                        
+                    for el in self.elements.values(): 
+                        el.acceptLastState()
+                        
+                    self.journal.message("Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1) 
+                    
+                    for man in self.outputmanagers:
+                        man.finalizeIncrement(U, P, increment)
+                        
+        except (ReachedMaxIncrements, ReachedMinIncrementSize) as e:
+            self.journal.errorMessage("Incrementation failed", self.identification)
+            
+        except KeyboardInterrupt:
+            print('')
+            self.journal.message("Interrupted by user", self.identification)
+            
+        else:
+            # reset all displacements, if the present step is a geostatic step
+            if isGeostaticStep: U = self.resetDisplacements(U)
+                
+            for stepActionType in stepActions.values():
+                for action in stepActionType.values():
+                    action.finishStep()
+                    
+        finally:
+            
+            finishedTime = time + stepProgress * stepLength
+            for section, time in self.computationTimes.items():
+                self.journal.message("Time in {:<30}: {:}s".format(section, time), self.identification, level=1)
+            
+        return 1.0 - stepProgress < 1e-15 , U, P, finishedTime
+    
+    def computeElements(self, U, dU, time, dT, P, V, I, J):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration """
-            
+        tic = getCurrentTime()
+        
         P[:] = 0.0
         UN1 = dU + U
+        pNewDT = np.array([1e36])
         
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
@@ -238,23 +239,57 @@ class NIST:
                                dU [ idcsInPUdU ], 
                                time, dT, pNewDT)
             if pNewDT[0] <= 1.0:
-                break 
+                raise CutbackRequest("An element requests for a cutback", pNewDT[0])
             
             # global effort vector is assembled directly
             P[ idcsInPUdU ] += Pe
+        
+        toc = getCurrentTime()
+        self.computationTimes['elements'] += toc - tic
+        return P, V
+    
+    def computeDistributedLoads(self, distributedLoads, P, I, time, dT, increment):
+        """ Loop over all elements, and evalute them. 
+        Note that ABAQUS style is employed: element(Un+1, dUn+1) 
+        instead of element(Un, dUn+1)
+        -> is called by solveStep() in each iteration """
+        
+        tic = getCurrentTime()
+        
+        for dLoad in distributedLoads:
+            magnitude = dLoad.getCurrentMagnitude(increment)
+            for faceID, elements in dLoad.surface.items():
+                for el in elements:
+                    idxInVIJ = self.elementToIndexInVIJMap[el]
+                    Pe = np.zeros(el.nDofPerEl)
+                    idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
+                    Pe[:] = 0.0 
+                    el.computeDistributedLoad(dLoad.loadType,
+                                              Pe,
+                                              faceID,
+                                              magnitude, 
+                                              time, dT)
+                    P[idcsInPUdU] += Pe                    
             
-        return P, V, pNewDT
+        toc = getCurrentTime()
+        self.computationTimes['distributed loads'] += toc - tic
+        return P
     
     def applyDirichletK(self, K, dirichlets):
         """ Apply the dirichlet bcs on the global stiffnes matrix
         -> is called by solveStep() before solving the global sys.
         http://stackoverflow.com/questions/12129948/scipy-sparse-set-row-to-zeros"""
             
+        tic = getCurrentTime()
         for dirichlet in dirichlets:
             for row in dirichlet.indices:
                 K.data[K.indptr[row]:K.indptr[row+1]] = 0.0
                 K[row, row] = 1.0
         K.eliminate_zeros()
+        
+        toc = getCurrentTime()
+        self.computationTimes['dirichlet K'] += toc - tic
+        
         return K
               
     def applyDirichlet(self, increment, R, dirichlets):
@@ -264,14 +299,18 @@ class NIST:
         for dirichlet in dirichlets:
             indices = dirichlet.indices#['indices']
             R[indices] = dirichlet.getDelta(increment)
+
         toc = getCurrentTime()
-        self.computationTimeInDirichlet += toc-tic
+        self.computationTimes['dirichlet R'] += toc - tic
+        
         return R
     
     def checkConvergency(self, R, ddU, iterationCounter):
         """ Check the convergency, indivudually for each field,
         similar to ABAQUS based on the current total residual and the flow correction
         -> is called by solveStep() to decide wether to continue iterating or stop"""
+        
+        tic = getCurrentTime()
         
         iterationMessage = ''
         convergedAtAll  = True
@@ -297,7 +336,25 @@ class NIST:
             convergedAtAll = convergedAtAll and convergedFlow and convergedEffort
             
         self.journal.message(iterationMessage, self.identification)     
+        
+        toc = getCurrentTime()
+        self.computationTimes['convergence check'] += toc - tic
+        
         return convergedAtAll
+    
+    def linearSolve(self, A, b):
+        tic =  getCurrentTime()
+        ddU = spsolve(A, b )
+        toc =  getCurrentTime()
+        self.computationTimes['linear solve'] += toc - tic
+        return ddU
+    
+    def assembleStiffness(self, V, I, J, shape):
+        tic =  getCurrentTime()
+        K = coo_matrix( (V, (I,J)), shape).tocsr()
+        toc =  getCurrentTime()
+        self.computationTimes['CSR generation'] += toc - tic
+        return K
     
     def generateVIJ(self, elements):
         """ Initializes the V vector and generates I, J entries for each element,
@@ -325,4 +382,15 @@ class NIST:
             idxInVIJ += el.sizeKe
             
         return V, I, J, elementToIndexInVIJMap
-             
+    
+    def resetDisplacements(self, U):
+        """ -> May be called at the end of a geostatic step, the zero all displacments after
+        applying the geostatic stress """
+        
+        self.journal.printSeperationLine()
+        self.journal.message("Geostatic step, resetting displacements", self.identification, level=1)
+        self.journal.printSeperationLine()
+        U[ self.fieldIndices['displacement'] ] = 0.0 
+        return U
+    
+    

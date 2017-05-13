@@ -4,6 +4,7 @@ Created on Sat Jan  21 12:18:10 2017
 
 @author: Matthias
 """
+from fe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 
 class IncrementGenerator:
     """ Version 2 of the increment generator, 
@@ -37,8 +38,12 @@ class IncrementGenerator:
         #zero increment; return value for first function call
         yield (0, 0.0, 0.0, 0.0, 0.0, self.currentTime )
         
-        while self.finishedStepProgress < (1.0-1e-15) and self.totalIncrements < self.maxNumberIncrements:
+        while self.finishedStepProgress < (1.0-1e-15):
         
+            if ( self.totalIncrements >= self.maxNumberIncrements ):
+                self.journal.errorMessage("Reached maximum number of increments", self.identification)
+                raise ReachedMaxIncrements()
+            
             if(self.nPassedGoodIncrements >= 3) and self.allowedToIncreasedNext:
                 self.increment *= 1.5
                 if self.increment > self.maxIncrement:
@@ -75,8 +80,9 @@ class IncrementGenerator:
         
         if self.increment == self.minIncrement:
             self.journal.errorMessage("Cannot reduce increment size", self.identification)
-            self.totalIncrements = self.maxNumberIncrements + 1
-            return 
+            raise ReachedMinIncrementSize()
+#            self.totalIncrements = self.maxNumberIncrements + 1
+#            return 
             
         self.finishedStepProgress -=    self.increment
         newIncrement = self.increment * scaleFactor

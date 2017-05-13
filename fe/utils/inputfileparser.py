@@ -9,6 +9,38 @@ import numpy as np
 from os.path import dirname, join
 import textwrap
 
+class CaseInsensitiveDict(dict):
+    @classmethod
+    def _k(cls, key):
+        return key.lower() if isinstance(key, str) else key
+
+    def __init__(self, *args, **kwargs):
+        super(CaseInsensitiveDict, self).__init__(*args, **kwargs)
+        self._convert_keys()
+    def __getitem__(self, key):
+        return super(CaseInsensitiveDict, self).__getitem__(self.__class__._k(key))
+    def __setitem__(self, key, value):
+        super(CaseInsensitiveDict, self).__setitem__(self.__class__._k(key), value)
+    def __delitem__(self, key):
+        return super(CaseInsensitiveDict, self).__delitem__(self.__class__._k(key))
+    def __contains__(self, key):
+        return super(CaseInsensitiveDict, self).__contains__(self.__class__._k(key))
+    def has_key(self, key):
+        return super(CaseInsensitiveDict, self).has_key(self.__class__._k(key))
+    def pop(self, key, *args, **kwargs):
+        return super(CaseInsensitiveDict, self).pop(self.__class__._k(key), *args, **kwargs)
+    def get(self, key, *args, **kwargs):
+        return super(CaseInsensitiveDict, self).get(self.__class__._k(key), *args, **kwargs)
+    def setdefault(self, key, *args, **kwargs):
+        return super(CaseInsensitiveDict, self).setdefault(self.__class__._k(key), *args, **kwargs)
+    def update(self, E={}, **F):
+        super(CaseInsensitiveDict, self).update(self.__class__(E))
+        super(CaseInsensitiveDict, self).update(self.__class__(**F))
+    def _convert_keys(self):
+        for k in list(self.keys()):
+            v = super(CaseInsensitiveDict, self).pop(k)
+            self.__setitem__(k, v)
+
 typeMappings = {  
             "integer": int,
             "float" : float,
@@ -34,6 +66,12 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                     '*nSet':            ("definition of an element set",
                         {   'nSet':     ('string', "name"),
                             'generate': ('string', "set True to generate from data line 1: start-node, end-node, step"),
+                            'data':     ('string', "Abaqus like node set definiton lines"), 
+                                        }),
+
+                    '*surface':         ("definition of an element set",
+                        {   'type':     ('string', "tpye of surface"),
+                            'name':     ('string', "name"),
                             'data':     ('string', "Abaqus like node set definiton lines"), 
                                         }),
 
@@ -88,12 +126,16 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                         {'input':           ('string', "filename")}),
                         
                 }
+inputLanguage_ = CaseInsensitiveDict()
+for kw, (doc, opts) in inputLanguage.items():
+    inputLanguage_[kw] = (doc, CaseInsensitiveDict(opts))
+inputLanguage = inputLanguage_
 
 def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
     """ Parse an Abaqus like input file to generate an dictionary with its content """
     
     if not existingFileDict:
-        fileDict = { key : [] for key in inputLanguage.keys()}
+        fileDict = CaseInsensitiveDict({ key : [] for key in inputLanguage.keys()})
     else:
         fileDict = existingFileDict
         
@@ -128,8 +170,10 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
                     try:
                         objectentry[optKey] = typeMappings[optionDataType] (val)
                     except ValueError:
-                        raise (ValueError('{:}, option {:}: cannot convert "{:}" to {:}'
-                                          .format(keyword, optKey, val, optionDataType)))
+                        raise ValueError('{:}, option {:}: cannot convert "{:}" to {:}'
+                                          .format(keyword, optKey, val, optionDataType))
+                    except:
+                        raise
                         
                 #special treatment for *include:
                 if keyword == "*include":
@@ -156,7 +200,7 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
                     else:    
                         data =  [typeMappings[dataType](d) for d in data] 
                 except ValueError:
-                    raise (ValueError('{:} data line: cannot convert {:} to {:}'.format(keyword, data, dataType)))
+                    raise ValueError('{:} data line: cannot convert {:} to {:}'.format(keyword, data, dataType))
 
                 fileDict[keyword][-1]['data'].append(data)
     

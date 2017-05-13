@@ -15,6 +15,7 @@ from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerByName
 from fe.config.solvers import solverLibrary
 from fe.utils.misc import isInteger, filterByJobName, stringDict
+from fe.utils.exceptions import StepFailed
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from time import time as getCurrentTime
@@ -92,6 +93,20 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
                 for nSet in line:
                     nodeSets[name] += nodeSets[nSet]
     
+    # generate surfaces sets
+    for surfaceDef in inputfile['*surface']:
+        name = surfaceDef['name']
+        sType = surfaceDef.get('type', 'element')
+        surface  = {} #.get(name, {})
+        if sType == 'element':
+            for l in surfaceDef['data']:
+                elSet, faceNumber = l
+                faceNumber = int(faceNumber)
+                elements = modelInfo['elementSets'][elSet]
+                elements +=  surface.setdefault(faceNumber, [])
+                surface[faceNumber] = elements
+                
+        modelInfo['surfaces'][name] = surface
     return modelInfo
     
 def assignSections(inputfile, elementSets):
@@ -200,6 +215,7 @@ def finitElementSimulation(inputfile, verbose=False):
                  'elements':        OrderedDict(),
                  'nodeSets':        {},
                  'elementSets':     {},
+                 'surfaces':        {},
                  'domainSize' :     domainSize}
                 
     # compact storage of the model
@@ -208,7 +224,7 @@ def finitElementSimulation(inputfile, verbose=False):
         modelInfo = getGeneratorByName(gen)(generatorDefinition, modelInfo, journal)
         
     modelInfo = collectNodesAndElementsFromInput(inputfile, modelInfo)
-        
+    
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], domainSize)
     
@@ -258,33 +274,37 @@ def finitElementSimulation(inputfile, verbose=False):
     
     try:
         for step in jobSteps:
-            # collect all step actions in a dictionary with key of actionType
-            # and concerned values 
-            stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions)
-            
-            for manager in outputmanagers: 
-                manager.initializeStep(step, stepActions, stepOptions)
+            try:
+                # collect all step actions in a dictionary with key of actionType
+                # and concerned values 
+                stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions)
                 
-            # solve the step 
-            tic =  getCurrentTime()
-            success, U, P, time = solver.solveStep(step, time, stepActions, stepOptions, U, P,)
-            toc = getCurrentTime()
-            
-            stepTime = toc - tic
-            jobInfo['computationTime'] += stepTime
-            
-            journal.message("Step finished in {:} s".format(stepTime), identification, level=0)
-            
-            # let all outputmanagers finalize the step
-            for manager in outputmanagers:
-                manager.finalizeStep(U, P,)
+                for manager in outputmanagers: 
+                    manager.initializeStep(step, stepActions, stepOptions)
+                    
+                # solve the step 
+                tic =  getCurrentTime()
+                success, U, P, time = solver.solveStep(step, time, stepActions, stepOptions, U, P,)
+                toc = getCurrentTime()
                 
-            if not success:
-                journal.errorMessage("Aborting job execution", identification)
-                break
-            
+                stepTime = toc - tic
+                jobInfo['computationTime'] += stepTime
+                
+                if not success:
+                    raise StepFailed()
+                
+                journal.message("Step finished in {:} s".format(stepTime), identification, level=0)
+                
+            finally:
+                for manager in outputmanagers:
+                    manager.finalizeStep(U, P,)
+                
     except KeyboardInterrupt:
+        print('')
         journal.errorMessage("Interrupted by user", identification)
+        
+    except StepFailed:
+        journal.errorMessage("Step not finished", identification)
         
     finally:
         # let all output managers finalize the job

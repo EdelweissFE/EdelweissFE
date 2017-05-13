@@ -11,6 +11,7 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
+from fe.utils.exceptions import CutbackRequest
 from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 from cython.parallel cimport parallel, threadid, prange
 from fe.elements.uelbaseelement.element cimport BaseElement, BftUel
@@ -51,7 +52,6 @@ class NISTParallel(NIST):
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
     def computeElements(self, U, dU, double[::1] time, double dT,
-                        pNewDT, 
                         P, 
                         V, 
                         long[::1] I, 
@@ -63,74 +63,78 @@ class NISTParallel(NIST):
 
         UN1 = dU + U # ABAQUS style!
         
-        cdef int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
-        cdef int desiredThreads = self.numThreads
-        cdef int nElements = len(self.elements.values())
-        cdef list elList = list(self.elements.values())
+        cdef:
+            int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
+            int desiredThreads = self.numThreads
+            int nElements = len(self.elements.values())
+            list elList = list(self.elements.values())
         
-        cdef double[::1] V_mView = V
-        cdef double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
-        cdef double[::1] UN1_mView = UN1
-        cdef double[::1] dU_mView = dU 
+            double[::1] V_mView = V
+            double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
+            double[::1] UN1_mView = UN1
+            double[::1] dU_mView = dU 
+            double[::1] P_mView = P
 
-        # oversized Buffers for parallel computing:
-        # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
-        cdef double[:, ::1] UN1e = np.empty((desiredThreads,  self.maximumNDofPerEl), )
-        cdef double[:, ::1] dUe = np.empty((desiredThreads,  self.maximumNDofPerEl), )
-        # oversized buffer for Pe ( size = sum(elements.ndof) )
-        cdef double[::1] Pe = np.empty(self.sizePe) 
+            # oversized Buffers for parallel computing:
+                # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
+            double[:, ::1] UN1e = np.empty((desiredThreads,  self.maximumNDofPerEl), )
+            double[:, ::1] dUe = np.empty((desiredThreads,  self.maximumNDofPerEl), )
+            # oversized buffer for Pe ( size = sum(elements.ndof) )
+            double[::1] Pe = np.empty(self.sizePe) 
         
-        cdef BaseElement backendBasedCythonElement
-        # lists (cpp elements + indices and nDofs), which can be accessed parallely
-        cdef BftUel** cppElements = <BftUel**> malloc ( nElements * sizeof(BftUel*) )
-        cdef int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
-        cdef int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
-        cdef int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
+            BaseElement backendBasedCythonElement
+            # lists (cpp elements + indices and nDofs), which can be accessed parallely
+            BftUel** cppElements = <BftUel**> malloc ( nElements * sizeof(BftUel*) )
+            int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
+            int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
+            int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
         
-        cdef int i, j=0
+            int i,j=0
+            
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing
             backendBasedCythonElement=  elList[i]
             backendBasedCythonElement.initializeStateVarsTemp()
-            cppElements[i] =     backendBasedCythonElement.bftUel
+            cppElements[i] =            backendBasedCythonElement.bftUel
             elIndicesInVIJ[i] =         self.elementToIndexInVIJMap[backendBasedCythonElement] 
             elNDofs[i] =                backendBasedCythonElement.nDofPerEl 
             # each element gets its place in the Pe buffer
             elIndexInPe[i] = j
             j += elNDofs[i]
-        
-        for i in prange(nElements, 
-                    schedule='dynamic', 
-                    num_threads=desiredThreads, 
-                    nogil=True):
-        
-            threadID =      threadid()
-            elIdxInVIJ =    elIndicesInVIJ[i]      
-            elIdxInPe =     elIndexInPe[i]
-            elNDofPerEl =   elNDofs[i]
             
-            for j in range (elNDofPerEl):
-                # copy global U & dU to buffer memories for element eval.
-                currentIdxInU =     I [ elIndicesInVIJ[i] +  j ]
-                UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
-                dUe[threadID, j] =  dU_mView[ currentIdxInU ]
+        try:
+            for i in prange(nElements, 
+                        schedule='dynamic', 
+                        num_threads=desiredThreads, 
+                        nogil=True):
             
-            (<BftUel*> 
-                 cppElements[i] )[0].computeYourself(&UN1e[threadID, 0],
-                                                    &dUe[threadID, 0],
-                                                    &Pe[elIdxInPe],
-                                                    &V_mView[elIdxInVIJ],
-                                                    &time[0],
-                                                    dT,
-                                                    pNewDTVector[threadID, 0])
+                threadID =      threadid()
+                elIdxInVIJ =    elIndicesInVIJ[i]      
+                elIdxInPe =     elIndexInPe[i]
+                elNDofPerEl =   elNDofs[i]
+                
+                for j in range (elNDofPerEl):
+                    # copy global U & dU to buffer memories for element eval.
+                    currentIdxInU =     I [ elIndicesInVIJ[i] +  j ]
+                    UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
+                    dUe[threadID, j] =  dU_mView[ currentIdxInU ]
+                
+                (<BftUel*> 
+                     cppElements[i] )[0].computeYourself(&UN1e[threadID, 0],
+                                                        &dUe[threadID, 0],
+                                                        &Pe[elIdxInPe],
+                                                        &V_mView[elIdxInVIJ],
+                                                        &time[0],
+                                                        dT,
+                                                        pNewDTVector[threadID, 0])
+                
+                if pNewDTVector[threadID, 0] <= 1.0:
+                    break
+    
+            minPNewDT = np.min(pNewDTVector) 
+            if minPNewDT < 1.0:
+                raise CutbackRequest("An element requests for a cutbrack", minPNewDT)
             
-            if pNewDTVector[threadID, 0] <= 1.0:
-                break
-
-        pNewDT[0] = np.min(pNewDTVector) 
-        
-        cdef double[::1] P_mView = P
-        if pNewDT[0] >= 1.0:
             #successful elements evaluation: condense oversize Pe buffer -> P
             P_mView[:] = 0.0
             for i in range(nElements):
@@ -139,10 +143,11 @@ class NISTParallel(NIST):
                 elNDofPerEl =   elNDofs[i]
                 for j in range (elNDofPerEl): 
                     P_mView[ I[elIdxInVIJ + j] ] += Pe[ elIdxInPe + j ]
-                
-        free( elIndicesInVIJ )
-        free( elNDofs )
-        free( elIndexInPe )
-        free( cppElements )
+                        
+        finally:
+            free( elIndicesInVIJ )
+            free( elNDofs )
+            free( elIndexInPe )
+            free( cppElements )
 
-        return P, V, pNewDT
+        return P, V
