@@ -17,6 +17,7 @@ class StepAction(StepActionBase):
                 'delta':   prescribed deltaValue """
                 
         self.name = name
+        
         dirichletIndices = []
         dirichletDelta = []
         
@@ -39,11 +40,18 @@ class StepAction(StepActionBase):
         else:
             self.amplitude = lambda x:x
         
+        self.active = True
+        
+    def finishStep(self,):
+        self.active = False
     
     def updateStepAction(self, definitionLines, jobInfo, modelInfo, journal):
         pass
     
     def getDelta(self, increment):
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        return self.delta * ( self.amplitude ( stepProgress ) - 
-                             (self.amplitude ( stepProgress - incrementSize )))
+        if self.active:
+            incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+            return self.delta * ( self.amplitude ( stepProgress ) - 
+                                 (self.amplitude ( stepProgress - incrementSize )))
+        else:
+            return 0.0

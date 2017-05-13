@@ -20,31 +20,59 @@ class StepAction(StepActionBase):
         self.name = name
         nodeForceIndices = []
         nodeForceDelta = []
-        
         nodeSets = modelInfo['nodeSets']
         
         action = stringDict(definition)        
-        field = action['field']
+        self.field = action['field']
+        self.idle = False
+        self.nSet = nodeSets[action['nSet']]
+        
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
-                directionIndices = [node.fields[field][x] for node in nodeSets[action['nSet']]]
+                directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 nodeForceIndices += directionIndices
                 nodeForceDelta += [float(action[direction])] * len(directionIndices)
-                            
-        self.indices = np.array(nodeForceIndices)
-        self.deltaP = np.array(nodeForceDelta)
+                 
+        self.indices = np.asarray(nodeForceIndices, dtype=np.int)
+        self.nodeForcesStepStart = np.zeros_like(self.indices, dtype=np.double)
+        self.nodeForcesDelta = np.asarray(nodeForceDelta)
+        
+        self.amplitude = self.getAmplitude(action)
+    
+    def getAmplitude(self, action):
         
         if 'f(t)' in action:
             t = sp.symbols('t')
-            self.amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
+            amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
         else:
-            self.amplitude = lambda x:x
+            amplitude = lambda x:x
+            
+        return amplitude
         
+    def finishStep(self):
+        self.idle = True
+        self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1)
     
-    def updateStepAction(self, definitionLines, jobInfo, modelInfo, journal):
-        pass
-    
+    def updateStepAction(self, definition):
+        self.idle = False
+        
+        action = stringDict(definition)
+        nodeForceDelta = []
+        for x, direction  in enumerate(['1', '2', '3']):
+            if direction in action:
+                directionIndices = [node.fields[self.field][x] for node in self.nSet]
+                nodeForceDelta += [float(action[direction])] * len(directionIndices)
+                 
+        self.nodeForcesDelta = np.asarray(nodeForceDelta)
+        self.amplitude = self.getAmplitude(action)
+        
     def applyOnP(self, P, increment):
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        P[self.indices] += self.deltaP * self.amplitude( stepProgress )
+        if self.idle:
+            P[self.indices] += self.nodeForcesStepStart
+        else:
+            incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+            t = stepProgress
+            amp = self.amplitude ( t )
+            P[self.indices] += self.nodeForcesStepStart +  self.nodeForcesDelta * amp
+            
         return P

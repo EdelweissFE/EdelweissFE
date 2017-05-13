@@ -21,7 +21,7 @@ class OutputManager(OutputManagerBase):
         self.exportFile = defDict['export']
         self.timeVals = []
     
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step, stepActions, stepOptions):
         pass
     
     def finalizeIncrement(self, U, P, increment):

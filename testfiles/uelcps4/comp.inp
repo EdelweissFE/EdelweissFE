@@ -4,25 +4,26 @@
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*job, name=cpe4job, domain=2d, solver=NISTParallel
+*job, name=cpe4job, domain=2d, solver=NIST
 
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=50
 y0=0, h=100
 elType=uelCPS4
-nX=50
-nY=100
+nX=10
+nY=10
 
 *output, type=ensight, jobName=cpe4job, name=esExport
 create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perElement, elSet=all, result=stress, gaussPt=1
-create=perElement, elSet=all, result=strain, gaussPt=1
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+**create=perElement, elSet=all, result=stress, gaussPt=1
+**create=perElement, elSet=all, result=strain, gaussPt=1
+**create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
+**create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
+**create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, numThreads=2
-dirichlet, name=1,  nSet=gen_leftBottom,   field=displacement, 2=0.0, 1=0.0
-dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0,
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.05
+**dirichlet, name=1,  nSet=gen_leftBottom,   field=displacement, 2=0.0, 1=0.0
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
+distributedload, name=dLoad1, surface=gen_surfaceLeft, type=pressure, magnitude=30.0
+**dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.05

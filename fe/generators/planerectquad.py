@@ -50,7 +50,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     nG = np.asarray(nodes).reshape(nNodesX, nNodesY)
     
     currentElementLabel = 1
-    
+    elements = []
     for x in range(nX):
         for y in range(nY):
             if elType.nNodes == 4:
@@ -59,22 +59,36 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                 newEl =  elType([nG[2*x,2*y], nG[2*x+2,2*y], nG[2*x+2,2*y+2], nG[2*x, 2*y+2],
                                  nG[2*x+1,2*y], nG[2*x+2,2*y+1], nG[2*x+1,2*y+2], nG[2*x, 2*y+1],
                                  ] , currentElementLabel  ) 
-                
-            modelInfo['elements'][ currentElementLabel] = newEl
+            elements.append(newEl)
+            modelInfo['elements'][currentElementLabel] = newEl
+            
             for i, node in enumerate(newEl.nodes):
                 node.fields.update( [ (f, True) for f in newEl.fields[i] ]  )
             currentElementLabel +=1
         
-        #nodesets:
-        modelInfo['nodeSets'][ '{:}_left'.format(name) ] =  [n for n in nG[0,:]]
-        modelInfo['nodeSets'][ '{:}_right'.format(name) ] = [n for n in nG[-1,:]]
-        modelInfo['nodeSets'][ '{:}_top'.format(name) ] =   [n for n in nG[:,-1]]
-        modelInfo['nodeSets'][ '{:}_bottom'.format(name) ] =   [n for n in nG[:,0]]
-        
-        modelInfo['nodeSets'][ '{:}_leftBottom'.format(name) ] =   [ nG[0,0] ]
-        modelInfo['nodeSets'][ '{:}_leftTop'.format(name) ] =      [ nG[0,-1] ]
-        modelInfo['nodeSets'][ '{:}_rightBottom'.format(name) ] =  [ nG[-1,0] ]
-        modelInfo['nodeSets'][ '{:}_rightTop'.format(name) ] =     [ nG[-1,-1] ]
-        
+    #nodesets:
+    modelInfo['nodeSets'][ '{:}_left'.format(name) ] =  [n for n in nG[0,:]]
+    modelInfo['nodeSets'][ '{:}_right'.format(name) ] = [n for n in nG[-1,:]]
+    modelInfo['nodeSets'][ '{:}_top'.format(name) ] =   [n for n in nG[:,-1]]
+    modelInfo['nodeSets'][ '{:}_bottom'.format(name) ] =   [n for n in nG[:,0]]
+    
+    modelInfo['nodeSets'][ '{:}_leftBottom'.format(name) ] =   [ nG[0,0] ]
+    modelInfo['nodeSets'][ '{:}_leftTop'.format(name) ] =      [ nG[0,-1] ]
+    modelInfo['nodeSets'][ '{:}_rightBottom'.format(name) ] =  [ nG[-1,0] ]
+    modelInfo['nodeSets'][ '{:}_rightTop'.format(name) ] =     [ nG[-1,-1] ]
+    
+    #element sets
+    elGrid = np.asarray(elements).reshape(nX, nY)
+    modelInfo['elementSets']['{:}_bottom'.format(name)] =   [ e for e in elGrid[:,0] ]  
+    modelInfo['elementSets']['{:}_top'.format(name)] =      [e for e in elGrid[:,-1] ]  
+    modelInfo['elementSets']['{:}_right'.format(name)] =    [e for e in elGrid[-1,:] ]  
+    modelInfo['elementSets']['{:}_left'.format(name)] =     [e for e in elGrid[0,:] ]  
+    
+    #surfaces
+    modelInfo['surfaces']['{:}_bottom'.format(name)] =  {1: [e for e in elGrid[:,0] ]  }
+    modelInfo['surfaces']['{:}_top'.format(name)] =     {3: [e for e in elGrid[:,-1] ]  }
+    modelInfo['surfaces']['{:}_right'.format(name)] =   {2: [e for e in elGrid[-1,:] ]  }
+    modelInfo['surfaces']['{:}_left'.format(name)] =    {4: [e for e in elGrid[0,:] ]  }
+    
     return modelInfo
         

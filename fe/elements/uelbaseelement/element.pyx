@@ -33,6 +33,14 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
                        int nStateVarsUmat,
                        const double* propertiesUmat,
                        int nPropertiesUmat)
+    
+mapLoadTypes={
+        'pressure' : DistributedLoadTypes.Pressure
+     }
+
+mapStateTypes={
+        'geostatic stress' : StateTypes.GeostaticStress
+     }
 
 cdef class BaseElement:
     
@@ -73,9 +81,12 @@ cdef class BaseElement:
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars
         
-    def setInitialCondition(self, ):
-        pass
-#        self.bftUel.setInitialConditions( )
+    def setInitialCondition(self, 
+                            stateType,
+                            const double[::1] values):
+        
+        self.bftUel.setInitialConditions(mapStateTypes[stateType],
+                                         &values[0])
 
     def computeYourself(self, 
                          double[::1] Ke, 
@@ -85,16 +96,36 @@ cdef class BaseElement:
                          const double[::1] time, 
                          double dTime, 
                          double[::1] pNewdT):
+        
         self.initializeStateVarsTemp()
         self.bftUel.computeYourself(&U[0], &dU[0],
-                                            &Pe[0], &Ke[0],
-                                             &time[0],
-                                            dTime,  pNewdT[0])
+                                            &Pe[0], 
+                                            &Ke[0],
+                                            &time[0],
+                                            dTime,  
+                                            pNewdT[0])
+        
+    def computeDistributedLoad(self,
+                               str loadType,
+                               double[::1] P,
+                               int faceID,
+                               const double[::1] load,
+                               const double[::1] time,
+                               double dTime):
+        
+        self.bftUel.computeDistributedLoad(mapLoadTypes[loadType],
+                                    &P[0], 
+                                    faceID,
+                                    &load[0],
+                                    &time[0],
+                                    dTime)
     def acceptLastState(self,):
         self.stateVars[:] = self.stateVarsTemp
         
     def resetToLastValidState(self,):
         pass
+    
+
     
     resultIndices = {'stress': lambda nStateVarsUmat,kw : slice( kw['gaussPt']*nStateVarsUmat,
                                                                  kw['gaussPt']*nStateVarsUmat + 6) ,
@@ -102,6 +133,7 @@ cdef class BaseElement:
                                                                  kw['gaussPt']*nStateVarsUmat + 12),
                     'sdv':    lambda nStateVarsUmat,kw, : slice( kw['idxStart'] + (kw['gaussPt']-1)* nStateVarsUmat, 
                                                                  kw['idxStop' ] + (kw['gaussPt']-1)* nStateVarsUmat)}
+                    
     def getPermanentResultPtr(self, **kw):    
         sVars = np.asarray(self.stateVars)
         idxSlice = self.resultIndices[ kw['result'] ](self.nStateVarsUmat, kw)     
