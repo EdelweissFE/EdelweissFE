@@ -41,15 +41,15 @@ cdef extern from "bftUel.h":
                                 const double* time,
                                 double dT)
         
-
 cdef class BaseElement:
     
     cdef BftUel* bftUel
     cdef public nodes, 
     cdef public int elNumber
     
-    cdef double[::1] uelProperties, stateVars, stateVarsTemp, nodeCoordinates, umatProperties
+    cdef public double[::1] stateVars
+    cdef double[::1] uelProperties, stateVarsTemp, nodeCoordinates, umatProperties
     cdef pUmatType umat
-    cdef int nStateVars, nStateVarsUmat
+    cdef public nStateVars, nStateVarsUmat
     cdef int[::1] intProperties
     cdef int numGaussPts, uelID

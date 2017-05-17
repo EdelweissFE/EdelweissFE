@@ -20,7 +20,7 @@ create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
 create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
 
 *step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, 
-options, category=NISTSolver, extrapolation=linear, numThreads=2
+**options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0
 dirichlet, name=top, nSet=topNodes, field=displacement, 2=-.5

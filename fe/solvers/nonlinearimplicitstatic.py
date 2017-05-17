@@ -161,7 +161,6 @@ class NIST:
                         if iterationCounter == maxIter-1:
                             raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
                         
-                        
                         K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
                         K = self.applyDirichletK(K, dirichlets)
                         ddU = self.linearSolve(K, R, )
@@ -255,7 +254,6 @@ class NIST:
         -> is called by solveStep() in each iteration """
         
         tic = getCurrentTime()
-        
         for dLoad in distributedLoads:
             magnitude = dLoad.getCurrentMagnitude(increment)
             for faceID, elements in dLoad.surface.items():
@@ -343,6 +341,8 @@ class NIST:
         return convergedAtAll
     
     def linearSolve(self, A, b):
+        """ Interface to the linear eq. system solver """
+        
         tic =  getCurrentTime()
         ddU = spsolve(A, b )
         toc =  getCurrentTime()
@@ -350,6 +350,8 @@ class NIST:
         return ddU
     
     def assembleStiffness(self, V, I, J, shape):
+        """ Construct a CSR matrix from VIJ """
+        
         tic =  getCurrentTime()
         K = coo_matrix( (V, (I,J)), shape).tocsr()
         toc =  getCurrentTime()
@@ -392,5 +394,4 @@ class NIST:
         self.journal.printSeperationLine()
         U[ self.fieldIndices['displacement'] ] = 0.0 
         return U
-    
     

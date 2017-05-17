@@ -155,7 +155,7 @@ def assignFieldDofIndices(nodes, domainSize):
         
     return fieldIdxBase, fieldIndices
     
-def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions):
+def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions, journal):
     """ Parses all the defined actions for the current step, 
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
@@ -165,10 +165,6 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
     overwritten or extended. Returns a dictionary with keys as defined in 
     stepactions."""
     
-    # create a default dictionary of type list with key defined by module action
-    # and values definitions in the form of list e.g.:
-    # defaultdict (list) { 'dirichlet' [ dirichlet defintion 1, dirichlet definition 2, ... ]}
-    
     for line in step['data']:
         if line[0].startswith('options'):
             # line is a option 
@@ -177,7 +173,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
             stepOptions[category].update(options)
         else:
             #line is an action
-            module = line[0]
+            module = line[0].lower()
             try:
                 if not line[1].startswith('name='):
                     raise
@@ -190,7 +186,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
             if moduleName in stepActions[module]:
                 stepActions[module][moduleName].updateStepAction(definitionRemainder)
             else:
-                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, definitionRemainder, jobInfo, modelInfo, None)
+                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, definitionRemainder, jobInfo, modelInfo, journal)
                                                                
     return  stepActions, stepOptions
 
@@ -277,7 +273,7 @@ def finitElementSimulation(inputfile, verbose=False):
             try:
                 # collect all step actions in a dictionary with key of actionType
                 # and concerned values 
-                stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions)
+                stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions, journal)
                 
                 for manager in outputmanagers: 
                     manager.initializeStep(step, stepActions, stepOptions)

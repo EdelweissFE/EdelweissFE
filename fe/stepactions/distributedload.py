@@ -12,10 +12,8 @@ import numpy as np
 import sympy as sp
 
 class StepAction(StepActionBase):
+    """ Distributed load, defined on an element-based surface """
     def __init__(self, name, definition, jobInfo, modelInfo, journal):
-        """ create dirichlet dictionary with node boundary condition in 
-        keytype 'indices': array of global dof indices
-                'delta':   prescribed deltaValue """
                 
         self.name = name
         self.magnitudeAtStepStart = 0.0
@@ -23,7 +21,7 @@ class StepAction(StepActionBase):
         action = stringDict(definition)        
         self.surface = modelInfo['surfaces'][action['surface']]
         self.loadType = action['type']
-        magnitude = np.asarray( [float(action['magnitude'])], dtype=np.double)
+        magnitude = np.asarray([float(action['magnitude'])])
         
         self.delta = magnitude
         if 'f(t)' in action:
@@ -35,19 +33,27 @@ class StepAction(StepActionBase):
         self.idle = False
             
     def finishStep(self):
-        self.magnitudeAtStepStart += self.delta
+        self.magnitudeAtStepStart += self.delta * self.amplitude(1.0)
+        self.delta=0
         self.idle = True
     
-    def updateStepAction(self, definition, jobInfo, modelInfo, journal):
+    def updateStepAction(self, definition,):
         action = stringDict(definition)
-        self.delta = np.fromstring(action['magnitude'], dtype=np.double) - self.magnitudeAtStepStart 
+        if 'magnitude' in action:
+            self.delta = np.asarray([float(action['magnitude'])]) - self.magnitudeAtStepStart 
+        elif 'delta' in action:
+            self.delta = np.asarray([float(action['delta'])])   
+        if 'f(t)' in action:
+            t = sp.symbols('t')
+            self.amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
+        else:
+            self.amplitude = lambda x:x
         self.idle = False
     
     def getCurrentMagnitude(self, increment):
-        if self.idle:
+        if self.idle == True:
             t = 1.0
         else:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             t = stepProgress
-        
         return self.magnitudeAtStepStart + self.delta * self.amplitude(t)

@@ -85,8 +85,9 @@ cdef class BaseElement:
                             stateType,
                             const double[::1] values):
         
-        self.bftUel.setInitialConditions(mapStateTypes[stateType],
-                                         &values[0])
+        self.initializeStateVarsTemp()
+        self.bftUel.setInitialConditions(mapStateTypes[stateType], &values[0])
+        self.acceptLastState()
 
     def computeYourself(self, 
                          double[::1] Ke, 

@@ -12,10 +12,8 @@ import numpy as np
 import sympy as sp
 
 class StepAction(StepActionBase):
+    """ Defines node based load, defined on a nodeset."""
     def __init__(self, name, definition, jobInfo, modelInfo, journal):
-        """ create dirichlet dictionary with node boundary condition in 
-        keytype 'indices': array of global dof indices
-                'delta':   prescribed deltaValue """
                 
         self.name = name
         nodeForceIndices = []
@@ -40,7 +38,6 @@ class StepAction(StepActionBase):
         self.amplitude = self.getAmplitude(action)
     
     def getAmplitude(self, action):
-        
         if 'f(t)' in action:
             t = sp.symbols('t')
             amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')

@@ -11,10 +11,8 @@ import numpy as np
 import sympy as sp
 
 class StepAction(StepActionBase):
+    """ Dirichlet boundary condition, based on a node set """
     def __init__(self, name, definition, jobInfo, modelInfo, journal):
-        """ create dirichlet dictionary with node boundary condition in 
-        keytype 'indices': array of global dof indices
-                'delta':   prescribed deltaValue """
                 
         self.name = name
         

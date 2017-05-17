@@ -11,15 +11,14 @@ import numpy as np
 
 
 class StepAction(StepActionBase):
+    """ Initializes elements of set with an Abaqus-like geostatic stress state.
+    Is automatically deactivated at the end of the step."""
     def __init__(self, name, definition, jobInfo, modelInfo, journal):
-        """ create dirichlet dictionary with node boundary condition in 
-        keytype 'indices': array of global dof indices
-                'delta':   prescribed deltaValue """
-                
+
         self.name = name
         action = stringDict(definition) 
         
-        self.geostaticElements = modelInfo['elSets'] [ action.get('elSet', 'all')]
+        self.geostaticElements = modelInfo['elementSets'] [ action.get('elSet', 'all')]
         self.p1 = float(action['p1'])
         self.p2 = float(action.get('p2', 0.0))
         self.level1 = float(action.get('h1', 1.0))
@@ -29,8 +28,8 @@ class StepAction(StepActionBase):
         
         self.geostaticDefinition = np.array([
                 self.p1,
-                self.p2,
                 self.level1,
+                self.p2,
                 self.level2,
                 self.xLateral,
                 self.yLateral,
@@ -43,5 +42,9 @@ class StepAction(StepActionBase):
     
     def updateStepAction(self, definitionLines, jobInfo, modelInfo, journal):
         pass
+    
+    def apply(self, ):
+        for el in self.geostaticElements:
+            el.setInitialCondition('geostatic stress', self.geostaticDefinition)
     
     
