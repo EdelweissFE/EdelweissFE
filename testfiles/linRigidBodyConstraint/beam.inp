@@ -1,0 +1,26 @@
+*modelGenerator, generator=planeRectQuad, name=gen
+l=100
+h=10
+nX=1
+nY=1
+elType=uelCPS4
+
+*material, name=linearElastic, id=le, statevars=0
+210000, 0.3
+
+*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+all
+
+*job, name=cps4job, domain=2d, solver=NIST
+
+*output, type=nodesetmonitor, jobName=cps4job
+nSet=gen_left, field=displacement, result=P, f(x)=sum(x), direction=2
+
+*constraint, type=linearizedRigidBody, name=rb1,
+nSet=gen_top,
+
+***output, type=ensight, jobName=cps4job, name=ensightExport
+**create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+
+*step, jobName=cps4job, maxInc=1e-0, minInc=1e-6, maxNumInc=1000, maxIter=25, 
+dirichlet, name=left,  nSet=gen_left,   field=displacement, 1=0.0, 2=0.0

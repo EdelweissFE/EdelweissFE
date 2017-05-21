@@ -14,6 +14,7 @@ from fe.config.generators import getGeneratorByName
 from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerByName
 from fe.config.solvers import solverLibrary
+from fe.config.constraints import getConstraintByName
 from fe.utils.misc import isInteger, filterByJobName, stringDict
 from fe.utils.exceptions import StepFailed
 from fe.config.configurator import loadConfiguration, updateConfiguration
@@ -107,6 +108,28 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
                 surface[faceNumber] = elements
                 
         modelInfo['surfaces'][name] = surface
+        
+#    for rpDef in inputfile['*referencetPoint']:
+#        name = rpDef['name']
+#        coordinates = np.zeros(domainSize)
+#        coordinates[:] = rpDef['data'][0:]
+#        modelInfo['referencePoints'][name] = ReferencePoint(name, coordinates)
+        
+    
+    for constraintDef in inputfile['*constraint']:
+        name = constraintDef['name']
+        constraint = constraintDef['type']
+        data = constraintDef['data']
+        
+        constraint = getConstraintByName(constraint)(name, data, modelInfo)
+        
+        for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
+            # update node.fields dictionary with available fields from phenomena, e.g
+            # OrderedDict : {'mechanical': True, 'thermal': False , ... }
+            node.fields.update( [ (f, True) for f in nodeFields]  )
+        
+        modelInfo['constraints'][name] = constraint
+        
     return modelInfo
     
 def assignSections(inputfile, elementSets):
@@ -126,7 +149,7 @@ def assignSections(inputfile, elementSets):
                                         material['statevars'],
                                         umatProperties)
 
-def assignFieldDofIndices(nodes, domainSize):
+def assignFieldDofIndices(nodes, constraints, domainSize):
     """ Loop over all nodes to generate the global field-dof indices.
     output is a tuple of:
         - number of total DOFS
@@ -153,6 +176,16 @@ def assignFieldDofIndices(nodes, domainSize):
     for field, indexList in fieldIndices.items():
         fieldIndices[field] = np.array(indexList)
         
+    for constraint in constraints.values():
+        # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
+        # we create them here, and assign them directly to the constraints 
+        # (In contrast to true field indices, which are not directly 
+        # assigned to elements/constraints but to the nodes)
+        nNeededDofs = constraint.additionalDofs
+        indicesOfConstraintAdditionalDofs = [i + fieldIdxBase for i in range(nNeededDofs)  ]
+        constraint.assignAdditionalDofIndices ( indicesOfConstraintAdditionalDofs )
+        fieldIdxBase += nNeededDofs
+#        fieldIndices[constraint.name] = indicesOfConstraintAdditionalDofs
     return fieldIdxBase, fieldIndices
     
 def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions, journal):
@@ -212,6 +245,8 @@ def finitElementSimulation(inputfile, verbose=False):
                  'nodeSets':        {},
                  'elementSets':     {},
                  'surfaces':        {},
+                 'referencePoints': {},
+                 'constraints':     {},
                  'domainSize' :     domainSize}
                 
     # compact storage of the model
@@ -222,7 +257,11 @@ def finitElementSimulation(inputfile, verbose=False):
     modelInfo = collectNodesAndElementsFromInput(inputfile, modelInfo)
     
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
-    numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], domainSize)
+    numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], modelInfo['constraints'], domainSize)
+    
+#    for node in modelInfo['nodes'].values():
+#        print(node.label)
+#        print(node.fields)
     
     modelInfo['nodeSets']['all'] = list( modelInfo['nodes'].values() )
     modelInfo['elementSets']['all'] = list ( modelInfo['elements'].values() )

@@ -32,6 +32,7 @@ class NIST:
         self.elements =     modelInfo['elements']
         self.nodeSets =     modelInfo['nodeSets']
         self.elementSets =  modelInfo['elementSets']
+        self.constraints =  modelInfo['constraints']
         self.fieldIndices = jobInfo['fieldIndices']
         
         self.flowCorrectionTolerances = jobInfo['flowCorrectionTolerance']
@@ -53,14 +54,18 @@ class NIST:
         
         for el in self.elements.values():
             self.sizeVIJ += el.sizeKe
+        
+        for constraint in self.constraints.values():
+            self.sizeVIJ += constraint.sizeStiffness
 
         # create indices map to elements; V, I, J are of type np vectors
         # elementToIndexInVIJMap is a dictionary of {element : index in VIJ vectors} 
-        V, I, J, elementToIndexInVIJMap = self.generateVIJ(self.elements, )
+        V, I, J, elementToIndexInVIJMap , constraintToIndexInVIJMap = self.generateVIJ(self.elements, self.constraints)
         self.V = V
         self.I = I
         self.J = J
         self.elementToIndexInVIJMap = elementToIndexInVIJMap # element  -> V[ .... idx ..  ]
+        self.constraintToIndexInVIJMap = constraintToIndexInVIJMap
         
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for flow (U) and effort (P) """
@@ -104,8 +109,10 @@ class NIST:
         concentratedLoads = stepActions['nodeforces'].values()
         geostatics = stepActions['geostatic'].values()
         isGeostaticStep = any([g.active for g in geostatics] )
+        linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
-        # initialize pNewDt as np.array, for bypassing to external c++ code (UEL)
+
+            
         lastIncrementSize = False
         
         try:
@@ -140,6 +147,7 @@ class NIST:
                     for cLoad in concentratedLoads: Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
                     Pdeadloads = self.computeDistributedLoads(distributedLoads, Pdeadloads, 
                                                               I, stepTimes, dT, increment)
+                
     
                 try:
                     # deadleads, only computed once per increment
@@ -152,6 +160,14 @@ class NIST:
                         
                         if concentratedLoads or distributedLoads:
                             P += Pdeadloads
+                            
+                        for constraint in linearConstraints:
+                            # linear constraints are independent on the solution
+                            idxInVIJ = self.constraintToIndexInVIJMap[constraint]
+                            idcsInPUdU = I[idxInVIJ : idxInVIJ+ constraint.nDof]            
+                            
+                            V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.stiffnessContribution.ravel()
+                            P[idcsInPUdU] += constraint.effortContribution
                             
                         R[:] = P
                         
@@ -170,6 +186,10 @@ class NIST:
                         
                         K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
                         K = self.applyDirichletK(K, dirichlets)
+                        
+#                        np.set_printoptions(precision=1, suppress=True)
+#                        print(K.todense())
+                        print(R)
                         ddU = self.linearSolve(K, R, )
                         dU += ddU
                         iterationCounter += 1
@@ -365,11 +385,12 @@ class NIST:
         self.computationTimes['CSR generation'] += toc - tic
         return K
     
-    def generateVIJ(self, elements):
+    def generateVIJ(self, elements, constraints):
         """ Initializes the V vector and generates I, J entries for each element,
         based on i) its (global) nodes ii) its dofLayout. Furthermore, 
         a dictionary with the mapping of each element to its index in VIJ 
         is created.
+        The same is done for each constraint
         -> is called by __init__() """
         
         V = np.zeros(self.sizeVIJ)
@@ -390,7 +411,26 @@ class NIST:
             J[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel('F')
             idxInVIJ += el.sizeKe
             
-        return V, I, J, elementToIndexInVIJMap
+        constraintToIndexInVIJMap = {}
+        for constraint in constraints.values():
+            destList = np.asarray(
+                    [i for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes) 
+                                        for nodeField in nodeFields 
+                                            for i in node.fields[nodeField]]
+                    + constraint.additionalDofIndices
+                    ) 
+    
+            constraintToIndexInVIJMap[constraint] = idxInVIJ        
+            
+#            print(destList)
+                                  
+            constraintDofLocations = np.tile(destList, (destList.shape[0], 1) )
+#            print(constraintDofLocations)
+            I[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel()
+            J[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel('F')
+            idxInVIJ += constraint.sizeStiffness
+        
+        return V, I, J, elementToIndexInVIJMap, constraintToIndexInVIJMap
     
     def resetDisplacements(self, U):
         """ -> May be called at the end of a geostatic step, the zero all displacments after

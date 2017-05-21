@@ -9,20 +9,24 @@ from collections import OrderedDict
 
                                         #field              field type
 phenomena = OrderedDict([               ("displacement" ,     "vector"),
+                                        ("rotation",          "rotation vector"),
                                         ("thermal",         "scalar"),
                                         ("nonlocal damage", "scalar"),])
                                         
                                         
                                         #field              #tolerance
 flowCorrectionTolerance = {             'displacement' :      1e-5,
+                                        'rotation' :      1e-5,
                                         'nonlocal damage':  1e-5,
                                         }
                                                                    
 effortResidualTolerance = {             'displacement' :      1e-7,
+                                        'rotation' :      1e-5,
                                         'nonlocal damage':  1e-7,
                                         }
 
 effortResidualToleranceAlternative = {  'displacement' :       1e-3,
+                                        'rotation' :      1e-5,
                                         'nonlocal damage':   1e-6,
                                         }
                                         
@@ -39,5 +43,8 @@ def getFieldSize(field, domainSize):
         return 1
     if fType == "vector":
         return domainSize
-
-    
+    if fType == "rotation vector":
+        if domainSize == 2:
+            return 1
+        elif domainSize == 3:
+            return 3
