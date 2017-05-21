@@ -61,6 +61,8 @@ class NISTParallel(NIST):
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration"""
 
+        tic = getCurrentTime()
+        
         UN1 = dU + U # ABAQUS style!
         
         cdef:
@@ -149,5 +151,7 @@ class NISTParallel(NIST):
             free( elNDofs )
             free( elIndexInPe )
             free( cppElements )
-
+            
+        toc = getCurrentTime()
+        self.computationTimes['elements'] += toc - tic
         return P, V

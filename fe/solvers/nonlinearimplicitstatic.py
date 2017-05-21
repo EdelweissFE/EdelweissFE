@@ -81,6 +81,7 @@ class NIST:
         I = self.I
         
         R = np.copy(P)
+        Pdeadloads = np.zeros_like(P)
         
         numberOfDofs = self.nDof
         stepLength = step.get('stepLength', 1.0)
@@ -131,20 +132,27 @@ class NIST:
                     extrapolatedIncrement = True
                 else:
                     extrapolatedIncrement = False
-                    dU[:] = 0.0        
+                    dU[:] = 0.0    
+                    
+                # Deadloads: only once per increment
+                if concentratedLoads or distributedLoads:
+                    Pdeadloads[:] = 0.0
+                    for cLoad in concentratedLoads: Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
+                    Pdeadloads = self.computeDistributedLoads(distributedLoads, Pdeadloads, 
+                                                              I, stepTimes, dT, increment)
     
                 try:
+                    # deadleads, only computed once per increment
+                    
                     while True:
                         
-                        for geostatic in geostatics:
-                            geostatic.apply()
+                        for geostatic in geostatics: geostatic.apply()
                         
                         P, V = self.computeElements(U, dU, stepTimes, dT, P, V, I, J,)
-                            
-                        for cLoad in concentratedLoads: 
-                            P = cLoad.applyOnP(P, increment) 
-                        self.computeDistributedLoads(distributedLoads, P, I, stepTimes, dT, increment)   
                         
+                        if concentratedLoads or distributedLoads:
+                            P += Pdeadloads
+                            
                         R[:] = P
                         
                         if iterationCounter == 0 and not extrapolatedIncrement and dirichlets :
@@ -154,7 +162,6 @@ class NIST:
                             # iteration cycle 1 or higher, time to check the convergency
                             for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
                             
-                            # check convergency 
                             if self.checkConvergency(R, ddU, iterationCounter):
                                 break
                             
@@ -213,7 +220,7 @@ class NIST:
             for section, time in self.computationTimes.items():
                 self.journal.message("Time in {:<30}: {:}s".format(section, time), self.identification, level=1)
             
-        return 1.0 - stepProgress < 1e-15 , U, P, finishedTime
+        return ((1.0 - stepProgress) < 1e-14) , U, P, finishedTime
     
     def computeElements(self, U, dU, time, dT, P, V, I, J):
         """ Loop over all elements, and evalute them. 
