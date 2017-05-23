@@ -122,15 +122,9 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                          'data':            ('string', "key=value pairs"),
                          }),
 
-                    '*referencePoint':      ("definition of a reference point",
-                        {'name':            ('string', 'name of the reference point'),
-                         'data':            ('numpy float array', "Abaqus like node definiton line: x, [y], [z]"), 
-                         }),
-
                     '*constraint':          ("define a constraint",
                         {'type':            ('string', "constraint type"),
-                         'name':            ('string', "(optional) name of the generator"),
-#                         'referencePoint':  ('string', "name of the (master) reference point"),
+                         'name':            ('string', "(optional) name of the constraint"),
                          'data':            ('string', "definition of the constraint"),
                          }),
                                          

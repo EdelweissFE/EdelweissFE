@@ -109,13 +109,6 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
                 
         modelInfo['surfaces'][name] = surface
         
-#    for rpDef in inputfile['*referencePoint']:
-#        name = rpDef['name']
-#        coordinates = np.zeros(domainSize)
-#        coordinates[:] = rpDef['data'][0:]
-#        modelInfo['referencePoints'][name] = ReferencePoint(name, coordinates)
-        
-    
     for constraintDef in inputfile['*constraint']:
         name = constraintDef['name']
         constraint = constraintDef['type']
@@ -124,8 +117,6 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
         constraint = getConstraintByName(constraint)(name, data, modelInfo)
         
         for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
-            # update node.fields dictionary with available fields from phenomena, e.g
-            # OrderedDict : {'mechanical': True, 'thermal': False , ... }
             node.fields.update( [ (f, True) for f in nodeFields]  )
         
         modelInfo['constraints'][name] = constraint
@@ -185,7 +176,7 @@ def assignFieldDofIndices(nodes, constraints, domainSize):
         indicesOfConstraintAdditionalDofs = [i + fieldIdxBase for i in range(nNeededDofs)  ]
         constraint.assignAdditionalGlobalDofIndices ( indicesOfConstraintAdditionalDofs )
         fieldIdxBase += nNeededDofs
-#        fieldIndices[constraint.name] = indicesOfConstraintAdditionalDofs
+        
     return fieldIdxBase, fieldIndices
     
 def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions, journal):
@@ -245,7 +236,6 @@ def finitElementSimulation(inputfile, verbose=False):
                  'nodeSets':        {},
                  'elementSets':     {},
                  'surfaces':        {},
-                 'referencePoints': {},
                  'constraints':     {},
                  'domainSize' :     domainSize}
                 

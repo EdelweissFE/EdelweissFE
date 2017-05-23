@@ -6,6 +6,9 @@ Created on Fri May 12 11:02:12 2017
 @author: matthias
 """
 
+class WrongDomain(Exception):
+    pass
+
 class StepFailed(Exception):
     pass
 

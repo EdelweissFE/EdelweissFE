@@ -152,8 +152,6 @@ class NIST:
                                                               I, stepTimes, dT, increment)
     
                 try:
-                    # deadleads, only computed once per increment
-                    
                     while True:
                         
                         for geostatic in geostatics: geostatic.apply()
@@ -172,7 +170,7 @@ class NIST:
                             # iteration cycle 1 or higher, time to check the convergency
                             
                             for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 
-                            for constraint in self.constraints.values(): R[constraint.globalDofIndices] = 0.0
+                            for constraint in self.constraints.values(): R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
                             if self.checkConvergency(R, ddU, iterationCounter) :
                                 break
@@ -222,7 +220,7 @@ class NIST:
         else:
             # reset all displacements, if the present step is a geostatic step
             if isGeostaticStep: U = self.resetDisplacements(U)
-                
+            
             for stepActionType in stepActions.values():
                 for action in stepActionType.values():
                     action.finishStep()
@@ -406,20 +404,9 @@ class NIST:
             
         constraintToIndexInVIJMap = {}
         for constraint in constraints.values():
-#            destList = np.asarray(
-#                    [i for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes) 
-#                                        for nodeField in nodeFields 
-#                                            for i in node.fields[nodeField]]
-#                    + constraint.additionalDofIndices
-#                    ) 
-    
             destList = constraint.globalDofIndices
             constraintToIndexInVIJMap[constraint] = idxInVIJ        
-            
-#            print(destList)
-                                  
             constraintDofLocations = np.tile( destList, (destList.shape[0], 1) )
-#            print(constraintDofLocations)
             I[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel()
             J[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel('F')
             idxInVIJ += constraint.sizeStiffness

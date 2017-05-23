@@ -9,6 +9,7 @@ Created on Sun May 21 11:34:35 2017
 import numpy as np
 
 from fe.utils.misc import stringDict
+from fe.utils.exceptions import WrongDomain
 
 class Constraint:
     """ linearized Rigid Body constraint """
@@ -19,6 +20,9 @@ class Constraint:
     
     def __init__(self, name, definitionLines, modelInfo):
         
+        if modelInfo['domainSize'] != 2 :
+            raise WrongDomain('Liniearized Rigid Body is currently only available for 2d domain size')
+            
         self.name = name
         definition = stringDict( [ e for line in definitionLines for e in line  ] )
         
@@ -45,8 +49,7 @@ class Constraint:
         nAffectedDofs =  nDim * (nSlaves + 1 ) + 1   
 
         distances = [ s.coordinates - self.rp.coordinates for s in self.slaveNodes ]
-        distanceMagnitudes = [ d @ d for d in distances  ]
-        
+        dMagnitudeSquares = [ d @ d for d in distances  ]
         
         self.nDof = nAffectedDofs + nConstraints
         self.sizeStiffness =  self.nDof * self.nDof
@@ -55,21 +58,21 @@ class Constraint:
         
         """
                |n1x         n1y         n2x         n2y    ...  rpx         rpy         rpA|
-        -------+------------------------------------------  ~ -----------------------------+
+        -------+------------------------------------------ ... ----------------------------+
         dg1_dU |dx1         dy1         0           0      ...  -dx1        -dy1        0  |
         dg2_dU |0           0           dx2         dy2    ...  -dx2        -dy2        0  |
-        ...    |...........................................................................|
+        ...    :...........................................................................:
         dg1A_dU|-d1y/h²     d1x/h²      0           0      ...   d1y/h²     -d1x/h²     -1.|
         dg2A_dU|0           0           -d1y/h²     d1x/h² ...   d1y/h²      d1x/h²     -1.|
         ...    |...........................................................................|
         """
         
         # derivatives distance
-        for i, (d, h2) in enumerate(zip( distances, distanceMagnitudes )):
-            dG_dU[i, i*nDim  :  i*nDim + nDim ] = d.T
-            dG_dU[i, - (nDim+1)  :  -1] =            -d.T
+        for i, d in enumerate (distances):
+            dG_dU[i, i*nDim  :  i*nDim + nDim ] =       d.T
+            dG_dU[i, - (nDim+1)  :  -1] =            -  d.T
         # derivatives angle
-        for i, (d, h2) in enumerate(zip( distances, distanceMagnitudes )):
+        for i, (d, h2) in enumerate(zip( distances, dMagnitudeSquares )):
             x = d.T/h2
             x[1] *= -1
             dG_dU[nSlaves + i, i*nDim  :  i*nDim + nDim ] =  x[::-1].T
@@ -103,10 +106,6 @@ class Constraint:
                                 for nodeField in nodeFields  
                                     for i in node.fields[nodeField]] + self.additionalGlobalDofIndices)
                     
-    def generateConstraintStiffness(self):
-        pass
-    def generateConstraintForce(self):
-        pass
 
         
     
