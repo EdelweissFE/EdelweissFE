@@ -8,26 +8,26 @@ Created on Tue Jan  10 19:10:42 2017
 from collections import OrderedDict
 
                                         #field              field type
-phenomena = OrderedDict([               ("displacement" ,     "vector"),
-                                        ("rotation",          "rotation vector"),
-                                        ("thermal",         "scalar"),
-                                        ("nonlocal damage", "scalar"),])
+phenomena = OrderedDict([               ("displacement" ,       "vector"),
+                                        ("rotation",            "rotation vector"),
+                                        ("thermal",             "scalar"),
+                                        ("nonlocal damage",     "scalar"),])
                                         
                                         
                                         #field              #tolerance
-flowCorrectionTolerance = {             'displacement' :      1e-5,
-                                        'rotation' :      1e-5,
-                                        'nonlocal damage':  1e-5,
+flowCorrectionTolerance = {             'displacement' :        1e-5,
+                                        'rotation' :            1e-5,
+                                        'nonlocal damage':      1e-5,
                                         }
                                                                    
-effortResidualTolerance = {             'displacement' :      1e-7,
-                                        'rotation' :      1e-5,
-                                        'nonlocal damage':  1e-7,
+effortResidualTolerance = {             'displacement' :        1e-7,
+                                        'rotation' :            1e-5,
+                                        'nonlocal damage':      1e-7,
                                         }
 
-effortResidualToleranceAlternative = {  'displacement' :       1e-3,
-                                        'rotation' :      1e-5,
-                                        'nonlocal damage':   1e-6,
+effortResidualToleranceAlternative = {  'displacement' :        1e-3,
+                                        'rotation' :            1e-5,
+                                        'nonlocal damage':      1e-6,
                                         }
                                         
                                         #domain             #dimensions

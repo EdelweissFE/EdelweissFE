@@ -109,7 +109,7 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
                 
         modelInfo['surfaces'][name] = surface
         
-#    for rpDef in inputfile['*referencetPoint']:
+#    for rpDef in inputfile['*referencePoint']:
 #        name = rpDef['name']
 #        coordinates = np.zeros(domainSize)
 #        coordinates[:] = rpDef['data'][0:]
@@ -181,9 +181,9 @@ def assignFieldDofIndices(nodes, constraints, domainSize):
         # we create them here, and assign them directly to the constraints 
         # (In contrast to true field indices, which are not directly 
         # assigned to elements/constraints but to the nodes)
-        nNeededDofs = constraint.additionalDofs
+        nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
         indicesOfConstraintAdditionalDofs = [i + fieldIdxBase for i in range(nNeededDofs)  ]
-        constraint.assignAdditionalDofIndices ( indicesOfConstraintAdditionalDofs )
+        constraint.assignAdditionalGlobalDofIndices ( indicesOfConstraintAdditionalDofs )
         fieldIdxBase += nNeededDofs
 #        fieldIndices[constraint.name] = indicesOfConstraintAdditionalDofs
     return fieldIdxBase, fieldIndices
@@ -258,10 +258,6 @@ def finitElementSimulation(inputfile, verbose=False):
     
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], modelInfo['constraints'], domainSize)
-    
-#    for node in modelInfo['nodes'].values():
-#        print(node.label)
-#        print(node.fields)
     
     modelInfo['nodeSets']['all'] = list( modelInfo['nodes'].values() )
     modelInfo['elementSets']['all'] = list ( modelInfo['elements'].values() )

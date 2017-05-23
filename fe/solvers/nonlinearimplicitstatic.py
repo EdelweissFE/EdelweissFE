@@ -111,7 +111,10 @@ class NIST:
         isGeostaticStep = any([g.active for g in geostatics] )
         linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
-
+        for constraint in linearConstraints:
+            # linear constraints are independent on the solution
+            idxInVIJ = self.constraintToIndexInVIJMap[constraint]
+            V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.K.ravel()
             
         lastIncrementSize = False
         
@@ -147,7 +150,6 @@ class NIST:
                     for cLoad in concentratedLoads: Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
                     Pdeadloads = self.computeDistributedLoads(distributedLoads, Pdeadloads, 
                                                               I, stepTimes, dT, increment)
-                
     
                 try:
                     # deadleads, only computed once per increment
@@ -161,14 +163,6 @@ class NIST:
                         if concentratedLoads or distributedLoads:
                             P += Pdeadloads
                             
-                        for constraint in linearConstraints:
-                            # linear constraints are independent on the solution
-                            idxInVIJ = self.constraintToIndexInVIJMap[constraint]
-                            idcsInPUdU = I[idxInVIJ : idxInVIJ+ constraint.nDof]            
-                            
-                            V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.stiffnessContribution.ravel()
-                            P[idcsInPUdU] += constraint.effortContribution
-                            
                         R[:] = P
                         
                         if iterationCounter == 0 and not extrapolatedIncrement and dirichlets :
@@ -176,20 +170,19 @@ class NIST:
                             R = self.applyDirichlet(increment, R, dirichlets)
                         else:
                             # iteration cycle 1 or higher, time to check the convergency
-                            for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 # only entries not affected by dirichlet bcs contribute to the residual
                             
-                            if self.checkConvergency(R, ddU, iterationCounter):
+                            for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 
+                            for constraint in self.constraints.values(): R[constraint.globalDofIndices] = 0.0
+                            
+                            if self.checkConvergency(R, ddU, iterationCounter) :
                                 break
                             
-                        if iterationCounter == maxIter-1:
+                        if iterationCounter == maxIter:
                             raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
                         
                         K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
                         K = self.applyDirichletK(K, dirichlets)
                         
-#                        np.set_printoptions(precision=1, suppress=True)
-#                        print(K.todense())
-                        print(R)
                         ddU = self.linearSolve(K, R, )
                         dU += ddU
                         iterationCounter += 1
@@ -413,18 +406,19 @@ class NIST:
             
         constraintToIndexInVIJMap = {}
         for constraint in constraints.values():
-            destList = np.asarray(
-                    [i for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes) 
-                                        for nodeField in nodeFields 
-                                            for i in node.fields[nodeField]]
-                    + constraint.additionalDofIndices
-                    ) 
+#            destList = np.asarray(
+#                    [i for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes) 
+#                                        for nodeField in nodeFields 
+#                                            for i in node.fields[nodeField]]
+#                    + constraint.additionalDofIndices
+#                    ) 
     
+            destList = constraint.globalDofIndices
             constraintToIndexInVIJMap[constraint] = idxInVIJ        
             
 #            print(destList)
                                   
-            constraintDofLocations = np.tile(destList, (destList.shape[0], 1) )
+            constraintDofLocations = np.tile( destList, (destList.shape[0], 1) )
 #            print(constraintDofLocations)
             I[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel()
             J[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel('F')

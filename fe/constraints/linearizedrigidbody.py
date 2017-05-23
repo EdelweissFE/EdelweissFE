@@ -22,60 +22,87 @@ class Constraint:
         self.name = name
         definition = stringDict( [ e for line in definitionLines for e in line  ] )
         
-        rbNset = definition.get('nSet')
+        rbNset = definition['nSet']
         nodeSets = modelInfo['nodeSets']
         
+        self.rp = nodeSets [ definition['referencePoint'] ] [0]
+        self.slaveNodes = nodeSets[ rbNset ]  # may also contain the RP, doesn't really matter as we remove it
         
-        self.nodes = nodeSets[ rbNset ]
+        if self.rp in self.slaveNodes: # remove the rp from the slave node set
+            self.slaveNodes = [s for s in self.slaveNodes if s is not self.rp]
         
+        # all nodes
+        self.nodes = self.slaveNodes +  [self.rp]
         
-        # 1th node becomes the rp:
-            
-        self.rp = self.nodes[0]
-        
-        self.fieldsOfNodes = [ ['displacement'] for node in self.nodes ]
-        
-        self.fieldsOfNodes[0] += ['rotation']
-        
-#        nodesNonRP = [ n for n  in self.nodes if n is not  self.rp ]
-#        print(nodesNonRP )1
+        nSlaves = len(self.slaveNodes)
+        self.slaveNodesFields = [ ['displacement'] ] * nSlaves
+        self.referencePointFields = [ ['displacement', 'rotation']  ]
+        self.fieldsOfNodes = self.slaveNodesFields + self.referencePointFields
 
         nDim = modelInfo['domainSize']
         
-        nConstraints = len(self.nodes) + 1 # 
-        nAffectedDofs =  len(self.nodes) * nDim + 1   
-        
+        nConstraints = nSlaves * 2 # one for distance, one for angle
+        nAffectedDofs =  nDim * (nSlaves + 1 ) + 1   
 
-        distances = [ n.coordinates - self.rp.coordinates for n in self.nodes ]
+        distances = [ s.coordinates - self.rp.coordinates for s in self.slaveNodes ]
         distanceMagnitudes = [ d @ d for d in distances  ]
-
-        dG_dU = np.zeros( (nConstraints, nAffectedDofs )  )
         
-#        for i in range(nConstraints):
-#            for j, n, d, h in enumerate(zip(self.nodes, distances, distanceMagnitudes)):
-#                dG_dU[i,j] = 
-            
         
-#        self.constraintFunctions = []
-        self.additionalDofs = nConstraints
-        self.additionalDofIndices =  []
-        
-        self.referencePoint = None
-        
-        self.nDof = 2 * len(self.fieldsOfNodes) + 1 + self.additionalDofs
+        self.nDof = nAffectedDofs + nConstraints
         self.sizeStiffness =  self.nDof * self.nDof
         
-        self.stiffnessContribution = np.zeros( (self.nDof, self.nDof) )
-        self.effortContribution = np.zeros( self.nDof )
+        dG_dU = np.zeros( (nConstraints, nAffectedDofs )  )
+        
+        """
+               |n1x         n1y         n2x         n2y    ...  rpx         rpy         rpA|
+        -------+------------------------------------------  ~ -----------------------------+
+        dg1_dU |dx1         dy1         0           0      ...  -dx1        -dy1        0  |
+        dg2_dU |0           0           dx2         dy2    ...  -dx2        -dy2        0  |
+        ...    |...........................................................................|
+        dg1A_dU|-d1y/h²     d1x/h²      0           0      ...   d1y/h²     -d1x/h²     -1.|
+        dg2A_dU|0           0           -d1y/h²     d1x/h² ...   d1y/h²      d1x/h²     -1.|
+        ...    |...........................................................................|
+        """
+        
+        # derivatives distance
+        for i, (d, h2) in enumerate(zip( distances, distanceMagnitudes )):
+            dG_dU[i, i*nDim  :  i*nDim + nDim ] = d.T
+            dG_dU[i, - (nDim+1)  :  -1] =            -d.T
+        # derivatives angle
+        for i, (d, h2) in enumerate(zip( distances, distanceMagnitudes )):
+            x = d.T/h2
+            x[1] *= -1
+            dG_dU[nSlaves + i, i*nDim  :  i*nDim + nDim ] =  x[::-1].T
+            dG_dU[nSlaves + i, - (nDim+1)  :  -1        ] = -x[::-1].T            
+        dG_dU[nSlaves:, -1] = -1
+        
+        
+        K = np.zeros( (self.nDof, self.nDof) )
+        
+        """
+        K =     |   0       dG_dU.T |
+                |   dG_dU   0       |
+        """
+        
+        K[0 : dG_dU.shape[1]    , -dG_dU.shape[0]: ] =    dG_dU.T
+        K[   -dG_dU.shape[0]:   , 0 : dG_dU.shape[1]: ] = dG_dU
+        
+        self.K = K
+#        self.P = np.zeros( self.nDof )
+        
+        self.additionalGlobalDofIndices =  []
+        self.nConstraints = nConstraints
+    
+    def getNumberOfAdditionalNeededDofs(self):
+        return self.nConstraints
 
-    def assignAdditionalDofIndices(self, dofIndices):
-        self.additionalDofIndices = dofIndices
-        print("dof indices for constraint:")
-        print(dofIndices)
-    def getAdditionalDofIndices(self,):
-        return self.additionalDofIndices
-    
-    
+    def assignAdditionalGlobalDofIndices(self, additionalGlobalDofIndices):
+        self.additionalGlobalDofIndices = additionalGlobalDofIndices
+        
+        self.globalDofIndices = np.asarray([i for node, nodeFields in zip(self.nodes, self.fieldsOfNodes) 
+                                for nodeField in nodeFields  
+                                    for i in node.fields[nodeField]] + self.additionalGlobalDofIndices)
+                    
     def generateConstraintStiffness(self):
         pass
     def generateConstraintForce(self):

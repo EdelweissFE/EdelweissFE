@@ -128,8 +128,9 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                          }),
 
                     '*constraint':          ("define a constraint",
-                        {'type':      ('string', "constraint type"),
+                        {'type':            ('string', "constraint type"),
                          'name':            ('string', "(optional) name of the generator"),
+#                         'referencePoint':  ('string', "name of the (master) reference point"),
                          'data':            ('string', "definition of the constraint"),
                          }),
                                          
