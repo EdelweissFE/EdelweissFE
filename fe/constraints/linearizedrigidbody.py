@@ -4,12 +4,23 @@
 Created on Sun May 21 11:34:35 2017
 
 @author: matthias
+
+Linearized rigid body constraint:
+    
+    Constrains a nodeset to a reference point.
+    Currently only available for spatialdomain = 2D.
+    Keywords are defined via datalines.
 """
 
 import numpy as np
 
 from fe.utils.misc import stringDict
 from fe.utils.exceptions import WrongDomain
+
+documentation = {
+        'nSet': '(slave) node set, which is constrained to the reference point',
+        'referencePoint': '(master) reference point'
+        }
 
 class Constraint:
     """ linearized Rigid Body constraint """

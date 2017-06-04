@@ -26,4 +26,4 @@ options, category=NISTSolver, extrapolation=off, numThreads=2
 **dirichlet, name=1,  nSet=gen_leftBottom,   field=displacement, 2=0.0, 1=0.0
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 **distributedload, name=dLoad1, surface=gen_surfaceLeft, type=pressure, magnitude=30.0
-**dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.05
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.05

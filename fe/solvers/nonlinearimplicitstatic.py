@@ -4,6 +4,9 @@
 Created on Sun Jan  8 20:37:35 2017
 
 @author: matthias
+
+Standard nonlinear, implicit static solver.
+
 """
 import numpy as np
 from scipy.sparse import coo_matrix
@@ -104,11 +107,11 @@ class NIST:
         
         dU = np.zeros(numberOfDofs)
         
-        dirichlets = stepActions['dirichlet'].values()
-        distributedLoads = stepActions['distributedload'].values()
+        dirichlets =        stepActions['dirichlet'].values()
+        distributedLoads =  stepActions['distributedload'].values()
         concentratedLoads = stepActions['nodeforces'].values()
-        geostatics = stepActions['geostatic'].values()
-        isGeostaticStep = any([g.active for g in geostatics] )
+        geostatics =        stepActions['geostatic'].values()
+        isGeostaticStep =   any([g.active for g in geostatics] )
         linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
         for constraint in linearConstraints:
@@ -196,7 +199,6 @@ class NIST:
                     lastIncrementSize = False
                     
                 else: 
-                    #converged
                     U += dU
                     lastIncrementSize = incrementSize
                     if iterationCounter >= criticalIter: 
@@ -218,8 +220,7 @@ class NIST:
             self.journal.message("Interrupted by user", self.identification)
             
         else:
-            # reset all displacements, if the present step is a geostatic step
-            if isGeostaticStep: U = self.resetDisplacements(U)
+            if isGeostaticStep: U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
             
             for stepActionType in stepActions.values():
                 for action in stepActionType.values():

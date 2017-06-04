@@ -7,14 +7,14 @@ Created on Tue Jan  10 19:10:42 2017
 """
 from collections import OrderedDict
 
-                                        #field              field type
+                                        #field                  field type
 phenomena = OrderedDict([               ("displacement" ,       "vector"),
                                         ("rotation",            "rotation vector"),
                                         ("thermal",             "scalar"),
                                         ("nonlocal damage",     "scalar"),])
                                         
                                         
-                                        #field              #tolerance
+                                        #field                  tolerance
 flowCorrectionTolerance = {             'displacement' :        1e-5,
                                         'rotation' :            1e-5,
                                         'nonlocal damage':      1e-5,
@@ -30,11 +30,11 @@ effortResidualToleranceAlternative = {  'displacement' :        1e-3,
                                         'nonlocal damage':      1e-6,
                                         }
                                         
-                                        #domain             #dimensions
-domainMapping = {                       "1d":               1,
-                                        "2d":               2,
-                                        "3d":               3,
-                                        "axisymmetric":     2,
+                                        #domain                 dimensions
+domainMapping = {                       "1d":                   1,
+                                        "2d":                   2,
+                                        "3d":                   3,
+                                        "axisymmetric":         2,
                                         }
     
 def getFieldSize(field, domainSize):
