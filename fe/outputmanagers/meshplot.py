@@ -108,7 +108,7 @@ class Plotter:
     def plotNodeLabels(self, labels):
         """ label nodes of elements """
         for label in labels:              
-            self.ax.annotate('%i' % label, xy=self.coordinates[label-1,:], fontsize=6, textcoords='data') 
+            self.ax.annotate('%i' % label, xy=self.coordinates[label-1,:], fontsize=6, textcoords='data')
             
     def plotMeshGrid(self):
         """ plot grid of elements; so far only implemented for quads """

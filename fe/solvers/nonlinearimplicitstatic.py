@@ -315,7 +315,7 @@ class NIST:
         for dirichlet in dirichlets:
             indices = dirichlet.indices#['indices']
             R[indices] = dirichlet.getDelta(increment)
-
+        
         toc = getCurrentTime()
         self.computationTimes['dirichlet R'] += toc - tic
         

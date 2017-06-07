@@ -137,7 +137,7 @@ cdef class BaseElement:
                     
     def getPermanentResultPtr(self, **kw):    
         sVars = np.asarray(self.stateVars)
-        idxSlice = self.resultIndices[ kw['result'] ](self.nStateVarsUmat, kw)     
+        idxSlice = self.resultIndices[ kw['result'] ](self.nStateVarsUmat, kw)    
         return sVars[idxSlice]
     
     def __dealloc__(self):
