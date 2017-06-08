@@ -23,8 +23,8 @@ Build Extension for the UEL base element, linked to the bftUserLibrary
 extensions = [Extension("*",
                 sources = ["fe/elements/uelbaseelement/element.pyx"],
                         include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()],
-                         libraries= ['bftUserLibrary'],
-                         runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                        libraries= ['bftUserLibrary'],
+                        runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
                         language='c++',)
                         ]  
 

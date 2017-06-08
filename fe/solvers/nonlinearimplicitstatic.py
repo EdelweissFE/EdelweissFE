@@ -38,9 +38,9 @@ class NIST:
         self.constraints =  modelInfo['constraints']
         self.fieldIndices = jobInfo['fieldIndices']
         
-        self.flowCorrectionTolerances = jobInfo['flowCorrectionTolerance']
-        self.effortResidualTolerances = jobInfo['effortResidualTolerance']
-        self.effortResidualTolerancesAlt = jobInfo['effortResidualToleranceAlternative']
+        self.fluxCorrectionTolerances = jobInfo['fluxCorrectionTolerance']
+        self.forceResidualTolerances = jobInfo['forceResidualTolerance']
+        self.forceResidualTolerancesAlt = jobInfo['forceResidualToleranceAlternative']
         
         # create headers for formatted output of solver
         nFields = len(self.fieldIndices.keys())
@@ -71,7 +71,7 @@ class NIST:
         self.constraintToIndexInVIJMap = constraintToIndexInVIJMap
         
     def initialize(self):
-        """ Initialize the solver and return the 2 vectors for flow (U) and effort (P) """
+        """ Initialize the solver and return the 2 vectors for flux (U) and force (P) """
         
         U = np.zeros(self.nDof)
         P = np.zeros(self.nDof)
@@ -259,7 +259,7 @@ class NIST:
             if pNewDT[0] <= 1.0:
                 raise CutbackRequest("An element requests for a cutback", pNewDT[0])
             
-            # global effort vector is assembled directly
+            # global force vector is assembled directly
             P[ idcsInPUdU ] += Pe
         
         toc = getCurrentTime()
@@ -295,7 +295,7 @@ class NIST:
     def applyDirichletK(self, K, dirichlets):
         """ Apply the dirichlet bcs on the global stiffnes matrix
         -> is called by solveStep() before solving the global sys.
-        http://stackoverflow.com/questions/12129948/scipy-sparse-set-row-to-zeros"""
+        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros"""
             
         tic = getCurrentTime()
         for dirichlet in dirichlets:
@@ -324,7 +324,7 @@ class NIST:
     
     def checkConvergency(self, R, ddU, iterationCounter):
         """ Check the convergency, indivudually for each field,
-        similar to ABAQUS based on the current total residual and the flow correction
+        similar to ABAQUS based on the current total residual and the flux correction
         -> is called by solveStep() to decide wether to continue iterating or stop"""
         
         tic = getCurrentTime()
@@ -333,24 +333,24 @@ class NIST:
         convergedAtAll  = True
         
         if iterationCounter < 15: # standard tolerance set
-            effortResidualTolerances = self.effortResidualTolerances
+            forceResidualTolerances = self.forceResidualTolerances
         else: # alternative tolerance set
-            effortResidualTolerances = self.effortResidualTolerancesAlt
+            forceResidualTolerances = self.forceResidualTolerancesAlt
         
         for field, fieldIndices in self.fieldIndices.items():
-            effortResidual =    np.linalg.norm(R[fieldIndices] , np.inf)
-            flowCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-            convergedEffort =   True if (effortResidual < effortResidualTolerances[field])  else False
-            convergedFlow =     True if (flowCorrection < self.flowCorrectionTolerances[field])  else False
+            forceResidual =    np.linalg.norm(R[fieldIndices] , np.inf)
+            fluxCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
+            convergedForce =   True if (forceResidual < forceResidualTolerances[field])  else False
+            convergedFlux =     True if (fluxCorrection < self.fluxCorrectionTolerances[field])  else False
                                      
             iterationMessage += self.iterationMessageTemplate.format(
-                                 effortResidual, 
-                                 '✓' if convergedEffort  else ' ',
-                                 flowCorrection,
-                                 '✓' if convergedFlow else ' ',
+                                 forceResidual, 
+                                 '✓' if convergedForce  else ' ',
+                                 fluxCorrection,
+                                 '✓' if convergedFlux else ' ',
                                  )
-            # converged if residual and flowCorrection are smaller than tolerance
-            convergedAtAll = convergedAtAll and convergedFlow and convergedEffort
+            # converged if residual and fluxCorrection are smaller than tolerance
+            convergedAtAll = convergedAtAll and convergedFlux and convergedForce
             
         self.journal.message(iterationMessage, self.identification)     
         

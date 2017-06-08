@@ -128,9 +128,13 @@ def assignSections(inputfile, elementSets):
     the given section definitions."""
     
     for secDef in inputfile['*section']:
-        if secDef['type'] == "planeUelUmat":
+        if secDef['type'] == "planeUelUmat" or secDef['type'] == "solidUelUmat":
             material = [mat for mat in inputfile['*material'] if mat['id'] == secDef['material']][0]
-            uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
+            if secDef['type'] == "planeUelUmat":
+                uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
+            else:
+                uelProperties = np.array([], dtype=float)
+                
             umatProperties = np.hstack(material['data'])
             for line in secDef['data']: 
                for elSet in line: 
