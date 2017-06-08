@@ -110,8 +110,10 @@ class NIST:
         dirichlets =        stepActions['dirichlet'].values()
         distributedLoads =  stepActions['distributedload'].values()
         concentratedLoads = stepActions['nodeforces'].values()
-        geostatics =        stepActions['geostatic'].values()
-        isGeostaticStep =   any([g.active for g in geostatics] )
+        
+        geostatics = stepActions['geostatic'].values()
+        activeGeostatics = [g for g in geostatics if g.active]
+        isGeostaticStep = any([g.active for g in geostatics] )
         linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
         for constraint in linearConstraints:
@@ -157,7 +159,8 @@ class NIST:
                 try:
                     while True:
                         
-                        for geostatic in geostatics: geostatic.apply()
+                    
+                        for geostatic in activeGeostatics: geostatic.apply() 
                         
                         P, V = self.computeElements(U, dU, stepTimes, dT, P, V, I, J,)
                         
@@ -316,7 +319,7 @@ class NIST:
         for dirichlet in dirichlets:
             indices = dirichlet.indices#['indices']
             R[indices] = dirichlet.getDelta(increment)
-
+        
         toc = getCurrentTime()
         self.computationTimes['dirichlet R'] += toc - tic
         

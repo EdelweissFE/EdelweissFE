@@ -37,7 +37,7 @@ class StepAction(StepActionBase):
         self.delta=0
         self.idle = True
     
-    def updateStepAction(self, definition,):
+    def updateStepAction(self, definition):
         action = stringDict(definition)
         if 'magnitude' in action:
             self.delta = np.asarray([float(action['magnitude'])]) - self.magnitudeAtStepStart 

@@ -21,11 +21,15 @@ class StepAction(StepActionBase):
         
         nodeSets = modelInfo['nodeSets']
         action = stringDict(definition) 
-        field = action['field']
+        self.field = action['field']
+
         
+        self.action = action
+        self.nSet = nodeSets [ action['nSet'] ]
+
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
-                directionIndices = [node.fields[field][x] for node in nodeSets[action['nSet']]]
+                directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 dirichletIndices += directionIndices
                 dirichletDelta += [float(action[direction])] * len(directionIndices)
                             
@@ -38,16 +42,33 @@ class StepAction(StepActionBase):
         else:
             self.amplitude = lambda x:x
         
-        self.active = True
+        self.moving = True
         
     def finishStep(self,):
-        self.active = False
+        self.moving = False
     
-    def updateStepAction(self, definitionLines, jobInfo, modelInfo, journal):
-        pass
-    
+    def updateStepAction(self, definition):
+        self.moving = True
+        action = stringDict(definition)
+
+        dirichletIndices = []
+        dirichletDelta = []
+        for x, direction  in enumerate(['1', '2', '3']):
+            if direction in action:
+                directionIndices = [node.fields[self.field][x] for node in self.nSet]
+                dirichletIndices += directionIndices
+                dirichletDelta += [float(action[direction])] * len(directionIndices)
+                            
+        self.delta = np.array(dirichletDelta)
+        
+        if 'f(t)' in action:
+            t = sp.symbols('t')
+            self.amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
+        else:
+            self.amplitude = lambda x:x
+
     def getDelta(self, increment):
-        if self.active:
+        if self.moving:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             return self.delta * ( self.amplitude ( stepProgress ) - 
                                  (self.amplitude ( stepProgress - incrementSize )))

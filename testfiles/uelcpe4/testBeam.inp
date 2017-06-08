@@ -26,4 +26,4 @@ nSet=left, field=displacement, result=P, f(x)=sum(x), direction=2
 options, category=NISTSolver,       extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
 dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=displacement, 2=-.1
+dirichlet, name=right, nSet=right,  field=displacement, 2=-10

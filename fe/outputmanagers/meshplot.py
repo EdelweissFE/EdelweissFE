@@ -35,8 +35,8 @@ class Plotter:
         self.rcParams = {
                 "pgf.texsystem": "pdflatex",        # change this if using xetex or lautex
                 "text.usetex": True,                # use LaTeX to write all text
-                'text.latex.preamble':[#r"\usepackage{mathpazo}",
-                                       #r"\usepackage{siunitx}",
+                'text.latex.preamble':[r"\usepackage{mathpazo}",
+                                       r"\usepackage{siunitx}",
                                         ],
                 "font.family": "serif",
                 "font.serif": [],                   # blank entries should cause plots to inherit fonts from the document
@@ -64,7 +64,7 @@ class Plotter:
             import plotterRcParams
             
             self.rcParams.update(plotterRcParams.rcParams)
-        
+#        
         self.figsWithAxes = {} # {figID : (figure, {axesDict})}
         matplotlib.rcParams.update(self.rcParams)
         
@@ -108,7 +108,7 @@ class Plotter:
     def plotNodeLabels(self, labels):
         """ label nodes of elements """
         for label in labels:              
-            self.ax.annotate('%i' % label, xy=self.coordinates[label-1,:], fontsize=6, textcoords='data') 
+            self.ax.annotate('%i' % label, xy=self.coordinates[label-1,:], fontsize=6, textcoords='data')
             
     def plotMeshGrid(self):
         """ plot grid of elements; so far only implemented for quads """
