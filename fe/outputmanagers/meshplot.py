@@ -380,12 +380,19 @@ class OutputManager(OutputManagerBase):
             location = U if perNodeJob['result'] == 'U' else P
             # indices dependent on field variable
             indices = perNodeJob['resultIndices']
-            # indices dependent on function f(x)
-            result = np.asarray([perNodeJob['f(x)'](row) for row in location[indices]])
+            result = []
+            for row in indices:
+                res = []
+                for idx in row:
+                    res.append(location[idx])
+                result.append(perNodeJob['f(x)'](res))
+            
+            result = np.asarray(result)
+#            result = np.asarray([perNodeJob['f(x)'](row) for row in location[indices]])  # DID NOT WORK OUT
             if perNodeJob['plotMeshGrid']=='unDeformed':
                 self.plotObj.plotMeshGrid(perNodeJob['axSpec'],)
             if perNodeJob['plotNodeLabels']:
-                self.plotObj.plotNodeLabels(self.nodes.keys())
+                self.plotObj.plotNodeLabels(self.nodes.keys(),perNodeJob['axSpec'])
             self.plotObj.contourPlotNodalValues(result,perNodeJob['axSpec'])
 
         for perElementJob in self.perElementJobs:
