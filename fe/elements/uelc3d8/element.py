@@ -18,7 +18,7 @@ class Element(BaseElement):
     sizeKe =                24 * 24
     dofIndicesPermutation = slice(0, 24)#np.arange(0, 24, 1, dtype=np.int)
     ensightType =           "hexa8"
-    uelIdentification =     -803
+    uelIdentification =     803
     
     def __init__(self, nodes, elNumber):
         super().__init__(nodes, elNumber, self.nGaussPt, self.uelIdentification)

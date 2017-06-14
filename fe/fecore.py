@@ -143,6 +143,8 @@ def assignSections(inputfile, elementSets):
                                         material['name'], 
                                         material['statevars'],
                                         umatProperties)
+        else:
+            raise Exception("Undefined section")
 
 def assignFieldDofIndices(nodes, constraints, domainSize):
     """ Loop over all nodes to generate the global field-dof indices.
