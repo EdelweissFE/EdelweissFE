@@ -23,8 +23,9 @@ Build Extension for the UEL base element, linked to the bftUserLibrary
 extensions = [Extension("*",
                 sources = ["fe/elements/uelbaseelement/element.pyx"],
                         include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()],
-                        libraries= ['bftUserLibrary'],
-                        runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                         libraries= ['bftUserLibrary'],
+                                 library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                         runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
                         language='c++',)
                         ]  
 
@@ -46,7 +47,8 @@ Build The parallel NISTParallel solver with OpenMP
 extensions += [Extension("*",
                 sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
                         include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()] ,
-                         runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                        library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] , 
+                        runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
                          libraries= ['bftUserLibrary'],
                          language='c++',
                          extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
