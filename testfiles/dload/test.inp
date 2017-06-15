@@ -18,7 +18,7 @@ loadEls, 3
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*job, name=cpe4job, domain=2d, 
+*job, name=cpe4job, domain=2d
 
 *output, type=ensight, jobName=cpe4job, name=ensightExport
 create=perNode,    elSet=all, field=displacement, result=U, name=displacement

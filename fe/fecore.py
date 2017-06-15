@@ -339,3 +339,6 @@ def finitElementSimulation(inputfile, verbose=False):
             manager.finalizeJob(U, P,)
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
         
+#        np.savetxt('U.ref', U)
+        return U
+        

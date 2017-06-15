@@ -16,7 +16,7 @@ figure=1, axSpec=211, create=perNode, field=nonlocal damage, result=U, f(x)=x[0]
 figure=1, axSpec=212, create=perElement, result=sdv, index=4, name=omega, gaussPt=1
 figure=2, axSpec=111, create=perNode, field=displacement, result=U, f(x)=sqrt( x @ x ), name=u
 figure=3, axSpec=111, c=red, ls=dashed, create=xyData, xField=displacement, xnSet=topNodes, xResult=U1, f(x)=mean(x), ynSet=topNodes, yField=displacement, yResult=P2, f(y)=sum(y)  
-configFigure, figure=3, axSpec=111, xLabel=U1, yLabel=P2,flipX=True
+configFigure, figure=3, axSpec=111, xLabel=U1, yLabel=P2, flipX=True
 saveFigure, figure=1, fileName=notchedBeam1
 saveFigure, figure=2, fileName=notchedBeam2
 saveFigure, figure=3, fileName=notchedBeam3
@@ -25,4 +25,4 @@ saveFigure, figure=3, fileName=notchedBeam3
 options, category=NISTSolver, extrapolation=linear, numThreads=15
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0
-dirichlet, name=top, nSet=topNodes, field=displacement, 2=-0.20
+dirichlet, name=top,   nSet=topNodes, field=displacement, 2=-0.04
