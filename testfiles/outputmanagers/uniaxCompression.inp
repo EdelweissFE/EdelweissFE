@@ -30,10 +30,9 @@ nSet=gen_top, field=displacement, result=P, f(x)=sum(x), direction=2
 *output, type=plotAlongNSetPath, jobName=cps4job, name=myNodeSetPlotter
 nSet=gen_top, field=displacement, result=U, direction=2, label=U along top surface, normalize=True
 
-*step, jobName=cps4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
-options, category=Ensight, intermediateSaveInterval=100,
-options, category=myEnsightExport, intermediateSaveInterval=10, 
-options, category=NISTSolver, extrapolation=off, numThreads=2
+*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=Ensight, intermediateSaveInterval=2,
+options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0
 dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,
 nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2

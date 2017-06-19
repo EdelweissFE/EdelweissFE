@@ -15,17 +15,17 @@ phenomena = OrderedDict([               ("displacement" ,       "vector"),
                                         
                                         
                                         #field                  tolerance
-flowCorrectionTolerance = {             'displacement' :        1e-5,
+fluxCorrectionTolerance = {             'displacement' :        1e-5,
                                         'rotation' :            1e-5,
                                         'nonlocal damage':      1e-5,
                                         }
                                                                    
-effortResidualTolerance = {             'displacement' :        1e-7,
+forceResidualTolerance = {             'displacement' :        1e-7,
                                         'rotation' :            1e-5,
                                         'nonlocal damage':      1e-7,
                                         }
 
-effortResidualToleranceAlternative = {  'displacement' :        1e-3,
+forceResidualToleranceAlternative = {  'displacement' :        1e-3,
                                         'rotation' :            1e-5,
                                         'nonlocal damage':      1e-6,
                                         }

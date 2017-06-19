@@ -12,7 +12,6 @@ from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import CutbackRequest
-from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance
 from cython.parallel cimport parallel, threadid, prange
 from fe.elements.uelbaseelement.element cimport BaseElement, BftUel
 from libc.stdlib cimport malloc, free

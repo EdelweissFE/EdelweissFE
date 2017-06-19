@@ -25,7 +25,7 @@ documentation = {
 class Constraint:
     """ linearized Rigid Body constraint """
     
-    # linear constraints are totally independent of the solution vector,
+    # linear constraints are independent of the solution vector,
     # and, thus, need only be evaluated once (per step)
     linearConstraint = True
     
@@ -102,7 +102,7 @@ class Constraint:
         K[   -dG_dU.shape[0]:   , 0 : dG_dU.shape[1]: ] = dG_dU
         
         self.K = K
-#        self.P = np.zeros( self.nDof )
+#        self.P = np.zeros( self.nDof ) # no contribution to RHS
         
         self.additionalGlobalDofIndices =  []
         self.nConstraints = nConstraints

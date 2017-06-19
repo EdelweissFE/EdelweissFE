@@ -128,9 +128,13 @@ def assignSections(inputfile, elementSets):
     the given section definitions."""
     
     for secDef in inputfile['*section']:
-        if secDef['type'] == "planeUelUmat":
+        if secDef['type'] == "planeUelUmat" or secDef['type'] == "solidUelUmat":
             material = [mat for mat in inputfile['*material'] if mat['id'] == secDef['material']][0]
-            uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
+            if secDef['type'] == "planeUelUmat":
+                uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
+            else:
+                uelProperties = np.array([], dtype=float)
+                
             umatProperties = np.hstack(material['data'])
             for line in secDef['data']: 
                for elSet in line: 
@@ -139,6 +143,8 @@ def assignSections(inputfile, elementSets):
                                         material['name'], 
                                         material['statevars'],
                                         umatProperties)
+        else:
+            raise Exception("Undefined section")
 
 def assignFieldDofIndices(nodes, constraints, domainSize):
     """ Loop over all nodes to generate the global field-dof indices.
@@ -332,4 +338,7 @@ def finitElementSimulation(inputfile, verbose=False):
         for manager in outputmanagers:
             manager.finalizeJob(U, P,)
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
+        
+#        np.savetxt('U.ref', U)
+        return U
         

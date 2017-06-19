@@ -5,13 +5,13 @@ Created on Mon Apr 10 20:26:22 2017
 
 @author: matthias
 """
-from fe.config.phenomena import flowCorrectionTolerance, effortResidualTolerance, effortResidualToleranceAlternative
+from fe.config.phenomena import fluxCorrectionTolerance, forceResidualTolerance, forceResidualToleranceAlternative
 from fe.utils.misc import stringDict
 
 def loadConfiguration(jobInfo):
-    jobInfo['flowCorrectionTolerance'] = flowCorrectionTolerance
-    jobInfo['effortResidualTolerance'] = effortResidualTolerance
-    jobInfo['effortResidualToleranceAlternative'] = effortResidualToleranceAlternative
+    jobInfo['fluxCorrectionTolerance'] = fluxCorrectionTolerance
+    jobInfo['forceResidualTolerance'] = forceResidualTolerance
+    jobInfo['forceResidualToleranceAlternative'] = forceResidualToleranceAlternative
     return jobInfo
 
 def updateConfiguration(newConfiguration, jobInfo):
