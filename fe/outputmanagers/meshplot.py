@@ -385,7 +385,7 @@ class OutputManager(OutputManagerBase):
                 res = []
                 for idx in row:
                     res.append(location[idx])
-                result.append(perNodeJob['f(x)'](res))
+                result.append(perNodeJob['f(x)'](np.asarray(res)))
             
             result = np.asarray(result)
 #            result = np.asarray([perNodeJob['f(x)'](row) for row in location[indices]])  # DID NOT WORK OUT
