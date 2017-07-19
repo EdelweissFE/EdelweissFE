@@ -33,7 +33,7 @@ for directory in testsDirs:
     
     residual = U - UReference
     
-    if ( np.max ( np.abs ( residual ) ) ) < 1e-14:
+    if ( np.max ( np.abs ( residual ) ) ) < 1e-6:
         passed = True
     else:
         passed = False

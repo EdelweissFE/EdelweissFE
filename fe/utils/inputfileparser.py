@@ -130,6 +130,16 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                                          
                     '*include': ("(optional) load extra .inp file (fragment), use relative path to current .inp",
                         {'input':           ('string', "filename")}),
+                                 
+                     '*parameterIdentification': ("identify material parameter for given x and y data",
+                        {'xData':           ('string', "filename where xData is given"),
+                         'yData':           ('string', "filename where yData is given"),
+                         'plot':            ('string', "True|False plot result with final parameters"),
+                         'id':              ('string', "name of the property"),
+                         'jobName':         ('string', "name of job"),
+                         'file':            ('string', "filename where identified parameters are written"),
+                         'data':            ('string', "key=value pairs"),
+                         }),                       
                         
                 }
 inputLanguage_ = CaseInsensitiveDict()

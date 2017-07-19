@@ -312,6 +312,7 @@ def finitElementSimulation(inputfile, verbose=False):
                 # solve the step 
                 tic =  getCurrentTime()
                 success, U, P, time = solver.solveStep(step, time, stepActions, stepOptions, U, P,)
+
                 toc = getCurrentTime()
                 
                 stepTime = toc - tic
@@ -331,6 +332,7 @@ def finitElementSimulation(inputfile, verbose=False):
         journal.errorMessage("Interrupted by user", identification)
         
     except StepFailed:
+        
         journal.errorMessage("Step not finished", identification)
         
     finally:
@@ -339,6 +341,5 @@ def finitElementSimulation(inputfile, verbose=False):
             manager.finalizeJob(U, P,)
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
         
-#        np.savetxt('U.ref', U)
-        return U
+        return success, U, P, outputmanagers
         

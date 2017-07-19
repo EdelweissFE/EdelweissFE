@@ -1,0 +1,55 @@
+*material, name=UntereggerRockMassNonLocal, id=urmnl, statevars=5, 
+** units in N and mm
+** ,  E             nu          fcu         m0            e       mg1          fcy         Ah         
+   56665e+03,     0.2040,  	41.60e+03,    	11.95,  	0.51,   9.943,   	29.53e+03,  0.004467   
+**   Bh          Ch          Dh      Gh      As     Bs           GSI   D 
+  1e-05,     8.817,  	 1e-6,    	0,  	15,     2.0,        40,   0
+** omegaMax, nonlocalRadius nonlocalweight    epsilonF   
+        0.99,   0.02,             1.005,          1.e-6,      
+    **0.99,   0.02,             1.005,          1.36798e-3,      
+
+*job, name=cps4nonlocaljob, domain=2d, solver=NISTParallel
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=0.15
+y0=0, h=1.5
+elType=uelCPS4NonLocal
+nX=1
+nY=10
+
+*elSet, elSet=weak
+5
+
+*section, name=sectionAll, thickness=1.00, material=urmnl, type=planeUelUmat
+all
+*section, name=sectionWeak, thickness=0.95, material=urmnl, type=planeUelUmat
+weak
+
+*output, type=nodeSetMonitor, jobName=cps4nonlocaljob, name=myNodeSetMonitor
+nSet=gen_top, field=displacement, result=P, f(x)=sum(x), direction=2, export=RF_10elnl_GSI40
+nSet=gen_top, field=displacement, result=U, f(x)=mean(x), direction=2, export=u_10elnl_GSI40
+
+*output, type=meshPlot, jobName=cps4nonlocaljob 
+figure=1, axSpec=221, create=perNode, field=displacement, result=U, name=$u_x$ (m), f(x)=x[0] 
+figure=1, axSpec=222, create=perNode, field=displacement, result=U, name=$u_y$ (m) , f(x)=x[1] 
+figure=1, axSpec=223, c=red, ls=solid, create=xyData, xField=displacement, xnSet=gen_top,xLabel=u, xResult=U2, f(x)=mean(x), yField=displacement, yResult=P2,ynSet=gen_bottom, f(y)=sum(y), area=True 
+figure=1, axSpec=224, create=perElement, plotNodeLabels=True, result=sdv, index=4, name=omega, gaussPt=1
+configFigure, figure=1, axSpec=223, xLabel=u (m), yLabel=RF (kN) 
+
+*step, jobName=cps4nonlocaljob, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=20, stepLength=1
+options, category=NISTSolver, numThreads=15
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0
+dirichlet, name=bottomLeft, nSet=gen_leftBottom,  field=displacement, 1=0
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=0.0004
+
+
+*parameterIdentification, id=urmnl, jobName=cps4nonlocaljob, xData=u_1el_GSI40.csv, yData=RF_1el_GSI40.csv, plot=True, file=identifiedParameters.inp
+idx=19, start=0.001, min=0.000001, max=0.01   
+type=y, result=P, nSet=gen_top, field=displacement, direction=2, f(x)=sum(x) 
+type=x, result=U, nSet=gen_top, field=displacement, direction=2, f(x)=mean(x)
+**type=x, result=time
+**type=y, node=22, result=U, field=displacement, direction=1 
+**type=z, nSet=gen_top, result=U, field=displacement, direction=1,  f(x)=mean(x)   
+**type=u, element=1, result=stress, index=0,  f(x)=-x*1000   
+**type=v, elSet=gen_top, result=sdv, index=4,  f(x)=mean(x)   
+**type=v, element=5, result=sdv, index=4,  f(x)=mean(x)   

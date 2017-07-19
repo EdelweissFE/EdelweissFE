@@ -5,6 +5,8 @@ Created on Mon Apr 18 17:36:07 2016
 @author: matthias
 """
 
+import numpy as np
+
 def flagDict(configLine):
     parts = [x.strip() for x in configLine.split("=")]
     opt = parts[0]
@@ -30,3 +32,8 @@ def isInteger(s):
     
 def filterByJobName(canditates, jobName):
     return [cand for cand in canditates if cand.get('jobName', 'defaultJob') == jobName]    
+
+
+def mergeNumpyDataLines(multiLineData):
+    flattenedMatProps = [p for row in multiLineData for p in row]
+    return np.array(flattenedMatProps, dtype=np.float)
