@@ -15,7 +15,7 @@ class OutputManagerBase(ABC):
     identification = "OutputManagerBase"
     
     @abstractmethod
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         pass
     
     @abstractmethod

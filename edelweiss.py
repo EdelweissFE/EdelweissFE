@@ -36,7 +36,7 @@ if __name__ == "__main__":
         for file in fileList:     
                 inputFiles.append(parseInputFile(file))
     except (KeyError, ValueError) as e:
-        print(e)
+        print(str(e))
         exit(1)
         
     #2 ) all computations and imports

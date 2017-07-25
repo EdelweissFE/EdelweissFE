@@ -14,7 +14,7 @@ import numpy as np
 
 class OutputManager(OutputManagerBase):
     identification = "TimeMonitor"
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         defDict = stringDict(definitionLines[0])

@@ -30,7 +30,7 @@ class NIST:
     defaultMaxIter = 10
     defaultCriticalIter = 5
     
-    def __init__(self, jobInfo, modelInfo, journal, outputmanagers=None):
+    def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
         self.nodes =        modelInfo['nodes']
         self.elements =     modelInfo['elements']
         self.nodeSets =     modelInfo['nodeSets']
@@ -50,7 +50,8 @@ class NIST:
         
         self.nDof = jobInfo['numberOfDofs']
         self.journal = journal
-        self.outputmanagers = outputmanagers or []
+        self.fieldOutputController = fieldOutputController
+        self.outputmanagers = outputmanagers 
         
         self.sizeVIJ = 0
         self.sizeNDofElementWise = 0
@@ -212,6 +213,7 @@ class NIST:
                         
                     self.journal.message("Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1) 
                     
+                    self.fieldOutputController.finalizeIncrement(U, P, increment)
                     for man in self.outputmanagers:
                         man.finalizeIncrement(U, P, increment)
                         
@@ -221,6 +223,9 @@ class NIST:
         except KeyboardInterrupt:
             print('')
             self.journal.message("Interrupted by user", self.identification)
+        
+#        except Exception as e:
+#            self.journal.errorMessage(str(e), self.identification)
             
         else:
             if isGeostaticStep: U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step

@@ -17,8 +17,12 @@ all
 weakAll
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel
+*fieldOutput
+name=displacement, elSet=all, field=displacement, result=U, 
+
+
 *output, type=ensight, jobName=cps4nljob, name=esExport
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+create=perNode, fieldOutput=displacement,
 
 *step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=Ensight, managerName=esExport, intermediateSaveInterval=10, 

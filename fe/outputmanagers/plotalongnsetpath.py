@@ -10,34 +10,31 @@ from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import stringDict
 import numpy as np
-import matplotlib.pyplot as plt
+import sympy as sp
 
 class OutputManager(OutputManagerBase):
     identification = "PathPlotter"
     
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
 
         nodes = modelInfo['nodes']
-        self.figures = {}
+        self.plotter = plotter
         
         for defline in definitionLines:
             entry = {}
             defDict = stringDict(defline)
-            figName = defDict.get('figure', 'defaultFigure')
+            entry['fieldOutput'] = fieldOutputController.fieldOutputs [ defDict['fieldOutput'] ]
+            nodes = entry['fieldOutput'].nSet
             
-            if figName not in self.figures:
-                self.figures[figName] = plt.figure()
-            entry['figure'] = self.figures[figName]
+            f = defDict.get('f(x)', 'x')
+            entry['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , 'numpy')
+            entry['label'] = defDict.get('label', entry['fieldOutput'].name)
+
+            entry['figure'] = defDict.get('figure', 1)
+            entry['axSpec'] = defDict.get('axSpec', 111)
             
-            nSetName = entry['nSetName'] = defDict['nSet']
-            nodes = modelInfo['nodeSets'][nSetName]
-            field = entry['field'] = defDict['field']
-            direct = entry['dir'] = int(defDict.get('direction', 1) )-1
-            entry['result'] = defDict.get('result', 'U')
-            entry['label'] = defDict.get('label', 'result along path')
-            entry['resultIndices'] = [node.fields[field][direct] for node in nodes]
             entry['normalize'] = defDict.get('normalize', False)
             self.monitorJobs.append(entry)
             
@@ -60,16 +57,15 @@ class OutputManager(OutputManagerBase):
     
     def finalizeJob(self, U, P,):
         for nJob in self.monitorJobs:
-            location = U if nJob['result'] == 'U' else P
-                
-            indices = nJob['resultIndices']
-            result =  location[indices]  
-            
+
+            result = nJob['fieldOutput'].getLastResult()
+            result = nJob['f(x)'] ( result )
+                    
+            if result.ndim >= 2:
+                raise Exception('plot along nset path: result ndim >=2 ')
+
             if nJob['normalize']:
                 result /= np.max(np.abs(result))
             
-            figure = nJob ['figure'] 
-            figure.gca().plot( nJob['pathDistances'], result, label=nJob['label'] )
-        
-        plt.legend()
-        plt.show()
+            self.plotter.plotXYData(nJob['pathDistances'], result, 
+                                    nJob['figure'], nJob['axSpec'], nJob )
