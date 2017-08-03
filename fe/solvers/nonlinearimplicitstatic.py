@@ -159,8 +159,6 @@ class NIST:
     
                 try:
                     while True:
-                        
-                    
                         for geostatic in activeGeostatics: geostatic.apply() 
                         
                         P, V = self.computeElements(U, dU, stepTimes, dT, P, V, I, J,)
@@ -175,7 +173,6 @@ class NIST:
                             R = self.applyDirichlet(increment, R, dirichlets)
                         else:
                             # iteration cycle 1 or higher, time to check the convergency
-                            
                             for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 
                             for constraint in self.constraints.values(): R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
@@ -224,9 +221,6 @@ class NIST:
             print('')
             self.journal.message("Interrupted by user", self.identification)
         
-#        except Exception as e:
-#            self.journal.errorMessage(str(e), self.identification)
-            
         else:
             if isGeostaticStep: U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
             
@@ -247,8 +241,8 @@ class NIST:
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration """
-        tic = getCurrentTime()
         
+        tic = getCurrentTime()
         P[:] = 0.0
         UN1 = dU + U
         pNewDT = np.array([1e36])
@@ -320,6 +314,7 @@ class NIST:
     def applyDirichlet(self, increment, R, dirichlets):
         """ Apply the dirichlet bcs on the Residual vector
         -> is called by solveStep() before solving the global sys."""
+        
         tic = getCurrentTime()
         for dirichlet in dirichlets:
             indices = dirichlet.indices#['indices']

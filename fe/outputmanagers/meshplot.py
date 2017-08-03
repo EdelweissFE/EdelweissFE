@@ -61,7 +61,7 @@ class MeshPlot:
         resultPerTriElement = self.TriangObj.quadFieldToTriField(fieldValues)
         mapping = ax.tripcolor(self.xCoord, self.yCoord, self.TriangObj.triangleIdx, facecolors=resultPerTriElement, 
                                     cmap= self.userColorMap, norm=colors.Normalize(vmax=fieldValues.max(), vmin=fieldValues.min()) )
-        cbar = fig.colorbar(mapping)        
+        cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)        
         cbar.set_label(label)
         ax.set_xlim(self.xLimits)
         ax.set_ylim(self.yLimits)
@@ -69,7 +69,7 @@ class MeshPlot:
     def contourPlotNodalValues(self, z, fig, ax, label):
         """ divide quads into two triangles and apply a nodal value to the corner nodes """
         mapping = ax.tricontourf(self.TriangObj.triang, z, self.contourPlotScaling, cmap= self.userColorMap, norm=colors.Normalize(vmax=z.max(), vmin=z.min()) ) 
-        cbar = fig.colorbar(mapping)
+        cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)
         cbar.set_label(label)
         ax.set_xlim(self.xLimits)
         ax.set_ylim(self.yLimits)
@@ -231,6 +231,8 @@ class OutputManager(OutputManagerBase):
             if perNodeJob['plotNodeLabels']:
                 self.meshPlot.plotNodeLabels(self.nodes.keys(),ax)
                 
+            result = np.squeeze(result)
+            
             self.meshPlot.contourPlotNodalValues(result, fig, ax, perNodeJob['label'])
 
         for perElementJob in self.perElementJobs:

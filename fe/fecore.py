@@ -280,17 +280,15 @@ def finitElementSimulation(inputfile, verbose=False):
     for updateConfig in inputfile['*updateConfiguration']:
         updateConfiguration(updateConfig, jobInfo)
 
-
     jobName = job.get('name', 'defaultJob')
     # collect all job steps in a list of stepDictionaries
     jobSteps = filterByJobName(inputfile['*step'], jobName)
                 
-    # collect all output managers in a list of objects   
-    
     plotter = Plotter(journal)
     
     fieldOutputController = FieldOutputController(modelInfo, inputfile)
     
+    # collect all output managers in a list of objects   
     outputmanagers = []
     for outputDef in filterByJobName(inputfile['*output'], jobName):
         OutputManager = getOutputManagerByName(outputDef['type'].lower())

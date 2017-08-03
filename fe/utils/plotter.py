@@ -42,7 +42,7 @@ class Plotter:
                 "xtick.labelsize": 8,
                 "ytick.labelsize": 8,
                 'lines.linewidth': 1,
-                'figure.dpi':200,
+                'figure.dpi':300,
                 'lines.markeredgewidth': 0.4,
                 'lines.markersize':4
                 }
@@ -142,8 +142,6 @@ class Plotter:
             fig.tight_layout()
             for axSpec, ax in axes.items():
                 ax.legend()
-                if axSpec < 0:
-                    continue
                 ax.relim()
                 ax.grid()
         plt.show()
