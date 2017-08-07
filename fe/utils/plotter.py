@@ -117,6 +117,7 @@ class Plotter:
         if 'flipX' in configEntry: ax.invert_xaxis()
         if 'flipY' in configEntry: ax.invert_yaxis()
         if 'aspect' in configEntry: ax.set_aspect(configEntry['aspect'])
+        if 'grid' in configEntry: ax.grid()
 
     def fancyFigSize(self, scale, width, heightRatio=False):
         fig_width_pt = width                       
@@ -143,6 +144,5 @@ class Plotter:
             for axSpec, ax in axes.items():
                 ax.legend()
                 ax.relim()
-                ax.grid()
         plt.show()
     

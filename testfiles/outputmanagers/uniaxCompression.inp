@@ -13,22 +13,30 @@ elType=uelCPS4
 nX=50
 nY=100
 
+*fieldOutput,
+name=Displacement, elSet=all, field=displacement, result=U, 
+name=Stress, elSet=all, result=stress, gaussPt=1
+name=Strain, elSet=all, result=strain, gaussPt=1
+name=AlphaP, elSet=all, result=sdv, gaussPt=1, index=0, 
+name=AlphaD, elSet=all, result=sdv, gaussPt=1, index=2, 
+name=Omega,  elSet=all, result=sdv, gaussPt=1, index=4, 
+name=Displacement_Top, nSet=gen_top, field=displacement, result=U
+name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P
+
 *output, type=ensight, jobName=cps4job, name=myEnsightExport
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perElement, elSet=all, result=stress, gaussPt=1
-create=perElement, elSet=all, result=strain, gaussPt=1
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+create=perNode,    elSet=all, fieldOutput=Displacement
+create=perElement, elSet=all, fieldOutput=Stress
+create=perElement, elSet=all, fieldOutput=Strain
+create=perElement, elSet=all, fieldOutput=AlphaP
+create=perElement, elSet=all, fieldOutput=AlphaD
+create=perElement, elSet=all, fieldOutput=Omega
 
-*output, type=nodeMonitor, jobName=cps4job, name=myNodeMonitor
-node=99, field=displacement, result=U, f(x)=x[0]
-
-*output, type=nodeSetMonitor, jobName=cps4job, name=myNodeSetMonitor
-nSet=gen_top, field=displacement, result=P, f(x)=sum(x), direction=2
+*output, type=monitor, jobName=cps4job, name=myNodeSetMonitor
+fieldOutput=Displacement_Top, f(x)='mean(x[:,1])'
+fieldOutput=Force_Bottom, f(x)='sum(x[:,1])'
 
 *output, type=plotAlongNSetPath, jobName=cps4job, name=myNodeSetPlotter
-nSet=gen_top, field=displacement, result=U, direction=2, label=U along top surface, normalize=True
+fieldOutput=Displacement_Top, label=U along top surface, normalize=True, f(x)='x[:,1]'
 
 *step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=Ensight, intermediateSaveInterval=2,
