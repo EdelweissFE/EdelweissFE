@@ -61,8 +61,7 @@ class OutputManager(OutputManagerBase):
             result = nJob['fieldOutput'].getLastResult()
             result = nJob['f(x)'] ( result )
                     
-            if result.ndim >= 2:
-                raise Exception('plot along nset path: result ndim >=2 ')
+            result = np.squeeze(result) 
 
             if nJob['normalize']:
                 result /= np.max(np.abs(result))
