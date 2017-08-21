@@ -325,7 +325,7 @@ class OutputManager(OutputManagerBase):
         self.name = name
         
         self.finishedSteps = 0
-        self.intermediateSaveInterval = 0
+        self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
         self.domainSize = jobInfo['domainSize']
         self.fieldOutputController = fieldOutputController
@@ -380,8 +380,8 @@ class OutputManager(OutputManagerBase):
                     self.perElementJobs.append(perElementJob)
                     
     def initializeStep(self, step, stepActions, stepOptions):
-        if self.name in stepOptions or 'EnsightOptions' in stepOptions :
-            options = stepOptions.get(self.name, False) or stepOptions['EnsightOptions']
+        if self.name in stepOptions or 'Ensight' in stepOptions :
+            options = stepOptions.get(self.name, False) or stepOptions['Ensight']
             self.intermediateSaveInterval = int(options.get('intermediateSaveInterval', 
                                                             self.intermediateSaveInterval))
             
@@ -444,6 +444,6 @@ data line: create=perNode|perElement
  - perElement: elSet: set, for which the per element job is created
                name: variable export name
                
-EnsightOptions in step actions:
+category Ensight in step options:
  - intermediateSaveInterval=N : intermediate save every N increments
  """)
