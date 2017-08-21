@@ -13,6 +13,7 @@ from fe.utils.misc import stringDict
 import numpy as np
 
 def generateModelData(generatorDefinition, modelInfo, journal):
+    
     options = generatorDefinition['data']
     options = stringDict( [ e for l in options for e in l ] )
     
@@ -25,8 +26,6 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     nX =int(options.get('nX', 10))
     nY =int(options.get('nY', 10))
     elType = getElementByName(options['elType'])
-    
-    
     if elType.nNodes == 4:
         nNodesX = nX+1
         nNodesY = nY+1
@@ -50,22 +49,24 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     nG = np.asarray(nodes).reshape(nNodesX, nNodesY)
     
     currentElementLabel = 1
+    
     elements = []
     for x in range(nX):
         for y in range(nY):
             if elType.nNodes == 4:
                 newEl =  elType([ nG[x,y], nG[x+1,y], nG[x+1,y+1], nG[x, y+1] ] , currentElementLabel  ) 
+                    
             elif elType.nNodes == 8:
                 newEl =  elType([nG[2*x,2*y], nG[2*x+2,2*y], nG[2*x+2,2*y+2], nG[2*x, 2*y+2],
                                  nG[2*x+1,2*y], nG[2*x+2,2*y+1], nG[2*x+1,2*y+2], nG[2*x, 2*y+1],
-                                 ] , currentElementLabel  ) 
+                                 ] , currentElementLabel  )
             elements.append(newEl)
             modelInfo['elements'][currentElementLabel] = newEl
             
             for i, node in enumerate(newEl.nodes):
                 node.fields.update( [ (f, True) for f in newEl.fields[i] ]  )
             currentElementLabel +=1
-        
+
     #nodesets:
     modelInfo['nodeSets'][ '{:}_left'.format(name) ] =  [n for n in nG[0,:]]
     modelInfo['nodeSets'][ '{:}_right'.format(name) ] = [n for n in nG[-1,:]]
@@ -80,10 +81,30 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     #element sets
     elGrid = np.asarray(elements).reshape(nX, nY)
     modelInfo['elementSets']['{:}_bottom'.format(name)] =   [ e for e in elGrid[:,0] ]  
-    modelInfo['elementSets']['{:}_top'.format(name)] =      [e for e in elGrid[:,-1] ]  
+    modelInfo['elementSets']['{:}_top'.format(name)] =      [e for e in elGrid[:,-1] ] 
+    modelInfo['elementSets']['{:}_central'.format(name)] =  [ elGrid[int(nX/2),int(nY/2)]  ]
     modelInfo['elementSets']['{:}_right'.format(name)] =    [e for e in elGrid[-1,:] ]  
     modelInfo['elementSets']['{:}_left'.format(name)] =     [e for e in elGrid[0,:] ]  
-    
+    modelInfo['elementSets']['{:}_sandwichHorizontal'.format(name)] = []
+    for elList in elGrid[1:-1,:]:
+        for e in elList:
+            modelInfo['elementSets']['{:}_sandwichHorizontal'.format(name)].append(e)
+   
+
+    # generate weak element sets in zone defined by a rectangel (xMin, yMin) to (xMax, yMax)
+    elListWeak = []
+    xMin = 0
+    xMax = 4
+    yMin = 56
+    yMax = 60
+
+    for el in modelInfo['elements'].values():
+        xNode1 =  el.nodes[0].coordinates[0]
+        yNode1 =  el.nodes[0].coordinates[1]
+        if (xNode1>=xMin) and (xNode1<xMax) and (yNode1>=yMin) and (yNode1<yMax) :
+            elListWeak.append(el)
+    modelInfo['elementSets']['{:}_weak'.format(name)] =    elListWeak
+
     #surfaces
     modelInfo['surfaces']['{:}_bottom'.format(name)] =  {1: [e for e in elGrid[:,0] ]  }
     modelInfo['surfaces']['{:}_top'.format(name)] =     {3: [e for e in elGrid[:,-1] ]  }

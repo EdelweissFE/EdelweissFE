@@ -81,6 +81,10 @@ class IncrementGenerator:
         if self.increment == self.minIncrement:
             self.journal.errorMessage("Cannot reduce increment size", self.identification)
             raise ReachedMinIncrementSize()
+        
+        if self.finishedStepProgress == 0.0:
+            self.journal.errorMessage("Failed zero increment", self.identification)
+            raise ReachedMinIncrementSize()
             
         self.finishedStepProgress -=    self.increment
         newIncrement = self.increment * scaleFactor

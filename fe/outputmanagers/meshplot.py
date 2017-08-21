@@ -207,7 +207,6 @@ class OutputManager(OutputManagerBase):
                        }
 
     def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
-        
         self.finishedSteps =0
         self.domainSize = jobInfo['domainSize']
         self.journal = journal
@@ -285,6 +284,7 @@ class OutputManager(OutputManagerBase):
                     xyJob['name'] =         definition.get('name', '')
                     xyJob['axSpec'] = int(definition.get('axSpec','111'))
                     xyJob['xResult'] = definition.get('xResult')
+                    xyJob['area'] = definition.get('area', False)
                     if xyJob['xResult'][0] == 'U' or 'P': 
                         xyJob['xField'] = definition.get('xField')
                         xyJob['xDoF'] = int(xyJob['xResult'][1])
@@ -316,6 +316,7 @@ class OutputManager(OutputManagerBase):
                 configJob['yLabel'] = definition.get('yLabel',None)
                 configJob['flipX'] = definition.get('flipX',False)
                 configJob['flipY'] = definition.get('flipY',False)
+                configJob['marker'] = definition.get('marker',None)
                 self.configJobs.append(configJob)
             
             if 'saveFigure' in definition:
@@ -374,6 +375,10 @@ class OutputManager(OutputManagerBase):
         for xyJob in self.xyJobs:
             self.plotObj.setFigLabelAxes(xyJob['figure'], xyJob['axSpec'], xyJob['name'])
             self.plotObj.plotXYData(xyJob['xList'], xyJob['yList'], xyJob['figure'], xyJob['axSpec'], xyJob )
+            if xyJob['area']:
+                xyJobArea = np.trapz( xyJob['yList'], x=xyJob['xList'])
+                self.plotObj.axes[xyJob['axSpec']].annotate('A='+str(xyJobArea),xy=(np.mean(xyJob['xList']),np.mean(xyJob['yList'])))
+                self.plotObj.axes[xyJob['axSpec']].fill(xyJob['xList'], xyJob['yList'], color='gray', alpha=0.5 )
             
         for perNodeJob in self.perNodeJobs:
             self.plotObj.setFigLabelAxes(perNodeJob['figure'],perNodeJob['axSpec'], perNodeJob['name'])
