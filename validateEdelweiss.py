@@ -29,6 +29,7 @@ for directory in testsDirs:
     UReference = np.loadtxt(referenceSolutionFile)
     
     inputFile = parseInputFile(testfile)
+    print('Test {:30}'.format(directory ), end="\r")
     U = finitElementSimulation(inputFile, verbose = False)
     
     residual = U - UReference
@@ -39,7 +40,7 @@ for directory in testsDirs:
         passed = False
     
     if passed:
-        print('Test {:30}: PASSED'.format(directory))
+        print('Test {:30} PASSED'.format(directory))
     else:
-        print('Test {:30}: FAILED'.format(directory))
+        print('Test {:30} FAILED'.format(directory))
     os.chdir('..')

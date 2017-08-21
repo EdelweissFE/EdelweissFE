@@ -13,11 +13,15 @@ elType=uelCPS4
 nX=10
 nY=10
 
-*output, type=nodesetmonitor, jobName=cpe4job
-nSet=gen_bottom, result=P, field=displacement, f(x)=mean(x), direction=2
+*fieldOutput
+nSet=gen_bottom, result=P, field=displacement, name=RF
+elSet=all, field=displacement, result=U, name=displacement
+
+*output, type=monitor, jobName=cpe4job
+fieldOutput=RF, f(x)='mean(x[:,1])'
 
 *output, type=ensight, jobName=cpe4job, name=esExport
-create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perNode, fieldOutput=displacement
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=50, maxIter=25, stepLength=100
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0

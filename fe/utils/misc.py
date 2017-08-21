@@ -19,7 +19,7 @@ def stringDict(listOfStringAssigments):
     for entry in listOfStringAssigments:
         parts = [x.strip() for x in entry.split("=")]
         opt = parts[0]
-        val = parts[1] if len(parts)>1 else 'True'
+        val = '='.join(parts[1:]) if len(parts)>1 else 'True'
         resultDict[opt] = val
     return resultDict
 

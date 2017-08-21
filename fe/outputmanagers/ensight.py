@@ -12,6 +12,7 @@ import datetime
 import numpy as np
 from collections import defaultdict, OrderedDict
 from fe.utils.misc import stringDict
+from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
 
 def writeCFloat(f, ndarray):
@@ -320,13 +321,14 @@ def createUnstructuredPartFromElementSet(setName, elementSet, partID):
 class OutputManager(OutputManagerBase):
     identification = "Ensight Export"
     
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         self.name = name
         
         self.finishedSteps = 0
-        self.intermediateSaveInterval = 0
+        self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
         self.domainSize = jobInfo['domainSize']
+        self.fieldOutputController = fieldOutputController
         self.journal = journal
         
         exportName = '{:}_{:}'.format(name,  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
@@ -358,47 +360,28 @@ class OutputManager(OutputManagerBase):
                 varType = definition['create']
                 
                 if varType == 'perNode':
-                    if 'elSet' in definition:
-                        setName = definition['elSet'].strip()
-                        perNodeJob = {}
-                        perNodeJob['name'] = definition['name']
-                        perNodeJob['part'] =  self.elSetToEnsightPartMappings[setName]
-                        field = definition['field']
-                        perNodeJob['result'] = definition['result']
-                        perNodeJob['varSize'] = variableTypes[ fe.config.phenomena.phenomena[field] ]
-                        perNodeJob['indices'] = np.asarray([node.fields[field] for node in perNodeJob['part'].nodes]).ravel()
-                        perNodeJob['dimensions'] = fe.config.phenomena.getFieldSize(field, self.domainSize)
-                        self.perNodeJobs.append(perNodeJob)
+                    perNodeJob = {}
+                    perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
+                    perNodeJob['name'] = definition.get('name', perNodeJob['fieldOutput'].name)
+                    if perNodeJob['fieldOutput'].type == 'perNode':
+                        raise Exception('Ensight: Please define perNode output "{:}" on an elSet, not on a nSet!'.format(perNodeJob['name']))
+                    perNodeJob['part'] =  self.elSetToEnsightPartMappings[perNodeJob['fieldOutput'].nSetName]
+                    field = perNodeJob['fieldOutput'].field
+                    perNodeJob['varSize'] = variableTypes[ fe.config.phenomena.phenomena[field] ]
+                    perNodeJob['dimensions'] = fe.config.phenomena.getFieldSize(field, self.domainSize)
+                    self.perNodeJobs.append(perNodeJob)
                         
                 if varType == 'perElement':
                     perElementJob = {}
-                    perElementJob['part'] =  self.elSetToEnsightPartMappings[definition['elSet']]
-                    perElementJob['result'] = definition['result']
-                    
-                    if 'index' in definition:
-                        idcs = definition['index']
-                        if ':' in definition['index']:
-                            idcs=[int (i) for i in idcs.split(':')]
-                            perElementJob['idxStart'], perElementJob['idxStop'] = idcs
-                        else:
-                            idx = int (idcs )
-                            perElementJob['idxStart'], perElementJob['idxStop'] = idx, idx+1
-                        
-                    if 'gaussPt' in definition:
-                        perElementJob['gaussPt'] = int( definition['gaussPt'] )
-                        
-                    perElementJob['name'] = definition.get('name', perElementJob['result'])
-                    
-                    part = perElementJob['part']
-                    perElementJob['permanentElResultMemory'] = {}
-                    for ensElType, elements in part.elementTree.items():
-                        perElementJob['permanentElResultMemory'][ensElType] = [el.getPermanentResultPtr(**perElementJob) for el in  elements.keys()]
-                    
+                    perElementJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
+                    perElementJob['part'] =  self.elSetToEnsightPartMappings[perElementJob['fieldOutput'].elSetName]
+                    perElementJob['elementsOfShape'] = disassembleElsetToEnsightShapes ( perElementJob['fieldOutput'].elSet )
+                    perElementJob['name'] = definition.get('name', perElementJob['fieldOutput'].name)
                     self.perElementJobs.append(perElementJob)
                     
     def initializeStep(self, step, stepActions, stepOptions):
-        if self.name in stepOptions or 'EnsightOptions' in stepOptions :
-            options = stepOptions.get(self.name, False) or stepOptions['EnsightOptions']
+        if self.name in stepOptions or 'Ensight' in stepOptions :
+            options = stepOptions.get(self.name, False) or stepOptions['Ensight']
             self.intermediateSaveInterval = int(options.get('intermediateSaveInterval', 
                                                             self.intermediateSaveInterval))
             
@@ -413,11 +396,9 @@ class OutputManager(OutputManagerBase):
         self.ensightCase.setCurrentTime(1, totalTime + dT)
         
         for perNodeJob in self.perNodeJobs:
-            resultIndices = perNodeJob['indices']
             resultTypeLength = perNodeJob['varSize'] 
-            resultDimensions = perNodeJob['dimensions']
             jobName = perNodeJob['name']
-            nodalVarTable = U[resultIndices].reshape( (-1, resultDimensions)  )
+            nodalVarTable = perNodeJob['fieldOutput'].getLastResult()
             partsDict = {perNodeJob['part'].partNumber : ('coordinates', nodalVarTable)}
             enSightVar = EnsightPerNodeVariable(jobName, resultTypeLength, partsDict)
             self.ensightCase.writeVariableTrendChunk(enSightVar, 1)
@@ -426,13 +407,14 @@ class OutputManager(OutputManagerBase):
         for perElementJob in self.perElementJobs:
             name = perElementJob['name']            
             part = perElementJob['part']
-            varDict = {}
-            for ensElType, elements in part.elementTree.items():
-                varDict[ensElType] = np.asarray(perElementJob['permanentElResultMemory'][ensElType])
-                if len(varDict[ensElType].shape)==1:
-                    dimension=1
-                else:
-                    dimension = varDict[ensElType].shape[1]
+            elementsOfShape = perElementJob['elementsOfShape']
+            result =  perElementJob['fieldOutput'].getLastResult()
+            varDict = { shape : result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items() }
+            
+            if len(result.shape)==1:
+                dimension=1
+            else:
+                dimension = result.shape[1]
 
             partsDict = {part.partNumber : varDict}
             enSightVar = EnsightPerElementVariable(name, dimension, partsDict)
@@ -461,12 +443,7 @@ data line: create=perNode|perElement
             field: result field
  - perElement: elSet: set, for which the per element job is created
                name: variable export name
-               result: element dependent result name (e.g. sdv, stress, strain),
-                       passed to element
-               index: index (or slice) for the result extraction, 
-                      passed to element
-               (gaussPt): optional, id of gaussPt, passed to element
                
-EnsightOptions in step actions:
+category Ensight in step options:
  - intermediateSaveInterval=N : intermediate save every N increments
  """)

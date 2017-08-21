@@ -40,7 +40,7 @@ if __name__ == "__main__":
             inputFiles.append(parseInputFile(file))
 
     except (KeyError, ValueError) as e:
-        print(e)
+        print(str(e))
         exit(1)
     
     if args.parID:

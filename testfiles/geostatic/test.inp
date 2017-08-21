@@ -12,17 +12,24 @@ elType=uelCPE4
 all
 
 *job, name=cpe4job, domain=2d, solver=NIST
+*fieldOutput,
+name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)='mean(x[:,1])'
+name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)='sum(x[:,1])'
+elSet=all,  field=displacement, result=U, name=displacement
+elSet=all,  result=sdv, index=0, name=S11, gaussPt=1
+elSet=all,  result=sdv, index=1, name=S22,  gaussPt=1
+elSet=all,  result=sdv, index=2, name=S33,  gaussPt=1
 
-*output, type=nodesetmonitor, jobName=cpe4job
-nSet=gen_top, field=displacement, result=U, f(x)=mean(x), direction=2
-*output, type=nodesetmonitor, jobName=cpe4job
-nSet=gen_bottom, field=displacement, result=P, f(x)=sum(x), direction=2
+*output, type=monitor, jobName=cpe4job
+fieldOutput=dispTop
+*output, type=monitor, jobName=cpe4job
+fieldOutput=RFBottom
 
 *output, type=ensight, jobName=cpe4job, name=ensightExport
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perElement,elSet=all,  result=sdv, index=0, name=S11, gaussPt=1
-create=perElement,elSet=all,  result=sdv, index=1, name=S22,  gaussPt=1
-create=perElement,elSet=all,  result=sdv, index=2, name=S33,  gaussPt=1
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=S11
+create=perElement, fieldOutput=S22
+create=perElement, fieldOutput=S33
 
 *step, jobName=cpe4job, maxInc=0.5
 dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, 

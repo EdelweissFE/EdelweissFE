@@ -15,7 +15,9 @@ from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerByName
 from fe.config.solvers import solverLibrary
 from fe.config.constraints import getConstraintByName
+from fe.utils.fieldoutput import FieldOutputController
 from fe.utils.misc import isInteger, filterByJobName, stringDict
+from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
@@ -278,22 +280,26 @@ def finitElementSimulation(inputfile, verbose=False):
     for updateConfig in inputfile['*updateConfiguration']:
         updateConfiguration(updateConfig, jobInfo)
 
-
     jobName = job.get('name', 'defaultJob')
     # collect all job steps in a list of stepDictionaries
     jobSteps = filterByJobName(inputfile['*step'], jobName)
                 
-    # collect all output managers in a list of objects     
+    plotter = Plotter(journal)
+    
+    fieldOutputController = FieldOutputController(modelInfo, inputfile)
+    
+    # collect all output managers in a list of objects   
     outputmanagers = []
     for outputDef in filterByJobName(inputfile['*output'], jobName):
         OutputManager = getOutputManagerByName(outputDef['type'].lower())
         managerName = outputDef.get('name', 'defaultName')
         definitionLines = outputDef['data']
-        outputmanagers.append(OutputManager(managerName, definitionLines, jobInfo, modelInfo, journal))
+        outputmanagers.append(OutputManager(managerName, definitionLines, jobInfo, modelInfo, 
+                                            fieldOutputController, journal, plotter))
     
     # generate an instance of the desired solver
     Solver =    solverLibrary[job.get('solver','NIST')]
-    solver =    Solver(jobInfo, modelInfo, journal, outputmanagers)
+    solver =    Solver(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
     U, P =      solver.initialize()
     
     stepActions = defaultdict(dict)
@@ -306,6 +312,7 @@ def finitElementSimulation(inputfile, verbose=False):
                 # and concerned values 
                 stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions, journal)
                 
+                fieldOutputController.initializeStep(step, stepActions, stepOptions)
                 for manager in outputmanagers: 
                     manager.initializeStep(step, stepActions, stepOptions)
                     
@@ -324,6 +331,7 @@ def finitElementSimulation(inputfile, verbose=False):
                 journal.message("Step finished in {:} s".format(stepTime), identification, level=0)
                 
             finally:
+                fieldOutputController.finalizeStep(U,P)
                 for manager in outputmanagers:
                     manager.finalizeStep(U, P,)
                 
@@ -335,11 +343,16 @@ def finitElementSimulation(inputfile, verbose=False):
         
         journal.errorMessage("Step not finished", identification)
         
+    except Exception as e:
+        journal.errorMessage(str(e), identification)
+        
     finally:
         # let all output managers finalize the job
+        fieldOutputController.finalizeJob(U, P)
         for manager in outputmanagers:
             manager.finalizeJob(U, P,)
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
+        plotter.show()
         
         return success, U, P, outputmanagers
         

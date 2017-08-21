@@ -13,16 +13,20 @@ elType=uelCPS4
 all
 
 *job, name=cps4job, domain=2d, solver=NIST
+*fieldOutput,
+name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
+name=displacement, elSet=all, field=displacement, result=U, name=displacement
 
-*output, type=nodesetmonitor, jobName=cps4job
-nSet=gen_left, field=displacement, result=P, f(x)=sum(x), direction=2
+
+*output, type=monitor, jobName=cps4job
+fieldOutput=load
 
 *constraint, type=linearizedRigidBody, name=rb1
 nSet=gen_right,
 referencePoint=gen_rightTop
 
 *output, type=ensight, jobName=cps4job, name=ensightExport
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
+create=perNode, fieldOutput=displacement
 
 *step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
 options, category=NISTSolver, extrapolation=off

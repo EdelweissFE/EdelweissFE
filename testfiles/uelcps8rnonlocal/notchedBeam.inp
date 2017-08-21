@@ -6,18 +6,27 @@
 all
 
 *job, name=cps8rnljob, domain=2d, solver=NISTParallel
+*fieldOutput
+name=load, nSet=topNodes,  field=displacement, result=P
+name=displacement, elSet=all, field=displacement, result=U, name=displacement
+name=nonlocalDamage, elSet=all, field=nonlocal damage, result=U, 
+name=stress, elSet=all, result=stress, gaussPt=1
+name=strain, elSet=all, result=strain, gaussPt=1
+name=alphaP, elSet=all, result=sdv, gaussPt=1, index=0, 
+name=alphaD, elSet=all, result=sdv, gaussPt=1, index=2, 
+name=omega, elSet=all, result=sdv, gaussPt=1, index=4, 
 
-*output, type=nodesetmonitor, jobName=cps8rnljob
-nSet=topNodes, field=displacement, result=P, f(x)=sum(x), direction=2
+*output, type=monitor, jobName=cps8rnljob
+fieldOutput=load, f(x)='sum(x[:,1])'
 
 *output, type=ensight, jobName=cps8rnljob, name=ensightExport
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perNode,    elSet=all, field=nonlocal damage, result=U, name=alphaDNonLocal
-create=perElement, elSet=all, result=stress, gaussPt=1
-create=perElement, elSet=all, result=strain, gaussPt=1
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+create=perNode,    fieldOutput=displacement
+create=perNode,    fieldOutput=nonlocalDamage
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+create=perElement, fieldOutput=alphaP
+create=perElement, fieldOutput=alphaD
+create=perElement, fieldOutput=omega
 
 *step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, 
 **options, category=NISTSolver, extrapolation=linear, numThreads=2

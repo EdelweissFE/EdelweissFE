@@ -5,17 +5,25 @@
 all
 
 *job, name=cps8rnljob, domain=2d, 
+*fieldOutput
+name=RFRight, nSet=right, field=displacement, result=P, 
+name=displacement, elSet=all, field=displacement, result=U, 
+name=stress, elSet=all, result=stress, gaussPt=1
+name=strain, elSet=all, result=strain, gaussPt=1
+name=alphaP, elSet=all, result=sdv, gaussPt=1, index=0, 
+name=alphaD, elSet=all, result=sdv, gaussPt=1, index=2, 
+name=omega, elSet=all, result=sdv, gaussPt=1, index=4, 
 
-*output, type=nodesetmonitor, jobName=cps8rnljob
-nSet=right, field=displacement, result=P, direction=1, f(x)=sum(x)
+*output, type=monitor, jobName=cps8rnljob
+fieldOutput=RFRight, f(x)='sum(x[:,1])'
 
 *output, type=ensight, jobName=cps8rnljob
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perElement, elSet=all, result=stress, gaussPt=1
-create=perElement, elSet=all, result=strain, gaussPt=1
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
-create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+create=perNode,    fieldOutput=displacement,
+create=perElement, fieldOutput=strain,
+create=perElement, fieldOutput=stress,
+create=perElement, fieldOutput=alphaP,
+create=perElement, fieldOutput=alphaD,
+create=perElement, fieldOutput=omega,
 
 *step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear

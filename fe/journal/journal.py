@@ -30,8 +30,7 @@ class Journal:
                 print(self.leveledOutput[level].format(message, senderIdentification))
     
     def errorMessage(self, errorMessage, senderIdentification):
-        if self.verbose:
-            print(self.errorMessageTemplate.format(errorMessage, senderIdentification))
+        print(self.errorMessageTemplate.format(errorMessage, senderIdentification))
         
     def printSeperationLine(self, ):
         if self.verbose:

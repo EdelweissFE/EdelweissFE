@@ -8,6 +8,7 @@ Created on Tue Jan  17 19:10:42 2017
 import numpy as np
 from os.path import dirname, join
 import textwrap
+import shlex
 
 class CaseInsensitiveDict(dict):
     @classmethod
@@ -87,6 +88,12 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                          'id':          ('string', "name of the property"),
                          'statevars':   ('integer', "number of statevars"),
                          'data':        ('numpy float array', "material properties, multiline possible")}),
+
+                    '*fieldOutput':        ("define fieldoutput, which is used by outputmanagers",
+                        { 
+                         'jobName':     ('string', "(optional), name of job, standard=defaultJob"),
+                         'data':        ('string', "defintions lines for the output module")}),
+                                         
                                          
                      '*output':        ("define an output module",
                         { 
@@ -158,8 +165,14 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
     keyword = currentKeyword
     with open(fileName) as f:
         for l in f:
-            lineElements = [x.strip() for x in l.split(",")]
-            lineElements=list(filter(None,lineElements))
+#            lineElements = [x.strip() for x in l.split(",")]
+#            lineElements=list(filter(None,lineElements))
+            lexer = shlex.shlex(l.strip(), posix=True)
+            lexer.whitespace_split = True
+            lexer.whitespace = ','
+            lineElements = [x.strip() for x in lexer]
+#            print(lineElements)
+
             if not lineElements or lineElements[0].startswith("**"):
                 # line is a comment
                 pass

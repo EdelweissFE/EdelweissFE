@@ -5,14 +5,19 @@
 all
 
 *job, name=c3d20nljob, domain=3d, 
+*fieldOutput
+nSet=setRight,     field=displacement, result=P, name=RFRight
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, result=stress, gaussPt=1, name=stress
+elSet=all, result=strain, gaussPt=1, name=strain
 
-*output, type=nodesetmonitor, jobName=c3d20nljob
-nSet=setRight, field=displacement, result=P, direction=1, f(x)=sum(x)
+*output, type=monitor, jobName=c3d20nljob
+fieldOutput=RFRight, f(x)='sum(x[:,1])'
 
 *output, type=ensight, jobName=c3d20nljob
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perElement, elSet=all, result=stress, gaussPt=1
-create=perElement, elSet=all, result=strain, gaussPt=1
+create=perNode,    fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
 
 *step, jobName=c3d20nljob, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear

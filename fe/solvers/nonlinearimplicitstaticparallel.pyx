@@ -34,8 +34,8 @@ class NISTParallel(NIST):
     
     identification = "NISTPSolver"
     
-    def __init__(self, jobInfo, modelInfo, journal, outputmanagers=None):
-        super().__init__(jobInfo, modelInfo, journal, outputmanagers)
+    def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
+        super().__init__(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
         
         self.maximumNDofPerEl = 0
         self.sizePe = 0

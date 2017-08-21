@@ -1413,9 +1413,14 @@ all
 *nSet, nSet=nSetRight
    3,   4,  31,  32,  33, 171, 172, 199, 200, 201, 339, 340, 367, 368, 369, 507
  508, 535, 536, 537, 675, 676, 703, 704, 705
+
+*fieldOutput, 
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, field=nonlocal damage, result=U, name=nonlocal
+
 *output, type=ensight, jobName=c3d8nljob, name=esExport
-create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-create=perNode,    elSet=all, field=nonlocal damage, result=U, name=nonlocal
+create=perNode, fieldOutput=displacement
+create=perNode, fieldOutput=nonlocal
 
 *step, jobName=c3d8nljob, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=2

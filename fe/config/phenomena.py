@@ -25,7 +25,7 @@ forceResidualTolerance = {             'displacement' :        1e-7,
                                         'nonlocal damage':      1e-7,
                                         }
 
-forceResidualToleranceAlternative = {  'displacement' :        1e-3,
+forceResidualToleranceAlternative = {  'displacement' :        1e-6,
                                         'rotation' :            1e-5,
                                         'nonlocal damage':      1e-6,
                                         }
