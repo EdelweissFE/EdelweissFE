@@ -25,15 +25,28 @@ all
 *section, name=sectionWeak, thickness=0.95, material=urmnl, type=planeUelUmat
 weak
 
-*output, type=nodeSetMonitor, jobName=cps4nonlocaljob, name=myNodeSetMonitor
-nSet=gen_top, field=displacement, result=P, f(x)=sum(x), direction=2, export=RF_10elnl_GSI40
-nSet=gen_top, field=displacement, result=U, f(x)=mean(x), direction=2, export=u_10elnl_GSI40
+*fieldOutput
+name=Displacement, elSet=all, field=displacement, result=U, 
+**name=NonlocalDmg, elSet=all, field=nonlocal damage, result=U, 
+name=Stress, elSet=all, result=stress, gaussPt=1
+name=Strain, elSet=all, result=strain, gaussPt=1
+name=AlphaP, elSet=all, result=sdv, gaussPt=1, index=0, 
+name=AlphaD, elSet=all, result=sdv, gaussPt=1, index=2, 
+name=Omega,  elSet=all, result=sdv, gaussPt=1, index=4, 
+name=Displacement_Top, nSet=gen_top, field=displacement, result=U
+name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P
+name=meanDispLoad, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
+name=sumRFNodes, nSet=gen_top, field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True
 
+****output, type=monitor, jobName=cps4nonlocaljob, name=myNodeSetMonitor
+***fieldOutput=Displacement_Top, f(x)='mean(x[:,1])',export=RF_10elnl_GSI40 
+***fieldOutput=Force_Bottom, f(x)='sum(x[:,1])', export=u_elnl_GSI40
 *output, type=meshPlot, jobName=cps4nonlocaljob 
-figure=1, axSpec=221, create=perNode, field=displacement, result=U, name=$u_x$ (m), f(x)=x[0] 
-figure=1, axSpec=222, create=perNode, field=displacement, result=U, name=$u_y$ (m) , f(x)=x[1] 
-figure=1, axSpec=223, c=red, ls=solid, create=xyData, xField=displacement, xnSet=gen_top,xLabel=u, xResult=U2, f(x)=mean(x), yField=displacement, yResult=P2,ynSet=gen_bottom, f(y)=sum(y), area=True 
-figure=1, axSpec=224, create=perElement, plotNodeLabels=True, result=sdv, index=4, name=omega, gaussPt=1
+figure=1, axSpec=221, create=perNode, fieldOutput=Displacement,  label=uy, f(x)='x[:,1]'
+**figure=1, axSpec=224, create=perNode, fieldOutput=NonlocalDmg, label=alphaDNL
+figure=1, axSpec=224, create=perElement, fieldOutput=AlphaP, label=alphaP
+figure=1, axSpec=223, c=red, ls=dashed, create=xyData, x=meanDispLoad, y=sumRFNodes,
+figure=1, axSpec=222, create=perElement, fieldOutput=Omega, label=omega
 configFigure, figure=1, axSpec=223, xLabel=u (m), yLabel=RF (kN) 
 
 *step, jobName=cps4nonlocaljob, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=20, stepLength=1

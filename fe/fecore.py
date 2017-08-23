@@ -296,6 +296,7 @@ def finitElementSimulation(inputfile, verbose=False):
         definitionLines = outputDef['data']
         outputmanagers.append(OutputManager(managerName, definitionLines, jobInfo, modelInfo, 
                                             fieldOutputController, journal, plotter))
+        
     
     # generate an instance of the desired solver
     Solver =    solverLibrary[job.get('solver','NIST')]

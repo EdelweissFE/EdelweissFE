@@ -16,7 +16,7 @@ from itertools import chain
 class OutputManager(OutputManagerBase):
     identification = "generateHistoryData"
     
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, journal):
+    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
 
         self.outputData = {}
         for defline in definitionLines:
