@@ -16,8 +16,9 @@ class FieldOutput:
     """
     Entity of a fieldOutput request
     """
-    def __init__(self, modelInfo, definition):
+    def __init__(self, modelInfo, definition, journal):
         self.name = definition['name']
+        self.journal = journal
         
         # determination of type:
             # perNode, perElement, perNodeSet, perElset...
@@ -28,6 +29,7 @@ class FieldOutput:
             
         elif 'elSet' in definition:
             if  definition['result'] == 'U' or  definition['result'] == 'P':
+                self.journal.message('Converting elSet {:} to a nSet due to requested nodal results'.format(definition['elSet']), self.name )
                 # an elset was given, but in fact a nodeset was 'meant': we extract the nodes of the elementset!
                 self.type = 'perNodeSet'
                 self.nSet = extractNodesFromElementSet( modelInfo['elementSets'] [ definition['elSet'] ] )
@@ -139,19 +141,15 @@ class FieldOutput:
     
     def finalizeJob(self, U, P,):
         if self.export:
-           
             res = np.asarray ( self.result )
-            
             if self.f_export:
                 res = self.f_export(res)
-                
             if res.ndim > 2:
-#                self.journal('Reshaping fieldOutput result for export in .csv file', self.name)
+                self.journal.message('Reshaping fieldOutput result for export in .csv file', self.name)
                 res = res .reshape ( ( res.shape[0] , -1) )
-            
             if self.appendResults and res.shape[0] == len(self.timeHistory): 
                 # we also store the time, if result shape and time history are 'compatible'
-#                self.journal('Adding time history for export in .csv file', self.name)
+                self.journal.message('Adding time history for export in .csv file', self.name)
                 time = np.asarray ( self.timeHistory ).reshape(-1, 1)
                 resultTable = np.hstack ( [time , res]   )
             else:
@@ -165,7 +163,7 @@ class FieldOutputController:
     The central module for managing field outputs, which can be used by output managers
     """
     
-    def __init__(self, modelInfo, inputFile):
+    def __init__(self, modelInfo, inputFile, journal):
         
         self.fieldOutputs = {}
         
@@ -175,7 +173,7 @@ class FieldOutputController:
         
         for defLine in definition['data']:
             fpDef = stringDict( defLine ) 
-            self.fieldOutputs [ fpDef['name'] ] = FieldOutput ( modelInfo, fpDef )
+            self.fieldOutputs [ fpDef['name'] ] = FieldOutput ( modelInfo, fpDef , journal)
         
     def finalizeIncrement(self, U, P, increment):
         for output in self.fieldOutputs.values():
