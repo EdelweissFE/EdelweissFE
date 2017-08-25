@@ -27,7 +27,7 @@ name=Displacement,      elSet=all,           field=displacement, result=U,
 name=DisplacementN,      nSet=all,           field=displacement, result=U, 
 name=Nonlocal Damage,   elSet=all,           field=nonlocal damage, result=U, 
 **name=Nonlocal DamageN,   nSet=all,           field=nonlocal damage, result=U, 
-name=DisplacementTop,   nSet=gen_top,       field=displacement, result=U, saveHistory=True
+name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 
 *output, type=monitor, jobName=cps4nljob
@@ -41,10 +41,8 @@ create=perNode, fieldOutput=Nonlocal Damage
 *output, type=meshPlot, jobName=cps4nljob
 figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', label=Neuner et al. (24h), 
 figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', label=U
-**figure=1, axSpec=224, create=perNode, fieldOutput=Nonlocal DamageN,  label=A
 configFigure, figure=1, axSpec=121, flipY=True, yLabel=$\\varepsilon\\thinspace$(-), xLabel=$t\\thinspace$(h)
 configFigure, figure=1, axSpec=122, aspect=equal
-**configFigure, figure=1, axSpec=224, aspect=equal
 
 *step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
 dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0

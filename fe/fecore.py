@@ -286,7 +286,7 @@ def finitElementSimulation(inputfile, verbose=False):
                 
     plotter = Plotter(journal)
     
-    fieldOutputController = FieldOutputController(modelInfo, inputfile)
+    fieldOutputController = FieldOutputController(modelInfo, inputfile, journal)
     
     # collect all output managers in a list of objects   
     outputmanagers = []
