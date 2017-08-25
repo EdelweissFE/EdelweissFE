@@ -88,12 +88,19 @@ class FieldOutput:
             
         self.timeHistory = []
         
+        # handle export of the fieldout at the end of the job:
+        self.export = definition.get('export', False)
+        if 'f_export(x)' in definition:
+            self.f_export =  sp.lambdify ( sp.DeferredVector('x'), definition['f_export(x)'] , 'numpy')
+        else:
+            self.f_export = None
+        
     def getLastResult(self, **kw):
         return self.result[-1] if self.appendResults else self.result
     
     def getResultHistory(self, ):
         if not self.appendResults:
-            raise Exception('fieldOuput {:} does not save any history; please define saveHistory=True!'.format(self.name))
+            raise Exception('fieldOuput {:} does not save any history; please define it with saveHistory=True!'.format(self.name))
         return np.asarray(self.result) 
     
     def getTimeHistory(self, ):
@@ -131,8 +138,27 @@ class FieldOutput:
         pass
     
     def finalizeJob(self, U, P,):
-        pass
-    
+        if self.export:
+           
+            res = np.asarray ( self.result )
+            
+            if self.f_export:
+                res = self.f_export(res)
+                
+            if res.ndim > 2:
+#                self.journal('Reshaping fieldOutput result for export in .csv file', self.name)
+                res = res .reshape ( ( res.shape[0] , -1) )
+            
+            if self.appendResults and res.shape[0] == len(self.timeHistory): 
+                # we also store the time, if result shape and time history are 'compatible'
+#                self.journal('Adding time history for export in .csv file', self.name)
+                time = np.asarray ( self.timeHistory ).reshape(-1, 1)
+                resultTable = np.hstack ( [time , res]   )
+            else:
+                resultTable = res
+            
+            np.savetxt('{:}.csv'.format( self.export ), resultTable, )
+            
 
 class FieldOutputController:
     """

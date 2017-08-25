@@ -27,7 +27,8 @@ name=Displacement,      elSet=all,           field=displacement, result=U,
 name=DisplacementN,      nSet=all,           field=displacement, result=U, 
 name=Nonlocal Damage,   elSet=all,           field=nonlocal damage, result=U, 
 **name=Nonlocal DamageN,   nSet=all,           field=nonlocal damage, result=U, 
-name=DisplacementTop,   nSet=gen_top,       field=displacement, result=U, saveHistory=True
+name=DisplacementTop,   nSet=gen_top,       field=displacement, result=U, saveHistory=True, 
+name=DisplacementTopMean,nSet=gen_top,       field=displacement, result=U, saveHistory=True, f(x)='mean(x[:,1])', export=creepDisplacement, 
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 
 *output, type=monitor, jobName=cps4nljob

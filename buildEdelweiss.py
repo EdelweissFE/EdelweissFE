@@ -15,7 +15,7 @@ directives = {'boundscheck':    False,
 
 # 1) rootDirectory where the libraries are located
 # rootDirectory = expanduser("~/constitutiveModelling")
-rootDirectory = expanduser("~/Dropbox/PHD/GITrepositoryLinux")
+rootDirectory = expanduser("~/constitutiveModelling/")
 
 """
 Build Extension for the UEL base element, linked to the bftUserLibrary
