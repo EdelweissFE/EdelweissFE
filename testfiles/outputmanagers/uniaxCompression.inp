@@ -21,7 +21,7 @@ name=AlphaP, elSet=all, result=sdv, gaussPt=1, index=0,
 name=AlphaD, elSet=all, result=sdv, gaussPt=1, index=2, 
 name=Omega,  elSet=all, result=sdv, gaussPt=1, index=4, 
 name=Displacement_Top, nSet=gen_top, field=displacement, result=U
-name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P
+name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P, saveHistory=True, export=ReactionForce, f_export(x)='x[:,:,1]'
 
 *output, type=ensight, jobName=cps4job, name=myEnsightExport
 create=perNode,    elSet=all, fieldOutput=Displacement

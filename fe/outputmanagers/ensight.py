@@ -362,9 +362,7 @@ class OutputManager(OutputManagerBase):
                 if varType == 'perNode':
                     perNodeJob = {}
                     perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
-                    perNodeJob['name'] = definition.get('name', perNodeJob['fieldOutput'].name)
-                    if perNodeJob['fieldOutput'].type == 'perNode':
-                        raise Exception('Ensight: Please define perNode output "{:}" on an elSet, not on a nSet!'.format(perNodeJob['name']))
+                    perNodeJob['name'] = definition.get('name', perNodeJob['fieldOutput'].name).replace(' ', '_')
                     perNodeJob['part'] =  self.elSetToEnsightPartMappings[perNodeJob['fieldOutput'].nSetName]
                     field = perNodeJob['fieldOutput'].field
                     perNodeJob['varSize'] = variableTypes[ fe.config.phenomena.phenomena[field] ]
@@ -376,7 +374,7 @@ class OutputManager(OutputManagerBase):
                     perElementJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
                     perElementJob['part'] =  self.elSetToEnsightPartMappings[perElementJob['fieldOutput'].elSetName]
                     perElementJob['elementsOfShape'] = disassembleElsetToEnsightShapes ( perElementJob['fieldOutput'].elSet )
-                    perElementJob['name'] = definition.get('name', perElementJob['fieldOutput'].name)
+                    perElementJob['name'] = definition.get('name', perElementJob['fieldOutput'].name).replace(' ', '_')
                     self.perElementJobs.append(perElementJob)
                     
     def initializeStep(self, step, stepActions, stepOptions):

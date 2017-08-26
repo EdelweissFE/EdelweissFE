@@ -7,7 +7,6 @@ Created on Wed Jul 19 16:29:29 2017
 """
 import numpy as np
 from scipy.optimize import curve_fit
-import time
 
 from fe.fecore import finitElementSimulation
 from fe.utils.misc import stringDict, mergeNumpyDataLines
@@ -113,18 +112,12 @@ def parameterIdentification(inputFile):
         inputFile['*output'] = []
         inputFile['*output'].append(outputManagerDict)
         
-        callBackFunc = lambda xData, *params: evaluateJob(inputFile, identificationJob, matParams, indices, xData, *params)        
-#        
-#        #sorting !
+        callBackFunc = lambda xData, *params: evaluateJob(inputFile, identificationJob, matParams, indices, xData, *params)
+        
+        # sorting !
         sortedIndices = xVals.argsort()
         xVals = xVals[sortedIndices]
         yVals = yVals[sortedIndices]
-        
-
-        if identificationJob.get('plot',''):
-            plt.plot(xVals, callBackFunc(xVals, np.asarray(estimations)), label="initial")
-            plt.hold(True)
-            
 
         popt, pcov = curve_fit(callBackFunc, xVals, yVals, p0 = estimations, 
                        bounds=(lowerBounds, upperBounds), 
@@ -166,13 +159,10 @@ def parameterIdentification(inputFile):
                     f.write(line + '\n')
             
         if identificationJob.get('plot',''):
-            plt.plot(xVals, yVals, ls='--', label="given data")
-            plt.plot(xVals, callBackFunc(xVals, popt), label="fitted curve")
-            plt.legend()
+            plt.plot(xVals, yVals, 'r--', xVals, callBackFunc(xVals, np.asarray(estimations)), 'g:', xVals, callBackFunc(xVals, popt), 'b-.')
+            plt.legend(['given data', 'initial val', 'fitted curve'])
             plt.grid()
             plt.show()
-#            fig.show()
-#            time.sleep(60)
+
             
     return
-##    

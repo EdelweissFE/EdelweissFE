@@ -286,7 +286,7 @@ def finitElementSimulation(inputfile, verbose=False):
                 
     plotter = Plotter(journal)
     
-    fieldOutputController = FieldOutputController(modelInfo, inputfile)
+    fieldOutputController = FieldOutputController(modelInfo, inputfile, journal)
     
     # collect all output managers in a list of objects   
     outputmanagers = []
@@ -320,7 +320,6 @@ def finitElementSimulation(inputfile, verbose=False):
                 # solve the step 
                 tic =  getCurrentTime()
                 success, U, P, time = solver.solveStep(step, time, stepActions, stepOptions, U, P,)
-
                 toc = getCurrentTime()
                 
                 stepTime = toc - tic
@@ -341,7 +340,6 @@ def finitElementSimulation(inputfile, verbose=False):
         journal.errorMessage("Interrupted by user", identification)
         
     except StepFailed:
-        
         journal.errorMessage("Step not finished", identification)
         
     except Exception as e:
