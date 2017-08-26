@@ -63,6 +63,7 @@ class MeshPlot:
                                     cmap= self.userColorMap, norm=colors.Normalize(vmax=fieldValues.max(), vmin=fieldValues.min()) )
         cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)        
         cbar.set_label(label)
+        ax.set_aspect('equal')
 #        ax.set_xlim(self.xLimits)
 #        ax.set_ylim(self.yLimits)
 
@@ -123,7 +124,7 @@ class OutputManager(OutputManagerBase):
                 if varType == 'perNode':
                     perNodeJob = {}
                     perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
-                    if perNodeJob['fieldOutput'].type != 'perNode':
+                    if perNodeJob['fieldOutput'].type == 'perNode':
                         raise Exception('Meshplot: Please define perNode output on an nSet, not on a elSet!')
                     perNodeJob['label']  =          definition.get('label', '')
                     perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
