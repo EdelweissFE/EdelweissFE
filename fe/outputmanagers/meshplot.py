@@ -15,7 +15,7 @@ Module meshplot divided into classes:
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 import numpy as np
 from fe.utils.misc import stringDict
-from fe.utils.meshtools import transferElsetResultsToElset
+from fe.utils.meshtools import transferElsetResultsToElset, extractNodesFromElementSet
 import fe.config.phenomena
 import matplotlib.tri as mtri
 from matplotlib import colors
@@ -63,8 +63,8 @@ class MeshPlot:
                                     cmap= self.userColorMap, norm=colors.Normalize(vmax=fieldValues.max(), vmin=fieldValues.min()) )
         cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)        
         cbar.set_label(label)
-        ax.set_xlim(self.xLimits)
-        ax.set_ylim(self.yLimits)
+#        ax.set_xlim(self.xLimits)
+#        ax.set_ylim(self.yLimits)
 
     def contourPlotNodalValues(self, z, fig, ax, label):
         """ divide quads into two triangles and apply a nodal value to the corner nodes """
@@ -123,6 +123,8 @@ class OutputManager(OutputManagerBase):
                 if varType == 'perNode':
                     perNodeJob = {}
                     perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
+                    if perNodeJob['fieldOutput'].type != 'perNode':
+                        raise Exception('Meshplot: Please define perNode output on an nSet, not on a elSet!')
                     perNodeJob['label']  =          definition.get('label', '')
                     perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
                     perNodeJob['figure'] =          int(definition.get('figure','1'))
