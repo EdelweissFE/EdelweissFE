@@ -4,7 +4,29 @@
 Created on Sat Jul 22 14:57:48 2017
 
 @author: matthias
+
+FieldOutputs store all kind of analysis results, 
+and are defined via the keyword *fieldOutput.
+All fieldOutputs are accessable to all outputmanagers at the end of each 
+increment, step and job.
+Furthermore, they can be exported to *.csv files at the end of the analysis job.
+
+ATTENTION: 
+    If the results are exported to a .csv file with enabled "saveHistory", 
+    the time History is automatically appended to the .csv file"
+
+Datalines:
 """
+
+documentation={'name':'name of the fieldOutput',
+               'nSet|elSet|node|element': 'entity, for which the fieldOutput is defined',
+               'result' : 'e.g., U, P, stress, strain ...',
+               'gaussPt': 'for element based fieldOutputs only, counting from 0',
+               'index':'for element based sdv fieldOutputs only, define the index (or slice) within the (material) sdv vector',
+               'f(x)': '(optional), apply math (in each increment)',
+               'saveHistory': '(optional), save complete History or only last (increment) result. Default: True (node, element) and False (nSet, elSet)',
+               'export':'(optional), export the fieldOutput to a file at the end of the job',
+               'f_export(x)': '(optional), apply math on the final result (table)'}
 
 import numpy as np
 import sympy as sp

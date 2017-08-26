@@ -4,7 +4,24 @@
 Created on Sun Jan 15 14:22:48 2017
 
 @author: matthias
+
+Output manager for Ensight exports.
+If loaded, it automatically exports all elSets as Ensight parts.
+For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.
+
+ATTENTION: 
+    fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.
+
+Datalines:
 """
+
+documentation = {
+        'create' : 'perNode|perElement',
+        'fieldOutput': 'name of the result, defined on an elSet (also for perNode results)',
+        'name': '(optional), standard = fieldOutputs name',
+        'intermediateSaveInterval': 'step option in category "Ensight": save .case file every N increments'
+        }
+
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 
 import os
@@ -432,16 +449,3 @@ class OutputManager(OutputManagerBase):
     def finalizeJob(self, U, P,):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
         
-def printDocumentation():
-    print("""Export a job to an Ensight Gold Case
-data line: create=perNode|perElement
- - perNode: elSet: set, for which the per node job is created
-            name: variable export name
-            type: U|P (flow|effort)
-            field: result field
- - perElement: elSet: set, for which the per element job is created
-               name: variable export name
-               
-category Ensight in step options:
- - intermediateSaveInterval=N : intermediate save every N increments
- """)

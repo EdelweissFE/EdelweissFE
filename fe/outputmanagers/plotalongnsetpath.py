@@ -4,7 +4,18 @@
 Created on Mon Apr 17 11:37:26 2017
 
 @author: matthias
+
+Plot nodal result for a nodeSet along the true geometrical distance.
+Corresponds to the plot along path functionality in Abaqus.
+
+Datalines:
 """
+documentation = {'fieldOutput':'fieldOutput to be plotted (defined on a nodeSet)',
+                 'figure':'(optional), figure of the Plotter',
+                 'axSpec':'(optional), axSpec (MATLAB syntax) in the figure',
+                 'label':'(optional), label, standard=fieldOutputs name',
+                 'f(x)':'(optional), apply math',
+                 'normalize':'(optional), normalize peak to 1.0'}
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 

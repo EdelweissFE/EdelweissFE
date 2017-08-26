@@ -70,10 +70,10 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                             'data':     ('string', "Abaqus like node set definiton lines"), 
                                         }),
 
-                    '*surface':         ("definition of an element set",
-                        {   'type':     ('string', "tpye of surface"),
+                    '*surface':         ("definition of surface set",
+                        {   'type':     ('string', "type of surface (currently 'element' only)"),
                             'name':     ('string', "name"),
-                            'data':     ('string', "Abaqus like node set definiton lines"), 
+                            'data':     ('string', "Abaqus like definition. Type 'element': elSet, faceID"), 
                                         }),
 
                     '*section':         ("definition of an section",
@@ -165,13 +165,10 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
     keyword = currentKeyword
     with open(fileName) as f:
         for l in f:
-#            lineElements = [x.strip() for x in l.split(",")]
-#            lineElements=list(filter(None,lineElements))
             lexer = shlex.shlex(l.strip(), posix=True)
             lexer.whitespace_split = True
             lexer.whitespace = ','
             lineElements = [x.strip() for x in lexer]
-#            print(lineElements)
 
             if not lineElements or lineElements[0].startswith("**"):
                 # line is a comment

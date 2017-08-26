@@ -4,7 +4,18 @@
 Created on Tue Jan 24 19:33:06 2017
 
 @author: matthias
+
+Apply simple node forces on a nSet.
 """
+
+documentation={
+        
+        'nSet':'nSet for application of the BC',
+        '1,2,3':'prescribed values in directions',
+        'field': 'field for BC',
+        'f(t)':'(optional) define an amplitude',
+        
+        }
 
 from fe.stepactions.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict
