@@ -4,6 +4,8 @@
 Created on Tue Jan  17 19:10:42 2017
 
 @author: matthias
+
+Inputfileparser for inputfiles employing the Abaqus syntax.
 """
 import numpy as np
 from os.path import dirname, join

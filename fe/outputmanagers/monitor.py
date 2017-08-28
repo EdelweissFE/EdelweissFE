@@ -5,7 +5,7 @@ Created on Sat Jul 22 21:26:01 2017
 
 @author: matthias
 
-A simple monitor to check results in the console during analysis.
+A simple monitor to observe results in the console during analysis.
 
 Datalines:
 """
@@ -34,10 +34,6 @@ class OutputManager(OutputManagerBase):
             entry['fieldOutput'] = fieldOutputController.fieldOutputs [ defDict['fieldOutput'] ]
             f = defDict.get('f(x)', 'x')
             entry['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , 'numpy')
-#            entry['export'] = defDict.get('export', False)
-#            if entry['export']:
-#                entry['history'] = []
-#            
             self.monitorJobs.append(entry)
     
     def initializeStep(self, step, stepActions, stepOptions):
@@ -51,19 +47,8 @@ class OutputManager(OutputManagerBase):
                                                            result),
                                  self.identification)
     
-#            if nJob['export']:
-#                nJob['history'].append(result)
-            
     def finalizeStep(self, U, P):
         pass
     
     def finalizeJob(self,U, P):
         pass
-#        exportfiles = defaultdict(list)
-#        
-#        for nJob in self.monitorJobs:
-#            if nJob['export']:
-#                exportfiles[ nJob['export'] ] .append(nJob['history'])
-#        
-#        for exportName, exportTable in exportfiles.items():
-#            np.savetxt('{:}.csv'.format(exportName), np.asarray(exportTable).T)

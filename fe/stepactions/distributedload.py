@@ -10,7 +10,6 @@ If not modified in subsequent steps, the load held constant.
 """
 
 documentation={
-        
         'surface':'surface for application of the distributed load',
         'magnitude':'dLoad magnitude',
         'delta': 'in subsequent steps only: define the new magnitude incrementally',

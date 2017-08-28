@@ -4,7 +4,34 @@
 Created on Wed Apr 12 15:41:51 2017
 
 @author: matthias
+
+A mesh generator, for rectangular geometries and structured quad meshes:
+    
+    <-----l----->
+     nX elements
+     __ __ __ __
+    |__|__|__|__|  A
+    |__|__|__|__|  |
+    |__|__|__|__|  | h
+    |__|__|__|__|  | nY elements
+  | |__|__|__|__|  |
+  | |__|__|__|__|  V
+x0|_____
+  y0
+  
+nSets, elSets, surface : 'name'_top, _bottom, _left, _right, ...
+are automatically generated
+
+Datalines:
 """
+
+documentation = {'x0' : '(optional) origin at x axis',
+                 'y0' : '(optional) origin at y axis',
+                 'h' : '(optional) height of the body',
+                 'l' : '(optional) length of the body',
+                 'nX': '(optional) number of elements along x',
+                 'nY': '(optional) number of elements along y',
+                 'elType': 'type of element'}
 
 from fe.elements.node import Node
 from fe.config.elementlibrary import getElementByName
@@ -91,6 +118,8 @@ def generateModelData(generatorDefinition, modelInfo, journal):
             modelInfo['elementSets']['{:}_sandwichHorizontal'.format(name)].append(e)
    
 
+#    Matthias : Bitte keine hardgecodeten Sachen. Danke!
+            
     # generate weak element sets in zone defined by a rectangel (xMin, yMin) to (xMax, yMax)
     elListWeak = []
     xMin = 0

@@ -9,6 +9,9 @@ Created on Sun Jul 23 21:03:23 2017
 from collections import OrderedDict, defaultdict
 
 def extractNodesFromElementSet(elementSet):
+    """
+    extract all nodes (without duplicates) from an elSet
+    """
     nodeCounter = 0
     partNodes = OrderedDict() # node -> index in nodelist
     for element in elementSet:
@@ -23,7 +26,7 @@ def extractNodesFromElementSet(elementSet):
 
 def disassembleElsetToEnsightShapes(elementSet):
     """
-    elset -> {shape : [index in elset, ... ], }
+    elset -> {shape : [element-index in elset, ... ], }
     """
     elements = defaultdict(list)
     for i, el in enumerate(elementSet):
@@ -31,6 +34,10 @@ def disassembleElsetToEnsightShapes(elementSet):
     return elements
 
 def transferElsetResultsToElset( elsetTarget, elsetOrigin, resultsTarget, resultsOrigin ):
+    """
+    Copy results from a (sub) elSet to another elSet.
+    ATTENTION: All elements in the origin set must be present in the target set. ( -> can be improved in future)
+    """
     
     for i, el in enumerate(elsetTarget):
         el.__index__in__elsetTarget = i
@@ -41,3 +48,5 @@ def transferElsetResultsToElset( elsetTarget, elsetOrigin, resultsTarget, result
     elif resultsOrigin.ndim == 2:
         resultsTarget[ indices, : ] = resultsOrigin
      
+    for el in elsetTarget:
+        del el.__index__in__elsetTarget
