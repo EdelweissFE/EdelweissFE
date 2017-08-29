@@ -4,7 +4,17 @@
 Created on Wed May 10 13:12:40 2017
 
 @author: matthias
+
+Distributed load, applied on a surface set.
+If not modified in subsequent steps, the load held constant.
 """
+
+documentation={
+        'surface':'surface for application of the distributed load',
+        'magnitude':'dLoad magnitude',
+        'delta': 'in subsequent steps only: define the new magnitude incrementally',
+        'f(t)':'(optional) define an amplitude',
+        }
 
 from fe.stepactions.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict

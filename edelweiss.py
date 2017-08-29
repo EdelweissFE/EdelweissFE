@@ -36,7 +36,6 @@ if __name__ == "__main__":
     #1 ) parse all files
     try:
         for file in fileList:    
-          #  print(parseInputFile(file))
             inputFiles.append(parseInputFile(file))
 
     except (KeyError, ValueError) as e:

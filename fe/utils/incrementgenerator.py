@@ -3,6 +3,8 @@
 Created on Sat Jan  21 12:18:10 2017
 
 @author: Matthias
+
+Provides an increment generator for incremental-iterative simulations
 """
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 

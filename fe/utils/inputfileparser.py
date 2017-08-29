@@ -4,6 +4,8 @@
 Created on Tue Jan  17 19:10:42 2017
 
 @author: matthias
+
+Inputfileparser for inputfiles employing the Abaqus syntax.
 """
 import numpy as np
 from os.path import dirname, join
@@ -70,10 +72,10 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                             'data':     ('string', "Abaqus like node set definiton lines"), 
                                         }),
 
-                    '*surface':         ("definition of an element set",
-                        {   'type':     ('string', "tpye of surface"),
+                    '*surface':         ("definition of surface set",
+                        {   'type':     ('string', "type of surface (currently 'element' only)"),
                             'name':     ('string', "name"),
-                            'data':     ('string', "Abaqus like node set definiton lines"), 
+                            'data':     ('string', "Abaqus like definition. Type 'element': elSet, faceID"), 
                                         }),
 
                     '*section':         ("definition of an section",
@@ -134,6 +136,14 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                          'name':            ('string', "(optional) name of the constraint"),
                          'data':            ('string', "definition of the constraint"),
                          }),
+
+                    '*configurePlots':      ("customize the figures and axes",
+                        {'data':            ('string', "key=value pairs for configuration of figures and axes"),
+                         }),
+
+                    '*exportPlots':         ("export your figures",
+                        {'data':            ('string', "key=value pairs for exporting of figures and axes"),
+                         }),
                                          
                     '*include': ("(optional) load extra .inp file (fragment), use relative path to current .inp",
                         {'input':           ('string', "filename")}),
@@ -165,13 +175,10 @@ def parseInputFile(fileName, currentKeyword = None, existingFileDict = None):
     keyword = currentKeyword
     with open(fileName) as f:
         for l in f:
-#            lineElements = [x.strip() for x in l.split(",")]
-#            lineElements=list(filter(None,lineElements))
             lexer = shlex.shlex(l.strip(), posix=True)
             lexer.whitespace_split = True
             lexer.whitespace = ','
             lineElements = [x.strip() for x in lexer]
-#            print(lineElements)
 
             if not lineElements or lineElements[0].startswith("**"):
                 # line is a comment

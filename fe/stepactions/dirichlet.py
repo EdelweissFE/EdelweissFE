@@ -4,7 +4,19 @@
 Created on Mon Jan 23 13:03:09 2017
 
 @author: matthias
+
+Dirichlet boundary condition.
+If not modified in subsequent steps, the BC is held constant.
 """
+documentation={
+        
+        'nSet':'nSet for application of the BC',
+        '1,2,3':'prescribed values in directions',
+        'field': 'field for BC',
+        'f(t)':'(optional) define an amplitude',
+        
+        }
+
 from fe.stepactions.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict
 import numpy as np
