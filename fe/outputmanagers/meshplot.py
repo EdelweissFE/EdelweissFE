@@ -15,7 +15,7 @@ Module meshplot divided into classes:
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 import numpy as np
 from fe.utils.misc import stringDict
-from fe.utils.meshtools import transferElsetResultsToElset, extractNodesFromElementSet
+from fe.utils.meshtools import transferElsetResultsToElset
 import fe.config.phenomena
 import matplotlib.tri as mtri
 from matplotlib import colors
@@ -26,6 +26,7 @@ documentation = {
         'axSpec': 'axis specification according to matplotlib syntax, (default=111)',
         'create=perNode': 'result per node is plotted in a meshplot',
         'create=perElement': 'result per element is plotted in a meshplot',
+        'create=meshOnly': 'plot the mesh only',
         'create=xyData': '2D Plot of results',
         }
 
@@ -63,9 +64,8 @@ class MeshPlot:
                                     cmap= self.userColorMap, norm=colors.Normalize(vmax=fieldValues.max(), vmin=fieldValues.min()) )
         cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)        
         cbar.set_label(label)
-        ax.set_aspect('equal')
-#        ax.set_xlim(self.xLimits)
-#        ax.set_ylim(self.yLimits)
+        ax.set_xlim(self.xLimits)
+        ax.set_ylim(self.yLimits)
 
     def contourPlotNodalValues(self, z, fig, ax, label):
         """ divide quads into two triangles and apply a nodal value to the corner nodes """
@@ -111,6 +111,7 @@ class OutputManager(OutputManagerBase):
         
         self.perNodeJobs = []
         self.perElementJobs = []
+        self.meshOnlyJobs = []
         self.configJobs = []
         self.xyJobs = []
         self.saveJobs = []
@@ -126,7 +127,7 @@ class OutputManager(OutputManagerBase):
                     perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
                     if perNodeJob['fieldOutput'].type == 'perNode':
                         raise Exception('Meshplot: Please define perNode output on an nSet, not on a elSet!')
-                    perNodeJob['label']  =          definition.get('label', '')
+                    perNodeJob['label']  =          definition.get('label',  definition['fieldOutput'] )
                     perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
                     perNodeJob['figure'] =          int(definition.get('figure','1'))
                     perNodeJob['plotMeshGrid'] =    definition.get('plotMeshGrid', 'unDeformed')
@@ -139,7 +140,7 @@ class OutputManager(OutputManagerBase):
                         
                 elif varType == 'perElement':
                     perElementJob = {}
-                    perElementJob['label']  =          definition.get('label', '')
+                    perElementJob['label']  =          definition.get('label',  definition['fieldOutput'] )
                     perElementJob['axSpec'] =       int(definition.get('axSpec','111'))
                     perElementJob['figure'] =       int(definition.get('figure','1'))
                     perElementJob['fieldOutput'] =     fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
@@ -149,6 +150,13 @@ class OutputManager(OutputManagerBase):
                     perElementJob['plotMeshGrid'] = definition.get('plotMeshGrid', 'unDeformed')
                     perElementJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
                     self.perElementJobs.append(perElementJob)
+                
+                elif varType=='meshOnly':
+                    perNodeJob = {}
+                    perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
+                    perNodeJob['figure'] =          int(definition.get('figure','1'))
+                    perNodeJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
+                    self.meshOnlyJobs.append(perNodeJob)
                     
                 elif varType == 'xyData':
                     xyJob = {}
@@ -170,21 +178,8 @@ class OutputManager(OutputManagerBase):
                     xyJob['axSpec'] =   int(definition.get('axSpec','111'))
                     self.xyJobs.append(xyJob)
             
-            if 'configFigure' in definition:
-                self.configJobs.append(dict(definition))
-            
-            if 'saveFigure' in definition:
-                saveJob = {}
-                saveJob['figure'] = int(definition.get('figure','1'))
-                saveJob['fileName'] = definition.get('fileName')
-                saveJob['width'] = definition.get('width',469.47)
-                saveJob['scale'] = definition.get('scale', 1.0)
-                saveJob['heightRatio'] = definition.get('heightRatio', False)
-                saveJob['png'] = definition.get('png', False)
-                self.saveJobs.append(saveJob)        
-
         # Initialize instance of plotterclass                 
-        if self.perElementJobs or self.perNodeJobs:
+        if self.perElementJobs or self.perNodeJobs or self.meshOnlyJobs:
             for element in self.elements.values():
                 nodeArray = [node.coordinates for node in element.nodes][:4]
                 nodeIdxArray = [nodeNumber.label-1 for nodeNumber in element.nodes[:]][:4]
@@ -237,6 +232,15 @@ class OutputManager(OutputManagerBase):
             result = np.squeeze(result)
             
             self.meshPlot.contourPlotNodalValues(result, fig, ax, perNodeJob['label'])
+        
+        for meshOnlyJob in self.meshOnlyJobs:
+            ax =  self.plotter.getAx(meshOnlyJob['figure'] , meshOnlyJob['axSpec'])
+            self.meshPlot.plotMeshGrid( ax)
+            ax.set_axis_off()
+            ax.set_aspect('equal')
+                            
+            if meshOnlyJob['plotNodeLabels']:
+                self.meshPlot.plotNodeLabels(self.nodes.keys(),ax)
 
         for perElementJob in self.perElementJobs:
 
@@ -261,9 +265,3 @@ class OutputManager(OutputManagerBase):
                 
             self.meshPlot.contourPlotFieldVariable(resultArray, fig, ax, perElementJob['label'] )
             
-        for configJob in self.configJobs:
-            self.plotter.configAxes(**configJob)
-        
-        for saveJob in self.saveJobs:
-            self.plotter.exportFigure(saveJob['fileName'], saveJob['figure'], saveJob['width'], saveJob['scale'], saveJob['heightRatio'], saveJob['png'])
-       

@@ -284,7 +284,7 @@ def finitElementSimulation(inputfile, verbose=False):
     # collect all job steps in a list of stepDictionaries
     jobSteps = filterByJobName(inputfile['*step'], jobName)
                 
-    plotter = Plotter(journal)
+    plotter = Plotter(journal, inputfile)
     
     fieldOutputController = FieldOutputController(modelInfo, inputfile, journal)
     

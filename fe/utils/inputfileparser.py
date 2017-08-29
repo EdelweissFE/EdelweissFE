@@ -136,6 +136,14 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                          'name':            ('string', "(optional) name of the constraint"),
                          'data':            ('string', "definition of the constraint"),
                          }),
+
+                    '*configurePlots':      ("customize the figures and axes",
+                        {'data':            ('string', "key=value pairs for configuration of figures and axes"),
+                         }),
+
+                    '*exportPlots':         ("export your figures",
+                        {'data':            ('string', "key=value pairs for exporting of figures and axes"),
+                         }),
                                          
                     '*include': ("(optional) load extra .inp file (fragment), use relative path to current .inp",
                         {'input':           ('string', "filename")}),

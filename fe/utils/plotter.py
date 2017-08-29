@@ -12,6 +12,7 @@ import numpy as np
 import os
 import sys
 import itertools
+from fe.utils.misc import stringDict
 
 defaultMarkerCycle = itertools.cycle(('o', 'v', 'D', 's', '^'))
 defaultLinePlotColorCycle = itertools.cycle(('k'))
@@ -22,7 +23,7 @@ class Plotter:
     """
     A Unified Plotter, which can be accessed and used by all outputmanagers
     """
-    def __init__(self, journal):
+    def __init__(self, journal, inputfile):
         self.journal = journal
         self.rcParams = {
                 "pgf.texsystem": "pdflatex",        # change this if using xetex or lautex
@@ -57,6 +58,9 @@ class Plotter:
             
         self.figsWithAxes = {} # {figID : (figure, {axesDict})}
         matplotlib.rcParams.update(self.rcParams)
+        
+        self.configurationLines = [ stringDict(c) for configEntry in  inputfile['*configurePlots'] for c in configEntry['data']   ]
+        self.exportJobs = [ stringDict(c) for configEntry in  inputfile['*exportPlots'] for c in configEntry['data']   ]
         
     def getAx(self, figureID=0, axSpec=111):
         """ create a figure with ax if it doesn't exist so far """
@@ -100,25 +104,36 @@ class Plotter:
                 plotDefinition['linestyle'] = (float(lsParts[0]), [ int(onOff) for onOff in lsParts[1:] ])
         ax.plot(x,y, **plotDefinition)   
         
-    def configAxes(self, **configEntry):
+    def configurePlotter(self):
         
-        ax = self.figsWithAxes[ int( configEntry['figure'] ) ][1][ int( configEntry['axSpec'] ) ]
+        for configEntry in self.configurationLines:
         
-        if "xLimits" in configEntry: 
-            limits = [float(x) for x in configEntry["xLimits"].split('_')] 
-            ax.set_xlim(limits)
+            ax = self.figsWithAxes[ int( configEntry['figure'] ) ][1][ int( configEntry['axSpec'] ) ]
             
-        if "yLimits" in configEntry: 
-            limits = [float(x) for x in configEntry["yLimits"].split('_')] 
-            ax.set_ylim(limits)
-            
-        if 'xLabel' in configEntry: ax.set_xlabel(configEntry['xLabel'])
-        if 'yLabel' in configEntry: ax.set_ylabel(configEntry['yLabel'])
-        if 'flipX' in configEntry: ax.invert_xaxis()
-        if 'flipY' in configEntry: ax.invert_yaxis()
-        if 'aspect' in configEntry: ax.set_aspect(configEntry['aspect'])
-        if 'grid' in configEntry: ax.grid()
+            if "xLimits" in configEntry: 
+                limits = [float(x) for x in configEntry["xLimits"].split('_')] 
+                ax.set_xlim(limits)
+                
+            if "yLimits" in configEntry: 
+                limits = [float(x) for x in configEntry["yLimits"].split('_')] 
+                ax.set_ylim(limits)
+                
+            if 'xLabel' in configEntry: ax.set_xlabel(configEntry['xLabel'])
+            if 'yLabel' in configEntry: ax.set_ylabel(configEntry['yLabel'])
+            if 'flipX' in configEntry: ax.invert_xaxis()
+            if 'flipY' in configEntry: ax.invert_yaxis()
+            if 'aspect' in configEntry: ax.set_aspect(configEntry['aspect'])
+            if 'grid' in configEntry: ax.grid()
 
+    def exportPlots(self):
+        for exportJob in self.exportJobs:
+            self.exportFigure(exportJob.get('fileName'),
+                          int(exportJob.get('figure','1')), 
+                          exportJob.get('width',469.47), 
+                          exportJob.get('scale', 1.0), 
+                          exportJob.get('heightRatio', False), 
+                          exportJob.get('png', False))
+            
     def fancyFigSize(self, scale, width, heightRatio=False):
         fig_width_pt = width                       
         inches_per_pt = 1.0/72.27                       # Convert pt to inch
@@ -128,8 +143,8 @@ class Plotter:
         fig_size = [fig_width,fig_height]
         return fig_size
     
-    def exportFigure(self, fileName, figure, width=469.47, scale=1.0, heightRatio=False, png=False):
-        fig, ax = self.figsWithAxes[figure]
+    def exportFigure(self, fileName, figureID, width=469.47, scale=1.0, heightRatio=False, png=False):
+        fig, ax = self.figsWithAxes[figureID]
         fig.set_size_inches(self.fancyFigSize(scale, width, heightRatio))
         fig.tight_layout(pad=0.15)
         fig.savefig('{}.pgf'.format(fileName))
@@ -139,10 +154,15 @@ class Plotter:
     
     def show(self,):
         
+        self.configurePlotter()
+        
         for fig, axes in self.figsWithAxes.values():
             fig.tight_layout()
             for axSpec, ax in axes.items():
                 ax.legend()
                 ax.relim()
+                
+        self.exportPlots()
+        
         plt.show()
     

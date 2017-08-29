@@ -47,7 +47,8 @@ figure=1, axSpec=221, create=perNode, fieldOutput=Displacement,  label=uy, f(x)=
 figure=1, axSpec=224, create=perElement, fieldOutput=AlphaP, label=alphaP
 figure=1, axSpec=223, c=red, ls=dashed, create=xyData, x=meanDispLoad, y=sumRFNodes,
 figure=1, axSpec=222, create=perElement, fieldOutput=Omega, label=omega
-configFigure, figure=1, axSpec=223, xLabel=u (m), yLabel=RF (kN) 
+*configurePlots
+figure=1, axSpec=223, xLabel=u (m), yLabel=RF (kN) 
 
 *step, jobName=cps4nonlocaljob, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=20, stepLength=1
 options, category=NISTSolver, numThreads=15

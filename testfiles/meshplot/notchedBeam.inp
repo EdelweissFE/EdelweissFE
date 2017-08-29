@@ -25,10 +25,17 @@ figure=1, axSpec=211, create=perNode, fieldOutput=alphaDNonlocal
 figure=1, axSpec=212, create=perElement, fieldOutput=omega1
 figure=2, axSpec=111, create=perNode, fieldOutput=UMag
 figure=3, axSpec=111, c=red, ls=dashed, create=xyData, x=meanDispLoad, y=sumRFNodes,
-configFigure, figure=3, axSpec=111, xLabel=U1, yLabel=P2, flipX=True
-saveFigure, figure=1, fileName=notchedBeam1
-saveFigure, figure=2, fileName=notchedBeam2
-saveFigure, figure=3, fileName=notchedBeam3
+figure=4, axpSec=111, create=meshOnly, 
+
+*configurePlots,
+figure=1, axSpec=211, 
+figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
+figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
+figure=4, axSpec=111, aspect=equal
+
+*exportPlots,
+figure=1, fileName=fig1
+figure=2, fileName=fig2
 
 *step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=10, stepLength=1
 options, category=NISTSolver, extrapolation=linear, numThreads=15
