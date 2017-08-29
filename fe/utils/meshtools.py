@@ -5,8 +5,8 @@ Created on Sun Jul 23 21:03:23 2017
 
 @author: matthias
 """
-
 from collections import OrderedDict, defaultdict
+import numpy as np
 
 def extractNodesFromElementSet(elementSet):
     nodeCounter = 0
@@ -41,3 +41,21 @@ def transferElsetResultsToElset( elsetTarget, elsetOrigin, resultsTarget, result
     elif resultsOrigin.ndim == 2:
         resultsTarget[ indices, : ] = resultsOrigin
      
+        
+def extractNodeCoordinatesFromElset(elementSet, displacementResult=False, displacementScaleFactor=1.0, numberOfNodes=4):
+    """ write (deformed or undeformed) coordinates of elementSet in list format:
+            [ [x1 y1 x2 y2 ... xNumberOfNodes, yNumberOfNodes], # element 1 in elementSet
+              [x1 y1 x2 y2 ... xNumberOfNodes, yNumberOfNodes], # element 2 in elementSet
+              ....
+            ]
+        """
+    elCoordinatesList = []
+
+    for element in elementSet:
+        if displacementResult is False:
+            nodeArray = [node.coordinates for node in element.nodes][:numberOfNodes]
+        else:
+            nodeArray = [node.coordinates + displacementResult[node.label-1,:]*displacementScaleFactor for node in element.nodes][:numberOfNodes]
+        elCoordinatesList.append(np.asarray(nodeArray))
+
+    return elCoordinatesList
