@@ -61,10 +61,10 @@ def extractNodeCoordinatesFromElset(elementSet, displacementResult=False, displa
     elCoordinatesList = []
 
     for element in elementSet:
-        if displacementResult is False:
-            nodeArray = [node.coordinates for node in element.nodes][:numberOfNodes]
-        else:
+        try:
             nodeArray = [node.coordinates + displacementResult[node.label-1,:]*displacementScaleFactor for node in element.nodes][:numberOfNodes]
+        except:
+            nodeArray = [node.coordinates for node in element.nodes][:numberOfNodes]
         elCoordinatesList.append(np.asarray(nodeArray))
 
     return elCoordinatesList

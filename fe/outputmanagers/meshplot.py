@@ -82,6 +82,17 @@ class MeshPlot:
         for label in labels:              
             ax.annotate('%i' % label, xy=self.coordinates[label-1,:], fontsize=6, textcoords='data')
 
+    def plotElementLabels(self, ax, elementList):
+        """ label nodes of elements """
+        for element in elementList:
+            xCenter = 0
+            yCenter = 0
+            for node in element.nodes:
+                xCenter += node.coordinates[0]
+                yCenter += node.coordinates[1]
+            ax.annotate('%i' % element.elNumber, xy=[xCenter/4, yCenter/4], fontsize=6, textcoords='data')
+
+
     def plotMeshGrid(self, ax, coordinateList):
         """ plot grid of elements; so far only implemented for quads """
         for element in coordinateList:
@@ -121,6 +132,10 @@ class OutputManager(OutputManagerBase):
         self.saveJobs = []
         self.meshOnlyJobs = []
         
+        # needed for meshOnly plot
+        fpDef = {'result': 'U', 'field': 'displacement', 'name': 'meshDisplacements', 'nSet': 'all'}
+        fieldOutputController.fieldOutputs [ fpDef['name'] ] = FieldOutput( modelInfo, fpDef , journal)
+        
         for defLine in definitionLines:
             definition = stringDict(defLine)
             
@@ -135,11 +150,10 @@ class OutputManager(OutputManagerBase):
                     perNodeJob['label']  =          definition.get('label',  definition['fieldOutput'] )
                     perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
                     perNodeJob['figure'] =          int(definition.get('figure','1'))
-                    perNodeJob['plotMeshGrid'] =    definition.get('plotMeshGrid', 'unDeformed')
+                    perNodeJob['plotMeshGrid'] =    definition.get('plotMeshGrid', 'undeformed')
                     if 'f(x)' in definition:
                         perNodeJob['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), definition['f(x)'] , 'numpy')
             
-                    perNodeJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
                     perNodeJob['dimensions'] =      fe.config.phenomena.getFieldSize(perNodeJob['fieldOutput'].field, self.domainSize)
                     self.perNodeJobs.append(perNodeJob)
                         
@@ -153,7 +167,6 @@ class OutputManager(OutputManagerBase):
                         perElementJob['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), definition['f(x)'] , 'numpy')
                             
                     perElementJob['plotMeshGrid'] = definition.get('plotMeshGrid', 'unDeformed')
-                    perElementJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
                     self.perElementJobs.append(perElementJob)
                 
                     
@@ -177,20 +190,19 @@ class OutputManager(OutputManagerBase):
                     xyJob['axSpec'] =   int(definition.get('axSpec','111'))
                     self.xyJobs.append(xyJob)
                     
-                    
+
                 elif varType == 'meshOnly':
                     meshOnlyJob = {}
                     
-                    fpDef = {'result': 'U', 'field': 'displacement', 'name': 'meshOnly', 'nSet': 'all'}
-                    fieldOutputController.fieldOutputs [ fpDef['name'] ] = FieldOutput( modelInfo, fpDef , journal)
-                    meshOnlyJob['fieldOutput'] = fieldOutputController.fieldOutputs [ fpDef['name'] ]
-                    meshOnlyJob['configuration'] = 'deformed'
-                    meshOnlyJob['axSpec'] =          int(definition.get('axSpec','111'))       
-                    meshOnlyJob['figure'] =          int(definition.get('figure','1'))
-                    meshOnlyJob['plotNodeLabels'] =  definition.get('plotNodeLabels', False)
-#                    meshOnlyJob['label'] =     definition.get('label', meshOnlyJob['y'].name)
+                    meshOnlyJob['fieldOutput']      = fieldOutputController.fieldOutputs [ fpDef['name'] ]
+                    meshOnlyJob['configuration']    = definition.get('configuration','undeformed')
+                    meshOnlyJob['scaleFactor']      = float(definition.get('scaleFactor',1.0))
+                    meshOnlyJob['axSpec']           = int(definition.get('axSpec','111'))       
+                    meshOnlyJob['figure']           = int(definition.get('figure','1'))
+                    meshOnlyJob['plotNodeLabels']   = definition.get('plotNodeLabels', False)
+                    meshOnlyJob['plotElementLabels'] =  definition.get('plotElementLabels', False)
                     self.meshOnlyJobs.append(meshOnlyJob)
-            
+
         # Initialize instance of plotterclass                 
         if self.perElementJobs or self.perNodeJobs or self.meshOnlyJobs:
             self.elCoordinatesList = extractNodeCoordinatesFromElset(self.elements.values())
@@ -235,13 +247,9 @@ class OutputManager(OutputManagerBase):
             if 'f(x)' in perNodeJob:
                 result = perNodeJob['f(x)'] (result)
     
-#            self.meshPlot = MeshPlot(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
-            if perNodeJob['plotMeshGrid']=='unDeformed':
+            if perNodeJob['plotMeshGrid']=='undeformed':
                 self.meshPlot.plotMeshGrid( ax,  self.elCoordinatesList)
             
-            if perNodeJob['plotNodeLabels']:
-                self.meshPlot.plotNodeLabels(self.nodes.keys(),ax)
-                
             result = np.squeeze(result)
             
             self.meshPlot.contourPlotNodalValues(result, fig, ax, perNodeJob['label'])
@@ -253,9 +261,6 @@ class OutputManager(OutputManagerBase):
             ax =  self.plotter.getAx(perElementJob['figure'] , perElementJob['axSpec'])
             self.meshPlot.plotMeshGrid(ax,  self.elCoordinatesList)
             
-            if perElementJob['plotNodeLabels']:
-                self.meshPlot.plotNodeLabels(self.nodes.keys(), ax)
-                
             resultArray = perElementJob['fieldOutput'].getLastResult()
             
             if 'f(x)' in perElementJob:
@@ -269,24 +274,28 @@ class OutputManager(OutputManagerBase):
                 resultArray = resultsTarget
                 
             self.meshPlot.contourPlotFieldVariable(resultArray, fig, ax, perElementJob['label'] )
+        
         for meshOnlyJob in self.meshOnlyJobs:
             
-            ax.set_axis_off()
-            ax.set_aspect('equal')
             fig = self.plotter.getFig(meshOnlyJob['figure'])
             ax =  self.plotter.getAx(meshOnlyJob['figure'] , meshOnlyJob['axSpec'])
-            result = meshOnlyJob['fieldOutput'].getLastResult()
+            ax.set_axis_off()
+            ax.set_aspect('equal')
+            
             if meshOnlyJob['plotNodeLabels']:
                 self.meshPlot.plotNodeLabels(self.nodes.keys(),ax)
+                
+            if meshOnlyJob['plotElementLabels']:
+                self.meshPlot.plotElementLabels(ax, self.elSets['all'])
 
             if meshOnlyJob['configuration'] == 'deformed':
-                
-                elCoordinatesListDeformed = extractNodeCoordinatesFromElset(self.elSets['all'], displacementResult=result, displacementScaleFactor=1.0)
+                elCoordinatesListDeformed = extractNodeCoordinatesFromElset(self.elSets['all'], meshOnlyJob['fieldOutput'].getLastResult(), meshOnlyJob['scaleFactor'])
                 self.meshPlot.plotMeshGrid( ax, elCoordinatesListDeformed)
             
             else:       
                 elCoordinatesListUnDeformed = extractNodeCoordinatesFromElset(self.elSets['all'])
                 self.meshPlot.plotMeshGrid( ax, elCoordinatesListUnDeformed)
+                
             
         for configJob in self.configJobs:
             self.plotter.configAxes(**configJob)
