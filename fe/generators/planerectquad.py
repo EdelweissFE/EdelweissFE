@@ -121,18 +121,18 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 #    Matthias : Bitte keine hardgecodeten Sachen. Danke!
             
     # generate weak element sets in zone defined by a rectangel (xMin, yMin) to (xMax, yMax)
-    elListWeak = []
-    xMin = 0
-    xMax = 4
-    yMin = 56
-    yMax = 60
-
-    for el in modelInfo['elements'].values():
-        xNode1 =  el.nodes[0].coordinates[0]
-        yNode1 =  el.nodes[0].coordinates[1]
-        if (xNode1>=xMin) and (xNode1<xMax) and (yNode1>=yMin) and (yNode1<yMax) :
-            elListWeak.append(el)
-    modelInfo['elementSets']['{:}_weak'.format(name)] =    elListWeak
+#    elListWeak = []
+#    xMin = 0
+#    xMax = 4
+#    yMin = 56
+#    yMax = 60
+#
+#    for el in modelInfo['elements'].values():
+#        xNode1 =  el.nodes[0].coordinates[0]
+#        yNode1 =  el.nodes[0].coordinates[1]
+#        if (xNode1>=xMin) and (xNode1<xMax) and (yNode1>=yMin) and (yNode1<yMax) :
+#            elListWeak.append(el)
+#    modelInfo['elementSets']['{:}_weak'.format(name)] =    elListWeak
 
     #surfaces
     modelInfo['surfaces']['{:}_bottom'.format(name)] =  {1: [e for e in elGrid[:,0] ]  }
