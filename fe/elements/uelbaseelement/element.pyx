@@ -7,12 +7,13 @@ Created on Thu Apr 27 08:35:06 2017
 """
 
 import numpy as np
-from fe.materials.umatlibrary cimport pUmatType, getUmat
-from fe.config.ueltypedefs cimport pSimpleUelWithUmatType
+#from fe.materials.umatlibrary cimport pUmatType, getUmat
+#from fe.config.ueltypedefs cimport pSimpleUelWithUmatType
 cimport numpy as np
 from libcpp.string cimport string
 cimport fe.elements.uelbaseelement.element 
 
+from libc.stdlib cimport malloc, free
 cdef public bint notificationToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
     return True
@@ -29,8 +30,8 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
                        const double* propertiesElement,
                        int nPropertiesElement,
                        int noEl,
-                       const pUmatType umat,
-                       int nStateVarsUmat,
+                       const string& materialName,
+                       int nStateVarsMaterial,
                        const double* propertiesUmat,
                        int nPropertiesUmat)
     
@@ -44,23 +45,24 @@ mapStateTypes={
 
 cdef class BaseElement:
     
-    def __init__(self, nodes, elNumber, int nGaussPt, int uelID):
+    def __init__(self, nodes, elNumber, int nGaussPt, int nStateVarsGaussPt, int uelID):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
         self.elNumber = elNumber
         self.numGaussPts = nGaussPt
+        self.nStateVarsGaussPt = nStateVarsGaussPt
         self.uelID = uelID
         
-    def setProperties(self, uelProperties, umatName, nStateVarsUmat, umatProperties):
-        self.uelProperties = uelProperties
-        self.nStateVarsUmat = nStateVarsUmat
-        self.umatProperties = umatProperties
-        self.nStateVars = self.numGaussPts * (nStateVarsUmat + 12)
-        self.stateVars = np.zeros(self.nStateVars)
-        self.stateVarsTemp = np.zeros(self.nStateVars)
-        self.umat = getUmat(umatName.lower())
-        self.intProperties = np.empty(0, dtype=np.intc)
+    def setProperties(self, elementProperties, materialName, nStateVarsMaterial, materialProperties):
+        self.elementProperties =    elementProperties
+        self.nStateVarsMaterial =   nStateVarsMaterial
+        self.materialProperties =   materialProperties
+        self.nStateVars =           self.numGaussPts * (nStateVarsMaterial + self.nStateVarsGaussPt)
+        self.stateVars =            np.zeros(self.nStateVars)
+        self.stateVarsTemp =        np.zeros(self.nStateVars)
+        self.materialName =         materialName.upper().encode('UTF-8')
         
+        # if we store already an element, we delete it
         if self.bftUel != NULL:
             del self.bftUel
         
@@ -68,13 +70,13 @@ cdef class BaseElement:
                                                 &self.nodeCoordinates[0], 
                                                 &self.stateVarsTemp[0], 
                                                 self.nStateVars,
-                                                &self.uelProperties[0], 
-                                                self.uelProperties.shape[0],
+                                                &self.elementProperties[0], 
+                                                self.elementProperties.shape[0],
                                                 self.elNumber,
-                                                self.umat, 
-                                                self.nStateVarsUmat,
-                                                &self.umatProperties[0],
-                                                self.umatProperties.shape[0])
+                                                self.materialName, 
+                                                self.nStateVarsMaterial,
+                                                &self.materialProperties[0],
+                                                self.materialProperties.shape[0])
         if self.bftUel == NULL:
             raise Exception("Element not found: {:}".format(self.uelID))
 
@@ -126,19 +128,17 @@ cdef class BaseElement:
     def resetToLastValidState(self,):
         pass
     
-
-    
-    resultIndices = {'stress': lambda nStateVarsUmat,kw : slice( kw['gaussPt']*nStateVarsUmat,
-                                                                 kw['gaussPt']*nStateVarsUmat + 6) ,
-                    'strain': lambda nStateVarsUmat,kw, : slice( kw['gaussPt']*nStateVarsUmat + 6,
-                                                                 kw['gaussPt']*nStateVarsUmat + 12),
-                    'sdv':    lambda nStateVarsUmat,kw, : slice( kw['idxStart'] + (kw['gaussPt']-1)* nStateVarsUmat, 
-                                                                 kw['idxStop' ] + (kw['gaussPt']-1)* nStateVarsUmat)}
-                    
     def getPermanentResultPtr(self, **kw):    
-        sVars = np.asarray(self.stateVars)
-        idxSlice = self.resultIndices[ kw['result'] ](self.nStateVarsUmat, kw)    
-        return sVars[idxSlice]
+        cdef int gPt =          kw['gaussPt']
+        cdef string result =    kw['result'].encode('UTF-8')
+        cdef int resultLength = 0
+        cdef double* ptr =      self.bftUel.getPermanentResultPointer(result, gPt, resultLength)
+        
+        if resultLength <= 0:
+            raise Exception("Invalid result '{:}' requested for element {:}".format(kw['result'], self.elNumber))
+        
+        resultArray = np.asarray( <double [:resultLength]> ptr )
+        return resultArray[ kw['index'] ] if 'index' in kw else resultArray
     
     def __dealloc__(self):
         del self.bftUel

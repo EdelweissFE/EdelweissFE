@@ -6,7 +6,8 @@ Created on Thu Apr 27 08:35:06 2017
 @author: matthias
 """
 
-from fe.materials.umatlibrary cimport pUmatType
+#from fe.materials.umatlibrary cimport pUmatType
+from libcpp.string cimport string
 
 cdef extern from "bftUel.h" namespace "BftUel":
     cdef enum StateTypes:
@@ -41,6 +42,8 @@ cdef extern from "bftUel.h":
                                 const double* time,
                                 double dT)
         
+        double* getPermanentResultPointer(const string& resultName, int gaussPt, int& resultLength)
+        
 cdef class BaseElement:
     
     cdef BftUel* bftUel
@@ -48,8 +51,7 @@ cdef class BaseElement:
     cdef public int elNumber
     
     cdef public double[::1] stateVars
-    cdef double[::1] uelProperties, stateVarsTemp, nodeCoordinates, umatProperties
-    cdef pUmatType umat
-    cdef public nStateVars, nStateVarsUmat
-    cdef int[::1] intProperties
-    cdef int numGaussPts, uelID
+    cdef double[::1] elementProperties, stateVarsTemp, nodeCoordinates, materialProperties
+    cdef string materialName
+    cdef int nStateVars, nStateVarsMaterial
+    cdef int numGaussPts, uelID, nStateVarsGaussPt

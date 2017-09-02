@@ -31,7 +31,7 @@ documentation={'name':'name of the fieldOutput',
 import numpy as np
 import sympy as sp
 
-from fe.utils.misc import stringDict
+from fe.utils.misc import stringDict, strToSlice
 from fe.utils.meshtools import  extractNodesFromElementSet
 
 class FieldOutput:
@@ -88,14 +88,10 @@ class FieldOutput:
             
             requestDictForElement = {}
             requestDictForElement['result'] = definition['result']
+            
             if 'index' in definition:
-                idcs = definition['index']
-                if ':' in definition['index']:
-                    idcs=[int (i) for i in idcs.split(':')]
-                    requestDictForElement['idxStart'], requestDictForElement['idxStop'] = idcs
-                else:
-                    idx = int (idcs)
-                    requestDictForElement['idxStart'], requestDictForElement['idxStop'] = idx, idx+1
+                requestDictForElement['index'] = strToSlice( definition['index'] )
+                    
             if 'gaussPt' in definition:
                 requestDictForElement['gaussPt'] = int( definition['gaussPt'] )
             

@@ -23,6 +23,15 @@ def stringDict(listOfStringAssigments):
         resultDict[opt] = val
     return resultDict
 
+def strToSlice(string):
+    
+    if ':' in string:
+        idcs=[int (i) for i in string.split(':')]
+        a, b = idcs
+        return slice(a,b)
+    else:
+        return int (idcs)
+
 def isInteger(s):
     try:
         int(s)
