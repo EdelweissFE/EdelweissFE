@@ -30,7 +30,7 @@ def strToSlice(string):
         a, b = idcs
         return slice(a,b)
     else:
-        return int (idcs)
+        return int (string)
 
 def isInteger(s):
     try:
