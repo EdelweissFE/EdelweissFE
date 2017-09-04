@@ -19,7 +19,7 @@ class Element(BaseElement):
     dofIndicesPermutation  = np.arange(0, 16, 1)
     ensightType =           "quad8"
     uelIdentification =     805
-    nStateVarsGaussPt =     12
+    nStateVarsGaussPtAdditional =     12
     
     def __init__(self, nodes, elNumber):
-        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPt, self.uelIdentification)
+        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtAdditional, self.uelIdentification)

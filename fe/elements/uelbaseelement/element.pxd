@@ -54,4 +54,4 @@ cdef class BaseElement:
     cdef double[::1] elementProperties, stateVarsTemp, nodeCoordinates, materialProperties
     cdef string materialName
     cdef int nStateVars, nStateVarsMaterial
-    cdef int numGaussPts, uelID, nStateVarsGaussPt
+    cdef int numGaussPts, uelID, nStateVarsGaussPtAdditional

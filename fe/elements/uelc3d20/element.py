@@ -30,6 +30,7 @@ class Element(BaseElement):
     dofIndicesPermutation = slice(0, nDofPerEl)
     ensightType =           "hexa20"
     uelIdentification =     2003
+    nStateVarsGaussPtAdditional =     12
     
     def __init__(self, nodes, elNumber):
-        super().__init__(nodes, elNumber, self.nGaussPt, self.uelIdentification)
+        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtAdditional, self.uelIdentification)

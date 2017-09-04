@@ -7,8 +7,6 @@ Created on Thu Apr 27 08:35:06 2017
 """
 
 import numpy as np
-#from fe.materials.umatlibrary cimport pUmatType, getUmat
-#from fe.config.ueltypedefs cimport pSimpleUelWithUmatType
 cimport numpy as np
 from libcpp.string cimport string
 cimport fe.elements.uelbaseelement.element 
@@ -23,17 +21,21 @@ cdef public bint warningToMSG(const string cppString):
     return False
 
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
-    BftUel* UelFactory(int id, 
+    enum MaterialCode: pass
+
+    MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
+    
+    BftUel* UelFactory(int elementCode, 
                        const double* elementCoordinates,
                        double* stateVars,
                        int nStateVars,
                        const double* propertiesElement,
                        int nPropertiesElement,
                        int noEl,
-                       const string& materialName,
+                       int materialCode,
                        int nStateVarsMaterial,
                        const double* propertiesUmat,
-                       int nPropertiesUmat)
+                       int nPropertiesUmat) except +ValueError
     
 mapLoadTypes={
         'pressure' : DistributedLoadTypes.Pressure
@@ -45,19 +47,19 @@ mapStateTypes={
 
 cdef class BaseElement:
     
-    def __init__(self, nodes, elNumber, int nGaussPt, int nStateVarsGaussPt, int uelID):
+    def __init__(self, nodes, elNumber, int nGaussPt, int nStateVarsGaussPtAdditional, int uelID):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
         self.elNumber = elNumber
         self.numGaussPts = nGaussPt
-        self.nStateVarsGaussPt = nStateVarsGaussPt
+        self.nStateVarsGaussPtAdditional = nStateVarsGaussPtAdditional
         self.uelID = uelID
         
     def setProperties(self, elementProperties, materialName, nStateVarsMaterial, materialProperties):
         self.elementProperties =    elementProperties
         self.nStateVarsMaterial =   nStateVarsMaterial
         self.materialProperties =   materialProperties
-        self.nStateVars =           self.numGaussPts * (nStateVarsMaterial + self.nStateVarsGaussPt)
+        self.nStateVars =           self.numGaussPts * (nStateVarsMaterial + self.nStateVarsGaussPtAdditional)
         self.stateVars =            np.zeros(self.nStateVars)
         self.stateVarsTemp =        np.zeros(self.nStateVars)
         self.materialName =         materialName.upper().encode('UTF-8')
@@ -73,12 +75,10 @@ cdef class BaseElement:
                                                 &self.elementProperties[0], 
                                                 self.elementProperties.shape[0],
                                                 self.elNumber,
-                                                self.materialName, 
+                                                getMaterialCodeFromName(self.materialName), 
                                                 self.nStateVarsMaterial,
                                                 &self.materialProperties[0],
                                                 self.materialProperties.shape[0])
-        if self.bftUel == NULL:
-            raise Exception("Element not found: {:}".format(self.uelID))
 
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars
@@ -134,10 +134,11 @@ cdef class BaseElement:
         cdef int resultLength = 0
         cdef double* ptr =      self.bftUel.getPermanentResultPointer(result, gPt, resultLength)
         
-        if resultLength <= 0:
+        try:
+            resultArray = np.asarray( <double [:resultLength]> ptr )
+        except:
             raise Exception("Invalid result '{:}' requested for element {:}".format(kw['result'], self.elNumber))
-        
-        resultArray = np.asarray( <double [:resultLength]> ptr )
+            
         return resultArray[ kw['index'] ] if 'index' in kw else resultArray
     
     def __dealloc__(self):
