@@ -348,10 +348,11 @@ def finitElementSimulation(inputfile, verbose=False):
     finally:
         # let all output managers finalize the job
         fieldOutputController.finalizeJob(U, P)
+ 
         for manager in outputmanagers:
             manager.finalizeJob(U, P,)
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
         plotter.show()
         
-        return success, U, P, outputmanagers
+        return success, U, P, outputmanagers, fieldOutputController
         

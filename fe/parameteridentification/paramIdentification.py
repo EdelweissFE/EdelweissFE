@@ -37,18 +37,18 @@ def createAbaqusMaterialInputDataLines(materialName, matParameters):
         
     return dataLines
     
-def evaluateJob(inputFile, identificationJob, matParams, paramIndices, xData, *params): 
+def evaluateJob(inputFile, xFieldOutput, yFieldOutput, matParams, paramIndices, xData, *params): 
     """ wrapper to generate vectorial data from FEM simulation for given xData 
     and for certain material parameters to be used within the parameter fitting
     """
     for idx, param in zip(paramIndices, params):
         matParams[idx] = param
         
-    success, U, P, outputManagers  = finitElementSimulation(inputFile, verbose=False)
-    
-    xValues = outputManagers[0].jobOutput['x']
-    yValues = outputManagers[0].jobOutput['y']
-    
+    success, U, P, outputManagers, fieldOutputController  = finitElementSimulation(inputFile, verbose=False)
+           
+    xValues = fieldOutputController.fieldOutputs[ xFieldOutput ].result 
+    yValues = fieldOutputController.fieldOutputs[ yFieldOutput ].result 
+
     if success:
 #    
 #         flip if x is not ascending (necessary for interpolation by np.interp)    
@@ -86,33 +86,25 @@ def parameterIdentification(inputFile):
         estimations = []
         lowerBounds = []
         upperBounds = []
-        
-        # preparation for writing to inputfile
-        outputManagerLines = []
-        outputManagerDict = {}
-        
-        for dataline in identificationJob['data']:
 
-            if 'type' in stringDict(dataline):
-                outputManagerLines.append(dataline)
-                continue
-            
-            dataline = stringDict(dataline)            
-            indices.append( int(dataline.get('idx')))
-            estimations.append(float(dataline.get('start')))
-            lowerBounds.append(float(dataline.get('min')))
-            upperBounds.append(float(dataline.get('max')))
+        for dataline in identificationJob['data']:
+            if 'type=x' in dataline:
+                xFieldOutput = stringDict(dataline)['fieldOutput']
+            elif 'type=y' in dataline:
+                yFieldOutput = stringDict(dataline)['fieldOutput']
+            else: 
+                dataline = stringDict(dataline)            
+                indices.append( int(dataline.get('idx')))
+                estimations.append(float(dataline.get('start')))
+                lowerBounds.append(float(dataline.get('min')))
+                upperBounds.append(float(dataline.get('max')))
 
         matParams = material['data']
         
-        outputManagerDict['data'] = outputManagerLines
-        outputManagerDict['type'] = 'generateHistoryData'
-        outputManagerDict['jobName'] = identificationJob.get('jobName', 'defaultJob')
-        
         inputFile['*output'] = []
-        inputFile['*output'].append(outputManagerDict)
-        
-        callBackFunc = lambda xData, *params: evaluateJob(inputFile, identificationJob, matParams, indices, xData, *params)
+        inputFile['*configurePlots'] = []
+
+        callBackFunc = lambda xData, *params: evaluateJob(inputFile, xFieldOutput, yFieldOutput, matParams, indices, xData, *params)
         
         # sorting !
         sortedIndices = xVals.argsort()
@@ -164,5 +156,4 @@ def parameterIdentification(inputFile):
             plt.grid()
             plt.show()
 
-            
     return
