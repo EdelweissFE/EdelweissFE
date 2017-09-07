@@ -29,8 +29,8 @@ for directory in testsDirs:
     UReference = np.loadtxt(referenceSolutionFile)
     
     inputFile = parseInputFile(testfile)
-    print('Test {:30}'.format(directory ), end="\r")
-    U = finitElementSimulation(inputFile, verbose = False)
+    print('Test {:30}'.format(directory ), end='\r')
+    success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False)
     
     residual = U - UReference
     

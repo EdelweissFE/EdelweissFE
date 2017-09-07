@@ -44,7 +44,7 @@ def evaluateJob(inputFile, xFieldOutput, yFieldOutput, matParams, paramIndices, 
     for idx, param in zip(paramIndices, params):
         matParams[idx] = param
         
-    success, U, P, outputManagers, fieldOutputController  = finitElementSimulation(inputFile, verbose=False)
+    success, U, P, fieldOutputController  = finitElementSimulation(inputFile, verbose=False)
            
     xValues = fieldOutputController.fieldOutputs[ xFieldOutput ].result 
     yValues = fieldOutputController.fieldOutputs[ yFieldOutput ].result 

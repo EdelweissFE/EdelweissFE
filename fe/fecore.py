@@ -354,5 +354,5 @@ def finitElementSimulation(inputfile, verbose=False):
         journal.message("Job computation time: {:} s".format(jobInfo['computationTime']), identification, level=0)
         plotter.show()
         
-        return success, U, P, outputmanagers, fieldOutputController
+        return success, U, P, fieldOutputController
         
