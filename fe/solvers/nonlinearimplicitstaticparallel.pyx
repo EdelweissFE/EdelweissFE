@@ -50,6 +50,39 @@ class NISTParallel(NIST):
         self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', 1))
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
+    def applyDirichletK(self, K, dirichlets):
+        """ Apply the dirichlet bcs on the global stiffnes matrix
+        -> is called by solveStep() before solving the global sys.
+        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros
+        
+        Cythonized version for speed!
+        """
+            
+        cdef int  i, j
+        cdef int [::1] indices_, indptr_, 
+        cdef long[::1] dirichletIndices
+        cdef double[::1] data_
+        
+        indices_ = K.indices
+        indptr_ = K.indptr
+        data_ = K.data
+        
+        tic = getCurrentTime()
+        for dirichlet in dirichlets:
+            dirichletIndices = dirichlet.indices
+            for i in dirichletIndices:
+                data_[ indptr_[i] : indptr_ [i+1] ] = 0.0
+                for j in range ( indptr_[i] , indptr_ [i+1] ):
+                    if i == indices_ [j]:
+                        data_[ j ] = 1.0
+                        continue
+                    
+        K.eliminate_zeros()
+        toc = getCurrentTime()
+        self.computationTimes['dirichlet K'] += toc - tic
+        
+        return K
+    
     def computeElements(self, U, dU, double[::1] time, double dT,
                         P, 
                         V, 
