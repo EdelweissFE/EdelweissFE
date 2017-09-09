@@ -9,7 +9,7 @@ Standard nonlinear, implicit static solver.
 
 """
 import numpy as np
-from scipy.sparse import coo_matrix
+from scipy.sparse import coo_matrix, csr_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest
@@ -317,8 +317,7 @@ class NIST:
         
         tic = getCurrentTime()
         for dirichlet in dirichlets:
-            indices = dirichlet.indices#['indices']
-            R[indices] = dirichlet.getDelta(increment)
+            R[dirichlet.indices] = dirichlet.getDelta(increment)
         
         toc = getCurrentTime()
         self.computationTimes['dirichlet R'] += toc - tic
@@ -371,11 +370,63 @@ class NIST:
         self.computationTimes['linear solve'] += toc - tic
         return ddU
     
+    def tocsr2(self, data):
+        I, J, E, N = data
+        n = len(I)
+        K = np.empty((n,), dtype=np.int64)
+        K.view(np.int32).reshape(n, 2).T[...] = J, I
+        S = np.argsort(K)
+        KS = K[S]
+        steps = np.flatnonzero(np.r_[1, np.diff(KS)])
+        ED = np.add.reduceat(E[S], steps)
+        JD, ID = KS[steps].view(np.int32).reshape(-1, 2).T
+        ID = np.searchsorted(ID, np.arange(N+1))
+        return csr_matrix((ED, np.array(JD, dtype=int), ID), (N, N))
+    
+    def tocsr(self, coo, copy=False):
+        """Convert this matrix to Compressed Sparse Row format
+        Duplicate entries will be summed together.
+        Examples
+        --------
+        >>> from numpy import array
+        >>> from scipy.sparse import coo_matrix
+        >>> row  = array([0, 0, 1, 3, 1, 0, 0])
+        >>> col  = array([0, 2, 1, 3, 1, 0, 0])
+        >>> data = array([1, 1, 1, 1, 1, 1, 1])
+        >>> A = coo_matrix((data, (row, col)), shape=(4, 4)).tocsr()
+        >>> A.toarray()
+        array([[3, 0, 1, 0],
+               [0, 2, 0, 0],
+               [0, 0, 0, 0],
+               [0, 0, 0, 1]])
+        """
+        from scipy.sparse.sputils import  get_index_dtype, upcast
+        from scipy.sparse._sparsetools import coo_tocsr
+        M,N = coo.shape
+        idx_dtype = get_index_dtype((coo.row, coo.col),
+                                    maxval=max(coo.nnz, N))
+        row = coo.row.astype(idx_dtype, copy=False)
+        col = coo.col.astype(idx_dtype, copy=False)
+
+        indptr = np.empty(M + 1, dtype=idx_dtype)
+        indices = np.empty_like(col, dtype=idx_dtype)
+        data = np.empty_like(coo.data, dtype=upcast(coo.dtype))
+
+        coo_tocsr(M, N, coo.nnz, row, col, coo.data,
+                  indptr, indices, data)
+
+        x = csr_matrix((data, indices, indptr), shape=coo.shape)
+        if not coo.has_canonical_format:
+            x.sum_duplicates()
+        return x
+    
     def assembleStiffness(self, V, I, J, shape):
         """ Construct a CSR matrix from VIJ """
-        
         tic =  getCurrentTime()
-        K = coo_matrix( (V, (I,J)), shape).tocsr()
+#        K  = coo_matrix( (V, (I,J)), shape).tocsr()
+        K = self.tocsr(coo_matrix( (V, (I,J)), shape))
+#        K = self.tocsr2( (  I, J,V, shape[0]) )
+#        print(  len(K.indices) )
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
         return K

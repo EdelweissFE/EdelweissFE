@@ -68,14 +68,14 @@ class NISTParallel(NIST):
         data_ = K.data
         
         tic = getCurrentTime()
-        for dirichlet in dirichlets:
+        for dirichlet in dirichlets: # for each bc
             dirichletIndices = dirichlet.indices
-            for i in dirichletIndices:
-                data_[ indptr_[i] : indptr_ [i+1] ] = 0.0
-                for j in range ( indptr_[i] , indptr_ [i+1] ):
+            for i in dirichletIndices: # for each node dof in the BC
+                for j in range ( indptr_[i] , indptr_ [i+1] ): # iterate along row
                     if i == indices_ [j]:
-                        data_[ j ] = 1.0
-                        continue
+                        data_[ j ] = 1.0 # diagonal entry
+                    else:
+                        data_[ j ] = 0.0 # off diagonal entry
                     
         K.eliminate_zeros()
         toc = getCurrentTime()
