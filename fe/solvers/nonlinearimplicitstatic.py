@@ -108,7 +108,7 @@ class NIST:
         
         dU = np.zeros(numberOfDofs)
         
-        dirichlets =        stepActions['dirichlet'].values()
+        dirichlets =        list(stepActions['dirichlet'].values()) + list(stepActions['shotcreteshellmaster'].values())
         distributedLoads =  stepActions['distributedload'].values()
         concentratedLoads = stepActions['nodeforces'].values()
         

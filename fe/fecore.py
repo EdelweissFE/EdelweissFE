@@ -342,8 +342,8 @@ def finitElementSimulation(inputfile, verbose=False):
     except StepFailed:
         journal.errorMessage("Step not finished", identification)
         
-    except Exception as e:
-        journal.errorMessage(str(e), identification)
+#    except Exception as e:
+#        journal.errorMessage(str(e), identification)
         
     finally:
         # let all output managers finalize the job
