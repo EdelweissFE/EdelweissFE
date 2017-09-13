@@ -109,7 +109,7 @@ class Plotter:
         
         for configEntry in self.configurationLines:
         
-            ax = self.figsWithAxes[ int( configEntry['figure'] ) ][1][ int( configEntry['axSpec'] ) ]
+            ax = self.figsWithAxes[ ( configEntry['figure'] ) ][1][ int( configEntry['axSpec'] ) ]
             
             if "xLimits" in configEntry: 
                 limits = [float(x) for x in configEntry["xLimits"].split('_')] 
@@ -129,7 +129,7 @@ class Plotter:
     def exportPlots(self):
         for exportJob in self.exportJobs:
             self.exportFigure(exportJob.get('fileName'),
-                          int(exportJob.get('figure','1')), 
+                          exportJob.get('figure','1'), 
                           exportJob.get('width',469.47), 
                           exportJob.get('scale', 1.0), 
                           exportJob.get('heightRatio', False), 

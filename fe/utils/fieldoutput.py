@@ -33,6 +33,7 @@ import sympy as sp
 
 from fe.utils.misc import stringDict, strToSlice
 from fe.utils.meshtools import  extractNodesFromElementSet
+from fe.utils.math import sympyMathModules
 
 class FieldOutput:
     """
@@ -111,7 +112,7 @@ class FieldOutput:
         # handle export of the fieldout at the end of the job:
         self.export = definition.get('export', False)
         if 'f_export(x)' in definition:
-            self.f_export =  sp.lambdify ( sp.DeferredVector('x'), definition['f_export(x)'] , 'numpy')
+            self.f_export =  sp.lambdify ( sp.DeferredVector('x'), definition['f_export(x)'] , ['numpy', sympyMathModules])
         else:
             self.f_export = None
         

@@ -66,6 +66,9 @@ class OutputManager(OutputManagerBase):
             
             entry['normalize'] = defDict.get('normalize', False)
             self.monitorJobs.append(entry)
+            
+            if 'exportPath' in defDict:
+                np.savetxt(defDict['exportPath'], np.asarray(entry['pathDistances']),  )
 
     
     def initializeStep(self, step, stepActions, stepOptions):
