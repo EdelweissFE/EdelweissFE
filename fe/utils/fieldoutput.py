@@ -21,19 +21,16 @@ Datalines:
 documentation={'name':'name of the fieldOutput',
                'nSet|elSet|node|element': 'entity, for which the fieldOutput is defined',
                'result' : 'e.g., U, P, stress, strain ...',
-               'gaussPt': 'for element based fieldOutputs only, counting from 0',
-               'index':'for element based sdv fieldOutputs only, define the index (or slice) within the (material) sdv vector',
+               'gaussPt': 'for element based fieldOutputs only, integers or slices',
                'f(x)': '(optional), apply math (in each increment)',
                'saveHistory': '(optional), save complete History or only last (increment) result. Default: True (node, element) and False (nSet, elSet)',
                'export':'(optional), export the fieldOutput to a file at the end of the job',
                'f_export(x)': '(optional), apply math on the final result (table)'}
 
 import numpy as np
-import sympy as sp
-
-from fe.utils.misc import stringDict, strToSlice
+from fe.utils.misc import stringDict, strToRange, isInteger
 from fe.utils.meshtools import  extractNodesFromElementSet
-from fe.utils.math import sympyMathModules
+from fe.utils.math import createMathExpression
 
 class FieldOutput:
     """
@@ -45,6 +42,7 @@ class FieldOutput:
         
         # determination of type:
             # perNode, perElement, perNodeSet, perElset...
+         
         if 'nSet' in definition:
             self.type = 'perNodeSet'
             self.nSet = modelInfo['nodeSets'] [ definition['nSet'] ]
@@ -69,7 +67,7 @@ class FieldOutput:
             
         elif 'element' in definition:
             self.type  = 'perElement'
-            self.element = modelInfo['elements'] [ int(definition['element']) ]
+            self.elSet = [ modelInfo['elements'] [ int(definition['element']) ] ]
         else:
             raise Exception('invalid field output requested: ' + definition['name'] )
             
@@ -90,20 +88,22 @@ class FieldOutput:
             requestDictForElement = {}
             requestDictForElement['result'] = definition['result']
             
-            if 'index' in definition:
-                requestDictForElement['index'] = strToSlice( definition['index'] )
-                    
-            if 'gaussPt' in definition:
-                requestDictForElement['gaussPt'] = int( definition['gaussPt'] )
+            if 'gaussPt' in definition and not isInteger(definition['gaussPt'] ):
+                # results are requested for multiple gausspoints
+                # this means that for every gaussPt a request is handed to each element,
+                # and the resulting array has one additional dimension ([elements, gaussPts, results])
+                gpts  = strToRange(definition['gaussPt'])
+                self.permanentElResultMemory = [ [el.getPermanentResultPtr(** dict(requestDictForElement, **{'gaussPt':gpt}) ) for gpt in gpts ] for el in self.elSet]
             
-            if self.type == 'perElement':
-                self.permanentElResultMemory = [ self.element.getPermanentResultPtr(**requestDictForElement) ]
-            elif self.type == 'perElementSet':
+            else:
+                # either a single gaussPt, or no gaussPt at all was requested.
+                # Anyways, only a single request has to be handed to the elements
+                if 'gaussPt' in definition:
+                    requestDictForElement['gaussPt'] = int(definition['gaussPt'])
                 self.permanentElResultMemory = [el.getPermanentResultPtr(**requestDictForElement) for el in self.elSet]
-            
+
         if 'f(x)' in definition:
-            self.fString = definition['f(x)']
-            self.f = sp.lambdify ( sp.DeferredVector('x'), definition['f(x)'] , 'numpy')
+            self.f = createMathExpression( definition['f(x)'] )
         else:
             self.f = None
             
@@ -112,7 +112,7 @@ class FieldOutput:
         # handle export of the fieldout at the end of the job:
         self.export = definition.get('export', False)
         if 'f_export(x)' in definition:
-            self.f_export =  sp.lambdify ( sp.DeferredVector('x'), definition['f_export(x)'] , ['numpy', sympyMathModules])
+            self.f_export =  createMathExpression( definition['f_export(x)'] ) 
         else:
             self.f_export = None
         

@@ -20,9 +20,8 @@ documentation = {'fieldOutput':'fieldOutput to be plotted (defined on a nodeSet/
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import stringDict
-from fe.utils.math import sympyMathModules
+from fe.utils.math import createMathExpression
 import numpy as np
-import sympy as sp
 
 class OutputManager(OutputManagerBase):
     identification = "PathPlotter"
@@ -57,8 +56,7 @@ class OutputManager(OutputManagerBase):
             for dist in distances :
                 entry['pathDistances'].append( entry['pathDistances'][-1] + dist)
                
-            f = defDict.get('f(x)', 'x')
-            entry['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , ['numpy', sympyMathModules])
+            entry['f(x)'] = createMathExpression(defDict.get('f(x)', 'x'))
             entry['label'] = defDict.get('label', entry['fieldOutput'].name)
 
             entry['figure'] = defDict.get('figure', 1)

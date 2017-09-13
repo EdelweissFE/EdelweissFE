@@ -24,13 +24,20 @@ def stringDict(listOfStringAssigments):
     return resultDict
 
 def strToSlice(string):
-    
     if ':' in string:
         idcs=[int (i) for i in string.split(':')]
         a, b = idcs
         return slice(a,b)
     else:
         return slice ( int (string), int (string)+1)
+    
+def strToRange(string):
+    if ':' in string:
+        idcs=[int (i) for i in string.split(':')]
+        a, b = idcs
+        return range(a,b)
+    else:
+        return range ( int (string))
 
 def isInteger(s):
     try:

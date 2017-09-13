@@ -15,7 +15,7 @@ documentation = {'fieldOutput' : 'fieldOutput to be monitored',
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
-import sympy as sp
+from fe.utils.math import createMathExpression
 
 class OutputManager(OutputManagerBase):
     """ Simple monitor for nodes, nodeSets, elements and elementSets """
@@ -32,8 +32,7 @@ class OutputManager(OutputManagerBase):
             entry = {}
             defDict = stringDict(defline)
             entry['fieldOutput'] = fieldOutputController.fieldOutputs [ defDict['fieldOutput'] ]
-            f = defDict.get('f(x)', 'x')
-            entry['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), f , 'numpy')
+            entry['f(x)'] = createMathExpression (defDict.get('f(x)', 'x') )
             self.monitorJobs.append(entry)
     
     def initializeStep(self, step, stepActions, stepOptions):

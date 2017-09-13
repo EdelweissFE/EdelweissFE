@@ -139,7 +139,7 @@ cdef class BaseElement:
         except:
             raise Exception("Invalid result '{:}' requested for element {:}".format(kw['result'], self.elNumber))
             
-        return resultArray[ kw['index'] ] if 'index' in kw else resultArray
+        return resultArray
     
     def __dealloc__(self):
         del self.bftUel

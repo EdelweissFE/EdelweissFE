@@ -15,13 +15,12 @@ Module meshplot divided into classes:
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 import numpy as np
 from fe.utils.misc import stringDict
-from fe.utils.meshtools import transferElsetResultsToElset, extractNodesFromElementSet, extractNodeCoordinatesFromElset
+from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
 import fe.config.phenomena
 from fe.utils.fieldoutput import FieldOutput
+from fe.utils.math import createMathExpression
 import matplotlib.tri as mtri
 from matplotlib import colors
-#import matplotlib.pyplot as plt
-import sympy as sp
 
 documentation = {
         'figure': 'figure number, (default=1)',
@@ -127,9 +126,9 @@ class OutputManager(OutputManagerBase):
         
         self.perNodeJobs = []
         self.perElementJobs = []
-        self.configJobs = []
+#        self.configJobs = []
         self.xyJobs = []
-        self.saveJobs = []
+#        self.saveJobs = []
         self.meshOnlyJobs = []
         
         # needed for meshOnly plot
@@ -148,11 +147,11 @@ class OutputManager(OutputManagerBase):
                     if perNodeJob['fieldOutput'].type == 'perNode':
                         raise Exception('Meshplot: Please define perNode output on an nSet, not on a elSet!')
                     perNodeJob['label']  =          definition.get('label',  definition['fieldOutput'] )
-                    perNodeJob['axSpec'] =          int(definition.get('axSpec','111'))       
-                    perNodeJob['figure'] =          int(definition.get('figure','1'))
+                    perNodeJob['axSpec'] =          definition.get('axSpec','111')
+                    perNodeJob['figure'] =          definition.get('figure','1')
                     perNodeJob['plotMeshGrid'] =    definition.get('plotMeshGrid', 'undeformed')
                     if 'f(x)' in definition:
-                        perNodeJob['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), definition['f(x)'] , 'numpy')
+                        perNodeJob['f(x)'] = createMathExpression ( definition['f(x)'] )
             
                     perNodeJob['dimensions'] =      fe.config.phenomena.getFieldSize(perNodeJob['fieldOutput'].field, self.domainSize)
                     self.perNodeJobs.append(perNodeJob)
@@ -160,11 +159,11 @@ class OutputManager(OutputManagerBase):
                 elif varType == 'perElement':
                     perElementJob = {}
                     perElementJob['label']  =          definition.get('label',  definition['fieldOutput'] )
-                    perElementJob['axSpec'] =       int(definition.get('axSpec','111'))
-                    perElementJob['figure'] =       int(definition.get('figure','1'))
+                    perElementJob['axSpec'] =          definition.get('axSpec','111')
+                    perElementJob['figure'] =          definition.get('figure','1')
                     perElementJob['fieldOutput'] =     fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
                     if 'f(x)' in definition:
-                        perElementJob['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), definition['f(x)'] , 'numpy')
+                        perElementJob['f(x)'] = createMathExpression ( definition['f(x)'] )
                             
                     perElementJob['plotMeshGrid'] = definition.get('plotMeshGrid', 'unDeformed')
                     self.perElementJobs.append(perElementJob)
@@ -181,13 +180,13 @@ class OutputManager(OutputManagerBase):
                     xyJob['y'] = fieldOutputController.fieldOutputs[ definition['y'] ]
                         
                     if 'f(x)' in definition:
-                        xyJob['f(x)'] = sp.lambdify ( sp.DeferredVector('x'), definition['f(x)'] , 'numpy')
+                        xyJob['f(x)'] = createMathExpression ( definition['f(x)'] )
                     if 'f(y)' in definition:
-                        xyJob['f(y)'] = sp.lambdify ( sp.DeferredVector('y'), definition['f(y)'] , 'numpy')
+                        xyJob['f(y)'] = createMathExpression ( definition['f(y)'], symbol='y')
                         
-                    xyJob['figure'] =   int(definition.get('figure','1'))
+                    xyJob['figure'] =   definition.get('figure','1')
                     xyJob['label'] =     definition.get('label', xyJob['y'].name)
-                    xyJob['axSpec'] =   int(definition.get('axSpec','111'))
+                    xyJob['axSpec'] =   definition.get('axSpec','111')
                     self.xyJobs.append(xyJob)
                     
 
@@ -197,8 +196,8 @@ class OutputManager(OutputManagerBase):
                     meshOnlyJob['fieldOutput']      = fieldOutputController.fieldOutputs [ fpDef['name'] ]
                     meshOnlyJob['configuration']    = definition.get('configuration','undeformed')
                     meshOnlyJob['scaleFactor']      = float(definition.get('scaleFactor',1.0))
-                    meshOnlyJob['axSpec']           = int(definition.get('axSpec','111'))       
-                    meshOnlyJob['figure']           = int(definition.get('figure','1'))
+                    meshOnlyJob['axSpec']           = definition.get('axSpec','111')
+                    meshOnlyJob['figure']           = definition.get('figure','1')
                     meshOnlyJob['plotNodeLabels']   = definition.get('plotNodeLabels', False)
                     meshOnlyJob['plotElementLabels'] =  definition.get('plotElementLabels', False)
                     self.meshOnlyJobs.append(meshOnlyJob)
@@ -296,9 +295,9 @@ class OutputManager(OutputManagerBase):
                 elCoordinatesListUnDeformed = extractNodeCoordinatesFromElset(self.elSets['all'])
                 self.meshPlot.plotMeshGrid( ax, elCoordinatesListUnDeformed)
                 
-            
-        for configJob in self.configJobs:
-            self.plotter.configAxes(**configJob)
-        
-        for saveJob in self.saveJobs:
-            self.plotter.exportFigure(saveJob['fileName'], saveJob['figure'], saveJob['width'], saveJob['scale'], saveJob['heightRatio'], saveJob['png'])
+#            
+#        for configJob in self.configJobs:
+#            self.plotter.configAxes(**configJob)
+#        
+#        for saveJob in self.saveJobs:
+#            self.plotter.exportFigure(saveJob['fileName'], saveJob['figure'], saveJob['width'], saveJob['scale'], saveJob['heightRatio'], saveJob['png'])

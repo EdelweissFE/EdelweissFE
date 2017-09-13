@@ -47,7 +47,9 @@ class NISTParallel(NIST):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
         
-        self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', 1))
+        self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', 2))
+        self.journal.message('Using {:} threads'.format(self.numThreads))
+        
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
     def applyDirichletK(self, K, dirichlets):

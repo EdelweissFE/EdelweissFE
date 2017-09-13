@@ -30,9 +30,9 @@ name=Displacement, nSet=all, field=displacement, result=U,
 name=NonlocalDmg, nSet=all, field=nonlocal damage, result=U, 
 name=Stress, elSet=all, result=stress, gaussPt=1
 name=Strain, elSet=all, result=strain, gaussPt=1
-name=AlphaP, elSet=all, result=sdv, gaussPt=1, index=0, 
-name=AlphaD, elSet=all, result=sdv, gaussPt=1, index=2, 
-name=Omega,  elSet=all, result=sdv, gaussPt=1, index=4, 
+name=AlphaP, elSet=all, result=sdv, gaussPt=1, f(x)='x[:,0]'
+name=AlphaD, elSet=all, result=sdv, gaussPt=1, f(x)='x[:,2]'
+name=Omega,  elSet=all, result=sdv, gaussPt=1, f(x)='x[:,4]'
 name=Displacement_Top, nSet=gen_top, field=displacement, result=U
 name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P
 name=meanDispLoad, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True

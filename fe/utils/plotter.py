@@ -68,7 +68,7 @@ class Plotter:
             self.figsWithAxes[figureID] = (plt.figure(figureID),{})
         
         fig, axes = self.figsWithAxes[figureID]
-        axSpec = int(axSpec)
+        axSpec = axSpec
         if not axSpec in axes:
             self.figsWithAxes[figureID][1][axSpec] =  fig.add_subplot(axSpec)
             self.figsWithAxes[figureID][1][axSpec].grid(True)
@@ -109,7 +109,7 @@ class Plotter:
         
         for configEntry in self.configurationLines:
         
-            ax = self.figsWithAxes[ ( configEntry['figure'] ) ][1][ int( configEntry['axSpec'] ) ]
+            ax = self.figsWithAxes[ ( configEntry['figure'] ) ][1][ configEntry['axSpec'] ]
             
             if "xLimits" in configEntry: 
                 limits = [float(x) for x in configEntry["xLimits"].split('_')] 
@@ -164,6 +164,5 @@ class Plotter:
                 ax.relim()
                 
         self.exportPlots()
-        
         plt.show()
     
