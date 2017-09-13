@@ -50,8 +50,8 @@ cdef class BaseElement:
     cdef public nodes, 
     cdef public int elNumber
     
-    cdef public double[::1] stateVars
-    cdef double[::1] elementProperties, stateVarsTemp, nodeCoordinates, materialProperties
+    cdef public double[::1] stateVars, nodeCoordinates
+    cdef double[::1] elementProperties, stateVarsTemp , materialProperties
     cdef string materialName
     cdef int nStateVars, nStateVarsMaterial
     cdef int numGaussPts, uelID, nStateVarsGaussPtAdditional

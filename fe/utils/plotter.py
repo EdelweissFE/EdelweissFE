@@ -71,6 +71,7 @@ class Plotter:
         axSpec = int(axSpec)
         if not axSpec in axes:
             self.figsWithAxes[figureID][1][axSpec] =  fig.add_subplot(axSpec)
+            self.figsWithAxes[figureID][1][axSpec].grid(True)
         
         return self.figsWithAxes[figureID][1][axSpec]
     

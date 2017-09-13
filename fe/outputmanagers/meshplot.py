@@ -20,7 +20,7 @@ import fe.config.phenomena
 from fe.utils.fieldoutput import FieldOutput
 import matplotlib.tri as mtri
 from matplotlib import colors
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import sympy as sp
 
 documentation = {
@@ -100,7 +100,7 @@ class MeshPlot:
                          np.append(element[:,1],element[0,1]), 'k', linewidth=0.3)
         ax.set_xlim(self.xLimits)
         ax.set_ylim(self.yLimits)
-
+        ax.grid(False)
             
 class OutputManager(OutputManagerBase):
     identification = "meshPlot"
