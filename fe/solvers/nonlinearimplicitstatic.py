@@ -231,8 +231,7 @@ class NIST:
         finally:
             
             finishedTime = time + stepProgress * stepLength
-            for section, time in self.computationTimes.items():
-                self.journal.message("Time in {:<30}: {:}s".format(section, time), self.identification, level=1)
+            self.journal.printTable([ ("Time in {:}".format(k), " {:10.4f}s".format(v)) for k, v in self.computationTimes.items() ], self.identification)
             
         return ((1.0 - stepProgress) < 1e-14) , U, P, finishedTime
     

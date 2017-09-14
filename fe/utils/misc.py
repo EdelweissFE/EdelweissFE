@@ -47,7 +47,7 @@ def isInteger(s):
         return False
     
 def filterByJobName(canditates, jobName):
-    return [cand for cand in canditates if cand.get('jobName', 'defaultJob') == jobName]    
+    return [cand for cand in canditates if 'jobName' not in cand or cand['jobName']  == jobName]    
 
 
 def mergeNumpyDataLines(multiLineData):
