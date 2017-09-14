@@ -346,7 +346,8 @@ def finitElementSimulation(inputfile, verbose=False):
  
         for manager in outputmanagers:
             manager.finalizeJob(U, P,)
-        journal.printTable( [ ("Job computation time", "{:10.4f}s".format(jobInfo['computationTime'])), ], identification, level=0,
+        journal.printTable( [ ("Job computation time", "{:10.4f}s".format(jobInfo['computationTime'])), ], 
+                             identification, level=0,
                              printHeaderRow=False)
         plotter.show()
         

@@ -42,7 +42,6 @@ class Journal:
             
     def printTable(self, table, senderIdentification, level=1, printHeaderRow=True):
         
-        
         nCols = len(table[0])
         
         cellWidth = int( math.floor( self.outputWidths[level] / nCols - 1 ) )
