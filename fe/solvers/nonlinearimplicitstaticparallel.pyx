@@ -51,7 +51,6 @@ class NISTParallel(NIST):
         
         self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', 2))
         self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
-        
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
     def applyDirichletK(self, K, dirichlets):
