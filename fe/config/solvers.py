@@ -6,9 +6,14 @@ Created on Fri Feb 10 19:20:25 2017
 @author: matthias
 """
 
-from fe.solvers.nonlinearimplicitstatic import NIST
-from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
+import importlib
 
-solverLibrary = {'NIST' : NIST,
-                 'NISTParallel' : NISTParallel,
+solverLibrary = {'NIST' : 'nonlinearimplicitstatic',
+                 'NISTParallel' : 'nonlinearimplicitstaticparallel',
                  }
+
+
+def getSolverByName(name):
+    solver = importlib.import_module("fe.solvers.{:}".format( solverLibrary[name] ))    
+    return getattr ( solver, name ) 
+

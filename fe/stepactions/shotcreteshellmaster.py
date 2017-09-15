@@ -9,8 +9,8 @@ Module for applying displacements on a shotcrete shell
 """
 
 documentation={
-        
         'nSet':'nSet for application of the BC',
+        'displacements': 'file containing the node displacements over time (column 0)'
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
