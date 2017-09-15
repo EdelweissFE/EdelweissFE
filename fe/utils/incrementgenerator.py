@@ -47,7 +47,7 @@ class IncrementGenerator:
                 raise ReachedMaxIncrements()
             
             if(self.nPassedGoodIncrements >= 3) and self.allowedToIncreasedNext:
-                self.increment *= 1.5
+                self.increment *= 1.1
                 if self.increment > self.maxIncrement:
                     self.increment = self.maxIncrement
             self.allowedToIncreasedNext = True

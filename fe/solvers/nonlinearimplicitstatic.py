@@ -74,7 +74,7 @@ class NIST:
         self.constraintToIndexInVIJMap = constraintToIndexInVIJMap
         
     def initialize(self):
-        """ Initialize the solver and return the 2 vectors for flux (U) and force (P) """
+        """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
         
         U = np.zeros(self.nDof)
         P = np.zeros(self.nDof)
@@ -162,6 +162,8 @@ class NIST:
                     Pdeadloads = self.computeDistributedLoads(distributedLoads, Pdeadloads, 
                                                               I, stepTimes, dT, increment)
     
+                spatialAveragedFluxes = dict.fromkeys(self.fieldIndices, 0.0)
+                
                 try:
                     while True:
                         for geostatic in activeGeostatics: geostatic.apply() 
@@ -183,11 +185,13 @@ class NIST:
                             for constraint in self.constraints.values(): 
                                 R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
-                            spatialAveragedFluxes = { f: np.linalg.norm(F[self.fieldIndices[f]],1) / nDof for f, nDof in self.SumOfNDofsElementWise.items() }
+                            for field, nDof in self.SumOfNDofsElementWise.items():
+                                spatialAveragedFluxes[field] = np.linalg.norm(F[self.fieldIndices[field]],1) / nDof 
                             
                             if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory) :
                                 break
-                            for lastResidual, nGrew in incrementResidualHistory.values():
+                            
+                            for previousFluxResidual, nGrew in incrementResidualHistory.values():
                                 if nGrew > maxGrowingIter: 
                                     raise DivergingSolution('Residual grew {:} times, cutting back'.format(maxGrowingIter))
                             
@@ -201,17 +205,13 @@ class NIST:
                         dU += ddU
                         iterationCounter += 1
                         
-                except DivergingSolution as e:
-                    self.journal.message(str(e), self.identification, 1)
-                    incGen.discardAndChangeIncrement( 0.25 )
-                    lastIncrementSize = False
-                    
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
                     incGen.discardAndChangeIncrement( e.cutbackSize if e.cutbackSize > 0.25 else 0.25 )
                     lastIncrementSize = False
                     
-                except ReachedMaxIterations as e:
+                except (ReachedMaxIterations, 
+                        DivergingSolution) as e:
                     self.journal.message(str(e), self.identification, 1)
                     incGen.discardAndChangeIncrement(0.25)
                     lastIncrementSize = False
@@ -357,19 +357,14 @@ class NIST:
         else: # alternative tolerance set
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
-        print(spatialAveragedFluxes)
         for field, fieldIndices in self.fieldIndices.items():
             fluxResidual =       np.linalg.norm(R[fieldIndices] , np.inf)
             fieldCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-#            convergedFlux =   True if (fluxResidual < fluxResidualTolerances[field])  else False
             convergedCorrection = True if (fieldCorrection < self.fieldCorrectionTolerances[field]) else False
-#            spatialAveragedFluxes = spatialAveragedFluxes[field]  if spatialAveragedFluxes[field] >= 1e-10 else 1e-10
             convergedFlux =       True if (fluxResidual <= fluxResidualTolerances[field] * spatialAveragedFluxes[field]  )  else False
-#            convergedCorrection =     True if (fieldCorrection < self.fieldCorrectionTolerances[field])  else False
             
-            
-            lastResidual, nGrew = residualHistory[field]
-            if fluxResidual > lastResidual:
+            previousFluxResidual, nGrew = residualHistory[field]
+            if fluxResidual > previousFluxResidual:
                 nGrew += 1
             residualHistory[field]  = (fluxResidual, nGrew)
                                      
