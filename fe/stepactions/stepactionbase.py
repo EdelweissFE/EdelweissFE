@@ -24,14 +24,6 @@ class StepActionBase(ABC):
         """is called when an updated definition is present for a new step"""
         pass
     
-#    @abstractmethod
-#    def applyOnP(self, Pext, increment):
-#        pass  
-
-#    @abstractmethod
-#    def applyOnDU(self, dU, increment):
-#        pass  
-    
     @abstractmethod
     def finishStep(self):
         """is called when a step successfully finished"""

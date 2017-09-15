@@ -10,7 +10,6 @@ Possible keywords for stepaction module geostatic
 """
 
 from fe.stepactions.stepactionbase import StepActionBase
-from fe.utils.misc import stringDict
 import numpy as np
 
 
@@ -26,10 +25,9 @@ documentation = {
 class StepAction(StepActionBase):
     """ Initializes elements of set with an Abaqus-like geostatic stress state.
     Is automatically deactivated at the end of the step."""
-    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, journal):
 
         self.name = name
-        action = stringDict(definition) 
         
         self.geostaticElements = modelInfo['elementSets'] [ action.get('elSet', 'all')]
         self.p1 = float(action['p1'])

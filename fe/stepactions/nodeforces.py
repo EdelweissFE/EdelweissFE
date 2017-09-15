@@ -18,20 +18,18 @@ documentation={
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
-from fe.utils.misc import stringDict
 import numpy as np
 import sympy as sp
 
 class StepAction(StepActionBase):
     """ Defines node based load, defined on a nodeset."""
-    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name = name
         nodeForceIndices = []
         nodeForceDelta = []
         nodeSets = modelInfo['nodeSets']
         
-        action = stringDict(definition)        
         self.field = action['field']
         self.idle = False
         self.nSet = nodeSets[action['nSet']]

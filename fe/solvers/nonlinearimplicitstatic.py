@@ -73,6 +73,14 @@ class NIST:
         self.elementToIndexInVIJMap = elementToIndexInVIJMap # element  -> V[ .... idx ..  ]
         self.constraintToIndexInVIJMap = constraintToIndexInVIJMap
         
+        # for the Abaqus like convergence test, the number of dofs 'element-wise' is needed:
+        # = Σ_elements Σ_nodes ( nDof (field) )
+        self.fieldNDofElementWise = {}
+        for field in self.fieldIndices.keys():
+             self.fieldNDofElementWise[field] = np.sum(
+                     [ len(node.fields[field]) for el in self.elements.values() 
+                                                 for node in (el.nodes) if field in node.fields])
+        
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
         
@@ -145,6 +153,8 @@ class NIST:
                 ddU = None
                 iterationCounter = 0
                 incrementResidualHistory = dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
+                spatialAveragedFluxes = dict.fromkeys(self.fieldIndices, 0.0)
+                
                 stepTimes = np.array([stepTime, totalTime])
                 
                 if extrapolation == 'linear' and lastIncrementSize:
@@ -162,8 +172,6 @@ class NIST:
                     Pdeadloads = self.computeDistributedLoads(distributedLoads, Pdeadloads, 
                                                               I, stepTimes, dT, increment)
     
-                spatialAveragedFluxes = dict.fromkeys(self.fieldIndices, 0.0)
-                
                 try:
                     while True:
                         for geostatic in activeGeostatics: geostatic.apply() 
@@ -185,7 +193,7 @@ class NIST:
                             for constraint in self.constraints.values(): 
                                 R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
-                            for field, nDof in self.SumOfNDofsElementWise.items():
+                            for field, nDof in self.fieldNDofElementWise.items():
                                 spatialAveragedFluxes[field] = np.linalg.norm(F[self.fieldIndices[field]],1) / nDof 
                             
                             if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory) :
@@ -246,7 +254,6 @@ class NIST:
                     action.finishStep()
                     
         finally:
-            
             finishedTime = time + stepProgress * stepLength
             self.journal.printTable([ ("Time in {:}".format(k), " {:10.4f}s".format(v)) for k, v in self.computationTimes.items() ], self.identification)
             
@@ -394,19 +401,6 @@ class NIST:
         self.computationTimes['linear solve'] += toc - tic
         return ddU
     
-#    def tocsr2(self, data):
-#        I, J, E, N = data
-#        n = len(I)
-#        K = np.empty((n,), dtype=np.int64)
-#        K.view(np.int32).reshape(n, 2).T[...] = J, I
-#        S = np.argsort(K)
-#        KS = K[S]
-#        steps = np.flatnonzero(np.r_[1, np.diff(KS)])
-#        ED = np.add.reduceat(E[S], steps)
-#        JD, ID = KS[steps].view(np.int32).reshape(-1, 2).T
-#        ID = np.searchsorted(ID, np.arange(N+1))
-#        return csr_matrix((ED, np.array(JD, dtype=int), ID), (N, N))
-    
     def tocsr(self, coo, copy=False):
         from scipy.sparse.sputils import  get_index_dtype, upcast
         from scipy.sparse._sparsetools import coo_tocsr
@@ -433,7 +427,6 @@ class NIST:
         tic =  getCurrentTime()
 #        K  = coo_matrix( (V, (I,J)), shape).tocsr()
         K = self.tocsr(coo_matrix( (V, (I,J)), shape))
-#        K = self.tocsr2( (  I, J,V, shape[0]) )
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
         return K
@@ -451,14 +444,6 @@ class NIST:
         J = np.zeros_like(V, dtype=np.int)
         idxInVIJ = 0
         elementToIndexInVIJMap = {}
-        
-        self.SumOfNDofsElementWise = {}
-        
-        # dirty 
-        for field in self.fieldIndices.keys():
-             self.SumOfNDofsElementWise[field] = np.sum([ len(node.fields[field]) for el in elements.values()
-                                                      for node in (el.nodes) if field in node.fields])
-#        print(self.SumOfNDofsElementWise)
         
         for el in elements.values():
             destList = np.asarray([i for iNode, node in enumerate(el.nodes) # for each node of the element..

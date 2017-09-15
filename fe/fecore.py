@@ -197,28 +197,22 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
     overwritten or extended. Returns a dictionary with keys as defined in 
     stepactions."""
     
-    for line in step['data']:
-        if line[0].startswith('options'):
+    for actionType, *definition in step['data']:
+        if actionType.startswith('options'):
             # line is a option 
-            options = stringDict(line[1:])
+            options = stringDict(definition)
             category = options['category']
             stepOptions[category].update(options)
         else:
             #line is an action
-            module = line[0].lower()
-            try:
-                if not line[1].startswith('name='):
-                    raise
-                moduleName = line[1].split('=')[1]
-                definitionRemainder = line[2:]
-            except:
-                moduleName = 'unnamed {:} {:}'.format(module, 1 )
-                definitionRemainder = line[1:]
+            module = actionType.lower()
+            options = stringDict(definition)
+            moduleName = options['name']
            
             if moduleName in stepActions[module]:
-                stepActions[module][moduleName].updateStepAction(definitionRemainder)
+                stepActions[module][moduleName].updateStepAction(options)
             else:
-                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, definitionRemainder, jobInfo, modelInfo, journal)
+                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, options, jobInfo, modelInfo, journal)
                                                                
     return  stepActions, stepOptions
 

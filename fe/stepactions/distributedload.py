@@ -17,18 +17,16 @@ documentation={
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
-from fe.utils.misc import stringDict
 import numpy as np
 import sympy as sp
 
 class StepAction(StepActionBase):
     """ Distributed load, defined on an element-based surface """
-    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name = name
         self.magnitudeAtStepStart = 0.0
         
-        action = stringDict(definition)        
         self.surface = modelInfo['surfaces'][action['surface']]
         self.loadType = action['type']
         magnitude = np.asarray([float(action['magnitude'])])
@@ -47,8 +45,7 @@ class StepAction(StepActionBase):
         self.delta=0
         self.idle = True
     
-    def updateStepAction(self, definition):
-        action = stringDict(definition)
+    def updateStepAction(self, action):
         if 'magnitude' in action:
             self.delta = np.asarray([float(action['magnitude'])]) - self.magnitudeAtStepStart 
         elif 'delta' in action:

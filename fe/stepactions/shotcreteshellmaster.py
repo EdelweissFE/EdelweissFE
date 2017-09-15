@@ -14,19 +14,17 @@ documentation={
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
-from fe.utils.misc import stringDict
 import numpy as np
 
 class StepAction(StepActionBase):
     """ Dirichlet boundary condition, based on a node set """
-    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name = name
         
         dirichletIndices = []
         
         nodeSets = modelInfo['nodeSets']
-        action = stringDict(definition) 
         
         displacementsFile = action['displacements']
         nSet = action['nSet']

@@ -18,13 +18,12 @@ documentation={
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
-from fe.utils.misc import stringDict
 import numpy as np
 import sympy as sp
 
 class StepAction(StepActionBase):
     """ Dirichlet boundary condition, based on a node set """
-    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name = name
         
@@ -32,7 +31,6 @@ class StepAction(StepActionBase):
         dirichletDelta = []
         
         nodeSets = modelInfo['nodeSets']
-        action = stringDict(definition) 
         self.field = action['field']
 
         
@@ -59,9 +57,8 @@ class StepAction(StepActionBase):
     def finishStep(self,):
         self.moving = False
     
-    def updateStepAction(self, definition):
+    def updateStepAction(self, action):
         self.moving = True
-        action = stringDict(definition)
 
         dirichletIndices = []
         dirichletDelta = []
