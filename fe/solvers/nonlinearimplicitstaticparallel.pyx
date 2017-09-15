@@ -48,7 +48,7 @@ class NISTParallel(NIST):
         returns: boolean Success, U vector, P vector, and the new current total time """
         
         self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', 2))
-        self.journal.message('Using {:} threads'.format(self.numThreads))
+        self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
         
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
@@ -110,6 +110,8 @@ class NISTParallel(NIST):
             double[::1] UN1_mView = UN1
             double[::1] dU_mView = dU 
             double[::1] P_mView = P
+            double[::1] R_mView = self.R_
+
 
             # oversized Buffers for parallel computing:
                 # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
@@ -179,7 +181,8 @@ class NISTParallel(NIST):
                 elNDofPerEl =   elNDofs[i]
                 for j in range (elNDofPerEl): 
                     P_mView[ I[elIdxInVIJ + j] ] += Pe[ elIdxInPe + j ]
-                        
+                    
+                    R_mView[ I[elIdxInVIJ + j] ] += Pe[ elIdxInPe + j ] if Pe[ elIdxInPe + j ] > 0 else -Pe[ elIdxInPe + j ]
         finally:
             free( elIndicesInVIJ )
             free( elNDofs )

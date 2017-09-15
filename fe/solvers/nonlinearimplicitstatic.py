@@ -12,7 +12,7 @@ import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
-from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest
+from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution
 from time import time as getCurrentTime
 from collections import defaultdict
 
@@ -37,6 +37,7 @@ class NIST:
         self.elementSets =  modelInfo['elementSets']
         self.constraints =  modelInfo['constraints']
         self.fieldIndices = jobInfo['fieldIndices']
+        self.residualHistories = dict.fromkeys( self.fieldIndices )
         
         self.fluxCorrectionTolerances = jobInfo['fluxCorrectionTolerance']
         self.forceResidualTolerances = jobInfo['forceResidualTolerance']
@@ -90,6 +91,7 @@ class NIST:
         I = self.I
         
         R = np.copy(P)
+        self.R_ = np.copy(P)
         Pdeadloads = np.zeros_like(P)
         
         numberOfDofs = self.nDof
@@ -140,6 +142,7 @@ class NIST:
                 
                 ddU = None
                 iterationCounter = 0
+                incrementResidualHistory = dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
                 stepTimes = np.array([stepTime, totalTime])
                 
                 if extrapolation == 'linear' and lastIncrementSize:
@@ -161,6 +164,7 @@ class NIST:
                     while True:
                         for geostatic in activeGeostatics: geostatic.apply() 
                         
+                        self.R_[:] = 0.0
                         P, V = self.computeElements(U, dU, stepTimes, dT, P, V, I, J,)
                         
                         if concentratedLoads or distributedLoads:
@@ -176,8 +180,12 @@ class NIST:
                             for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 
                             for constraint in self.constraints.values(): R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
-                            if self.checkConvergency(R, ddU, iterationCounter) :
+                            spatialAveragedFluxes = { f: np.linalg.norm(self.R_[v],ord=1) / v.shape[0] for f, v in self._fieldsInVIJ.items()  }
+                            if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory) :
                                 break
+                            for lastResidual, nGrew in incrementResidualHistory.values():
+                                if nGrew > 3: 
+                                    raise DivergingSolution('Residual grew 3 times, cutting back')
                             
                         if iterationCounter == maxIter:
                             raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
@@ -188,6 +196,11 @@ class NIST:
                         ddU = self.linearSolve(K, R, )
                         dU += ddU
                         iterationCounter += 1
+                        
+                except DivergingSolution as e:
+                    self.journal.message(str(e), self.identification, 1)
+                    incGen.discardAndChangeIncrement( 0.25 )
+                    lastIncrementSize = False
                     
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
@@ -262,6 +275,7 @@ class NIST:
             
             # global force vector is assembled directly
             P[ idcsInPUdU ] += Pe
+            self.R_ [ idcsInPUdU ] += np.abs(Pe)
         
         toc = getCurrentTime()
         self.computationTimes['elements'] += toc - tic
@@ -323,7 +337,7 @@ class NIST:
         
         return R
     
-    def checkConvergency(self, R, ddU, iterationCounter):
+    def checkConvergency(self, R, ddU, spatialAveragedFluxes, iterationCounter, residualHistory):
         """ Check the convergency, indivudually for each field,
         similar to ABAQUS based on the current total residual and the flux correction
         -> is called by solveStep() to decide wether to continue iterating or stop"""
@@ -341,8 +355,17 @@ class NIST:
         for field, fieldIndices in self.fieldIndices.items():
             forceResidual =    np.linalg.norm(R[fieldIndices] , np.inf)
             fluxCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-            convergedForce =   True if (forceResidual < forceResidualTolerances[field])  else False
-            convergedFlux =     True if (fluxCorrection < self.fluxCorrectionTolerances[field])  else False
+#            convergedForce =   True if (forceResidual < forceResidualTolerances[field])  else False
+            convergedFlux =     True #if (fluxCorrection < self.fluxCorrectionTolerances[field])  else False
+#            print(spatialAveragedFluxes[field])
+            convergedForce =   True if (forceResidual < 5e-3 *   spatialAveragedFluxes[field] if spatialAveragedFluxes[field] >= 1e-10 else 1e-10 )  else False
+#            convergedFlux =     True if (fluxCorrection < self.fluxCorrectionTolerances[field])  else False
+            
+            
+            lastResidual, nGrew = residualHistory[field]
+            if forceResidual > lastResidual:
+                nGrew += 1
+            residualHistory[field]  = (forceResidual, nGrew)
                                      
             iterationMessage += self.iterationMessageTemplate.format(
                                  forceResidual, 
@@ -352,6 +375,7 @@ class NIST:
                                  )
             # converged if residual and fluxCorrection are smaller than tolerance
             convergedAtAll = convergedAtAll and convergedFlux and convergedForce
+            
             
         self.journal.message(iterationMessage, self.identification)     
         
@@ -426,10 +450,23 @@ class NIST:
         J = np.zeros_like(V, dtype=np.int)
         idxInVIJ = 0
         elementToIndexInVIJMap = {}
+        
+        self._fieldsInVIJ = {}
+        
+        # dirty 
+        for field in self.fieldIndices.keys():
+             self._fieldsInVIJ[field] = np.asarray([ i for el in elements.values()
+                                                  for iNode, node in enumerate(el.nodes)
+                                                         for i in node.fields.get(field, [])  ])
+    
+#        for f in self._fieldsInVIJ.values():
+#            print(f)
+        
         for el in elements.values():
-            destList = np.asarray([i for iNode, node in enumerate(el.nodes) 
-                                        for nodeField in el.fields[iNode] 
-                                            for i in node.fields[nodeField]]) 
+            destList = np.asarray([i for iNode, node in enumerate(el.nodes) # for each node of the element..
+                                        for nodeField in el.fields[iNode]  # for each field of this node
+                                            for i in node.fields[nodeField]])  # the index in the global system
+    
     
             elementToIndexInVIJMap[el] = idxInVIJ        
                                   

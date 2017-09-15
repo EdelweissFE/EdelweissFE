@@ -23,3 +23,5 @@ class ReachedMaxIncrements(Exception):
     pass
 class ReachedMinIncrementSize(Exception):
     pass
+class DivergingSolution(Exception):
+    pass
