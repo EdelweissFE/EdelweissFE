@@ -29,7 +29,7 @@ referencePoint=gen_rightTop
 create=perNode, fieldOutput=displacement
 
 *step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
-options, category=NISTSolver, extrapolation=off
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=leftCorner,  nSet=gen_leftBottom, field=displacement, 1=0.0, 2=0.0
 dirichlet, name=rotRP,  nSet=gen_rightTop,   field=rotation, 1=0.05
 dirichlet, name=movRP,  nSet=gen_rightTop,   field=displacement, 2=0.00

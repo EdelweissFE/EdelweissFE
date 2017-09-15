@@ -29,6 +29,7 @@ class NIST:
     defaultMaxNumInc = 1000
     defaultMaxIter = 10
     defaultCriticalIter = 5
+    defaultMaxGrowingIter = 3
     
     def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
         self.nodes =        modelInfo['nodes']
@@ -39,9 +40,9 @@ class NIST:
         self.fieldIndices = jobInfo['fieldIndices']
         self.residualHistories = dict.fromkeys( self.fieldIndices )
         
-        self.fluxCorrectionTolerances = jobInfo['fluxCorrectionTolerance']
-        self.forceResidualTolerances = jobInfo['forceResidualTolerance']
-        self.forceResidualTolerancesAlt = jobInfo['forceResidualToleranceAlternative']
+        self.fieldCorrectionTolerances =    jobInfo['fieldCorrectionTolerance']
+        self.fluxResidualTolerances =       jobInfo['fluxResidualTolerance']
+        self.fluxResidualTolerancesAlt =    jobInfo['fluxResidualToleranceAlternative']
         
         # create headers for formatted output of solver
         nFields = len(self.fieldIndices.keys())
@@ -90,9 +91,9 @@ class NIST:
         J = self.J
         I = self.I
         
-        R = np.copy(P)
-        self.R_ = np.copy(P)
-        Pdeadloads = np.zeros_like(P)
+        R =             np.copy(P)          # global Residual vector for the Newton iteration
+        F =             np.zeros_like(P)    # accumulated Flux vector 
+        Pdeadloads =    np.zeros_like(P)
         
         numberOfDofs = self.nDof
         stepLength = step.get('stepLength', 1.0)
@@ -107,6 +108,7 @@ class NIST:
         
         maxIter = step.get('maxIter', self.defaultMaxIter)
         criticalIter = step.get('crititcalIter', self.defaultCriticalIter)
+        maxGrowingIter = step.get('maxGrowIter', self.defaultMaxGrowingIter)
         
         dU = np.zeros(numberOfDofs)
         
@@ -164,8 +166,7 @@ class NIST:
                     while True:
                         for geostatic in activeGeostatics: geostatic.apply() 
                         
-                        self.R_[:] = 0.0
-                        P, V = self.computeElements(U, dU, stepTimes, dT, P, V, I, J,)
+                        P, V, F = self.computeElements(U, dU, stepTimes, dT, P, V, I, J, F)
                         
                         if concentratedLoads or distributedLoads:
                             P += Pdeadloads
@@ -177,15 +178,18 @@ class NIST:
                             R = self.applyDirichlet(increment, R, dirichlets)
                         else:
                             # iteration cycle 1 or higher, time to check the convergency
-                            for dirichlet in dirichlets: R[dirichlet.indices] = 0.0 
-                            for constraint in self.constraints.values(): R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
+                            for dirichlet in dirichlets: 
+                                R[dirichlet.indices] = 0.0 
+                            for constraint in self.constraints.values(): 
+                                R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
-                            spatialAveragedFluxes = { f: np.linalg.norm(self.R_[v],ord=1) / v.shape[0] for f, v in self._fieldsInVIJ.items()  }
+                            spatialAveragedFluxes = { f: np.linalg.norm(F[self.fieldIndices[f]],1) / nDof for f, nDof in self.SumOfNDofsElementWise.items() }
+                            
                             if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory) :
                                 break
                             for lastResidual, nGrew in incrementResidualHistory.values():
-                                if nGrew > 3: 
-                                    raise DivergingSolution('Residual grew 3 times, cutting back')
+                                if nGrew > maxGrowingIter: 
+                                    raise DivergingSolution('Residual grew {:} times, cutting back'.format(maxGrowingIter))
                             
                         if iterationCounter == maxIter:
                             raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
@@ -248,14 +252,15 @@ class NIST:
             
         return ((1.0 - stepProgress) < 1e-14) , U, P, finishedTime
     
-    def computeElements(self, U, dU, time, dT, P, V, I, J):
+    def computeElements(self, U, dU, time, dT, P, V, I, J, F):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration """
         
         tic = getCurrentTime()
-        P[:] = 0.0
+        P[:] =      0.0
+        F[:] = 0.0
         UN1 = dU + U
         pNewDT = np.array([1e36])
         
@@ -275,11 +280,11 @@ class NIST:
             
             # global force vector is assembled directly
             P[ idcsInPUdU ] += Pe
-            self.R_ [ idcsInPUdU ] += np.abs(Pe)
+            F[ idcsInPUdU ] += np.abs(Pe)
         
         toc = getCurrentTime()
         self.computationTimes['elements'] += toc - tic
-        return P, V
+        return P, V, F
     
     def computeDistributedLoads(self, distributedLoads, P, I, time, dT, increment):
         """ Loop over all elements, and evalute them. 
@@ -348,33 +353,34 @@ class NIST:
         convergedAtAll  = True
         
         if iterationCounter < 15: # standard tolerance set
-            forceResidualTolerances = self.forceResidualTolerances
+            fluxResidualTolerances = self.fluxResidualTolerances
         else: # alternative tolerance set
-            forceResidualTolerances = self.forceResidualTolerancesAlt
+            fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
+        print(spatialAveragedFluxes)
         for field, fieldIndices in self.fieldIndices.items():
-            forceResidual =    np.linalg.norm(R[fieldIndices] , np.inf)
-            fluxCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-#            convergedForce =   True if (forceResidual < forceResidualTolerances[field])  else False
-            convergedFlux =     True #if (fluxCorrection < self.fluxCorrectionTolerances[field])  else False
-#            print(spatialAveragedFluxes[field])
-            convergedForce =   True if (forceResidual < 5e-3 *   spatialAveragedFluxes[field] if spatialAveragedFluxes[field] >= 1e-10 else 1e-10 )  else False
-#            convergedFlux =     True if (fluxCorrection < self.fluxCorrectionTolerances[field])  else False
+            fluxResidual =       np.linalg.norm(R[fieldIndices] , np.inf)
+            fieldCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
+#            convergedFlux =   True if (fluxResidual < fluxResidualTolerances[field])  else False
+            convergedCorrection = True if (fieldCorrection < self.fieldCorrectionTolerances[field]) else False
+#            spatialAveragedFluxes = spatialAveragedFluxes[field]  if spatialAveragedFluxes[field] >= 1e-10 else 1e-10
+            convergedFlux =       True if (fluxResidual <= fluxResidualTolerances[field] * spatialAveragedFluxes[field]  )  else False
+#            convergedCorrection =     True if (fieldCorrection < self.fieldCorrectionTolerances[field])  else False
             
             
             lastResidual, nGrew = residualHistory[field]
-            if forceResidual > lastResidual:
+            if fluxResidual > lastResidual:
                 nGrew += 1
-            residualHistory[field]  = (forceResidual, nGrew)
+            residualHistory[field]  = (fluxResidual, nGrew)
                                      
             iterationMessage += self.iterationMessageTemplate.format(
-                                 forceResidual, 
-                                 '✓' if convergedForce  else ' ',
-                                 fluxCorrection,
-                                 '✓' if convergedFlux else ' ',
+                                 fluxResidual, 
+                                 '✓' if convergedFlux  else ' ',
+                                 fieldCorrection,
+                                 '✓' if convergedCorrection else ' ',
                                  )
-            # converged if residual and fluxCorrection are smaller than tolerance
-            convergedAtAll = convergedAtAll and convergedFlux and convergedForce
+            # converged if residual and fieldCorrection are smaller than tolerance
+            convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
             
             
         self.journal.message(iterationMessage, self.identification)     
@@ -451,16 +457,13 @@ class NIST:
         idxInVIJ = 0
         elementToIndexInVIJMap = {}
         
-        self._fieldsInVIJ = {}
+        self.SumOfNDofsElementWise = {}
         
         # dirty 
         for field in self.fieldIndices.keys():
-             self._fieldsInVIJ[field] = np.asarray([ i for el in elements.values()
-                                                  for iNode, node in enumerate(el.nodes)
-                                                         for i in node.fields.get(field, [])  ])
-    
-#        for f in self._fieldsInVIJ.values():
-#            print(f)
+             self.SumOfNDofsElementWise[field] = np.sum([ len(node.fields[field]) for el in elements.values()
+                                                      for node in (el.nodes) if field in node.fields])
+#        print(self.SumOfNDofsElementWise)
         
         for el in elements.values():
             destList = np.asarray([i for iNode, node in enumerate(el.nodes) # for each node of the element..

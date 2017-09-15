@@ -26,6 +26,8 @@ cdef public bint warningToMSG(const string cppString):
 #     print(cppString.decode('UTF-8'))
     return False
 
+#cdef double abs
+
 class NISTParallel(NIST):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
     Designed to interface with Abaqus UELs
@@ -89,7 +91,8 @@ class NISTParallel(NIST):
                         P, 
                         V, 
                         long[::1] I, 
-                        long[::1] J):
+                        long[::1] J,
+                        F):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -110,7 +113,7 @@ class NISTParallel(NIST):
             double[::1] UN1_mView = UN1
             double[::1] dU_mView = dU 
             double[::1] P_mView = P
-            double[::1] R_mView = self.R_
+            double[::1] F_mView = F
 
 
             # oversized Buffers for parallel computing:
@@ -175,14 +178,14 @@ class NISTParallel(NIST):
             
             #successful elements evaluation: condense oversize Pe buffer -> P
             P_mView[:] = 0.0
+            F_mView[:] = 0.0
             for i in range(nElements):
                 elIdxInVIJ =    elIndicesInVIJ[i]
                 elIdxInPe =     elIndexInPe[i]
                 elNDofPerEl =   elNDofs[i]
                 for j in range (elNDofPerEl): 
-                    P_mView[ I[elIdxInVIJ + j] ] += Pe[ elIdxInPe + j ]
-                    
-                    R_mView[ I[elIdxInVIJ + j] ] += Pe[ elIdxInPe + j ] if Pe[ elIdxInPe + j ] > 0 else -Pe[ elIdxInPe + j ]
+                    P_mView[ I[elIdxInVIJ + j] ] +=      Pe[ elIdxInPe + j ]
+                    F_mView[ I[elIdxInVIJ + j] ] += abs( Pe[ elIdxInPe + j ] )
         finally:
             free( elIndicesInVIJ )
             free( elNDofs )
@@ -191,4 +194,4 @@ class NISTParallel(NIST):
             
         toc = getCurrentTime()
         self.computationTimes['elements'] += toc - tic
-        return P, V
+        return P, V, F
