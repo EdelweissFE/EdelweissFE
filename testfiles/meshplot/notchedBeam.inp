@@ -38,7 +38,7 @@ figure=1, fileName=fig1
 figure=2, fileName=fig2
 
 *step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=10, stepLength=1
-options, category=NISTSolver, extrapolation=linear, numThreads=15
+options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0
 dirichlet, name=top,   nSet=topNodes, field=displacement, 2=-0.04

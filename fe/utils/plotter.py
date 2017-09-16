@@ -154,15 +154,17 @@ class Plotter:
             fig.savefig('{}.png'.format(fileName), dpi=400)
     
     def show(self,):
-        
-        self.configurePlotter()
-        
-        for fig, axes in self.figsWithAxes.values():
-            fig.tight_layout()
-            for axSpec, ax in axes.items():
-                ax.legend()
-                ax.relim()
-                
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.configurePlotter()
+            
+            for fig, axes in self.figsWithAxes.values():
+                fig.tight_layout()
+                for axSpec, ax in axes.items():
+                    ax.legend()
+                    ax.relim()
+                    
         self.exportPlots()
         plt.show()
     

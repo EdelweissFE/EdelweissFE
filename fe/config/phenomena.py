@@ -20,14 +20,14 @@ fieldCorrectionTolerance = {            'displacement' :        1e-2,
                                         'nonlocal damage':      1e-2,
                                         }
                                                                    
-fluxResidualTolerance = {               'displacement' :         5e-3,
+fluxResidualTolerance = {               'displacement' :        2e-3,
                                         'rotation' :            5e-3,
                                         'nonlocal damage':      5e-3,
                                         }
 
-fluxResidualToleranceAlternative = {    'displacement' :          5e-2,
-                                        'rotation' :            5e-2,
-                                        'nonlocal damage':      5e-2,
+fluxResidualToleranceAlternative = {    'displacement' :        1e-2,
+                                        'rotation' :            1e-2,
+                                        'nonlocal damage':      1e-2,
                                         }
                                         
                                         #domain                 dimensions

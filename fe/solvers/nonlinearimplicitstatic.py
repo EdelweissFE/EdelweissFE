@@ -80,7 +80,7 @@ class NIST:
              self.fieldNDofElementWise[field] = np.sum(
                      [ len(node.fields[field]) for el in self.elements.values() 
                                                  for node in (el.nodes) if field in node.fields])
-        
+    
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
         
@@ -130,7 +130,7 @@ class NIST:
         linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
         for constraint in linearConstraints:
-            # linear constraints are independent on the solution
+            # linear constraints' stiffness contributions are independent of the solution
             idxInVIJ = self.constraintToIndexInVIJMap[constraint]
             V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.K.ravel()
             
@@ -150,10 +150,10 @@ class NIST:
                 self.journal.message(self.iterationHeader, self.identification, level=2)
                 self.journal.message(self.iterationHeader2, self.identification, level=2)
                 
-                ddU = None
-                iterationCounter = 0
-                incrementResidualHistory = dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
-                spatialAveragedFluxes = dict.fromkeys(self.fieldIndices, 0.0)
+                ddU =                       None
+                iterationCounter =          0
+                incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
+                spatialAveragedFluxes =     dict.fromkeys(self.fieldIndices, 0.0)
                 
                 stepTimes = np.array([stepTime, totalTime])
                 
@@ -194,9 +194,9 @@ class NIST:
                                 R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
                             
                             for field, nDof in self.fieldNDofElementWise.items():
-                                spatialAveragedFluxes[field] = np.linalg.norm(F[self.fieldIndices[field]],1) / nDof 
+                                spatialAveragedFluxes[field] = max( 1e-8, np.linalg.norm(F[self.fieldIndices[field]],1) / nDof )
                             
-                            if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory) :
+                            if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory):
                                 break
                             
                             for previousFluxResidual, nGrew in incrementResidualHistory.values():
@@ -215,7 +215,7 @@ class NIST:
                         
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
-                    incGen.discardAndChangeIncrement( e.cutbackSize if e.cutbackSize > 0.25 else 0.25 )
+                    incGen.discardAndChangeIncrement( max ( e.cutbackSize, 0.25 ) )
                     lastIncrementSize = False
                     
                 except (ReachedMaxIterations, 
@@ -266,10 +266,11 @@ class NIST:
         -> is called by solveStep() in each iteration """
         
         tic = getCurrentTime()
+        
         P[:] =      0.0
-        F[:] = 0.0
-        UN1 = dU + U
-        pNewDT = np.array([1e36])
+        F[:] =      0.0
+        UN1 =       dU + U
+        pNewDT =    np.array([1e36])
         
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
@@ -286,8 +287,8 @@ class NIST:
                 raise CutbackRequest("An element requests for a cutback", pNewDT[0])
             
             # global force vector is assembled directly
-            P[ idcsInPUdU ] += Pe
-            F[ idcsInPUdU ] += np.abs(Pe)
+            P[ idcsInPUdU ] +=      Pe
+            F[ idcsInPUdU ] += abs( Pe )
         
         toc = getCurrentTime()
         self.computationTimes['elements'] += toc - tic
@@ -351,7 +352,7 @@ class NIST:
     
     def checkConvergency(self, R, ddU, spatialAveragedFluxes, iterationCounter, residualHistory):
         """ Check the convergency, indivudually for each field,
-        similar to ABAQUS based on the current total residual and the flux correction
+        similar to ABAQUS based on the current total flux residual and the field correction
         -> is called by solveStep() to decide wether to continue iterating or stop"""
         
         tic = getCurrentTime()
@@ -365,10 +366,11 @@ class NIST:
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
         for field, fieldIndices in self.fieldIndices.items():
-            fluxResidual =       np.linalg.norm(R[fieldIndices] , np.inf)
-            fieldCorrection =    np.linalg.norm(ddU[fieldIndices] , np.inf) if ddU is not None else 0.0
-            convergedCorrection = True if (fieldCorrection < self.fieldCorrectionTolerances[field]) else False
-            convergedFlux =       True if (fluxResidual <= fluxResidualTolerances[field] * spatialAveragedFluxes[field]  )  else False
+            fluxResidual =       np.linalg.norm( R[fieldIndices] , np.inf )
+            fieldCorrection =    np.linalg.norm( ddU[fieldIndices] , np.inf ) if ddU is not None else 0.0
+            
+            convergedCorrection = fieldCorrection < self.fieldCorrectionTolerances[field] 
+            convergedFlux =       fluxResidual <= fluxResidualTolerances[field] * spatialAveragedFluxes[field] 
             
             previousFluxResidual, nGrew = residualHistory[field]
             if fluxResidual > previousFluxResidual:
@@ -383,7 +385,6 @@ class NIST:
                                  )
             # converged if residual and fieldCorrection are smaller than tolerance
             convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
-            
             
         self.journal.message(iterationMessage, self.identification)     
         
@@ -479,4 +480,3 @@ class NIST:
         self.journal.printSeperationLine()
         U[ self.fieldIndices['displacement'] ] = 0.0 
         return U
-    
