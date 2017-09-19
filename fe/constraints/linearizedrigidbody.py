@@ -104,7 +104,6 @@ class Constraint:
         K[   -dG_dU.shape[0]:   , 0 : dG_dU.shape[1]: ] = dG_dU
         
         self.K = K
-#        self.P = np.zeros( self.nDof ) # no contribution to RHS
         
         self.additionalGlobalDofIndices =  []
         self.nConstraints = nConstraints

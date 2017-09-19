@@ -20,7 +20,8 @@ class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
     Designed to interface with Abaqus UELs
     Public methods are: __init__(), initializeUP() and solveStep(...).
-    OutputManagers are updated at the end of each increment. """
+    OutputManagers are updated at the end of each increment. 
+    """
     
     identification = "NISTSolver"
     
@@ -103,8 +104,8 @@ class NIST:
         F =             np.zeros_like(P)    # accumulated Flux vector 
         Pdeadloads =    np.zeros_like(P)
         
-        numberOfDofs = self.nDof
-        stepLength = step.get('stepLength', 1.0)
+        numberOfDofs =  self.nDof
+        stepLength =    step.get('stepLength', 1.0)
         extrapolation = stepOptions['NISTSolver'].get('extrapolation', 'linear')
 
         incGen = IncrementGenerator(time, 
@@ -114,9 +115,9 @@ class NIST:
                                     step.get('maxNumInc', self.defaultMaxNumInc), 
                                     self.journal)
         
-        maxIter = step.get('maxIter', self.defaultMaxIter)
-        criticalIter = step.get('crititcalIter', self.defaultCriticalIter)
-        maxGrowingIter = step.get('maxGrowIter', self.defaultMaxGrowingIter)
+        maxIter =           step.get('maxIter',         self.defaultMaxIter)
+        criticalIter =      step.get('crititcalIter',   self.defaultCriticalIter)
+        maxGrowingIter =    step.get('maxGrowIter',     self.defaultMaxGrowingIter)
         
         dU = np.zeros(numberOfDofs)
         
@@ -124,9 +125,8 @@ class NIST:
         distributedLoads =  stepActions['distributedload'].values()
         concentratedLoads = stepActions['nodeforces'].values()
         
-        geostatics = stepActions['geostatic'].values()
-        activeGeostatics = [g for g in geostatics if g.active]
-        isGeostaticStep = any([g.active for g in geostatics] )
+        geostatics =        stepActions['geostatic'].values()
+        activeGeostatics =  [g for g in geostatics if g.active]
         linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
         for constraint in linearConstraints:
@@ -247,7 +247,7 @@ class NIST:
             self.journal.message("Interrupted by user", self.identification)
         
         else:
-            if isGeostaticStep: U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
+            if activeGeostatics: U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
             
             for stepActionType in stepActions.values():
                 for action in stepActionType.values():
@@ -366,8 +366,8 @@ class NIST:
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
         for field, fieldIndices in self.fieldIndices.items():
-            fluxResidual =       np.linalg.norm( R[fieldIndices] , np.inf )
-            fieldCorrection =    np.linalg.norm( ddU[fieldIndices] , np.inf ) if ddU is not None else 0.0
+            fluxResidual =       np.linalg.norm( R[ fieldIndices ] , np.inf )
+            fieldCorrection =    np.linalg.norm( ddU[ fieldIndices ] , np.inf ) if ddU is not None else 0.0
             
             convergedCorrection = fieldCorrection < self.fieldCorrectionTolerances[field] 
             convergedFlux =       fluxResidual <= fluxResidualTolerances[field] * spatialAveragedFluxes[field] 
@@ -450,7 +450,6 @@ class NIST:
             destList = np.asarray([i for iNode, node in enumerate(el.nodes) # for each node of the element..
                                         for nodeField in el.fields[iNode]  # for each field of this node
                                             for i in node.fields[nodeField]])  # the index in the global system
-    
     
             elementToIndexInVIJMap[el] = idxInVIJ        
                                   
