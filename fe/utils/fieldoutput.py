@@ -32,6 +32,7 @@ from fe.utils.misc import stringDict, strToRange, isInteger
 from fe.utils.meshtools import  extractNodesFromElementSet
 from fe.utils.math import createMathExpression
 from fe.utils.elementresultcollector import ElementResultCollector
+from time import time as getCurrentTime
 
 class FieldOutput:
     """
@@ -40,7 +41,7 @@ class FieldOutput:
     def __init__(self, modelInfo, definition, journal):
         self.name = definition['name']
         self.journal = journal
-        
+        self.timeTotal = 0.0
         # determination of type:
             # perNode, perElement, perNodeSet, perElset...
          
@@ -83,6 +84,9 @@ class FieldOutput:
         if self.type == 'perNode' or self.type == 'perNodeSet':
             self.resultVector =     definition['result']
             self.field =            definition['field']
+            
+            if self.type == 'perNodeSet':
+                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet], dtype=np.int).ravel()
                 
         elif self.type == 'perElement' or self.type == 'perElementSet':
             
@@ -139,6 +143,9 @@ class FieldOutput:
         pass
     
     def finalizeIncrement(self, U, P, increment):
+        
+        tic = getCurrentTime()
+        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeHistory.append ( totalTime + dT )
         
@@ -150,7 +157,8 @@ class FieldOutput:
             
         elif self.type == 'perNodeSet':
             resVec = U if self.resultVector == 'U' else P
-            incrementResult =  np.array( [  resVec [ n.fields[ self.field ] ] for n in self.nSet])
+#            incrementResult =  np.array( [  resVec [ n.fields[ self.field ] ] for n in self.nSet])
+            incrementResult =  resVec[self.resultIndices].reshape( len(self.nSet), -1)
         
         elif self.type == 'perElementSet' or self.type == 'perElement':
 #            incrementResult = np.asarray( self.permanentElResultMemory )
@@ -163,11 +171,17 @@ class FieldOutput:
             self.result.append(incrementResult)
         else:
             self.result = incrementResult
-            
+        
+        toc = getCurrentTime()
+        self.timeTotal += toc - tic
+        
     def finalizeStep(self, U, P,):
         pass
     
     def finalizeJob(self, U, P,):
+        
+        print(self.name + "   " + str(self.timeTotal))
+        
         if self.export:
             res = np.asarray ( self.result )
             if self.f_export:
@@ -219,6 +233,6 @@ class FieldOutputController:
     def finalizeJob(self, U, P,):
         for output in self.fieldOutputs.values():
             output.finalizeJob(U,P)
-    
+        
     def getRequestData(self, request):
         pass
