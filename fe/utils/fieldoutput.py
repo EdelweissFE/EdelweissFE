@@ -31,6 +31,7 @@ import numpy as np
 from fe.utils.misc import stringDict, strToRange, isInteger
 from fe.utils.meshtools import  extractNodesFromElementSet
 from fe.utils.math import createMathExpression
+from fe.utils.elementresultcollector import ElementResultCollector
 
 class FieldOutput:
     """
@@ -85,22 +86,29 @@ class FieldOutput:
                 
         elif self.type == 'perElement' or self.type == 'perElementSet':
             
-            requestDictForElement = {}
-            requestDictForElement['result'] = definition['result']
+#            requestDictForElement = {}
+#            requestDictForElement['result'] = definition['result']
             
-            if 'gaussPt' in definition and not isInteger(definition['gaussPt'] ):
-                # results are requested for multiple gausspoints
-                # this means that for every gaussPt a request is handed to each element,
-                # and the resulting array has one additional dimension ([elements, gaussPts, results])
-                gpts  = strToRange(definition['gaussPt'])
-                self.permanentElResultMemory = [ [el.getPermanentResultPtr(** dict(requestDictForElement, **{'gaussPt':gpt}) ) for gpt in gpts ] for el in self.elSet]
+            gpt = definition['gaussPt']
+            gaussPts = strToRange(gpt) if not isInteger(gpt) else [ int (gpt)  ]
             
-            else:
-                # either a single gaussPt, or no gaussPt at all was requested.
-                # Anyways, only a single request has to be handed to the elements
-                if 'gaussPt' in definition:
-                    requestDictForElement['gaussPt'] = int(definition['gaussPt'])
-                self.permanentElResultMemory = [el.getPermanentResultPtr(**requestDictForElement) for el in self.elSet]
+            self.elementResultCollector = ElementResultCollector(self.elSet,
+                                                                 gaussPts, 
+                                                                 definition['result'])
+            
+#            if 'gaussPt' in definition and not isInteger(definition['gaussPt'] ):
+#                # results are requested for multiple gausspoints
+#                # this means that for every gaussPt a request is handed to each element,
+#                # and the resulting array has one additional dimension ([elements, gaussPts, results])
+#                gpts  = strToRange(definition['gaussPt'])
+#                self.permanentElResultMemory = [ [el.getPermanentResultPtr(** dict(requestDictForElement, **{'gaussPt':gpt}) ) for gpt in gpts ] for el in self.elSet]
+#            
+#            else:
+#                # either a single gaussPt, or no gaussPt at all was requested.
+#                # Anyways, only a single request has to be handed to the elements
+#                if 'gaussPt' in definition:
+#                    requestDictForElement['gaussPt'] = int(definition['gaussPt'])
+#                self.permanentElResultMemory = [el.getPermanentResultPtr(**requestDictForElement) for el in self.elSet]
 
         if 'f(x)' in definition:
             self.f = createMathExpression( definition['f(x)'] )
@@ -145,7 +153,8 @@ class FieldOutput:
             incrementResult =  np.array( [  resVec [ n.fields[ self.field ] ] for n in self.nSet])
         
         elif self.type == 'perElementSet' or self.type == 'perElement':
-            incrementResult = np.asarray( self.permanentElResultMemory )
+#            incrementResult = np.asarray( self.permanentElResultMemory )
+            incrementResult = self.elementResultCollector.getCurrentResults()
             
         if self.f:
             incrementResult = self.f( incrementResult )

@@ -41,6 +41,11 @@ extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],
                                  libraries= ['bftUserLibrary'],
                                  language="c++",)]
 
+extensions += [Extension("*", ["fe/utils/elementresultcollector.pyx"],                                    
+                                 include_dirs=[numpy.get_include()],
+                                 language="c++",)]
+
+
 """
 Build The parallel NISTParallel solver with OpenMP
 """
