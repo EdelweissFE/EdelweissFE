@@ -32,7 +32,6 @@ from fe.utils.misc import stringDict, strToRange, isInteger
 from fe.utils.meshtools import  extractNodesFromElementSet
 from fe.utils.math import createMathExpression
 from fe.utils.elementresultcollector import ElementResultCollector
-from time import time as getCurrentTime
 
 class FieldOutput:
     """
@@ -90,29 +89,12 @@ class FieldOutput:
                 
         elif self.type == 'perElement' or self.type == 'perElementSet':
             
-#            requestDictForElement = {}
-#            requestDictForElement['result'] = definition['result']
-            
             gpt = definition['gaussPt']
             gaussPts = strToRange(gpt) if not isInteger(gpt) else [ int (gpt)  ]
             
             self.elementResultCollector = ElementResultCollector(self.elSet,
                                                                  gaussPts, 
                                                                  definition['result'])
-            
-#            if 'gaussPt' in definition and not isInteger(definition['gaussPt'] ):
-#                # results are requested for multiple gausspoints
-#                # this means that for every gaussPt a request is handed to each element,
-#                # and the resulting array has one additional dimension ([elements, gaussPts, results])
-#                gpts  = strToRange(definition['gaussPt'])
-#                self.permanentElResultMemory = [ [el.getPermanentResultPtr(** dict(requestDictForElement, **{'gaussPt':gpt}) ) for gpt in gpts ] for el in self.elSet]
-#            
-#            else:
-#                # either a single gaussPt, or no gaussPt at all was requested.
-#                # Anyways, only a single request has to be handed to the elements
-#                if 'gaussPt' in definition:
-#                    requestDictForElement['gaussPt'] = int(definition['gaussPt'])
-#                self.permanentElResultMemory = [el.getPermanentResultPtr(**requestDictForElement) for el in self.elSet]
 
         if 'f(x)' in definition:
             self.f = createMathExpression( definition['f(x)'] )
@@ -144,8 +126,6 @@ class FieldOutput:
     
     def finalizeIncrement(self, U, P, increment):
         
-        tic = getCurrentTime()
-        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeHistory.append ( totalTime + dT )
         
@@ -157,11 +137,9 @@ class FieldOutput:
             
         elif self.type == 'perNodeSet':
             resVec = U if self.resultVector == 'U' else P
-#            incrementResult =  np.array( [  resVec [ n.fields[ self.field ] ] for n in self.nSet])
             incrementResult =  resVec[self.resultIndices].reshape( len(self.nSet), -1)
         
         elif self.type == 'perElementSet' or self.type == 'perElement':
-#            incrementResult = np.asarray( self.permanentElResultMemory )
             incrementResult = self.elementResultCollector.getCurrentResults()
             
         if self.f:
@@ -172,15 +150,10 @@ class FieldOutput:
         else:
             self.result = incrementResult
         
-        toc = getCurrentTime()
-        self.timeTotal += toc - tic
-        
     def finalizeStep(self, U, P,):
         pass
     
     def finalizeJob(self, U, P,):
-        
-        print(self.name + "   " + str(self.timeTotal))
         
         if self.export:
             res = np.asarray ( self.result )

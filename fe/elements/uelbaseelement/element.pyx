@@ -128,18 +128,18 @@ cdef class BaseElement:
     def resetToLastValidState(self,):
         pass
     
-    def getPermanentResultPtr(self, **kw):    
-        cdef int gPt =          kw['gaussPt']
-        cdef string result =    kw['result'].encode('UTF-8')
-        cdef int resultLength = 0
-        cdef double* ptr =      self.bftUel.getPermanentResultPointer(result, gPt, resultLength)
+    def getResultArray(self, result, gaussPt, getPersistentView=True):    
+        """ get the array of a result, possibly as a persistent view which is continiously
+        updated by the element """
+        cdef string result_ =  result.encode('UTF-8')
+        return np.array(  self.getPermanentResultPointer(result_, gaussPt), copy= not getPersistentView)
         
-        try:
-            resultArray = np.asarray( <double [:resultLength]> ptr )
-        except:
-            raise Exception("Invalid result '{:}' requested for element {:}".format(kw['result'], self.elNumber))
             
-        return resultArray
+    cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt, ):
+        """ direct access the the stateVars of the element / underlying material"""
+        cdef int resultLength = 0
+        cdef double* ptr = self.bftUel.getPermanentResultPointer(result, gaussPt, resultLength)
+        return <double[:resultLength]> ( ptr )
     
     def __dealloc__(self):
         del self.bftUel

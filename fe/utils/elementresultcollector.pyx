@@ -14,11 +14,11 @@ from libc.stdlib cimport malloc, free
 cdef class ElementResultCollector:
     """
     A cython class for collecting element results (by using the permanent results pointer (i.e., a numpy array) 
-    into large array of all elements and all gaussPoints.
+    in large array of all elements and all gaussPoints.
     A 3D array is assembled if multiple gaussPoints are requested (shape [elements, gaussPoints, resultVector] )
     or a 2D array for one gaussPoint ( shape [elements, resultVector] ).
     
-    Method getCurrentResults updates the assembly array and passes it back.
+    method getCurrentResults() updates the assembly array and passes it back.
     
     The caller is responsible to make a copy of it, if persistent results are needed!
     """
@@ -33,16 +33,16 @@ cdef class ElementResultCollector:
         
         self.nEls = len(elements)
         self.nGauss = len(gaussPoints)
-        # assemble a 2d list of all permanent result pointers 
-        resultsPointerList = [ [ el.getPermanentResultPtr(result = result, gaussPt = gpt) for gpt in gaussPoints ] for el in elements ]
+        # assemble a 2d list of all permanent result arrays (=continously updated np arrays)
+        resultsPointerList = [ [ el.getResultArray(result, gpt, getPersistentView=True) for gpt in gaussPoints ] for el in elements ]
         self.nSize = resultsPointerList[0][0].shape[0]
         
-        # use a performant 2D C-array for the pointers
+        # allocate an equivalent 2D C-array for the pointers to each elements results
         self.resultPointers = <double**> malloc ( sizeof(double*) * self.nEls * self.nGauss )
         
         cdef double* ptr
         cdef double[::1] res
-        # fill the 2D C-array of pointers
+        # fill the 2D C-array of pointers by accessing the elements' resultArrays memoryviews
         for i, el in enumerate(resultsPointerList):
             for j, gPt in enumerate(el):
                 res = gPt
@@ -60,7 +60,6 @@ cdef class ElementResultCollector:
             self.resultsTable = self.resultsTable.reshape(self.nEls, -1)
     
     def update(self, ):
-        
         #performant updating!
         cdef int i, j, k
         for i in range(self.nEls):

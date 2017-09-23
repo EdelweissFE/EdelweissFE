@@ -55,3 +55,4 @@ cdef class BaseElement:
     cdef string materialName
     cdef int nStateVars, nStateVarsMaterial
     cdef int numGaussPts, uelID, nStateVarsGaussPtAdditional
+    cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt)
