@@ -29,7 +29,7 @@ class Element(BaseElement):
     sizeKe =                nDofPerEl * nDofPerEl
     dofIndicesPermutation = slice(0, nDofPerEl)
     ensightType =           "hexa20"
-    uelIdentification =     2003
+    uelIdentification =     "UelC3D20"
     nStateVarsGaussPtAdditional =     12
     
     def __init__(self, nodes, elNumber):

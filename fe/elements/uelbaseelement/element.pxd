@@ -52,7 +52,7 @@ cdef class BaseElement:
     
     cdef public double[::1] stateVars, nodeCoordinates
     cdef double[::1] elementProperties, stateVarsTemp , materialProperties
-    cdef string materialName
+    cdef string materialName, uelID
     cdef int nStateVars, nStateVarsMaterial
-    cdef int numGaussPts, uelID, nStateVarsGaussPtAdditional
+    cdef int numGaussPts, nStateVarsGaussPtAdditional
     cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt)

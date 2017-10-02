@@ -17,7 +17,7 @@ class Element(BaseElement):
     sizeKe =                nDofPerEl * nDofPerEl
     dofIndicesPermutation = np.array([0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22] + [2,5,8,11,14,17,20,23], dtype=int)  
     ensightType =           "quad8"
-    uelIdentification =     817
+    uelIdentification =     "UelCPE8NonLocal"
     nStateVarsGaussPtAdditional =     12
     
     def __init__(self, nodes, elNumber):
