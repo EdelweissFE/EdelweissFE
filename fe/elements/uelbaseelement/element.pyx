@@ -47,19 +47,20 @@ mapStateTypes={
 
 cdef class BaseElement:
     
-    def __init__(self, nodes, elNumber, int nGaussPt, int nStateVarsGaussPtAdditional, int uelID):
+    def __init__(self, nodes, elNumber, int nGaussPt, int nStateVarsGaussPtAdditional, int uelID, int nStateVarsElement=0):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
         self.elNumber = elNumber
         self.numGaussPts = nGaussPt
         self.nStateVarsGaussPtAdditional = nStateVarsGaussPtAdditional
+        self.nStateVarsElement = nStateVarsElement
         self.uelID = uelID
         
     def setProperties(self, elementProperties, materialName, nStateVarsMaterial, materialProperties):
         self.elementProperties =    elementProperties
         self.nStateVarsMaterial =   nStateVarsMaterial
         self.materialProperties =   materialProperties
-        self.nStateVars =           self.numGaussPts * (nStateVarsMaterial + self.nStateVarsGaussPtAdditional)
+        self.nStateVars =           self.nStateVarsElement + self.numGaussPts * (nStateVarsMaterial + self.nStateVarsGaussPtAdditional)
         self.stateVars =            np.zeros(self.nStateVars)
         self.stateVarsTemp =        np.zeros(self.nStateVars)
         self.materialName =         materialName.upper().encode('UTF-8')
