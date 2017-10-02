@@ -30,7 +30,7 @@ class NIST:
     defaultMaxNumInc = 1000
     defaultMaxIter = 10
     defaultCriticalIter = 5
-    defaultMaxGrowingIter = 3
+    defaultMaxGrowingIter = 10
     
     def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
         self.nodes =        modelInfo['nodes']
