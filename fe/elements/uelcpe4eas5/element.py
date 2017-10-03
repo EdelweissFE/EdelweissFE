@@ -12,8 +12,9 @@ class Element(BaseElement):
     sizeKe =                8 * 8
     dofIndicesPermutation = np.array([0,1,2,3,4,5,6,7])
     ensightType =           "quad4"
-    uelIdentification =     "UelCPE4"
+    uelIdentification =     "UelCPE4EAS5"
     nStateVarsGaussPtSpecific =     12
+    nStateVarsElementSpecific = 5
     
     def __init__(self, nodes, elNumber):
-        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtSpecific, self.uelIdentification)
+        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtSpecific, self.uelIdentification, self.nStateVarsElementSpecific)

@@ -21,7 +21,7 @@ class Element(BaseElement):
                                         3, 7,11, 15, 19, 23, 27, 31], dtype=int)
     ensightType =           "hexa8"
     uelIdentification =     "UelC3D8NonLocal"
-    nStateVarsGaussPtAdditional =     12
+    nStateVarsGaussPtSpecific =     12
     
     def __init__(self, nodes, elNumber):
-        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtAdditional, self.uelIdentification)
+        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtSpecific, self.uelIdentification)
