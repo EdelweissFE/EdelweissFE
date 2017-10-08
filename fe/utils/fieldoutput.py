@@ -85,7 +85,7 @@ class FieldOutput:
             self.field =            definition['field']
             
             if self.type == 'perNodeSet':
-                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet], dtype=np.int).ravel()
+                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet if self.field in n.fields], dtype=np.int).ravel()
                 
         elif self.type == 'perElement' or self.type == 'perElementSet':
             
