@@ -216,7 +216,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
                                                                
     return  stepActions, stepOptions
 
-def finitElementSimulation(inputfile, verbose=False):
+def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     """ This is the core of the finite element analysis:
     It assembles the model, and controls the respective solver based
     on the defined simulation steps.
@@ -343,7 +343,8 @@ def finitElementSimulation(inputfile, verbose=False):
         journal.printTable( [ ("Job computation time", "{:10.4f}s".format(jobInfo['computationTime'])), ], 
                              identification, level=0,
                              printHeaderRow=False)
-        plotter.show()
+        if not suppressPlots:
+            plotter.show()
         
         return success, U, P, fieldOutputController
         

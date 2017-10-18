@@ -35,23 +35,32 @@ if __name__ == "__main__":
         
         inputFile = parseInputFile(testfile)
         print('Test {:30}'.format(directory ), end='\r')
-        success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False)
         
-        if not args.create:
+        try:
+        
+            success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False, suppressPlots=True)
             
-            UReference = np.loadtxt(referenceSolutionFile)
-            residual = U - UReference
-            
-            if ( np.max ( np.abs ( residual ) ) ) < 1e-6:
-                passed = True
+            if not args.create:
+                
+                UReference = np.loadtxt(referenceSolutionFile)
+                residual = U - UReference
+                
+                if success and ( np.max ( np.abs ( residual ) ) ) < 1e-6:
+                    passed = True
+                else:
+                    passed = False
+                
+                if passed:
+                    print('Test {:30} PASSED'.format(directory))
+                else:
+                    print('Test {:30} FAILED'.format(directory))
+                os.chdir('..')
+                
             else:
-                passed = False
-            
-            if passed:
-                print('Test {:30} PASSED'.format(directory))
-            else:
-                print('Test {:30} FAILED'.format(directory))
-            os.chdir('..')
-            
-        else:
-            np.savetxt(referenceSolutionFile, U)
+                print('')
+#                print('Test {:30}'.format(directory))
+                np.savetxt(referenceSolutionFile, U)
+
+        except Exception as e:
+            print("Test {:30} FAILED: ".format(directory) + str(e) )
+            continue

@@ -11,16 +11,11 @@ weak
 
 *job, name=cpe4job, domain=2d, 
 
-*output, type=nodesetmonitor, jobName=cpe4job
-nSet=left, field=displacement, result=P, f(x)=sum(x), direction=2
+*fieldOutput, jobName=cpe4job
+name=displacement, result=U, nSet=all, field=displacement
 
-***output, type=ensight, jobName=cpe4job, name=ensightExport
-**create=perNode,    elSet=all, field=displacement, result=U, name=displacement
-**create=perElement, elSet=all, result=stress, gaussPt=1
-**create=perElement, elSet=all, result=strain, gaussPt=1
-**create=perElement, elSet=all, result=sdv, gaussPt=1, index=0, name=alphaP
-**create=perElement, elSet=all, result=sdv, gaussPt=1, index=2, name=alphaD
-**create=perElement, elSet=all, result=sdv, gaussPt=1, index=4, name=omega
+*output, type=ensight
+create=perNode, fieldOutput=displacement
 
 *step, jobName=cpe4job, maxInc=1e-2, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
 options, category=NISTSolver,       extrapolation=linear
