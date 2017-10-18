@@ -38,7 +38,7 @@ class Triangulation:
         
     def quadIdxToTriIdx(self, xCoord, yCoord, elementIdxMatrix):
         triangleIdx = np.asarray([ [list(elIdx[:3]) , [elIdx[2],elIdx[3],elIdx[0] ]  ] for elIdx in elementIdxMatrix  ]).reshape(-1,3)      
-        triang = mtri.Triangulation(xCoord,yCoord,triangleIdx)
+        triang = mtri.Triangulation(xCoord, yCoord, triangleIdx)
         return triangleIdx, triang 
         
     def quadFieldToTriField(self, fieldValues):
@@ -62,15 +62,33 @@ class MeshPlot:
         value for both triangles """
         resultPerTriElement = self.TriangObj.quadFieldToTriField(fieldValues)
         mapping = ax.tripcolor(self.xCoord, self.yCoord, self.TriangObj.triangleIdx, facecolors=resultPerTriElement, 
-                                    cmap= self.userColorMap, norm=colors.Normalize(vmax=fieldValues.max(), vmin=fieldValues.min()) )
+                                    cmap= self.userColorMap, norm=colors.Normalize(vmax=np.nanmax(resultPerTriElement), vmin=np.nanmin(resultPerTriElement) ))
         cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)        
         cbar.set_label(label)
         ax.set_xlim(self.xLimits)
         ax.set_ylim(self.yLimits)
 
-    def contourPlotNodalValues(self, z, fig, ax, label):
+    def contourPlotNodalValues(self, z, fig, ax, label, elements, nSet):
         """ divide quads into two triangles and apply a nodal value to the corner nodes """
-        mapping = ax.tricontourf(self.TriangObj.triang, z, self.contourPlotScaling, cmap= self.userColorMap, norm=colors.Normalize(vmax=z.max(), vmin=z.min()) ) 
+        
+        # PERFORMANCE IMPROVEMENT PENDING
+        
+        nSetList = [node.label for node in nSet]
+        coordinates = np.asarray([node.coordinates for node in nSet])
+        
+        triangleNodes = []
+        counter = 0
+        for element in elements.values():
+            nodeList = []
+            for node in element.nodes:
+                nodeList.append(node)
+            
+            if set([node.label for node in nodeList]) < set(nSetList):
+                counter +=1
+                triangleNodes.append([nSetList.index(node.label) for node in nodeList])
+            
+        triangObjTemp = Triangulation(coordinates[:,0], coordinates[:,1], triangleNodes)
+        mapping = ax.tricontourf(triangObjTemp.triang, z, self.contourPlotScaling, cmap= self.userColorMap, norm=colors.Normalize(vmax=np.nanmax(z), vmin=np.nanmin(z) ) )
         cbar = fig.colorbar(mapping,fraction=0.046, pad=0.04)
         cbar.set_label(label)
         ax.set_xlim(self.xLimits)
@@ -128,7 +146,7 @@ class OutputManager(OutputManagerBase):
         self.perElementJobs = []
 #        self.configJobs = []
         self.xyJobs = []
-#        self.saveJobs = []
+        self.saveJobs = []
         self.meshOnlyJobs = []
         
         # needed for meshOnly plot
@@ -138,14 +156,24 @@ class OutputManager(OutputManagerBase):
         for defLine in definitionLines:
             definition = stringDict(defLine)
             
+            if 'saveFigure' in definition:
+                saveJob = {}
+                saveJob['figure'] = definition.get('figure', '1')
+                saveJob['fileName'] = definition.get('name', 'exportFigure')
+                saveJob['width'] = definition.get('width', False)
+                saveJob['scale'] = definition.get('scale', False)
+                saveJob['heightRatio'] = definition.get('heightRatio', False)
+                saveJob['png'] = definition.get('png', False)
+                self.saveJobs.append(saveJob)
+            
+            
             if 'create' in definition:
                 varType = definition['create']
                 
                 if varType == 'perNode':
                     perNodeJob = {}
                     perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
-                    if perNodeJob['fieldOutput'].type == 'perNode':
-                        raise Exception('Meshplot: Please define perNode output on an nSet, not on a elSet!')
+                    perNodeJob['nSet'] = perNodeJob['fieldOutput'].nSet
                     perNodeJob['label']  =          definition.get('label',  definition['fieldOutput'] )
                     perNodeJob['axSpec'] =          definition.get('axSpec','111')
                     perNodeJob['figure'] =          definition.get('figure','1')
@@ -239,9 +267,11 @@ class OutputManager(OutputManagerBase):
             
         for perNodeJob in self.perNodeJobs:
             result = perNodeJob['fieldOutput'].getLastResult()
-            
             fig = self.plotter.getFig(perNodeJob['figure'])
             ax =  self.plotter.getAx(perNodeJob['figure'] , perNodeJob['axSpec'])
+            ax.set_axis_off()
+            ax.set_aspect('equal')
+            
 
             if 'f(x)' in perNodeJob:
                 result = perNodeJob['f(x)'] (result)
@@ -251,13 +281,20 @@ class OutputManager(OutputManagerBase):
             
             result = np.squeeze(result)
             
-            self.meshPlot.contourPlotNodalValues(result, fig, ax, perNodeJob['label'])
-        
+            self.meshPlot.contourPlotNodalValues(result, fig, ax, perNodeJob['label'], self.elements, perNodeJob['nSet'] )
 
         for perElementJob in self.perElementJobs:
 
             fig = self.plotter.getFig(perElementJob['figure'])
             ax =  self.plotter.getAx(perElementJob['figure'] , perElementJob['axSpec'])
+            ax.set_axis_off()
+            ax.set_aspect('equal')
+            
+#            print(self.elCoordinatesList)
+#            if perElementJob['configuration'] == 'deformed':
+#                elCoordinatesListDeformed = extractNodeCoordinatesFromElset(self.elSets['all'], perElementJob['fieldOutput'].getLastResult(), perElementJob['scaleFactor'])
+#                self.meshPlot.plotMeshGrid( ax, elCoordinatesListDeformed)
+           
             self.meshPlot.plotMeshGrid(ax,  self.elCoordinatesList)
             
             resultArray = perElementJob['fieldOutput'].getLastResult()
@@ -273,7 +310,6 @@ class OutputManager(OutputManagerBase):
                 resultArray = resultsTarget
                 
             self.meshPlot.contourPlotFieldVariable(resultArray, fig, ax, perElementJob['label'] )
-        
         for meshOnlyJob in self.meshOnlyJobs:
             
             fig = self.plotter.getFig(meshOnlyJob['figure'])
@@ -294,10 +330,10 @@ class OutputManager(OutputManagerBase):
             else:       
                 elCoordinatesListUnDeformed = extractNodeCoordinatesFromElset(self.elSets['all'])
                 self.meshPlot.plotMeshGrid( ax, elCoordinatesListUnDeformed)
-                
-#            
+       
 #        for configJob in self.configJobs:
-#            self.plotter.configAxes(**configJob)
-#        
-#        for saveJob in self.saveJobs:
-#            self.plotter.exportFigure(saveJob['fileName'], saveJob['figure'], saveJob['width'], saveJob['scale'], saveJob['heightRatio'], saveJob['png'])
+##            self.plotter.configAxes(**configJob)
+##        
+        for saveJob in self.saveJobs:
+            self.plotter.exportFigure(saveJob['fileName'], saveJob['figure'], saveJob['width'], saveJob['scale'], saveJob['heightRatio'], saveJob['png'])
+##
