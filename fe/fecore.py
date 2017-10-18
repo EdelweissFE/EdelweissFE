@@ -61,14 +61,42 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
     for elSetDefinition in inputfile['*elSet']:
         name = elSetDefinition['elSet']
         
+        
+        # TO DO _------------------ BETTER PROGRAMMING
+        
+        
         #decide if entries are labels or existing nodeSets:
         if isInteger(elSetDefinition['data'][0][0]):
             elNumbers = [int(num) for line in elSetDefinition['data'] for num in line]
+
             if elSetDefinition.get('generate', False):
                 generateDef = elNumbers[0:3]
                 els = [elements[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
+            
+            elif elSetDefinition.get('boolean', False):
+                booleanDef = elSetDefinition.get('boolean')
+                if booleanDef=='difference':
+                    els = [n for n in elementSets[name] if n.elNumber not in elNumbers ]
+                
+                elif booleanDef=='union':
+                    els = [n for n in elementSets[name]]
+                    els += [ elements[n] for n in elNumbers]
+
+                elif booleanDef=='intersection':
+                    elNumbersBase = [n.elNumber for n in elementSets[name]]
+                    els = [ elements[n] for n in list(set(elNumbers).intersection(elNumbersBase))]
+                    for el in els:
+                        print(el.elNumber)
+                    
+                else:
+                    raise Exception("Undefined boolean operation!")
+                
+                if  elSetDefinition.get('newElSet') != name:
+                    name =  elSetDefinition.get('newElSet')
+                else:
+                    del elementSets[name]
             else:
-                els = [elements[elNum] for elNum  in elNumbers]
+                els = [elements[elNum] for elNum  in elNumbers]     
             elementSets[name] = els
         else:
             elementSets[name]  = []
@@ -297,6 +325,7 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     
     stepActions = defaultdict(dict)
     stepOptions = defaultdict(dict)
+    
     
     try:
         for step in jobSteps:
