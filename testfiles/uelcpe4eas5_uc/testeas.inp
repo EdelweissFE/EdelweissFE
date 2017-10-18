@@ -23,7 +23,7 @@ nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=50
 y0=0, h=200
-elType=uelCPE4EAS4
+elType=uelCPE4EAS5
 nX=10
 nY=40
 
