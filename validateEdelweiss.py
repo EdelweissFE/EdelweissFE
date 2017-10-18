@@ -58,7 +58,6 @@ if __name__ == "__main__":
                 
             else:
                 print('')
-#                print('Test {:30}'.format(directory))
                 np.savetxt(referenceSolutionFile, U)
 
         except Exception as e:
