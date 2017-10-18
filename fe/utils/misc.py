@@ -6,6 +6,7 @@ Created on Mon Apr 18 17:36:07 2016
 """
 
 import numpy as np
+from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 def flagDict(configLine):
     parts = [x.strip() for x in configLine.split("=")]
@@ -14,8 +15,7 @@ def flagDict(configLine):
     return {opt: val}
     
 def stringDict(listOfStringAssigments):
-    resultDict = {}
-    
+    resultDict = CaseInsensitiveDict()
     for entry in listOfStringAssigments:
         parts = [x.strip() for x in entry.split("=")]
         opt = parts[0]
