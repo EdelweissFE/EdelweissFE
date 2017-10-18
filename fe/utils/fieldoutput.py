@@ -85,7 +85,7 @@ class FieldOutput:
             self.field =            definition['field']
             
             if self.type == 'perNodeSet':
-                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet], dtype=np.int).ravel()
+                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet if self.field in n.fields], dtype=np.int).ravel()
                 
         elif self.type == 'perElement' or self.type == 'perElementSet':
             
@@ -166,7 +166,7 @@ class FieldOutput:
                 # we also store the time, if result shape and time history are 'compatible'
                 self.journal.message('Adding time history for export in .csv file', self.name)
                 time = np.asarray ( self.timeHistory ).reshape(-1, 1)
-                resultTable = np.hstack ( [time , res]   )
+                resultTable = np.column_stack ( (time , res)   )
             else:
                 resultTable = res
             
