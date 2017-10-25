@@ -21,6 +21,8 @@ from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
+from fe.utils.caseinsensitivedict import CaseInsensitiveDict
+
 from time import time as getCurrentTime
 
 def collectNodesAndElementsFromInput(inputfile, modelInfo):
@@ -323,8 +325,8 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     solver =    Solver(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
     U, P =      solver.initialize()
     
-    stepActions = defaultdict(dict)
-    stepOptions = defaultdict(dict)
+    stepActions = defaultdict(CaseInsensitiveDict)
+    stepOptions = defaultdict(CaseInsensitiveDict)
     
     
     try:
