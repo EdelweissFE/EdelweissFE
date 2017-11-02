@@ -52,13 +52,13 @@ class StepAction(StepActionBase):
         else:
             self.amplitude = lambda x:x
         
-        self.moving = True
+        self.active = True
         
     def finishStep(self,):
-        self.moving = False
+        self.active = False
     
     def updateStepAction(self, action):
-        self.moving = True
+        self.active = True
 
         dirichletIndices = []
         dirichletDelta = []
@@ -77,7 +77,7 @@ class StepAction(StepActionBase):
             self.amplitude = lambda x:x
 
     def getDelta(self, increment):
-        if self.moving:
+        if self.active:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             return self.delta * ( self.amplitude ( stepProgress ) - 
                                  (self.amplitude ( stepProgress - incrementSize )))

@@ -122,18 +122,19 @@ class NIST:
         dU = np.zeros(numberOfDofs)
         
         dirichlets =        list(stepActions['dirichlet'].values()) + list(stepActions['shotcreteshellmaster'].values())
-        distributedLoads =  stepActions['distributedload'].values()
+        distributedDeadLoads =  stepActions['distributedload'].values()
         concentratedLoads = stepActions['nodeforces'].values()
         
         geostatics =        stepActions['geostatic'].values()
         activeGeostatics =  [g for g in geostatics if g.active]
         linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
         
+        indirectDisplacementControl =  stepActions['indirectDisplacementControl']
+        
         for constraint in linearConstraints:
             # linear constraints' stiffness contributions are independent of the solution
-            idxInVIJ = self.constraintToIndexInVIJMap[constraint]
-            V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.K.ravel()
-            
+            self.assembleLinearConstraintStiffness ( constraint, V)
+
         lastIncrementSize = False
         
         try:
@@ -150,68 +151,35 @@ class NIST:
                 self.journal.message(self.iterationHeader, self.identification, level=2)
                 self.journal.message(self.iterationHeader2, self.identification, level=2)
                 
-                ddU =                       None
-                iterationCounter =          0
-                incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
-                spatialAveragedFluxes =     dict.fromkeys(self.fieldIndices, 0.0)
+                dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
                 
-                stepTimes = np.array([stepTime, totalTime])
-                
-                if extrapolation == 'linear' and lastIncrementSize:
-                    dU *= (incrementSize/lastIncrementSize) 
-                    dU = self.applyDirichlet(increment, dU, dirichlets)      
-                    extrapolatedIncrement = True
-                else:
-                    extrapolatedIncrement = False
-                    dU[:] = 0.0    
-                    
-                # Deadloads: only once per increment
-                if concentratedLoads or distributedLoads:
-                    Pdeadloads[:] = 0.0
-                    for cLoad in concentratedLoads: Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
-                    Pdeadloads = self.computeDistributedLoads(distributedLoads, Pdeadloads, 
-                                                              I, stepTimes, dT, increment)
-    
                 try:
-                    while True:
-                        for geostatic in activeGeostatics: geostatic.apply() 
-                        
-                        P, V, F = self.computeElements(U, dU, stepTimes, dT, P, V, I, J, F)
-                        
-                        if concentratedLoads or distributedLoads:
-                            P += Pdeadloads
-                            
-                        R[:] = P
-                        
-                        if iterationCounter == 0 and not extrapolatedIncrement and dirichlets :
-                            # first iteration? apply dirichlet bcs and unconditionally solve
-                            R = self.applyDirichlet(increment, R, dirichlets)
-                        else:
-                            # iteration cycle 1 or higher, time to check the convergency
-                            for dirichlet in dirichlets: 
-                                R[dirichlet.indices] = 0.0 
-                            for constraint in self.constraints.values(): 
-                                R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
-                            
-                            for field, nDof in self.fieldNDofElementWise.items():
-                                spatialAveragedFluxes[field] = max( 1e-8, np.linalg.norm(F[self.fieldIndices[field]],1) / nDof )
-                            
-                            if self.checkConvergency(R, ddU, spatialAveragedFluxes, iterationCounter, incrementResidualHistory):
-                                break
-                            
-                            for previousFluxResidual, nGrew in incrementResidualHistory.values():
-                                if nGrew > maxGrowingIter: 
-                                    raise DivergingSolution('Residual grew {:} times, cutting back'.format(maxGrowingIter))
-                            
-                        if iterationCounter == maxIter:
-                            raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
-                        
-                        K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
-                        K = self.applyDirichletK(K, dirichlets)
-                        
-                        ddU = self.linearSolve(K, R, )
-                        dU += ddU
-                        iterationCounter += 1
+                    
+                    if indirectDisplacementControl:
+                        dU, iterationCounter, incrementResidualHistory = self.IndirectControlledNewton (U, dU, 
+                                                              V, I, J, P, R, F, 
+                                                              dirichlets,
+                                                              Pdeadloads, 
+                                                              concentratedLoads, 
+                                                              distributedDeadLoads, 
+                                                              activeGeostatics,
+                                                              increment,
+                                                              isExtrapolatedIncrement,
+                                                              maxIter,
+                                                              maxGrowingIter)
+                    
+                    else:
+                        dU, iterationCounter, incrementResidualHistory = self.Newton (U, dU, 
+                                                                                      V, I, J, P, R, F, 
+                                                                                      dirichlets,
+                                                                                      Pdeadloads, 
+                                                                                      concentratedLoads, 
+                                                                                      distributedDeadLoads, 
+                                                                                      activeGeostatics,
+                                                                                      increment,
+                                                                                      isExtrapolatedIncrement,
+                                                                                      maxIter,
+                                                                                      maxGrowingIter)
                         
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
@@ -258,6 +226,137 @@ class NIST:
             self.journal.printTable([ ("Time in {:}".format(k), " {:10.4f}s".format(v)) for k, v in self.computationTimes.items() ], self.identification)
             
         return ((1.0 - stepProgress) < 1e-14) , U, P, finishedTime
+    
+    def Newton(self, U, dU, 
+               V, I, J, P, R, F, 
+               dirichlets,
+               Pdeadloads, 
+               concentratedLoads, 
+               distributedDeadLoads, 
+               activeGeostatics,
+               increment,
+               isExtrapolatedIncrement,
+               maxIter,
+               maxGrowingIter):
+        
+        """ Standard Newton Raphon scheme to solve for an increment """
+        
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        numberOfDofs =  self.nDof
+        stepTimes = np.array([stepTime, totalTime])
+        iterationCounter =          0
+        incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
+        
+        ddU = None
+        
+        activeDeadLoads =  concentratedLoads or distributedDeadLoads
+        
+        if activeDeadLoads:
+            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, increment)
+        
+        while True:
+            for geostatic in activeGeostatics: geostatic.apply() 
+            
+            P, V, F = self.computeElements(U, dU, stepTimes, dT, P, V, I, J, F)
+            
+            if activeDeadLoads:
+                P += Pdeadloads
+                
+            R[:] = P
+            
+            if iterationCounter == 0 and not isExtrapolatedIncrement and dirichlets :
+                # first iteration? apply dirichlet bcs and unconditionally solve
+                R = self.applyDirichlet(increment, R, dirichlets)
+            else:
+                # iteration cycle 1 or higher, time to check the convergency
+                for dirichlet in dirichlets: 
+                    R[dirichlet.indices] = 0.0 
+                for constraint in self.constraints.values(): 
+                    R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
+                
+                if self.checkConvergency(R, ddU, F, iterationCounter, incrementResidualHistory):
+                    break
+                
+                if self.checkDivergingSolution (incrementResidualHistory , maxGrowingIter):
+                    raise DivergingSolution('Residual grew {:} times, cutting back'.format(maxGrowingIter))
+                
+            if iterationCounter == maxIter:
+                raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
+            
+            K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
+            K = self.applyDirichletK(K, dirichlets)
+            
+            ddU = self.linearSolve(K, R, )
+            dU += ddU
+            iterationCounter += 1
+            
+        return dU, iterationCounter, incrementResidualHistory
+    
+    def IndirectControlledNewton(self, U, dU, 
+               V, I, J, P, R, F, 
+               dirichlets,
+               Pdeadloads, 
+               concentratedLoads, 
+               distributedDeadLoads, 
+               activeGeostatics,
+               increment,
+               isExtrapolatedIncrement,
+               maxIter,
+               maxGrowingIter,
+               indirectController):
+        
+        """ Newton Raphon scheme to solve for an increment employing the indirect (displacement) control """
+        
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        numberOfDofs =  self.nDof
+        stepTimes = np.array([stepTime, totalTime])
+        iterationCounter =          0
+        incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
+        
+        ddU = None
+        
+        activeDeadLoads =  concentratedLoads or distributedDeadLoads
+        
+        if activeDeadLoads:
+            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, increment)
+        
+        while True:
+            for geostatic in activeGeostatics: geostatic.apply() 
+            
+            P, V, F = self.computeElements(U, dU, stepTimes, dT, P, V, I, J, F)
+            
+            if activeDeadLoads:
+                P += Pdeadloads
+                
+            R[:] = P
+            
+            if iterationCounter == 0 and not isExtrapolatedIncrement and dirichlets :
+                # first iteration? apply dirichlet bcs and unconditionally solve
+                R = self.applyDirichlet(increment, R, dirichlets)
+            else:
+                # iteration cycle 1 or higher, time to check the convergency
+                for dirichlet in dirichlets: 
+                    R[dirichlet.indices] = 0.0 
+                for constraint in self.constraints.values(): 
+                    R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
+                
+                if self.checkConvergency(R, ddU, F, iterationCounter, incrementResidualHistory):
+                    break
+                
+                if self.checkDivergingSolution (incrementResidualHistory , maxGrowingIter):
+                    raise DivergingSolution('Residual grew {:} times, cutting back'.format(maxGrowingIter))
+                
+            if iterationCounter == maxIter:
+                raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
+            
+            K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
+            K = self.applyDirichletK(K, dirichlets)
+            
+            ddU = self.linearSolve(K, R, )
+            dU += ddU
+            iterationCounter += 1
+            
+        return dU, iterationCounter, incrementResidualHistory
     
     def computeElements(self, U, dU, time, dT, P, V, I, J, F):
         """ Loop over all elements, and evalute them. 
@@ -350,7 +449,7 @@ class NIST:
         
         return R
     
-    def checkConvergency(self, R, ddU, spatialAveragedFluxes, iterationCounter, residualHistory):
+    def checkConvergency(self, R, ddU, F, iterationCounter, residualHistory):
         """ Check the convergency, indivudually for each field,
         similar to ABAQUS based on the current total flux residual and the field correction
         -> is called by solveStep() to decide wether to continue iterating or stop"""
@@ -359,6 +458,8 @@ class NIST:
         
         iterationMessage = ''
         convergedAtAll  = True
+        
+        spatialAveragedFluxes = self.computeSpatialAveragedFluxes( F )
         
         if iterationCounter < 15: # standard tolerance set
             fluxResidualTolerances = self.fluxResidualTolerances
@@ -403,6 +504,7 @@ class NIST:
         return ddU
     
     def tocsr(self, coo, copy=False):
+        """ More performant conversion of coo to csr """
         from scipy.sparse.sputils import  get_index_dtype, upcast
         from scipy.sparse._sparsetools import coo_tocsr
         M,N = coo.shape
@@ -426,7 +528,6 @@ class NIST:
     def assembleStiffness(self, V, I, J, shape):
         """ Construct a CSR matrix from VIJ """
         tic =  getCurrentTime()
-#        K  = coo_matrix( (V, (I,J)), shape).tocsr()
         K = self.tocsr(coo_matrix( (V, (I,J)), shape))
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
@@ -479,3 +580,54 @@ class NIST:
         self.journal.printSeperationLine()
         U[ self.fieldIndices['displacement'] ] = 0.0 
         return U
+    
+    def computeSpatialAveragedFluxes(self, F):
+        """ Compute the spatial averaged flux for every field 
+        -> Called by checkConvergency() """
+        spatialAveragedFluxes =     dict.fromkeys(self.fieldIndices, 0.0)
+        for field, nDof in self.fieldNDofElementWise.items():
+            spatialAveragedFluxes[field] = max( 1e-8, np.linalg.norm(F[ self.fieldIndices[field] ], 1) / nDof )
+        
+        return spatialAveragedFluxes
+            
+    def assembleLinearConstraintStiffness(self, constraint, V):
+        """ Assemble the sub stiffness matrix for a linear constraint (independent of the solution)
+        -> once per Increment"""
+        idxInVIJ = self.constraintToIndexInVIJMap[constraint]
+        V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.K.ravel()
+        
+        return V
+        
+    def assembleDeadLoads(self, Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, increment):
+        """ Assemble all deadloads into a right hand side vector 
+        -> Usually only once per increment """
+        Pdeadloads[:] = 0.0
+        # cloads
+        for cLoad in concentratedLoads: 
+            Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
+        # dloads
+        Pdeadloads = self.computeDistributedLoads(distributedDeadLoads, Pdeadloads, I, stepTimes, dT, increment)
+        
+        return Pdeadloads
+        
+    def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize ):
+        """if active, extrapolate the solution of the last increment.
+        Also returns a boolean for information of an extrapolation was computed
+        -> at the beginning of each increment """
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        
+        if extrapolation == 'linear' and lastIncrementSize:
+            dU *= (incrementSize/lastIncrementSize) 
+            dU = self.applyDirichlet(increment, dU, dirichlets)      
+            isExtrapolatedIncrement = True
+        else:
+            isExtrapolatedIncrement = False
+            dU[:] = 0.0    
+        
+        return dU, isExtrapolatedIncrement
+    
+    def checkDivergingSolution(self, incrementResidualHistory, maxGrowingIter):
+        for previousFluxResidual, nGrew in incrementResidualHistory.values():
+            if nGrew > maxGrowingIter: 
+                return True
+        return False
