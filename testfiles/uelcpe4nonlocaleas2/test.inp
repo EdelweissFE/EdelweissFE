@@ -1,0 +1,50 @@
+*material, name=modleonNonLocal, id=modleon, statevars=5
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
+
+*section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
+all
+*elSet, elSet=weak
+20,61
+*section, name=sectionweak, thickness=.8, material=modleon, type=planeUelUmat
+weak
+
+*job, name=cpe4job, domain=2d, solver=NIST
+*fieldOutput
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, field=nonlocal damage , result=U, name=alpha_d_nl
+elSet=all, result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
+elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
+nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
+
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=50
+y0=0, h=200
+elType=uelCPE4NonLocalEAS2
+nX=10
+nY=40
+
+*output, type=ensight, jobName=cpe4job, name=esExport
+create=perNode,    fieldOutput=displacement
+create=perNode,    fieldOutput=alpha_d_nl
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+create=perElement, fieldOutput=alphaP
+create=perElement, fieldOutput=alphaD
+create=perElement, fieldOutput=omega
+
+*output, type=meshplot, jobName=cpe4job, name=RFPlot
+create=xyData, x=time, y=RFTop, legend=RF
+
+*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear, numThreads=8
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
+dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
+distributedload, name=dload, surface=gen_left, magnitude=0, f(t)=t, type=pressure
+distributedload, name=dload2, surface=gen_right, magnitude=0, f(t)=t, type=pressure
+
+*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-2
