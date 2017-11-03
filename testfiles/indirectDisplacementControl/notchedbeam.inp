@@ -1,0 +1,24 @@
+*include, input=mesh.inp
+*material, name=linearelastic, id=linearelastic, statevars=0
+30000.0, 0.15 
+
+*section, name=section1, thickness=1.0, material=linearelastic, type=planeUelUmat
+all
+
+*job, name=cps8rnljob, domain=2d, solver=NISTIndirectControlled
+*fieldOutput
+name=load, nSet=topNodes,  field=displacement, result=P
+name=displacement, elSet=all, field=displacement, result=U, name=displacement
+
+*output, type=monitor, jobName=cps8rnljob
+fieldOutput=load, f(x)='sum(x[:,1])'
+
+*output, type=ensight, jobName=cps8rnljob, name=ensightExport
+create=perNode,    fieldOutput=displacement
+
+*step, jobName=cps8rnljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, 
+options, category=NISTSolver, extrapolation=linear, numThreads=2
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 2=0
+dirichlet, name=top, nSet=topNodes, field=displacement, 2=-.5
+indirectdisplacementcontrol, name=id, x=x, y=y, 

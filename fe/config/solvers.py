@@ -10,6 +10,7 @@ import importlib
 
 solverLibrary = {'NIST' : 'nonlinearimplicitstatic',
                  'NISTParallel' : 'nonlinearimplicitstaticparallel',
+                 'NISTIndirectControlled' : 'nistindirect',
                  }
 
 
