@@ -28,6 +28,8 @@ class NISTPArcLength(NISTParallel):
         self.stepEndTime = 1.0
         self.totalEndTime = 1.0
         
+        self.dLambda = 0.0
+        
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
     def Newton(self, U, dU, 
@@ -37,7 +39,8 @@ class NISTPArcLength(NISTParallel):
            distributedDeadLoads, 
            activeGeostatics,
            increment,
-           isExtrapolatedIncrement,
+           lastIncrementSize,
+           extrapolation,
            maxIter,
            maxGrowingIter):
         
@@ -58,8 +61,10 @@ class NISTPArcLength(NISTParallel):
         ddU = None
         
         Lambda =  self.Lambda
-        dLambda = 0.0
+        dLambda = self.dLambda
         ddLambda = 0.0
+        
+        dU, isExtrapolatedIncrement, dLambda = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda)
         
         referenceIncrement = incNumber, 1.0,  1.0,  1.0 * stepTime, self.stepEndTime, self.totalEndTime 
         
@@ -102,13 +107,29 @@ class NISTPArcLength(NISTParallel):
             
             ddLambda = self.arcLengthController.computeDDLambda( dU, ddU_0, ddU_f, increment ) 
             
-            dU += ddU_0 + ddLambda * ddU_f
+            ddU = ddU_0 + ddLambda * ddU_f
+            
+            dU += ddU
             dLambda += ddLambda
             
             iterationCounter += 1
            
-#        self.arcLengthController.computeDDLambda( dU, ddU_0, ddU_f, increment )  
         self.Lambda += dLambda
+        self.dLambda = dLambda
         
-        self.arcLengthController.finishIncrement()  
+        self.arcLengthController.finishIncrement(U, dU, dLambda)  
         return dU, iterationCounter, incrementResidualHistory
+    
+    
+    def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda):
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        
+        if extrapolation == 'linear' and lastIncrementSize:
+            dLambda = dLambda * (incrementSize/lastIncrementSize) 
+        else:
+            dLambda = 0.0    
+            
+        dU, isExtrapolatedIncrement = super().extrapolateLastIncrement( extrapolation, increment, dU, dirichlets, lastIncrementSize)
+#        dU[:] = .0
+        
+        return dU, isExtrapolatedIncrement, dLambda

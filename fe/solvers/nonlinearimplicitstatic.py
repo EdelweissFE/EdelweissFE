@@ -100,9 +100,7 @@ class NIST:
         J = self.J
         I = self.I
         
-        R =             np.copy(P)          # global Residual vector for the Newton iteration
-        F =             np.zeros_like(P)    # accumulated Flux vector 
-        Pdeadloads =    np.zeros_like(P)
+
         
         numberOfDofs =  self.nDof
         stepLength =    step.get('stepLength', 1.0)
@@ -149,18 +147,17 @@ class NIST:
                 self.journal.message(self.iterationHeader, self.identification, level=2)
                 self.journal.message(self.iterationHeader2, self.identification, level=2)
                 
-                dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
                 
                 try:
                     dU, iterationCounter, incrementResidualHistory = self.Newton (U, dU, 
-                                                                                  V, I, J, P, R, F, 
+                                                                                  V, I, J, P, 
                                                                                   dirichlets,
-                                                                                  Pdeadloads, 
                                                                                   concentratedLoads, 
                                                                                   distributedDeadLoads, 
                                                                                   activeGeostatics,
                                                                                   increment,
-                                                                                  isExtrapolatedIncrement,
+                                                                                  lastIncrementSize,
+                                                                                  extrapolation,
                                                                                   maxIter,
                                                                                   maxGrowingIter)
                         
@@ -176,6 +173,7 @@ class NIST:
                     lastIncrementSize = False
                     
                 else: 
+                    
                     U += dU
                     lastIncrementSize = incrementSize
                     if iterationCounter >= criticalIter: 
@@ -211,14 +209,14 @@ class NIST:
         return ((1.0 - stepProgress) < 1e-14) , U, P, finishedTime
     
     def Newton(self, U, dU, 
-               V, I, J, P, R, F, 
+               V, I, J, P, 
                dirichlets,
-               Pdeadloads, 
                concentratedLoads, 
                distributedDeadLoads, 
                activeGeostatics,
                increment,
-               isExtrapolatedIncrement,
+               lastIncrementSize,
+               extrapolation,
                maxIter,
                maxGrowingIter):
         
@@ -230,9 +228,14 @@ class NIST:
         iterationCounter =          0
         incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
         
+        R =             np.copy(P)          # global Residual vector for the Newton iteration
+        F =             np.zeros_like(P)    # accumulated Flux vector 
+        Pdeadloads =    np.zeros_like(P)
         ddU = None
         
         activeDeadLoads =  concentratedLoads or distributedDeadLoads
+        
+        dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
         if activeDeadLoads:
             Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, increment)

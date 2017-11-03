@@ -17,6 +17,7 @@ elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
 elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
 elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
 nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
+nSet=gen_top, field=displacement, result=U, f(x)='( x[0, 1] ) ', name=UTop, saveHistory=true
 nset=n1, field=displacement, result=U, f(x)='x[:,1]', name=n1
 nset=n2, field=displacement, result=U, f(x)='x[:,1]', name=n2
 
@@ -47,11 +48,12 @@ create=perElement, fieldOutput=omega
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
+create=xyData, x=time, y=UTop, legend=U, figure=2
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=2
+options, category=NISTSolver, extrapolation=off, numThreads=2
 options, category=NISTArcLength, arcLengthController=indirectcontrol,
-indirectcontrol, dof1=' nodes[18].fields["displacement"][1] ' , dof2=' nodes[24].fields["displacement"][1] ' , L=-0.2, controltype=crackmouthopening, stopAt=' nodes[11].fields["displacement"] = -2 ' 
+indirectcontrol, dof1=' nodes[18].fields["displacement"][1] ' , dof2=' nodes[24].fields["displacement"][1] ' , L=-0.5, controltype=crackmouthopening, stopAt=' nodes[11].fields["displacement"] = -2 ' 
 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
