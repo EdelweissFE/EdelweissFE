@@ -237,7 +237,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
             #line is an action
             module = actionType.lower()
             options = stringDict(definition)
-            moduleName = options['name']
+            moduleName = options.get('name', module)
            
             if moduleName in stepActions[module]:
                 stepActions[module][moduleName].updateStepAction(options)
