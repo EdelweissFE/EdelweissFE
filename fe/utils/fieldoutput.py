@@ -172,6 +172,23 @@ class FieldOutput:
             
             np.savetxt('{:}.csv'.format( self.export ), resultTable, )
             
+    def __eq__(self, other):
+        return self.getLastResult() == other
+
+    def __ne__(self, other):
+        return self.getLastResult() != other
+
+    def __lt__(self, other):
+        return self.getLastResult() < other
+
+    def __le__(self, other):
+        return self.getLastResult() <= other
+
+    def __gt__(self, other):
+        return self.getLastResult() > other
+
+    def __ge__(self, other):
+        return self.getLastResult() >= other
 
 class FieldOutputController:
     """

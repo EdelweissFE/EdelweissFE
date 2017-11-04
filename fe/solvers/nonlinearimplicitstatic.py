@@ -12,7 +12,7 @@ import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
 from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
-from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution
+from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution, ConditionalStop
 from time import time as getCurrentTime
 from collections import defaultdict
 
@@ -100,9 +100,6 @@ class NIST:
         J = self.J
         I = self.I
         
-
-        
-        numberOfDofs =  self.nDof
         stepLength =    step.get('stepLength', 1.0)
         extrapolation = stepOptions['NISTSolver'].get('extrapolation', 'linear')
 
@@ -117,17 +114,11 @@ class NIST:
         criticalIter =      step.get('crititcalIter',   self.defaultCriticalIter)
         maxGrowingIter =    step.get('maxGrowIter',     self.defaultMaxGrowingIter)
         
-        dU = np.zeros(numberOfDofs)
+        dU = np.zeros(self.nDof)
         
-        dirichlets =        list(stepActions['dirichlet'].values()) + list(stepActions['shotcreteshellmaster'].values())
-        distributedDeadLoads =  stepActions['distributedload'].values()
-        concentratedLoads = stepActions['nodeforces'].values()
+        activeStepActions = self.collectActiveStepActions( stepActions )
         
-        geostatics =        stepActions['geostatic'].values()
-        activeGeostatics =  [g for g in geostatics if g.active]
-        linearConstraints = [c for c in self.constraints.values() if c.linearConstraint ]
-        
-        for constraint in linearConstraints:
+        for constraint in activeStepActions['linearConstraints']:
             # linear constraints' stiffness contributions are independent of the solution
             self.assembleLinearConstraintStiffness ( constraint, V)
 
@@ -147,14 +138,10 @@ class NIST:
                 self.journal.message(self.iterationHeader, self.identification, level=2)
                 self.journal.message(self.iterationHeader2, self.identification, level=2)
                 
-                
                 try:
-                    dU, iterationCounter, incrementResidualHistory = self.Newton (U, dU, 
+                    dU, iterationCounter, incrementResidualHistory = self.solveIncrement (U, dU, 
                                                                                   V, I, J, P, 
-                                                                                  dirichlets,
-                                                                                  concentratedLoads, 
-                                                                                  distributedDeadLoads, 
-                                                                                  activeGeostatics,
+                                                                                  activeStepActions,
                                                                                   increment,
                                                                                   lastIncrementSize,
                                                                                   extrapolation,
@@ -173,7 +160,6 @@ class NIST:
                     lastIncrementSize = False
                     
                 else: 
-                    
                     U += dU
                     lastIncrementSize = incrementSize
                     if iterationCounter >= criticalIter: 
@@ -189,14 +175,22 @@ class NIST:
                         man.finalizeIncrement(U, P, increment)
                         
         except (ReachedMaxIncrements, ReachedMinIncrementSize) as e:
+            success = False
             self.journal.errorMessage("Incrementation failed", self.identification)
             
         except KeyboardInterrupt:
+            success = False
             print('')
             self.journal.message("Interrupted by user", self.identification)
         
+        except ConditionalStop:
+            success = True
+            self.journal.message("Conditional Stop", self.identification)
+        
         else:
-            if activeGeostatics: U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
+            success = True
+            if activeStepActions['geostatics']: 
+                U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
             
             for stepActionType in stepActions.values():
                 for action in stepActionType.values():
@@ -206,44 +200,42 @@ class NIST:
             finishedTime = time + stepProgress * stepLength
             self.journal.printTable([ ("Time in {:}".format(k), " {:10.4f}s".format(v)) for k, v in self.computationTimes.items() ], self.identification)
             
-        return ((1.0 - stepProgress) < 1e-14) , U, P, finishedTime
+        return success , U, P, finishedTime
     
-    def Newton(self, U, dU, 
+    def solveIncrement(self, U, dU, 
                V, I, J, P, 
-               dirichlets,
-               concentratedLoads, 
-               distributedDeadLoads, 
-               activeGeostatics,
+               activeStepActions,
                increment,
                lastIncrementSize,
                extrapolation,
                maxIter,
                maxGrowingIter):
-        
         """ Standard Newton Raphon scheme to solve for an increment """
         
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        numberOfDofs =  self.nDof
-        stepTimes = np.array([stepTime, totalTime])
         iterationCounter =          0
         incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
         
         R =             np.copy(P)          # global Residual vector for the Newton iteration
         F =             np.zeros_like(P)    # accumulated Flux vector 
         Pdeadloads =    np.zeros_like(P)
-        ddU = None
+        ddU =           None
         
-        activeDeadLoads =  concentratedLoads or distributedDeadLoads
+        dirichlets =            activeStepActions['dirichlets']
+        concentratedLoads =     activeStepActions['concentratedLoads']
+        distributedDeadLoads =  activeStepActions['distributedDeadLoads']
+        
+        activeDeadLoads = concentratedLoads or distributedDeadLoads
         
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
         if activeDeadLoads:
-            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, increment)
+            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, increment)
         
         while True:
-            for geostatic in activeGeostatics: geostatic.apply() 
+            for geostatic in activeStepActions['geostatics']: geostatic.apply() 
             
-            P, V, F = self.computeElements(U, dU, stepTimes, dT, P, V, I, J, F)
+            P, V, F = self.computeElements(U, dU, P, V, I, J, F, increment)
             
             if activeDeadLoads:
                 P += Pdeadloads
@@ -269,7 +261,7 @@ class NIST:
             if iterationCounter == maxIter:
                 raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
             
-            K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
+            K = self.assembleStiffness(V, I, J)
             K = self.applyDirichletK(K, dirichlets)
             
             ddU = self.linearSolve(K, R )
@@ -278,13 +270,16 @@ class NIST:
             
         return dU, iterationCounter, incrementResidualHistory
     
-    def computeElements(self, U, dU, time, dT, P, V, I, J, F):
+    def computeElements(self, U, dU, P, V, I, J, F, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration """
         
         tic = getCurrentTime()
+        
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        time = np.array([stepTime, totalTime])
         
         P[:] =      0.0
         F[:] =      0.0
@@ -313,13 +308,15 @@ class NIST:
         self.computationTimes['elements'] += toc - tic
         return P, V, F
     
-    def computeDistributedLoads(self, distributedLoads, P, I, time, dT, increment):
+    def computeDistributedLoads(self, distributedLoads, P, I, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration """
         
         tic = getCurrentTime()
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        time = np.array([stepTime, totalTime])
         for dLoad in distributedLoads:
             magnitude = dLoad.getCurrentMagnitude(increment)
             for faceID, elements in dLoad.surface.items():
@@ -445,9 +442,10 @@ class NIST:
             x.sum_duplicates()
         return x
     
-    def assembleStiffness(self, V, I, J, shape):
+    def assembleStiffness(self, V, I, J):
         """ Construct a CSR matrix from VIJ """
         tic =  getCurrentTime()
+        shape = (self.nDof, self.nDof)
         K = self.tocsr(coo_matrix( (V, (I,J)), shape))
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
@@ -518,7 +516,7 @@ class NIST:
         
         return V
         
-    def assembleDeadLoads(self, Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, increment):
+    def assembleDeadLoads(self, Pdeadloads, concentratedLoads, distributedDeadLoads, I, increment):
         """ Assemble all deadloads into a right hand side vector 
         -> Usually only once per increment """
         Pdeadloads[:] = 0.0
@@ -526,7 +524,7 @@ class NIST:
         for cLoad in concentratedLoads: 
             Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
         # dloads
-        Pdeadloads = self.computeDistributedLoads(distributedDeadLoads, Pdeadloads, I, stepTimes, dT, increment)
+        Pdeadloads = self.computeDistributedLoads(distributedDeadLoads, Pdeadloads, I, increment)
         
         return Pdeadloads
         
@@ -551,3 +549,16 @@ class NIST:
             if nGrew > maxGrowingIter: 
                 return True
         return False
+    
+    def collectActiveStepActions(self, stepActions):
+        
+        activeActions = dict()
+        
+        activeActions['dirichlets'] =            list(stepActions['dirichlet'].values()) + list(stepActions['shotcreteshellmaster'].values())
+        activeActions['distributedDeadLoads'] =  stepActions['distributedload'].values()
+        activeActions['concentratedLoads'] =     stepActions['nodeforces'].values()
+        
+        activeActions['geostatics'] =           [g for g in stepActions['geostatic'].values() if g.active]
+        activeActions['linearConstraints'] =    [c for c in self.constraints.values() if c.linearConstraint ]
+        
+        return activeActions

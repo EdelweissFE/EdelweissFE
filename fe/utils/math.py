@@ -16,5 +16,15 @@ def sigPrinc(x):
 
 sympyMathModules = {'sigPrinc':sigPrinc}
 
+def createModelAccessibleFunction(expression, modelInfo, fieldOutputs):
+    """ Create a function from a string expression, which can access the complete model and fieldOutput"""
+    scope = {**modelInfo, **locals()}
+    f = eval("lambda:" + expression, scope)
+    return f
+    
+def evalModelAccessibleExpression(expression, modelInfo, fieldOutputs):
+    """ Evalualate a string expression, which can access the complete model and fieldOutput"""
+    return createModelAccessibleFunction(expression, modelInfo, fieldOutputs)()
+
 def createMathExpression(expression, symbol='x'):
     return sp.lambdify ( sp.DeferredVector(symbol), expression, ['numpy', sympyMathModules])

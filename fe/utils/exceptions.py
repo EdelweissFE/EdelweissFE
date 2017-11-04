@@ -25,3 +25,5 @@ class ReachedMinIncrementSize(Exception):
     pass
 class DivergingSolution(Exception):
     pass
+class ConditionalStop(Exception):
+    pass

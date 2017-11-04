@@ -17,33 +17,28 @@ documentation={
 
 from fe.stepactions.stepactionbase import StepActionBase
 import numpy as np
+from fe.utils.math import evalModelAccessibleExpression
 
 class StepAction(StepActionBase):
-    """ Dirichlet boundary condition, based on a node set """
+    """ Indirect (displacement) controller for the NISTArcLength solver """
+    identification = 'IndirectControl'
     def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name = name
         self.journal = journal
         
-        if 'deactive' in action:
+        if 'deactivate' in action:
             self.active = False
             return
         else:
             self.active = True
         
-        nodes = modelInfo['nodes']
-        nodeSets = modelInfo['nodeSets']
-        
-        controltype = action['controltype']
-        
-        if controltype == "crackmouthopening":
-            self.c = np.array([-1, 1])
+        self.c = np.array([-1, 1])
         
         self.L =  float ( action['L'] )
         
-        self.dof1 = eval ( action['dof1'] )
-        self.dof2 = eval ( action['dof2'] )
-        
+        self.dof1 = evalModelAccessibleExpression ( action['dof1'], modelInfo, fieldOutputs=None)
+        self.dof2 = evalModelAccessibleExpression ( action['dof2'], modelInfo, fieldOutputs=None)
         
         self.idcs = np.array([self.dof1, self.dof2])
         
@@ -58,11 +53,10 @@ class StepAction(StepActionBase):
     def finishIncrement(self, U, dU, dLambda):
         self.journal.message('Dof 1: {:5.5f}, Dof 2: {:5.5f}'.format( 
                 U [self.dof1] + dU [self.dof1],
-                U [self.dof2] + dU [self.dof2]), self.name )
+                U [self.dof2] + dU [self.dof2]), self.identification )
         
     def finishStep(self,):
         pass
-#        self.active = False
     
     def updateStepAction(self, action):
         pass

@@ -86,18 +86,27 @@ class NISTParallel(NIST):
         
         return K
     
-    def computeElements(self, U, dU, double[::1] time, double dT,
+    def computeElements(self, U, dU,
                         P, 
                         V, 
                         long[::1] I, 
                         long[::1] J,
-                        F):
+                        F,
+                        increment
+                        ):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
         -> is called by solveStep() in each iteration"""
 
         tic = getCurrentTime()
+        
+        cdef:
+            double[::1] time
+            double dT
+        
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        time = np.array([stepTime, totalTime])
         
         UN1 = dU + U # ABAQUS style!
         

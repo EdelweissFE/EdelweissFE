@@ -5,51 +5,62 @@ Created on Thu Nov  2 13:43:01 2017
 
 @author: m9
 """
-
 from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
 
 import numpy as np
-from fe.utils.exceptions import ReachedMaxIterations, DivergingSolution
+from fe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
+from fe.utils.math import createModelAccessibleFunction
 
 class NISTPArcLength(NISTParallel):
     identification = "NISTPArcLength"
     
-    
     def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
         
         self.Lambda =  0.
+        self.fieldOutputs = fieldOutputController.fieldOutputs
+        self.modelInfo = modelInfo
+        
         return super().__init__(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
     
     def solveStep(self, step, time, stepActions, stepOptions, U, P):
         
-        arcLengthControllerType = stepOptions['NISTArcLength']['arcLengthController']
-        self.arcLengthController =  stepActions[ arcLengthControllerType ] [arcLengthControllerType] # name = module designation
+        options = stepOptions['NISTArcLength']
+        arcLengthControllerType = options['arcLengthController']
         
-        self.stepEndTime = 1.0
-        self.totalEndTime = 1.0
+        if 'stopCondition' in options:
+             self.checkConditionalStop = createModelAccessibleFunction( options['stopCondition'], self.modelInfo, self.fieldOutputs  )
+        else:
+            self.checkConditionalStop = False
+        
+        self.arcLengthController =  stepActions[ arcLengthControllerType ] [arcLengthControllerType] # name = module designation
         
         self.dLambda = 0.0
         
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
-    def Newton(self, U, dU, 
+    def solveIncrement(self, U, dU, 
            V, I, J, P, 
-           dirichlets,
-           concentratedLoads, 
-           distributedDeadLoads, 
-           activeGeostatics,
+           activeStepActions,
            increment,
            lastIncrementSize,
            extrapolation,
            maxIter,
            maxGrowingIter):
         
+        """Arc length method to solve for an increment"""
+        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         
-        numberOfDofs =  self.nDof
-        stepTimes = np.array([stepTime, totalTime])
+        if self.checkConditionalStop and incNumber > 1.0 and self.checkConditionalStop():
+            raise ConditionalStop
+        
         iterationCounter =          0
         incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
+        
+        dirichlets =            activeStepActions['dirichlets']
+        concentratedLoads =     activeStepActions['concentratedLoads']
+        distributedDeadLoads =  activeStepActions['distributedDeadLoads']
+        
         activeDeadLoads =  concentratedLoads or distributedDeadLoads
         
         R_ =            np.tile(P, (2,1)).T
@@ -57,6 +68,7 @@ class NISTPArcLength(NISTParallel):
         R_f =           R_[:,1]
         F =             np.zeros_like(P)    # accumulated Flux vector 
         Pdeadloads =    np.zeros_like(P)
+        Pdeadloads_f =  np.zeros_like(P)
         
         ddU = None
         
@@ -66,23 +78,26 @@ class NISTPArcLength(NISTParallel):
         
         dU, isExtrapolatedIncrement, dLambda = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda)
         
-        referenceIncrement = incNumber, 1.0,  1.0,  1.0 * stepTime, self.stepEndTime, self.totalEndTime 
+        referenceIncrement = incNumber, 1.0,  1.0,  0.0, 0.0, 0.0 
+        
+        Pdeadloads_f = self.assembleDeadLoads (Pdeadloads_f, concentratedLoads, distributedDeadLoads, I, referenceIncrement)
         
         while True:
-            for geostatic in activeGeostatics: geostatic.apply() 
+            for geostatic in activeStepActions['geostatics']: geostatic.apply() 
             
-            P, V, F = self.computeElements(U, dU, stepTimes, dT, P, V, I, J, F)
+            modifiedIncrement = incNumber, dLambda, Lambda + dLambda, 0.0, 0.0, 0.0
             
-            modifiedIncrement = incNumber, dLambda, Lambda + dLambda, 0.0, self.stepEndTime, self.totalEndTime
+            R_f[:] = 0.0
+            P, V, F = self.computeElements(U, dU, P, V, I, J, F, increment)
             
             if activeDeadLoads:
-                Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, stepTimes, dT, modifiedIncrement)
-                P += Pdeadloads
+                Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, modifiedIncrement)
+                P   += Pdeadloads
+                R_f += Pdeadloads_f
                 
             R[:] = P
-            R_f[:] = 0.0
             
-            R = self.applyDirichlet( modifiedIncrement, R, dirichlets)
+            R = self.applyDirichlet( modifiedIncrement, R, dirichlets )
             R_f = self.applyDirichlet ( referenceIncrement, R_f, dirichlets)
             
             for constraint in self.constraints.values(): 
@@ -98,7 +113,7 @@ class NISTPArcLength(NISTParallel):
             if iterationCounter == maxIter:
                 raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
             
-            K = self.assembleStiffness(V, I, J, shape=(numberOfDofs, numberOfDofs) )
+            K = self.assembleStiffness(V, I, J)
             K = self.applyDirichletK(K, dirichlets)
             
             ddU_ = self.linearSolve(K, R_ )
@@ -118,10 +133,12 @@ class NISTPArcLength(NISTParallel):
         self.dLambda = dLambda
         
         self.arcLengthController.finishIncrement(U, dU, dLambda)  
+        
         return dU, iterationCounter, incrementResidualHistory
     
-    
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda):
+        """ also account for dLambda"""
+        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         
         if extrapolation == 'linear' and lastIncrementSize:
@@ -130,6 +147,5 @@ class NISTPArcLength(NISTParallel):
             dLambda = 0.0    
             
         dU, isExtrapolatedIncrement = super().extrapolateLastIncrement( extrapolation, increment, dU, dirichlets, lastIncrementSize)
-#        dU[:] = .0
         
         return dU, isExtrapolatedIncrement, dLambda
