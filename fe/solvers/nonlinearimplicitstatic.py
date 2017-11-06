@@ -111,7 +111,7 @@ class NIST:
                                     self.journal)
         
         maxIter =           step.get('maxIter',         self.defaultMaxIter)
-        criticalIter =      step.get('crititcalIter',   self.defaultCriticalIter)
+        criticalIter =      step.get('criticalIter',    self.defaultCriticalIter)
         maxGrowingIter =    step.get('maxGrowIter',     self.defaultMaxGrowingIter)
         
         dU = np.zeros(self.nDof)
@@ -504,7 +504,7 @@ class NIST:
         -> Called by checkConvergency() """
         spatialAveragedFluxes =     dict.fromkeys(self.fieldIndices, 0.0)
         for field, nDof in self.fieldNDofElementWise.items():
-            spatialAveragedFluxes[field] = max( 1e-8, np.linalg.norm(F[ self.fieldIndices[field] ], 1) / nDof )
+            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.fieldIndices[field] ], 1) / nDof )
         
         return spatialAveragedFluxes
             

@@ -4,15 +4,15 @@
 Created on Thu Nov  2 18:35:44 2017
 
 @author: matthias
+
+Indirect (displacement) controller for the NISTArcLength solver
 """
 
 documentation={
         
-        'nSet':'nSet for application of the BC',
-        '1,2,3':'prescribed values in directions',
-        'field': 'field for BC',
-        'f(t)':'(optional) define an amplitude',
-        
+        'dof1':'Degree of freedom for the constraint ( model access expression )',
+        'dof1':'Degree of freedom for the constraint ( model access expression )',
+        'L' : 'Final distance (e.g. crack opening)',
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
@@ -20,23 +20,15 @@ import numpy as np
 from fe.utils.math import evalModelAccessibleExpression
 
 class StepAction(StepActionBase):
-    """ Indirect (displacement) controller for the NISTArcLength solver """
     identification = 'IndirectControl'
     def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
-        self.name = name
+        self.name =     name
         self.journal = journal
-        
-        if 'deactivate' in action:
-            self.active = False
-            return
-        else:
-            self.active = True
         
         self.c = np.array([-1, 1])
         
         self.L =  float ( action['L'] )
-        
         self.dof1 = evalModelAccessibleExpression ( action['dof1'], modelInfo, fieldOutputs=None)
         self.dof2 = evalModelAccessibleExpression ( action['dof2'], modelInfo, fieldOutputs=None)
         
