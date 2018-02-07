@@ -1,0 +1,58 @@
+** Simulation of creep test (24h) by Neuner et al. 2017 -- nonlocal version for shotleon v2
+
+*modelGenerator, generator=planeRectQuad, name=gen
+l=100
+h=200
+nX=10
+nY=10
+elType=uelCPS4NonLocal
+
+*material, name=ShotLeonV2NonLocal, id=scdp, statevars=125
+**E28,          E1,         flowMag,        flowExponent,       flowDelay,      nu,         tTransition,        tDelay,
+21537,          13943,      34,             1.2207,               0.0,            0.2,        0.5,                0.3,
+**vResidual,    nKelvin,    kelvinMin,      strainShrInf,       TauShr,         fcu28,      fcu1,               ratioFcy,
+1e-2,           12,         1e-5,           -0.0020,            360,            40.85,      18.56,              0.1,
+**ratioFbu,     ratioFtu,   eCPP1,          eCPP8,              eCPP24,         nlRadius,   nonLocalWeight,     epsilonF,
+1.16,           0.1,        -0.03,          -0.0007,            -0.0007,        5,          1.05,               0.0017
+**enableDamage, dTStatic,   castTime,       timeToDays,         enableNonlinearCreep,
+1,              1e-3,       0.0,            0.041666,         1.0
+
+*section, name=section1, thickness=1.0, material=scdp, type=planeUelUmat
+all
+
+*job, name=cps4nljob, domain=2d, solver=NISTParallel
+
+*fieldOutput,
+name=Displacement,      elSet=all,           field=displacement, result=U, 
+name=DisplacementN,      nSet=all,           field=displacement, result=U, 
+**name=Nonlocal Damage,   elSet=all,           field=nonlocal damage, result=U, 
+**name=Nonlocal DamageN,   nSet=all,           field=nonlocal damage, result=U, 
+name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
+name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
+name=E,                 elSet=all,          result=sdv, f(x)='x[0,1]', gaussPt=0, saveHistory=True
+
+*output, type=monitor, jobName=cps4nljob
+name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
+name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
+
+*output, type=ensight, jobName=cps4nljob,
+create=perNode, fieldOutput=Displacement
+**create=perNode, fieldOutput=Nonlocal Damage
+
+*output, type=meshPlot, jobName=cps4nljob
+figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', label=Neuner et al. (24h), 
+figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', label=U
+figure=2, axSpec=111, create=xyData,  y=E, x=time,  label=E, 
+
+*configurePlots
+figure=1, axSpec=121, flipY=True, yLabel=$\\varepsilon\\thinspace$(-), xLabel=$t\\thinspace$(h)
+figure=1, axSpec=122, aspect=equal
+
+*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
+dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0
+dirichlet, name=corner,  nSet=gen_leftBottom, field=displacement, 2=0.0, 1=0
+
+*step, jobName=cps4nljob, maxInc=2e-2, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=0.01
+distributedload, name=dload, surface=gen_top, magnitude=3.9, type=pressure, f(t)=t
+
+*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
