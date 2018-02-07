@@ -17,7 +17,7 @@ from fe.elements.uelbaseelement.element cimport BaseElement, BftUel
 from libc.stdlib cimport malloc, free
 from libcpp.string cimport string
 from time import time as getCurrentTime
-from multiprocessing import cpu_count()
+from multiprocessing import cpu_count
 
 cdef public bint notificationToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
@@ -50,7 +50,7 @@ class NISTParallel(NIST):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
         
-        self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', cpu_count() )
+        self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', cpu_count() ))
         self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
     
