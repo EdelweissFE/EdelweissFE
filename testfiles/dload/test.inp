@@ -22,8 +22,12 @@ all
 
 *fieldOutput,
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
+name=displacement, nSet=gen_left, field=displacement, result=P, name=RF
 name=stress, elSet=all, result=stress, gaussPt=1
 name=strain, elSet=all, result=strain, gaussPt=1
+
+*output, type=monitor, jobName=cpe4job, name=ensightExport
+fieldOutput = RF, f(x) = 'sum ( x[:, 1])'
 
 *output, type=ensight, jobName=cpe4job, name=ensightExport
 create=perNode,    fieldOutput=displacement
