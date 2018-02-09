@@ -15,6 +15,7 @@ from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution, ConditionalStop
 from time import time as getCurrentTime
 from collections import defaultdict
+from fe.external.pardiso import pardisoSolve
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
@@ -415,10 +416,16 @@ class NIST:
         """ Interface to the linear eq. system solver """
         
         tic =  getCurrentTime()
-        ddU = spsolve(A, b , use_umfpack=False)
+#        ddU2 = spsolve(A, b , use_umfpack=False)
+        
+        ddU2 = np.asarray(pardisoSolve(A, b))
+        
+#        print( np.linalg.norm(ddU - ddU2) )
+#        print(ddU2)
+        
         toc =  getCurrentTime()
         self.computationTimes['linear solve'] += toc - tic
-        return ddU
+        return ddU2
     
     def tocsr(self, coo, copy=False):
         """ More performant conversion of coo to csr """

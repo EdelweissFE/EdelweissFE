@@ -62,6 +62,21 @@ extensions += [Extension("*",
                         ]  
 
 """
+Build The Pardiso Interface
+"""
+
+extensions += [Extension("*",
+                sources = ["fe/external/pardiso.pyx"],
+                        include_dirs=[join(rootDirectory,'PardisoInterface', "include"), numpy.get_include()] ,
+                         library_dirs= [join(rootDirectory,'PardisoInterface', "lib") ] , 
+                         runtime_library_dirs= [join(rootDirectory,'PardisoInterface', "lib") , join('/opt/intel/mkl/intel64', "lib")
+                             ] ,
+                         libraries= ['PardisoInterface'],
+                         language='c++',
+                         )
+                        ]  
+
+"""
 Compile!
 """
 setup(ext_modules = cythonize(extensions,
