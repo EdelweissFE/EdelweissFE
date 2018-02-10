@@ -13,7 +13,6 @@ cdef extern from 'pardisoInterface.h' namespace 'PardisoInterface' nogil:
     int solve(const double* values, const int* innerIndices, const int* outerIndexPtr, int nnz, int cols, int rows,  const double* rhs, int nRhs, double* out)
 
 def pardisoSolve (A, b ):
-    #A
     cdef int rows, cols 
     rows, cols =            A.shape
     cdef int nnz =          A.nnz

@@ -1,9 +1,6 @@
 #include <Eigen/Dense>
 #include <Eigen/PardisoSupport>
 
-#include <ctime>
-#include <iostream>
-
 namespace PardisoInterface{
 
 int solve(const double* values, const int* innerIndices, const int* outerIndexPtr, int nnz, int cols, int rows,  const double* rhs, int nRhs, double* out)
@@ -18,11 +15,7 @@ int solve(const double* values, const int* innerIndices, const int* outerIndexPt
 
     Solver solver;
     
-      clock_t begin = clock();
     solver.analyzePattern(A);
-      clock_t end = clock();
-      double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << elapsed_secs << std::endl;
     solver.factorize(A);
 
      x = solver.solve(b);

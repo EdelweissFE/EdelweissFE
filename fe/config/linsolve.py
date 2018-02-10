@@ -21,7 +21,7 @@ def getLinSolverByName(linsolverName):
         return lambda A, b : spsolve(A, b, use_umfpack=False)
     elif linsolverName.lower() == 'umfpack':
         from scipy.sparse.linalg import spsolve 
-        return lambda A, b : spsolve(A, b, use_umfpack=False)
+        return lambda A, b : spsolve(A, b, use_umfpack=True)
     elif linsolverName.lower() == 'pardiso':
         from fe.linsolve.pardiso.pardiso import pardisoSolve
         return pardisoSolve
