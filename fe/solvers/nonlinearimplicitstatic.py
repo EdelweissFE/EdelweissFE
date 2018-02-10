@@ -10,12 +10,13 @@ Standard nonlinear, implicit static solver.
 """
 import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
-from scipy.sparse.linalg import spsolve
+#from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution, ConditionalStop
 from time import time as getCurrentTime
 from collections import defaultdict
-from fe.external.pardiso import pardisoSolve
+#from fe.external.pardiso import pardisoSolve
+from fe.config.linsolve import getLinSolverByName, getDefaultLinSolver
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
@@ -41,6 +42,8 @@ class NIST:
         self.constraints =  modelInfo['constraints']
         self.fieldIndices = jobInfo['fieldIndices']
         self.residualHistories = dict.fromkeys( self.fieldIndices )
+        
+        self.linSolver = getLinSolverByName(jobInfo['linsolver']) if 'linsolver' in jobInfo else getDefaultLinSolver()
         
         self.fieldCorrectionTolerances =    jobInfo['fieldCorrectionTolerance']
         self.fluxResidualTolerances =       jobInfo['fluxResidualTolerance']
@@ -416,16 +419,10 @@ class NIST:
         """ Interface to the linear eq. system solver """
         
         tic =  getCurrentTime()
-#        ddU2 = spsolve(A, b , use_umfpack=False)
-        
-        ddU2 = np.asarray(pardisoSolve(A, b))
-        
-#        print( np.linalg.norm(ddU - ddU2) )
-#        print(ddU2)
-        
+        ddU = self.linSolver(A, b)
         toc =  getCurrentTime()
         self.computationTimes['linear solve'] += toc - tic
-        return ddU2
+        return ddU
     
     def tocsr(self, coo, copy=False):
         """ More performant conversion of coo to csr """

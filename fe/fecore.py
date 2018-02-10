@@ -299,7 +299,6 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
                
     # add or update additional job info such as inputfile, domain, name
     jobInfo.update(job)
-    
     jobInfo = loadConfiguration(jobInfo)
     for updateConfig in inputfile['*updateConfiguration']:
         updateConfiguration(updateConfig, jobInfo)

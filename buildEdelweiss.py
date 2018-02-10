@@ -20,7 +20,6 @@ rootDirectory = expanduser("~/constitutiveModelling/")
 """
 Build Extension for the UEL base element, linked to the bftUserLibrary
 """
-
 extensions = [Extension("*",
                 sources = ["fe/elements/uelbaseelement/element.pyx"],
                         include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()],
@@ -66,12 +65,9 @@ Build The Pardiso Interface
 """
 
 extensions += [Extension("*",
-                sources = ["fe/external/pardiso.pyx"],
-                        include_dirs=[join(rootDirectory,'PardisoInterface', "include"), numpy.get_include()] ,
-                         library_dirs= [join(rootDirectory,'PardisoInterface', "lib") ] , 
-                         runtime_library_dirs= [join(rootDirectory,'PardisoInterface', "lib") , join('/opt/intel/mkl/intel64', "lib")
-                             ] ,
-                         libraries= ['PardisoInterface'],
+                sources = ["fe/linsolve/pardiso/pardiso.pyx", 'fe/linsolve/pardiso/pardisoInterface.cpp'],
+                         include_dirs=[ numpy.get_include(), 'fe/linsolve/pardiso/include' ] ,
+                         libraries= [ 'mkl_intel_thread', 'mkl_core', 'mkl_rt', 'iomp5', ],
                          language='c++',
                          )
                         ]  
