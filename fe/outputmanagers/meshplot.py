@@ -211,10 +211,11 @@ class OutputManager(OutputManagerBase):
                         xyJob['f(x)'] = createMathExpression ( definition['f(x)'] )
                     if 'f(y)' in definition:
                         xyJob['f(y)'] = createMathExpression ( definition['f(y)'], symbol='y')
-                        
-                    xyJob['figure'] =   definition.get('figure','1')
-                    xyJob['label'] =     definition.get('label', xyJob['y'].name)
-                    xyJob['axSpec'] =   definition.get('axSpec','111')
+                     
+                    xyJob['figure'] =     definition.get('figure','1')
+                    xyJob['label'] =      definition.get('label', xyJob['y'].name)
+                    xyJob['axSpec'] =     definition.get('axSpec','111')
+                    xyJob['integral'] =   definition.get('integral','False')
                     self.xyJobs.append(xyJob)
                     
 
@@ -262,9 +263,13 @@ class OutputManager(OutputManagerBase):
                 x = xyJob['f(x)'] ( x )
             if 'f(y)' in xyJob:
                 y = xyJob['f(y)'] ( y )
-                
+               
             self.plotter.plotXYData(x, y, xyJob['figure'], xyJob['axSpec'], xyJob )
-            
+            ax =  self.plotter.getAx(xyJob['figure'] , xyJob['axSpec'])
+            if xyJob['integral']=='True':
+                integral = np.trapz(y,x)
+                ax.fill_between(x, 0, y, color='gray', label=str(integral))
+
         for perNodeJob in self.perNodeJobs:
             result = perNodeJob['fieldOutput'].getLastResult()
             fig = self.plotter.getFig(perNodeJob['figure'])
@@ -295,7 +300,7 @@ class OutputManager(OutputManagerBase):
 #                elCoordinatesListDeformed = extractNodeCoordinatesFromElset(self.elSets['all'], perElementJob['fieldOutput'].getLastResult(), perElementJob['scaleFactor'])
 #                self.meshPlot.plotMeshGrid( ax, elCoordinatesListDeformed)
            
-            self.meshPlot.plotMeshGrid(ax,  self.elCoordinatesList)
+#            self.meshPlot.plotMeshGrid(ax,  self.elCoordinatesList)
             
             resultArray = perElementJob['fieldOutput'].getLastResult()
             
