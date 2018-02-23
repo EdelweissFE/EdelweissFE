@@ -173,6 +173,8 @@ class FieldOutput:
             np.savetxt('{:}.csv'.format( self.export ), resultTable, )
             
     def __eq__(self, other):
+        if(type(other) == str):
+            return other == self.name
         return self.getLastResult() == other
 
     def __ne__(self, other):
