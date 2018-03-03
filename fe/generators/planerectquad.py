@@ -112,27 +112,17 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     modelInfo['elementSets']['{:}_central'.format(name)] =  [ elGrid[int(nX/2),int(nY/2)]  ]
     modelInfo['elementSets']['{:}_right'.format(name)] =    [e for e in elGrid[-1,:] ]  
     modelInfo['elementSets']['{:}_left'.format(name)] =     [e for e in elGrid[0,:] ]  
+    
+    nShearBand = min( nX, nY )
+    if nShearBand > 3:
+        shearBand = [ elGrid[ int ( nX/2 + i - nShearBand/2 ), int ( nY/2 + i - nShearBand/2 ) ]  for i in range(nShearBand) ]
+        modelInfo['elementSets']['{:}_shearBand'.format(name)] =  [e for e in shearBand]   
+        modelInfo['elementSets']['{:}_shearBandCenter'.format(name)] =  [e for e in shearBand [  int(nShearBand/2) - 1 : int(nShearBand/2) + 2  ] ]   
+    
     modelInfo['elementSets']['{:}_sandwichHorizontal'.format(name)] = []
     for elList in elGrid[1:-1,:]:
         for e in elList:
             modelInfo['elementSets']['{:}_sandwichHorizontal'.format(name)].append(e)
-   
-
-#    Matthias : Bitte keine hardgecodeten Sachen. Danke!
-            
-    # generate weak element sets in zone defined by a rectangel (xMin, yMin) to (xMax, yMax)
-#    elListWeak = []
-#    xMin = 0
-#    xMax = 4
-#    yMin = 56
-#    yMax = 60
-#
-#    for el in modelInfo['elements'].values():
-#        xNode1 =  el.nodes[0].coordinates[0]
-#        yNode1 =  el.nodes[0].coordinates[1]
-#        if (xNode1>=xMin) and (xNode1<xMax) and (yNode1>=yMin) and (yNode1<yMax) :
-#            elListWeak.append(el)
-#    modelInfo['elementSets']['{:}_weak'.format(name)] =    elListWeak
 
     #surfaces
     modelInfo['surfaces']['{:}_bottom'.format(name)] =  {1: [e for e in elGrid[:,0] ]  }
