@@ -129,8 +129,8 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
     # generate surfaces sets
     for surfaceDef in inputfile['*surface']:
         name = surfaceDef['name']
-        sType = surfaceDef.get('type', 'element')
-        surface  = {} #.get(name, {})
+        sType = surfaceDef.get('type', 'element').lower()
+        surface  = {} 
         if sType == 'element':
             for l in surfaceDef['data']:
                 elSet, faceNumber = l
