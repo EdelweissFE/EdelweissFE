@@ -29,7 +29,6 @@ class OutputManager(OutputManagerBase):
     def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
-
         self.plotter = plotter
         
         for defline in definitionLines:
@@ -39,6 +38,8 @@ class OutputManager(OutputManagerBase):
             
             #compute distance(s), entity 0 is the reference entity in the 'origin'
             entry['pathDistances'] = [0.0]
+            entry['nStages'] = int(defDict.get('nStages', 1))
+            entry['export'] =  bool(defDict.get('export', False))
              
             try: # nSet?
                 nodes = entry['fieldOutput'].nSet
@@ -70,10 +71,33 @@ class OutputManager(OutputManagerBase):
 
     
     def initializeStep(self, step, stepActions, stepOptions):
-        pass
+        for nJob in self.monitorJobs:
+            self.plotStages = np.linspace(0,step['steplength'],nJob['nStages'])
     
     def finalizeIncrement(self, U, P, increment):
-        pass
+        totalTime = increment[3]+increment[4]
+        if totalTime>self.plotStages[0]:
+            for nJob in self.monitorJobs:
+                nJob_= nJob.copy()
+                nJob_['label']=None
+                result = nJob['fieldOutput'].getLastResult()
+                
+                result = nJob['f(x)'] ( result )
+                        
+                result = np.squeeze(result) 
+    
+                if nJob['normalize']:
+                    result /= np.max(np.abs(result))
+                
+                if nJob['export']:
+                    exportData = np.column_stack((nJob['pathDistances'], result))
+                    np.savetxt(nJob['label']+'stage_'+str(nJob['nStages']-len(self.plotStages))+'.csv', exportData)
+
+                self.plotter.plotXYData(nJob['pathDistances'], result, 
+                                        nJob['figure'], nJob['axSpec'], nJob_)
+                
+            self.plotStages = np.delete(self.plotStages, 0)    
+            
             
     def finalizeStep(self, U, P,):
         pass
@@ -89,5 +113,11 @@ class OutputManager(OutputManagerBase):
             if nJob['normalize']:
                 result /= np.max(np.abs(result))
             
+            
+            if nJob['export']:
+                exportData = np.column_stack((nJob['pathDistances'], result))
+                np.savetxt(nJob['label']+'stage_'+str(nJob['nStages']-len(self.plotStages))+'.csv', exportData)
+            
             self.plotter.plotXYData(nJob['pathDistances'], result, 
-                                    nJob['figure'], nJob['axSpec'], nJob )
+                                    nJob['figure'], nJob['axSpec'], nJob)
+            self.plotter.show()
