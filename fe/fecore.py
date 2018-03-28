@@ -87,9 +87,6 @@ def collectNodesAndElementsFromInput(inputfile, modelInfo):
                 elif booleanDef=='intersection':
                     elNumbersBase = [n.elNumber for n in elementSets[name]]
                     els = [ elements[n] for n in list(set(elNumbers).intersection(elNumbersBase))]
-                    for el in els:
-                        print(el.elNumber)
-                    
                 else:
                     raise Exception("Undefined boolean operation!")
                 

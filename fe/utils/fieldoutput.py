@@ -125,7 +125,6 @@ class FieldOutput:
         pass
     
     def finalizeIncrement(self, U, P, increment):
-        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeHistory.append ( totalTime + dT )
         
@@ -191,6 +190,9 @@ class FieldOutput:
 
     def __ge__(self, other):
         return self.getLastResult() >= other
+
+    def __getitem__(self, other):
+        return  self.getLastResult()[other]
 
 class FieldOutputController:
     """
