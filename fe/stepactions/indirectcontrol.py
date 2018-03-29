@@ -25,7 +25,7 @@ class StepAction(StepActionBase):
                 
         self.name =     name
         self.journal = journal
-        
+        self.modelInfo = modelInfo 
         self.c = np.array([-1, 1])
         
         self.L =  float ( action['L'] )
@@ -38,7 +38,7 @@ class StepAction(StepActionBase):
         
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         dL = incrementSize * self.L
-        
+       
         ddLambda = ( dL - self.c.dot ( dU [self.idcs]  + ddU_0 [self.idcs] ) )  /  self.c.dot ( ddU_f [self.idcs] )
         return ddLambda
     
@@ -51,4 +51,10 @@ class StepAction(StepActionBase):
         pass
     
     def updateStepAction(self, action):
+        self.L =  float ( action['L'] )
+        self.dof1 = evalModelAccessibleExpression ( action['dof1'], self.modelInfo, fieldOutputs=None)
+        self.dof2 = evalModelAccessibleExpression ( action['dof2'], self.modelInfo, fieldOutputs=None)
+        
+        self.idcs = np.array([self.dof1, self.dof2])
+        self.c = np.array([-1, 1])
         pass

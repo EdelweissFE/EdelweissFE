@@ -190,7 +190,10 @@ class NIST:
         except ConditionalStop:
             success = True
             self.journal.message("Conditional Stop", self.identification)
-        
+
+            for stepActionType in stepActions.values():
+                for action in stepActionType.values():
+                    action.finishStep()        
         else:
             success = True
             if activeStepActions['geostatics']: 

@@ -36,8 +36,8 @@ class NISTPArcLength(NISTParallel):
         else:
             self.arcLengthController =  stepActions[ arcLengthControllerType ] [arcLengthControllerType] # name = module designation
             
-            if 'stopCondition' in options:
-                 self.checkConditionalStop = createModelAccessibleFunction( options['stopCondition'], self.modelInfo, self.fieldOutputs  )
+            if 'stopCondition' in options and options['stopCondition']!='False' :
+                self.checkConditionalStop = createModelAccessibleFunction( options['stopCondition'], self.modelInfo, self.fieldOutputs  )
             else:
                 self.checkConditionalStop = lambda : False
         
@@ -96,7 +96,6 @@ class NISTPArcLength(NISTParallel):
         referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
         zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0 
         
-        
         P_0 = self.assembleDeadLoads (P_0, concentratedLoads, distributedDeadLoads, I, zeroIncrement) # compute 'dead' deadloads, like gravity
         P_f = self.assembleDeadLoads (P_f, concentratedLoads, distributedDeadLoads, I, referenceIncrement) # compute the reference load ...
         P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
@@ -117,7 +116,7 @@ class NISTPArcLength(NISTParallel):
                 R_0 = self.applyDirichlet( modifiedIncrement, R_0, dirichlets )
 
             R_f = self.applyDirichlet (referenceIncrement, R_f, dirichlets)
-            
+           
             for constraint in self.constraints.values(): 
                 R_0[constraint.globalDofIndices] = 0.0
                 R_f[constraint.globalDofIndices] = 0.0
@@ -143,7 +142,7 @@ class NISTPArcLength(NISTParallel):
             
             # compute the increment of the load parameter. Method depends on the employed arc length controller
             ddLambda = self.arcLengthController.computeDDLambda( dU, ddU_0, ddU_f, increment ) 
-            
+
             # assemble total solution
             ddU = ddU_0 + ddLambda * ddU_f
             
@@ -154,7 +153,7 @@ class NISTPArcLength(NISTParallel):
            
         self.Lambda += dLambda
         self.dLambda = dLambda
-        self.arcLengthController.finishIncrement(U, dU, dLambda)  
+        self.arcLengthController.finishIncrement(U, dU, dLambda) 
         return dU, iterationCounter, incrementResidualHistory
     
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
