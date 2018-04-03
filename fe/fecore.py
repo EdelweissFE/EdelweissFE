@@ -7,173 +7,20 @@ Created on Tue Jan  17 19:10:42 2017
 """
 import numpy as np
 from collections import OrderedDict, defaultdict
-from fe.elements.node import Node
-from fe.config.elementlibrary import getElementByName
 from fe.config.phenomena import getFieldSize, domainMapping
 from fe.config.generators import getGeneratorByName
 from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerByName
 from fe.config.solvers import getSolverByName
-from fe.config.constraints import getConstraintByName
 from fe.utils.fieldoutput import FieldOutputController
-from fe.utils.misc import isInteger, filterByJobName, stringDict
+from fe.utils.misc import  filterByJobName, stringDict
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
-
+from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
-
-def collectNodesAndElementsFromInput(inputfile, modelInfo):
-    """ Collects nodes, elements, node sets and element sets from
-    the input file. """
-    
-    domainSize = modelInfo['domainSize']
-    
-    # returns an OrderedDict of {node label: node} 
-    nodeDefinitions = modelInfo['nodes']
-    for nodeDefs in inputfile['*node']:
-        for defLine in nodeDefs['data']:
-            label = int(defLine[0])
-            coordinates = np.zeros(domainSize)
-            coordinates[:] = defLine[1:]
-            nodeDefinitions[label] = Node(label, coordinates, )
-
-    # returns an OrderedDict of {element Label: element}   
-    elements = modelInfo['elements']
-    for elDefs in inputfile['*element']:
-        elementType = elDefs['type']
-        ElementClass = getElementByName(elementType)
-
-        for defLine in elDefs['data']:
-            label = defLine[0]
-            # store nodeObjects in elNodes list
-            elNodes =  [ nodeDefinitions[n] for n in defLine[1:] ]
-            newEl = ElementClass(elNodes, label)
-            for iNode, node in enumerate(elNodes):
-                # update node.fields dictionary with available fields from phenomena, e.g
-                # OrderedDict : {'mechanical': True, 'thermal': False , ... }
-                node.fields.update( [ (f, True) for f in newEl.fields[iNode] ]  )
-            elements[label] = newEl
-            
-    # generate dictionary of elementObjects belonging to a specified elementset
-    # or generate elementset by generate definition in inputfile
-    elementSets = modelInfo['elementSets']
-    for elSetDefinition in inputfile['*elSet']:
-        name = elSetDefinition['elSet']
-        
-        
-        # TO DO _------------------ BETTER PROGRAMMING
-        
-        
-        #decide if entries are labels or existing nodeSets:
-        if isInteger(elSetDefinition['data'][0][0]):
-            elNumbers = [int(num) for line in elSetDefinition['data'] for num in line]
-
-            if elSetDefinition.get('generate', False):
-                generateDef = elNumbers[0:3]
-                els = [elements[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
-            
-            elif elSetDefinition.get('boolean', False):
-                booleanDef = elSetDefinition.get('boolean')
-                if booleanDef=='difference':
-                    els = [n for n in elementSets[name] if n.elNumber not in elNumbers ]
-                
-                elif booleanDef=='union':
-                    els = [n for n in elementSets[name]]
-                    els += [ elements[n] for n in elNumbers]
-
-                elif booleanDef=='intersection':
-                    elNumbersBase = [n.elNumber for n in elementSets[name]]
-                    els = [ elements[n] for n in list(set(elNumbers).intersection(elNumbersBase))]
-                else:
-                    raise Exception("Undefined boolean operation!")
-                
-                if  elSetDefinition.get('newElSet') != name:
-                    name =  elSetDefinition.get('newElSet')
-                else:
-                    del elementSets[name]
-            else:
-                els = [elements[elNum] for elNum  in elNumbers]     
-            elementSets[name] = els
-        else:
-            elementSets[name]  = []
-            for line in elSetDefinition['data']:
-                for elSet in line:
-                    elementSets[name] += elementSets[elSet]
-
-    # generate dictionary of nodeObjects belonging to a specified nodeset
-    # or generate nodeset by generate definition in inputfile
-    nodeSets = modelInfo['nodeSets']
-    for nSetDefinition in inputfile['*nSet']:
-        name = nSetDefinition['nSet']
-        
-        if isInteger(nSetDefinition['data'][0][0]):
-            nodes = [int(n) for line in  nSetDefinition['data'] for n in line]
-            if nSetDefinition.get('generate', False):
-                generateDef = nodes #nSetDefinition['data'][0][0:3]
-                nodes = [nodeDefinitions[n] for n in np.arange(generateDef[0], generateDef[1]+1, generateDef[2], dtype=int) ]
-            else:
-                nodes = [nodeDefinitions[n] for n in nodes]
-            nodeSets[name] = nodes 
-        else:
-            nodeSets[name]  = []
-            for line in nSetDefinition['data']:
-                for nSet in line:
-                    nodeSets[name] += nodeSets[nSet]
-    
-    # generate surfaces sets
-    for surfaceDef in inputfile['*surface']:
-        name = surfaceDef['name']
-        sType = surfaceDef.get('type', 'element').lower()
-        surface  = {} 
-        if sType == 'element':
-            for l in surfaceDef['data']:
-                elSet, faceNumber = l
-                faceNumber = int(faceNumber)
-                elements = modelInfo['elementSets'][elSet]
-                elements +=  surface.setdefault(faceNumber, [])
-                surface[faceNumber] = elements
-                
-        modelInfo['surfaces'][name] = surface
-        
-    for constraintDef in inputfile['*constraint']:
-        name = constraintDef['name']
-        constraint = constraintDef['type']
-        data = constraintDef['data']
-        
-        constraint = getConstraintByName(constraint)(name, data, modelInfo)
-        
-        for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
-            node.fields.update( [ (f, True) for f in nodeFields]  )
-        
-        modelInfo['constraints'][name] = constraint
-        
-    return modelInfo
-    
-def assignSections(inputfile, elementSets):
-    """ Assign properties and section properties to all elements by
-    the given section definitions."""
-    
-    for secDef in inputfile['*section']:
-        if secDef['type'] == "planeUelUmat" or secDef['type'] == "solidUelUmat":
-            material = [mat for mat in inputfile['*material'] if mat['id'] == secDef['material']][0]
-            if secDef['type'] == "planeUelUmat":
-                uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
-            else:
-                uelProperties = np.array([], dtype=float)
-                
-            umatProperties = np.hstack(material['data'])
-            for line in secDef['data']: 
-               for elSet in line: 
-                   for el in elementSets[elSet]:
-                       el.setProperties(uelProperties, 
-                                        material['name'], 
-                                        material['statevars'],
-                                        umatProperties)
-        else:
-            raise Exception("Undefined section")
 
 def assignFieldDofIndices(nodes, constraints, domainSize):
     """ Loop over all nodes to generate the global field-dof indices.
@@ -268,20 +115,19 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
                  'constraints':     {},
                  'domainSize' :     domainSize}
                 
-    # compact storage of the model
+    # call individual optional model generators
     for generatorDefinition in inputfile['*modelGenerator']:
         gen = generatorDefinition['generator']
         modelInfo = getGeneratorByName(gen)(generatorDefinition, modelInfo, journal)
         
-    modelInfo = collectNodesAndElementsFromInput(inputfile, modelInfo)
+    # the standard 'Abaqus like' model generator is invoked unconditionally and it has direct access to the inputfile
+    abqModelConstructor = AbqModelConstructor(journal)
+    modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.assignSectionsFromInputFile(modelInfo, inputfile)
     
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], modelInfo['constraints'], domainSize)
-    
-    modelInfo['nodeSets']['all'] = list( modelInfo['nodes'].values() )
-    modelInfo['elementSets']['all'] = list ( modelInfo['elements'].values() )
-    
-    assignSections(inputfile, modelInfo['elementSets'])
     
     journal.message("total size of eq. system: {:}".format(numberOfDofs), identification, 0)
     journal.printSeperationLine()
@@ -323,7 +169,6 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     
     stepActions = defaultdict(CaseInsensitiveDict)
     stepOptions = defaultdict(CaseInsensitiveDict)
-    
     
     try:
         for step in jobSteps:
@@ -372,4 +217,3 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
         if not suppressPlots:
             plotter.show()
         return success, U, P, fieldOutputController
-        
