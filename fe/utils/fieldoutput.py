@@ -191,8 +191,8 @@ class FieldOutput:
     def __ge__(self, other):
         return self.getLastResult() >= other
 
-    def __getitem__(self, other):
-        return  self.getLastResult()[other]
+    def __getitem__(self, index):
+        return  self.getLastResult()[index]
 
 class FieldOutputController:
     """
