@@ -120,4 +120,3 @@ class OutputManager(OutputManagerBase):
             
             self.plotter.plotXYData(nJob['pathDistances'], result, 
                                     nJob['figure'], nJob['axSpec'], nJob)
-            self.plotter.show()

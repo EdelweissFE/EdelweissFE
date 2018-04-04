@@ -20,6 +20,7 @@ documentation={
 from fe.stepactions.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
+from fe.utils.misc import stringDict
 
 class StepAction(StepActionBase):
     """ Defines node based load, defined on a nodeset."""
@@ -43,9 +44,11 @@ class StepAction(StepActionBase):
         self.indices = np.asarray(nodeForceIndices, dtype=np.int)
         self.nodeForcesStepStart = np.zeros_like(self.indices, dtype=np.double)
         self.nodeForcesDelta = np.asarray(nodeForceDelta)
+        self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
         
         self.amplitude = self.getAmplitude(action)
-    
+        self.loadMultiplier = 0
+
     def getAmplitude(self, action):
         if 'f(t)' in action:
             t = sp.symbols('t')
@@ -55,20 +58,22 @@ class StepAction(StepActionBase):
             
         return amplitude
         
-    def finishStep(self):
+    def finishStep(self, U, P):
         self.idle = True
-        self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1)
-    
-    def updateStepAction(self, definition):
+        if abs(self.loadMultiplier)>1e-16: # only called in case of indirect displacementcontrol
+            self.nodeForcesStepStart += self.nodeForcesDelta * self.loadMultiplier
+        else:
+            self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1)
+        self.loadMultiplier = 0
+
+    def updateStepAction(self, action):
         self.idle = False
-        
-        action = stringDict(definition)
         nodeForceDelta = []
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
                 directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 nodeForceDelta += [float(action[direction])] * len(directionIndices)
-                 
+        
         self.nodeForcesDelta = np.asarray(nodeForceDelta)
         self.amplitude = self.getAmplitude(action)
         

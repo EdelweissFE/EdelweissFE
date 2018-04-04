@@ -150,7 +150,7 @@ class OutputManager(OutputManagerBase):
         self.meshOnlyJobs = []
         
         # needed for meshOnly plot
-        fpDef = {'result': 'U', 'field': 'displacement', 'name': 'meshDisplacements', 'nSet': 'all'}
+        fpDef = {'result': 'U', 'field': 'displacement', 'name': 'meshDisplacements', 'elSet': 'all'}
         fieldOutputController.fieldOutputs [ fpDef['name'] ] = FieldOutput( modelInfo, fpDef , journal)
         
         for defLine in definitionLines:
