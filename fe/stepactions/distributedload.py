@@ -26,6 +26,7 @@ class StepAction(StepActionBase):
                 
         self.name = name
         self.magnitudeAtStepStart = 0.0
+        self.loadMultiplier = 0 # only in case of indirect displacement control
         
         self.surface = modelInfo['surfaces'][action['surface']]
         self.loadType = action['type']
@@ -40,11 +41,17 @@ class StepAction(StepActionBase):
             
         self.idle = False
             
-    def finishStep(self):
-        self.magnitudeAtStepStart += self.delta * self.amplitude(1.0)
+    def finishStep(self, U, P):
+        
+        if abs(self.loadMultiplier)>1e-16: # only called in case of indirect displacementcontrol
+            self.magnitudeAtStepStart += self.delta * self.loadMultiplier
+        else:
+            self.magnitudeAtStepStart += self.delta * self.amplitude(1.0)
+            
         self.delta=0
         self.idle = True
-    
+        self.loadMultiplier = 0
+
     def updateStepAction(self, action):
         if 'magnitude' in action:
             self.delta = np.asarray([float(action['magnitude'])]) - self.magnitudeAtStepStart 

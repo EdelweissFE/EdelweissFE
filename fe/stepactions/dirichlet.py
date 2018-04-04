@@ -54,7 +54,7 @@ class StepAction(StepActionBase):
         
         self.active = True
         
-    def finishStep(self,):
+    def finishStep(self, U, P):
         self.active = False
     
     def updateStepAction(self, action):

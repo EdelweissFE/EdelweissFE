@@ -25,6 +25,6 @@ class StepActionBase(ABC):
         pass
     
     @abstractmethod
-    def finishStep(self):
+    def finishStep(self, U, P):
         """is called when a step successfully finished"""
         pass

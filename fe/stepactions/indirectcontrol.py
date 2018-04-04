@@ -27,11 +27,13 @@ class StepAction(StepActionBase):
         self.journal = journal
         self.modelInfo = modelInfo 
         self.c = np.array([-1, 1])
+        self.currentL0 = 0.0
         
         self.L =  float ( action['L'] )
         self.dof1 = evalModelAccessibleExpression ( action['dof1'], modelInfo, fieldOutputs=None)
         self.dof2 = evalModelAccessibleExpression ( action['dof2'], modelInfo, fieldOutputs=None)
-        
+       
+        self.definition = str( action.get('definition', 'absolute') ) 
         self.idcs = np.array([self.dof1, self.dof2])
         
     def computeDDLambda(self, dU, ddU_0, ddU_f, increment ):
@@ -46,15 +48,20 @@ class StepAction(StepActionBase):
         self.journal.message('Dof 1: {:5.5f}, Dof 2: {:5.5f}'.format( 
                 U [self.dof1] + dU [self.dof1],
                 U [self.dof2] + dU [self.dof2]), self.identification )
+
         
-    def finishStep(self,):
-        pass
+    def finishStep(self, U, P):
+        self.currentL0 =  self.c.dot ( U [self.idcs]  )
+        print("current cmod")
+        print( self.currentL0 )
     
     def updateStepAction(self, action):
-        self.L =  float ( action['L'] )
+        if self.definition=='absolute':
+            self.L =  float ( action['L'] ) - self.currentL0
+        else:
+            self.L =  float ( action['L'] )
         self.dof1 = evalModelAccessibleExpression ( action['dof1'], self.modelInfo, fieldOutputs=None)
         self.dof2 = evalModelAccessibleExpression ( action['dof2'], self.modelInfo, fieldOutputs=None)
         
         self.idcs = np.array([self.dof1, self.dof2])
         self.c = np.array([-1, 1])
-        pass
