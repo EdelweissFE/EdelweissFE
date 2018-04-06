@@ -154,6 +154,10 @@ class NISTPArcLength(NISTParallel):
         self.Lambda += dLambda
         self.dLambda = dLambda
         self.arcLengthController.finishIncrement(U, dU, dLambda) 
+        for dLoad in distributedDeadLoads:
+            dLoad.loadMultiplier = self.Lambda
+        for cLoad in concentratedLoads:
+            cLoad.loadMultiplier = self.Lambda    
         return dU, iterationCounter, incrementResidualHistory
     
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
@@ -164,7 +168,7 @@ class NISTPArcLength(NISTParallel):
             return super().extrapolateLastIncrement( extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
         elif extrapolation == 'linear' and lastIncrementSize:
-            dLambda = dLambda * (incrementSize/lastIncrementSize) 
+            dLambda = dLambda * (incrementSize/lastIncrementSize)
             dU, isExtrapolatedIncrement  = super().extrapolateLastIncrement( extrapolation, increment, dU, {}, lastIncrementSize)
         else:
             dLambda = 0.0   

@@ -193,15 +193,16 @@ class NIST:
 
             for stepActionType in stepActions.values():
                 for action in stepActionType.values():
-                    action.finishStep()        
+                    action.finishStep(U,P)        
         else:
             success = True
             if activeStepActions['geostatics']: 
+                self.journal.message("Geostatic Step -- displacements are resetted", self.identification)
                 U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
             
             for stepActionType in stepActions.values():
                 for action in stepActionType.values():
-                    action.finishStep()
+                    action.finishStep(U, P)
                     
         finally:
             finishedTime = time + stepProgress * stepLength
@@ -244,10 +245,10 @@ class NIST:
             
             P, V, F = self.computeElements(U, dU, P, V, I, J, F, increment)
             
-            if activeDeadLoads:
-                P += Pdeadloads
-                
             R[:] = P
+            
+            if activeDeadLoads:
+                R += Pdeadloads
             
             if iterationCounter == 0 and not isExtrapolatedIncrement and dirichlets :
                 # first iteration? apply dirichlet bcs and unconditionally solve
