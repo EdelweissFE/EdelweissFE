@@ -52,8 +52,6 @@ class StepAction(StepActionBase):
         
     def finishStep(self, U, P):
         self.currentL0 =  self.c.dot ( U [self.idcs]  )
-        print("current cmod")
-        print( self.currentL0 )
     
     def updateStepAction(self, action):
         if self.definition=='absolute':

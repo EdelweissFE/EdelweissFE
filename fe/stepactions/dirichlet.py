@@ -33,7 +33,6 @@ class StepAction(StepActionBase):
         nodeSets = modelInfo['nodeSets']
         self.field = action['field']
 
-        
         self.action = action
         self.nSet = nodeSets [ action['nSet'] ]
 

@@ -20,7 +20,7 @@ documentation={
 from fe.stepactions.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
-from fe.utils.misc import stringDict
+#from fe.utils.misc import stringDict
 
 class StepAction(StepActionBase):
     """ Defines node based load, defined on a nodeset."""
@@ -47,7 +47,7 @@ class StepAction(StepActionBase):
         self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
         
         self.amplitude = self.getAmplitude(action)
-        self.loadMultiplier = 0
+#        self.loadMultiplier = 0
 
     def getAmplitude(self, action):
         if 'f(t)' in action:
@@ -57,14 +57,18 @@ class StepAction(StepActionBase):
             amplitude = lambda x:x
             
         return amplitude
+    
         
-    def finishStep(self, U, P):
-        self.idle = True
-        if abs(self.loadMultiplier)>1e-16: # only called in case of indirect displacementcontrol
-            self.nodeForcesStepStart += self.nodeForcesDelta * self.loadMultiplier
-        else:
-            self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1)
-        self.loadMultiplier = 0
+    def finishStep(self, U, P, stepMagnitude=None):
+        if not self.idle:
+            if stepMagnitude == None:
+                # standard caes
+                self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1.0)
+            else:
+                # set the 'actual' increment manually, e.g. for arc length method
+                self.nodeForcesStepStart += self.nodeForcesDelta * stepMagnitude
+            self.nodeForcesDelta = 0
+            self.idle = True
 
     def updateStepAction(self, action):
         self.idle = False

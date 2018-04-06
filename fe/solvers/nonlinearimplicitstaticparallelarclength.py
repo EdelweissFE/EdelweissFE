@@ -32,7 +32,6 @@ class NISTPArcLength(NISTParallel):
         
         if arcLengthControllerType == 'off':
             self.arcLengthController = None
-        
         else:
             self.arcLengthController =  stepActions[ arcLengthControllerType ] [arcLengthControllerType] # name = module designation
             
@@ -44,7 +43,7 @@ class NISTPArcLength(NISTParallel):
         self.dLambda = 0.0
         
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
-    
+        
     def solveIncrement(self, U, dU, 
            V, I, J, P, 
            activeStepActions,
@@ -154,10 +153,7 @@ class NISTPArcLength(NISTParallel):
         self.Lambda += dLambda
         self.dLambda = dLambda
         self.arcLengthController.finishIncrement(U, dU, dLambda) 
-        for dLoad in distributedDeadLoads:
-            dLoad.loadMultiplier = self.Lambda
-        for cLoad in concentratedLoads:
-            cLoad.loadMultiplier = self.Lambda    
+        
         return dU, iterationCounter, incrementResidualHistory
     
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
@@ -176,3 +172,14 @@ class NISTPArcLength(NISTParallel):
             isExtrapolatedIncrement = False
         
         return dU, isExtrapolatedIncrement, dLambda
+
+    def finishStepActions(self, U, P, stepActions):
+        
+        if self.arcLengthController != None:
+            # set the magnitude of loads to the current load multiplier
+            for stepAction in stepActions['nodeforces'].values():
+                stepAction.finishStep(U, P, stepMagnitude = self.Lambda)
+            for stepAction in stepActions['distributedload'].values():
+                stepAction.finishStep(U, P, stepMagnitude = self.Lambda)
+        
+        return super().finishStepActions(U, P, stepActions)
