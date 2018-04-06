@@ -9,7 +9,7 @@ Standard nonlinear, implicit static solver.
 
 """
 import numpy as np
-from scipy.sparse import coo_matrix, csr_matrix
+from scipy.sparse import csr_matrix
 #from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution, ConditionalStop
@@ -427,33 +427,35 @@ class NIST:
         self.computationTimes['linear solve'] += toc - tic
         return ddU
     
-    def tocsr(self, coo, copy=False):
-        """ More performant conversion of coo to csr """
-        from scipy.sparse.sputils import  get_index_dtype, upcast
-        from scipy.sparse._sparsetools import coo_tocsr
-        M,N = coo.shape
-        idx_dtype = get_index_dtype((coo.row, coo.col),
-                                    maxval=max(coo.nnz, N))
-        row = coo.row.astype(idx_dtype, copy=False)
-        col = coo.col.astype(idx_dtype, copy=False)
-
-        indptr = np.empty(M + 1, dtype=idx_dtype)
-        indices = np.empty_like(col, dtype=idx_dtype)
-        data = np.empty_like(coo.data, dtype=upcast(coo.dtype))
-
-        coo_tocsr(M, N, coo.nnz, row, col, coo.data,
-                  indptr, indices, data)
-
-        x = csr_matrix((data, indices, indptr), shape=coo.shape)
-        if not coo.has_canonical_format:
-            x.sum_duplicates()
-        return x
+#    def tocsr(self, coo, copy=False):
+#        """ More performant conversion of coo to csr """
+#        from scipy.sparse.sputils import  get_index_dtype, upcast
+#        from scipy.sparse._sparsetools import coo_tocsr
+#        M,N = coo.shape
+#        idx_dtype = get_index_dtype((coo.row, coo.col),
+#                                    maxval=max(coo.nnz, N))
+#        row = coo.row.astype(idx_dtype, copy=False)
+#        col = coo.col.astype(idx_dtype, copy=False)
+#
+#        indptr = np.empty(M + 1, dtype=idx_dtype)
+#        indices = np.empty_like(col, dtype=idx_dtype)
+#        data = np.empty_like(coo.data, dtype=upcast(coo.dtype))
+#
+#        coo_tocsr(M, N, coo.nnz, row, col, coo.data,
+#                  indptr, indices, data)
+#
+#        x = csr_matrix((data, indices, indptr), shape=coo.shape)
+#        if not coo.has_canonical_format:
+#            x.sum_duplicates()
+#        return x
     
     def assembleStiffness(self, V, I, J):
         """ Construct a CSR matrix from VIJ """
         tic =  getCurrentTime()
         shape = (self.nDof, self.nDof)
-        K = self.tocsr(coo_matrix( (V, (I,J)), shape))
+#        K = self.tocsr(coo_matrix( (V, (I,J)), shape))
+#        K = coo_matrix( (V, (I,J)), shape).tocsr()
+        K = csr_matrix ( (V, (I,J)), shape )
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
         return K
