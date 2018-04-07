@@ -9,23 +9,20 @@ Apply simple node forces on a nSet.
 """
 
 documentation={
-        
         'nSet':'nSet for application of the BC',
         '1,2,3':'prescribed values in directions',
         'field': 'field for BC',
         'f(t)':'(optional) define an amplitude',
-        
         }
 
 from fe.stepactions.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
-#from fe.utils.misc import stringDict
 
 class StepAction(StepActionBase):
     """ Defines node based load, defined on a nodeset."""
     def __init__(self, name, action, jobInfo, modelInfo, journal):
-                
+        
         self.name = name
         nodeForceIndices = []
         nodeForceDelta = []
@@ -47,9 +44,9 @@ class StepAction(StepActionBase):
         self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
         
         self.amplitude = self.getAmplitude(action)
-#        self.loadMultiplier = 0
 
     def getAmplitude(self, action):
+        
         if 'f(t)' in action:
             t = sp.symbols('t')
             amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
@@ -57,20 +54,22 @@ class StepAction(StepActionBase):
             amplitude = lambda x:x
             
         return amplitude
-    
         
     def finishStep(self, U, P, stepMagnitude=None):
+        
         if not self.idle:
             if stepMagnitude == None:
-                # standard caes
+                # standard case
                 self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1.0)
             else:
                 # set the 'actual' increment manually, e.g. for arc length method
                 self.nodeForcesStepStart += self.nodeForcesDelta * stepMagnitude
+                
             self.nodeForcesDelta = 0
             self.idle = True
 
     def updateStepAction(self, action):
+        
         self.idle = False
         nodeForceDelta = []
         for x, direction  in enumerate(['1', '2', '3']):
@@ -82,6 +81,7 @@ class StepAction(StepActionBase):
         self.amplitude = self.getAmplitude(action)
         
     def applyOnP(self, P, increment):
+        
         if self.idle:
             P[self.indices] += self.nodeForcesStepStart
         else:

@@ -23,6 +23,7 @@ import sympy as sp
 
 class StepAction(StepActionBase):
     """ Dirichlet boundary condition, based on a node set """
+    
     def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name = name
@@ -54,13 +55,15 @@ class StepAction(StepActionBase):
         self.active = True
         
     def finishStep(self, U, P):
+        
         self.active = False
     
     def updateStepAction(self, action):
+        
         self.active = True
-
         dirichletIndices = []
         dirichletDelta = []
+        
         for x, direction  in enumerate(['1', '2', '3']):
             if direction in action:
                 directionIndices = [node.fields[self.field][x] for node in self.nSet]
@@ -76,6 +79,7 @@ class StepAction(StepActionBase):
             self.amplitude = lambda x:x
 
     def getDelta(self, increment):
+        
         if self.active:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             return self.delta * ( self.amplitude ( stepProgress ) - 

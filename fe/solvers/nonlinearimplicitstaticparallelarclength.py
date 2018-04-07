@@ -157,6 +157,8 @@ class NISTPArcLength(NISTParallel):
         return dU, iterationCounter, incrementResidualHistory
     
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
+        """Modified extrapolation to account for a load multiplier predictor """
+        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         
         if dLambda == None:
@@ -174,9 +176,11 @@ class NISTPArcLength(NISTParallel):
         return dU, isExtrapolatedIncrement, dLambda
 
     def finishStepActions(self, U, P, stepActions):
+        """Modified finish to communicate the 'correct' magnitude of external loads, 
+        i.e., the load multiplier,
+        to the stepactions (nodeforces, distributedloads, ... ) """
         
         if self.arcLengthController != None:
-            # set the magnitude of loads to the current load multiplier
             for stepAction in stepActions['nodeforces'].values():
                 stepAction.finishStep(U, P, stepMagnitude = self.Lambda)
             for stepAction in stepActions['distributedload'].values():

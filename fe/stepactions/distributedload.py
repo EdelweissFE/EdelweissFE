@@ -40,32 +40,39 @@ class StepAction(StepActionBase):
         self.idle = False
             
     def finishStep(self, U, P, stepMagnitude=None):
+        
         if not self.idle:
             if stepMagnitude == None:
-                # standard caes
+                # standard case
                 self.magnitudeAtStepStart += self.delta * self.amplitude(1.0)
             else:
                 # set the 'actual' increment manually, e.g. for arc length method
                 self.magnitudeAtStepStart += self.delta * stepMagnitude
+                
             self.delta = 0
             self.idle = True
     
     def updateStepAction(self, action):
+        
         if 'magnitude' in action:
             self.delta = np.asarray([float(action['magnitude'])]) - self.magnitudeAtStepStart 
         elif 'delta' in action:
             self.delta = np.asarray([float(action['delta'])])   
+            
         if 'f(t)' in action:
             t = sp.symbols('t')
             self.amplitude = sp.lambdify(t, sp.sympify(action['f(t)']), 'numpy')
         else:
             self.amplitude = lambda x:x
+            
         self.idle = False
     
     def getCurrentMagnitude(self, increment):
+        
         if self.idle == True:
             t = 1.0
         else:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             t = stepProgress
+            
         return self.magnitudeAtStepStart + self.delta * self.amplitude(t)

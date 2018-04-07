@@ -21,6 +21,7 @@ from fe.utils.math import evalModelAccessibleExpression
 
 class StepAction(StepActionBase):
     identification = 'IndirectControl'
+    
     def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name =     name
@@ -48,7 +49,6 @@ class StepAction(StepActionBase):
         self.journal.message('Dof 1: {:5.5f}, Dof 2: {:5.5f}'.format( 
                 U [self.dof1] + dU [self.dof1],
                 U [self.dof2] + dU [self.dof2]), self.identification )
-
         
     def finishStep(self, U, P):
         self.currentL0 =  self.c.dot ( U [self.idcs]  )
