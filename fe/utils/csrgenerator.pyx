@@ -12,21 +12,22 @@ cimport numpy as np
 
 cdef class CSRGenerator:
     
-    cdef csrMatrix
-    cdef double[::1] V
-    cdef long[::1] x
-    cdef long[::1] I, J
+    """ Generates Compressed Sparse Row Matrices from the COO format,
+    and offers the possibility to update the matrix without reanalyzing the 
+    pattern (in contrast to SciPy)"""
     
+    cdef csrMatrix
+    cdef long[::1] x
     cdef double[::1] data
     cdef int nDof
     
-    def __init__(self, double[::1] V, long[::1] I, long[::1] J, long nDof):
+    def __init__(self, long[::1] I, long[::1] J, long nDof):
+        """ Initialize the pattern, V can be a dummy (empty) vector """
+        self.nDof = nDof     
+        self.x  = np.zeros_like ( I , dtype=int )
         
-        self.nDof = nDof
-        self.I = I
-        self.J = J
-        self.csrMatrix = csr_matrix( (V, (I,J) ), (nDof, nDof) )        
-        self.x  = np.zeros_like ( V , dtype=int )
+        # abuse Scipy to create the object
+        self.csrMatrix = csr_matrix( (np.zeros_like(I, dtype=np.double), (I,J) ), (nDof, nDof) )   
 
         cdef int[::1] indices, indptr
         
@@ -46,6 +47,7 @@ cdef class CSRGenerator:
                     break
             
     def updateCSR(self, double[::1] V):
+        """ get updated copies of the CSR matrix """
         cdef int cooPairIdx
         self.data[:] = 0.0
         for cooPairIdx in range( len (self.x) ):
