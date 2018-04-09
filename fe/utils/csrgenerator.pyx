@@ -25,33 +25,30 @@ cdef class CSRGenerator:
         self.nDof = nDof
         self.I = I
         self.J = J
-        self.csrMatrix = csr_matrix( (V, (I,J) ), (nDof, nDof) )
-        
-        self.x  = np.zeros_like ( V , dtype=long )
+        self.csrMatrix = csr_matrix( (V, (I,J) ), (nDof, nDof) )        
+        self.x  = np.zeros_like ( V , dtype=int )
+
+        cdef int[::1] indices, indptr
         
         self.data = self.csrMatrix.data
-        
-        cdef long idx = 0
-        cdef long tmp = 0
-        cdef long row, col
-        cdef int[::1] colIndices, indices, indptr
         indices = self.csrMatrix.indices
         indptr = self.csrMatrix.indptr
         
-        for (row, col) in zip(I, J):
-            colIndices = indices[indptr[row] : indptr[row+1]]
-            tmp = 0 
-            for colIdx in colIndices:
+        cdef int cooPairIdx, c
+        cdef long row, col
+        for cooPairIdx in range(len(I)):
+            row = I [ cooPairIdx ]
+            col = J [ cooPairIdx ]
+            for c in range( indptr[row], indptr[row+1] ):
+                colIdx = indices[ c ]
                 if colIdx == col:
-                    self.x [ idx ] = indptr[row] + tmp 
+                    self.x [ cooPairIdx ] = c 
                     break
-                tmp += 1
-            idx += 1
             
     def updateCSR(self, double[::1] V):
-        cdef long i, x
+        cdef int cooPairIdx
         self.data[:] = 0.0
-        for i, x in enumerate( self.x ):
-            self.data [ x ] += V [ i ]
+        for cooPairIdx in range( len (self.x) ):
+            self.data [ self.x[cooPairIdx] ] += V [ cooPairIdx ]
         
         return self.csrMatrix.copy()
