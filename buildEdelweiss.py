@@ -44,6 +44,10 @@ extensions += [Extension("*", ["fe/utils/elementresultcollector.pyx"],
                                  include_dirs=[numpy.get_include()],
                                  language="c++",)]
 
+extensions += [Extension("*", ["fe/utils/csrgenerator.pyx"],                                    
+                                 include_dirs=[numpy.get_include()],
+                                 language="c++",)]
+
 
 """
 Build The parallel NISTParallel solver with OpenMP
