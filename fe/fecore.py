@@ -366,16 +366,14 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
         journal.errorMessage("Step not finished", identification)
         
     finally:
-        # let all output managers finalize the job
-        fieldOutputController.finalizeJob(U, P)
- 
-        for manager in outputmanagers:
-            manager.finalizeJob(U, P,)
         journal.printTable( [ ("Job computation time", "{:10.4f}s".format(jobInfo['computationTime'])), ], 
                              identification, level=0,
                              printHeaderRow=False)
+        # let all output managers finalize the job
+        fieldOutputController.finalizeJob(U, P)
+        for manager in outputmanagers:
+            manager.finalizeJob(U, P,)
         if not suppressPlots:
             plotter.show()
-        
         return success, U, P, fieldOutputController
         

@@ -388,7 +388,7 @@ class NIST:
             fieldCorrection =    np.linalg.norm( ddU[ fieldIndices ] , np.inf ) if ddU is not None else 0.0
             
             convergedCorrection = fieldCorrection < self.fieldCorrectionTolerances[field] 
-            convergedFlux =       fluxResidual <= fluxResidualTolerances[field] * spatialAveragedFluxes[field] 
+            convergedFlux =       fluxResidual <= max( fluxResidualTolerances[field] * spatialAveragedFluxes[field], 1e-10 )
             
             previousFluxResidual, nGrew = residualHistory[field]
             if fluxResidual > previousFluxResidual:
@@ -415,7 +415,7 @@ class NIST:
         """ Interface to the linear eq. system solver """
         
         tic =  getCurrentTime()
-        ddU = spsolve(A, b )
+        ddU = spsolve(A, b , use_umfpack=False)
         toc =  getCurrentTime()
         self.computationTimes['linear solve'] += toc - tic
         return ddU

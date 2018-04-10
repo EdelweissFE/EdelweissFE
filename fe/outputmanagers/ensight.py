@@ -438,7 +438,7 @@ class OutputManager(OutputManagerBase):
         
         # intermediate save of the case
         if self.intermediateSaveInterval:
-            if self.intermediateSaveIntervalCounter == self.intermediateSaveInterval:
+            if self.intermediateSaveIntervalCounter >= self.intermediateSaveInterval:
                 self.ensightCase.finalize(replaceTimeValuesByEnumeration=False, closeFileHandes=False)
                 self.intermediateSaveIntervalCounter = 0
             self.intermediateSaveIntervalCounter +=1
