@@ -9,12 +9,12 @@ from Cython.Build import cythonize
 from os.path import expanduser, join
 import numpy 
 
-directives = {'boundscheck':    False,
-              'wraparound':     False,
-              'nonecheck' :     False}
+directives = {'boundscheck':            False,
+              'wraparound':             False,
+              'nonecheck' :             False,
+              'initializedcheck' :      False} # efficient access of memoryviews
 
 # 1) rootDirectory where the libraries are located
-# rootDirectory = expanduser("~/constitutiveModelling")
 rootDirectory = expanduser("~/constitutiveModelling/")
 
 """
@@ -39,8 +39,15 @@ extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],
                                  runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
                                  libraries= ['bftUserLibrary'],
                                  language="c++",)]
+"""
+Auxiliary extension modules
+"""
 
 extensions += [Extension("*", ["fe/utils/elementresultcollector.pyx"],                                    
+                                 include_dirs=[numpy.get_include()],
+                                 language="c++",)]
+
+extensions += [Extension("*", ["fe/utils/csrgenerator.pyx"],                                    
                                  include_dirs=[numpy.get_include()],
                                  language="c++",)]
 
@@ -76,4 +83,6 @@ extensions += [Extension("*",
 Compile!
 """
 setup(ext_modules = cythonize(extensions,
-                            compiler_directives=directives))
+                            compiler_directives=directives,
+                            annotate=True
+                            ))

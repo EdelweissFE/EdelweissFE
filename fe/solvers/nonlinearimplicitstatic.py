@@ -9,14 +9,12 @@ Standard nonlinear, implicit static solver.
 
 """
 import numpy as np
-from scipy.sparse import csr_matrix
-#from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMaxIterations, ReachedMinIncrementSize, CutbackRequest, DivergingSolution, ConditionalStop
 from time import time as getCurrentTime
 from collections import defaultdict
-#from fe.external.pardiso import pardisoSolve
 from fe.config.linsolve import getLinSolverByName, getDefaultLinSolver
+from fe.utils.csrgenerator import CSRGenerator
 
 class NIST:
     """ This is the Nonlinear Implicit STatic -- solver.
@@ -77,6 +75,8 @@ class NIST:
         self.J = J
         self.elementToIndexInVIJMap = elementToIndexInVIJMap # element  -> V[ .... idx ..  ]
         self.constraintToIndexInVIJMap = constraintToIndexInVIJMap
+        
+        self.csrGenerator = CSRGenerator ( I, J, self.nDof )
         
         # for the Abaqus like convergence test, the number of dofs 'element-wise' is needed:
         # = Σ_elements Σ_nodes ( nDof (field) )
@@ -196,13 +196,12 @@ class NIST:
                     action.finishStep(U,P)        
         else:
             success = True
+            
             if activeStepActions['geostatics']: 
                 self.journal.message("Geostatic Step -- displacements are resetted", self.identification)
                 U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
             
-            for stepActionType in stepActions.values():
-                for action in stepActionType.values():
-                    action.finishStep(U, P)
+            self.finishStepActions(U, P, stepActions)
                     
         finally:
             finishedTime = time + stepProgress * stepLength
@@ -428,35 +427,10 @@ class NIST:
         self.computationTimes['linear solve'] += toc - tic
         return ddU
     
-#    def tocsr(self, coo, copy=False):
-#        """ More performant conversion of coo to csr """
-#        from scipy.sparse.sputils import  get_index_dtype, upcast
-#        from scipy.sparse._sparsetools import coo_tocsr
-#        M,N = coo.shape
-#        idx_dtype = get_index_dtype((coo.row, coo.col),
-#                                    maxval=max(coo.nnz, N))
-#        row = coo.row.astype(idx_dtype, copy=False)
-#        col = coo.col.astype(idx_dtype, copy=False)
-#
-#        indptr = np.empty(M + 1, dtype=idx_dtype)
-#        indices = np.empty_like(col, dtype=idx_dtype)
-#        data = np.empty_like(coo.data, dtype=upcast(coo.dtype))
-#
-#        coo_tocsr(M, N, coo.nnz, row, col, coo.data,
-#                  indptr, indices, data)
-#
-#        x = csr_matrix((data, indices, indptr), shape=coo.shape)
-#        if not coo.has_canonical_format:
-#            x.sum_duplicates()
-#        return x
-    
     def assembleStiffness(self, V, I, J):
         """ Construct a CSR matrix from VIJ """
         tic =  getCurrentTime()
-        shape = (self.nDof, self.nDof)
-#        K = self.tocsr(coo_matrix( (V, (I,J)), shape))
-#        K = coo_matrix( (V, (I,J)), shape).tocsr()
-        K = csr_matrix ( (V, (I,J)), shape )
+        K = self.csrGenerator.updateCSR( V )
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
         return K
@@ -572,3 +546,8 @@ class NIST:
         activeActions['linearConstraints'] =    [c for c in self.constraints.values() if c.linearConstraint ]
         
         return activeActions
+    
+    def finishStepActions(self, U, P, stepActions):
+        for stepActionType in stepActions.values():
+            for action in stepActionType.values():
+                action.finishStep(U, P)

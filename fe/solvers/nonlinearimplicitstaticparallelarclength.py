@@ -32,7 +32,6 @@ class NISTPArcLength(NISTParallel):
         
         if arcLengthControllerType == 'off':
             self.arcLengthController = None
-        
         else:
             self.arcLengthController =  stepActions[ arcLengthControllerType ] [arcLengthControllerType] # name = module designation
             
@@ -44,7 +43,7 @@ class NISTPArcLength(NISTParallel):
         self.dLambda = 0.0
         
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
-    
+        
     def solveIncrement(self, U, dU, 
            V, I, J, P, 
            activeStepActions,
@@ -154,13 +153,12 @@ class NISTPArcLength(NISTParallel):
         self.Lambda += dLambda
         self.dLambda = dLambda
         self.arcLengthController.finishIncrement(U, dU, dLambda) 
-        for dLoad in distributedDeadLoads:
-            dLoad.loadMultiplier = self.Lambda
-        for cLoad in concentratedLoads:
-            cLoad.loadMultiplier = self.Lambda    
+        
         return dU, iterationCounter, incrementResidualHistory
     
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
+        """Modified extrapolation to account for a load multiplier predictor """
+        
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         
         if dLambda == None:
@@ -176,3 +174,16 @@ class NISTPArcLength(NISTParallel):
             isExtrapolatedIncrement = False
         
         return dU, isExtrapolatedIncrement, dLambda
+
+    def finishStepActions(self, U, P, stepActions):
+        """Modified finish to communicate the 'correct' magnitude of external loads, 
+        i.e., the load multiplier,
+        to the stepactions (nodeforces, distributedloads, ... ) """
+        
+        if self.arcLengthController != None:
+            for stepAction in stepActions['nodeforces'].values():
+                stepAction.finishStep(U, P, stepMagnitude = self.Lambda)
+            for stepAction in stepActions['distributedload'].values():
+                stepAction.finishStep(U, P, stepMagnitude = self.Lambda)
+        
+        return super().finishStepActions(U, P, stepActions)

@@ -11,7 +11,7 @@ Indirect (displacement) controller for the NISTArcLength solver
 documentation={
         
         'dof1':'Degree of freedom for the constraint ( model access expression )',
-        'dof1':'Degree of freedom for the constraint ( model access expression )',
+        'dof2':'Degree of freedom for the constraint ( model access expression )',
         'L' : 'Final distance (e.g. crack opening)',
         }
 
@@ -21,6 +21,7 @@ from fe.utils.math import evalModelAccessibleExpression
 
 class StepAction(StepActionBase):
     identification = 'IndirectControl'
+    
     def __init__(self, name, action, jobInfo, modelInfo, journal):
                 
         self.name =     name
@@ -48,12 +49,9 @@ class StepAction(StepActionBase):
         self.journal.message('Dof 1: {:5.5f}, Dof 2: {:5.5f}'.format( 
                 U [self.dof1] + dU [self.dof1],
                 U [self.dof2] + dU [self.dof2]), self.identification )
-
         
     def finishStep(self, U, P):
         self.currentL0 =  self.c.dot ( U [self.idcs]  )
-        print("current cmod")
-        print( self.currentL0 )
     
     def updateStepAction(self, action):
         if self.definition=='absolute':
