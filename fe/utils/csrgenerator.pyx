@@ -62,5 +62,5 @@ cdef class CSRGenerator:
         
         for cooPairIdx in range( self.nCooPairs ):
             self.data [ self.x[cooPairIdx] ] += V [ cooPairIdx ]
-        
+            
         return self.csrMatrix.copy()

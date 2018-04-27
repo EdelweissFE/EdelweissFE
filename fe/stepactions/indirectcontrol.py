@@ -11,7 +11,7 @@ Indirect (displacement) controller for the NISTArcLength solver
 documentation={
         
         'dof1':'Degree of freedom for the constraint ( model access expression )',
-        'dof1':'Degree of freedom for the constraint ( model access expression )',
+        'dof2':'Degree of freedom for the constraint ( model access expression )',
         'L' : 'Final distance (e.g. crack opening)',
         }
 
