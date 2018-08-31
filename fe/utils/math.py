@@ -7,14 +7,17 @@ Created on Wed Sep 13 08:50:46 2017
 """
 
 import numpy as np
-import sympy as sp
 
 def sigPrinc(x):
     return np.linalg.eig([[x[0], x[3], x[4]],
                           [x[3], x[1], x[5]],
                           [x[4], x[5], x[2]]] )[0]
 
-sympyMathModules = {'sigPrinc':sigPrinc}
+mathModules = {'sigPrinc':sigPrinc,
+               'mean'   : np.mean,
+               'max'    : np.max,
+               'min'    : np.min,
+               'linalg' : np.linalg}
 
 def createModelAccessibleFunction(expression, modelInfo, fieldOutputs):
     """ Create a function from a string expression, which can access the complete model and fieldOutput"""
@@ -27,4 +30,4 @@ def evalModelAccessibleExpression(expression, modelInfo, fieldOutputs):
     return createModelAccessibleFunction(expression, modelInfo, fieldOutputs)()
 
 def createMathExpression(expression, symbol='x'):
-    return sp.lambdify ( sp.DeferredVector(symbol), expression, ['numpy', sympyMathModules])
+    return lambda x : eval ( expression, globals(), { symbol : x , **mathModules } )
