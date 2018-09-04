@@ -23,6 +23,13 @@ cdef extern from "bftUel.h" namespace "BftUel":
 
 cdef extern from "bftUel.h":
     cdef cppclass BftUel nogil:
+        
+        int getNumberOfRequiredStateVars()
+
+        void assignStateVars(double *stateVars, int nStateVars)
+
+        void initializeYourself()
+
         void computeYourself( const double* QTotal,
                                             const double* dQ,
                                             double* Pe,
@@ -53,6 +60,5 @@ cdef class BaseElement:
     cdef public double[::1] stateVars, nodeCoordinates
     cdef double[::1] elementProperties, stateVarsTemp , materialProperties
     cdef string materialName, uelID
-    cdef int nStateVars, nStateVarsMaterial
-    cdef int numGaussPts, nStateVarsGaussPtAdditional, nStateVarsElement
+    cdef int nStateVars
     cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt)

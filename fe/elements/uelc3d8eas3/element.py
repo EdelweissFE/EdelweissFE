@@ -23,4 +23,4 @@ class Element(BaseElement):
     nStateVarsElementSpecific =     3
     
     def __init__(self, nodes, elNumber):
-        super().__init__(nodes, elNumber, self.nGaussPt, self.nStateVarsGaussPtSpecific, self.uelIdentification, self.nStateVarsElementSpecific)
+        super().__init__(nodes, elNumber, self.uelIdentification)

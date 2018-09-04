@@ -29,13 +29,10 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     
     BftUel* UelFactory(int elementCode, 
                        const double* elementCoordinates,
-                       double* stateVars,
-                       int nStateVars,
                        const double* propertiesElement,
                        int nPropertiesElement,
                        int noEl,
                        int materialCode,
-                       int nStateVarsMaterial,
                        const double* propertiesUmat,
                        int nPropertiesUmat) except +ValueError
     
@@ -49,22 +46,15 @@ mapStateTypes={
 
 cdef class BaseElement:
     
-    def __init__(self, nodes, elNumber, int nGaussPt, int nStateVarsGaussPtSpecific, str uelID, int nStateVarsElement=0):
+    def __init__(self, nodes, elNumber, str uelID):
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
         self.elNumber = elNumber
-        self.numGaussPts = nGaussPt
-        self.nStateVarsGaussPtSpecific = nStateVarsGaussPtSpecific
         self.uelID = uelID.encode('UTF-8')
-        self.nStateVarsElement = nStateVarsElement
         
-    def setProperties(self, elementProperties, materialName, nStateVarsMaterial, materialProperties):
+    def setProperties(self, elementProperties, materialName, materialProperties):
         self.elementProperties =    elementProperties
-        self.nStateVarsMaterial =   nStateVarsMaterial
         self.materialProperties =   materialProperties
-        self.nStateVars =           self.nStateVarsElement + self.numGaussPts * (nStateVarsMaterial + self.nStateVarsGaussPtSpecific)
-        self.stateVars =            np.zeros(self.nStateVars)
-        self.stateVarsTemp =        np.zeros(self.nStateVars)
         self.materialName =         materialName.upper().encode('UTF-8')
         
         # if we store already an element, we delete it
@@ -73,15 +63,21 @@ cdef class BaseElement:
         
         self.bftUel = UelFactory(getElementCodeFromName(self.uelID), 
                                 &self.nodeCoordinates[0], 
-                                &self.stateVarsTemp[0], 
-                                self.nStateVars,
                                 &self.elementProperties[0], 
                                 self.elementProperties.shape[0],
                                 self.elNumber,
                                 getMaterialCodeFromName(self.materialName), 
-                                self.nStateVarsMaterial,
                                 &self.materialProperties[0],
                                 self.materialProperties.shape[0])
+        
+        self.nStateVars =           self.bftUel.getNumberOfRequiredStateVars()
+        
+        self.stateVars =            np.zeros(self.nStateVars)
+        self.stateVarsTemp =        np.zeros(self.nStateVars)
+        
+        self.bftUel.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
+        
+        self.bftUel.initializeYourself()
 
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars
@@ -104,6 +100,7 @@ cdef class BaseElement:
                          double[::1] pNewdT):
         
         self.initializeStateVarsTemp()
+        
         self.bftUel.computeYourself(&U[0], &dU[0],
                                             &Pe[0], 
                                             &Ke[0],
