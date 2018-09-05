@@ -28,7 +28,7 @@ cdef extern from "bftUel.h":
 
         void assignStateVars(double *stateVars, int nStateVars)
 
-        void initializeYourself()
+        void initializeYourself(const double* elementCoordinates)
 
         void computeYourself( const double* QTotal,
                                             const double* dQ,
