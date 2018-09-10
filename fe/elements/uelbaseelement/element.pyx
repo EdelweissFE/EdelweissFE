@@ -28,7 +28,6 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
     
     BftUel* UelFactory(int elementCode, 
-#                       const double* elementCoordinates,
                        const double* propertiesElement,
                        int nPropertiesElement,
                        int noEl,
@@ -62,7 +61,6 @@ cdef class BaseElement:
             del self.bftUel
         
         self.bftUel = UelFactory(getElementCodeFromName(self.uelID), 
-#                                &self.nodeCoordinates[0], 
                                 &self.elementProperties[0], 
                                 self.elementProperties.shape[0],
                                 self.elNumber,

@@ -169,7 +169,6 @@ class AbqModelConstructor:
                        for el in elementSets[elSet]:
                            el.setProperties(uelProperties, 
                                             material['name'], 
-#                                            material['statevars'],
                                             umatProperties)
             else:
                 raise Exception("Undefined section")

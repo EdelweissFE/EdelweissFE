@@ -57,7 +57,7 @@ inputLanguage = {    '*element':         ("definition of element(s)",
                     '*material':        ("definition of a material",
                         { 'name':       ('string', "name of the property"),
                          'id':          ('string', "name of the property"),
-                         'statevars':   ('integer', "number of statevars"),
+                         'statevars':   ('integer', "(deprecated and ignored) number of statevars"),
                          'data':        ('numpy float array', "material properties, multiline possible")}),
 
                     '*fieldOutput':        ("define fieldoutput, which is used by outputmanagers",
