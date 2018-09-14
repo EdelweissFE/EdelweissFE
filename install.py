@@ -8,6 +8,10 @@ from distutils.core import setup, Extension
 from Cython.Build import cythonize
 from os.path import expanduser, join
 import numpy 
+import sys
+
+sys.argv[1:] = ['build_ext', '--inplace', ]  + sys.argv[1:]
+
 
 directives = {'boundscheck':            False,
               'wraparound':             False,

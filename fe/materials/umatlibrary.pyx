@@ -15,8 +15,3 @@ cdef public bint warningToMSG(const string cppString):
     # printing is not possible, as the GIL is usually released for parallel computing
     return False
 
-#cdef extern from "userLibrary.h" namespace "userLibrary":
-#    pUmatType getUmatByName(const string& name)
-#
-#cdef pUmatType getUmat(str name):
-#    return getUmatByName(name.upper().encode('UTF-8'))
