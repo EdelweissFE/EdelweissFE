@@ -7,12 +7,14 @@ EdelweissFE requires
 - Numpy
 - Scipy
 - Cython 0.28+
-- Intel MKL for the PARDISO solver
+- Intel MKL for the PARDISO 
+- Eigen Library for Linear Algebra
 - Matplotlib
 - OpenMP 
 - bftUserLibrary (Elements and Materials)
 
 A recent version of Anaconda (https://anaconda.org/) is sufficient to compile and run EdelweissFE on a linux system.
+The Eigen library should be in accessible for the compiler through the standard include paths; It is recommended to install the headers in `/usr/include`
 
 ## Configuration
 
@@ -36,7 +38,7 @@ Simply run
 
 `python edelweiss.py INPUT.inp`
 
-# Parallelization
+### Parallelization
 
 If a parallel solver (e.g, NISTParallel, NISTPArcLength) is selected in the .inp file, EdelweissFE  automatically determines the max. number of threads dependent on the host architecture.
 However, it is RECOMMENDED to enforce a fixed number of threads by running
