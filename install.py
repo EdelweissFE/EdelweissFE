@@ -18,18 +18,20 @@ directives = {'boundscheck':            False,
               'nonecheck' :             False,
               'initializedcheck' :      False} # efficient access of memoryviews
 
-# 1) rootDirectory where the libraries are located
-rootDirectory = expanduser("~/constitutiveModelling/")
+# 1) 
+BFT_USER_LIBRARY =                  expanduser("~/constitutiveModelling/bftUserLibrary")
+EIGEN_LIBRARY_PARENT_DIRECTORY=     "/usr/include"
+MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 
 """
 Build Extension for the UEL base element, linked to the bftUserLibrary
 """
 extensions = [Extension("*",
                 sources = ["fe/elements/uelbaseelement/element.pyx"],
-                        include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()],
+                        include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()],
                          libraries= ['bftUserLibrary'],
-                                 library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
-                         runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                                 library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
+                         runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
                         language='c++',)
                         ]  
 
@@ -38,9 +40,9 @@ Build Extension for the UMAT material library, linked to the bftUserLibrary
 """
 
 extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],                                    
-                                 include_dirs=[numpy.get_include()] + [join(rootDirectory,'bftUserLibrary', "include")], 
-                                 library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
-                                 runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                                 include_dirs=[numpy.get_include()] + [join(BFT_USER_LIBRARY, "include")], 
+                                 library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
+                                 runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
                                  libraries= ['bftUserLibrary'],
                                  language="c++",)]
 """
@@ -62,9 +64,9 @@ Build The parallel NISTParallel solver with OpenMP
 
 extensions += [Extension("*",
                 sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
-                        include_dirs=[join(rootDirectory,'bftUserLibrary', "include"), numpy.get_include()] ,
-                        library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] , 
-                        runtime_library_dirs= [join(rootDirectory,'bftUserLibrary', "lib") ] ,
+                        include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()] ,
+                        library_dirs= [join(BFT_USER_LIBRARY, "lib") ] , 
+                        runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
                          libraries= ['bftUserLibrary'],
                          language='c++',
                          extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
@@ -77,7 +79,9 @@ Build The Pardiso Interface
 
 extensions += [Extension("*",
                 sources = ["fe/linsolve/pardiso/pardiso.pyx", 'fe/linsolve/pardiso/pardisoInterface.cpp'],
-                         include_dirs=[ numpy.get_include(), 'fe/linsolve/pardiso/include' ] ,
+                         include_dirs=[ numpy.get_include(), 
+                             MKL_INCLUDE, #'fe/linsolve/pardiso/include', 
+                             EIGEN_LIBRARY_PARENT_DIRECTORY] ,
                          libraries= [ 'mkl_intel_thread', 'mkl_core', 'mkl_rt', 'iomp5', ],
                          language='c++',
                          )
