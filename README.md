@@ -3,36 +3,42 @@ EdelweissFE: A light-weight, platform-independent, parallel finite element frame
 ## Prerequisites
 
 EdelweissFE requires 
-- Python 3.5+
-- Numpy
-- Scipy
-- Cython 0.28+
-- Intel MKL for the PARDISO 
-- Eigen Library for Linear Algebra
-- Matplotlib
-- OpenMP 
-- bftUserLibrary (Elements and Materials)
+- Python 3.5+*
+- Numpy*
+- Scipy*
+- Cython 0.28+*
+- Matplotlib*
+- OpenMP*
+- Intel MKL for the PARDISO*  (binaries and header files; if you use anaconda, install pacakages `mkl` and `mkl-include`)
+- bftUserLibrary 
+- Eigen Library for Linear Algebra (http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
-A recent version of Anaconda (https://anaconda.org/) is sufficient to compile and run EdelweissFE on a linux system.
-The Eigen library should be in accessible for the compiler through the standard include paths; It is recommended to install the headers in `/usr/include`
+*: Provided via Anaconda packages
+A recent version of Anaconda (https://anaconda.org/) is sufficient to compile and run EdelweissFE on a Linux system.
+Anaconda also provides free access to Intel MKL binaries (via package `mkl`) and header files (via package `mkl-include`), so no standalaone installation of the Intel MKL is required.
 
 ## Configuration
 
-Modify install.py:
-
-- define the parent directory containing the `bftUserLibrary` directory (e.g., `/home/user/constitutiveModelling`)
+Customize install.py by defining all paths pointing to the respective libraries.
+Default paths are already defined, and usually only minor modifications should be required.
 
 ## Installation
 
-EdelweissFE depends on several Cython modules, which must be compiled prior to a first run.
+EdelweissFE depends on several Cython modules, which must be compiled prior to first running the software.
 
 Simply run
 `python install.py`
 
+Enforce a recomipilation and installation with
+`python install.py --force`
 
 ## Run the validation examples
 
 `python validateEdelweiss.py`
+
+Recreate the validation reference solutions (please only if you know what you are doing)
+
+`python validateEdelweiss.py --create`
 
 ## Execute a simulation
 
