@@ -8,7 +8,6 @@ Created on Thu Apr 27 08:35:06 2017
 
 import numpy as np
 cimport numpy as np
-from libcpp.string cimport string
 cimport fe.elements.uelbaseelement.element 
 
 from libc.stdlib cimport malloc, free
@@ -19,21 +18,6 @@ cdef public bint notificationToMSG(const string cppString):
 cdef public bint warningToMSG(const string cppString):
 #    print(cppString.decode('UTF-8'))
     return False
-
-cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
-    enum MaterialCode: pass
-    enum ElementCode: pass
-
-    MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
-    ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
-    
-    BftUel* UelFactory(int elementCode, 
-                       const double* propertiesElement,
-                       int nPropertiesElement,
-                       int noEl,
-                       int materialCode,
-                       const double* propertiesUmat,
-                       int nPropertiesUmat) except +ValueError
     
 mapLoadTypes={
         'pressure' : DistributedLoadTypes.Pressure
@@ -76,6 +60,19 @@ cdef class BaseElement:
         self.bftUel.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
         
         self.bftUel.initializeYourself(&self.nodeCoordinates[0])
+        
+    def getNodeFields(self):
+        cdef vector[vector[string]] fields = self.bftUel.getNodeFields() 
+        pyVec = [ [ s.decode('utf-8')  for s in n  ] for n in fields ]
+        return pyVec
+
+    def getDofIndicesPermutationPattern(self):
+        cdef vector[int] permutationPattern = self.bftUel.getDofIndicesPermutationPattern()
+        return np.asarray(permutationPattern)
+
+    def getElementShape(self):
+        cdef string shape = self.bftUel.getElementShape()
+        return shape.decode('utf-8')
 
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars

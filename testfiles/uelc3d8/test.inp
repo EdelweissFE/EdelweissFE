@@ -4,7 +4,7 @@
 *section, name=section1, material=modleon, type=solidUelUmat
 all
 
-*job, name=c3d8job, domain=3d, solver=NIST
+*job, name=c3d8job, domain=3d, solver=NISTParallel
 
 *Node
       1,         100.,          10.,          10.

@@ -8,6 +8,7 @@ Created on Thu Apr 27 08:35:06 2017
 
 #from fe.materials.umatlibrary cimport pUmatType
 from libcpp.string cimport string
+from libcpp.vector cimport vector
 
 cdef extern from "bftUel.h" namespace "BftUel":
     cdef enum StateTypes:
@@ -20,6 +21,21 @@ cdef extern from "bftUel.h" namespace "BftUel":
         
     cdef enum DistributedLoadTypes:
         Pressure
+        
+cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
+    enum MaterialCode: pass
+    enum ElementCode: pass
+
+    MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
+    ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
+    
+    BftUel* UelFactory(int elementCode, 
+                       const double* propertiesElement,
+                       int nPropertiesElement,
+                       int noEl,
+                       int materialCode,
+                       const double* propertiesUmat,
+                       int nPropertiesUmat) except +ValueError
 
 cdef extern from "bftUel.h":
     cdef cppclass BftUel nogil:
@@ -50,6 +66,13 @@ cdef extern from "bftUel.h":
                                 double dT)
         
         double* getPermanentResultPointer(const string& resultName, int gaussPt, int& resultLength)
+        
+        vector[vector[string]] getNodeFields()
+
+        vector[int] getDofIndicesPermutationPattern()
+
+        string getElementShape()
+
         
 cdef class BaseElement:
     
