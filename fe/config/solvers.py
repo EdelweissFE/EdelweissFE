@@ -9,7 +9,7 @@ Created on Fri Feb 10 19:20:25 2017
 import importlib
 
 solverLibrary = {'NIST' : 'nonlinearimplicitstatic',
-                 'NISTParallel' : 'nonlinearimplicitstaticparallel',
+                 'NISTParallel' : 'nonlinearimplicitstaticparallelmk2',
                  'NISTPArcLength' : 'nonlinearimplicitstaticparallelarclength',
                  }
 

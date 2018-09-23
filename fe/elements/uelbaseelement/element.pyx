@@ -99,12 +99,13 @@ cdef class BaseElement:
         
         self.initializeStateVarsTemp()
         
-        self.bftUel.computeYourself(&U[0], &dU[0],
-                                            &Pe[0], 
-                                            &Ke[0],
-                                            &time[0],
-                                            dTime,  
-                                            pNewdT[0])
+        with nogil:
+            self.bftUel.computeYourself(&U[0], &dU[0],
+                                                &Pe[0], 
+                                                &Ke[0],
+                                                &time[0],
+                                                dTime,  
+                                                pNewdT[0])
         
     def computeDistributedLoad(self,
                                str loadType,

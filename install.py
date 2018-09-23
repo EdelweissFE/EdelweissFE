@@ -72,6 +72,20 @@ extensions += [Extension("*",
                          extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
                          extra_link_args=['-fopenmp'],)
                         ]  
+"""
+Build The parallel NISTParallel solver with OpenMP
+"""
+
+extensions += [Extension("*",
+                sources = ["fe/solvers/nonlinearimplicitstaticparallelmk2.pyx"],
+                        include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()] ,
+                        library_dirs= [join(BFT_USER_LIBRARY, "lib") ] , 
+                        runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
+                         libraries= ['bftUserLibrary'],
+                         language='c++',
+                         extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
+                         extra_link_args=['-fopenmp'],)
+                        ]  
 
 """
 Build The Pardiso Interface
