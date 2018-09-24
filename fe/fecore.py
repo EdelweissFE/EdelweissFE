@@ -123,8 +123,10 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # the standard 'Abaqus like' model generator is invoked unconditionally and it has direct access to the inputfile
     abqModelConstructor = AbqModelConstructor(journal)
     modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.assignSectionsFromInputFile(modelInfo, inputfile)
+    
+    modelInfo = abqModelConstructor.createNodeFields(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], modelInfo['constraints'], domainSize)

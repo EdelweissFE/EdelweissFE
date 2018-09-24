@@ -72,13 +72,17 @@ cdef extern from "bftUel.h":
         vector[int] getDofIndicesPermutationPattern()
 
         string getElementShape()
+        
+        int getNNodes()
+        
+        int getNDofPerElement()
 
         
 cdef class BaseElement:
     
     cdef BftUel* bftUel
     cdef public nodes, 
-    cdef public int elNumber
+    cdef public int elNumber, nNodes, nDofPerElement
     
     cdef public double[::1] stateVars, nodeCoordinates
     cdef double[::1] elementProperties, stateVarsTemp , materialProperties
