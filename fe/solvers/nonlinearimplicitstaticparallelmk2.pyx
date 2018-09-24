@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jan  8 20:37:35 2017
+Created on Mon Sep 24 13:52:01 2018
 
 @author: matthias
 """
@@ -13,22 +13,12 @@ from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import CutbackRequest
 from cython.parallel cimport parallel, threadid, prange
-#from fe.elements.uelbaseelement.element cimport BaseElement, BftUel
 from libc.stdlib cimport malloc, free
 from libcpp.string cimport string
 from time import time as getCurrentTime
 from multiprocessing import cpu_count
 import os
 
-#cdef public bint notificationToMSG(const string cppString):
-##    print(cppString.decode('UTF-8'))
-#    return True
-#    
-#cdef public bint warningToMSG(const string cppString):
-##     print(cppString.decode('UTF-8'))
-#    return False
-
-#cdef double abs
 
 class NISTParallel(NIST):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
@@ -137,7 +127,6 @@ class NISTParallel(NIST):
             # oversized buffer for Pe ( size = sum(elements.ndof) )
             double[::1] Pe = np.empty(self.sizePe) 
         
-#            BaseElement backendBasedCythonElement
             # lists (indices and nDofs), which can be accessed parallely
             int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
             int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
@@ -173,7 +162,8 @@ class NISTParallel(NIST):
                 
                 # for accessing the element in the list, and for passing the parameters
                 # we have enable the gil. This prevents a parallel execution in the meanwhile,
-                # so we hope the method computeYourself AGAIN releases the gil INSIDE 
+                # so we hope the method computeYourself AGAIN releases the gil INSIDE.
+                # Otherwise, a truly parallel execution won't happen at all!
                 with gil:
                     elList[i].computeYourself(V_mView[elIdxInVIJ : elIdxInVIJ + elNDofPerEl * elNDofPerEl],
                                               Pe[elIdxInPe : elIdxInPe + elNDofPerEl],
@@ -186,12 +176,7 @@ class NISTParallel(NIST):
                 if pNewDTVector[threadID, 0] <= 1.0:
                     with gil:
                         raise CutbackRequest("An element requests for a cutbrack", float(pNewDTVector[threadID, 0]))
-#                    break
-    
-#            minPNewDT = np.min(pNewDTVector) 
-#            if minPNewDT < 1.0:
-#                raise CutbackRequest("An element requests for a cutbrack", minPNewDT)
-            
+                        
             #successful elements evaluation: condense oversize Pe buffer -> P
             P_mView[:] = 0.0
             F_mView[:] = 0.0

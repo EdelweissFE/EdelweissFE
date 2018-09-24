@@ -8,7 +8,7 @@ Created on Thu Nov  2 13:43:01 2017
 (Parallel) Arc Length Solver, based on the proposed approach in Jirásek/Bažant 2001.
 Replaces the NewtonRaphson scheme of the NISTParallel Solver.
 """
-from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
+from fe.solvers.nonlinearimplicitstaticparallelmk2 import NISTParallel
 
 import numpy as np
 from fe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
