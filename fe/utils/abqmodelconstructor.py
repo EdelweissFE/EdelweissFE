@@ -44,7 +44,7 @@ class AbqModelConstructor:
                 label = defLine[0]
                 # store nodeObjects in elNodes list
                 elNodes =  [ nodeDefinitions[n] for n in defLine[1:] ]
-                newEl = ElementClass(elNodes, label)
+                newEl = ElementClass(elementType, elNodes, label)
 #                for iNode, node in enumerate(elNodes):
 #                    # update node.fields dictionary with available fields from phenomena, e.g
 #                    # OrderedDict : {'mechanical': True, 'thermal': False , ... }

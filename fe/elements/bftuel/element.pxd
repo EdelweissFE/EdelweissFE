@@ -22,6 +22,10 @@ cdef extern from "bftUel.h" namespace "BftUel":
     cdef enum DistributedLoadTypes:
         Pressure
         
+    cdef enum PropertyTypes:
+            ElementProperties,
+            BftMaterial
+
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     enum MaterialCode: pass
     enum ElementCode: pass
@@ -30,12 +34,8 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
     
     BftUel* UelFactory(int elementCode, 
-                       const double* propertiesElement,
-                       int nPropertiesElement,
                        int noEl,
-                       int materialCode,
-                       const double* propertiesUmat,
-                       int nPropertiesUmat) except +ValueError
+                       ) except +ValueError
 
 cdef extern from "bftUel.h":
     cdef cppclass BftUel nogil:
@@ -43,6 +43,8 @@ cdef extern from "bftUel.h":
         int getNumberOfRequiredStateVars()
 
         void assignStateVars(double *stateVars, int nStateVars)
+        
+        void assignProperty(PropertyTypes property, int propertyInfo, const double* propertyValues, int nProperties)
 
         void initializeYourself(const double* elementCoordinates)
 
@@ -78,14 +80,17 @@ cdef extern from "bftUel.h":
         int getNDofPerElement()
 
         
-cdef class BaseElement:
+cdef class BftUelWrapper:
     
     cdef BftUel* bftUel
     cdef public nodes, 
-    cdef public int elNumber, nNodes, nDofPerElement
+    cdef public int elNumber, 
+    cdef public int nNodes, nDofPerEl
+    cdef public list fields
+    cdef public str ensightType
+    cdef readonly dofIndicesPermutation
     
     cdef public double[::1] stateVars, nodeCoordinates
     cdef double[::1] elementProperties, stateVarsTemp , materialProperties
-    cdef string materialName, uelID
     cdef int nStateVars
     cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt)

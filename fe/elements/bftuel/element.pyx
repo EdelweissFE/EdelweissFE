@@ -8,7 +8,7 @@ Created on Thu Apr 27 08:35:06 2017
 
 import numpy as np
 cimport numpy as np
-cimport fe.elements.uelbaseelement.element 
+cimport fe.elements.bftuel.element 
 
 from libc.stdlib cimport malloc, free
 cdef public bint notificationToMSG(const string cppString):
@@ -27,30 +27,40 @@ mapStateTypes={
         'geostatic stress' : StateTypes.GeostaticStress
      }
 
-cdef class BaseElement:
+cdef class BftUelWrapper:
     
-    def __init__(self, nodes, elNumber, str uelID):
+    def __cinit__(self, elementType, nodes, elNumber):
         self.nodes = nodes
-        self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
+        if self.nodes:
+            self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
+            
         self.elNumber = elNumber
-        self.uelID = uelID.encode('UTF-8')
+        
+        self.bftUel = UelFactory(getElementCodeFromName( elementType.upper().encode('utf-8')), 
+                        self.elNumber)
+        
+        self.nNodes                         = self.bftUel.getNNodes()
+        
+        self.nDofPerEl                      = self.bftUel.getNDofPerElement()
+        
+        cdef vector[vector[string]] fields  = self.bftUel.getNodeFields()
+        self.fields                         = [ [ s.decode('utf-8')  for s in n  ] for n in fields ]
+        
+        cdef vector[int] permutationPattern = self.bftUel.getDofIndicesPermutationPattern()
+        self.dofIndicesPermutation          = np.asarray(permutationPattern)
+        
+        self.ensightType                    = self.bftUel.getElementShape().decode('utf-8')
         
     def setProperties(self, elementProperties, materialName, materialProperties):
+        
         self.elementProperties =    elementProperties
         self.materialProperties =   materialProperties
-        self.materialName =         materialName.upper().encode('UTF-8')
         
-        # if we store already an element, we delete it
-        if self.bftUel != NULL:
-            del self.bftUel
+        self.bftUel.assignProperty( ElementProperties, 0, 
+                                   &self.elementProperties[0], self.elementProperties.shape[0] )
         
-        self.bftUel = UelFactory(getElementCodeFromName(self.uelID), 
-                                &self.elementProperties[0], 
-                                self.elementProperties.shape[0],
-                                self.elNumber,
-                                getMaterialCodeFromName(self.materialName), 
-                                &self.materialProperties[0],
-                                self.materialProperties.shape[0])
+        self.bftUel.assignProperty( BftMaterial, getMaterialCodeFromName(materialName.upper().encode('UTF-8')), 
+                                   &self.materialProperties[0], self.materialProperties.shape[0] )
         
         self.nStateVars =           self.bftUel.getNumberOfRequiredStateVars()
         
@@ -61,19 +71,6 @@ cdef class BaseElement:
         
         self.bftUel.initializeYourself(&self.nodeCoordinates[0])
         
-    def getNodeFields(self):
-        cdef vector[vector[string]] fields = self.bftUel.getNodeFields() 
-        pyVec = [ [ s.decode('utf-8')  for s in n  ] for n in fields ]
-        return pyVec
-
-    def getDofIndicesPermutationPattern(self):
-        cdef vector[int] permutationPattern = self.bftUel.getDofIndicesPermutationPattern()
-        return np.asarray(permutationPattern)
-
-    def getElementShape(self):
-        cdef string shape = self.bftUel.getElementShape()
-        return shape.decode('utf-8')
-
     def initializeStateVarsTemp(self, ):
         self.stateVarsTemp[:] = self.stateVars
         

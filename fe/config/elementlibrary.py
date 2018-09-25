@@ -5,8 +5,10 @@ Created on Tue Jan  17 19:10:42 2017
 
 @author: matthias
 """
-import importlib
+#import importlib
 
 def getElementByName(name):
-    module = importlib.import_module("fe.elements."+name.lower()+".element")    
-    return module.Element
+    
+    if name.lower().startswith('uel'):
+        from fe.elements.bftuel.element import BftUelWrapper
+        return BftUelWrapper

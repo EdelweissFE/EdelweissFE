@@ -27,7 +27,7 @@ MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 Build Extension for the UEL base element, linked to the bftUserLibrary
 """
 extensions = [Extension("*",
-                sources = ["fe/elements/uelbaseelement/element.pyx"],
+                sources = ["fe/elements/bftuel/element.pyx"],
                         include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()],
                          libraries= ['bftUserLibrary'],
                                  library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
@@ -63,10 +63,7 @@ Build The parallel NISTParallel solver with OpenMP
 
 extensions += [Extension("*",
                 sources = ["fe/solvers/nonlinearimplicitstaticparallelmk2.pyx"],
-                        include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()] ,
-                        library_dirs= [join(BFT_USER_LIBRARY, "lib") ] , 
-                        runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
-                         libraries= ['bftUserLibrary'],
+                        include_dirs=[numpy.get_include()] ,
                          language='c++',
                          extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
                          extra_link_args=['-fopenmp'],)

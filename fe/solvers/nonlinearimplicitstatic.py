@@ -62,7 +62,7 @@ class NIST:
         self.sizeNDofElementWise = 0
         
         for el in self.elements.values():
-            self.sizeVIJ += el.sizeKe
+            self.sizeVIJ += (el.nDofPerEl**2)
         
         for constraint in self.constraints.values():
             self.sizeVIJ += constraint.sizeStiffness
@@ -178,7 +178,7 @@ class NIST:
                     for man in self.outputmanagers:
                         man.finalizeIncrement(U, P, increment)
                         
-        except (ReachedMaxIncrements, ReachedMinIncrementSize) as e:
+        except (ReachedMaxIncrements, ReachedMinIncrementSize):
             success = False
             self.journal.errorMessage("Incrementation failed", self.identification)
             
@@ -295,7 +295,7 @@ class NIST:
         
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
-            Ke = V[idxInVIJ : idxInVIJ+el.sizeKe]
+            Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
             Pe = np.zeros(el.nDofPerEl)
             idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
             
@@ -458,9 +458,9 @@ class NIST:
                                   
             # looks like black magic, but it's an efficient way to generate all indices of Ke in K:
             elDofLocations = np.tile(destList[ el.dofIndicesPermutation  ], (destList.shape[0], 1) )
-            I[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ+el.sizeKe] = elDofLocations.ravel('F')
-            idxInVIJ += el.sizeKe
+            I[idxInVIJ : idxInVIJ+el.nDofPerEl**2] = elDofLocations.ravel()
+            J[idxInVIJ : idxInVIJ+el.nDofPerEl**2] = elDofLocations.ravel('F')
+            idxInVIJ += el.nDofPerEl**2
             
         constraintToIndexInVIJMap = {}
         for constraint in constraints.values():
