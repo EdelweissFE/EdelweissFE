@@ -22,9 +22,6 @@ cdef extern from "bftUel.h" namespace "BftUel":
     cdef enum DistributedLoadTypes:
         Pressure
         
-    cdef enum PropertyTypes:
-            ElementProperties,
-            BftMaterial
 
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     enum MaterialCode: pass
@@ -36,6 +33,16 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     BftUel* UelFactory(int elementCode, 
                        int noEl,
                        ) except +ValueError
+                       
+cdef extern from "bftUelProperty.h":
+    cdef cppclass BftUelProperty nogil:
+        pass
+    
+    cdef cppclass BftMaterialSection(BftUelProperty) nogil:
+        BftMaterialSection(int materialCode, const double* materialProperties, int nMaterialProperties)
+        
+    cdef cppclass ElementProperties(BftUelProperty) nogil:
+        ElementProperties(const double* elementProperties, int nElementProperties)
 
 cdef extern from "bftUel.h":
     cdef cppclass BftUel nogil:
@@ -44,7 +51,7 @@ cdef extern from "bftUel.h":
 
         void assignStateVars(double *stateVars, int nStateVars)
         
-        void assignProperty(PropertyTypes property, int propertyInfo, const double* propertyValues, int nProperties)
+        void assignProperty(const BftUelProperty& uelProperty)
 
         void initializeYourself(const double* elementCoordinates)
 
@@ -76,9 +83,8 @@ cdef extern from "bftUel.h":
         string getElementShape()
         
         int getNNodes()
-        
+    
         int getNDofPerElement()
-
         
 cdef class BftUelWrapper:
     

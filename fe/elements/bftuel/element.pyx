@@ -9,6 +9,9 @@ Created on Thu Apr 27 08:35:06 2017
 import numpy as np
 cimport numpy as np
 cimport fe.elements.bftuel.element 
+cimport libcpp.cast
+
+from libcpp.memory cimport unique_ptr, allocator, make_unique
 
 from libc.stdlib cimport malloc, free
 cdef public bint notificationToMSG(const string cppString):
@@ -26,7 +29,7 @@ mapLoadTypes={
 mapStateTypes={
         'geostatic stress' : StateTypes.GeostaticStress
      }
-
+    
 cdef class BftUelWrapper:
     
     def __cinit__(self, elementType, nodes, elNumber):
@@ -56,11 +59,17 @@ cdef class BftUelWrapper:
         self.elementProperties =    elementProperties
         self.materialProperties =   materialProperties
         
-        self.bftUel.assignProperty( ElementProperties, 0, 
-                                   &self.elementProperties[0], self.elementProperties.shape[0] )
+        self.bftUel.assignProperty( 
+                ElementProperties(
+                        &self.elementProperties[0],
+                        self.elementProperties.shape[0] ) )
         
-        self.bftUel.assignProperty( BftMaterial, getMaterialCodeFromName(materialName.upper().encode('UTF-8')), 
-                                   &self.materialProperties[0], self.materialProperties.shape[0] )
+        self.bftUel.assignProperty(
+                BftMaterialSection(
+                        getMaterialCodeFromName(
+                                materialName.upper().encode('UTF-8')), 
+                        &self.materialProperties[0],
+                        self.materialProperties.shape[0] ) )
         
         self.nStateVars =           self.bftUel.getNumberOfRequiredStateVars()
         
