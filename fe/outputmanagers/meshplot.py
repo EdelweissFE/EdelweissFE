@@ -196,7 +196,6 @@ class OutputManager(OutputManagerBase):
                     perElementJob['plotMeshGrid'] = definition.get('plotMeshGrid', 'unDeformed')
                     self.perElementJobs.append(perElementJob)
                 
-                    
                 elif varType == 'xyData':
                     xyJob = {}
                     
@@ -216,7 +215,6 @@ class OutputManager(OutputManagerBase):
                     xyJob['label'] =      definition.get('label', xyJob['y'].name)
                     xyJob['axSpec'] =     definition.get('axSpec','111')
                     xyJob['integral'] =   definition.get('integral','False')
-                    xyJob['export'] =     bool(definition.get('export', False))
                     self.xyJobs.append(xyJob)
                     
 
@@ -270,10 +268,6 @@ class OutputManager(OutputManagerBase):
             if xyJob['integral']=='True':
                 integral = np.trapz(y,x)
                 ax.fill_between(x, 0, y, color='gray', label=str(integral))
-            if xyJob['export']:
-                exportData = np.column_stack((x,y))
-                np.savetxt(xyJob['label']+'.csv', exportData)
-            
 
         for perNodeJob in self.perNodeJobs:
             result = perNodeJob['fieldOutput'].getLastResult()
@@ -281,7 +275,6 @@ class OutputManager(OutputManagerBase):
             ax =  self.plotter.getAx(perNodeJob['figure'] , perNodeJob['axSpec'])
             ax.set_axis_off()
             ax.set_aspect('equal')
-            
 
             if 'f(x)' in perNodeJob:
                 result = perNodeJob['f(x)'] (result)
