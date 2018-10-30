@@ -32,8 +32,8 @@ class Plotter:
                                        r"\usepackage{siunitx}",
                                         ],
                 "font.family": "serif",
-                "font.serif": [],                   # blank entries should cause plots to inherit fonts from the document
-                "font.sans-serif": [],
+#                "font.serif": [],                   # blank entries should cause plots to inherit fonts from the document
+#                "font.sans-serif": [],
                 "font.monospace": [],
                 "axes.labelsize": 10,               # LaTeX default is 10pt font.
                 "font.size": 10,
