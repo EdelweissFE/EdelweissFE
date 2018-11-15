@@ -74,6 +74,12 @@ cdef extern from "bftUel.h":
                                 const double* time,
                                 double dT)
         
+        void computeBodyForce(
+                        double* P, 
+                        const double* load,
+                        const double* time,
+                        double dT)
+        
         double* getPermanentResultPointer(const string& resultName, int gaussPt, int& resultLength)
         
         vector[vector[string]] getNodeFields()

@@ -124,6 +124,16 @@ cdef class BftUelWrapper:
                                     &load[0],
                                     &time[0],
                                     dTime)
+        
+    def computeBodyForce(self, double[::1] P,
+                               const double[::1] load,
+                               const double[::1] time,
+                               double dTime):
+        
+        self.bftUel.computeBodyForce(&P[0], 
+                                    &load[0],
+                                    &time[0],
+                                    dTime)
     def acceptLastState(self,):
         self.stateVars[:] = self.stateVarsTemp
         

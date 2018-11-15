@@ -121,6 +121,7 @@ class NIST:
         dU = np.zeros(self.nDof)
         
         activeStepActions = self.collectActiveStepActions( stepActions )
+#        print(activeStepActions)
         
         for constraint in activeStepActions['linearConstraints']:
             # linear constraints' stiffness contributions are independent of the solution
@@ -231,13 +232,14 @@ class NIST:
         dirichlets =            activeStepActions['dirichlets']
         concentratedLoads =     activeStepActions['concentratedLoads']
         distributedDeadLoads =  activeStepActions['distributedDeadLoads']
+        bodyForces =            activeStepActions['bodyForces']
         
-        activeDeadLoads = concentratedLoads or distributedDeadLoads
+        activeDeadLoads = concentratedLoads or distributedDeadLoads or bodyForces
         
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
         if activeDeadLoads:
-            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, I, increment)
+            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, bodyForces, I, increment)
         
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
@@ -341,6 +343,31 @@ class NIST:
             
         toc = getCurrentTime()
         self.computationTimes['distributed loads'] += toc - tic
+        return P
+    
+    def computeBodyForces(self, bodyForces, P, I, increment):
+        """ Loop over all elements, and evalute them. 
+        Note that ABAQUS style is employed: element(Un+1, dUn+1) 
+        instead of element(Un, dUn+1)
+        -> is called by solveStep() in each iteration """
+        
+        tic = getCurrentTime()
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        time = np.array([stepTime, totalTime])
+        for bForce in bodyForces:
+            force = bForce.getCurrentBodyForce(increment)
+            for el in bForce.elements:
+                idxInVIJ = self.elementToIndexInVIJMap[el]
+                Pe = np.zeros(el.nDofPerEl)
+                idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
+                Pe[:] = 0.0 
+                el.computeBodyForce(Pe,
+                                          force, 
+                                          time, dT)
+                P[idcsInPUdU] += Pe                    
+            
+        toc = getCurrentTime()
+        self.computationTimes['body forces'] += toc - tic
         return P
     
     def applyDirichletK(self, K, dirichlets):
@@ -500,7 +527,7 @@ class NIST:
         
         return V
         
-    def assembleDeadLoads(self, Pdeadloads, concentratedLoads, distributedDeadLoads, I, increment):
+    def assembleDeadLoads(self, Pdeadloads, concentratedLoads, distributedDeadLoads, bodyForces, I, increment):
         """ Assemble all deadloads into a right hand side vector 
         -> Usually only once per increment """
         Pdeadloads[:] = 0.0
@@ -509,6 +536,7 @@ class NIST:
             Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
         # dloads
         Pdeadloads = self.computeDistributedLoads(distributedDeadLoads, Pdeadloads, I, increment)
+        Pdeadloads = self.computeBodyForces(bodyForces, Pdeadloads, I, increment)
         
         return Pdeadloads
         
@@ -540,6 +568,7 @@ class NIST:
         
         activeActions['dirichlets'] =            list(stepActions['dirichlet'].values()) + list(stepActions['shotcreteshellmaster'].values())
         activeActions['distributedDeadLoads'] =  stepActions['distributedload'].values()
+        activeActions['bodyForces'] =            stepActions['bodyforce'].values()
         activeActions['concentratedLoads'] =     stepActions['nodeforces'].values()
         
         activeActions['geostatics'] =           [g for g in stepActions['geostatic'].values() if g.active]
