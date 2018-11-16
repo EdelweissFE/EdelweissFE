@@ -88,5 +88,6 @@ Compile!
 """
 setup(ext_modules = cythonize(extensions,
                             compiler_directives=directives,
-                            annotate=True
+                            annotate=True,
+                            language_level=3
                             ))
