@@ -42,7 +42,7 @@ cdef class CSRGenerator:
             col = J [ cooPairIdx ]
             
             #binary search algorithm (can be improved based on lookup tables, but seems to be sufficient for the moment)
-            delta = (indptr[row+1] - indptr[row]) / 2 
+            delta = max ( (indptr[row+1] - indptr[row]) >> 1 , 1 )
             c = indptr[row] + delta
             while True:
                 if indices[c] > col:
