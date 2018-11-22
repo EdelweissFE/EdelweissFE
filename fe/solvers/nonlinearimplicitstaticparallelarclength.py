@@ -76,6 +76,7 @@ class NISTPArcLength(NISTParallel):
         dirichlets =            activeStepActions['dirichlets']
         concentratedLoads =     activeStepActions['concentratedLoads']
         distributedDeadLoads =  activeStepActions['distributedDeadLoads']
+        bodyForces =            activeStepActions['bodyForces']
         
         R_ =            np.tile(P, (2,1)).T # 2 RHSs
         R_0 =           R_[:,0]
@@ -94,9 +95,9 @@ class NISTPArcLength(NISTParallel):
         
         referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
         zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0 
-        
-        P_0 = self.assembleDeadLoads (P_0, concentratedLoads, distributedDeadLoads, I, zeroIncrement) # compute 'dead' deadloads, like gravity
-        P_f = self.assembleDeadLoads (P_f, concentratedLoads, distributedDeadLoads, I, referenceIncrement) # compute the reference load ...
+   
+        P_0 = self.assembleDeadLoads (P_0, concentratedLoads, distributedDeadLoads, bodyForces, I, zeroIncrement) # compute 'dead' deadloads, like gravity
+        P_f = self.assembleDeadLoads (P_f, concentratedLoads, distributedDeadLoads, bodyForces, I, referenceIncrement) # compute the reference load ...
         P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
         
         while True:
