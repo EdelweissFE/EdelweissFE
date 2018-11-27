@@ -121,7 +121,6 @@ class NIST:
         dU = np.zeros(self.nDof)
         
         activeStepActions = self.collectActiveStepActions( stepActions )
-#        print(activeStepActions)
         
         for constraint in activeStepActions['linearConstraints']:
             # linear constraints' stiffness contributions are independent of the solution
@@ -226,20 +225,16 @@ class NIST:
         
         R =             np.copy(P)          # global Residual vector for the Newton iteration
         F =             np.zeros_like(P)    # accumulated Flux vector 
-        Pdeadloads =    np.zeros_like(P)
+        PExt =          np.zeros_like(P)
         ddU =           None
         
         dirichlets =            activeStepActions['dirichlets']
         concentratedLoads =     activeStepActions['concentratedLoads']
-        distributedDeadLoads =  activeStepActions['distributedDeadLoads']
+        distributedLoads =      activeStepActions['distributedLoads']
         bodyForces =            activeStepActions['bodyForces']
-        
-        activeDeadLoads = concentratedLoads or distributedDeadLoads or bodyForces
         
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
-        if activeDeadLoads:
-            Pdeadloads = self.assembleDeadLoads (Pdeadloads, concentratedLoads, distributedDeadLoads, bodyForces, I, increment)
         
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
@@ -248,8 +243,8 @@ class NIST:
             
             R[:] = P
             
-            if activeDeadLoads:
-                R += Pdeadloads
+            PExt = self.assembleLoads (PExt, concentratedLoads, distributedLoads, bodyForces, I, U, increment)
+            R += PExt
             
             if iterationCounter == 0 and not isExtrapolatedIncrement and dirichlets :
                 # first iteration? apply dirichlet bcs and unconditionally solve
@@ -317,7 +312,7 @@ class NIST:
         self.computationTimes['elements'] += toc - tic
         return P, V, F
     
-    def computeDistributedLoads(self, distributedLoads, P, I, increment):
+    def computeDistributedLoads(self, distributedLoads, P, I, U, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -338,6 +333,7 @@ class NIST:
                                               Pe,
                                               faceID,
                                               magnitude, 
+                                              U,
                                               time, dT)
                     P[idcsInPUdU] += Pe                    
             
@@ -345,7 +341,7 @@ class NIST:
         self.computationTimes['distributed loads'] += toc - tic
         return P
     
-    def computeBodyForces(self, bodyForces, P, I, increment):
+    def computeBodyForces(self, bodyForces, P, I, U, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -363,6 +359,7 @@ class NIST:
                 Pe[:] = 0.0 
                 el.computeBodyForce(Pe,
                                           force, 
+                                          U,
                                           time, dT)
                 P[idcsInPUdU] += Pe                    
             
@@ -527,18 +524,17 @@ class NIST:
         
         return V
         
-    def assembleDeadLoads(self, Pdeadloads, concentratedLoads, distributedDeadLoads, bodyForces, I, increment):
-        """ Assemble all deadloads into a right hand side vector 
-        -> Usually only once per increment """
-        Pdeadloads[:] = 0.0
+    def assembleLoads(self, PExt, concentratedLoads, distributedLoads, bodyForces, I, U, increment):
+        """ Assemble all loads into a right hand side vector """
+        PExt[:] = 0.0
         # cloads
         for cLoad in concentratedLoads: 
-            Pdeadloads = cLoad.applyOnP(Pdeadloads, increment) 
+            PExt = cLoad.applyOnP(PExt, increment) 
         # dloads
-        Pdeadloads = self.computeDistributedLoads(distributedDeadLoads, Pdeadloads, I, increment)
-        Pdeadloads = self.computeBodyForces(bodyForces, Pdeadloads, I, increment)
+        PExt = self.computeDistributedLoads(distributedLoads, PExt, I, U, increment)
+        PExt = self.computeBodyForces(bodyForces, PExt, I, U, increment)
         
-        return Pdeadloads
+        return PExt
         
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize ):
         """if active, extrapolate the solution of the last increment.
@@ -567,7 +563,7 @@ class NIST:
         activeActions = dict()
         
         activeActions['dirichlets'] =            list(stepActions['dirichlet'].values()) + list(stepActions['shotcreteshellmaster'].values())
-        activeActions['distributedDeadLoads'] =  stepActions['distributedload'].values()
+        activeActions['distributedLoads'] =     stepActions['distributedload'].values()
         activeActions['bodyForces'] =            stepActions['bodyforce'].values()
         activeActions['concentratedLoads'] =     stepActions['nodeforces'].values()
         

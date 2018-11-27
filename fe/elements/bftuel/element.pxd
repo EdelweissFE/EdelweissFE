@@ -71,12 +71,14 @@ cdef extern from "bftUel.h":
                                 double* P, 
                                 int faceID, 
                                 const double* load,
+                                const double* QTotal,
                                 const double* time,
                                 double dT)
         
         void computeBodyForce(
                         double* P, 
                         const double* load,
+                        const double* QTotal,
                         const double* time,
                         double dT)
         

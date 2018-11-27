@@ -115,6 +115,7 @@ cdef class BftUelWrapper:
                                double[::1] P,
                                int faceID,
                                const double[::1] load,
+                               const double[::1] U, 
                                const double[::1] time,
                                double dTime):
         
@@ -122,16 +123,19 @@ cdef class BftUelWrapper:
                                     &P[0], 
                                     faceID,
                                     &load[0],
+                                    &U[0], 
                                     &time[0],
                                     dTime)
         
     def computeBodyForce(self, double[::1] P,
                                const double[::1] load,
+                               const double[::1] U, 
                                const double[::1] time,
                                double dTime):
         
         self.bftUel.computeBodyForce(&P[0], 
                                     &load[0],
+                                    &U[0], 
                                     &time[0],
                                     dTime)
     def acceptLastState(self,):
