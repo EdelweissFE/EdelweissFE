@@ -243,7 +243,7 @@ class NIST:
             
             R[:] = P
             
-            PExt = self.assembleLoads (PExt, concentratedLoads, distributedLoads, bodyForces, I, U, increment)
+            PExt = self.assembleLoads (PExt, concentratedLoads, distributedLoads, bodyForces, I, U + dU , increment)
             R += PExt
             
             if iterationCounter == 0 and not isExtrapolatedIncrement and dirichlets :
