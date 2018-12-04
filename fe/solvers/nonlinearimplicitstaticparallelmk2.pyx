@@ -82,7 +82,7 @@ class NISTParallel(NIST):
         
         return K
     
-    def computeElements(self, U, dU,
+    def computeElements(self, Un1, dU,
                         P, 
                         V, 
                         long[::1] I, 
@@ -104,8 +104,6 @@ class NISTParallel(NIST):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         time = np.array([stepTime, totalTime])
         
-        UN1 = dU + U # ABAQUS style!
-        
         cdef:
             int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
             int desiredThreads = self.numThreads
@@ -114,7 +112,7 @@ class NISTParallel(NIST):
         
             double[::1] V_mView = V
             double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
-            double[::1] UN1_mView = UN1
+            double[::1] UN1_mView = Un1
             double[::1] dU_mView = dU 
             double[::1] P_mView = P
             double[::1] F_mView = F
@@ -125,14 +123,14 @@ class NISTParallel(NIST):
             double[:, ::1] UN1e = np.empty((desiredThreads,  self.maximumNDofPerEl), )
             double[:, ::1] dUe = np.empty((desiredThreads,  self.maximumNDofPerEl), )
             # oversized buffer for Pe ( size = sum(elements.ndof) )
-            double[::1] Pe = np.empty(self.sizePe) 
+            double[::1] Pe = np.zeros(self.sizePe) 
         
             # lists (indices and nDofs), which can be accessed parallely
             int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
             int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
             int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
         
-            int i,j=0
+            int i, j = 0
             
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing

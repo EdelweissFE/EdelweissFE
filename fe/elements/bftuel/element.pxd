@@ -69,6 +69,7 @@ cdef extern from "bftUel.h":
         void computeDistributedLoad(
                                 DistributedLoadTypes loadType,
                                 double* P, 
+                                double* K, 
                                 int faceID, 
                                 const double* load,
                                 const double* QTotal,
@@ -77,6 +78,7 @@ cdef extern from "bftUel.h":
         
         void computeBodyForce(
                         double* P, 
+                        double* K, 
                         const double* load,
                         const double* QTotal,
                         const double* time,

@@ -44,8 +44,8 @@ class NISTPArcLength(NISTParallel):
         
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
         
-    def solveIncrement(self, U, dU, 
-           V, I, J, P, 
+    def solveIncrement(self, U, dU, P,
+           V, I, J,
            activeStepActions,
            increment,
            lastIncrementSize,
@@ -56,8 +56,8 @@ class NISTPArcLength(NISTParallel):
         Implementation based on the proposed approach by """
         
         if self.arcLengthController == None:
-            return super().solveIncrement(U, dU, 
-                                           V, I, J, P, 
+            return super().solveIncrement(U, dU, P,
+                                           V, I, J,  
                                            activeStepActions,
                                            increment,
                                            lastIncrementSize,
@@ -75,7 +75,7 @@ class NISTPArcLength(NISTParallel):
         
         dirichlets =            activeStepActions['dirichlets']
         concentratedLoads =     activeStepActions['concentratedLoads']
-        distributedLoads =  activeStepActions['distributedLoads']
+        distributedLoads =      activeStepActions['distributedLoads']
         bodyForces =            activeStepActions['bodyForces']
         
         R_ =            np.tile(P, (2,1)).T # 2 RHSs
@@ -86,6 +86,7 @@ class NISTPArcLength(NISTParallel):
         P_0 = np.zeros_like(P)
         P_f = np.zeros_like(P)
         ddU = None
+        Un1 = np.zeros_like(P)
         
         Lambda =  self.Lambda
         dLambda = self.dLambda
@@ -95,19 +96,21 @@ class NISTPArcLength(NISTParallel):
         
         referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
         zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0 
-   
-#        P_0 = self.assembleDeadLoads (P_0, concentratedLoads, distributedDeadLoads, bodyForces, I, zeroIncrement) # compute 'dead' deadloads, like gravity
-#        P_f = self.assembleDeadLoads (P_f, concentratedLoads, distributedDeadLoads, bodyForces, I, referenceIncrement) # compute the reference load ...
-#        P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
-#        
+        
+        P_0[:] = P_f[:] = 0.0
+        P_0, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_0, V, I, J, zeroIncrement) # compute 'dead' deadloads, like gravity
+        P_f, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_f, V, I, J, referenceIncrement) # compute 'dead' deadloads, like gravity
+        P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
+
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
-            P, V, F = self.computeElements(U, dU, P, V, I, J, F, increment)
-            
-            
-            P_0 = self.assembleLoads (P_0, concentratedLoads, distributedLoads, bodyForces, I, U + dU, zeroIncrement) # compute 'dead' deadloads, like gravity
-            P_f = self.assembleLoads (P_f, concentratedLoads, distributedLoads, bodyForces, I, U + dU, referenceIncrement) # compute 'dead' deadloads, like gravity
-            P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
+
+            Un1[:] = U
+            Un1+=   dU
+
+            P[:] = V[:] = F[:] = 0.0
+
+            P, V, F = self.computeElements(Un1, dU, P, V, I, J, F, increment)
             
             # Dead and Reference load .. 
             R_0[:] = P_0 + ( Lambda + dLambda ) * P_f + P
@@ -160,7 +163,7 @@ class NISTPArcLength(NISTParallel):
         self.dLambda = dLambda
         self.arcLengthController.finishIncrement(U, dU, dLambda) 
         
-        return dU, iterationCounter, incrementResidualHistory
+        return Un1, dU, P, iterationCounter, incrementResidualHistory
     
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
         """Modified extrapolation to account for a load multiplier predictor """

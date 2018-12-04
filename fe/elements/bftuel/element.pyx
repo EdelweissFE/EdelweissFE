@@ -113,6 +113,7 @@ cdef class BftUelWrapper:
     def computeDistributedLoad(self,
                                str loadType,
                                double[::1] P,
+                               double[::1] K,
                                int faceID,
                                const double[::1] load,
                                const double[::1] U, 
@@ -121,19 +122,24 @@ cdef class BftUelWrapper:
         
         self.bftUel.computeDistributedLoad(mapLoadTypes[loadType],
                                     &P[0], 
+                                    &K[0], 
                                     faceID,
                                     &load[0],
                                     &U[0], 
                                     &time[0],
                                     dTime)
         
-    def computeBodyForce(self, double[::1] P,
-                               const double[::1] load,
-                               const double[::1] U, 
-                               const double[::1] time,
-                               double dTime):
+    def computeBodyForce(self, 
+            double[::1] P,
+            double[::1] K,
+           const double[::1] load,
+           const double[::1] U, 
+           const double[::1] time,
+           double dTime):
         
-        self.bftUel.computeBodyForce(&P[0], 
+        self.bftUel.computeBodyForce(
+                                    &P[0], 
+                                    &K[0], 
                                     &load[0],
                                     &U[0], 
                                     &time[0],
