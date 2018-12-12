@@ -77,6 +77,7 @@ class NISTPArcLength(NISTParallel):
         concentratedLoads =     activeStepActions['concentratedLoads']
         distributedLoads =      activeStepActions['distributedLoads']
         bodyForces =            activeStepActions['bodyForces']
+        constraints =           activeStepActions['constraints']
         
         R_ =            np.tile(P, (2,1)).T # 2 RHSs
         R_0 =           R_[:,0]
@@ -85,6 +86,7 @@ class NISTPArcLength(NISTParallel):
         
         P_0 = np.zeros_like(P)
         P_f = np.zeros_like(P)
+        V_f = np.zeros_like(V)
         ddU = None
         Un1 = np.zeros_like(P)
         
@@ -97,24 +99,31 @@ class NISTPArcLength(NISTParallel):
         referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
         zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0 
         
-        P_0[:] = P_f[:] = 0.0
-        P_0, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_0, V, I, J, zeroIncrement) # compute 'dead' deadloads, like gravity
-        P_f, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_f, V, I, J, referenceIncrement) # compute 'dead' deadloads, like gravity
-        P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
-
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
 
             Un1[:] = U
             Un1+=   dU
 
-            P[:] = V[:] = F[:] = 0.0
+            P[:] = V[:] = F[:] =  P_0[:] = P_f[:] = V_f[:] = 0.0
 
-            P, V, F = self.computeElements(Un1, dU, P, V, I, J, F, increment)
+            P, V, F     = self.computeElements(Un1, dU, P, V, I, J, F, increment)
+            
+            P_0, V      = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_0, V,   I, J, zeroIncrement) # compute 'dead' deadloads, like gravity
+            P_f, V_f    = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_f, V_f, I, J, referenceIncrement) # compute 'dead' deadloads, like gravity
+
+            P_0, V      = self.assembleConstraints (constraints, Un1, P_0, V, I, J, zeroIncrement)
+            # Currently i don't know if we will ever need 'variable' (e.g. time dependent constraints):
+            # P_f, V_f = self.assembleConstraints (constraints, Un1, P_f, V_f, I, J, referenceIncrement)
+            
+            P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
             
             # Dead and Reference load .. 
             R_0[:] = P_0 + ( Lambda + dLambda ) * P_f + P
             R_f[:] = P_f
+            
+            # add stiffness contribution
+            V[:] += ( Lambda + dLambda ) * V_f
             
             # Dirichlets .. 
             if isExtrapolatedIncrement and iterationCounter == 0:
@@ -125,10 +134,6 @@ class NISTPArcLength(NISTParallel):
 
             R_f = self.applyDirichlet (referenceIncrement, R_f, dirichlets)
            
-            for constraint in self.constraints.values(): 
-                R_0[constraint.globalDofIndices] = 0.0
-                R_f[constraint.globalDofIndices] = 0.0
-             
             if iterationCounter > 0 or isExtrapolatedIncrement:
                 if self.checkConvergency(R_0, ddU, F, iterationCounter, incrementResidualHistory):
                     break

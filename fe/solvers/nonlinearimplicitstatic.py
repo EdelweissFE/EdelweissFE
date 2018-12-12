@@ -120,10 +120,6 @@ class NIST:
         
         activeStepActions = self.collectActiveStepActions( stepActions )
         
-        for constraint in activeStepActions['linearConstraints']:
-            # linear constraints' stiffness contributions are independent of the solution
-            self.assembleLinearConstraintStiffness ( constraint, V)
-
         lastIncrementSize = False
         
         try:
@@ -231,6 +227,7 @@ class NIST:
         concentratedLoads =     activeStepActions['concentratedLoads']
         distributedLoads =      activeStepActions['distributedLoads']
         bodyForces =            activeStepActions['bodyForces']
+        constraints =           activeStepActions['constraints']
         
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
@@ -242,7 +239,8 @@ class NIST:
             P[:] =  V[:] =  F[:] = PExt[:] = 0.0
 
             P, V, F = self.computeElements(Un1, dU, P, V, I, J, F, increment)
-            PExt, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, PExt, V, I, J, increment)
+            PExt, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, PExt, V, I, J, increment)            
+            PExt, V = self.assembleConstraints (constraints, Un1, PExt, V, I, J, increment)
 
             R[:] = P    
             R += PExt
@@ -254,9 +252,6 @@ class NIST:
                 # iteration cycle 1 or higher, time to check the convergency
                 for dirichlet in dirichlets: 
                     R[dirichlet.indices] = 0.0 
-                for constraint in self.constraints.values(): 
-                    R[constraint.globalDofIndices] = 0.0 # currently no external loads on rbs possible
-                
                 if self.checkConvergency(R, ddU, F, iterationCounter, incrementResidualHistory):
                     break
                 
@@ -512,13 +507,28 @@ class NIST:
         
         return spatialAveragedFluxes
             
-    def assembleLinearConstraintStiffness(self, constraint, V):
+    def assembleConstraints(self, constraints, Un1, PExt, V, I, J, increment):
         """ Assemble the sub stiffness matrix for a linear constraint (independent of the solution)
         -> once per Increment"""
-        idxInVIJ = self.constraintToIndexInVIJMap[constraint]
-        V[idxInVIJ : idxInVIJ+constraint.sizeStiffness] = constraint.K.ravel()
         
-        return V
+        tic = getCurrentTime()
+        
+        for constraint in constraints:
+            
+            
+            idxInVIJ = self.constraintToIndexInVIJMap[constraint]
+            nDof = constraint.nDof
+            idcsInPUdU = I[idxInVIJ : idxInVIJ+nDof]
+            
+            Pe = np.zeros(nDof)
+            constraint.applyConstraint(Un1[idcsInPUdU], Pe, V[idxInVIJ : idxInVIJ+constraint.sizeStiffness], increment)
+
+            PExt[idcsInPUdU] += Pe   
+        
+        toc = getCurrentTime()
+        self.computationTimes['constraints'] += toc - tic
+            
+        return PExt, V
         
     def assembleLoads(self, concentratedLoads, distributedLoads, bodyForces, Un1, PExt, V, I, J, increment):
         """ Assemble all loads into a right hand side vector """
@@ -563,7 +573,7 @@ class NIST:
         activeActions['concentratedLoads'] =     stepActions['nodeforces'].values()
         
         activeActions['geostatics'] =           [g for g in stepActions['geostatic'].values() if g.active]
-        activeActions['linearConstraints'] =    [c for c in self.constraints.values() if c.linearConstraint ]
+        activeActions['constraints'] =          [c for c in self.constraints.values() ]
         
         return activeActions
     

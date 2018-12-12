@@ -104,6 +104,7 @@ class Constraint:
         K[   -dG_dU.shape[0]:   , 0 : dG_dU.shape[1]: ] = dG_dU
         
         self.K = K
+        self.dG_dU = dG_dU
         
         self.additionalGlobalDofIndices =  []
         self.nConstraints = nConstraints
@@ -114,11 +115,19 @@ class Constraint:
     def assignAdditionalGlobalDofIndices(self, additionalGlobalDofIndices):
         self.additionalGlobalDofIndices = additionalGlobalDofIndices
         
+        # TODO: .. move away from constraint, since this should be not handled by a constraint intself
         self.globalDofIndices = np.asarray([i for node, nodeFields in zip(self.nodes, self.fieldsOfNodes) 
                                 for nodeField in nodeFields  
                                     for i in node.fields[nodeField]] + self.additionalGlobalDofIndices)
                     
 
+    def applyConstraint(self, Un1, PExt, V, increment):
+       
+        LambdaN1 = Un1[ -self.nConstraints : ]
         
+        PExt[ : -self.nConstraints ] -= LambdaN1 .dot( self.dG_dU )
+#        PExt[- self.nConstraints  : ] -= 0.0
+        
+        V += self.K.ravel()
     
     

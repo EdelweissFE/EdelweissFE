@@ -1,0 +1,39 @@
+*modelGenerator, generator=planeRectQuad, name=gen
+l=200
+h=5
+nX=30
+nY=5
+elType=uelCPE4TL
+
+
+*material, name=stvenantkirchhoffisotropic, id=le, statevars=5
+30000.0, 0.15 
+
+*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+all
+
+*job, name=cps4job, domain=2d, solver=NIST
+*fieldOutput,
+name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
+name=displacement, elSet=all, field=displacement, result=U, name=displacement
+name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=2) ', gaussPt=0:3
+
+
+*output, type=monitor, jobName=cps4job
+fieldOutput=load
+
+*constraint, type=rigidbody, name=rb1
+**nSet=gen_rightBottom,
+nSet=gen_right
+referencePoint=gen_rightTop
+
+*output, type=ensight, jobName=cps4job, name=ensightExport
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+
+*step, jobName=cps4job, maxInc=1e-2, minInc=1e-4, maxNumInc=1000, maxIter=10
+options, category=NISTSolver, extrapolation=off
+dirichlet, name=left,  nSet=gen_left,         field=displacement, 1=0.0, 
+dirichlet, name=leftCorner,  nSet=gen_leftBottom,   field=displacement, 1=0.0, 2=0.0
+dirichlet, name=rotRP,  nSet=gen_rightTop,   field=rotation, 1=3.141
+**dirichlet, name=movRP,  nSet=gen_rightTop,   field=displacement, 2=0.00
