@@ -50,25 +50,18 @@ class Constraint:
         self.fieldsOfNodes = self.slaveNodesFields + self.referencePointFields
 
         self.nDim = modelInfo['domainSize']
+        nDim = self.nDim
        
-        nConstraints = 0
-        rotationalConstraint = True
-        if rotationalConstraint:
-            if self.nDim == 2 :
-                nConstraints += nSlaves * 1 
-            elif self.nDim == 3:
-                nConstraints += nSlaves * 3
+        nConstraints = nSlaves * nDim
         
         nRp = 1
         
-        nRpRotDof = 1 if self.nDim == 2 else 3
-        self.nAffectedDofs = self.nDim * (nSlaves + nRp ) + nRpRotDof 
+        self.nAffectedDofs = nDim * (nSlaves + nRp + nRp ) 
 
         self.d0s = [ s.coordinates - self.rp.coordinates for s in self.slaveNodes ]
         
         self.nDof = self.nAffectedDofs + nConstraints
         self.sizeStiffness =  self.nDof * self.nDof
-        
         
         self.additionalGlobalDofIndices =  []
         self.nConstraints = nConstraints
@@ -149,16 +142,60 @@ class Constraint:
                 
         return G, H
     
+
+    
+    def G_and_H_Rot_3D(self, Un, Urp, PhiRp, d0):
+        
+        def Rphi_3D_x( phi, ):
+            return np.array([
+                                [1,            0,               0,],
+                                [0,             np.cos(phi),    -np.sin(phi)  ],
+                                [0,              np.sin(phi),   +np.cos(phi)  ],])
+    
+        def Rphi_3D_y( phi, ):
+            return np.array([
+                                [np.cos(phi),            0,                +np.sin(phi),],
+                                [0,                     1,                  0],
+                                [-np.sin(phi),           0,                 +np.cos(phi)  ],])
+        def Rphi_3D_z( phi, ):
+            return np.array([
+                                [ np.cos(phi),  -np.sin(phi),   0  ],
+                                [ np.sin(phi),  +np.cos(phi),   0  ],
+                                [0,             0,              1,],])
+        
+        # 3 + 3 + 3
+        G = np.zeros( (3, 9) )
+        H = np.zeros( (3, 9, 9) )
+        
+        # d/dUN
+        G[:, 0:3, ] = - np.identity(3) 
+        # d/dURp
+        G[:, 3:6, ] = + np.identity(3) 
+        # d
+        
+        def rot(phi):
+            return Rphi_3D_z(phi[2]) @  Rphi_3D_y(phi[1])  @ Rphi_3D_x(phi[0]) 
+        
+        for i in range(3):
+            
+            phi = np.copy(PhiRp)
+            phi[i] += np.pi/2
+            
+            G[:, 6 + i] = rot( phi ) @ d0
+            
+            for j in range(3):
+                phi2 = np.copy(phi)
+                phi2[j] += np.pi/2
+                
+                H[:, 6 + i, 6 + j ] = rot( phi2 ) @ d0
+        
+        return G, H
+    
     def applyConstraint(self, Un1, PExt, V, increment):
         
         nConstraints = self.nConstraints
         
         nDim = self.nDim
-        
-        if nDim == 2:
-            nRot = 1
-        elif nDim == 3:
-            nRot = 3
         
         nU = self.nDof - nConstraints
         nNodes = len ( self.slaveNodes )
@@ -167,7 +204,7 @@ class Constraint:
         
         
         idcsURp = [j for j in range ( nNodes * nDim,  nNodes * nDim + nDim  )]
-        idcsPhiRp = [j for j in range ( nNodes * nDim + nDim, nNodes * nDim + nDim + nRot  )]
+        idcsPhiRp = [j for j in range ( nNodes * nDim + nDim, nNodes * nDim + nDim + nDim  )]
         
 
         URp =    Un1[idcsURp]
@@ -179,9 +216,6 @@ class Constraint:
         
         KUU = K[0:nU, 0:nU]
         
-        idcsXY = [0,1]
-        idcsXZ = [0,2]
-        idcsYZ = [1,2]
         
         for i in range( nNodes ):
         
@@ -189,39 +223,29 @@ class Constraint:
             
             idcsUNode = [ j for j in range ( i * nDim , i * nDim + nDim ) ]
             
-            for n in range(nRot):
-                #projection in each direction
-                if n == 0:
-                    coordIndices = idcsXY
-                elif n == 1:
-                    coordIndices = idcsXZ
-                else:
-                    coordIndices = idcsYZ
+            idxL =  (i * nDim )
+            
+            Lambda = Lambdas[ idxL : idxL + nDim  ]
+            
+            Un = UNodes [idcsUNode]
                 
-                d02 = d0 [ coordIndices ]
-
-                idxL =  (i * nRot ) + n 
-                Lambda = Lambdas[ idxL]
+            G, H = self.G_and_H_Rot_3D(Un, URp, PhiRp, d0)
                 
-                Un = UNodes [idcsUNode]
-                
-                Un2 = Un [ coordIndices ]
-                URp2 = URp [coordIndices]
-                
-                G, H =  self.G_and_H_Rot(Un2[0], Un2[1], URp2[0], URp2[1], PhiRp[n], d02)
-                
-                idcsU = idcsUNode + idcsURp + idcsPhiRp
+            idcsU = idcsUNode + idcsURp + idcsPhiRp
                                 
-                KUL = K[0:nU, nU+ idxL ]
-                KLU = K[nU + idxL, 0:nU ]
+            KUL = K[0:nU, nU + idxL : nU + idxL + nDim ]
+            KLU = K[nU + idxL  : nU + idxL + nDim , 0:nU ]
                 
-                for j in range(5):
-                    PExt[idcsU[j]] -= Lambda * G[j]
+            PExt[idcsU] -= Lambda.T @ G
+                
+            for k in range(nDim) :
+                for i in range(6, 9):
+                    for j in range(6, 9):
+                        KUU [ idcsU[i], idcsU[j] ]  += Lambda[k] * H[k,i,j]
                     
-                    for k in range(5):
-                        KUU [ idcsU[j], idcsU[k] ] += Lambda * H[j,k]
-                        
-                    KUL [ idcsU[j ]] += G[j]
-                    KLU [ idcsU[j] ] += G[j]
+            KUL [ idcsU, : ] += G.T
+            KLU [ :, idcsU ] += G
+
+            # print(K != 0.0)
                     
 
