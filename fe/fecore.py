@@ -45,9 +45,6 @@ def assignFieldDofIndices(nodes, constraints, domainSize):
             indexList = fieldIndices.setdefault(field, []) 
             indexList += (node.fields[field])
             fieldIdxBase += fieldSize             
-                
-    for field, indexList in fieldIndices.items():
-        fieldIndices[field] = np.array(indexList)
         
     for constraint in constraints.values():
         # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
@@ -58,6 +55,9 @@ def assignFieldDofIndices(nodes, constraints, domainSize):
         indicesOfConstraintAdditionalDofs = [i + fieldIdxBase for i in range(nNeededDofs)  ]
         constraint.assignAdditionalGlobalDofIndices ( indicesOfConstraintAdditionalDofs )
         fieldIdxBase += nNeededDofs
+        
+    for field, indexList in fieldIndices.items():
+        fieldIndices[field] = np.array(indexList)
         
     return fieldIdxBase, fieldIndices
     

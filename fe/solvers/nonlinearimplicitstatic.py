@@ -82,9 +82,13 @@ class NIST:
         # = Σ_elements Σ_nodes ( nDof (field) )
         self.fieldNDofElementWise = {}
         for field in self.fieldIndices.keys():
-             self.fieldNDofElementWise[field] = np.sum(
+             self.fieldNDofElementWise[field] =  np.sum(
                      [ len(node.fields[field]) for el in self.elements.values() 
-                                                 for node in (el.nodes) if field in node.fields])
+                                                 for node in (el.nodes) if field in node.fields]
+                     + 
+                     [ len(node.fields[field]) for constraint in self.constraints.values() 
+                                                 for node in (constraint.nodes) if field in node.fields]
+                     ) 
     
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
@@ -514,7 +518,6 @@ class NIST:
         tic = getCurrentTime()
         
         for constraint in constraints:
-            
             
             idxInVIJ = self.constraintToIndexInVIJMap[constraint]
             nDof = constraint.nDof

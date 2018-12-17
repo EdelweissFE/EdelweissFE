@@ -14,61 +14,62 @@ documentation = {
 import numpy as np
 
 from fe.utils.misc import stringDict
-from fe.utils.exceptions import WrongDomain
-
 
 class Constraint:
     """ Rigid Body constraint """
     
-    # linear constraints are independent of the solution vector,
-    # and, thus, need only be evaluated once (per step)
-    linearConstraint = True
-    
     def __init__(self, name, definitionLines, modelInfo):
-        
-#        if modelInfo['domainSize'] != 2 :
-#            raise WrongDomain('Rigid Body is currently only available for 2d domain size')
             
         self.name = name
         definition = stringDict( [ e for line in definitionLines for e in line  ] )
         
-        rbNset = definition['nSet']
-        nodeSets = modelInfo['nodeSets']
+        self.nDim = modelInfo['domainSize']
+        nDim = self.nDim
         
-        self.rp = nodeSets [ definition['referencePoint'] ] [0]
+        rbNset =    definition['nSet']
+        nodeSets =  modelInfo['nodeSets']
+        
+        self.referencePoint = nodeSets [ definition['referencePoint'] ] [0]
         self.slaveNodes = nodeSets[ rbNset ]  # may also contain the RP, doesn't really matter as we remove it
         
-        if self.rp in self.slaveNodes: # remove the rp from the slave node set
-            self.slaveNodes = [s for s in self.slaveNodes if s is not self.rp]
+        if self.referencePoint in self.slaveNodes: # remove the rp from the slave node set
+            self.slaveNodes = [s for s in self.slaveNodes if s is not self.referencePoint]
+                        
+            
+        nRot = 3
+        nSlaves = len(self.slaveNodes)
+        
+        self.indicesOfSlaveNodesInP  = [[i*nDim + j                 for j in range ( nDim ) ] for i in range( nSlaves ) ]
+        self.indicesOfRPUinP =          [ nSlaves * nDim + j        for j in range (nDim  )]
+        self.indicesOfRPPhiInP =        [ nSlaves * nDim + nDim + j for j in range (nRot )]
         
         # all nodes
-        self.nodes = self.slaveNodes +  [self.rp]
+        self.nodes = self.slaveNodes +  [self.referencePoint]
         
-        nSlaves = len(self.slaveNodes)
         self.slaveNodesFields = [ ['displacement'] ] * nSlaves
         self.referencePointFields = [ ['displacement', 'rotation']  ]
         self.fieldsOfNodes = self.slaveNodesFields + self.referencePointFields
-
-        self.nDim = modelInfo['domainSize']
-        nDim = self.nDim
        
         nConstraints = nSlaves * nDim
-        
         nRp = 1
         
-        self.nAffectedDofs = nDim * (nSlaves + nRp + nRp ) 
+        self.nDofsOnNodes = nDim * (nSlaves + nRp  )  + nRot
 
-        self.d0s = [ s.coordinates - self.rp.coordinates for s in self.slaveNodes ]
+        self.distancesSlaveNodeRP = [ s.coordinates - self.referencePoint.coordinates for s in self.slaveNodes ]
         
-        self.nDof = self.nAffectedDofs + nConstraints
+        self.nDof = self.nDofsOnNodes + nConstraints
         self.sizeStiffness =  self.nDof * self.nDof
         
         self.additionalGlobalDofIndices =  []
         self.nConstraints = nConstraints
+#        self.clearLambda = False
         
-    def getNodeFields(self):
+    def getFields(self):
         # TODO: use
         return self.slaveNodesFields + self.referencePointFields
+    
+#    def acceptLastState(self,):
+#        self.clearLambda = True
     
     def getNumberOfAdditionalNeededDofs(self):
         return self.nConstraints
@@ -80,172 +81,120 @@ class Constraint:
                                 for nodeField in nodeFields  
                                     for i in node.fields[nodeField]] + self.additionalGlobalDofIndices)
     
-    
-    def G_and_H_Rot(self, Unx, Uny, URpx, URpy, PhiRp, d0):
-        
-        """" g(...) = 0 = -PhiRp + atan2( a ,b )
-        with a = d0_x * dN_y - d0y * dN_x
-             b = d0_x * dN_x + d0y * dN_y
-        and
-            d0 = X_n - X_rp
-            dN = x_n - x_rp = d0 + U_n - Urp
-        """
-        
-        G = np.zeros ( (5) )
-        H = np.zeros ( (5,5) )
-        
-        dN = np.copy(d0)
-        dN[0] += ( Unx - URpx )
-        dN[1] += ( Uny - URpy )
-        
-        a = d0[0] * dN[1] - d0[1] * dN[0]
-        b = d0[0] * dN[0] + d0[1] * dN[1]
-        
-        """
-        derivatives of atan2
-        """
-        
-        b2plusa2_inv = 1. / (b**2 + a**2)
-        d_atan2_d_a = b * b2plusa2_inv
-        d_atan2_d_b = -a * b2plusa2_inv
-        
-        """
-        derivatives of a, b wrt Un and Urp
-        """
-        
-        da_dUni = [-d0[1], +d0[0], +d0[1], -d0[0]]
-        db_dUni = [d0[0], d0[1], -d0[0], -d0[1]]
-        
-        for i in range(4):
-            G[i] = d_atan2_d_a * da_dUni[i] + d_atan2_d_b * db_dUni[i]
-        
-        G[4] = -1
-        
-        """
-        2nd order derivatives for H
-        """
-        
-        b2plusa2_inv2 = b2plusa2_inv ** 2
-        
-        d2_atan2_d_a_d_a = b * b2plusa2_inv2 * (-1) * 2 * a
-        d2_atan2_d_a_d_b = (+1) * b2plusa2_inv + b * (-1) * b2plusa2_inv2 * 2 * b
-        d2_atan2_d_b_d_a = (-1) * b2plusa2_inv + a * (-1) * b2plusa2_inv2 * 2 * a
-        d2_atan2_d_b_d_b = - d2_atan2_d_a_d_a
-        
-        for i in range(4):
-            for j in range(4):
-                H[i, j] = (
-                        d2_atan2_d_a_d_a * da_dUni[j] * da_dUni[i] + 
-                        d2_atan2_d_a_d_b * da_dUni[j] * db_dUni[i] +
-                        d2_atan2_d_b_d_a * db_dUni[j] * da_dUni[i] + 
-                        d2_atan2_d_b_d_b * db_dUni[j] * db_dUni[i] )
-                
-        return G, H
-    
+    def Rphi_3D_x_(self, phi, d):
+        phi = phi + np.pi / 2  * d
+        i  =0.0 if d > 0 else 1.0
+        return np.array([[i,            0,            0,           ],
+                         [0,            np.cos(phi),  -np.sin(phi) ],
+                         [0,            np.sin(phi),  +np.cos(phi) ],])
 
+    def Rphi_3D_y_(self, phi, d):
+        phi = phi + np.pi / 2  * d
+        i  =0.0 if d > 0 else 1.0
+        return np.array([[np.cos(phi),   0,           +np.sin(phi),],
+                          [0,            i,           0            ],
+                          [-np.sin(phi), 0,           +np.cos(phi) ],])
     
-    def G_and_H_Rot_3D(self, Un, Urp, PhiRp, d0):
-        
-        def Rphi_3D_x( phi, ):
-            return np.array([
-                                [1,            0,               0,],
-                                [0,             np.cos(phi),    -np.sin(phi)  ],
-                                [0,              np.sin(phi),   +np.cos(phi)  ],])
-    
-        def Rphi_3D_y( phi, ):
-            return np.array([
-                                [np.cos(phi),            0,                +np.sin(phi),],
-                                [0,                     1,                  0],
-                                [-np.sin(phi),           0,                 +np.cos(phi)  ],])
-        def Rphi_3D_z( phi, ):
-            return np.array([
-                                [ np.cos(phi),  -np.sin(phi),   0  ],
-                                [ np.sin(phi),  +np.cos(phi),   0  ],
-                                [0,             0,              1,],])
-        
-        # 3 + 3 + 3
-        G = np.zeros( (3, 9) )
-        H = np.zeros( (3, 9, 9) )
-        
-        # d/dUN
-        G[:, 0:3, ] = - np.identity(3) 
-        # d/dURp
-        G[:, 3:6, ] = + np.identity(3) 
-        # d
-        
-        def rot(phi):
-            return Rphi_3D_z(phi[2]) @  Rphi_3D_y(phi[1])  @ Rphi_3D_x(phi[0]) 
-        
-        for i in range(3):
-            
-            phi = np.copy(PhiRp)
-            phi[i] += np.pi/2
-            
-            G[:, 6 + i] = rot( phi ) @ d0
-            
-            for j in range(3):
-                phi2 = np.copy(phi)
-                phi2[j] += np.pi/2
-                
-                H[:, 6 + i, 6 + j ] = rot( phi2 ) @ d0
-        
-        return G, H
-    
+    def Rphi_3D_z_(self, phi, d):
+        phi = phi + np.pi / 2  * d
+        i  =0.0 if d > 0 else 1.0
+        return np.array([[ np.cos(phi),  -np.sin(phi),   0  ],
+                         [ np.sin(phi),  +np.cos(phi),   0  ],
+                         [0,             0,              i,],])
+
     def applyConstraint(self, Un1, PExt, V, increment):
         
-        nConstraints = self.nConstraints
-        
-        nDim = self.nDim
+        nConstraints    = self.nConstraints
+        nDim            = self.nDim
         
         nU = self.nDof - nConstraints
-        nNodes = len ( self.slaveNodes )
-        
-        UNodes = Un1[: nNodes * nDim]
-        
-        
-        idcsURp = [j for j in range ( nNodes * nDim,  nNodes * nDim + nDim  )]
-        idcsPhiRp = [j for j in range ( nNodes * nDim + nDim, nNodes * nDim + nDim + nDim  )]
+        nSlaves = len ( self.slaveNodes )
         
 
-        URp =    Un1[idcsURp]
-        PhiRp =  Un1[idcsPhiRp]
+        URp =       Un1[self.indicesOfRPUinP]
+        PhiRp =     Un1[self.indicesOfRPPhiInP]
+        Lambdas =   Un1[nU:].reshape( (nDim, -1), order='F')
         
-        Lambdas = Un1[nU:] 
+#        if self.clearLambda:
+#            Lambdas[:] = 0.0
+#            self.clearLambda = False
         
-        K = V.reshape( self.nDof, self.nDof)
-        
-        KUU = K[0:nU, 0:nU]
-        
-        
-        for i in range( nNodes ):
-        
-            d0 = self.d0s[i]
-            
-            idcsUNode = [ j for j in range ( i * nDim , i * nDim + nDim ) ]
-            
-            idxL =  (i * nDim )
-            
-            Lambda = Lambdas[ idxL : idxL + nDim  ]
-            
-            Un = UNodes [idcsUNode]
-                
-            G, H = self.G_and_H_Rot_3D(Un, URp, PhiRp, d0)
-                
-            idcsU = idcsUNode + idcsURp + idcsPhiRp
-                                
-            KUL = K[0:nU, nU + idxL : nU + idxL + nDim ]
-            KLU = K[nU + idxL  : nU + idxL + nDim , 0:nU ]
-                
-            PExt[idcsU] -= Lambda.T @ G
-                
-            for k in range(nDim) :
-                for i in range(6, 9):
-                    for j in range(6, 9):
-                        KUU [ idcsU[i], idcsU[j] ]  += Lambda[k] * H[k,i,j]
-                    
-            KUL [ idcsU, : ] += G.T
-            KLU [ :, idcsU ] += G
+        K = V.reshape( self.nDof, self.nDof, order='F')
 
-            # print(K != 0.0)
-                    
+        G = np.zeros( (nDim, 9) )
+        H = np.zeros( (nDim, 9, 9) )
+        
+        # d/dUN
+        G[:, 0:3 ] = - np.identity(nDim) 
+        G[:, 3:6 ] = + np.identity(nDim) 
+        
+        Rx, Ry, Rz = self.Rphi_3D_x_, self.Rphi_3D_y_, self.Rphi_3D_z_
+        
+        RotationMatricesAndDerivatives = [ [R(phi, d)  for d in range(3) ] for R, phi in zip ( (Rx,Ry,Rz), PhiRp)  ]
+        Rx = RotationMatricesAndDerivatives[0]
+        Ry = RotationMatricesAndDerivatives[1]
+        Rz = RotationMatricesAndDerivatives[2]
+        
+        RDerivativeProductsI = (
+                Rz[0] @ Ry[0] @ Rx[1],
+                Rz[0] @ Ry[1] @ Rx[0],
+                Rz[1] @ Ry[0] @ Rx[0],)
+        
+        RDerivativeProductsII = (
+                (Rz[0] @ Ry[0] @ Rx[2],
+                 Rz[0] @ Ry[1] @ Rx[1],
+                 Rz[1] @ Ry[0] @ Rx[1],),
+                 
+                (Rz[0] @ Ry[1] @ Rx[1],
+                 Rz[0] @ Ry[2] @ Rx[0],
+                 Rz[1] @ Ry[1] @ Rx[0],),
+                 
+                (Rz[1] @ Ry[0] @ Rx[1],
+                 Rz[1] @ Ry[1] @ Rx[0],
+                 Rz[2] @ Ry[0] @ Rx[0],),)
 
+        
+        #start and end of Lambda in P
+        L0, LF = nU, nU + nDim
+        
+        for i in range( nSlaves ):
+        
+            d0 = self.distancesSlaveNodeRP[i]
+#            print(d0)
+            Lambda = Lambdas[:,i]
+            indcsUNode = self.indicesOfSlaveNodesInP[i]
+            
+            Un =     Un1[indcsUNode]
+
+            g =  -d0 - (Un - URp) + Rz[0] @ Ry[0] @ Rx[0] @ d0
+            
+            # TODO: maybe implemented more performant using np.tensordot (but also morge ugly..)            
+            for i in range(3):
+                G[:, 2*nDim +i] = RDerivativeProductsI[i] @ d0
+                for j in range(3):
+                    H[:, 6+i, 6+j] = RDerivativeProductsII[i][j] @ d0 
+            indcsU = np.array( indcsUNode + self.indicesOfRPUinP + self.indicesOfRPPhiInP, dtype=np.int)
+            
+            KUU = K[0:nU, 0:nU]
+            KUL = K[0:nU,   L0 : LF ]
+            KLU = K[L0: LF , 0:nU ]
+
+            PExt[indcsU]    -= Lambda.T @ G
+            PExt[L0:LF]     -= g 
+            
+            #for coordinate like - black magic - access in KUU..:
+            t = np.tile( indcsU , (indcsU.shape[0] ,1))
+            
+            KUL [ indcsU, : ] += G.T
+            KLU [ :, indcsU ] += G
+            KUU[ t.T, t ]     += np.tensordot( Lambda, H, (0,0) ) # L_[i] H_[i,j,k]
+            # ... corresponds to:
+#            for i in range(6,9):
+#                for j in range(6,9):
+#                    for k in range(nDim) :
+#                        KUU [ indcsU[i], indcsU[j] ]  += Lambda[k] * H[k,i,j]
+            
+
+            L0 += nDim
+            LF += nDim
+#            print(Lambda)

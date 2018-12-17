@@ -1034,15 +1034,19 @@ name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=2) ', gaussPt=0:3
 
 *constraint, type=rigidbody, name=rb1
-nSet=rTop
+nSet=right
 referencePoint=rBottom
 
 *output, type=ensight, jobName=cps4job, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 
-*step, jobName=cps4job, maxInc=1e-2, minInc=1e-4, maxNumInc=1000, maxIter=10
-options, category=NISTSolver, extrapolation=off
+*step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=10
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
-dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=0,  2=0, 3=3.141
-**dirichlet, name=movRP,  nSet=gen_rightTop,   field=displacement, 2=0.00
+dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=3.141,  
+*step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=10
+**options, category=NISTSolver, extrapolation=linear
+**dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
+dirichlet, name=rotRP2,  nSet=rBottom,   field=rotation, 3=3.141,  
+**dirichlet, name=movRP,  nSet=rBottom,   field=displacement, 1=-5
