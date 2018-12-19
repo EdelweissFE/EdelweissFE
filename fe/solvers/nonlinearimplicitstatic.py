@@ -38,63 +38,34 @@ class NIST:
         self.nodeSets =     modelInfo['nodeSets']
         self.elementSets =  modelInfo['elementSets']
         self.constraints =  modelInfo['constraints']
-        self.fieldIndices = jobInfo['fieldIndices']
-        self.residualHistories = dict.fromkeys( self.fieldIndices )
         
         self.linSolver = getLinSolverByName(jobInfo['linsolver']) if 'linsolver' in jobInfo else getDefaultLinSolver()
         
+        self.theDofManager =                jobInfo['dofManager']
         self.fieldCorrectionTolerances =    jobInfo['fieldCorrectionTolerance']
         self.fluxResidualTolerances =       jobInfo['fluxResidualTolerance']
         self.fluxResidualTolerancesAlt =    jobInfo['fluxResidualToleranceAlternative']
         
         # create headers for formatted output of solver
-        nFields = len(self.fieldIndices.keys())
-        self.iterationHeader = ("{:^25}"*nFields).format(*self.fieldIndices.keys())
+        nFields = len(self.theDofManager.fieldIndices.keys())
+        self.iterationHeader = ("{:^25}"*nFields).format(*self.theDofManager.fieldIndices.keys())
         self.iterationHeader2 = (" {:<10}  {:<10}  ").format('||R||∞','||ddU||∞') *nFields
         self.iterationMessageTemplate = "{:11.2e}{:1}{:11.2e}{:1} "
         
-        self.nDof = jobInfo['numberOfDofs']
         self.journal = journal
         self.fieldOutputController = fieldOutputController
         self.outputmanagers = outputmanagers 
         
-        self.sizeVIJ = 0
-        self.sizeNDofElementWise = 0
+        self.VIJDatabase = self.theDofManager.constructVIJDatabase()
+        self.csrGenerator = CSRGenerator ( self.VIJDatabase.I, self.VIJDatabase.J, self.theDofManager.numberOfDofs )
         
-        for el in self.elements.values():
-            self.sizeVIJ += (el.nDofPerEl**2)
-        
-        for constraint in self.constraints.values():
-            self.sizeVIJ += constraint.sizeStiffness
-
-        # create indices map to elements; V, I, J are of type np vectors
-        # elementToIndexInVIJMap is a dictionary of {element : index in VIJ vectors} 
-        V, I, J, elementToIndexInVIJMap , constraintToIndexInVIJMap = self.generateVIJ(self.elements, self.constraints)
-        self.V = V
-        self.I = I
-        self.J = J
-        self.elementToIndexInVIJMap = elementToIndexInVIJMap # element  -> V[ .... idx ..  ]
-        self.constraintToIndexInVIJMap = constraintToIndexInVIJMap
-        
-        self.csrGenerator = CSRGenerator ( I, J, self.nDof )
-        
-        # for the Abaqus like convergence test, the number of dofs 'element-wise' is needed:
-        # = Σ_elements Σ_nodes ( nDof (field) )
-        self.fieldNDofElementWise = {}
-        for field in self.fieldIndices.keys():
-             self.fieldNDofElementWise[field] =  np.sum(
-                     [ len(node.fields[field]) for el in self.elements.values() 
-                                                 for node in (el.nodes) if field in node.fields]
-                     + 
-                     [ len(node.fields[field]) for constraint in self.constraints.values() 
-                                                 for node in (constraint.nodes) if field in node.fields]
-                     ) 
+        self.residualHistories = dict.fromkeys( self.theDofManager.fieldIndices )
     
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
         
-        U = np.zeros(self.nDof)
-        P = np.zeros(self.nDof)
+        U = np.zeros(self.theDofManager.numberOfDofs)
+        P = np.zeros(self.theDofManager.numberOfDofs)
         
         return U, P
         
@@ -104,7 +75,8 @@ class NIST:
     
         self.computationTimes = defaultdict(lambda : 0.0)
             
-        V, I, J = self.V, self.I, self.J
+        VIJDatabase = self.VIJDatabase
+        V, I, J = VIJDatabase.V, VIJDatabase.I, VIJDatabase.J
         
         stepLength =    step.get('stepLength', 1.0)
         extrapolation = stepOptions['NISTSolver'].get('extrapolation', 'linear')
@@ -120,7 +92,7 @@ class NIST:
         criticalIter =      step.get('criticalIter',    self.defaultCriticalIter)
         maxGrowingIter =    step.get('maxGrowIter',     self.defaultMaxGrowingIter)
         
-        dU = np.zeros(self.nDof)
+        dU = np.zeros(self.theDofManager.numberOfDofs)
         
         activeStepActions = self.collectActiveStepActions( stepActions )
         
@@ -219,7 +191,7 @@ class NIST:
         
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         iterationCounter =          0
-        incrementResidualHistory =  dict.fromkeys( self.fieldIndices, (0.0, 0 ) )
+        incrementResidualHistory =  dict.fromkeys( self.theDofManager.fieldIndices, (0.0, 0 ) )
         
         R =             np.copy(P)          # global Residual vector for the Newton iteration
         F =             np.zeros_like(P)    # accumulated Flux vector 
@@ -288,7 +260,7 @@ class NIST:
         pNewDT =    np.array([1e36])
         
         for el in self.elements.values():
-            idxInVIJ = self.elementToIndexInVIJMap[el]
+            idxInVIJ = self.VIJDatabase.entitiesInVIJ[el]
             Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
             Pe = np.zeros(el.nDofPerEl)
             idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
@@ -324,7 +296,7 @@ class NIST:
             magnitude = dLoad.getCurrentMagnitude(increment)
             for faceID, elements in dLoad.surface.items():
                 for el in elements:
-                    idxInVIJ = self.elementToIndexInVIJMap[el]
+                    idxInVIJ = self.VIJDatabase.entitiesInVIJ[el]
                     Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
                     Pe = np.zeros(el.nDofPerEl)
                     idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
@@ -349,7 +321,7 @@ class NIST:
         for bForce in bodyForces:
             force = bForce.getCurrentBodyForce(increment)
             for el in bForce.elements:
-                idxInVIJ = self.elementToIndexInVIJMap[el]
+                idxInVIJ = self.VIJDatabase.entitiesInVIJ[el]
                 Pe = np.zeros(el.nDofPerEl)
                 Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
                 idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
@@ -409,7 +381,7 @@ class NIST:
         else: # alternative tolerance set
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
-        for field, fieldIndices in self.fieldIndices.items():
+        for field, fieldIndices in self.theDofManager.fieldIndices.items():
             fluxResidual =       np.linalg.norm( R[ fieldIndices ] , np.inf )
             fieldCorrection =    np.linalg.norm( ddU[ fieldIndices ] , np.inf ) if ddU is not None else 0.0
             
@@ -453,45 +425,7 @@ class NIST:
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
         return K
-    
-    def generateVIJ(self, elements, constraints):
-        """ Initializes the V vector and generates I, J entries for each element,
-        based on i) its (global) nodes ii) its dofLayout. Furthermore, 
-        a dictionary with the mapping of each element to its index in VIJ 
-        is created.
-        The same is done for each constraint
-        -> is called by __init__() """
-        
-        V = np.zeros(self.sizeVIJ)
-        I = np.zeros_like(V, dtype=np.int)
-        J = np.zeros_like(V, dtype=np.int)
-        idxInVIJ = 0
-        elementToIndexInVIJMap = {}
-        
-        for el in elements.values():
-            destList = np.asarray([i for iNode, node in enumerate(el.nodes) # for each node of the element..
-                                        for nodeField in el.fields[iNode]  # for each field of this node
-                                            for i in node.fields[nodeField]])  # the index in the global system
-    
-            elementToIndexInVIJMap[el] = idxInVIJ        
-                                  
-            # looks like black magic, but it's an efficient way to generate all indices of Ke in K:
-            elDofLocations = np.tile(destList[ el.dofIndicesPermutation  ], (destList.shape[0], 1) )
-            I[idxInVIJ : idxInVIJ+el.nDofPerEl**2] = elDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ+el.nDofPerEl**2] = elDofLocations.ravel('F')
-            idxInVIJ += el.nDofPerEl**2
-            
-        constraintToIndexInVIJMap = {}
-        for constraint in constraints.values():
-            destList = constraint.globalDofIndices
-            constraintToIndexInVIJMap[constraint] = idxInVIJ        
-            constraintDofLocations = np.tile( destList, (destList.shape[0], 1) )
-            I[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ + constraint.sizeStiffness] = constraintDofLocations.ravel('F')
-            idxInVIJ += constraint.sizeStiffness
-        
-        return V, I, J, elementToIndexInVIJMap, constraintToIndexInVIJMap
-    
+
     def resetDisplacements(self, U):
         """ -> May be called at the end of a geostatic step, the zero all displacments after
         applying the geostatic stress """
@@ -499,15 +433,15 @@ class NIST:
         self.journal.printSeperationLine()
         self.journal.message("Geostatic step, resetting displacements", self.identification, level=1)
         self.journal.printSeperationLine()
-        U[ self.fieldIndices['displacement'] ] = 0.0 
+        U[ self.theDofManager.fieldIndices['displacement'] ] = 0.0 
         return U
     
     def computeSpatialAveragedFluxes(self, F):
         """ Compute the spatial averaged flux for every field 
         -> Called by checkConvergency() """
-        spatialAveragedFluxes =     dict.fromkeys(self.fieldIndices, 0.0)
-        for field, nDof in self.fieldNDofElementWise.items():
-            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.fieldIndices[field] ], 1) / nDof )
+        spatialAveragedFluxes =     dict.fromkeys(self.theDofManager.fieldIndices, 0.0)
+        for field, nDof in self.theDofManager.numberOfAccumulatedFieldConnections.items():
+            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.theDofManager.fieldIndices[field] ], 1) / nDof )
         
         return spatialAveragedFluxes
             
@@ -519,7 +453,7 @@ class NIST:
         
         for constraint in constraints:
             
-            idxInVIJ = self.constraintToIndexInVIJMap[constraint]
+            idxInVIJ = self.VIJDatabase.entitiesInVIJ[constraint]
             nDof = constraint.nDof
             idcsInPUdU = I[idxInVIJ : idxInVIJ+nDof]
             

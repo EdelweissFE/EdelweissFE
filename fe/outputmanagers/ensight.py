@@ -344,7 +344,7 @@ class OutputManager(OutputManagerBase):
         self.finishedSteps = 0
         self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
-        self.domainSize = jobInfo['domainSize']
+        self.domainSize = modelInfo['domainSize']
         self.fieldOutputController = fieldOutputController
         self.journal = journal
         

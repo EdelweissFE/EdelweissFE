@@ -1,0 +1,28 @@
+*include, input=federv3.inp
+
+*material, name=stvenantkirchhoffisotropic, id=le, statevars=5
+30000.0, 0.15 
+
+*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+all
+
+*job, name=c3d8tljob, domain=3d, solver=NISTParallel
+*fieldOutput,
+name=displacement, elSet=all, field=displacement, result=U, name=displacement
+name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=1) ', gaussPt=0:3
+name=strain, elSet=all, result=strain, f(x)=' mean(x, axis=1) ', gaussPt=0:3
+
+*constraint, type=rigidbody, name=rb1
+referencePoint=RP
+nset=p_Set-2
+
+*output, type=ensight, jobName=c3d8tljob, name=ensightExport
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+
+*step, jobName=c3d8tljob, maxInc=1e-2, minInc=1e-4, maxNumInc=1000, maxIter=10
+options, category=NISTSolver, extrapolation=linear
+dirichlet, name=enc, nSet=Set-1, field=displacement, 1=0, 2=0, 3=0
+dirichlet, name=enc2, nSet=Set-5, field=displacement, 1=0, 2=0, 3=0
+dirichlet, name=rpMov, nSet=RP, field=rotation, 1=-3.141, 2=0, 3=0

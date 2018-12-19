@@ -10,7 +10,6 @@ from fe.elements.node import Node
 from fe.config.elementlibrary import getElementByName
 from fe.utils.misc import isInteger
 from fe.config.constraints import getConstraintByName
-
 import numpy as np
 
 class AbqModelConstructor:
@@ -45,10 +44,6 @@ class AbqModelConstructor:
                 # store nodeObjects in elNodes list
                 elNodes =  [ nodeDefinitions[n] for n in defLine[1:] ]
                 newEl = ElementClass(elementType, elNodes, label)
-#                for iNode, node in enumerate(elNodes):
-#                    # update node.fields dictionary with available fields from phenomena, e.g
-#                    # OrderedDict : {'mechanical': True, 'thermal': False , ... }
-#                    node.fields.update( [ (f, True) for f in newEl.fields[iNode] ]  )
                 elements[label] = newEl
                 
         # generate dictionary of elementObjects belonging to a specified elementset
@@ -142,8 +137,8 @@ class AbqModelConstructor:
             
             constraint = getConstraintByName(constraint)(name, data, modelInfo)
             
-            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
-                node.fields.update( [ (f, True) for f in nodeFields]  )
+#            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
+#                node.fields.update( [ (f, True) for f in nodeFields]  )
             
             modelInfo['constraints'][name] = constraint
             
@@ -175,13 +170,3 @@ class AbqModelConstructor:
                 
         return modelInfo
     
-    def createNodeFields(self, modelInfo, inputFile):
-        for element in modelInfo['elements'].values():
-            for node, nodeFields in zip ( element.nodes, element.fields ):
-#            for iNode, node in enumerate(elNodes):
-                # update node.fields dictionary with available fields from phenomena, e.g
-                # OrderedDict : {'mechanical': True, 'thermal': False , ... }
-#                node.fields.update( [ (f, True) for f in newEl.fields[iNode] ]  )
-                node.fields.update( [ (f, True) for f in nodeFields ]  )
-        return modelInfo
-        

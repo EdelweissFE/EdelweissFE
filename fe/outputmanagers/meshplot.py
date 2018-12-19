@@ -123,7 +123,7 @@ class OutputManager(OutputManagerBase):
     identification = "meshPlot"
 
     def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
-        self.domainSize = jobInfo['domainSize']
+        self.domainSize = modelInfo['domainSize']
         self.plotter = plotter
         self.journal = journal
 

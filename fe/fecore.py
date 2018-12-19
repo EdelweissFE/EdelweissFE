@@ -5,9 +5,8 @@ Created on Tue Jan  17 19:10:42 2017
 
 @author: matthias
 """
-import numpy as np
 from collections import OrderedDict, defaultdict
-from fe.config.phenomena import getFieldSize, domainMapping
+from fe.config.phenomena import domainMapping
 from fe.config.generators import getGeneratorByName
 from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerByName
@@ -16,50 +15,12 @@ from fe.utils.fieldoutput import FieldOutputController
 from fe.utils.misc import  filterByJobName, stringDict
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
+from fe.utils.dofmanager import DofManager
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
-
-def assignFieldDofIndices(nodes, constraints, domainSize):
-    """ Loop over all nodes to generate the global field-dof indices.
-    output is a tuple of:
-        - number of total DOFS
-        - orderedDict( (mechanical, indices), 
-                       (nonlocalDamage, indices)
-                       (thermal, indices)
-                       ...)."""
-        
-    fieldIdxBase = 0
-    fieldIndices = OrderedDict()
-    for node in nodes.values():
-            #delete all fields of a node, which are not active
-        for field, enabled in list(node.fields.items()):
-            if not enabled:
-                del node.fields[field]
-                
-        for field in node.fields.keys():
-            fieldSize = getFieldSize(field, domainSize)
-            node.fields[field] = [i + fieldIdxBase for i in range(fieldSize)]
-            indexList = fieldIndices.setdefault(field, []) 
-            indexList += (node.fields[field])
-            fieldIdxBase += fieldSize             
-        
-    for constraint in constraints.values():
-        # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
-        # we create them here, and assign them directly to the constraints 
-        # (In contrast to true field indices, which are not directly 
-        # assigned to elements/constraints but to the nodes)
-        nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
-        indicesOfConstraintAdditionalDofs = [i + fieldIdxBase for i in range(nNeededDofs)  ]
-        constraint.assignAdditionalGlobalDofIndices ( indicesOfConstraintAdditionalDofs )
-        fieldIdxBase += nNeededDofs
-        
-    for field, indexList in fieldIndices.items():
-        fieldIndices[field] = np.array(indexList)
-        
-    return fieldIdxBase, fieldIndices
     
 def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions, journal):
     """ Parses all the defined actions for the current step, 
@@ -124,22 +85,19 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     abqModelConstructor = AbqModelConstructor(journal)
     modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.assignSectionsFromInputFile(modelInfo, inputfile)
-    
-    modelInfo = abqModelConstructor.createNodeFields(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
-    numberOfDofs, fieldIndices = assignFieldDofIndices(modelInfo['nodes'], modelInfo['constraints'], domainSize)
+    dofManager = DofManager(modelInfo)
     
-    journal.message("total size of eq. system: {:}".format(numberOfDofs), identification, 0)
+    journal.message("total size of eq. system: {:}".format(dofManager.numberOfDofs), identification, 0)
     journal.printSeperationLine()
 
     jobName = job.get('name', '')
     time = job.get('startTime', 0.0)
     # store job info
-    jobInfo = {'domainSize':        domainSize,
-               'numberOfDofs':      numberOfDofs,
-               'fieldIndices':      fieldIndices,
+    jobInfo = {
+               'dofManager':        dofManager,
                'computationTime':   0.0}
                
     # add or update additional job info such as inputfile, domain, name
