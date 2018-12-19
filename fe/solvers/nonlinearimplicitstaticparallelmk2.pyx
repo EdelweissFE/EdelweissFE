@@ -134,7 +134,7 @@ class NISTParallel(NIST):
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing
             backendBasedCythonElement=  elList[i]
-            elIndicesInVIJ[i] =         self.elementToIndexInVIJMap[backendBasedCythonElement] 
+            elIndicesInVIJ[i] =         self.VIJDatabase.entitiesInVIJ[backendBasedCythonElement] 
             elNDofs[i] =                backendBasedCythonElement.nDofPerEl 
             # each element gets its place in the Pe buffer
             elIndexInPe[i] = j

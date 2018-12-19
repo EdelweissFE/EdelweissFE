@@ -28,7 +28,7 @@ class StepAction(StepActionBase):
         self.elements = modelInfo['elementSets'] [ action['elSet'] ]
         magnitude = np.fromstring(action['forceVector'], sep=',', dtype=np.double)
         
-        if len(magnitude) < jobInfo['domainSize']:
+        if len(magnitude) < modelInfo['domainSize']:
             raise Exception('BodyForce {:}: force vector has wrong dimension!'.format(self.name))
         
         self.delta = magnitude
