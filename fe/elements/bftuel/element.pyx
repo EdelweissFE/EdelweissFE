@@ -11,6 +11,8 @@ cimport numpy as np
 cimport fe.elements.bftuel.element 
 cimport libcpp.cast
 
+from fe.utils.exceptions import CutbackRequest
+
 from libcpp.memory cimport unique_ptr, allocator, make_unique
 
 from libc.stdlib cimport malloc, free
@@ -97,18 +99,20 @@ cdef class BftUelWrapper:
                          const double[::1] U, 
                          const double[::1] dU, 
                          const double[::1] time, 
-                         double dTime, 
-                         double[::1] pNewdT):
+                         double dTime, ):
         
         self.initializeStateVarsTemp()
         
+        cdef double pNewDT = 1e36
         with nogil:
             self.bftUel.computeYourself(&U[0], &dU[0],
                                                 &Pe[0], 
                                                 &Ke[0],
                                                 &time[0],
                                                 dTime,  
-                                                pNewdT[0])
+                                                pNewDT)
+            if pNewDT < 1.0:
+                raise CutbackRequest("An element requests for a cutback!", pNewDT)
         
     def computeDistributedLoad(self,
                                str loadType,

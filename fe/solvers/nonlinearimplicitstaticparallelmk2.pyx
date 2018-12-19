@@ -111,7 +111,6 @@ class NISTParallel(NIST):
             list elList = list(self.elements.values())
         
             double[::1] V_mView = V
-            double[:, ::1] pNewDTVector = np.ones( (desiredThreads, 1), order='C' )  * 1e36 # as many pNewDTs as threads
             double[::1] UN1_mView = Un1
             double[::1] dU_mView = dU 
             double[::1] P_mView = P
@@ -168,13 +167,8 @@ class NISTParallel(NIST):
                                               UN1e[threadID, :],
                                               dUe[threadID, :],
                                               time,
-                                              dT,
-                                              pNewDTVector[threadID, :])
+                                              dT)
                 
-                if pNewDTVector[threadID, 0] <= 1.0:
-                    with gil:
-                        raise CutbackRequest("An element requests for a cutbrack", float(pNewDTVector[threadID, 0]))
-                        
             #successful elements evaluation: condense oversize Pe buffer -> P
             P_mView[:] = 0.0
             F_mView[:] = 0.0

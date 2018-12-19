@@ -285,7 +285,7 @@ class NIST:
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         time = np.array([stepTime, totalTime])
         
-        pNewDT =    np.array([1e36])
+#        pNewDT =    np.array([1e36])
         
         for el in self.elements.values():
             idxInVIJ = self.elementToIndexInVIJMap[el]
@@ -297,10 +297,12 @@ class NIST:
                                Pe, 
                                Un1[ idcsInPUdU ], 
                                dU [ idcsInPUdU ], 
-                               time, dT, pNewDT)
+                               time, dT, 
+#                               pNewDT
+                               )
 
-            if pNewDT[0] <= 1.0:
-                raise CutbackRequest("An element requests for a cutback", pNewDT[0])
+#            if pNewDT[0] <= 1.0:
+#                raise CutbackRequest("An element requests for a cutback", pNewDT[0])
             
             # global force vector is assembled directly
             P[ idcsInPUdU ] +=      Pe

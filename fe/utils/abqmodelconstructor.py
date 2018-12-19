@@ -178,10 +178,7 @@ class AbqModelConstructor:
     def createNodeFields(self, modelInfo, inputFile):
         for element in modelInfo['elements'].values():
             for node, nodeFields in zip ( element.nodes, element.fields ):
-#            for iNode, node in enumerate(elNodes):
-                # update node.fields dictionary with available fields from phenomena, e.g
                 # OrderedDict : {'mechanical': True, 'thermal': False , ... }
-#                node.fields.update( [ (f, True) for f in newEl.fields[iNode] ]  )
                 node.fields.update( [ (f, True) for f in nodeFields ]  )
         return modelInfo
         
