@@ -15,6 +15,8 @@ import numpy as np
 
 from fe.utils.misc import stringDict
 
+#from numba import jit
+
 class Constraint:
     """ Rigid Body constraint """
     
@@ -62,7 +64,6 @@ class Constraint:
         
         self.additionalGlobalDofIndices =  []
         self.nConstraints = nConstraints
-#        self.clearLambda = False
         
         self.nRot = 3
     
@@ -182,7 +183,6 @@ class Constraint:
             
             g =  -d0 - (Un - URp) + T @ d0
             
-            # TODO: maybe implemented more performant using np.tensordot (but also morge ugly..)            
             for i in range(nRot):
                 G[:, 2*nDim +i] = RDerivativeProductsI[i] @ d0
                 for j in range(nRot):
@@ -199,7 +199,7 @@ class Constraint:
             KLU = K[L0:LF, 0:nU ]
             
             # for KUU, only the Phi_RP block is nonzero
-            KUU[-nRot:, -nRot:] += np.tensordot( Lambda, H[:,-nRot:, -nRot:], (0,0) ) # L_[i] H_[i,j,k]
+            KUU[-nRot:, -nRot:] += np.einsum('i,ijk->jk', Lambda, H[:,-nRot:, -nRot:], ) # L_[i] H_[i,j,k]
             KUL [ indcsU, : ]   += G.T
             KLU [ :, indcsU ]   += G
 

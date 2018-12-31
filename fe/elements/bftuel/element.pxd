@@ -5,8 +5,6 @@ Created on Thu Apr 27 08:35:06 2017
 
 @author: matthias
 """
-
-#from fe.materials.umatlibrary cimport pUmatType
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
@@ -101,7 +99,7 @@ cdef class BftUelWrapper:
     cdef BftUel* bftUel
     cdef public nodes, 
     cdef public int elNumber, 
-    cdef public int nNodes, nDofPerEl
+    cdef public int nNodes, nDof
     cdef public list fields
     cdef public str ensightType
     cdef readonly dofIndicesPermutation
@@ -110,3 +108,15 @@ cdef class BftUelWrapper:
     cdef double[::1] elementProperties, stateVarsTemp , materialProperties
     cdef int nStateVars
     cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt)
+    
+    # nogil methods are already declared here:
+    
+    cpdef void initializeStateVarsTemp(self, ) nogil
+
+    cpdef void computeYourself(self, 
+                     double[::1] Ke, 
+                     double[::1] Pe, 
+                     const double[::1] U, 
+                     const double[::1] dU, 
+                     const double[::1] time, 
+                     double dTime, ) nogil except *

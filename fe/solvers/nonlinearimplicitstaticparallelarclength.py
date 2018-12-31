@@ -44,8 +44,7 @@ class NISTPArcLength(NISTParallel):
         
         return super().solveStep(step, time, stepActions, stepOptions, U, P)
         
-    def solveIncrement(self, U, dU, P,
-           V, I, J,
+    def solveIncrement(self, U, dU, P, K,
            activeStepActions,
            increment,
            lastIncrementSize,
@@ -56,8 +55,7 @@ class NISTPArcLength(NISTParallel):
         Implementation based on the proposed approach by """
         
         if self.arcLengthController == None:
-            return super().solveIncrement(U, dU, P,
-                                           V, I, J,  
+            return super().solveIncrement(U, dU, P, K,
                                            activeStepActions,
                                            increment,
                                            lastIncrementSize,
@@ -71,7 +69,7 @@ class NISTPArcLength(NISTParallel):
             raise ConditionalStop
         
         iterationCounter =          0
-        incrementResidualHistory =  dict.fromkeys( self.theDofManager.fieldIndices, (0.0, 0 ) )
+        incrementResidualHistory =  dict.fromkeys( self.theDofManager.IndicesOfFieldsInDofVector, (0.0, 0 ) )
         
         dirichlets =            activeStepActions['dirichlets']
         concentratedLoads =     activeStepActions['concentratedLoads']
@@ -79,25 +77,25 @@ class NISTPArcLength(NISTParallel):
         bodyForces =            activeStepActions['bodyForces']
         constraints =           activeStepActions['constraints']
         
-        R_ =            np.tile(P, (2,1)).T # 2 RHSs
+        R_ =            np.tile(self.theDofManager.constructDofVector(), (2,1)).T # 2 RHSs
         R_0 =           R_[:,0]
         R_f =           R_[:,1]
-        F =             np.zeros_like(P)    # accumulated Flux vector 
+        F =             self.theDofManager.constructDofVector()    # accumulated Flux vector 
         
-        P_0 = np.zeros_like(P)
-        P_f = np.zeros_like(P)
-        V_f = np.zeros_like(V)
+        P_0 = self.theDofManager.constructDofVector()
+        P_f = self.theDofManager.constructDofVector()
+        K_f = self.theDofManager.constructVIJSystemMatrix()
+        Un1 = self.theDofManager.constructDofVector()
         ddU = None
-        Un1 = np.zeros_like(P)
         
-        Lambda =  self.Lambda
-        dLambda = self.dLambda
-        ddLambda = 0.0
+        Lambda      =  self.Lambda
+        dLambda     = self.dLambda
+        ddLambda    = 0.0
         
         dU, isExtrapolatedIncrement, dLambda = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda)
         
-        referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
-        zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0 
+        referenceIncrement  = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
+        zeroIncrement       = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0 
         
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
@@ -105,15 +103,15 @@ class NISTPArcLength(NISTParallel):
             Un1[:] = U
             Un1+=   dU
 
-            P[:] = V[:] = F[:] =  P_0[:] = P_f[:] = V_f[:] = 0.0
+            P[:] = K[:] = F[:] =  P_0[:] = P_f[:] = K_f[:] = 0.0
 
-            P, V, F     = self.computeElements(Un1, dU, P, V, I, J, F, increment)
+            P, K, F     = self.computeElements(Un1, dU, P, K, F, increment)
             
-            P_0, V      = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_0, V,   I, J, zeroIncrement) # compute 'dead' deadloads, like gravity
-            P_f, V_f    = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_f, V_f, I, J, referenceIncrement) # compute 'dead' deadloads, like gravity
+            P_0, K      = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K, zeroIncrement) # compute 'dead' deadloads, like gravity
+            P_f, K_f    = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_f, K_f, referenceIncrement) # compute 'dead' deadloads, like gravity
 
-            P_0, V      = self.assembleConstraints (constraints, Un1, P_0, V, I, J, zeroIncrement)
-            # Currently i don't know if we will ever need 'variable' (e.g. time dependent constraints):
+            P_0, K      = self.assembleConstraints (constraints, Un1, P_0, K, zeroIncrement)
+            # Currently i don't know if we will ever need 'transient' (e.g. time dependent constraints):
             # P_f, V_f = self.assembleConstraints (constraints, Un1, P_f, V_f, I, J, referenceIncrement)
             
             P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
@@ -123,7 +121,7 @@ class NISTPArcLength(NISTParallel):
             R_f[:] = P_f
             
             # add stiffness contribution
-            V[:] += ( Lambda + dLambda ) * V_f
+            K[:] += ( Lambda + dLambda ) * K_f
             
             # Dirichlets .. 
             if isExtrapolatedIncrement and iterationCounter == 0:
@@ -135,7 +133,7 @@ class NISTPArcLength(NISTParallel):
             R_f = self.applyDirichlet (referenceIncrement, R_f, dirichlets)
            
             if iterationCounter > 0 or isExtrapolatedIncrement:
-                if self.checkConvergency(R_0, ddU, F, iterationCounter, incrementResidualHistory):
+                if self.checkConvergence(R_0, ddU, F, iterationCounter, incrementResidualHistory):
                     break
                 
                 if self.checkDivergingSolution (incrementResidualHistory , maxGrowingIter):
@@ -144,11 +142,11 @@ class NISTPArcLength(NISTParallel):
             if iterationCounter == maxIter:
                 raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
             
-            K = self.assembleStiffness(V, I, J)
-            K = self.applyDirichletK(K, dirichlets)
+            K_ = self.assembleStiffnessCSR(K)
+            K_ = self.applyDirichletK(K_, dirichlets)
             
             # solve 2 eq. systems at once:
-            ddU_ = self.linearSolve(K, R_ )
+            ddU_ = self.linearSolve(K_, R_ )
             # q_0 = K⁻¹ * (  Pext_0  + dLambda * Pext_Ref - PInt  )
             # q_f = K⁻¹ * (  Pext_Ref  )
             ddU_0, ddU_f = ddU_[:,0], ddU_[:,1]
@@ -159,8 +157,8 @@ class NISTPArcLength(NISTParallel):
             # assemble total solution
             ddU = ddU_0 + ddLambda * ddU_f
             
-            dU +=       ddU
-            dLambda +=  ddLambda
+            dU      += ddU
+            dLambda += ddLambda
             
             iterationCounter += 1
            

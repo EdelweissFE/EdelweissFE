@@ -19,7 +19,6 @@ from time import time as getCurrentTime
 from multiprocessing import cpu_count
 import os
 
-
 class NISTParallel(NIST):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
     Designed to interface with Abaqus UELs
@@ -28,15 +27,6 @@ class NISTParallel(NIST):
     
     identification = "NISTPSolver"
     
-    def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
-        super().__init__(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
-        
-        self.maximumNDofPerEl = 0
-        self.sizePe = 0
-        for el in self.elements.values():
-            self.maximumNDofPerEl = el.nDofPerEl if el.nDofPerEl > self.maximumNDofPerEl else self.maximumNDofPerEl
-            self.sizePe += el.nDofPerEl
-            
     def solveStep(self, step, time, stepActions, stepOptions, U, P):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
@@ -82,14 +72,7 @@ class NISTParallel(NIST):
         
         return K
     
-    def computeElements(self, Un1, dU,
-                        P, 
-                        V, 
-                        long[::1] I, 
-                        long[::1] J,
-                        F,
-                        increment
-                        ):
+    def computeElements(self, Un1, dU, P, K, F, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -105,85 +88,82 @@ class NISTParallel(NIST):
         time = np.array([stepTime, totalTime])
         
         cdef:
-            int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
+            int elNDof, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
             int desiredThreads = self.numThreads
             int nElements = len(self.elements.values())
             list elList = list(self.elements.values())
         
-            double[::1] V_mView = V
-            double[::1] UN1_mView = Un1
-            double[::1] dU_mView = dU 
-            double[::1] P_mView = P
-            double[::1] F_mView = F
-
+            long[::1] I             = K.I
+            double[::1] K_mView     = K
+            double[::1] UN1_mView   = Un1
+            double[::1] dU_mView    = dU 
+            double[::1] P_mView     = P
+            double[::1] F_mView     = F
 
             # oversized Buffers for parallel computing:
                 # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
-            double[:, ::1] UN1e = np.empty((desiredThreads,  self.maximumNDofPerEl), )
-            double[:, ::1] dUe = np.empty((desiredThreads,  self.maximumNDofPerEl), )
+            maxNDofOfAnyEl      = self.theDofManager.largestNumberOfElNDof
+            double[:, ::1] UN1e = np.empty((desiredThreads, maxNDofOfAnyEl), )
+            double[:, ::1] dUe  = np.empty((desiredThreads, maxNDofOfAnyEl), )
             # oversized buffer for Pe ( size = sum(elements.ndof) )
-            double[::1] Pe = np.zeros(self.sizePe) 
+            double[::1] Pe = np.zeros(self.theDofManager.accumulatedElementNDof) 
         
             # lists (indices and nDofs), which can be accessed parallely
-            int* elIndicesInVIJ = <int*> malloc(nElements * sizeof (int*) )
-            int* elIndexInPe =    <int*> malloc(nElements * sizeof (int*) )
-            int* elNDofs =        <int*> malloc(nElements * sizeof (int*) )
+            int[::1] elIndicesInVIJ         = np.empty( (nElements,), dtype=np.intc )
+            int[::1] elIndexInPe            = np.empty( (nElements,), dtype=np.intc )
+            int[::1] elNDofs                = np.empty( (nElements,), dtype=np.intc )
         
             int i, j = 0
             
+        #TODO: this could be done once (__init__) and stored permanently in a cdef class
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing
-            backendBasedCythonElement=  elList[i]
-            elIndicesInVIJ[i] =         self.VIJDatabase.entitiesInVIJ[backendBasedCythonElement] 
-            elNDofs[i] =                backendBasedCythonElement.nDofPerEl 
+            el                      = elList[i]
+            elIndicesInVIJ[i]       = self.theDofManager.entitiesInVIJ[el] 
+            elNDofs[i]              = el.nDof 
             # each element gets its place in the Pe buffer
             elIndexInPe[i] = j
             j += elNDofs[i]
+        
+        for i in prange(nElements, 
+                    schedule='dynamic', 
+                    num_threads=desiredThreads, 
+                    nogil=True):
+        
+            threadID    = threadid()
+            elIdxInVIJ  = elIndicesInVIJ[i]      
+            elIdxInPe   = elIndexInPe[i]
+            elNDof      = elNDofs[i]
             
-        try:
-            for i in prange(nElements, 
-                        schedule='dynamic', 
-                        num_threads=desiredThreads, 
-                        nogil=True):
+            for j in range (elNDof):
+                # copy global U & dU to buffer memories for element eval.
+                currentIdxInU =     I [ elIndicesInVIJ[i] +  j ]
+                UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
+                dUe[threadID, j] =  dU_mView[ currentIdxInU ]
             
-                threadID =      threadid()
-                elIdxInVIJ =    elIndicesInVIJ[i]      
-                elIdxInPe =     elIndexInPe[i]
-                elNDofPerEl =   elNDofs[i]
-                
-                for j in range (elNDofPerEl):
-                    # copy global U & dU to buffer memories for element eval.
-                    currentIdxInU =     I [ elIndicesInVIJ[i] +  j ]
-                    UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
-                    dUe[threadID, j] =  dU_mView[ currentIdxInU ]
-                
-                # for accessing the element in the list, and for passing the parameters
-                # we have enable the gil. This prevents a parallel execution in the meanwhile,
-                # so we hope the method computeYourself AGAIN releases the gil INSIDE.
-                # Otherwise, a truly parallel execution won't happen at all!
-                with gil:
-                    elList[i].computeYourself(V_mView[elIdxInVIJ : elIdxInVIJ + elNDofPerEl * elNDofPerEl],
-                                              Pe[elIdxInPe : elIdxInPe + elNDofPerEl],
-                                              UN1e[threadID, :],
-                                              dUe[threadID, :],
-                                              time,
-                                              dT)
-                
-            #successful elements evaluation: condense oversize Pe buffer -> P
-            P_mView[:] = 0.0
-            F_mView[:] = 0.0
-            for i in range(nElements):
-                elIdxInVIJ =    elIndicesInVIJ[i]
-                elIdxInPe =     elIndexInPe[i]
-                elNDofPerEl =   elNDofs[i]
-                for j in range (elNDofPerEl): 
-                    P_mView[ I[elIdxInVIJ + j] ] +=      Pe[ elIdxInPe + j ]
-                    F_mView[ I[elIdxInVIJ + j] ] += abs( Pe[ elIdxInPe + j ] )
-        finally:
-            free( elIndicesInVIJ )
-            free( elNDofs )
-            free( elIndexInPe )
+            # for accessing the element in the list, and for passing the parameters
+            # we have to enable the gil. 
+            # This prevents a parallel execution in the meanwhile,
+            # so we hope the method computeYourself AGAIN releases the gil INSIDE.
+            # Otherwise, a truly parallel execution won't happen at all!
+            with gil:
+                elList[i].computeYourself(K_mView[elIdxInVIJ : elIdxInVIJ + elNDof ** 2],
+                                          Pe[elIdxInPe : elIdxInPe + elNDof],
+                                          UN1e[threadID, :],
+                                          dUe[threadID, :],
+                                          time,
+                                          dT)
+            
+        #successful elements evaluation: condense oversize Pe buffer -> P
+        for i in range(nElements):
+            elIdxInVIJ =    elIndicesInVIJ[i]
+            elIdxInPe =     elIndexInPe[i]
+            elNDof =   elNDofs[i]
+            for j in range (elNDof): 
+                P_mView[ I[elIdxInVIJ + j] ] +=      Pe[ elIdxInPe + j ]
+                F_mView[ I[elIdxInVIJ + j] ] += abs( Pe[ elIdxInPe + j ] )
             
         toc = getCurrentTime()
         self.computationTimes['elements'] += toc - tic
-        return P, V, F
+        
+        return P, K, F

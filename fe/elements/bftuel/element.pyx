@@ -10,6 +10,7 @@ import numpy as np
 cimport numpy as np
 cimport fe.elements.bftuel.element 
 cimport libcpp.cast
+cimport cython
 
 from fe.utils.exceptions import CutbackRequest
 
@@ -32,6 +33,7 @@ mapStateTypes={
         'geostatic stress' : StateTypes.GeostaticStress
      }
     
+@cython.final # no subclassing -> cpdef with nogil possible
 cdef class BftUelWrapper:
     
     def __cinit__(self, elementType, nodes, elNumber):
@@ -46,7 +48,7 @@ cdef class BftUelWrapper:
         
         self.nNodes                         = self.bftUel.getNNodes()
         
-        self.nDofPerEl                      = self.bftUel.getNDofPerElement()
+        self.nDof                           = self.bftUel.getNDofPerElement()
         
         cdef vector[vector[string]] fields  = self.bftUel.getNodeFields()
         self.fields                         = [ [ s.decode('utf-8')  for s in n  ] for n in fields ]
@@ -82,7 +84,7 @@ cdef class BftUelWrapper:
         
         self.bftUel.initializeYourself(&self.nodeCoordinates[0])
         
-    def initializeStateVarsTemp(self, ):
+    cpdef void initializeStateVarsTemp(self, ) nogil:
         self.stateVarsTemp[:] = self.stateVars
         
     def setInitialCondition(self, 
@@ -93,26 +95,26 @@ cdef class BftUelWrapper:
         self.bftUel.setInitialConditions(mapStateTypes[stateType], &values[0])
         self.acceptLastState()
 
-    def computeYourself(self, 
+    cpdef void computeYourself(self, 
                          double[::1] Ke, 
                          double[::1] Pe, 
                          const double[::1] U, 
                          const double[::1] dU, 
                          const double[::1] time, 
-                         double dTime, ):
+                         double dTime, ) nogil except *:
         
         self.initializeStateVarsTemp()
         
         cdef double pNewDT = 1e36
-        with nogil:
-            self.bftUel.computeYourself(&U[0], &dU[0],
-                                                &Pe[0], 
-                                                &Ke[0],
-                                                &time[0],
-                                                dTime,  
-                                                pNewDT)
-            if pNewDT < 1.0:
-                raise CutbackRequest("An element requests for a cutback!", pNewDT)
+        
+        self.bftUel.computeYourself(&U[0], &dU[0],
+                                            &Pe[0], 
+                                            &Ke[0],
+                                            &time[0],
+                                            dTime,  
+                                            pNewDT)
+        if pNewDT < 1.0:
+            raise CutbackRequest("An element requests for a cutback!", pNewDT)
         
     def computeDistributedLoad(self,
                                str loadType,

@@ -20,8 +20,14 @@ cdef class CSRGenerator:
     cdef double[::1] data
     cdef int nDof, nCooPairs
     
-    def __init__(self, long[::1] I, long[::1] J, long nDof):
+    def __init__(self, systemMatrix ):
         """ Initialize the pattern, V can be a dummy (empty) vector """
+        
+        cdef:
+            long[::1] I = systemMatrix.I
+            long[::1] J = systemMatrix.J
+            long nDof = systemMatrix.nDof
+        
         self.nDof = nDof
         self.x  =  np.zeros_like ( I , dtype=np.intc ) 
         

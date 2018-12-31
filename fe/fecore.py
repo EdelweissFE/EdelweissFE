@@ -81,7 +81,7 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
         gen = generatorDefinition['generator']
         modelInfo = getGeneratorByName(gen)(generatorDefinition, modelInfo, journal)
         
-    # the standard 'Abaqus like' model generator is invoked unconditionally and it has direct access to the inputfile
+    # the standard 'Abaqus like' model generator is invoked unconditionally, and it has direct access to the inputfile
     abqModelConstructor = AbqModelConstructor(journal)
     modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.assignSectionsFromInputFile(modelInfo, inputfile)
@@ -90,7 +90,7 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     dofManager = DofManager(modelInfo)
     
-    journal.message("total size of eq. system: {:}".format(dofManager.numberOfDofs), identification, 0)
+    journal.message("total size of eq. system: {:}".format(dofManager.nDof), identification, 0)
     journal.printSeperationLine()
 
     jobName = job.get('name', '')

@@ -47,8 +47,8 @@ class NIST:
         self.fluxResidualTolerancesAlt =    jobInfo['fluxResidualToleranceAlternative']
         
         # create headers for formatted output of solver
-        nFields = len(self.theDofManager.fieldIndices.keys())
-        self.iterationHeader = ("{:^25}"*nFields).format(*self.theDofManager.fieldIndices.keys())
+        nFields = len(self.theDofManager.IndicesOfFieldsInDofVector.keys())
+        self.iterationHeader = ("{:^25}"*nFields).format(*self.theDofManager.IndicesOfFieldsInDofVector.keys())
         self.iterationHeader2 = (" {:<10}  {:<10}  ").format('||R||∞','||ddU||∞') *nFields
         self.iterationMessageTemplate = "{:11.2e}{:1}{:11.2e}{:1} "
         
@@ -56,16 +56,17 @@ class NIST:
         self.fieldOutputController = fieldOutputController
         self.outputmanagers = outputmanagers 
         
-        self.VIJDatabase = self.theDofManager.constructVIJDatabase()
-        self.csrGenerator = CSRGenerator ( self.VIJDatabase.I, self.VIJDatabase.J, self.theDofManager.numberOfDofs )
+        self.systemMatrix = self.theDofManager.constructVIJSystemMatrix()
         
-        self.residualHistories = dict.fromkeys( self.theDofManager.fieldIndices )
+        self.csrGenerator = CSRGenerator ( self.systemMatrix )
+        
+        self.residualHistories = dict.fromkeys( self.theDofManager.IndicesOfFieldsInDofVector )
     
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
         
-        U = np.zeros(self.theDofManager.numberOfDofs)
-        P = np.zeros(self.theDofManager.numberOfDofs)
+        U = self.theDofManager.constructDofVector()
+        P = self.theDofManager.constructDofVector()
         
         return U, P
         
@@ -75,8 +76,7 @@ class NIST:
     
         self.computationTimes = defaultdict(lambda : 0.0)
             
-        VIJDatabase = self.VIJDatabase
-        V, I, J = VIJDatabase.V, VIJDatabase.I, VIJDatabase.J
+        K = self.systemMatrix
         
         stepLength =    step.get('stepLength', 1.0)
         extrapolation = stepOptions['NISTSolver'].get('extrapolation', 'linear')
@@ -92,7 +92,7 @@ class NIST:
         criticalIter =      step.get('criticalIter',    self.defaultCriticalIter)
         maxGrowingIter =    step.get('maxGrowIter',     self.defaultMaxGrowingIter)
         
-        dU = np.zeros(self.theDofManager.numberOfDofs)
+        dU = self.theDofManager.constructDofVector()
         
         activeStepActions = self.collectActiveStepActions( stepActions )
         
@@ -114,7 +114,7 @@ class NIST:
                 
                 try:
                     U, dU, P, iterationCounter, incrementResidualHistory = self.solveIncrement (U, dU, P,
-                                                                                  V, I, J, 
+                                                                                  K,
                                                                                   activeStepActions,
                                                                                   increment,
                                                                                   lastIncrementSize,
@@ -134,7 +134,6 @@ class NIST:
                     lastIncrementSize = False
                     
                 else: 
-                    # U += dU
                     lastIncrementSize = incrementSize
                     if iterationCounter >= criticalIter: 
                         incGen.preventIncrementIncrease()
@@ -180,30 +179,30 @@ class NIST:
         return success , U, P, finishedTime
     
     def solveIncrement(self, Un, dU, P,
-               V, I, J, 
+               K,
                activeStepActions,
                increment,
                lastIncrementSize,
                extrapolation,
                maxIter,
                maxGrowingIter):
-        """ Standard Newton Raphon scheme to solve for an increment """
+        """ Standard Newton-Raphson scheme to solve for an increment """
         
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         iterationCounter =          0
-        incrementResidualHistory =  dict.fromkeys( self.theDofManager.fieldIndices, (0.0, 0 ) )
+        incrementResidualHistory =  dict.fromkeys( self.theDofManager.IndicesOfFieldsInDofVector, (0.0, 0 ) )
         
-        R =             np.copy(P)          # global Residual vector for the Newton iteration
-        F =             np.zeros_like(P)    # accumulated Flux vector 
-        PExt =          np.zeros_like(P)
-        Un1 =           np.zeros_like(P)
-        ddU =           None
+        R       = self.theDofManager.constructDofVector()
+        F       = self.theDofManager.constructDofVector()
+        PExt    = self.theDofManager.constructDofVector()
+        Un1     = self.theDofManager.constructDofVector()
+        ddU     = None
         
-        dirichlets =            activeStepActions['dirichlets']
-        concentratedLoads =     activeStepActions['concentratedLoads']
-        distributedLoads =      activeStepActions['distributedLoads']
-        bodyForces =            activeStepActions['bodyForces']
-        constraints =           activeStepActions['constraints']
+        dirichlets          = activeStepActions['dirichlets']
+        concentratedLoads   = activeStepActions['concentratedLoads']
+        distributedLoads    = activeStepActions['distributedLoads']
+        bodyForces          = activeStepActions['bodyForces']
+        constraints         = activeStepActions['constraints']
         
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
@@ -212,11 +211,12 @@ class NIST:
 
             Un1[:] = Un
             Un1 +=   dU
-            P[:] =  V[:] =  F[:] = PExt[:] = 0.0
-
-            P, V, F = self.computeElements(Un1, dU, P, V, I, J, F, increment)
-            PExt, V = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, PExt, V, I, J, increment)            
-            PExt, V = self.assembleConstraints (constraints, Un1, PExt, V, I, J, increment)
+            
+            P[:] =  K[:] =  F[:] = PExt[:] = 0.0
+            
+            P, K, F = self.computeElements(Un1, dU, P, K, F, increment)
+            PExt, K = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment)            
+            PExt, K = self.assembleConstraints (constraints, Un1, PExt, K, increment)
 
             R[:] = P    
             R += PExt
@@ -225,10 +225,10 @@ class NIST:
                 # first iteration? apply dirichlet bcs and unconditionally solve
                 R = self.applyDirichlet(increment, R, dirichlets)
             else:
-                # iteration cycle 1 or higher, time to check the convergency
+                # iteration cycle 1 or higher, time to check the convergence
                 for dirichlet in dirichlets: 
                     R[dirichlet.indices] = 0.0 
-                if self.checkConvergency(R, ddU, F, iterationCounter, incrementResidualHistory):
+                if self.checkConvergence(R, ddU, F, iterationCounter, incrementResidualHistory):
                     break
                 
                 if self.checkDivergingSolution (incrementResidualHistory , maxGrowingIter):
@@ -237,16 +237,16 @@ class NIST:
             if iterationCounter == maxIter:
                 raise  ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
             
-            K = self.assembleStiffness(V, I, J)
-            K = self.applyDirichletK(K, dirichlets)
+            K_ = self.assembleStiffnessCSR( K  )
+            K_ = self.applyDirichletK(K_, dirichlets)
             
-            ddU = self.linearSolve(K, R )
+            ddU = self.linearSolve(K_, R )
             dU += ddU
             iterationCounter += 1
             
         return Un1, dU, P, iterationCounter, incrementResidualHistory
     
-    def computeElements(self, Un1, dU, P, V, I, J, F, increment):
+    def computeElements(self, Un1, dU, P, K, F, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -257,35 +257,22 @@ class NIST:
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         time = np.array([stepTime, totalTime])
         
-#        pNewDT =    np.array([1e36])
-        
         for el in self.elements.values():
-            idxInVIJ = self.VIJDatabase.entitiesInVIJ[el]
-            Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
-            Pe = np.zeros(el.nDofPerEl)
-            idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
             
-            el.computeYourself(Ke, 
-                               Pe, 
-                               Un1[ idcsInPUdU ], 
-                               dU [ idcsInPUdU ], 
-                               time, dT, 
-#                               pNewDT
-                               )
-
-#            if pNewDT[0] <= 1.0:
-#                raise CutbackRequest("An element requests for a cutback", pNewDT[0])
+            Ke = K [ el ]
+            Pe = np.zeros(el.nDof)
             
-            # global force vector is assembled directly
-            P[ idcsInPUdU ] +=      Pe
-            F[ idcsInPUdU ] += abs( Pe )
+            el.computeYourself(Ke, Pe, Un1[ el ], dU [ el ], time, dT)
+            
+            P[ el ] +=      Pe
+            F[ el ] += abs( Pe )
         
         toc = getCurrentTime()
         self.computationTimes['elements'] += toc - tic
 
-        return P, V, F
+        return P, K, F
     
-    def computeDistributedLoads(self, distributedLoads, Un1, PExt, V, I, J, increment):
+    def computeDistributedLoads(self, distributedLoads, Un1, PExt, K, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -298,20 +285,19 @@ class NIST:
             magnitude = dLoad.getCurrentMagnitude(increment)
             for faceID, elements in dLoad.surface.items():
                 for el in elements:
-                    idxInVIJ = self.VIJDatabase.entitiesInVIJ[el]
-                    Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
-                    Pe = np.zeros(el.nDofPerEl)
-                    idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
-
-                    el.computeDistributedLoad(dLoad.loadType, Pe, Ke, faceID, magnitude, Un1[idcsInPUdU], time, dT) 
                     
-                    PExt[idcsInPUdU] += Pe                    
+                    Ke = K[el]
+                    Pe = np.zeros(el.nDof)
+                    
+                    el.computeDistributedLoad(dLoad.loadType, Pe, Ke, faceID, magnitude, Un1[ el ], time, dT) 
+                    
+                    PExt[ el ] += Pe                    
             
         toc = getCurrentTime()
         self.computationTimes['distributed loads'] += toc - tic
-        return PExt, V
+        return PExt, K
     
-    def computeBodyForces(self, bodyForces, Un1, PExt, V, I, J, increment):
+    def computeBodyForces(self, bodyForces, Un1, PExt, K, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -323,18 +309,17 @@ class NIST:
         for bForce in bodyForces:
             force = bForce.getCurrentBodyForce(increment)
             for el in bForce.elements:
-                idxInVIJ = self.VIJDatabase.entitiesInVIJ[el]
-                Pe = np.zeros(el.nDofPerEl)
-                Ke = V[idxInVIJ : idxInVIJ+el.nDofPerEl**2]
-                idcsInPUdU = I[idxInVIJ : idxInVIJ+el.nDofPerEl]
+                
+                Pe = np.zeros(el.nDof)
+                Ke = K[el]
 
-                el.computeBodyForce(Pe, Ke, force, Un1[idcsInPUdU], time, dT)
+                el.computeBodyForce(Pe, Ke, force, Un1[ el ], time, dT)
 
-                PExt[idcsInPUdU] += Pe                    
+                PExt[ el ] += Pe                    
             
         toc = getCurrentTime()
         self.computationTimes['body forces'] += toc - tic
-        return PExt, V
+        return PExt, K
     
     def applyDirichletK(self, K, dirichlets):
         """ Apply the dirichlet bcs on the global stiffnes matrix
@@ -366,7 +351,7 @@ class NIST:
         
         return R
     
-    def checkConvergency(self, R, ddU, F, iterationCounter, residualHistory):
+    def checkConvergence(self, R, ddU, F, iterationCounter, residualHistory):
         """ Check the convergency, indivudually for each field,
         similar to ABAQUS based on the current total flux residual and the field correction
         -> is called by solveStep() to decide wether to continue iterating or stop"""
@@ -383,7 +368,7 @@ class NIST:
         else: # alternative tolerance set
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
-        for field, fieldIndices in self.theDofManager.fieldIndices.items():
+        for field, fieldIndices in self.theDofManager.IndicesOfFieldsInDofVector.items():
             fluxResidual =       np.linalg.norm( R[ fieldIndices ] , np.inf )
             fieldCorrection =    np.linalg.norm( ddU[ fieldIndices ] , np.inf ) if ddU is not None else 0.0
             
@@ -399,8 +384,8 @@ class NIST:
                                  fluxResidual, 
                                  '✓' if convergedFlux  else ' ',
                                  fieldCorrection,
-                                 '✓' if convergedCorrection else ' ',
-                                 )
+                                 '✓' if convergedCorrection else ' ',)
+            
             # converged if residual and fieldCorrection are smaller than tolerance
             convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
             
@@ -420,13 +405,13 @@ class NIST:
         self.computationTimes['linear solve'] += toc - tic
         return ddU
     
-    def assembleStiffness(self, V, I, J):
+    def assembleStiffnessCSR(self, K):
         """ Construct a CSR matrix from VIJ """
         tic =  getCurrentTime()
-        K = self.csrGenerator.updateCSR( V )
+        KCsr = self.csrGenerator.updateCSR( K )
         toc =  getCurrentTime()
         self.computationTimes['CSR generation'] += toc - tic
-        return K
+        return KCsr
 
     def resetDisplacements(self, U):
         """ -> May be called at the end of a geostatic step, the zero all displacments after
@@ -435,19 +420,19 @@ class NIST:
         self.journal.printSeperationLine()
         self.journal.message("Geostatic step, resetting displacements", self.identification, level=1)
         self.journal.printSeperationLine()
-        U[ self.theDofManager.fieldIndices['displacement'] ] = 0.0 
+        U[ self.theDofManager.IndicesOfFieldsInDofVector['displacement'] ] = 0.0 
         return U
     
     def computeSpatialAveragedFluxes(self, F):
         """ Compute the spatial averaged flux for every field 
-        -> Called by checkConvergency() """
-        spatialAveragedFluxes =     dict.fromkeys(self.theDofManager.fieldIndices, 0.0)
-        for field, nDof in self.theDofManager.numberOfAccumulatedFieldConnections.items():
-            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.theDofManager.fieldIndices[field] ], 1) / nDof )
+        -> Called by checkConvergence() """
+        spatialAveragedFluxes =     dict.fromkeys(self.theDofManager.IndicesOfFieldsInDofVector, 0.0)
+        for field, nDof in self.theDofManager.nAccumulatedNodalFluxesFieldwise.items():
+            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.theDofManager.IndicesOfFieldsInDofVector[field] ], 1) / nDof )
         
         return spatialAveragedFluxes
             
-    def assembleConstraints(self, constraints, Un1, PExt, V, I, J, increment):
+    def assembleConstraints(self, constraints, Un1, PExt, K, increment):
         """ Assemble the sub stiffness matrix for a linear constraint (independent of the solution)
         -> once per Increment"""
         
@@ -455,30 +440,28 @@ class NIST:
         
         for constraint in constraints:
             
-            idxInVIJ = self.VIJDatabase.entitiesInVIJ[constraint]
-            nDof = constraint.nDof
-            idcsInPUdU = I[idxInVIJ : idxInVIJ+nDof]
+            Ke = K[ constraint ]
+            Pe = np.zeros(constraint.nDof)
             
-            Pe = np.zeros(nDof)
-            constraint.applyConstraint(Un1[idcsInPUdU], Pe, V[idxInVIJ : idxInVIJ+constraint.sizeStiffness], increment)
+            constraint.applyConstraint( Un1[ constraint ], Pe, Ke , increment )
 
-            PExt[idcsInPUdU] += Pe   
+            PExt[ constraint ] += Pe   
         
         toc = getCurrentTime()
         self.computationTimes['constraints'] += toc - tic
             
-        return PExt, V
+        return PExt, K
         
-    def assembleLoads(self, concentratedLoads, distributedLoads, bodyForces, Un1, PExt, V, I, J, increment):
+    def assembleLoads(self, concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment):
         """ Assemble all loads into a right hand side vector """
         # cloads
         for cLoad in concentratedLoads: 
             PExt = cLoad.applyOnP(PExt, increment) 
         # dloads
-        PExt, V = self.computeDistributedLoads(distributedLoads, Un1, PExt, V, I, J, increment)
-        PExt, V = self.computeBodyForces(bodyForces, Un1, PExt, V, I, J, increment)
+        PExt, K = self.computeDistributedLoads(distributedLoads, Un1, PExt, K, increment)
+        PExt, K = self.computeBodyForces(bodyForces, Un1, PExt, K, increment)
         
-        return PExt, V
+        return PExt, K
         
     def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize ):
         """if active, extrapolate the solution of the last increment.
