@@ -330,7 +330,12 @@ class NIST:
         for dirichlet in dirichlets:
             for row in dirichlet.indices:
                 K.data[K.indptr[row]:K.indptr[row+1]] = 0.0
-                K[row, row] = 1.0
+
+        # K[row, row] = 1.0 @ once, faster than within the loop above:
+        diag = K.diagonal()
+        diag[ np.concatenate( [ d.indices for d in dirichlets ] ) ] = 1.0
+        K.setdiag(diag)
+        
         K.eliminate_zeros()
         
         toc = getCurrentTime()

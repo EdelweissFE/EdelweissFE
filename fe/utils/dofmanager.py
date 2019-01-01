@@ -255,7 +255,6 @@ class DofManager:
             J[idxInVIJ : idxInVIJ + constraint.nDof**2] = constraintDofLocations.ravel('F')
             idxInVIJ += constraint.nDof**2
         
-        
         return I, J, entitiesInVIJ
     
     def constructVIJSystemMatrix(self, ):

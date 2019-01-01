@@ -168,8 +168,7 @@ class Constraint:
                      Rz[2] @ Ry[0] @ Rx[0],),)
                     
         elif nDim == 2:
-            pass
-
+            raise Exception("rigid body constraint not yet implemented for 2D")
         
         #start and end of Lambda in P
         L0, LF = nU, nU + nDim
