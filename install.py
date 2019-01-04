@@ -76,7 +76,7 @@ Build The Pardiso Interface
 extensions += [Extension("*",
                 sources = ["fe/linsolve/pardiso/pardiso.pyx", 'fe/linsolve/pardiso/pardisoInterface.cpp'],
                          include_dirs=[ numpy.get_include(), 
-                             MKL_INCLUDE, #'fe/linsolve/pardiso/include', 
+                             MKL_INCLUDE, 
                              EIGEN_LIBRARY_PARENT_DIRECTORY] ,
                          libraries= [ 'mkl_intel_thread', 'mkl_core', 'mkl_rt', 'iomp5', ],
                          language='c++',

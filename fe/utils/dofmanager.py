@@ -11,9 +11,13 @@ from fe.config.phenomena import getFieldSize
 import numpy as np
 
 class VIJSystemMatrix(np.ndarray):
-    """This class represents a constructed VIJ triple for sparse matrices in coordinate format,
-    and provides direct access to the DOF indices of elements and constraints within the VIJ triple
     """
+    This class represents the V Vector of VIJ triple (sparse matrix in COO format),
+    which
+        - also contains the I and J vectors as class members,
+        - allows to directly access (contiguous read and write) access of each entity
+          via the [] operator
+     """
     
     def __new__(cls, nDof, I, J, entitiesInVIJ ):
 
@@ -34,7 +38,10 @@ class VIJSystemMatrix(np.ndarray):
             return super().__getitem__(  key  )
         
 class DofVector (np.ndarray) :
-    
+    """
+    This class represents a Dof Vector, which also has knowledge of each entities (elements, constraints) location within.
+    The [] operator allows to access (non-contigouos read, write) @ each entities location
+    """
     def __new__(cls, nDof, entitiesInDofVector ):
         obj = np.zeros(nDof, dtype=float).view(cls)
         obj.entitiesInDofVector = entitiesInDofVector

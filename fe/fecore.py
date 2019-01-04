@@ -96,8 +96,7 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     jobName = job.get('name', '')
     time = job.get('startTime', 0.0)
     # store job info
-    jobInfo = {
-               'dofManager':        dofManager,
+    jobInfo = {'dofManager':        dofManager,
                'computationTime':   0.0}
                
     # add or update additional job info such as inputfile, domain, name

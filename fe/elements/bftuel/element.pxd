@@ -49,7 +49,9 @@ cdef extern from "bftUel.h":
 
         void assignStateVars(double *stateVars, int nStateVars)
         
-        void assignProperty(const BftUelProperty& uelProperty)
+        void assignProperty( const BftUelProperty& property ) 
+
+        void assignProperty( const BftMaterialSection& property ) 
 
         void initializeYourself(const double* elementCoordinates)
 
