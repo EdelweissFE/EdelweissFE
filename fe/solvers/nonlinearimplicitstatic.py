@@ -160,9 +160,12 @@ class NIST:
             success = True
             self.journal.message("Conditional Stop", self.identification)
 
-            for stepActionType in stepActions.values():
-                for action in stepActionType.values():
-                    action.finishStep(U,P)        
+#            for stepActionType in stepActions.values():
+#                for action in stepActionType.values():
+#                    action.finishStep(U,P)        
+                    
+            self.finishStepActions(U, P, stepActions)
+            
         else:
             success = True
             
@@ -227,7 +230,7 @@ class NIST:
             else:
                 # iteration cycle 1 or higher, time to check the convergence
                 for dirichlet in dirichlets: 
-                    R[dirichlet.indices] = 0.0 
+                    R[ dirichlet.indices ] = 0.0 
                 if self.checkConvergence(R, ddU, F, iterationCounter, incrementResidualHistory):
                     break
                 

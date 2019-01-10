@@ -71,16 +71,16 @@ class NISTPArcLength(NISTParallel):
         iterationCounter =          0
         incrementResidualHistory =  dict.fromkeys( self.theDofManager.IndicesOfFieldsInDofVector, (0.0, 0 ) )
         
-        dirichlets =            activeStepActions['dirichlets']
-        concentratedLoads =     activeStepActions['concentratedLoads']
-        distributedLoads =      activeStepActions['distributedLoads']
-        bodyForces =            activeStepActions['bodyForces']
-        constraints =           activeStepActions['constraints']
+        dirichlets          = activeStepActions['dirichlets']
+        concentratedLoads   = activeStepActions['concentratedLoads']
+        distributedLoads    = activeStepActions['distributedLoads']
+        bodyForces          = activeStepActions['bodyForces']
+        constraints         = activeStepActions['constraints']
         
-        R_ =            np.tile(self.theDofManager.constructDofVector(), (2,1)).T # 2 RHSs
-        R_0 =           R_[:,0]
-        R_f =           R_[:,1]
-        F =             self.theDofManager.constructDofVector()    # accumulated Flux vector 
+        R_  = np.tile(self.theDofManager.constructDofVector(), (2,1)).T # 2 RHSs
+        R_0 = R_[:,0]
+        R_f = R_[:,1]
+        F   = self.theDofManager.constructDofVector()    # accumulated Flux vector 
         
         P_0 = self.theDofManager.constructDofVector()
         P_f = self.theDofManager.constructDofVector()
@@ -100,8 +100,8 @@ class NISTPArcLength(NISTParallel):
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
 
-            Un1[:] = U
-            Un1+=   dU
+            Un1[:]  = U
+            Un1     += dU
 
             P[:] = K[:] = F[:] =  P_0[:] = P_f[:] = K_f[:] = 0.0
 
@@ -162,8 +162,8 @@ class NISTPArcLength(NISTParallel):
             
             iterationCounter += 1
            
-        self.Lambda += dLambda
-        self.dLambda = dLambda
+        self.Lambda     += dLambda
+        self.dLambda    = dLambda
         self.arcLengthController.finishIncrement(U, dU, dLambda) 
         
         return Un1, dU, P, iterationCounter, incrementResidualHistory
