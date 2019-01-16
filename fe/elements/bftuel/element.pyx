@@ -102,19 +102,20 @@ cdef class BftUelWrapper:
                          const double[::1] dU, 
                          const double[::1] time, 
                          double dTime, ) nogil except *:
-        
-        self.initializeStateVarsTemp()
-        
-        cdef double pNewDT = 1e36
-        
-        self.bftUel.computeYourself(&U[0], &dU[0],
-                                            &Pe[0], 
-                                            &Ke[0],
-                                            &time[0],
-                                            dTime,  
-                                            pNewDT)
-        if pNewDT < 1.0:
-            raise CutbackRequest("Element {:} requests for a cutback!".format(self.elNumber), pNewDT)
+        cdef double pNewDT 
+        with nogil:
+            self.initializeStateVarsTemp()
+            
+            pNewDT = 1e36
+            
+            self.bftUel.computeYourself(&U[0], &dU[0],
+                                                &Pe[0], 
+                                                &Ke[0],
+                                                &time[0],
+                                                dTime,  
+                                                pNewDT)
+            if pNewDT < 1.0:
+                raise CutbackRequest("Element {:} requests for a cutback!".format(self.elNumber), pNewDT)
         
     def computeDistributedLoad(self,
                                str loadType,

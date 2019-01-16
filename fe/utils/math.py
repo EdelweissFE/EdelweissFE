@@ -17,6 +17,8 @@ mathModules = {'sigPrinc':sigPrinc,
                'mean'   : np.mean,
                'max'    : np.max,
                'min'    : np.min,
+               'abs'    : np.abs,
+               'sum'    : np.sum,
                'linalg' : np.linalg}
 
 def createModelAccessibleFunction(expression, modelInfo, fieldOutputs):

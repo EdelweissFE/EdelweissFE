@@ -160,10 +160,6 @@ class NIST:
             success = True
             self.journal.message("Conditional Stop", self.identification)
 
-#            for stepActionType in stepActions.values():
-#                for action in stepActionType.values():
-#                    action.finishStep(U,P)        
-                    
             self.finishStepActions(U, P, stepActions)
             
         else:
