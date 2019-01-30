@@ -1,0 +1,36 @@
+*include, input=mesh.inp
+*material, name=modleonNonLocal, id=modleon, statevars=5
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
+
+*section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
+all
+
+*job, name=cps8rnljob, domain=2d, solver=NISTParallel
+*fieldOutput
+name=load, nSet=topNodes,  field=displacement, result=P
+**name=displacement, elSet=all, field=displacement, result=U, name=displacement
+name=nonlocalDamage, elSet=all, field=nonlocal damage, result=U, 
+name=stress, elSet=all, result=stress, gaussPt=0:4, f(x)='mean(x, axis=1)'
+name=strain, elSet=all, result=strain, gaussPt=0:4, f(x)='mean(x, axis=1)'
+name=alphaP, elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,0], axis=1)'
+name=alphaD, elSet=all, result=sdv,gaussPt=0:4, f(x)='mean(x[:,:,2], axis=1)'
+name=omega, elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,4], axis=1)'
+
+
+*output, type=monitor, jobName=cps8rnljob
+fieldOutput=load, f(x)='sum(x[:,1])'
+
+*output, type=ensight, jobName=cps8rnljob, name=ensightExport
+**create=perNode,    fieldOutput=displacement
+create=perNode,    fieldOutput=nonlocalDamage
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+create=perElement, fieldOutput=alphaP
+create=perElement, fieldOutput=alphaD
+create=perElement, fieldOutput=omega
+
+*step, jobName=cps8rnljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, 
+options, category=NISTSolver, extrapolation=linear, numThreads=2
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 2=0
+dirichlet, name=top, nSet=topNodes, field=displacement, 2=-.5
