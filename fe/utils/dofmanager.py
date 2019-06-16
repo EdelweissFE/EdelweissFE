@@ -7,7 +7,7 @@ Created on Tue Dec 18 09:18:25 2018
 """
 
 from collections import OrderedDict
-from fe.config.phenomena import getFieldSize
+from fe.config.phenomena import getFieldSize, phenomena
 import numpy as np
 
 class VIJSystemMatrix(np.ndarray):
@@ -118,20 +118,21 @@ class DofManager:
         domainSize = self.modelInfo['domainSize']
         constraints = self.modelInfo['constraints']
         
-        
         IndicesOfFieldsInDofVector = OrderedDict()
         fieldIdxBase = 0
-        
-        for node in nodes.values():
-                #delete all fields of a node, which are not active
-            for field, enabled in list(node.fields.items()):
-                if not enabled:
+
+        # blockwise assembly       
+        for field in phenomena.keys():
+            fieldSize = getFieldSize(field, domainSize)
+            indexList = IndicesOfFieldsInDofVector.setdefault(field, []) 
+            
+            for node in nodes.values():
+                # delete all fields of a node, which are not active
+                if node.fields[field] == False:
                     del node.fields[field]
-                    
-            for field in node.fields.keys():
-                fieldSize = getFieldSize(field, domainSize)
+                    continue
+
                 node.fields[field] = [i + fieldIdxBase for i in range(fieldSize)]
-                indexList = IndicesOfFieldsInDofVector.setdefault(field, []) 
                 indexList += (node.fields[field])
                 fieldIdxBase += fieldSize       
             

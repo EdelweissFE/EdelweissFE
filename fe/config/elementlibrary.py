@@ -10,5 +10,5 @@ Created on Tue Jan  17 19:10:42 2017
 def getElementByName(name):
     
     if name.lower().startswith('uel'):
-        from fe.elements.bftuel.element import BftUelWrapper
-        return BftUelWrapper
+        from fe.elements.bftelement.element import BftElementWrapper
+        return BftElementWrapper

@@ -24,10 +24,10 @@ EIGEN_LIBRARY_PARENT_DIRECTORY=     "/usr/include"
 MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 
 """
-Build Extension for the UEL base element, linked to the bftUserLibrary
+Build Extension for the bftElement base element, linked to the bftUserLibrary
 """
 extensions = [Extension("*",
-                sources = ["fe/elements/bftuel/element.pyx"],
+                sources = ["fe/elements/bftelement/element.pyx"],
                         include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()],
                          libraries= ['bftUserLibrary'],
                                  library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,

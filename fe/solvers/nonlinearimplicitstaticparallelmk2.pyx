@@ -101,7 +101,7 @@ class NISTParallel(NIST):
             double[::1] F_mView     = F
 
             # oversized Buffers for parallel computing:
-                # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
+            # tables [nThreads x max(elements.ndof) ] for U & dU (can be overwritten during parallel computing)
             maxNDofOfAnyEl      = self.theDofManager.largestNumberOfElNDof
             double[:, ::1] UN1e = np.empty((desiredThreads, maxNDofOfAnyEl), )
             double[:, ::1] dUe  = np.empty((desiredThreads, maxNDofOfAnyEl), )

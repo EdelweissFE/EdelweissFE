@@ -8,7 +8,7 @@ Created on Thu Apr 27 08:35:06 2017
 
 import numpy as np
 cimport numpy as np
-cimport fe.elements.bftuel.element 
+cimport fe.elements.bftelement.element 
 cimport libcpp.cast
 cimport cython
 
@@ -17,14 +17,7 @@ from fe.utils.exceptions import CutbackRequest
 from libcpp.memory cimport unique_ptr, allocator, make_unique
 
 from libc.stdlib cimport malloc, free
-cdef public bint notificationToMSG(const string cppString):
-#    print(cppString.decode('UTF-8'))
-    return True
-    
-cdef public bint warningToMSG(const string cppString):
-#    print(cppString.decode('UTF-8'))
-    return False
-    
+
 mapLoadTypes={
         'pressure' : DistributedLoadTypes.Pressure
      }
@@ -34,7 +27,7 @@ mapStateTypes={
      }
     
 @cython.final # no subclassing -> cpdef with nogil possible
-cdef class BftUelWrapper:
+cdef class BftElementWrapper:
     
     def __cinit__(self, elementType, nodes, elNumber):
         self.nodes = nodes
@@ -43,46 +36,46 @@ cdef class BftUelWrapper:
             
         self.elNumber = elNumber
         
-        self.bftUel = UelFactory(getElementCodeFromName( elementType.upper().encode('utf-8')), 
+        self.bftElement = bftElementFactory(getElementCodeFromName( elementType.upper().encode('utf-8')), 
                         self.elNumber)
         
-        self.nNodes                         = self.bftUel.getNNodes()
+        self.nNodes                         = self.bftElement.getNNodes()
         
-        self.nDof                           = self.bftUel.getNDofPerElement()
+        self.nDof                           = self.bftElement.getNDofPerElement()
         
-        cdef vector[vector[string]] fields  = self.bftUel.getNodeFields()
+        cdef vector[vector[string]] fields  = self.bftElement.getNodeFields()
         self.fields                         = [ [ s.decode('utf-8')  for s in n  ] for n in fields ]
         
-        cdef vector[int] permutationPattern = self.bftUel.getDofIndicesPermutationPattern()
+        cdef vector[int] permutationPattern = self.bftElement.getDofIndicesPermutationPattern()
         self.dofIndicesPermutation          = np.asarray(permutationPattern)
         
-        self.ensightType                    = self.bftUel.getElementShape().decode('utf-8')
+        self.ensightType                    = self.bftElement.getElementShape().decode('utf-8')
         
     def setProperties(self, elementProperties, materialName, materialProperties):
         
         self.elementProperties =    elementProperties
         self.materialProperties =   materialProperties
         
-        self.bftUel.assignProperty( 
+        self.bftElement.assignProperty( 
                 ElementProperties(
                         &self.elementProperties[0],
                         self.elementProperties.shape[0] ) )
         
-        self.bftUel.assignProperty(
+        self.bftElement.assignProperty(
                 BftMaterialSection(
                         getMaterialCodeFromName(
                                 materialName.upper().encode('UTF-8')), 
                         &self.materialProperties[0],
                         self.materialProperties.shape[0] ) )
         
-        self.nStateVars =           self.bftUel.getNumberOfRequiredStateVars()
+        self.nStateVars =           self.bftElement.getNumberOfRequiredStateVars()
         
         self.stateVars =            np.zeros(self.nStateVars)
         self.stateVarsTemp =        np.zeros(self.nStateVars)
         
-        self.bftUel.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
+        self.bftElement.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
         
-        self.bftUel.initializeYourself(&self.nodeCoordinates[0])
+        self.bftElement.initializeYourself(&self.nodeCoordinates[0])
         
     cpdef void initializeStateVarsTemp(self, ) nogil:
         self.stateVarsTemp[:] = self.stateVars
@@ -92,7 +85,7 @@ cdef class BftUelWrapper:
                             const double[::1] values):
         
         self.initializeStateVarsTemp()
-        self.bftUel.setInitialConditions(mapStateTypes[stateType], &values[0])
+        self.bftElement.setInitialConditions(mapStateTypes[stateType], &values[0])
         self.acceptLastState()
 
     cpdef void computeYourself(self, 
@@ -108,7 +101,7 @@ cdef class BftUelWrapper:
             
             pNewDT = 1e36
             
-            self.bftUel.computeYourself(&U[0], &dU[0],
+            self.bftElement.computeYourself(&U[0], &dU[0],
                                                 &Pe[0], 
                                                 &Ke[0],
                                                 &time[0],
@@ -127,7 +120,7 @@ cdef class BftUelWrapper:
                                const double[::1] time,
                                double dTime):
         
-        self.bftUel.computeDistributedLoad(mapLoadTypes[loadType],
+        self.bftElement.computeDistributedLoad(mapLoadTypes[loadType],
                                     &P[0], 
                                     &K[0], 
                                     faceID,
@@ -144,7 +137,7 @@ cdef class BftUelWrapper:
            const double[::1] time,
            double dTime):
         
-        self.bftUel.computeBodyForce(
+        self.bftElement.computeBodyForce(
                                     &P[0], 
                                     &K[0], 
                                     &load[0],
@@ -167,8 +160,8 @@ cdef class BftUelWrapper:
     cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt, ):
         """ direct access the the stateVars of the element / underlying material"""
         cdef int resultLength = 0
-        cdef double* ptr = self.bftUel.getPermanentResultPointer(result, gaussPt, resultLength)
+        cdef double* ptr = self.bftElement.getPermanentResultPointer(result, gaussPt, resultLength)
         return <double[:resultLength]> ( ptr )
     
     def __dealloc__(self):
-        del self.bftUel
+        del self.bftElement

@@ -25,5 +25,8 @@ def getLinSolverByName(linsolverName):
     elif linsolverName.lower() == 'pardiso':
         from fe.linsolve.pardiso.pardiso import pardisoSolve
         return pardisoSolve
+    elif linsolverName.lower() == 'amgcl':
+        from fe.linsolve.amgcl.amgcl import amgclSolve
+        return amgclSolve
     else:
         raise AttributeError('invalid linear solver {:} requested'.format(linsolverName))

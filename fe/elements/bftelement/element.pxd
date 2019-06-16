@@ -8,19 +8,18 @@ Created on Thu Apr 27 08:35:06 2017
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cdef extern from "bftUel.h" namespace "BftUel":
+cdef extern from "bftElement.h" namespace "BftElement":
     cdef enum StateTypes:
         Sigma11,
         Sigma22,
         Sigma33,
         HydrostaticStress,
         GeostaticStress,
-        UmatStateVars
+        BftMaterialStateVars
         
     cdef enum DistributedLoadTypes:
         Pressure
         
-
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     enum MaterialCode: pass
     enum ElementCode: pass
@@ -28,28 +27,28 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
     ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
     
-    BftUel* UelFactory(int elementCode, 
+    BftElement* bftElementFactory(int elementCode, 
                        int noEl,
                        ) except +ValueError
                        
-cdef extern from "bftUelProperty.h":
-    cdef cppclass BftUelProperty nogil:
+cdef extern from "bftElementProperty.h":
+    cdef cppclass BftElementProperty nogil:
         pass
     
-    cdef cppclass BftMaterialSection(BftUelProperty) nogil:
+    cdef cppclass BftMaterialSection(BftElementProperty) nogil:
         BftMaterialSection(int materialCode, const double* materialProperties, int nMaterialProperties)
         
-    cdef cppclass ElementProperties(BftUelProperty) nogil:
+    cdef cppclass ElementProperties(BftElementProperty) nogil:
         ElementProperties(const double* elementProperties, int nElementProperties)
 
-cdef extern from "bftUel.h":
-    cdef cppclass BftUel nogil:
+cdef extern from "bftElement.h":
+    cdef cppclass BftElement nogil:
         
         int getNumberOfRequiredStateVars()
 
         void assignStateVars(double *stateVars, int nStateVars)
         
-        void assignProperty( const BftUelProperty& property ) 
+        void assignProperty( const BftElementProperty& property ) 
 
         void assignProperty( const BftMaterialSection& property ) 
 
@@ -96,9 +95,9 @@ cdef extern from "bftUel.h":
     
         int getNDofPerElement()
         
-cdef class BftUelWrapper:
+cdef class BftElementWrapper:
     
-    cdef BftUel* bftUel
+    cdef BftElement* bftElement
     cdef public nodes, 
     cdef public int elNumber, 
     cdef public int nNodes, nDof
