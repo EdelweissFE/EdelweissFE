@@ -76,7 +76,7 @@ class DofManager:
         self.activateFieldsOnNodes()
         
         (self.nDof, 
-         self.IndicesOfFieldsInDofVector) = self.initializeDofVectorStructure()
+         self.indicesOfFieldsInDofVector) = self.initializeDofVectorStructure()
 
         (self.nAccumulatedNodalFluxes, 
          self.nAccumulatedNodalFluxesFieldwise) = self.countNodalFluxes()
@@ -118,13 +118,13 @@ class DofManager:
         domainSize = self.modelInfo['domainSize']
         constraints = self.modelInfo['constraints']
         
-        IndicesOfFieldsInDofVector = OrderedDict()
+        indicesOfFieldsInDofVector = OrderedDict()
         fieldIdxBase = 0
 
         # blockwise assembly       
         for field in phenomena.keys():
             fieldSize = getFieldSize(field, domainSize)
-            indexList = IndicesOfFieldsInDofVector.setdefault(field, []) 
+            indexList = [] 
             
             for node in nodes.values():
                 # delete all fields of a node, which are not active
@@ -134,8 +134,11 @@ class DofManager:
 
                 node.fields[field] = [i + fieldIdxBase for i in range(fieldSize)]
                 indexList += (node.fields[field])
-                fieldIdxBase += fieldSize       
-            
+                fieldIdxBase += fieldSize     
+                
+            if indexList:
+                indicesOfFieldsInDofVector[field] = indexList
+                
         for constraint in constraints.values():
             # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
             # we create them here, and assign them directly to the constraints 
@@ -147,12 +150,9 @@ class DofManager:
             constraint.assignAdditionalGlobalDofIndices ( indicesOfConstraintAdditionalDofs )
             fieldIdxBase += nNeededDofs
             
-        for field, indexList in IndicesOfFieldsInDofVector.items():
-            IndicesOfFieldsInDofVector[field] = np.array(indexList)
-            
         nDof = fieldIdxBase
-        
-        return nDof, IndicesOfFieldsInDofVector
+
+        return nDof, indicesOfFieldsInDofVector
                 
     def countNodalFluxes(self):
         """
@@ -160,7 +160,7 @@ class DofManager:
         the number of dofs 'entity-wise' is needed:
         = Σ_(elements+constraints) Σ_nodes ( nDof (field) )"""
                 
-        IndicesOfFieldsInDofVector = self.IndicesOfFieldsInDofVector
+        indicesOfFieldsInDofVector = self.indicesOfFieldsInDofVector
         
         elements    = self.modelInfo['elements']
         constraints = self.modelInfo['constraints']
@@ -168,7 +168,7 @@ class DofManager:
         accumulatedNumberOfFieldFluxes = {}
         accumulatedNodalFluxesTotal = 0
         
-        for field in IndicesOfFieldsInDofVector.keys():
+        for field in indicesOfFieldsInDofVector.keys():
              accumulatedNumberOfFieldFluxes[field] =  np.sum(
                      [ len(node.fields[field]) for el in elements.values() 
                                                  for node in (el.nodes) if field in node.fields]
