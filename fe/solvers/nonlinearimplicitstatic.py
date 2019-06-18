@@ -47,8 +47,8 @@ class NIST:
         self.fluxResidualTolerancesAlt =    jobInfo['fluxResidualToleranceAlternative']
         
         # create headers for formatted output of solver
-        nFields = len(self.theDofManager.IndicesOfFieldsInDofVector.keys())
-        self.iterationHeader = ("{:^25}"*nFields).format(*self.theDofManager.IndicesOfFieldsInDofVector.keys())
+        nFields = len(self.theDofManager.indicesOfFieldsInDofVector.keys())
+        self.iterationHeader = ("{:^25}"*nFields).format(*self.theDofManager.indicesOfFieldsInDofVector.keys())
         self.iterationHeader2 = (" {:<10}  {:<10}  ").format('||R||∞','||ddU||∞') *nFields
         self.iterationMessageTemplate = "{:11.2e}{:1}{:11.2e}{:1} "
         
@@ -60,7 +60,7 @@ class NIST:
         
         self.csrGenerator = CSRGenerator ( self.systemMatrix )
         
-        self.residualHistories = dict.fromkeys( self.theDofManager.IndicesOfFieldsInDofVector )
+        self.residualHistories = dict.fromkeys( self.theDofManager.indicesOfFieldsInDofVector )
     
     def initialize(self):
         """ Initialize the solver and return the 2 vectors for field (U) and flux (P) """
@@ -189,7 +189,7 @@ class NIST:
         
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         iterationCounter =          0
-        incrementResidualHistory =  dict.fromkeys( self.theDofManager.IndicesOfFieldsInDofVector, (0.0, 0 ) )
+        incrementResidualHistory =  dict.fromkeys( self.theDofManager.indicesOfFieldsInDofVector, (0.0, 0 ) )
         
         R       = self.theDofManager.constructDofVector()
         F       = self.theDofManager.constructDofVector()
@@ -372,7 +372,7 @@ class NIST:
         else: # alternative tolerance set
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
         
-        for field, fieldIndices in self.theDofManager.IndicesOfFieldsInDofVector.items():
+        for field, fieldIndices in self.theDofManager.indicesOfFieldsInDofVector.items():
             fluxResidual =       np.linalg.norm( R[ fieldIndices ] , np.inf )
             fieldCorrection =    np.linalg.norm( ddU[ fieldIndices ] , np.inf ) if ddU is not None else 0.0
             
@@ -424,15 +424,15 @@ class NIST:
         self.journal.printSeperationLine()
         self.journal.message("Geostatic step, resetting displacements", self.identification, level=1)
         self.journal.printSeperationLine()
-        U[ self.theDofManager.IndicesOfFieldsInDofVector['displacement'] ] = 0.0 
+        U[ self.theDofManager.indicesOfFieldsInDofVector['displacement'] ] = 0.0 
         return U
     
     def computeSpatialAveragedFluxes(self, F):
         """ Compute the spatial averaged flux for every field 
         -> Called by checkConvergence() """
-        spatialAveragedFluxes =     dict.fromkeys(self.theDofManager.IndicesOfFieldsInDofVector, 0.0)
+        spatialAveragedFluxes =     dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, 0.0)
         for field, nDof in self.theDofManager.nAccumulatedNodalFluxesFieldwise.items():
-            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.theDofManager.IndicesOfFieldsInDofVector[field] ], 1) / nDof )
+            spatialAveragedFluxes[field] = max( 1e-10, np.linalg.norm(F[ self.theDofManager.indicesOfFieldsInDofVector[field] ], 1) / nDof )
         
         return spatialAveragedFluxes
             

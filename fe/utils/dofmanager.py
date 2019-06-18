@@ -99,12 +99,14 @@ class DofManager:
         
         for element in modelInfo['elements'].values():
             for node, nodeFields in zip ( element.nodes, element.fields ):
-                node.fields.update( [ (f, True) for f in nodeFields ]  )
+                for field in nodeFields:
+                    node.fields [ field ] = True
                 
         for constraint in modelInfo['constraints'].values():
             for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
-                node.fields.update( [ (f, True) for f in nodeFields]  )
-                
+                for field in nodeFields:
+                    node.fields [ field ] = True
+#                
     def initializeDofVectorStructure(self):
         """ Loop over all nodes to generate the global field-dof indices.
         output is a tuple of:
@@ -119,7 +121,7 @@ class DofManager:
         constraints = self.modelInfo['constraints']
         
         indicesOfFieldsInDofVector = OrderedDict()
-        fieldIdxBase = 0
+        currentIndexInDofVector = 0
 
         # blockwise assembly       
         for field in phenomena.keys():
@@ -127,15 +129,12 @@ class DofManager:
             indexList = [] 
             
             for node in nodes.values():
-                # delete all fields of a node, which are not active
-                if node.fields[field] == False:
-                    del node.fields[field]
-                    continue
-
-                node.fields[field] = [i + fieldIdxBase for i in range(fieldSize)]
-                indexList += (node.fields[field])
-                fieldIdxBase += fieldSize     
-                
+                if field in node.fields:
+                    node.fields[field] = [i + currentIndexInDofVector for i in range(fieldSize)]
+                    indexList += node.fields[field]
+                    currentIndexInDofVector += fieldSize     
+                    
+            # if we have dofs of this field at all
             if indexList:
                 indicesOfFieldsInDofVector[field] = indexList
                 
@@ -145,12 +144,12 @@ class DofManager:
             # (In contrast to true field indices, which are not directly 
             # assigned to elements/constraints but to the nodes)
             nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
-            indicesOfConstraintAdditionalDofs = [i + fieldIdxBase for i in range(nNeededDofs)  ]
+            indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)  ]
             #TODO: Store here in dofmanager
             constraint.assignAdditionalGlobalDofIndices ( indicesOfConstraintAdditionalDofs )
-            fieldIdxBase += nNeededDofs
+            currentIndexInDofVector += nNeededDofs
             
-        nDof = fieldIdxBase
+        nDof = currentIndexInDofVector
 
         return nDof, indicesOfFieldsInDofVector
                 
