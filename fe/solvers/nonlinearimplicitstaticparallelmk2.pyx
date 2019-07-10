@@ -131,6 +131,9 @@ class NISTParallel(NIST):
                     nogil=True):
         
             threadID    = threadid()
+#            with gil:
+#                pass
+#                print(threadID)
             elIdxInVIJ  = elIndicesInVIJ[i]      
             elIdxInPe   = elIndexInPe[i]
             elNDof      = elNDofs[i]
