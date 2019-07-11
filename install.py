@@ -20,7 +20,7 @@ directives = {'boundscheck':            False,
 
 # 1) 
 BFT_USER_LIBRARY =                  expanduser("~/constitutiveModelling/bftUserLibrary")
-EIGEN_LIBRARY_PARENT_DIRECTORY=     "/usr/include"
+EIGEN_INCLUDE=                      expanduser("~/anaconda3/x86_64-conda_cos6-linux-gnu/include/")
 MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 
 """
@@ -77,7 +77,8 @@ extensions += [Extension("*",
                 sources = ["fe/linsolve/pardiso/pardiso.pyx", 'fe/linsolve/pardiso/pardisoInterface.cpp'],
                          include_dirs=[ numpy.get_include(), 
                              MKL_INCLUDE, 
-                             EIGEN_LIBRARY_PARENT_DIRECTORY] ,
+                             EIGEN_INCLUDE,
+                             ] ,
                          libraries= [ 'mkl_intel_thread', 'mkl_core', 'mkl_rt', 'iomp5', ],
                          language='c++',
                          )
