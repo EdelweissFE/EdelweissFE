@@ -98,6 +98,8 @@ class NIST:
         
         lastIncrementSize = False
         
+        for sdvini in activeStepActions['sdvinis']: sdvini.apply() 
+
         try:
             for increment in incGen.generateIncrement():
                 incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -205,9 +207,9 @@ class NIST:
         
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize)
         
+        
         while True:
             for geostatic in activeStepActions['geostatics']: geostatic.apply() 
-            for sdvini in activeStepActions['sdvinis']: sdvini.apply() 
 
             Un1[:] = Un
             Un1 +=   dU

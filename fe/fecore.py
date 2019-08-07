@@ -46,6 +46,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
            
             if moduleName in stepActions[module]:
                 stepActions[module][moduleName].updateStepAction(options)
+                journal.message("Stepaction \"{:}\" will be updated".format(moduleName), "stepActionManager", 1)
             else:
                 stepActions[module][moduleName] = stepActionFactory(module)(moduleName, options, jobInfo, modelInfo, journal)
                                                                
