@@ -1,0 +1,39 @@
+*material, name=linearelastic, id=linearelastic, statevars=5, 
+30000.0, 0.15 
+
+*section, name=section1, thickness=1.0, material=linearelastic, type=planeUelUmat
+all
+
+*job, name=cpe4job, domain=2d, solver=NIST
+*fieldOutput
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
+
+**name=meanDispLoad, nSet=topNodes, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
+name=RF, nSet=gen_top, field=displacement, result=P, f(x)='sum(x[:,0])', saveHistory=True
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=100
+y0=0, h=100
+elType=uelCPE4UL
+nX=1
+nY=1
+
+***output, type=ensight, jobName=cpe4job, name=esExport
+**create=perNode,    fieldOutput=displacement
+**create=perElement, fieldOutput=stress
+**create=perElement, fieldOutput=strain
+
+**name=UMag, nSet=all, field=displacement, result=U, f(x)='linalg.norm(x, axis=1)'
+****fieldOutputs for xy plot
+
+*output, type=meshPlot, jobName=cpe4job, 
+figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=time, y=RF,
+**figure=1, axSpec=211, create=perNode, fieldOutput=
+**figure=1, axSpec=212, create=perElement, fieldOutput=stress, f(x)='mean(x, axis=1)'
+
+*step, jobName=cpe4job, maxInc=1e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=off, numThreads=1
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=0, 1=1000

@@ -108,8 +108,7 @@ cdef class BftElementWrapper:
                                                 dTime,  
                                                 pNewDT)
             if pNewDT < 1.0:
-                with gil:
-                    raise CutbackRequest("Element {:} requests for a cutback!".format(self.elNumber), pNewDT)
+                raise CutbackRequest("Element {:} requests for a cutback!".format(self.elNumber), pNewDT)
         
     def computeDistributedLoad(self,
                                str loadType,

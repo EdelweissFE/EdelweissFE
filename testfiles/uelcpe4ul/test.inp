@@ -1,0 +1,24 @@
+*include, input=meshBeamDistorted.inp
+
+*material, name=stvenantkirchhoffisotropic, id=stvenantkirchhoff, statevars=5
+30000.0, 0.15 
+
+*section, name=section1, thickness=1.0, material=stvenantkirchhoff, type=planeUelUmat
+all
+
+*section, name=section1weak, thickness=.9, material=stvenantkirchhoff, type=planeUelUmat
+weak
+
+*job, name=cpe4job, domain=2d, 
+
+*fieldOutput, jobName=cpe4job
+name=displacement, result=U, nSet=all, field=displacement
+
+*output, type=ensight
+create=perNode, fieldOutput=displacement
+
+*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
+options, category=NISTSolver,       extrapolation=linear
+dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
+dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 2=-10

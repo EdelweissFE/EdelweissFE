@@ -28,6 +28,9 @@ class Constraint:
         self.nDim = modelInfo['domainSize']
         nDim = self.nDim
         
+        if nDim == 2:
+            raise Exception("rigid body constraint not yet implemented for 2D")
+        
         rbNset =    definition['nSet']
         nodeSets =  modelInfo['nodeSets']
         
@@ -167,8 +170,8 @@ class Constraint:
                      Rz[1] @ Ry[1] @ Rx[0],
                      Rz[2] @ Ry[0] @ Rx[0],),)
                     
-        elif nDim == 2:
-            raise Exception("rigid body constraint not yet implemented for 2D")
+#        elif nDim == 2:
+#            raise Exception("rigid body constraint not yet implemented for 2D")
         
         #start and end of Lambda in P
         L0, LF = nU, nU + nDim
