@@ -9,13 +9,13 @@ EdelweissFE requires
 - Cython 0.28+*
 - Matplotlib*
 - OpenMP*
-- Intel MKL for the PARDISO*  (binaries and header files; if you use anaconda, install pacakages `mkl` and `mkl-include`)
-- bftUserLibrary 
+- Intel MKL for the PARDISO*  (binaries and header files; if you use Anaconda, install pacakages `mkl` and `mkl-include`)
+- bftUserLibrary (https://git.uibk.ac.at/afbDevelopers/bftUserLibrary)
 - Eigen Library for Linear Algebra (http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
 *: Provided via Anaconda packages
 A recent version of Anaconda (https://anaconda.org/) is sufficient to compile and run EdelweissFE on a Linux system.
-Anaconda also provides free access to Intel MKL binaries (via package `mkl`) and header files (via package `mkl-include`), so no standalaone installation of the Intel MKL is required.
+Anaconda also provides free access to Intel MKL binaries (via package `mkl`, usually installed by default) and header files (via package `mkl-include`, available via ```conda install mkl-include```), so no standalaone installation of the Intel MKL is required.
 
 ## Configuration
 

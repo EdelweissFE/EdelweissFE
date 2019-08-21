@@ -23,7 +23,8 @@ mapLoadTypes={
      }
 
 mapStateTypes={
-        'geostatic stress' : StateTypes.GeostaticStress
+        'geostatic stress' : StateTypes.GeostaticStress,
+        'sdvini' : StateTypes.BftMaterialStateVars
      }
     
 @cython.final # no subclassing -> cpdef with nogil possible

@@ -27,3 +27,5 @@ class DivergingSolution(Exception):
     pass
 class ConditionalStop(Exception):
     pass
+class InputExecption(Exception):
+    pass
