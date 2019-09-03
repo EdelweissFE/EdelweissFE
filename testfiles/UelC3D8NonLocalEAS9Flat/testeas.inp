@@ -1,12 +1,9 @@
 *include, input=mesh.inp
 
-***material, name=linearelastic, id=le, statevars=0
-**30000, 0.3
-
-*material, name=modleon, id=modleon, statevars=5, 
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
-*material, name=modleon, id=modleonweak, statevars=5, 
-1000.0, 0.15 ,13 , 37.4 ,  45   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
+*material, name=modleonNonLocal, id=modleon, 
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
+*material, name=modleonNonLocal, id=modleonweak, 
+1000.0, 0.15 ,13 , 37.4 ,  45   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
 
 *section, name=section1, material=modleon, type=solidUelUmat
 all
@@ -16,20 +13,40 @@ weak
 *job, name=easjob, domain=3d, solver=NISTParallel
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
+elSet=all, field=nonlocal damage, result=U, name=alpha_d_nonlocal
 elSet=all, result=stress, gaussPt=0:8, name=stress, f(x)='mean(x, axis=1)'
 elSet=all, result=strain, gaussPt=0:8, name=strain, f(x)='mean(x, axis=1)'
 elSet=all, result=sdv, gaussPt=0:8, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
 elSet=all, result=sdv, gaussPt=0:8, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
 elSet=all, result=sdv, gaussPt=0:8, name=omega, f(x)='mean( x[:,:,4], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas0, f(x)='mean( x[:,:,0], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas1, f(x)='mean( x[:,:,1], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas2, f(x)='mean( x[:,:,2], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas3, f(x)='mean( x[:,:,3], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas4, f(x)='mean( x[:,:,4], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas5, f(x)='mean( x[:,:,5], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas6, f(x)='mean( x[:,:,6], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas7, f(x)='mean( x[:,:,7], axis=1) '
+elSet=all, result=enhancedstrainparameters, gaussPt=0:8, name=eas8, f(x)='mean( x[:,:,8], axis=1) '
 nSet=top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
 
 *output, type=ensight, jobName=easjob, name=esExport
 create=perNode,    fieldOutput=displacement
+create=perNode,    fieldOutput=alpha_d_nonlocal
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
+create=perElement, fieldOutput=eas0
+create=perElement, fieldOutput=eas1
+create=perElement, fieldOutput=eas2
+create=perElement, fieldOutput=eas3
+create=perElement, fieldOutput=eas4
+create=perElement, fieldOutput=eas5
+create=perElement, fieldOutput=eas6
+create=perElement, fieldOutput=eas7
+create=perElement, fieldOutput=eas8
 
 *output, type=meshplot, jobName=easjob, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
@@ -37,12 +54,10 @@ create=xyData, x=time, y=RFTop, legend=RF
 *step, jobName=easjob, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bcCorner,     nSet=origin,      field=displacement,     1=0, 2=0, 3=0
-dirichlet, name=bottom2, nSet=bottom,  field=displacement,               2=0,
+dirichlet, name=bottom2, nSet=bottom,  field=displacement,               2=0, 
 dirichlet, name=zrot,   nSet=zrotlock, field=displacement,             3=0,
 dirichlet, name=back,   nSet=back, field=displacement,             3=0,
 dirichlet, name=front,   nSet=front, field=displacement,             3=0,
-**distributedload, name=dload, surface=gen_left, magnitude=0, f(t)=t, type=pressure
-**distributedload, name=dload2, surface=gen_right, magnitude=0, f(t)=t, type=pressure
 
 *step, jobName=easjob, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8

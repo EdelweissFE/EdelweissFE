@@ -6,19 +6,19 @@
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
 
-*section, name=section1weak, thickness=.9, material=modleon, type=planeUelUmat
-weak
-
 *job, name=cpe4job, domain=2d, 
 
 *fieldOutput, jobName=cpe4job
-name=displacement, result=U, nSet=all, field=displacement
+name=displacement, result=U, elSet=all, field=displacement, 
+name=omega, result=omega, elSet=all, gaussPt=0:4, f(x)=' mean( x, axis=1)'
 
-*output, type=ensight
+*output, type=ensight, jobName=cpe4job, name=esExport
 create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=omega
 
-*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
+
+*step, jobName=cpe4job, maxInc=5e-2, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=200
 options, category=NISTSolver,       extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 
-dirichlet, name=1,     nSet=1,      field=displacement, 1=0.0, 2=0.0
-dirichlet, name=right, nSet=right,  field=displacement, 2=-10
+dirichlet, name=1,     nSet=corner,      field=displacement, 1=0.0, 2=0.0
+dirichlet, name=right, nSet=right,  field=displacement, 2=1

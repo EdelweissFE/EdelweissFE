@@ -1,5 +1,5 @@
 *material, name=modleonNonLocal, id=modleon, statevars=5
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
+20000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
 
 *section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
 all
@@ -17,15 +17,13 @@ elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
 elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
 elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
 elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
-elSet=all, result=enhancedstrainparameters, gaussPt=0:4, name=eas0, f(x)='mean(x[:,:,0], axis=1)'
-elSet=all, result=enhancedstrainparameters, gaussPt=0:4, name=eas1, f(x)='mean(x[:,:,1], axis=1)'
 nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
 
 
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=50
 y0=0, h=200
-elType=uelCPE4NonLocalEAS2
+elType=uelCPE4NonLocalULFBar
 nX=10
 nY=40
 
@@ -37,8 +35,6 @@ create=perElement, fieldOutput=strain
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
-create=perElement, fieldOutput=eas0,
-create=perElement, fieldOutput=eas1,
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
@@ -47,4 +43,4 @@ create=xyData, x=time, y=RFTop, legend=RF
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-5
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-15
