@@ -42,59 +42,47 @@ class FieldOutput:
         self.journal = journal
         self.timeTotal = 0.0
         # determination of type:
-            # perNode, perElement, perNodeSet, perElset...
+            # perNode, perElement, nodalResult, perElset...
          
         if 'nSet' in definition:
-            self.type = 'perNodeSet'
+            self.domainType = 'nSet'
+
+            self.type = 'nodalResult'
             self.nSet = modelInfo['nodeSets'] [ definition['nSet'] ]
             self.nSetName = definition['nSet']
+            self.resultVector =     definition['result']
+            self.field =            definition['field']
+            self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet if self.field in n.fields], dtype=np.int).ravel()
             
         elif 'elSet' in definition:
+            self.domainType = 'elSet'
+
             if  definition['result'] == 'U' or  definition['result'] == 'P':
                 self.journal.message('Converting elSet {:} to a nSet due to requested nodal results'.format(definition['elSet']), self.name )
                 # an elset was given, but in fact a nodeset was 'meant': we extract the nodes of the elementset!
-                self.type = 'perNodeSet'
+                self.type = 'nodalResult'
                 self.nSet = extractNodesFromElementSet( modelInfo['elementSets'] [ definition['elSet'] ] )
                 self.nSetName = definition['elSet']
+                self.resultVector =     definition['result']
+                self.field =            definition['field']
+                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet if self.field in n.fields], dtype=np.int).ravel()
             else:
                 # it's really an elSet job
-                self.type= 'perElementSet'
+                self.type= 'elementResult'
                 self.elSet = modelInfo['elementSets'] [ definition['elSet'] ]
                 self.elSetName =  definition['elSet']
-            
-        elif 'node' in definition:
-            self.type = 'perNode'
-            self.node = modelInfo['nodes'] [ int(definition['node']) ]
-            
-        elif 'element' in definition:
-            self.type  = 'perElement'
-            self.elSet = [ modelInfo['elements'] [ int(definition['element']) ] ]
+
+                gpt = definition['gaussPt']
+                gaussPts = strToRange(gpt) if not isInteger(gpt) else [ int (gpt)  ]
+                
+                self.elementResultCollector = ElementResultCollector(self.elSet,
+                                                                     gaussPts, 
+                                                                     definition['result'])
         else:
             raise Exception('invalid field output requested: ' + definition['name'] )
             
-        # save history, or only current value(s) ?
-        if self.type == 'perNode' or self.type == 'perElement':
-            self.appendResults = definition.get('saveHistory', True)
-        else:
-            self.appendResults = definition.get('saveHistory', False)
-            
+        self.appendResults = definition.get('saveHistory', False)
         self.result = [] if self.appendResults else None
-            
-        if self.type == 'perNode' or self.type == 'perNodeSet':
-            self.resultVector =     definition['result']
-            self.field =            definition['field']
-            
-            if self.type == 'perNodeSet':
-                self.resultIndices =  np.array([ [ n.fields[ self.field ] ] for n in self.nSet if self.field in n.fields], dtype=np.int).ravel()
-                
-        elif self.type == 'perElement' or self.type == 'perElementSet':
-            
-            gpt = definition['gaussPt']
-            gaussPts = strToRange(gpt) if not isInteger(gpt) else [ int (gpt)  ]
-            
-            self.elementResultCollector = ElementResultCollector(self.elSet,
-                                                                 gaussPts, 
-                                                                 definition['result'])
 
         if 'f(x)' in definition:
             self.f = createMathExpression( definition['f(x)'] )
@@ -130,15 +118,11 @@ class FieldOutput:
         
         incrementResult = None
         
-        if self.type == 'perNode':
-            resVec = U if self.resultVector == 'U' else P
-            incrementResult =  resVec [ self.node.fields[ self.field ] ]
-            
-        elif self.type == 'perNodeSet':
+        if self.type == 'nodalResult':
             resVec = U if self.resultVector == 'U' else P
             incrementResult =  resVec[self.resultIndices].reshape( len(self.nSet), -1)
         
-        elif self.type == 'perElementSet' or self.type == 'perElement':
+        elif self.type == 'elementResult':
             incrementResult = self.elementResultCollector.getCurrentResults()
             
         if self.f:

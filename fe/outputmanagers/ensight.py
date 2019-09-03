@@ -375,10 +375,14 @@ class OutputManager(OutputManagerBase):
             definition = stringDict(defLine)
             if 'create' in definition:
                 varType = definition['create']
+
+                fieldOutput = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
+                if fieldOutput.domainType != 'elSet':
+                    raise Exception("Ensight output can only operate on fieldOutputs defined on elSets!")
                 
                 if varType == 'perNode':
                     perNodeJob = {}
-                    perNodeJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
+                    perNodeJob['fieldOutput'] = fieldOutput
                     perNodeJob['name'] = definition.get('name', perNodeJob['fieldOutput'].name).replace(' ', '_')
                     perNodeJob['part'] =  self.elSetToEnsightPartMappings[perNodeJob['fieldOutput'].nSetName]
                     field = perNodeJob['fieldOutput'].field
@@ -388,7 +392,7 @@ class OutputManager(OutputManagerBase):
                         
                 if varType == 'perElement':
                     perElementJob = {}
-                    perElementJob['fieldOutput'] = fieldOutputController.fieldOutputs[ definition['fieldOutput'] ]
+                    perElementJob['fieldOutput'] = fieldOutput
                     perElementJob['part'] =  self.elSetToEnsightPartMappings[perElementJob['fieldOutput'].elSetName]
                     perElementJob['elementsOfShape'] = disassembleElsetToEnsightShapes ( perElementJob['fieldOutput'].elSet )
                     perElementJob['name'] = definition.get('name', perElementJob['fieldOutput'].name).replace(' ', '_')
