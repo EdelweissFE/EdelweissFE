@@ -50,7 +50,7 @@ cdef extern from "bftElement.h":
         
         void assignProperty( const BftElementProperty& property ) 
 
-        void assignProperty( const BftMaterialSection& property ) 
+        void assignProperty( const BftMaterialSection& property ) except +ValueError
 
         void initializeYourself(const double* elementCoordinates)
 
