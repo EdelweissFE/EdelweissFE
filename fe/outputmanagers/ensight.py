@@ -41,6 +41,7 @@ def writeC80(f, string):
 
 variableTypes = {"scalar" : 1,
                  "vector" : 3,
+                 "rotation vector" : 3,
                  "tensor": 9}
 
 ensightPerNodeVariableTypes = {
@@ -53,7 +54,7 @@ ensightPerElementVariableTypes = {
                                   1 : 'scalar per element',
                                   3 : 'vector per element',
                                   6 : 'tensor per element',
-                                  9 : 'tensor9 per element'}
+                                  9 : 'tensor asym per element'}
                  
 class EnsightUnstructuredPart:
     """ define an unstructured part, by a list of nodes and a dictionary of elements.
@@ -182,7 +183,11 @@ class EnsightPerNodeVariable:
     def writeToFile(self, fileHandle, ):
         f = fileHandle
         writeC80(f, self.description)
-        for ensightPartID, (structureType,  values) in self.partsDict.items():          
+        for ensightPartID, (structureType,  values) in self.partsDict.items():   
+#            print(self.name)
+#            if self.name=='nonlocal_damage':
+#                print(np.max(values))
+
             writeC80(f, 'part')
             writeCInt(f, ensightPartID)
             writeC80(f, structureType)
@@ -202,12 +207,19 @@ class EnsightPerElementVariable:
         self.varType = ensightPerElementVariableTypes[variableDimension]
         
     def writeToFile(self, fileHandle):
+
         f = fileHandle
         writeC80(f, self.description)
-        for ensightPartID, elTypeDict in self.partsDict.items():          
+        for ensightPartID, elTypeDict in self.partsDict.items():  
+#            print(self.varType)
+ 
+#            print(self.name)
+#            if self.name=='nonlocal damage':
+#                print(np.max(values))
             writeC80(f, 'part')
             writeCInt(f, ensightPartID)
             for elType, values in elTypeDict.items():
+#                print(values.shape)           
                 writeC80(f, elType)
                 writeCFloat(f, values.T)
 

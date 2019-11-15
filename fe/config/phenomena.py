@@ -10,23 +10,27 @@ from collections import OrderedDict
                                         #field                  field type
 phenomena = OrderedDict([               ("displacement" ,       "vector"),
                                         ("rotation",            "rotation vector"),
+                                        ("micro rotation",      "rotation vector"),
                                         ("thermal",             "scalar"),
                                         ("nonlocal damage",     "scalar"),])
                                         
                                         
                                         #field                  tolerance
-fieldCorrectionTolerance = {            'displacement' :        1e-3,
+fieldCorrectionTolerance = {            'displacement' :        1e-8,
                                         'rotation' :            1e-3,
+                                        'micro rotation' :      1e-8,
                                         'nonlocal damage':      1e-3,
                                         }
                                                                    
-fluxResidualTolerance = {               'displacement' :        1e-4,
+fluxResidualTolerance = {               'displacement' :        1e-8,
                                         'rotation' :            1e-4,
+                                        'micro rotation' :      1e-8,
                                         'nonlocal damage':      1e-4,
                                         }
 
 fluxResidualToleranceAlternative = {    'displacement' :        5e-3,
                                         'rotation' :            5e-3,
+                                        'micro rotation' :      5e-3,
                                         'nonlocal damage':      5e-3,
                                         }
                                         

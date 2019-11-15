@@ -19,6 +19,8 @@ cdef extern from "bftElement.h" namespace "BftElement":
         
     cdef enum DistributedLoadTypes:
         Pressure
+        SurfaceTraction
+        SurfaceTorsion
         
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     enum MaterialCode: pass
@@ -60,7 +62,7 @@ cdef extern from "bftElement.h":
                                             double* Ke,
                                             const double* time,
                                             double dT,
-                                            double& pNewdT,)
+                                            double& pNewdT,) except +ValueError
         
         void setInitialConditions(StateTypes state, 
                                   const double* values)

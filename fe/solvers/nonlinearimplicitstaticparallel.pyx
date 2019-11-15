@@ -31,16 +31,6 @@ from time import time as getCurrentTime
 from multiprocessing import cpu_count
 import os
 
-cdef public bint notificationToMSG(const string cppString):
-#    print(cppString.decode('UTF-8'))
-    return True
-   
-cdef public bint warningToMSG(const string cppString):
-#     print(cppString.decode('UTF-8'))
-    return False
-
-#cdef double abs
-
 class NISTParallelForBftElements(NISTParallel):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
     Designed to interface with Abaqus UELs

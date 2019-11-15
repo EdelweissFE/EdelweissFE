@@ -19,7 +19,9 @@ from libcpp.memory cimport unique_ptr, allocator, make_unique
 from libc.stdlib cimport malloc, free
 
 mapLoadTypes={
-        'pressure' : DistributedLoadTypes.Pressure
+        'pressure' : DistributedLoadTypes.Pressure,
+        'surface torsion' : DistributedLoadTypes.SurfaceTorsion,
+        'surface traction' : DistributedLoadTypes.SurfaceTraction
      }
 
 mapStateTypes={

@@ -58,12 +58,24 @@ extensions += [Extension("*", ["fe/utils/csrgenerator.pyx"],
                                  language="c++",)]
 
 """
-Build The parallel NISTParallel solver with OpenMP
+Build The parallel NISTParallelMK2 solver with OpenMP
 """
 
 extensions += [Extension("*",
                 sources = ["fe/solvers/nonlinearimplicitstaticparallelmk2.pyx"],
                         include_dirs=[numpy.get_include()] ,
+                         language='c++',
+                         extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
+                         extra_link_args=['-fopenmp'],)
+                        ]  
+
+"""
+Build The (old) parallel NISTParallel solver with OpenMP
+"""
+
+extensions += [Extension("*",
+                sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
+                        include_dirs=[numpy.get_include()] +  [join(BFT_USER_LIBRARY, "include") ] ,
                          language='c++',
                          extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
                          extra_link_args=['-fopenmp'],)

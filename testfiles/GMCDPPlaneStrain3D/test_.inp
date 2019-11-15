@@ -1,0 +1,76 @@
+*material, name=GMCDP, id=GMCDP
+**E,        nu,     GcToG,  lb, lt          polarRatio,     
+30000.0,    0.15 ,  1,     2, 2.828,          1.499999999
+**fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
+47.4,       13,     4.74,   55,         0.85,           0.0003,       .99,             2,       1
+**Ah,       Bh,     Ch,     Dh,         Hp,             As,     
+0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
+**a1,       a2,     a3,     a4,         a5,             a6,         
+0.25,        0.25,   0.5,     .0,           0.333333332,  0
+*material, name=GMCDP, id=GMCDPWeak
+**E,        nu,     GcToG,  lb, lt          polarRatio,     
+30000.0,    0.15 ,  1,     2, 2.828,          1.499999999
+**fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
+44.4,       13,     4.54,   53,         0.85,           0.0003,       .99,             2,       1
+**Ah,       Bh,     Ch,     Dh,         Hp,             As,     
+0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
+**a1,       a2,     a3,     a4,         a5,             a6,         
+0.25,        0.25,   0.5,     .0,           0.333333332,  0
+*material, name=GMCDP, id=GMCDPLE
+**E,        nu,     GcToG,  lb, lt          polarRatio,     
+30000.0,    0.15 ,  1,     2, 2.828,          1.499999999
+**fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
+47.4e3,       13e3,     4.74e3,   55e3,         0.85,           0.0003,       .0,             2,       1
+**Ah,       Bh,     Ch,     Dh,         Hp,             As,     
+0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
+**a1,       a2,     a3,     a4,         a5,             a6,         
+0.25,        0.25,   0.5,     .0,           0.333333332,  0
+*include, input=mesh.inp
+
+
+*section, name=section1, material=GMCDP, type=solidUelUmat
+all
+*section, name=section2, material=GMCDPWeak, type=solidUelUmat
+weak 
+*section, name=sectionLE, material=GMCDPLE, type=solidUelUmat
+top
+bottom
+
+*job, name=cpe4job, domain=3d, solver=NISTParallelForBftElements
+*fieldOutput
+elSet=all, field=displacement, result=U, name=displacement
+**elSet=all, field=micro rotation, result=U, name=micro rotation
+elSet=all, field=nonlocal damage, result=U, name=nonlocal damage
+elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='max( x[:,:,0], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='max( x[:,:,1], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='max( x[:,:,2], axis=1) '
+name=RF, nSet=top, field=displacement, result=P, f(x)='sum(x[:,1])/2.5', saveHistory=True
+name=U, nSet=top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True 
+
+*output, type=monitor, jobName=cpe4job, name=omegaMon
+fieldOutput=omega, f(x)='max(x)'
+fieldOutput=nonlocal damage, f(x)='max(x)'
+fieldOutput=alphaD, f(x)='max(x)'
+fieldOutput=RF
+
+*output, type=ensight, jobName=cpe4job, name=esExport
+create=perNode,    fieldOutput=displacement
+**create=perNode,    fieldOutput=micro rotation
+create=perNode,    fieldOutput=nonlocal damage
+create=perElement, fieldOutput=alphaP
+create=perElement, fieldOutput=alphaD
+create=perElement, fieldOutput=omega
+
+*output, type=meshplot, jobName=cpe4job, name=RFPlot
+figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
+
+*step, jobName=cpe4job, maxInc=5e-2, minInc=5e-4, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear, numThreads=8
+options, category=Ensight, intermediateSaveInterval=1
+dirichlet, name=bottom, nSet=bottom,  field=displacement, 2=0, 
+**dirichlet, name=bottomR, nSet=bottom,  field=micro rotation, 1=0,2=0,3=0
+**dirichlet, name=topR, nSet=top,  field=micro rotation, 1=0,2=0,3=0
+dirichlet, name=origin, nSet=origin,  field=displacement, 2=0, 1=0, 3=0
+dirichlet, name=top, nSet=top, field=displacement, 2=-5
+dirichlet, name=frontAndBackD, nSet=frontAndBack, field=displacement, 3=0
+dirichlet, name=frontAndBackR, nSet=frontAndBack, field=micro rotation, 1=0, 2=0
