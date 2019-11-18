@@ -39,8 +39,7 @@ cdef class BftElementWrapper:
             
         self.elNumber = elNumber
         
-        self.bftElement = bftElementFactory(getElementCodeFromName( elementType.upper().encode('utf-8')), 
-                        self.elNumber)
+        self.bftElement = BftElementFactory.createElement( BftElementFactory.getElementCodeFromName( elementType.upper().encode('utf-8')), self.elNumber)
         
         self.nNodes                         = self.bftElement.getNNodes()
         
