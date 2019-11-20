@@ -26,14 +26,15 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     enum MaterialCode: pass
     enum ElementCode: pass
 
-    MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
+    cdef cppclass BftMaterialFactory:
+        @staticmethod
+        MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
     
     cdef cppclass BftElementFactory:
-
         @staticmethod
         ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
         @staticmethod
-        BftElement* createElement(const string&, int noEl,) except +ValueError
+        BftElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
                        
 cdef extern from "bftElementProperty.h":
     cdef cppclass BftElementProperty nogil:

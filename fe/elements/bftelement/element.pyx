@@ -65,7 +65,7 @@ cdef class BftElementWrapper:
         
         self.bftElement.assignProperty(
                 BftMaterialSection(
-                        getMaterialCodeFromName(
+                        BftMaterialFactory.getMaterialCodeFromName(
                                 materialName.upper().encode('UTF-8')), 
                         &self.materialProperties[0],
                         self.materialProperties.shape[0] ) )
