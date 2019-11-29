@@ -1,0 +1,93 @@
+*node
+0, 0, 0, 0
+1, 0.100, 0, 0
+2, 0.100, 0.100, 0
+3, 0, 0.100, 0
+4, 0, 0, 0.100
+5, 0.100, 0, 0.100
+6, 0.100, 0.100, 0.100
+7, 0, 0.100, 0.100
+
+*nSet, nSet=bottom
+0,1,2,3
+*nSet, nSet=top
+4,5,6,7
+*nSet, nSet=left
+0,3,4,7
+*nSet, nSet=right
+1,2,5,6
+*nSet, nSet=front
+0,1,4,5
+*nSet, nSet=back
+2,3,6,7
+
+
+*element, Type=uelC3D8
+1, 0,1,2,3,4,5,6,7
+
+*elSet, elSet=all
+1
+
+*surface, type=element, name=surfaceTop
+**elset, faceID
+all, 2
+*surface, type=element, name=surfaceRight
+**elset, faceID
+all, 4
+*surface, type=element, name=surfaceBack
+**elset, faceID
+all, 5
+
+*material, name=ModifiedCamClay, id=MCC, statevars=5
+**** G kappa lambda M
+100000, 0.01, 0.08, 1.01
+
+*section, name=section1, material=MCC, type=solidUelUmat
+all
+
+*job, name=myJob, domain=3d, solver=NISTParallel
+
+*fieldOutput, jobName=myJob
+name=v,       elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,0])', saveHistory=True
+name=lnp,     elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
+name=p0,      elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+name=q,       elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,3])', saveHistory=True
+name=eps_v,   elSet=all, result=strain, gaussPt=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
+name=p,       elSet=all, result=stress, gaussPt=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3.', saveHistory=True
+name=u_right, nSet=right, field=displacement, result=U, f(x)='mean(x[:,0])', saveHistory=True
+name=p_right, nSet=right, field=displacement, result=P, f(x)='mean(x[:,0])', saveHistory=True
+name=eps_33,  elSet=all, result=strain, gaussPt=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+name=sig_33,  elSet=all, result=stress, gaussPt=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+elSet=all,    result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all,    result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
+elSet=all,    field=displacement, result=U, name=displacement
+
+*output, type=ensight, jobName=myJob, name=ensightExport
+create=perNode,    fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+
+** ----------------
+** pre-consolidation
+** ----------------
+
+*step, jobName=myJob, maxInc=1e0, minInc=1e-5, maxNumInc=100000, maxIter=25, stepLength=1
+options,         category=NISTSolver, extrapolation=linear, numThreads=15
+dirichlet,       name=bottom, nSet=bottom,      field=displacement, 3=0.0
+dirichlet,       name=left, nSet=left,          field=displacement, 1=0.0
+dirichlet,       name=back, nSet=front,          field=displacement, 2=0.0
+distributedload, name=dloadT, surface=surfaceTop, type=pressure, magnitude=10.0, f(t)=1
+distributedload, name=dloadB, surface=surfaceBack, type=pressure, magnitude=10.0, f(t)=1
+distributedload, name=dloadR, surface=surfaceRight, type=pressure, magnitude=10.0, f(t)=1
+geostatic,       name=geo, elSet=all, p1=-10., h1=0, p2=-10., h2=100, xLateral=1.0, zLateral=1.0
+sdvini,          name=ini, elSet=all, sdv=0, val=1.45
+sdvini,          name=ini2, elSet=all, sdv=2, val=90
+
+** ----------------
+** shearing
+** ----------------
+*step, jobName=myJob, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
+ dirichlet, name=top, nSet=top,      field=displacement,     3=-0.05
+
+*output, type=meshPlot, jobName=myJob, 
+figure=2, axSpec=111, c=red, ls=dashed, create=xyData, x=eps_33, y=sig_33
