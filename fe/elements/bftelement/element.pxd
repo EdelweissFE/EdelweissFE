@@ -28,11 +28,11 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
 
     cdef cppclass BftMaterialFactory:
         @staticmethod
-        MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
+        MaterialCode getMaterialCodeFromName(const string& materialName) except +IndexError
     
     cdef cppclass BftElementFactory:
         @staticmethod
-        ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
+        ElementCode  getElementCodeFromName(const string& elementName) except +IndexError
         @staticmethod
         BftElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
                        
