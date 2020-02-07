@@ -1,19 +1,19 @@
 *material, name=GMCDP, id=GMCDP
-**E,        nu,     GcToG,  lb, lt          polarRatio,     
-30000.0,    0.15 ,  1,     2, 2.8284271247461903,          1.49999999999999
+**E,        nu,     GcToG,  lelastic, lJ2          polarRatio,     
+30000.0,    0.15 ,  1,     2, 4,          1.49999999999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
-47.4,       13,     4.74,   55,         0.85,           0.0003,       .99,             2,       1
+47.4,       13,     4.74,   55,         0.85,           0.0032,       .99,             2,       1.00
 **Ah,       Bh,     Ch,     Dh,         Hp,             As,     
-0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
+0.08,       0.003,  2.0,    0.000001,   0.000,          .75
 **a1,       a2,     a3,     a4,         a5,             a6,         
 0.25,        0.25,   0.5,     0,           0.333333332,  0
-**0.5,        0.0,   0.5,     .0,           0.333333332,  0
+** 0.5,        0.0,   0.5,     .0,           0.333333332,  0
 **0.75,        -0.25,   0.75,     -.25,           0.333333332,  0
 
 
 *section, name=section1, thickness=1.0, material=GMCDP, type=planeUelUmat
 all
-*section, name=section2, thickness=.97, material=GMCDP, type=planeUelUmat
+*section, name=section2, thickness=.98, material=GMCDP, type=planeUelUmat
 gen_shearBand
 
 *job, name=cpe4job, domain=2d, solver=NISTParallelForBftElements
@@ -31,14 +31,19 @@ name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHis
 x0=0, h=200
 y0=0, l=50
 elType=uelNCCPE8R
-nX=20
-nY=80
+nX=25
+nY=100
 
 *output, type=monitor, jobName=cpe4job, name=omegaMon
 fieldOutput=omega, f(x)='max(x)'
 fieldOutput=nonlocal damage, f(x)='max(x)'
 fieldOutput=alphaD, f(x)='max(x)'
 fieldOutput=RF
+
+** *constraint, type=simplebrushplateconstraint, name=p2
+** nSet=gen_right,
+** referencePoint=gen_rightBottom
+** direction=1
 
 *output, type=ensight, jobName=cpe4job, name=esExport
 create=perNode,    fieldOutput=displacement

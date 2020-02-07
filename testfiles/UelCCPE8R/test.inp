@@ -1,8 +1,8 @@
 *material, name=cosseratDruckerPrager, id=cosseratDruckerPrager
-**E, nu, GcToG, lb,  polarRatio, sigmaYield, phi(deg), psi(deg) 
-30000, 0.20, 1., 2,  3.9,     1.49999,      1,         25,      5,
-**a1,   a2,     a3,     a4,     b1,     b2,     b3,     b4
-0.25,   0.25,   .5, .5,   0.25,   0.25,   0.25,   0.25
+**E, nu, GcToG, lb,  lBending, polarRatio, sigmaYield, phi(deg), psi(deg) 
+30000, 0.20, 1., 2,  4,     1.5,      1,         25,      5,
+**a1,   a2,     a3,     a4, lJ2
+0.25,   0.25,   .5, .0,  2.0
 **hardening modulus
 -30
 
@@ -37,4 +37,4 @@ figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-5
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-.4

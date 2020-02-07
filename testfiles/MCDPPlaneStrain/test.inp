@@ -1,12 +1,12 @@
 *material, name=MCDP, id=MCDP
 **E,        nu,     GcToG,  l,          polarRatio,     
-30000.0,    0.15 ,  1.,     2,          1.499999999
+30000.0,    0.15 ,  1.,     2,          1.499999
 **fcu,      fcy,    ftu,    fbu,        Df,             GfI,        omegaMax,     
 47.4,       13,     4.74,   55,         0.85,           0.005,       .99
 **Ah,       Bh,     Ch,     Dh,         As,     
 0.12,       0.003,  2.0,    0.000001,   15.0,
-**a1,       a2,     a3,     a4,         a5,             a6,         
-0.25,        0.25,   0.25,     .25,           0.333333332,    0,               
+**a1,       a2,     a3,     a4,       lJ2
+0.25,        0.25,   0.25,     .25,   2.0
 
 
 *section, name=section1, thickness=1.0, material=MCDP, type=planeUelUmat
@@ -29,8 +29,8 @@ name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHis
 x0=0, h=200
 y0=0, l=50
 elType=uelCCPE8R
-nX=40
-nY=120
+nX=20
+nY=80
 
 *output, type=monitor, jobName=cpe4job, name=omegaMon
 fieldOutput=omega, f(x)='max(x)'

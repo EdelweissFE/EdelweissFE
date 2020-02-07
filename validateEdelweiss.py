@@ -32,7 +32,7 @@ if __name__ == "__main__":
         
         if not os.path.exists(testfile):
             continue
-        
+
         inputFile = parseInputFile(testfile)
         print('Test {:30}'.format(directory ), end='\r')
         
@@ -41,20 +41,17 @@ if __name__ == "__main__":
             success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False, suppressPlots=True)
             
             if not args.create:
-                
-                UReference = np.loadtxt(referenceSolutionFile)
-                residual = U - UReference
-                
-                if success and ( np.max ( np.abs ( residual ) ) ) < 1e-6:
-                    passed = True
+                if success:
+                    UReference = np.loadtxt(referenceSolutionFile)
+                    residual = U - UReference
+                    
+                    if ( np.max ( np.abs ( residual ) ) ) < 1e-6:
+                        print('Test {:30} PASSED'.format(directory))
+                    else:
+                        print('Test {:30} FAILED'.format(directory))
+                    os.chdir('..')
                 else:
-                    passed = False
-                
-                if passed:
-                    print('Test {:30} PASSED'.format(directory))
-                else:
-                    print('Test {:30} FAILED'.format(directory))
-                os.chdir('..')
+                    print('Test {:30} FAILED: '.format(directory) + "Test not completed!")
                 
             else:
                 print('')

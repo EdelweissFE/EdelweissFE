@@ -4,7 +4,7 @@
 *include, input=fine.inp
 *material, name=GMCDP, id=GMCDP
 **E,        nu,     GcToG,  lb, lt          polarRatio,     
-30000.0,    0.15 ,  1,     2, 2.828,          1.499999999
+30000.0,    0.15 ,  1,     2, 4,          1.499999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4,       13,     4.74,   55,         0.85,           0.0003,       .99,             2,       1
 **Ah,       Bh,     Ch,     Dh,         Hp,             As,     
@@ -13,7 +13,7 @@
 0.25,        0.25,   2.5,     .0,           0.333333332,  0
 *material, name=GMCDP, id=GMCDPWeak
 **E,        nu,     GcToG,  lb, lt          polarRatio,     
-30000.0,    0.15 ,  1,     2, 2.828,          1.499999999
+30000.0,    0.15 ,  1,     2, 4,          1.499999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 44.4,       13,     4.54,   53,         0.85,           0.0003,       .99,             2,       1
 **Ah,       Bh,     Ch,     Dh,         Hp,             As,     
@@ -22,7 +22,7 @@
 0.25,        0.25,   2.5,     .0,           0.333333332,  0
 *material, name=GMCDP, id=GMCDPLE
 **E,        nu,     GcToG,  lb, lt          polarRatio,     
-30000.0,    0.15 ,  1,     2, 2.828,          1.499999999
+30000.0,    0.15 ,  1,     2, 4,          1.499999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4e3,       13e3,     4.74e3,   55e3,         0.85,           0.0003,       .0,             2,       1
 **Ah,       Bh,     Ch,     Dh,         Hp,             As,     
@@ -36,7 +36,8 @@ weak
 *section, name=sectionLE, material=GMCDPLE, type=solidUelUmat
 top
 bottom
-*job, name=cpe4job, domain=3d, solver=NISTParallelForBftElements
+** *job, name=cpe4job, domain=3d, solver=NISTParallelForBftElements
+*job, name=cpe4job, domain=3d, solver=NISTParallelForBftElements, solver=amgcl
 ***job, name=cpe4job, domain=3d, solver=NISTPArcLength
 
 *fieldOutput,
@@ -68,7 +69,7 @@ fieldOutput=RF
 *step, jobName=cpe4job, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom,  nSet=bottom,   field=displacement, 3=0.0
-dirichlet, name=topD,  nSet=top,   field=nonlocal damage, 1=0.0
+** dirichlet, name=topD,  nSet=top,   field=nonlocal damage, 1=0.0
 dirichlet, name=origin,  nSet=origin,   field=displacement, 1=0.0, 
 dirichlet, name=symD,  nSet=sym,   field=displacement, 2=0.0
 dirichlet, name=symR,  nSet=sym,   field=micro rotation, 1=0.0, 3=0
