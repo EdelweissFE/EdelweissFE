@@ -28,7 +28,7 @@ class StepAction(StepActionBase):
         self.magnitudeAtStepStart = 0.0
         self.surface = modelInfo['surfaces'][action['surface']]
         self.loadType = action['type']
-        magnitude = np.asarray([float(action['magnitude'])])
+        magnitude = np.fromstring( action['magnitude'], sep=',')
         
         self.delta = magnitude
         if 'f(t)' in action:

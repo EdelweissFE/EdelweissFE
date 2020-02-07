@@ -88,6 +88,7 @@ class NISTPArcLength(NISTParallel):
         Un1 = self.theDofManager.constructDofVector()
         ddU = None
         
+        
         Lambda      =  self.Lambda
         dLambda     = self.dLambda
         ddLambda    = 0.0
@@ -106,14 +107,11 @@ class NISTPArcLength(NISTParallel):
             P[:] = K[:] = F[:] =  P_0[:] = P_f[:] = K_f[:] = 0.0
 
             P, K, F     = self.computeElements(Un1, dU, P, K, F, increment)
-            
+            P, K        = self.assembleConstraints (constraints, Un1, P, K, increment)
+                        
             P_0, K      = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K, zeroIncrement) # compute 'dead' deadloads, like gravity
             P_f, K_f    = self.assembleLoads (concentratedLoads, distributedLoads, bodyForces, Un1, P_f, K_f, referenceIncrement) # compute 'dead' deadloads, like gravity
 
-            P_0, K      = self.assembleConstraints (constraints, Un1, P_0, K, zeroIncrement)
-            # Currently i don't know if we will ever need 'transient' (e.g. time dependent constraints):
-            # P_f, V_f = self.assembleConstraints (constraints, Un1, P_f, V_f, I, J, referenceIncrement)
-            
             P_f -= P_0 # and subtract the dead part, since we are only interested in the homogeneous linear part
             
             # Dead and Reference load .. 

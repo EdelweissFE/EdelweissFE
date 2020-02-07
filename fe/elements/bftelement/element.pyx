@@ -19,7 +19,9 @@ from libcpp.memory cimport unique_ptr, allocator, make_unique
 from libc.stdlib cimport malloc, free
 
 mapLoadTypes={
-        'pressure' : DistributedLoadTypes.Pressure
+        'pressure' : DistributedLoadTypes.Pressure,
+        'surface torsion' : DistributedLoadTypes.SurfaceTorsion,
+        'surface traction' : DistributedLoadTypes.SurfaceTraction
      }
 
 mapStateTypes={
@@ -37,8 +39,7 @@ cdef class BftElementWrapper:
             
         self.elNumber = elNumber
         
-        self.bftElement = bftElementFactory(getElementCodeFromName( elementType.upper().encode('utf-8')), 
-                        self.elNumber)
+        self.bftElement = BftElementFactory.createElement( BftElementFactory.getElementCodeFromName( elementType.upper().encode('utf-8')), self.elNumber)
         
         self.nNodes                         = self.bftElement.getNNodes()
         
@@ -64,7 +65,7 @@ cdef class BftElementWrapper:
         
         self.bftElement.assignProperty(
                 BftMaterialSection(
-                        getMaterialCodeFromName(
+                        BftMaterialFactory.getMaterialCodeFromName(
                                 materialName.upper().encode('UTF-8')), 
                         &self.materialProperties[0],
                         self.materialProperties.shape[0] ) )

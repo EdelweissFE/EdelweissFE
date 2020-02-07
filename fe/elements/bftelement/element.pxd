@@ -19,17 +19,22 @@ cdef extern from "bftElement.h" namespace "BftElement":
         
     cdef enum DistributedLoadTypes:
         Pressure
+        SurfaceTraction
+        SurfaceTorsion
         
 cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
     enum MaterialCode: pass
     enum ElementCode: pass
 
-    MaterialCode getMaterialCodeFromName(const string& materialName) except +ValueError
-    ElementCode  getElementCodeFromName(const string& elementName) except +ValueError
+    cdef cppclass BftMaterialFactory:
+        @staticmethod
+        MaterialCode getMaterialCodeFromName(const string& materialName) except +IndexError
     
-    BftElement* bftElementFactory(int elementCode, 
-                       int noEl,
-                       ) except +ValueError
+    cdef cppclass BftElementFactory:
+        @staticmethod
+        ElementCode  getElementCodeFromName(const string& elementName) except +IndexError
+        @staticmethod
+        BftElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
                        
 cdef extern from "bftElementProperty.h":
     cdef cppclass BftElementProperty nogil:
@@ -60,7 +65,7 @@ cdef extern from "bftElement.h":
                                             double* Ke,
                                             const double* time,
                                             double dT,
-                                            double& pNewdT,)
+                                            double& pNewdT,) except +ValueError
         
         void setInitialConditions(StateTypes state, 
                                   const double* values)
