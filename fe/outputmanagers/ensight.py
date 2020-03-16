@@ -16,6 +16,7 @@ Datalines:
 """
 
 documentation = {
+        'configuration': 'overwrite=y|n|yes|no|True|False|',
         'create' : 'perNode|perElement',
         'fieldOutput': 'name of the result, defined on an elSet (also for perNode results)',
         'name': '(optional), standard = fieldOutputs name',
@@ -28,6 +29,7 @@ import os
 import datetime
 import numpy as np
 from collections import defaultdict, OrderedDict
+from distutils.util import strtobool
 from fe.utils.misc import stringDict
 from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
@@ -235,7 +237,8 @@ class EnsightChunkWiseCase:
         self.variableTrends = {}
         self.fileHandles = {}
         
-        os.mkdir( self.caseFileNamePrefix )
+        if not os.path.exists( self.caseFileNamePrefix ): 
+            os.mkdir( self.caseFileNamePrefix )
 
     def setCurrentTime(self, timeAndFileSetNumber, timeValue):
         if not timeAndFileSetNumber in self.timeAndFileSets:
@@ -360,7 +363,12 @@ class OutputManager(OutputManagerBase):
         self.fieldOutputController = fieldOutputController
         self.journal = journal
         
-        exportName = '{:}_{:}'.format(name,  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+        exportName = '{:}_{:}'.format(name,  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")) 
+        
+        for defLine in definitionLines:
+            definition = stringDict(defLine) 
+            if 'configuration' in definition and strtobool(definition.get('overwrite','False')):
+                exportName = '{:}'.format(name); break
         
         self.elSetToEnsightPartMappings = {}
         self.ensightCase = EnsightChunkWiseCase(exportName)
