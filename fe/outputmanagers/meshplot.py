@@ -21,6 +21,7 @@ from fe.utils.fieldoutput import FieldOutput
 from fe.utils.math import createMathExpression
 import matplotlib.tri as mtri
 from matplotlib import colors
+from distutils.util import strtobool
 
 documentation = {
         'figure': 'figure number, (default=1)',
@@ -214,7 +215,7 @@ class OutputManager(OutputManagerBase):
                     xyJob['figure'] =     definition.get('figure','1')
                     xyJob['label'] =      definition.get('label', xyJob['y'].name)
                     xyJob['axSpec'] =     definition.get('axSpec','111')
-                    xyJob['integral'] =   definition.get('integral','False')
+                    xyJob['integral'] =   strtobool(definition.get('integral','False'))
                     self.xyJobs.append(xyJob)
                     
 
@@ -265,9 +266,9 @@ class OutputManager(OutputManagerBase):
             
             self.plotter.plotXYData(x, y, xyJob['figure'], xyJob['axSpec'], xyJob )
             ax =  self.plotter.getAx(xyJob['figure'] , xyJob['axSpec'])
-            if xyJob['integral']=='True':
-                integral = np.trapz(y,x)
-                ax.fill_between(x, 0, y, color='gray', label=str(integral))
+            if xyJob['integral']:
+                integral = np.trapz(y.flatten(),x=x.flatten())
+                ax.fill_between(x.flatten(), 0, y.flatten(), color='gray', label=str(integral))
 
         for perNodeJob in self.perNodeJobs:
             result = perNodeJob['fieldOutput'].getLastResult()
