@@ -153,7 +153,7 @@ class Plotter:
         if png:
             fig.savefig('{}.png'.format(fileName), dpi=400)
     
-    def show(self,):
+    def finalize(self,):
         import warnings
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -166,5 +166,7 @@ class Plotter:
                     ax.relim()
                     
         self.exportPlots()
+
+    def show(self,):
         plt.show()
     

@@ -174,6 +174,8 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
         fieldOutputController.finalizeJob(U, P)
         for manager in outputmanagers:
             manager.finalizeJob(U, P,)
+
+        plotter.finalize()
         if not suppressPlots:
             plotter.show()
         return success, U, P, fieldOutputController
