@@ -43,7 +43,6 @@ class Plotter:
                 "xtick.labelsize": 8,
                 "ytick.labelsize": 8,
                 'lines.linewidth': 1,
-                'figure.dpi':300,
                 'lines.markeredgewidth': 0.4,
                 'lines.markersize':4
                 }
@@ -162,7 +161,9 @@ class Plotter:
             for fig, axes in self.figsWithAxes.values():
                 fig.tight_layout()
                 for axSpec, ax in axes.items():
-                    ax.legend()
+                    leglabels = ax.get_legend_handles_labels() # print legend only if labels were defined (ommit for contourplots)
+                    if leglabels[0]:
+                        ax.legend()
                     ax.relim()
                     
         self.exportPlots()
