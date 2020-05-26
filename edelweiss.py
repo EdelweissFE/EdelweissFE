@@ -7,6 +7,7 @@ Created on Tue Jan  17 19:10:42 2017
 """
 
 import argparse  
+import matplotlib
 from fe.fecore import finitElementSimulation
 from fe.parameteridentification.paramIdentification import parameterIdentification
 from fe.utils.inputfileparser import parseInputFile,printKeywords
@@ -18,6 +19,7 @@ if __name__ == "__main__":
     parser.add_argument('file', type=str,  nargs='*', ) # multiple input files possible
     parser.add_argument('--quiet', dest='verbose', action='store_false', help='suppress output') 
     parser.add_argument('--noplot', dest='noplot', action='store_true', help='suppress plots') 
+    parser.add_argument('--mplBackend', dest='mplBackend', default=None, type=str, help='suppress plots') 
     parser.add_argument('--keywords', dest='kw', action='store_true', help='print keywords') 
     parser.add_argument('--doc=module', dest='doc', help='print keywords') 
     parser.add_argument('--parameterIdentification', dest='parID', help='run parameter identification',  nargs='*',)
@@ -32,6 +34,10 @@ if __name__ == "__main__":
     if args.doc:
         printDocumentation(args.doc)
         exit(0)
+
+    if args.mplBackend:
+        print("Setting matplotlib backend to {:}".format(args.mplBackend))
+        matplotlib.use(args.mplBackend)
     
     inputFiles = []
     #1 ) parse all files
@@ -42,6 +48,7 @@ if __name__ == "__main__":
     except (KeyError, ValueError) as e:
         print(str(e))
         exit(1)
+
     
     if args.parID:
         for inputFile in inputFiles:
