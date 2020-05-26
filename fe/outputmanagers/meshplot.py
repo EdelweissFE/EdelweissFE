@@ -161,10 +161,10 @@ class OutputManager(OutputManagerBase):
                 saveJob = {}
                 saveJob['figure'] = definition.get('figure', '1')
                 saveJob['fileName'] = definition.get('name', 'exportFigure')
-                saveJob['width'] = definition.get('width', False)
-                saveJob['scale'] = definition.get('scale', False)
+                saveJob['width'] = definition.get('width', 469.47)
+                saveJob['scale'] = definition.get('scale', 1.0)
                 saveJob['heightRatio'] = definition.get('heightRatio', False)
-                saveJob['png'] = definition.get('png', False)
+                saveJob['png'] = definition.get('png', True)
                 self.saveJobs.append(saveJob)
             
             
