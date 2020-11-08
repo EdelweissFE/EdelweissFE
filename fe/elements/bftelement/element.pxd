@@ -15,7 +15,8 @@ cdef extern from "bftElement.h" namespace "BftElement":
         Sigma33,
         HydrostaticStress,
         GeostaticStress,
-        BftMaterialStateVars
+        BftMaterialStateVars,
+        BftMaterialInitialization
         
     cdef enum DistributedLoadTypes:
         Pressure
