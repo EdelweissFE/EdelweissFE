@@ -13,22 +13,36 @@ class Journal:
     output and/or file output.
     Information messages can be sorted by the importance level. 
     Suppressing certain levels of output is possible. """
-    
-    outputWidths = {
-    0: 79,
-    1:  76,
-    2:  75}
-    
-    errorMessageTemplate =  " > > > {:<68}{:>18} < < < "
-    leveledOutput = {0: " {:<80}{:>18} ",
-                     1: "   {:<78}{:>18} ",
-                     2: "     {:<76}{:>18} ",}
-    
+
     def __init__(self, verbose=True, outputFile=None, suppressFromLevel=3):
         self.suppressLvl = suppressFromLevel
         self.verbose = verbose
+        self.setNewLineWidth (newWidth = 100, leftColumn = 80 )
     
+    def setNewLineWidth( self, newWidth=100, leftColumn=80):
+        self.linewidth = newWidth
+        self.leftColumn = leftColumn
+        self.outputWidths = {}
+        self.outputWidths[0] = leftColumn - 1
+        self.outputWidths[1] = leftColumn - 4
+        self.outputWidths[2] = leftColumn - 5
+        self._rightColumn = self.linewidth - leftColumn
+
+
+        # self.errorMessageTemplate =  " > > > {:<68}{:>18} < < < "
+        # self.leveledOutput = {0: " {:<80}{:>18} ",
+        #                       1: "   {:<78}{:>18} ",
+        #                       2: "     {:<76}{:>18} ",}
+        self.errorMessageTemplate =  " > > > {{:<{:}}}{{:>{:}}} < < < " .format( leftColumn - 12, self._rightColumn - 2 )
+        self.leveledOutput = {0: " {{:<{:}}}{{:>{:}}} "                 .format(leftColumn,       self._rightColumn - 2 ) ,
+                                1: "   {{:<{:}}}{{:>{:}}} "             .format(leftColumn -2 ,   self._rightColumn - 2 ) ,
+                                2: "     {{:<{:}}}{{:>{:}}} "            .format(leftColumn - 4 , self._rightColumn - 2 ) ,}
+
+
     def message(self, message, senderIdentification, level=1):
+        while len(message) > self.leftColumn-2 :
+            self.setNewLineWidth( self.linewidth + 5, self.leftColumn + 5 )
+
         if level < self.suppressLvl:
             if self.verbose:
                 print(self.leveledOutput[level].format(message, senderIdentification))
@@ -38,7 +52,7 @@ class Journal:
         
     def printSeperationLine(self, ):
         if self.verbose:
-            print('+'+'-'*98+'+')
+            print('+'+'-'* ( self.linewidth - 2 )+'+')
             
     def printTable(self, table, senderIdentification, level=1, printHeaderRow=True):
         
