@@ -8,11 +8,11 @@ Created on Sun Jan  8 20:37:35 2017
 Fri Oct 6 2018:
 
     This solver is now deprecated since it is replaced by its sucessor mk2. 
-    This version (mk1) directly accesses the underlying BftElement, and thus 
+    This version (mk1) directly accesses the underlying MarmotElement, and thus 
     it is able to completely release the GIL throughout the complete prange loop.
-    Naturally, it is compatible only with cython elements based on BftElements.
+    Naturally, it is compatible only with cython elements based on MarmotElements.
     However, it seems that there is no measurable performance advantage over mk2, which
-    is not dependent on a  underlying BftElement (and is thus also compatible with python or
+    is not dependent on a  underlying MarmotElement (and is thus also compatible with python or
     cython elements). 
     This solver remains for teaching purposes to demonstrate how to interact with cpp objects.
 """
@@ -24,14 +24,14 @@ from scipy.sparse.linalg import spsolve
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import CutbackRequest
 from cython.parallel cimport parallel, threadid, prange
-from fe.elements.bftelement.element cimport BftElement, BftElementWrapper
+from fe.elements.marmotelement.element cimport MarmotElement, MarmotElementWrapper
 from libc.stdlib cimport malloc, free
 from libcpp.string cimport string
 from time import time as getCurrentTime
 from multiprocessing import cpu_count
 import os
 
-class NISTParallelForBftElements(NISTParallel):
+class NISTParallelForMarmotElements(NISTParallel):
     """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
     Designed to interface with Abaqus UELs
     Public methods are: __init__(), initializeUP() and solveStep(...).
@@ -78,9 +78,9 @@ class NISTParallelForBftElements(NISTParallel):
             double[::1] Pe = np.zeros(self.theDofManager.accumulatedElementNDof) 
   
         
-            BftElementWrapper backendBasedCythonElement
+            MarmotElementWrapper backendBasedCythonElement
             # lists (cpp elements + indices and nDofs), which can be accessed parallely
-            BftElement** cppElements =      <BftElement**> malloc ( nElements * sizeof(BftElement*) )
+            MarmotElement** cppElements =      <MarmotElement**> malloc ( nElements * sizeof(MarmotElement*) )
             int[::1] elIndicesInVIJ         = np.empty( (nElements,), dtype=np.intc )
             int[::1] elIndexInPe            = np.empty( (nElements,), dtype=np.intc )
             int[::1] elNDofs                = np.empty( (nElements,), dtype=np.intc )
@@ -91,7 +91,7 @@ class NISTParallelForBftElements(NISTParallel):
             # prepare all lists for upcoming parallel element computing
             backendBasedCythonElement   = elList[i]
             backendBasedCythonElement.initializeStateVarsTemp()
-            cppElements[i]              = backendBasedCythonElement.bftElement
+            cppElements[i]              = backendBasedCythonElement.marmotElement
             elIndicesInVIJ[i]           = self.theDofManager.entitiesInVIJ[backendBasedCythonElement] 
             elNDofs[i]                  = backendBasedCythonElement.nDof 
             # each element gets its place in the Pe buffer
@@ -115,7 +115,7 @@ class NISTParallelForBftElements(NISTParallel):
                     UN1e[threadID, j] = UN1_mView[ currentIdxInU ]
                     dUe[threadID, j] =  dU_mView[ currentIdxInU ]
                
-                (<BftElement*> 
+                (<MarmotElement*> 
                      cppElements[i] )[0].computeYourself(&UN1e[threadID, 0],
                                                         &dUe[threadID, 0],
                                                         &Pe[elIdxInPe],

@@ -8,7 +8,7 @@ Created on Thu Apr 27 08:35:06 2017
 
 import numpy as np
 cimport numpy as np
-cimport fe.elements.bftelement.element 
+cimport fe.elements.marmotelement.element 
 cimport libcpp.cast
 cimport cython
 
@@ -26,12 +26,12 @@ mapLoadTypes={
 
 mapStateTypes={
         'geostatic stress' : StateTypes.GeostaticStress,
-        'sdvini' : StateTypes.BftMaterialStateVars,
-        'initialize material': StateTypes.BftMaterialInitialization
+        'sdvini' : StateTypes.MarmotMaterialStateVars,
+        'initialize material': StateTypes.MarmotMaterialInitialization
      }
     
 @cython.final # no subclassing -> cpdef with nogil possible
-cdef class BftElementWrapper:
+cdef class MarmotElementWrapper:
     
     def __cinit__(self, elementType, nodes, elNumber):
         self.nodes = nodes
@@ -40,45 +40,45 @@ cdef class BftElementWrapper:
             
         self.elNumber = elNumber
         
-        self.bftElement = BftElementFactory.createElement( BftElementFactory.getElementCodeFromName( elementType.upper().encode('utf-8')), self.elNumber)
+        self.marmotElement = MarmotElementFactory.createElement( MarmotElementFactory.getElementCodeFromName( elementType.upper().encode('utf-8')), self.elNumber)
         
-        self.nNodes                         = self.bftElement.getNNodes()
+        self.nNodes                         = self.marmotElement.getNNodes()
         
-        self.nDof                           = self.bftElement.getNDofPerElement()
+        self.nDof                           = self.marmotElement.getNDofPerElement()
         
-        cdef vector[vector[string]] fields  = self.bftElement.getNodeFields()
+        cdef vector[vector[string]] fields  = self.marmotElement.getNodeFields()
         self.fields                         = [ [ s.decode('utf-8')  for s in n  ] for n in fields ]
         
-        cdef vector[int] permutationPattern = self.bftElement.getDofIndicesPermutationPattern()
+        cdef vector[int] permutationPattern = self.marmotElement.getDofIndicesPermutationPattern()
         self.dofIndicesPermutation          = np.asarray(permutationPattern)
         
-        self.ensightType                    = self.bftElement.getElementShape().decode('utf-8')
+        self.ensightType                    = self.marmotElement.getElementShape().decode('utf-8')
         
     def setProperties(self, elementProperties, materialName, materialProperties):
         
         self.elementProperties =    elementProperties
         self.materialProperties =   materialProperties
         
-        self.bftElement.assignProperty( 
+        self.marmotElement.assignProperty( 
                 ElementProperties(
                         &self.elementProperties[0],
                         self.elementProperties.shape[0] ) )
         
-        self.bftElement.assignProperty(
-                BftMaterialSection(
-                        BftMaterialFactory.getMaterialCodeFromName(
+        self.marmotElement.assignProperty(
+                MarmotMaterialSection(
+                        MarmotMaterialFactory.getMaterialCodeFromName(
                                 materialName.upper().encode('UTF-8')), 
                         &self.materialProperties[0],
                         self.materialProperties.shape[0] ) )
         
-        self.nStateVars =           self.bftElement.getNumberOfRequiredStateVars()
+        self.nStateVars =           self.marmotElement.getNumberOfRequiredStateVars()
         
         self.stateVars =            np.zeros(self.nStateVars)
         self.stateVarsTemp =        np.zeros(self.nStateVars)
         
-        self.bftElement.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
+        self.marmotElement.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
         
-        self.bftElement.initializeYourself(&self.nodeCoordinates[0])
+        self.marmotElement.initializeYourself(&self.nodeCoordinates[0])
         
     cpdef void initializeStateVarsTemp(self, ) nogil:
         self.stateVarsTemp[:] = self.stateVars
@@ -88,7 +88,7 @@ cdef class BftElementWrapper:
                             const double[::1] values):
         
         self.initializeStateVarsTemp()
-        self.bftElement.setInitialConditions(mapStateTypes[stateType], &values[0])
+        self.marmotElement.setInitialConditions(mapStateTypes[stateType], &values[0])
         self.acceptLastState()
 
     cpdef void computeYourself(self, 
@@ -104,7 +104,7 @@ cdef class BftElementWrapper:
             
             pNewDT = 1e36
             
-            self.bftElement.computeYourself(&U[0], &dU[0],
+            self.marmotElement.computeYourself(&U[0], &dU[0],
                                                 &Pe[0], 
                                                 &Ke[0],
                                                 &time[0],
@@ -123,7 +123,7 @@ cdef class BftElementWrapper:
                                const double[::1] time,
                                double dTime):
         
-        self.bftElement.computeDistributedLoad(mapLoadTypes[loadType],
+        self.marmotElement.computeDistributedLoad(mapLoadTypes[loadType],
                                     &P[0], 
                                     &K[0], 
                                     faceID,
@@ -140,7 +140,7 @@ cdef class BftElementWrapper:
            const double[::1] time,
            double dTime):
         
-        self.bftElement.computeBodyForce(
+        self.marmotElement.computeBodyForce(
                                     &P[0], 
                                     &K[0], 
                                     &load[0],
@@ -162,9 +162,10 @@ cdef class BftElementWrapper:
             
     cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt, ):
         """ direct access the the stateVars of the element / underlying material"""
-        cdef int resultLength = 0
-        cdef double* ptr = self.bftElement.getPermanentResultPointer(result, gaussPt, resultLength)
-        return <double[:resultLength]> ( ptr )
+        cdef PermanentResultLocation res = self.marmotElement.getPermanentResultPointer(result, gaussPt )
+
+        # TODO: check if we do not 'need' to cast away the constness:
+        return <double[:res.resultLength]> ( res.resultLocation)
     
     def __dealloc__(self):
-        del self.bftElement
+        del self.marmotElement
