@@ -37,6 +37,7 @@ create=perElement, fieldOutput=strain
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
+configuration, overwrite=yes
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF

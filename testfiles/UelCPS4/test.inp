@@ -25,6 +25,7 @@ nY=10
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
+configuration, overwrite=yes
 **create=perElement, fieldOutput=alphaP
 **create=perElement, fieldOutput=alphaD
 **create=perElement, fieldOutput=omega

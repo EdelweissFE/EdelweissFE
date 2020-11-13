@@ -41,6 +41,7 @@ create=perNode,    fieldOutput=micro rotation
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
+configuration, overwrite=yes
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF

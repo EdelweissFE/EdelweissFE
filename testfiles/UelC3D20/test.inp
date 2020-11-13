@@ -18,6 +18,7 @@ fieldOutput=RFRight, f(x)='sum(x[:,1])'
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
+configuration, overwrite=yes
 
 *step, jobName=c3d20nljob, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear

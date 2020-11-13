@@ -23,7 +23,7 @@ elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
 fieldOutput=load, f(x)='sum(x[:,1])'
 
 *output, type=ensight, jobName=myjob, name=notchedBeam
-configuration, overwrite=y
+configuration, overwrite=yes
 create=perNode,    fieldOutput=displacement
 **create=perNode,    fieldOutput=nonlocalDamage
 create=perElement, fieldOutput=stress
