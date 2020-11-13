@@ -129,8 +129,8 @@ class Plotter:
         for exportJob in self.exportJobs:
             self.exportFigure(exportJob.get('fileName'),
                           exportJob.get('figure','1'), 
-                          exportJob.get('width',469.47), 
-                          exportJob.get('scale', 1.0), 
+                          float( exportJob.get('width',469.47) ), 
+                          float( exportJob.get('scale', 1.0) ), 
                           exportJob.get('heightRatio', False), 
                           exportJob.get('png', False))
             

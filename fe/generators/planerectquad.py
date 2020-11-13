@@ -127,6 +127,16 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     for elList in elGrid[1:-1,:]:
         for e in elList:
             modelInfo['elementSets']['{:}_sandwichHorizontal'.format(name)].append(e)
+    
+    modelInfo['elementSets']['{:}_sandwichVertical'.format(name)] = []
+    for elList in elGrid[:,1:-1]:
+        for e in elList:
+            modelInfo['elementSets']['{:}_sandwichVertical'.format(name)].append(e)
+    
+    modelInfo['elementSets']['{:}_core'.format(name)] = []
+    for elList in elGrid[1:-1,1:-1]:
+        for e in elList:
+            modelInfo['elementSets']['{:}_core'.format(name)].append(e)
 
     #surfaces
     modelInfo['surfaces']['{:}_bottom'.format(name)] =  {1: [e for e in elGrid[:,0] ]  }

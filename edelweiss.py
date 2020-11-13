@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument('file', type=str,  nargs='*', ) # multiple input files possible
     parser.add_argument('--quiet', dest='verbose', action='store_false', help='suppress output') 
     parser.add_argument('--noplot', dest='noplot', action='store_true', help='suppress plots') 
-    parser.add_argument('--mplBackend', dest='mplBackend', default=None, type=str, help='suppress plots') 
+    parser.add_argument('--mplBackend', dest='mplBackend', default=None, type=str, help='define a matplotlib backend') 
     parser.add_argument('--keywords', dest='kw', action='store_true', help='print keywords') 
     parser.add_argument('--doc=module', dest='doc', help='print keywords') 
     parser.add_argument('--parameterIdentification', dest='parID', help='run parameter identification',  nargs='*',)
