@@ -19,7 +19,7 @@ directives = {'boundscheck':            False,
               'initializedcheck' :      False} # efficient access of memoryviews
 
 # 1) 
-BFT_USER_LIBRARY =                  expanduser("~/constitutiveModelling/bftUserLibrary")
+MARMOT =                  expanduser("~/constitutiveModelling/marmot/bftUserLibrary")
 EIGEN_INCLUDE=                      expanduser("~/anaconda3/x86_64-conda_cos6-linux-gnu/include/")
 MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 
@@ -27,24 +27,13 @@ MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 Build Extension for the bftElement base element, linked to the bftUserLibrary
 """
 extensions = [Extension("*",
-                sources = ["fe/elements/bftelement/element.pyx"],
-                        include_dirs=[join(BFT_USER_LIBRARY, "include"), numpy.get_include()],
-                         libraries= ['bftUserLibrary'],
-                                 library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
-                         runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
+                sources = ["fe/elements/marmotelement/element.pyx"],
+                        include_dirs=[join(MARMOT, "include"), numpy.get_include()],
+                         libraries= ['Marmot'],
+                                 library_dirs= [join(MARMOT, "build/lib") ] ,
+                         runtime_library_dirs= [join(MARMOT, "build/lib") ] ,
                         language='c++',)
                         ]  
-
-"""
-Build Extension for the UMAT material library, linked to the bftUserLibrary
-"""
-
-extensions += [Extension("*", ["fe/materials/umatlibrary.pyx"],                                    
-                                 include_dirs=[numpy.get_include()] + [join(BFT_USER_LIBRARY, "include")], 
-                                 library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
-                                 runtime_library_dirs= [join(BFT_USER_LIBRARY, "lib") ] ,
-                                 libraries= ['bftUserLibrary'],
-                                 language="c++",)]
 """
 Auxiliary extension modules
 """
@@ -75,7 +64,7 @@ Build The (old) parallel NISTParallel solver with OpenMP
 
 extensions += [Extension("*",
                 sources = ["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
-                        include_dirs=[numpy.get_include()] +  [join(BFT_USER_LIBRARY, "include") ] ,
+                        include_dirs=[numpy.get_include()] +  [join(MARMOT, "include") ] ,
                          language='c++',
                          extra_compile_args=['-fopenmp', '-Wno-maybe-uninitialized', ],
                          extra_link_args=['-fopenmp'],)

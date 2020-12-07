@@ -3,13 +3,13 @@ l=100
 h=10
 nX=15
 nY=5
-elType=uelCPS4
+elType=CPS4
 
 
 *material, name=linearElastic, id=le, statevars=5
 30000.0, 0.15 
 
-*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=le, type=plane
 all
 
 *job, name=cps4job, domain=2d, solver=NIST

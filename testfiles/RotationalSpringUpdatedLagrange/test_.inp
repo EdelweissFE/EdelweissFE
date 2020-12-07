@@ -3,7 +3,7 @@
 *material, name=stvenantkirchhoffisotropic, id=le
 30000.0, 0.15 
 
-*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=le, type=plane
 all
 
 *job, name=c3d8tljob, domain=3d, solver=NISTParallel

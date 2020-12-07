@@ -1,5 +1,5 @@
 *modelGenerator, generator=planeRectQuad, name=gen
-elType=uelCPE4TL
+elType=CPE4TL
 nX=20
 nY=5
 l=100,
@@ -8,7 +8,7 @@ h=5
 *material, name=stvenantkirchhoffisotropic, id=stvenantkirchhoffisotropic, statevars=0
 5000, 0.25 
 
-*section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=plane
 all
 
 *job, name=cpe4job, domain=2d

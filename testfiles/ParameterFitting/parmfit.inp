@@ -13,16 +13,16 @@
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=0.15
 y0=0, h=1.5
-elType=uelCPS4NonLocal
+elType=GCPS4
 nX=1
 nY=10
 
 *elSet, elSet=weak
 5
 
-*section, name=sectionAll, thickness=1.00, material=urmnl, type=planeUelUmat
+*section, name=sectionAll, thickness=1.00, material=urmnl, type=plane
 all
-*section, name=sectionWeak, thickness=0.95, material=urmnl, type=planeUelUmat
+*section, name=sectionWeak, thickness=0.95, material=urmnl, type=plane
 weak
 
 *fieldOutput

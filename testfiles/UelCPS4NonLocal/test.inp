@@ -11,9 +11,9 @@
 *elSet, elSet=weakAll
 weak, weak2
 
-*section, name=section1, thickness=1.0, material=modleon, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=modleon, type=plane
 all
-*section, name=sectionweak, thickness=0.85, material=modleon, type=planeUelUmat
+*section, name=sectionweak, thickness=0.85, material=modleon, type=plane
 weakAll
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel

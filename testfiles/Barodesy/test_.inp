@@ -1,5 +1,5 @@
 *modelGenerator, generator=planeRectQuad, name=gen
-elType=uelCPE4UL
+elType=CPE4UL
 nX=20
 nY=40
 l=0.037
@@ -9,7 +9,7 @@ h=0.1
 ** phiC N lambda* kappa* sigma* (1 when calculating in kpa) numericalCohesion
 24, 0.8, 0.059, 0.018, 1, 0.1
 
-*section, name=section1, thickness=1.0, material=wealdClay, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=wealdClay, type=plane
 all
 
 *job, name=cpe4job, domain=2d, solver=NISTParallel

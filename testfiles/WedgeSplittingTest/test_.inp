@@ -7104,7 +7104,7 @@
    7098,   152.863632,         245.
    7099,   152.909088,         250.
    7100,   152.954544,         255.
-*Element, type=uelCPS4NonLocal
+*Element, type=GCPS4
   1,   1,  30, 369,  83
   2,  30,  31, 370, 369
   3,  31,  32, 371, 370
@@ -14129,7 +14129,7 @@ _Surf-PressureR_S4, 4
 ****** omegaMax, nonlocalRadius nonlocalweight              epsilonF   
 **     0.999999,   2.0,        1.05,     4e-04 
      0.99,   4.0,        1.05,     8e-04 
-*section, name=sectionAll, thickness=100.00, material=urmnl, type=planeUelUmat
+*section, name=sectionAll, thickness=100.00, material=urmnl, type=plane
 Set-Complete
 
 *job, name=cpe4job, domain=2d, solver=NISTPArcLength

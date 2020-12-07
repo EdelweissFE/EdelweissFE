@@ -28,16 +28,16 @@
 *include, input=mesh.inp
 
 
-*section, name=section1, material=GMCDP, type=solidUelUmat
+*section, name=section1, material=GMCDP, type=solid
 all
-*section, name=section2, material=GMCDPWeak, type=solidUelUmat
+*section, name=section2, material=GMCDPWeak, type=solid
 weak 
-*section, name=sectionLE, material=GMCDPLE, type=solidUelUmat
+*section, name=sectionLE, material=GMCDPLE, type=solid
 top
 bottom
 
-** *job, name=cpe4job, domain=3d, solver=NISTParallelForBftElements, linsolver=amgcl
-*job, name=cpe4job, domain=3d, solver=NISTParallelForBftElements,
+** *job, name=cpe4job, domain=3d, solver=NISTParallelForMarmotElements, linsolver=amgcl
+*job, name=cpe4job, domain=3d, solver=NISTParallelForMarmotElements,
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 **elSet=all, field=micro rotation, result=U, name=micro rotation

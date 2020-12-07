@@ -2204,7 +2204,7 @@
    2203,           0.,          10.,           0.
    2204,           0.,           5.,           0.
    2205,           0.,           0.,           0.
-*Element, type=uelC3D8UL
+*Element, type=C3D8UL
    1,  106,  107,  128,  127,    1,    2,   23,   22
    2,  107,  108,  129,  128,    2,    3,   24,   23
    3,  108,  109,  130,  129,    3,    4,   25,   24
@@ -3848,7 +3848,7 @@ _loadsurf_S3, 3
 *material, name=stvenantkirchhoffisotropic, id=stvenantkirchhoffisotropic, statevars=0
 5000, 0.25 
 
-*section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=plane
 all
 
 *job, name=c3d8job, domain=3d

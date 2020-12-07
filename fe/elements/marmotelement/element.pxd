@@ -8,7 +8,7 @@ Created on Thu Apr 27 08:35:06 2017
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cdef extern from "MarmotElement.h" namespace "MarmotElement":
+cdef extern from "Marmot/MarmotElement.h" namespace "MarmotElement":
     cdef enum StateTypes:
         Sigma11,
         Sigma22,
@@ -23,7 +23,7 @@ cdef extern from "MarmotElement.h" namespace "MarmotElement":
         SurfaceTraction
         SurfaceTorsion
         
-cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
+cdef extern from "Marmot/Marmot.h" namespace "MarmotLibrary" nogil:
     enum MaterialCode: pass
     enum ElementCode: pass
 
@@ -37,7 +37,7 @@ cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
         @staticmethod
         MarmotElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
                        
-cdef extern from "MarmotElementProperty.h":
+cdef extern from "Marmot/MarmotElementProperty.h":
     cdef cppclass MarmotElementProperty nogil:
         pass
     
@@ -47,13 +47,13 @@ cdef extern from "MarmotElementProperty.h":
     cdef cppclass ElementProperties(MarmotElementProperty) nogil:
         ElementProperties(const double* elementProperties, int nElementProperties)
 
-cdef extern from "MarmotUtils.h":
+cdef extern from "Marmot/MarmotUtils.h":
     cdef struct PermanentResultLocation:
         const double *resultLocation
         int resultLength
 
 
-cdef extern from "MarmotElement.h":
+cdef extern from "Marmot/MarmotElement.h":
     cdef cppclass MarmotElement nogil:
         
         int getNumberOfRequiredStateVars()
