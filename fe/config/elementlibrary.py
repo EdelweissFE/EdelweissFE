@@ -5,10 +5,9 @@ Created on Tue Jan  17 19:10:42 2017
 
 @author: matthias
 """
-#import importlib
 
-def getElementByName(name):
+def getElementByName(name, provider):
     
-    # if name.lower().startswith('uel'):
-    from fe.elements.marmotelement.element import MarmotElementWrapper
-    return MarmotElementWrapper
+    if provider == "marmot" or not provider: 
+        from fe.elements.marmotelement.element import MarmotElementWrapper
+        return MarmotElementWrapper

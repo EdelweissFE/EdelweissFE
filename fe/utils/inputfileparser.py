@@ -23,6 +23,7 @@ typeMappings = {
     
 inputLanguage = {    '*element':         ("definition of element(s)",
                         {   'type':     ('string', "assign one of the types definied in the elementlibrary"),
+                            'provider': ('string', "provider (library) for the element type. Default: Marmot"),
                             'data':     ('numpy integer array', "Abaqus like element definiton lines"), }),
 
                     '*elSet':           ("definition of an element set",

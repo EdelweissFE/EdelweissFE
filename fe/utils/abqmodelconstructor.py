@@ -36,8 +36,9 @@ class AbqModelConstructor:
         elements = modelInfo['elements']
         
         for elDefs in inputFile['*element']:
-            elementType = elDefs['type']
-            ElementClass = getElementByName(elementType)
+            elementType     = elDefs['type']
+            elementProvider = elDefs['provider']
+            ElementClass = getElementByName(elementType, elementProvider)
     
             for defLine in elDefs['data']:
                 label = defLine[0]
