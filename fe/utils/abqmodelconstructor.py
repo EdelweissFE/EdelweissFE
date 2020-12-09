@@ -37,7 +37,7 @@ class AbqModelConstructor:
         
         for elDefs in inputFile['*element']:
             elementType     = elDefs['type']
-            elementProvider = elDefs['provider']
+            elementProvider = elDefs.get('provider', False)
             ElementClass = getElementByName(elementType, elementProvider)
     
             for defLine in elDefs['data']:
