@@ -1,0 +1,45 @@
+*modelGenerator, generator=planeRectQuad, name=gen
+l=100
+h=200
+nX=10
+nY=10
+elType=CPS4
+
+*material, name=ShotLeon, id=scdp, statevars=125
+**             q1,             q2,             q3,             q4,             nu,             E1,        nKelvin,      kelvinMin,
+       2.1700e+01,     1.4900e+02,     8.7000e+00,     1.4000e+01,     2.1000e-01,     1.8000e+04,    1.2000e+01,      1.0000e-05,
+**   strainShrInf,         TauShr,           kHum,          fcu28,           fcu1,       ratioFcy,       ratioFbu,       ratioFtu,
+      -0.0000e-03,     3.2000e+01,     1.0000e+00,     4.0850e+01,     1.8560e+01,     1.0000e-01,     1.1600e+00,     1.0000e-01,
+**          eCPP1,          eCPP8,         eCPP24,             Df,             Ah,             Ch,             Dh,             As,
+      -3.0000e-03,    -1.5000e-03,    -7.0000e-04,     8.5000e-01,     8.0000e-02,     2.0000e+00,     1.0000e-06,     1.5000e+01,
+**            GFI,   enableDamage,       dTStatic,       castTime,     timeToDays,
+       1.0000e-01,     1.0000e+00,     1.0000e-02,     0.0000e+00,     4.1667e-02,
+
+*section, name=section1, thickness=1.0, material=scdp, type=plane
+all
+
+*job, name=cps4nljob, domain=2d, solver=NISTParallel
+
+*fieldOutput,
+name=Displacement,      elSet=all,           field=displacement, result=U, 
+name=DisplacementN,      nSet=all,           field=displacement, result=U, 
+name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
+name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
+name=E,                 elSet=all,          result=sdv, f(x)='x[0,1]', gaussPt=0, saveHistory=True
+
+*output, type=monitor, jobName=cps4nljob
+name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
+name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
+
+*output, type=ensight, jobName=cps4nljob,
+create=perNode, fieldOutput=Displacement
+configuration, overwrite=yes
+
+*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=10
+dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0
+dirichlet, name=corner,  nSet=gen_leftBottom, field=displacement, 2=0.0, 1=0
+
+*step, jobName=cps4nljob, maxInc=2e-2, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=0.01
+distributedload, name=dload, surface=gen_top, magnitude=3.79, type=pressure, f(t)=t
+
+*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
