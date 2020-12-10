@@ -24,6 +24,7 @@ create=perElement, fieldOutput=stress,
 create=perElement, fieldOutput=alphaP,
 create=perElement, fieldOutput=alphaD,
 create=perElement, fieldOutput=omega,
+configuration, overwrite=yes
 
 *step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear

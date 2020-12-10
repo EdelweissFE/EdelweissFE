@@ -30,6 +30,7 @@ create=perElement, elSet=all, fieldOutput=Strain
 create=perElement, elSet=all, fieldOutput=AlphaP
 create=perElement, elSet=all, fieldOutput=AlphaD
 create=perElement, elSet=all, fieldOutput=Omega
+configuration, overwrite=yes
 
 *output, type=monitor, jobName=cps4job, name=myNodeSetMonitor
 fieldOutput=Displacement_Top, f(x)='mean(x[:,1])'

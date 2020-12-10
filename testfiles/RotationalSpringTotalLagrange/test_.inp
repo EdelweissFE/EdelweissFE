@@ -20,6 +20,7 @@ nset=p_Set-2
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
+configuration, overwrite=yes
 
 *step, jobName=c3d8tljob, maxInc=1e-2, minInc=1e-4, maxNumInc=1000, maxIter=10
 options, category=NISTSolver, extrapolation=linear

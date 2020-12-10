@@ -459,6 +459,7 @@ name=RF, nSet=top, result=P, field=displacement
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
+configuration, overwrite=yes
 
 *output, type=monitor, jobName=c3d8job, name=myNodeSetMonitor
 **fieldOutput=Displacement_Top, f(x)='mean(x[:,1])'

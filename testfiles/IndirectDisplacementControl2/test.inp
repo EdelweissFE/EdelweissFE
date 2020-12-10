@@ -28,6 +28,7 @@ nY=40
 
 *output, type=ensight, jobName=cpe4job, name=esExport
 create=perNode,    fieldOutput=displacement
+configuration, overwrite=yes
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
