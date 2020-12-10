@@ -14166,6 +14166,7 @@ create=perElement, elSet=Set-Complete, fieldOutput=Strain
 create=perElement, elSet=Set-Complete, fieldOutput=AlphaP
 create=perElement, elSet=Set-Complete, fieldOutput=AlphaD
 create=perElement, elSet=Set-Complete, fieldOutput=Omega
+configuration, overwrite=yes
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-7, maxNumInc=10000
 options, category=NISTSolver, numThreads=15, extrapolation=linear

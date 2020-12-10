@@ -1,0 +1,48 @@
+*material, name=GMDruckerPrager, id=le, 
+**E,     nu,    GcToG,  lb,   lt,       polarRatio,     sigmaYield,     h,      phi(deg), psi(deg) 
+100, 0.25,   .5,    4,   8,     1.4999999,          0.06,         0,           25,      0.0, 
+**a1,   a2,     a3,     a4,   lJ2,      softeningModulus,   weightingParemeter,     maxDamage,  nonLocalRadius
+0.5,   0.0,   0.5,     0.0,   10.0,        1e-0,               1.0,                    0.90,       8.0
+
+
+*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+all
+
+*job, name=gmdruckerpragerjob, domain=2d, solver=NISTParallelForBftElements
+*fieldOutput
+name=displacement, elSet=all, field=displacement, result=U, 
+name=nonlocal damage, elSet=all, field=nonlocal damage, result=U, 
+name=umag, elSet=all, field=displacement, result=U, f(x)=' linalg.norm ( x, axis=1 )'
+name=RF, nSet=gen_top, field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True, export=RF
+name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True, export=U
+name=alphaP, elSet=all, result=alphaP, gaussPt=0:4, f(x)='max ( x[:,:], axis=1)'
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, h=200
+y0=0, l=100
+elType=uelGMCPE8RUL
+nX=10
+nY=20
+
+*output, type=monitor, jobName=gmdruckerpragerjob, name=omegaMon
+fieldOutput=RF
+
+*output, type=ensight, jobName=gmdruckerpragerjob, name=esExport
+configuration, overwrite=True
+create=perNode, fieldOutput=displacement, 
+create=perNode, fieldOutput=nonlocal damage,
+create=perElement, fieldOutput=alphaP
+
+*output, type=meshplot, jobName=gmdruckerpragerjob, name=RFPlot
+figure=1, axSpec=121, c=k, ls=solid, create=xyData, x=time, y=RF
+figure=1, axSpec=122, create=perNode, fieldOutput=umag
+
+*exportPlots,
+figure=1, fileName=plot
+
+*step, jobName=gmdruckerpragerjob, maxInc=5e-2, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=100
+initializematerial, name=init, elSet=all 
+dirichlet, name=rbottom, nSet=gen_bottom,  field=micro rotation, 1=0, 
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0,
+dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-10, 

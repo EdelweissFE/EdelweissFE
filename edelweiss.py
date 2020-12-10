@@ -8,6 +8,7 @@ Created on Tue Jan  17 19:10:42 2017
 
 import argparse  
 import matplotlib
+import numpy as np 
 from fe.fecore import finitElementSimulation
 from fe.parameteridentification.paramIdentification import parameterIdentification
 from fe.utils.inputfileparser import parseInputFile,printKeywords
@@ -20,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('--quiet', dest='verbose', action='store_false', help='suppress output') 
     parser.add_argument('--noplot', dest='noplot', action='store_true', help='suppress plots') 
     parser.add_argument('--mplBackend', dest='mplBackend', default=None, type=str, help='define a matplotlib backend') 
+    parser.add_argument('--output', dest='output', default=None, type=str, help='write the final solution to a file') 
     parser.add_argument('--keywords', dest='kw', action='store_true', help='print keywords') 
     parser.add_argument('--doc=module', dest='doc', help='print keywords') 
     parser.add_argument('--parameterIdentification', dest='parID', help='run parameter identification',  nargs='*',)
@@ -57,4 +59,6 @@ if __name__ == "__main__":
 #    #2 ) all computations and imports
     else:
         for inputFile in inputFiles:
-            finitElementSimulation(inputFile, verbose = args.verbose, suppressPlots=args.noplot)
+            success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = args.verbose, suppressPlots=args.noplot)
+            if args.output:
+                np.savetxt(args.output, U)

@@ -66,6 +66,8 @@ elSet=all,    field=displacement, result=U, name=displacement
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
+configuration, overwrite=yes
+
 
 ** ----------------
 ** pre-consolidation

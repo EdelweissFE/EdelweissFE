@@ -29,6 +29,7 @@ nY=80
 *output, type=ensight, jobName=cpe4job, name=esExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=micro rotation
+configuration, overwrite=yes
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF

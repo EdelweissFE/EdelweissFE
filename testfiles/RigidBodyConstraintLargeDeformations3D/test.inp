@@ -1040,6 +1040,7 @@ referencePoint=rBottom
 *output, type=ensight, jobName=cps4job, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
+configuration, overwrite=yes
 
 *step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=10
 options, category=NISTSolver, extrapolation=linear
