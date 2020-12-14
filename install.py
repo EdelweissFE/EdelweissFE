@@ -19,7 +19,7 @@ directives = {'boundscheck':            False,
               'initializedcheck' :      False} # efficient access of memoryviews
 
 # 1) 
-MARMOT =                  expanduser("~/constitutiveModelling/marmot/bftUserLibrary")
+MARMOT =                  expanduser("~/constitutiveModelling/Marmot")
 EIGEN_INCLUDE=                      expanduser("~/anaconda3/x86_64-conda_cos6-linux-gnu/include/")
 MKL_INCLUDE =                       expanduser("~/anaconda3/include")
 
