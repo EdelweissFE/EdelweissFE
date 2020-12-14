@@ -3,7 +3,7 @@ l=100
 h=200
 nX=10
 nY=10
-elType=uelCPS4
+elType=CPS4
 
 *material, name=ShotLeon, id=scdp, statevars=125
 **             q1,             q2,             q3,             q4,             nu,             E1,        nKelvin,      kelvinMin,
@@ -15,7 +15,7 @@ elType=uelCPS4
 **            GFI,   enableDamage,       dTStatic,       castTime,     timeToDays,
        1.0000e-01,     1.0000e+00,     1.0000e-02,     0.0000e+00,     4.1667e-02,
 
-*section, name=section1, thickness=1.0, material=scdp, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=scdp, type=plane
 all
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel

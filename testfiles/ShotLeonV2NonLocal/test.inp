@@ -1,11 +1,9 @@
-** Simulation of creep test (24h) by Neuner et al. 2017 -- nonlocal version for shotleon v2
-
 *modelGenerator, generator=planeRectQuad, name=gen
 l=100
 h=200
 nX=10
 nY=10
-elType=uelCPS4NonLocal
+elType=GCPS4
 
 *material, name=ShotLeonV2NonLocal, id=scdp, statevars=125
 **E28,          E1,         flowMag,        flowExponent,       flowDelay,      nu,         tTransition,        tDelay,
@@ -17,7 +15,7 @@ elType=uelCPS4NonLocal
 **enableDamage, dTStatic,   castTime,       timeToDays,         enableNonlinearCreep,
 1,              1e-3,       0.0,            0.041666,         1.0
 
-*section, name=section1, thickness=1.0, material=scdp, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=scdp, type=plane
 all
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel
@@ -38,15 +36,7 @@ name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) /
 *output, type=ensight, jobName=cps4nljob,
 create=perNode, fieldOutput=Displacement
 **create=perNode, fieldOutput=Nonlocal Damage
-
-***output, type=meshPlot, jobName=cps4nljob
-**figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', label=Neuner et al. (24h), 
-**figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', label=U
-**figure=2, axSpec=111, create=xyData,  y=E, x=time,  label=E, 
-
-**configurePlots
-**figure=1, axSpec=121, flipY=True, yLabel=$\\varepsilon\\thinspace$(-), xLabel=$t\\thinspace$(h)
-**figure=1, axSpec=122, aspect=equal
+configuration, overwrite=yes
 
 *step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
 dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0

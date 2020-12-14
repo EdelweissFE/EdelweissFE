@@ -36,8 +36,9 @@ class AbqModelConstructor:
         elements = modelInfo['elements']
         
         for elDefs in inputFile['*element']:
-            elementType = elDefs['type']
-            ElementClass = getElementByName(elementType)
+            elementType     = elDefs['type']
+            elementProvider = elDefs.get('provider', False)
+            ElementClass = getElementByName(elementType, elementProvider)
     
             for defLine in elDefs['data']:
                 label = defLine[0]
@@ -151,18 +152,18 @@ class AbqModelConstructor:
         elementSets = modelInfo['elementSets']
     
         for secDef in inputFile['*section']:
-            if secDef['type'] == "planeUelUmat" or secDef['type'] == "solidUelUmat":
+            if secDef['type'] == "plane" or secDef['type'] == "solid":
                 material = [mat for mat in inputFile['*material'] if mat['id'] == secDef['material']][0]
-                if secDef['type'] == "planeUelUmat":
-                    uelProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
+                if secDef['type'] == "plane":
+                    elProperties = np.asarray( [ secDef['thickness'] ], dtype=float)
                 else:
-                    uelProperties = np.array([], dtype=float)
+                    elProperties = np.array([], dtype=float)
                     
                 umatProperties = np.hstack(material['data'])
                 for line in secDef['data']: 
                    for elSet in line: 
                        for el in elementSets[elSet]:
-                           el.setProperties(uelProperties, 
+                           el.setProperties(elProperties, 
                                             material['name'], 
                                             umatProperties)
             else:

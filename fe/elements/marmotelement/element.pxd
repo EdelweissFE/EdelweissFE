@@ -8,55 +8,61 @@ Created on Thu Apr 27 08:35:06 2017
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cdef extern from "bftElement.h" namespace "BftElement":
+cdef extern from "Marmot/MarmotElement.h" namespace "MarmotElement":
     cdef enum StateTypes:
         Sigma11,
         Sigma22,
         Sigma33,
         HydrostaticStress,
         GeostaticStress,
-        BftMaterialStateVars,
-        BftMaterialInitialization
+        MarmotMaterialStateVars,
+        MarmotMaterialInitialization
         
     cdef enum DistributedLoadTypes:
         Pressure
         SurfaceTraction
         SurfaceTorsion
         
-cdef extern from "userLibrary.h" namespace "userLibrary" nogil:
+cdef extern from "Marmot/Marmot.h" namespace "MarmotLibrary" nogil:
     enum MaterialCode: pass
     enum ElementCode: pass
 
-    cdef cppclass BftMaterialFactory:
+    cdef cppclass MarmotMaterialFactory:
         @staticmethod
         MaterialCode getMaterialCodeFromName(const string& materialName) except +IndexError
     
-    cdef cppclass BftElementFactory:
+    cdef cppclass MarmotElementFactory:
         @staticmethod
         ElementCode  getElementCodeFromName(const string& elementName) except +IndexError
         @staticmethod
-        BftElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
+        MarmotElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
                        
-cdef extern from "bftElementProperty.h":
-    cdef cppclass BftElementProperty nogil:
+cdef extern from "Marmot/MarmotElementProperty.h":
+    cdef cppclass MarmotElementProperty nogil:
         pass
     
-    cdef cppclass BftMaterialSection(BftElementProperty) nogil:
-        BftMaterialSection(int materialCode, const double* materialProperties, int nMaterialProperties)
+    cdef cppclass MarmotMaterialSection(MarmotElementProperty) nogil:
+        MarmotMaterialSection(int materialCode, const double* materialProperties, int nMaterialProperties)
         
-    cdef cppclass ElementProperties(BftElementProperty) nogil:
+    cdef cppclass ElementProperties(MarmotElementProperty) nogil:
         ElementProperties(const double* elementProperties, int nElementProperties)
 
-cdef extern from "bftElement.h":
-    cdef cppclass BftElement nogil:
+cdef extern from "Marmot/MarmotUtils.h":
+    cdef struct PermanentResultLocation:
+        const double *resultLocation
+        int resultLength
+
+
+cdef extern from "Marmot/MarmotElement.h":
+    cdef cppclass MarmotElement nogil:
         
         int getNumberOfRequiredStateVars()
 
         void assignStateVars(double *stateVars, int nStateVars)
         
-        void assignProperty( const BftElementProperty& property ) 
+        void assignProperty( const MarmotElementProperty& property ) 
 
-        void assignProperty( const BftMaterialSection& property ) except +ValueError
+        void assignProperty( const MarmotMaterialSection& property ) except +ValueError
 
         void initializeYourself(const double* elementCoordinates)
 
@@ -89,7 +95,7 @@ cdef extern from "bftElement.h":
                         const double* time,
                         double dT)
         
-        double* getPermanentResultPointer(const string& resultName, int gaussPt, int& resultLength)
+        PermanentResultLocation getPermanentResultPointer(const string& resultName, int gaussPt)
         
         vector[vector[string]] getNodeFields()
 
@@ -101,9 +107,9 @@ cdef extern from "bftElement.h":
     
         int getNDofPerElement()
         
-cdef class BftElementWrapper:
+cdef class MarmotElementWrapper:
     
-    cdef BftElement* bftElement
+    cdef MarmotElement* marmotElement
     cdef public nodes, 
     cdef public int elNumber, 
     cdef public int nNodes, nDof

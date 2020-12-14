@@ -5,10 +5,10 @@
 0.5,   0.0,   0.5,     0.0,   10.0,        1e-0,               1.0,                    0.90,       8.0
 
 
-*section, name=section1, thickness=1.0, material=le, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=gmdruckerpragerjob, domain=2d, solver=NISTParallelForBftElements
+*job, name=gmdruckerpragerjob, domain=2d, solver=NISTParallelForMarmotElements
 *fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, 
 name=nonlocal damage, elSet=all, field=nonlocal damage, result=U, 
@@ -20,7 +20,7 @@ name=alphaP, elSet=all, result=alphaP, gaussPt=0:4, f(x)='max ( x[:,:], axis=1)'
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, h=200
 y0=0, l=100
-elType=uelGMCPE8RUL
+elType=GMCPE8RUL
 nX=10
 nY=20
 

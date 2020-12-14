@@ -22,7 +22,7 @@
 2,3,6,7
 
 
-*element, Type=uelC3D8
+*element, Type=C3D8
 1, 0,1,2,3,4,5,6,7
 
 *elSet, elSet=all
@@ -42,7 +42,7 @@ all, 5
 **** G kappa lambda M
 100000, 0.01, 0.08, 1.01
 
-*section, name=section1, material=MCC, type=solidUelUmat
+*section, name=section1, material=MCC, type=solid
 all
 
 *job, name=myJob, domain=3d, solver=NISTParallel

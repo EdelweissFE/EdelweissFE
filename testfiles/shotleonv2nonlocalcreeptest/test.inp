@@ -5,7 +5,7 @@ l=100
 h=200
 nX=10
 nY=10
-elType=uelCPS4NonLocal
+elType=GCPS4
 
 *material, name=ShotLeonV2NonLocal, id=scdp, statevars=125
 **E28,          E1,         flowMag,        flowExponent,       flowDelay,      nu,         tTransition,        tDelay,
@@ -17,7 +17,7 @@ elType=uelCPS4NonLocal
 **enableDamage, dTStatic,   castTime,       timeToDays,         enableNonlinearCreep,
 1,              1e-3,       0.0,            0.041666,         1.0
 
-*section, name=section1, thickness=1.0, material=scdp, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=scdp, type=plane
 all
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel

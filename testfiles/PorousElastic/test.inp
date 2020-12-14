@@ -21,14 +21,14 @@
 *nSet, nSet=back
 2,3,6,7
 
-*element, Type=uelC3D8
+*element, Type=C3D8
 1, 0,1,2,3,4,5,6,7
 
 *material, name=PorousElastic, id=PE, statevars=2
 ** G kappa
 3.3, 0.015
 
-*section, name=section1, material=PE, type=solidUelUmat
+*section, name=section1, material=PE, type=solid
 all
 
 *job, name=myJob, domain=3d, solver=NISTParallel

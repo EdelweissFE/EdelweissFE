@@ -4,14 +4,14 @@
 *material, name=GMNeoHooke, id=le, 
 3000.0, 0.15, 0.1, 10, 20, 1.499999999
 
-*section, name=section1, material=le, type=solidUelUmat
+*section, name=section1, material=le, type=solid
 all
 
 *constraint, type=rigidbody, name=rb1
 nSet=front
 referencePoint=center_front
 
-*job, name=c3d8job, domain=3d, solver=NISTParallelForBftElements
+*job, name=c3d8job, domain=3d, solver=NISTParallelForMarmotElements
 *fieldOutput,
 name=displacement, elSet=all, field=displacement, result=U, 
 name=reaction force, nSet=back, field=displacement, result=P, f(x)=' sum  ( x, axis=0 )'

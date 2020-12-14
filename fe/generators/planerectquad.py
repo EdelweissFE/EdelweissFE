@@ -52,7 +52,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     l = float(options.get('l', 1.0))
     nX =int(options.get('nX', 10))
     nY =int(options.get('nY', 10))
-    elType = getElementByName(options['elType'])
+    elType = getElementByName(options['elType'], options.get('elProvider', None) )
     
     testEl = elType(options['elType'], [], 0, )
     if testEl.nNodes == 4:

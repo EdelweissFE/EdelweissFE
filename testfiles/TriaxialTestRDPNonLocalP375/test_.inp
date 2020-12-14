@@ -25,11 +25,11 @@
   56665,     0.2040,  	33.28,    	11.95,  	0.51,   9.943,   	23.62,    
     0.004467,    1e-05,     8.817,  	 1e-6,    	0,  	40,	2,  			 100,   
     0.,     	 0.99,  2, 1.005, 5e-5
-*section, name=section1, material=urm, type=solidUelUmat
+*section, name=section1, material=urm, type=solid
 all
-*section, name=section-weak, material=urm-weak, type=solidUelUmat
+*section, name=section-weak, material=urm-weak, type=solid
 weak
-***section, name=section-topbottom, material=le, type=solidUelUmat
+***section, name=section-topbottom, material=le, type=solid
 **top
 **bottom
 
