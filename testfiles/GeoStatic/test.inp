@@ -30,6 +30,8 @@ create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=S11
 create=perElement, fieldOutput=S22
 create=perElement, fieldOutput=S33
+configuration, overwrite=yes
+
 
 *step, jobName=cpe4job, maxInc=0.5
 dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, 

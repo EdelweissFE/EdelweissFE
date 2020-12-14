@@ -494,6 +494,7 @@ elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, jobName=c3d8job, name=esExport
 create=perNode, fieldOutput=displacement 
+configuration, overwrite=yes
 
 *step, jobName=c3d8job, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, numThreads=2

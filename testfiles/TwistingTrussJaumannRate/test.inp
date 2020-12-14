@@ -1040,6 +1040,7 @@ referencePoint=rBottom
 *output, type=ensight, jobName=c3d8job, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
+configuration, overwrite=yes
 
 *step, jobName=c3d8job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=20
 options, category=NISTSolver, extrapolation=linear

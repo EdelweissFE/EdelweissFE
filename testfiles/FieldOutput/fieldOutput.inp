@@ -33,6 +33,8 @@ figure=1, axSpec=212, c=red, ls=dashed, create=xyData, x=time, y=RF_bottom, f(y)
 create=perNode,    fieldOutput=displacement, 
 create=perElement, fieldOutput=stress,
 create=perElement, fieldOutput=alphaP,
+configuration, overwrite=yes
+
 
 *output, type=monitor, jobName=cps4job, name=myNodeMonitor
 fieldOutput=RF_bottom, f(x)='sum ( x[:,1] )'

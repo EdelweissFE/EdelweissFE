@@ -1421,6 +1421,7 @@ elSet=all, field=nonlocal damage, result=U, name=nonlocal
 *output, type=ensight, jobName=c3d8nljob, name=esExport
 create=perNode, fieldOutput=displacement
 create=perNode, fieldOutput=nonlocal
+configuration, overwrite=yes
 
 *step, jobName=c3d8nljob, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=2

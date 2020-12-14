@@ -37,6 +37,7 @@ name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) /
 
 *output, type=ensight, jobName=cps4nljob,
 create=perNode, fieldOutput=Displacement
+configuration, overwrite=yes
 **create=perNode, fieldOutput=Nonlocal Damage
 
 *output, type=meshPlot, jobName=cps4nljob

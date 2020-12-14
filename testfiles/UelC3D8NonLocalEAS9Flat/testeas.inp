@@ -47,6 +47,7 @@ create=perElement, fieldOutput=eas5
 create=perElement, fieldOutput=eas6
 create=perElement, fieldOutput=eas7
 create=perElement, fieldOutput=eas8
+configuration, overwrite=yes
 
 *output, type=meshplot, jobName=easjob, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF

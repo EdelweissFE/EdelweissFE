@@ -367,7 +367,7 @@ class OutputManager(OutputManagerBase):
         
         for defLine in definitionLines:
             definition = stringDict(defLine) 
-            if 'configuration' in definition and strtobool(definition.get('overwrite','False')):
+            if 'configuration' in definition and strtobool(definition.get('overwrite','True')):
                 exportName = '{:}'.format(name); break
         
         self.elSetToEnsightPartMappings = {}

@@ -54,6 +54,8 @@ elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,2], axis=1) '
 create=xyData, x=time, y=RF, legend=RF
 *output, type=ensight, jobName=cpe4job, name=ensightExport
 create=perNode,    fieldOutput=displacement
+configuration, overwrite=yes
+
 **create=perNode,    fieldOutput=micro rotation
 create=perNode,    fieldOutput=nonlocal damage
 create=perElement, fieldOutput=alphaP

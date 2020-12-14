@@ -873,6 +873,7 @@ elSet=all, result=stress, name=stress, gaussPt=0:8, f(x)=' max (x, axis=1) '
 *output, type=ensight, jobName=c3d8job, name=esExport
 create=perNode, fieldOutput=displacement 
 create=perElement, fieldOutput=stress
+configuration, overwrite=yes
 
 *output, type=meshPlot, jobName=c3d8job, 
 figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=time, y=RF
