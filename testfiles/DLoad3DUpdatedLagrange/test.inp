@@ -3851,7 +3851,7 @@ _loadsurf_S3, 3
 *section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=plane
 all
 
-*job, name=c3d8job, domain=3d
+*job, name=c3d8job, domain=3d, solver=NIST
 
 *fieldOutput,
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
@@ -3864,7 +3864,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*step, jobName=c3d8job, maxInc=2e-2, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
+*step, jobName=c3d8job, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=clamp,  nSet=Set-1,   field=displacement, 1=0.0, 2=0.0, 3=0.
-distributedload, name=dload, surface=loadsurf, type=pressure, magnitude=90, f(t)=t
+distributedload, name=dload, surface=loadsurf, type=pressure, magnitude=10, f(t)=t

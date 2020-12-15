@@ -9,9 +9,9 @@ all
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
 elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
-**elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
-**elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
-**elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
+elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
 
 
 *modelGenerator, generator=planeRectQuad, name=gen
@@ -22,13 +22,13 @@ nX=10
 nY=10
 
 *output, type=ensight, jobName=cpe4job, name=esExport
+configuration, overwrite=yes
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
-configuration, overwrite=yes
-**create=perElement, fieldOutput=alphaP
-**create=perElement, fieldOutput=alphaD
-**create=perElement, fieldOutput=omega
+create=perElement, fieldOutput=alphaP
+create=perElement, fieldOutput=alphaD
+create=perElement, fieldOutput=omega
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=2

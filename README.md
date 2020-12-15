@@ -8,6 +8,7 @@ EdelweissFE requires
 - Scipy*
 - Cython 0.28+*
 - Matplotlib*
+- Rich
 - OpenMP*
 - Intel MKL for the PARDISO*  (binaries and header files; if you use Anaconda, install packages `mkl` and `mkl-include`)
 - bftUserLibrary (https://git.uibk.ac.at/afbDevelopers/bftUserLibrary)

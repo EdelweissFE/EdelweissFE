@@ -1,12 +1,12 @@
 *material, name=MCDP, id=MCDP
 **E,        nu,     GcToG,  l,          polarRatio,     
-30000.0,    0.15 ,  1.,     2,          1.499999
+30000.0,    0.15 ,  1.,     4,          1.499999
 **fcu,      fcy,    ftu,    fbu,        Df,             GfI,        omegaMax,     
-47.4,       13,     4.74,   55,         0.85,           0.005,       .99
+47.4,       13,     4.74,   55,         0.85,           0.005,       .0
 **Ah,       Bh,     Ch,     Dh,         As,     
 0.12,       0.003,  2.0,    0.000001,   15.0,
 **a1,       a2,     a3,     a4,       lJ2
-0.25,        0.25,   0.25,     .25,   2.0
+0.50,       0.00,   0.50,  .00,   4.0
 
 
 *section, name=section1, thickness=1.0, material=MCDP, type=plane
@@ -29,8 +29,8 @@ name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHis
 x0=0, h=200
 y0=0, l=50
 elType=CCPE8R
-nX=20
-nY=80
+nX=5
+nY=20
 
 *output, type=monitor, jobName=cpe4job, name=omegaMon
 fieldOutput=omega, f(x)='max(x)'
@@ -46,8 +46,8 @@ configuration, overwrite=yes
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
-*step, jobName=cpe4job, maxInc=5e-2, minInc=5e-5, maxNumInc=10000, maxIter=25, stepLength=100
+*step, jobName=cpe4job, maxInc=1e-1, minInc=5e-5, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-5,
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-2,

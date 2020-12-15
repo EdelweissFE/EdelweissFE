@@ -8,10 +8,16 @@ Created on Wed Jun 14 21:40:55 2017
 
 import os
 
+import matplotlib
+matplotlib.use('Agg')
+
 from fe.fecore import finitElementSimulation
 from fe.utils.inputfileparser import parseInputFile
 import numpy as np
 import argparse  
+from timeit import default_timer as timer
+from rich import print
+import rich
 
 
 if __name__ == "__main__":    
@@ -21,6 +27,7 @@ if __name__ == "__main__":
 
     testfile =  'test.inp' 
     referenceSolutionFile = 'U.ref'
+
     
     testfilesDir = os.path.join ( os.getcwd() , 'testfiles' )
     os.chdir(testfilesDir)
@@ -34,11 +41,13 @@ if __name__ == "__main__":
             continue
 
         inputFile = parseInputFile(testfile)
-        print('Test {:30}'.format(directory ), end='\r')
+        print('Test {:50}'.format(directory ), end='\r')
         
         try:
-        
+       
+            tic = timer()
             success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False, suppressPlots=True)
+            toc = timer()
             
             if not args.create:
                 if success:
@@ -46,17 +55,17 @@ if __name__ == "__main__":
                     residual = U - UReference
                     
                     if ( np.max ( np.abs ( residual ) ) ) < 1e-6:
-                        print('Test {:30} PASSED'.format(directory))
+                        print("Test {:50} [green]PASSED[/] \[{:2.1f}]".format(directory, toc-tic) )
                     else:
-                        print('Test {:30} FAILED'.format(directory))
+                        print('Test {:50} [red]FAILED[/]'.format(directory))
                     os.chdir('..')
                 else:
-                    print('Test {:30} FAILED: '.format(directory) + "Test not completed!")
+                    print('Test {:50} [red]FAILED[/]: '.format(directory) + "Test not completed!")
                 
             else:
                 print('')
                 np.savetxt(referenceSolutionFile, U)
 
         except Exception as e:
-            print("Test {:30} FAILED: ".format(directory) + str(e) )
+            print("Test {:50} [red]FAILED[/]: ".format(directory) + str(e) )
             continue

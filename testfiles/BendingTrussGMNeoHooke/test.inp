@@ -1,6 +1,6 @@
-*include, input=mesh_quad.inp
+** *include, input=mesh_quad.inp
 ** *include, input=mesh_quad_fine.inp
-** *include, input=mesh_lin.inp
+*include, input=mesh_lin.inp
 *material, name=GMNeoHooke, id=le, 
 3000.0, 0.15, 0.1, 10, 20, 1.499999999
 
@@ -23,7 +23,7 @@ create=perNode, fieldOutput=displacement,
 *output, type=monitor, jobName=c3d8job, name=omegaMon
 fieldOutput=reaction force
 
-*step, jobName=c3d8job, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=20
+*step, jobName=c3d8job, maxInc=2e-1, minInc=1e-6, maxNumInc=1000, maxIter=20
 initializematerial, name=init, elSet=all 
 dirichlet, name=rt,   nSet=back,         field=micro rotation, 1=0.0, 2=0, 3=0
 dirichlet, name=back,   nSet=back,         field=displacement, 1=0.0, 2=0, 3=0

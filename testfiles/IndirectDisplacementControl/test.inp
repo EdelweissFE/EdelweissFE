@@ -45,8 +45,8 @@ create=xyData, x=time, y=UTop, legend=U, figure=2
 
 *step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, numThreads=2
-options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition = ' fieldOutputs["UTop"] < -2.0 '
-indirectcontrol, dof1=' nodes[18].fields["displacement"][1] ', dof2=' nodes[24].fields["displacement"][1] ' , L=-0.5, 
+options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition = ' fieldOutputs["UTop"] < -1.0 '
+indirectcontrol, dof1=' nodes[18].fields["displacement"][1] ', dof2=' nodes[24].fields["displacement"][1] ' , L=-0.1, 
 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
