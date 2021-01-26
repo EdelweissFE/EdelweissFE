@@ -3,13 +3,13 @@ l=30
 h=30
 nX=3
 nY=3
-elType=uelCPE4
+elType=CPE4
 
 *material, name=HoekBrown, id=RockMat
 ** E |  nu  |  fcu  |  m0  |   e   |  GSI  |   D   | psiDeg | viscosity
 30000, 0.21,  36.0,   10.0,  0.51,    40.0,   0.0,    3.26,    0.0001
 
-*section, name=section1, thickness=1.0, material=RockMat, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=RockMat, type=plane
 all
 
 *job, name=cpe4job, domain=2d, solver=NIST
@@ -22,11 +22,11 @@ elSet=all,  field=displacement, result=U, name=displacement
 elSet=all,  result=stress,  gaussPt=0:3, f(x)='np.mean(x,axis=1)', name=stress
 elSet=all,  result=strain,  gaussPt=0:3, f(x)='np.mean(x,axis=1)', name=strain
 
-*output, type=monitor, jobName=cpe4job
-fieldOutput=dispTop
-fieldOutput=dispRight
-fieldOutput=RFBottom
-fieldOutput=RFLeft
+***output, type=monitor, jobName=cpe4job
+**fieldOutput=dispTop
+**fieldOutput=dispRight
+**fieldOutput=RFBottom
+**fieldOutput=RFLeft
 
 *output, type=ensight, jobName=cpe4job, name=ensightExport
 create=perNode, fieldOutput=displacement
