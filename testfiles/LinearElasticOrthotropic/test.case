@@ -1,0 +1,19 @@
+FORMAT
+type: ensight gold
+TIME
+time set: 1 noDesc
+number of steps: 3
+filename start number: 0
+filename increment: 1
+time values: 0.00000000e+00
+1.00000000e+00
+2.00000000e+00
+FILE
+file set: 1 
+number of steps: 3 
+GEOMETRY
+model: test/geometry.geo 
+VARIABLE
+vector per node: 1 1 displacement test/displacement.var
+tensor per element: 1 1 stress test/stress.var
+tensor per element: 1 1 strain test/strain.var
