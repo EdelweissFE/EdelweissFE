@@ -1,0 +1,14 @@
+*.vtu
+*.pvtu
+*.case
+*.swp
+*.vtk
+*.html
+*.cpp
+*.cpython-38-x86_64-linux-gnu.so
+CMakeCache.txt
+Makefile
+CMakeFiles
+__pycache__
+esExport
+ensightExport
