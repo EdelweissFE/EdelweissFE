@@ -19,24 +19,29 @@ from timeit import default_timer as timer
 from rich import print
 import rich
 
-
 if __name__ == "__main__":    
     parser = argparse.ArgumentParser(description='validation script for FE analyses')
-    parser.add_argument('--create', dest='create', action='store_true', help='create refernce solutions') 
+    parser.add_argument('--create', dest='create', action='store_true', help='create refernece solutions') 
+    parser.add_argument('--tests', help='comma-separated list (without whitespace inbetween) with names of analyzed test files, ' 
+                                         'e.g. MeshPlot,NodeForces, or simply type all. The names are case-sensitive.', type=str, default='all')
     args=parser.parse_args()
 
     testfile =  'test.inp' 
     referenceSolutionFile = 'U.ref'
+    tests = [item for item in args.tests.split(',')]
 
-    
     testfilesDir = os.path.join ( os.getcwd() , 'testfiles' )
     os.chdir(testfilesDir)
     testsDirs = next(os.walk('.'))[1]
     
+    if "all" not in tests:
+        testsDirs = list(set(testsDirs).intersection(set(tests)))       
+
     for directory in testsDirs:
         
         os.chdir( os.path.join ( testfilesDir, directory ))
         
+        # no test.inp file is found
         if not os.path.exists(testfile):
             continue
 
@@ -44,7 +49,6 @@ if __name__ == "__main__":
         print('Test {:50}'.format(directory ), end='\r')
         
         try:
-       
             tic = timer()
             success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False, suppressPlots=True)
             toc = timer()

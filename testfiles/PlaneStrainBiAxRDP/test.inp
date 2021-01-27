@@ -3,16 +3,16 @@ l=30
 h=30
 nX=3
 nY=3
-elType=uelCPE4
+elType=CPE4
 
 *material, name=RockDamagePlasticity, id=RockMat
 **E | nu |
 8e3, 0.25,
 **RDP
 **fcu | m0 |  e  |  mg1  |  fcy |  GFI |   Ah  |  Bh   |  Ch  |   Dh  | Gh  | As | Bs | GSI  | D | omegaMax
-41.22,  1.767, 0.51,  1,   22.5,  0.5, 2e-2, 2.2e-2,   8.8,   1e-6,   0,   10,  2,   100,    0,    1.0,
+41.22,  1.767, 0.51,  1,   22.5,  0.5, 2e-2, 2.2e-2,   8.8,   1e-6,   0,   10,  2,   80,    0,    1.0,
 
-*section, name=section1, thickness=1.0, material=RockMat, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=RockMat, type=plane
 all
 
 *job, name=cpe4job, domain=2d, solver=NIST

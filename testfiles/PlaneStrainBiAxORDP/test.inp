@@ -3,7 +3,7 @@ l=30
 h=30
 nX=3
 nY=3
-elType=uelCPE4
+elType=CPE4
 
 *material, name=ORDP, id=RockMat
 **Orthotropic Elastic
@@ -19,7 +19,7 @@ elType=uelCPE4
 **c1 | c2 | c3 
 0.5453, -0.4015, 0.479
 
-*section, name=section1, thickness=1.0, material=RockMat, type=planeUelUmat
+*section, name=section1, thickness=1.0, material=RockMat, type=plane
 all
 
 *job, name=cpe4job, domain=2d, solver=NIST

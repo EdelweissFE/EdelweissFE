@@ -1,0 +1,82 @@
+*material, name=LinearElastic, id=myMaterial
+**Transverse Isotropic (plane of isotropy 2-3 -> E2 == E3 ; nu12 == nu13 ; G12 == G13 ; G23 = E2/(2*(1+nu23)))
+**E1  |   E2  |  nu12 | nu23 |  G12  | nx | ny | nz |
+1.8e4,  0.7e4,   0.22,  0.12,  0.73e4,  1,   0,  0
+
+*section, name=section1, material=myMaterial, type=solid
+all
+
+*job, name=c3d8job, domain=3d, solver=NISTParallel
+
+*node
+0, 0, 0, 0
+1, 0.100, 0, 0
+2, 0.100, 0.100, 0
+3, 0, 0.100, 0
+4, 0, 0, 0.100
+5, 0.100, 0, 0.100
+6, 0.100, 0.100, 0.100
+7, 0, 0.100, 0.100
+
+*nSet, nSet=bottom
+0,1,2,3
+*nSet, nSet=top
+4,5,6,7
+*nSet, nSet=back
+0,3,4,7
+*nSet, nSet=front
+1,2,5,6
+*nSet, nSet=left
+0,1,4,5
+*nSet, nSet=right
+2,3,6,7
+*nSet, nSet=bottomleft
+1
+*nSet, nSet=bottomback
+0
+
+
+*element, Type=C3D8
+1, 0,1,2,3,4,5,6,7
+
+*elSet, elSet=all
+1
+
+*surface, type=element, name=surfaceTop
+**elset, faceID
+all, 2
+*surface, type=element, name=surfaceFront
+**elset, faceID
+all, 3
+*surface, type=element, name=surfaceRight
+**elset, faceID
+all, 4
+*surface, type=element, name=surfaceBack
+**elset, faceID
+all, 5
+*surface, type=element, name=surfaceLeft
+all, 6
+
+*fieldOutput,
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, result=strain, name=strain, gaussPt=0:7, f(x)='np.mean(x,axis=1)'
+elSet=all, result=stress, name=stress, gaussPt=0:7, f(x)='np.mean(x,axis=1)'
+**name=sig22, elSet=all, result=stress, gaussPt=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True, export=sig22
+**name=eps22, elSet=all, result=strain, gaussPt=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True, export=eps22
+
+*output, type=ensight, jobName=c3d8job, name=test
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+configuration, overwrite=yes
+
+***output, type=meshPlot, jobName=c3d8job
+**figure=1, axSpec=111, c=red, create=xyData, x=eps22, y=sig22
+
+*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+dirichlet, name=1, nSet=left, field=displacement, 2=0
+dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0
+dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
+
+*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
+dirichlet, name=right, nSet=right, field=displacement, 2=-0.01
