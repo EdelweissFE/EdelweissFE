@@ -16,8 +16,8 @@ import argparse
 if __name__ == "__main__":    
     parser = argparse.ArgumentParser(description='validation script for FE analyses')
     parser.add_argument('--create', dest='create', action='store_true', help='create refernece solutions') 
-    parser.add_argument('--tests', help='comma-seperated list (without whitespace inbetween) with names of analyzed test files,' 
-                                         'e.g. MeshPlot,NodeForces, or simply type all', type=str, default='all')
+    parser.add_argument('--tests', help='comma-separated list (without whitespace inbetween) with names of analyzed test files, ' 
+                                         'e.g. MeshPlot,NodeForces, or simply type all. The names are case-sensitive.', type=str, default='all')
     args=parser.parse_args()
 
     testfile =  'test.inp' 
