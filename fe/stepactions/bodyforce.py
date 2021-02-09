@@ -21,7 +21,7 @@ import sympy as sp
 
 class StepAction(StepActionBase):
     """ Simple Body Force """
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
                 
         self.name = name
         self.forceAtStepStart = 0.0

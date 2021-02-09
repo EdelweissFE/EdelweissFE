@@ -24,7 +24,7 @@ import sympy as sp
 class StepAction(StepActionBase):
     """ Dirichlet boundary condition, based on a node set """
     
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
                 
         self.name = name
         

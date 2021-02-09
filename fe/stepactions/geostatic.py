@@ -25,7 +25,7 @@ documentation = {
 class StepAction(StepActionBase):
     """ Initializes elements of set with an Abaqus-like geostatic stress state.
     Is automatically deactivated at the end of the step."""
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.name = name
         
