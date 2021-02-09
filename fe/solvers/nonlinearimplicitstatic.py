@@ -98,7 +98,7 @@ class NIST:
         
         lastIncrementSize = False
         
-        for sdvini in activeStepActions['sdvinis']: sdvini.apply() 
+        for setfield in activeStepActions['setfields']: setfield.apply()
         for initmaterial in activeStepActions['initializematerial']: initmaterial.apply() 
 
         try:
@@ -504,8 +504,8 @@ class NIST:
         
         activeActions['geostatics'] =           [g for g in stepActions['geostatic'].values() if g.active]
         activeActions['constraints'] =          [c for c in self.constraints.values() ]
-        activeActions['sdvinis'] =              [s for s in stepActions['sdvini'].values() if s.active]
-        activeActions['initializematerial'] =    [s for s in stepActions['initializematerial'].values() if s.active]
+        activeActions['setfields'] =       [s for s in stepActions['setfield'].values() if s.active]
+        activeActions['initializematerial'] =   [s for s in stepActions['initializematerial'].values() if s.active]
         
         return activeActions
     

@@ -22,7 +22,7 @@ from fe.utils.math import evalModelAccessibleExpression
 class StepAction(StepActionBase):
     identification = 'IndirectControl'
     
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
                 
         self.name =     name
         self.journal = journal

@@ -3,7 +3,7 @@
 """
 Created on Mo July 29 10:50:53 2019
 
-@author: magdalena
+@author: matthias
 
 """
 
@@ -12,14 +12,11 @@ import numpy as np
 
 
 documentation = {
-        'sdv' : 'set number of state variable for initialization',
-        'val' : 'set initial value of state variable',
         }
 
 class StepAction(StepActionBase):
-    """ Initializes elements of set with an Abaqus-like geostatic stress state.
-    Is automatically deactivated at the end of the step."""
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    """ Initializes materials """
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.name = name
         
