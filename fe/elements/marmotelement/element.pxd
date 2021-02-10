@@ -48,9 +48,9 @@ cdef extern from "Marmot/MarmotElementProperty.h":
         ElementProperties(const double* elementProperties, int nElementProperties)
 
 cdef extern from "Marmot/MarmotUtils.h":
-    cdef struct PermanentResultLocation:
-        const double *resultLocation
-        int resultLength
+    cdef struct StateView:
+        double *stateLocation
+        int stateSize
 
 
 cdef extern from "Marmot/MarmotElement.h":
@@ -95,7 +95,7 @@ cdef extern from "Marmot/MarmotElement.h":
                         const double* time,
                         double dT)
         
-        PermanentResultLocation getPermanentResultPointer(const string& resultName, int gaussPt)
+        StateView getStateView(const string& stateName, int gaussPt)
         
         vector[vector[string]] getNodeFields()
 
@@ -120,7 +120,7 @@ cdef class MarmotElementWrapper:
     cdef public double[::1] stateVars, nodeCoordinates
     cdef double[::1] elementProperties, stateVarsTemp , materialProperties
     cdef int nStateVars
-    cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt)
+    cdef double[::1] getStateView(self, string stateName, int gaussPt)
     
     # nogil methods are already declared here:
     

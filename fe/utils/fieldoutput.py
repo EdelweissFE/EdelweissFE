@@ -71,13 +71,16 @@ class FieldOutput:
                 self.type= 'elementResult'
                 self.elSet = modelInfo['elementSets'] [ definition['elSet'] ]
                 self.elSetName =  definition['elSet']
+                self.resultName = definition['result']
 
                 gpt = definition['gaussPt']
                 gaussPts = strToRange(gpt) if not isInteger(gpt) else [ int (gpt)  ]
+
+                self.gaussPts = gaussPts
                 
                 self.elementResultCollector = ElementResultCollector(self.elSet,
                                                                      gaussPts, 
-                                                                     definition['result'])
+                                                                     self.resultName)
         else:
             raise Exception('invalid field output requested: ' + definition['name'] )
             
@@ -108,14 +111,10 @@ class FieldOutput:
     
     def getTimeHistory(self, ):
         return np.asarray( self.timeHistory )
-    
-    def initializeStep(self, step, stepActions, stepOptions):
-        pass
-    
-    def finalizeIncrement(self, U, P, increment):
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        self.timeHistory.append ( totalTime + dT )
-        
+
+    def updateResults(self, currentTime, U, P):
+
+        self.timeHistory.append ( currentTime )
         incrementResult = None
         
         if self.type == 'nodalResult':
@@ -132,6 +131,17 @@ class FieldOutput:
             self.result.append(incrementResult)
         else:
             self.result = incrementResult
+
+    def initializeJob(self, startTime, U, P ):
+        self.updateResults(startTime, U, P)
+    
+    def initializeStep(self, step, stepActions, stepOptions):
+        pass
+    
+    def finalizeIncrement(self, U, P, increment):
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        newTime = totalTime + dT
+        self.updateResults(newTime, U, P)
         
     def finalizeStep(self, U, P,):
         pass
@@ -154,6 +164,20 @@ class FieldOutput:
                 resultTable = res
             
             np.savetxt('{:}.csv'.format( self.export ), resultTable, )
+
+    def setResults(self, values):
+        if self.type == 'elementResult':
+            if self.f:
+                raise Exception('cannot set field output for modified results (f(x) != None) !')
+
+            for i, el in enumerate(self.elSet):
+                for j, g in enumerate( self.gaussPts):
+                    theArray =  el.getResultArray(self.resultName, g, True)
+                    theArray[:] = values[i, j, :]
+                    el.acceptLastState()
+
+        else: 
+            raise Exception('setting field output currently only implemented for element!')
             
     def __eq__(self, other):
         if(type(other) == str):
@@ -177,6 +201,7 @@ class FieldOutput:
 
     def __getitem__(self, index):
         return  self.getLastResult()[index]
+
 
 class FieldOutputController:
     """
@@ -207,6 +232,9 @@ class FieldOutputController:
         for output in self.fieldOutputs.values():
             output.initializeStep( step, stepActions, stepOptions)
     
+    def initializeJob(self, startTime, U, P,):
+        for output in self.fieldOutputs.values():
+            output.initializeJob(startTime, U, P)
     
     def finalizeJob(self, U, P,):
         for output in self.fieldOutputs.values():

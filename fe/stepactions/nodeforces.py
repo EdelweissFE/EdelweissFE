@@ -21,7 +21,7 @@ import sympy as sp
 
 class StepAction(StepActionBase):
     """ Defines node based load, defined on a nodeset."""
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
         
         self.name = name
         nodeForceIndices = []

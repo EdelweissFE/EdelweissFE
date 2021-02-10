@@ -16,7 +16,7 @@ class StepActionBase(ABC):
     
     
     @abstractmethod
-    def __init__(self, name, definition, jobInfo, modelInfo, journal):
+    def __init__(self, name, definition, jobInfo, modelInfo, fieldOutputController, journal):
         pass
     
     @abstractmethod

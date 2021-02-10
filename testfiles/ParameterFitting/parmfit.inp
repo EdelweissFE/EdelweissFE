@@ -1,4 +1,4 @@
-*material, name=UntereggerRockMassNonLocal, id=urmnl, statevars=5, 
+*material, name=RockDamagePlasticityNonLocal, id=urmnl, statevars=5, 
 ** units in N and mm
 ** ,  E             nu          fcu         m0            e       mg1          fcy         Ah         
    56665e+03,     0.2040,  	41.60e+03,    	11.95,  	0.51,   9.943,   	29.53e+03,  0.004467   

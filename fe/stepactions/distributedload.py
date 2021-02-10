@@ -22,7 +22,7 @@ import sympy as sp
 
 class StepAction(StepActionBase):
     """ Distributed load, defined on an element-based surface """
-    def __init__(self, name, action, jobInfo, modelInfo, journal):
+    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
                 
         self.name = name
         self.magnitudeAtStepStart = 0.0

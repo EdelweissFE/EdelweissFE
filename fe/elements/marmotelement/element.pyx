@@ -157,15 +157,14 @@ cdef class MarmotElementWrapper:
         """ get the array of a result, possibly as a persistent view which is continiously
         updated by the element """
         cdef string result_ =  result.encode('UTF-8')
-        return np.array(  self.getPermanentResultPointer(result_, gaussPt), copy= not getPersistentView)
+        return np.array(  self.getStateView(result_, gaussPt), copy= not getPersistentView)
         
             
-    cdef double[::1] getPermanentResultPointer(self, string result, int gaussPt, ):
+    cdef double[::1] getStateView(self, string result, int gaussPt, ):
         """ direct access the the stateVars of the element / underlying material"""
-        cdef PermanentResultLocation res = self.marmotElement.getPermanentResultPointer(result, gaussPt )
+        cdef StateView res = self.marmotElement.getStateView(result, gaussPt )
 
-        # TODO: check if we do not 'need' to cast away the constness:
-        return <double[:res.resultLength]> ( res.resultLocation)
+        return <double[:res.stateSize]> ( res.stateLocation )
     
     def __dealloc__(self):
         del self.marmotElement

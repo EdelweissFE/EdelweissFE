@@ -22,7 +22,7 @@ from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
     
-def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions, journal):
+def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActions, stepOptions, fieldOutputController, journal):
     """ Parses all the defined actions for the current step, 
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
@@ -48,7 +48,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
                 stepActions[module][moduleName].updateStepAction(options)
                 journal.message("Stepaction \"{:}\" will be updated".format(moduleName), "stepActionManager", 1)
             else:
-                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, options, jobInfo, modelInfo, journal)
+                stepActions[module][moduleName] = stepActionFactory(module)(moduleName, options, jobInfo, modelInfo, fieldOutputController, journal)
                                                                
     return  stepActions, stepOptions
 
@@ -129,13 +129,15 @@ def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
     
     stepActions = defaultdict(CaseInsensitiveDict)
     stepOptions = defaultdict(CaseInsensitiveDict)
+
+    fieldOutputController.initializeJob(time, U, P)
     
     try:
         for step in jobSteps:
             try:
                 # collect all step actions in a dictionary with key of actionType
                 # and concerned values 
-                stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions, journal)
+                stepActions, stepOptions = collectStepActionsAndOptions(step, jobInfo, modelInfo, time,  U, P, stepActions, stepOptions, fieldOutputController, journal)
                 
                 fieldOutputController.initializeStep(step, stepActions, stepOptions)
                 for manager in outputmanagers: 
