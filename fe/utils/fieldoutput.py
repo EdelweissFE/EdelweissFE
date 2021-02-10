@@ -21,7 +21,7 @@ Datalines:
 documentation={'name':'name of the fieldOutput',
                'nSet|elSet|node|element': 'entity, for which the fieldOutput is defined',
                'result' : 'e.g., U, P, stress, strain ...',
-               'gaussPt': 'for element based fieldOutputs only, integers or slices',
+               'quadraturePoint': 'for element based fieldOutputs only, integers or slices',
                'f(x)': '(optional), apply math (in each increment)',
                'saveHistory': '(optional), save complete History or only last (increment) result. Default: True (node, element) and False (nSet, elSet)',
                'export':'(optional), export the fieldOutput to a file at the end of the job',
@@ -73,13 +73,13 @@ class FieldOutput:
                 self.elSetName =  definition['elSet']
                 self.resultName = definition['result']
 
-                gpt = definition['gaussPt']
-                gaussPts = strToRange(gpt) if not isInteger(gpt) else [ int (gpt)  ]
+                qp = definition['quadraturePoint']
+                quadraturePoints = strToRange(qp) if not isInteger(qp) else [ int (qp)  ]
 
-                self.gaussPts = gaussPts
+                self.quadraturePoints = quadraturePoints
                 
                 self.elementResultCollector = ElementResultCollector(self.elSet,
-                                                                     gaussPts, 
+                                                                     quadraturePoints, 
                                                                      self.resultName)
         else:
             raise Exception('invalid field output requested: ' + definition['name'] )
@@ -171,7 +171,7 @@ class FieldOutput:
                 raise Exception('cannot set field output for modified results (f(x) != None) !')
 
             for i, el in enumerate(self.elSet):
-                for j, g in enumerate( self.gaussPts):
+                for j, g in enumerate( self.quadraturePoints):
                     theArray =  el.getResultArray(self.resultName, g, True)
                     theArray[:] = values[i, j, :]
                     el.acceptLastState()

@@ -8,8 +8,8 @@ all
 *fieldOutput
 nSet=setRight,     field=displacement, result=P, name=RFRight
 elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=stress, gaussPt=1, name=stress
-elSet=all, result=strain, gaussPt=1, name=strain
+elSet=all, result=stress, quadraturePoint=1, name=stress
+elSet=all, result=strain, quadraturePoint=1, name=strain
 
 *output, type=monitor, jobName=c3d20nljob
 fieldOutput=RFRight, f(x)='sum(x[:,1])'

@@ -19,9 +19,9 @@ gen_shearBand
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, field=micro rotation, result=U, name=micro rotation
-elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='max( x[:,:,0], axis=1) '
-elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='max( x[:,:,1], axis=1) '
-elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='max( x[:,:,2], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaP, f(x)='max( x[:,:,0], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaD, f(x)='max( x[:,:,1], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=omega, f(x)='max( x[:,:,2], axis=1) '
 name=RF, nSet=gen_top, field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True
 name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True 
 

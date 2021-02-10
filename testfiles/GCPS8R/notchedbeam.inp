@@ -10,11 +10,11 @@ all
 name=load, nSet=topNodes,  field=displacement, result=P
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=nonlocalDamage, elSet=all, field=nonlocal damage, result=U, 
-name=stress, elSet=all, result=stress, gaussPt=0:4, f(x)='mean(x, axis=1)'
-name=strain, elSet=all, result=strain, gaussPt=0:4, f(x)='mean(x, axis=1)'
-name=alphaP, elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,0], axis=1)'
-name=alphaD, elSet=all, result=sdv,gaussPt=0:4, f(x)='mean(x[:,:,2], axis=1)'
-name=omega, elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,4], axis=1)'
+name=stress, elSet=all, result=stress, quadraturePoint=0:4, f(x)='mean(x, axis=1)'
+name=strain, elSet=all, result=strain, quadraturePoint=0:4, f(x)='mean(x, axis=1)'
+name=alphaP, elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,0], axis=1)'
+name=alphaD, elSet=all, result=sdv,quadraturePoint=0:4, f(x)='mean(x[:,:,2], axis=1)'
+name=omega, elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,4], axis=1)'
 
 
 *output, type=monitor, jobName=cps8rnljob

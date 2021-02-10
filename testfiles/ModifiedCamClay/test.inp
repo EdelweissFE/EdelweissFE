@@ -48,18 +48,18 @@ all
 *job, name=myJob, domain=3d, solver=NISTParallel
 
 *fieldOutput, jobName=myJob
-name=v,       elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,0])', saveHistory=True
-name=lnp,     elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
-name=p0,      elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
-name=q,       elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,3])', saveHistory=True
-name=eps_v,   elSet=all, result=strain, gaussPt=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
-name=p,       elSet=all, result=stress, gaussPt=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3.', saveHistory=True
+name=v,       elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,0])', saveHistory=True
+name=lnp,     elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
+name=p0,      elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+name=q,       elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,3])', saveHistory=True
+name=eps_v,   elSet=all, result=strain, quadraturePoint=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
+name=p,       elSet=all, result=stress, quadraturePoint=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3.', saveHistory=True
 name=u_right, nSet=right, field=displacement, result=U, f(x)='mean(x[:,0])', saveHistory=True
 name=p_right, nSet=right, field=displacement, result=P, f(x)='mean(x[:,0])', saveHistory=True
-name=eps_33,  elSet=all, result=strain, gaussPt=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
-name=sig_33,  elSet=all, result=stress, gaussPt=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
-elSet=all,    result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
-elSet=all,    result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
+name=eps_33,  elSet=all, result=strain, quadraturePoint=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+name=sig_33,  elSet=all, result=stress, quadraturePoint=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+elSet=all,    result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all,    result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
 elSet=all,    field=displacement, result=U, name=displacement
 
 *output, type=ensight, jobName=myJob, name=ensightExport

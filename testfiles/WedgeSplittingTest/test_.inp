@@ -14137,11 +14137,11 @@ Set-Complete
 *fieldOutput,
 elSet=Set-Complete, field=displacement, result=U, name=disp
 elSet=Set-Complete, field=nonlocal damage, result=U, name=adnl
-name=Stress, elSet=Set-Complete, result=stress, gaussPt=1
-name=Strain, elSet=Set-Complete, result=strain, gaussPt=1
-name=AlphaP, elSet=Set-Complete, result=sdv, gaussPt=1, f(x)='x[:,0]'
-name=AlphaD, elSet=Set-Complete, result=sdv, gaussPt=1, f(x)='x[:,2]'
-name=Omega,  elSet=Set-Complete, result=sdv, gaussPt=1, f(x)='x[:,4]'
+name=Stress, elSet=Set-Complete, result=stress, quadraturePoint=1
+name=Strain, elSet=Set-Complete, result=strain, quadraturePoint=1
+name=AlphaP, elSet=Set-Complete, result=sdv, quadraturePoint=1, f(x)='x[:,0]'
+name=AlphaD, elSet=Set-Complete, result=sdv, quadraturePoint=1, f(x)='x[:,2]'
+name=Omega,  elSet=Set-Complete, result=sdv, quadraturePoint=1, f(x)='x[:,4]'
 name=Displacement_Notch, nSet=Set-PointNotch, field=displacement, result=U, saveHistory=True
 name=Displacement_NotchNew, nSet=Set-PointLoad, field=displacement, result=U, saveHistory=True
 name=Force_SP, nSet=Set-PressureLeft,  field=displacement, result=P, saveHistory=True

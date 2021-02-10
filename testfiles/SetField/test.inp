@@ -491,8 +491,8 @@ all
 
 *fieldOutput,
 elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=alphaP, name=alphaP, gaussPt=0:8
-elSet=all, result=alphaP, name=alphaPMax, gaussPt=0:8, f(x)='np.max(x, axis=1)'
+elSet=all, result=alphaP, name=alphaP, quadraturePoint=0:8
+elSet=all, result=alphaP, name=alphaPMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
 
 *output, type=ensight, jobName=c3d8job, name=esExport
 create=perNode, fieldOutput=displacement 

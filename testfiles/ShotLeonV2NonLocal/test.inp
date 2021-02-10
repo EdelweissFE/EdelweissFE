@@ -27,7 +27,7 @@ name=DisplacementN,      nSet=all,           field=displacement, result=U,
 **name=Nonlocal DamageN,   nSet=all,           field=nonlocal damage, result=U, 
 name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
-name=E,                 elSet=all,          result=sdv, f(x)='x[0,1]', gaussPt=0, saveHistory=True
+name=E,                 elSet=all,          result=sdv, f(x)='x[0,1]', quadraturePoint=0, saveHistory=True
 
 *output, type=monitor, jobName=cps4nljob
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
