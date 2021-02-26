@@ -48,11 +48,11 @@ elSet=all, field=displacement, result=U, name=displacement
 nSet=top, field=displacement, result=P, name=displacement, name=RF, f(x)=' sum(x[:,2]) ', saveHistory=True, export=RF
 nSet=top, field=displacement, result=U, name=UTop,  f(x)=' (x[0,2]) ', saveHistory=True, export=UTop
 elSet=all, field=nonlocal damage , result=U, name=alpha_d_nl
-elSet=all, result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
-elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
-elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
-elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
-elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
+elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 create=xyData, x=time, y=RF, legend=RF

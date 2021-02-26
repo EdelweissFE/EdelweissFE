@@ -868,7 +868,7 @@ all
 *fieldOutput,
 elSet=all, field=displacement, result=U, name=displacement
 nSet=nSetLoad, field=displacement, result=P, name=RF, f(x)=' sum ( x[:,1]) ', saveHistory=True
-elSet=all, result=stress, name=stress, gaussPt=0:8, f(x)=' max (x, axis=1) '
+elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=' max (x, axis=1) '
 
 *output, type=ensight, jobName=c3d8job, name=esExport
 create=perNode, fieldOutput=displacement 

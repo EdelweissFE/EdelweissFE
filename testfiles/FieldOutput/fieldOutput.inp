@@ -20,9 +20,9 @@ name=displacement_top,          nSet=gen_top,       field=displacement, result=U
 name=displacement_top_mean_1,   nSet=gen_top,       field=displacement, result=U, saveHistory=True, f(x)='mean( x[:,1])'
 name=RF_bottom,                 nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 name=RF_bottom_sum_1,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True, f(x)='sum(x[:,1])'
-name=stress,                    elSet=all,          result=stress,      gaussPt=1
-name=stress_top,                elSet=gen_top,      result=stress,      gaussPt=1
-name=alphaP,                    elSet=all,          result=sdv,         gaussPt=1, f(x)='x[:,0]'
+name=stress,                    elSet=all,          result=stress,      quadraturePoint=1
+name=stress_top,                elSet=gen_top,      result=stress,      quadraturePoint=1
+name=alphaP,                    elSet=all,          result=sdv,         quadraturePoint=1, f(x)='x[:,0]'
 
 *output, type=meshPlot, jobName=cps4job, 
 figure=1, axSpec=221, create=perNode,       fieldOutput=displacement,       f(x)='x[:,1]', label=U2
