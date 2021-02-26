@@ -34,7 +34,7 @@ cdef class ElementResultCollector:
         self.nEls = len(elements)
         self.nGauss = len(gaussPoints)
         # assemble a 2d list of all permanent result arrays (=continously updated np arrays)
-        resultsPointerList = [ [ el.getResultArray(result, gpt, getPersistentView=True) for gpt in gaussPoints ] for el in elements ]
+        resultsPointerList = [ [ el.getResultArray(result, qp, getPersistentView=True) for qp in gaussPoints ] for el in elements ]
         self.nSize = resultsPointerList[0][0].shape[0]
         
         # allocate an equivalent 2D C-array for the pointers to each elements results

@@ -34,10 +34,10 @@ all
 *job, name=myJob, domain=3d, solver=NISTParallel
 
 *fieldOutput, jobName=myJob
-name=v,     elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,0])', saveHistory=True
-name=lnp,   elSet=all, result=sdv, gaussPt=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
-name=eps_v, elSet=all, result=strain, gaussPt=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
-name=p,     elSet=all, result=stress, gaussPt=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3', saveHistory=True
+name=v,     elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,0])', saveHistory=True
+name=lnp,   elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
+name=eps_v, elSet=all, result=strain, quadraturePoint=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
+name=p,     elSet=all, result=stress, quadraturePoint=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3', saveHistory=True
 
 
 *step, jobName=myJob, maxInc=1e0, minInc=1e-5, maxNumInc=100000, maxIter=25, stepLength=1

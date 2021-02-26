@@ -11,11 +11,11 @@ weak
 *job, name=cpe4job, domain=2d, solver=NISTPArcLength
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=stress, gaussPt=0:4, name=stress, f(x)='mean(x, axis=1)'
-elSet=all, result=strain, gaussPt=0:4, name=strain, f(x)='mean(x, axis=1)'
-elSet=all, result=sdv, gaussPt=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
-elSet=all, result=sdv, gaussPt=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
-elSet=all, result=sdv, gaussPt=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
+elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
 nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
 nSet=gen_top, field=displacement, result=U, f(x)='( x[0, 1] ) ', name=UTop, saveHistory=true
 

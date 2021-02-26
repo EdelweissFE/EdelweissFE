@@ -153,16 +153,16 @@ cdef class MarmotElementWrapper:
     def resetToLastValidState(self,):
         pass
     
-    def getResultArray(self, result, gaussPt, getPersistentView=True):    
+    def getResultArray(self, result, quadraturePoint, getPersistentView=True):    
         """ get the array of a result, possibly as a persistent view which is continiously
         updated by the element """
         cdef string result_ =  result.encode('UTF-8')
-        return np.array(  self.getStateView(result_, gaussPt), copy= not getPersistentView)
+        return np.array(  self.getStateView(result_, quadraturePoint), copy= not getPersistentView)
         
             
-    cdef double[::1] getStateView(self, string result, int gaussPt, ):
+    cdef double[::1] getStateView(self, string result, int quadraturePoint, ):
         """ direct access the the stateVars of the element / underlying material"""
-        cdef StateView res = self.marmotElement.getStateView(result, gaussPt )
+        cdef StateView res = self.marmotElement.getStateView(result, quadraturePoint )
 
         return <double[:res.stateSize]> ( res.stateLocation )
     

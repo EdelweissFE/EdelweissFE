@@ -59,10 +59,10 @@ all, 6
 
 *fieldOutput,
 elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=strain, name=strain, gaussPt=0:7, f(x)='np.mean(x,axis=1)'
-elSet=all, result=stress, name=stress, gaussPt=0:7, f(x)='np.mean(x,axis=1)'
-name=sig22, elSet=all, result=stress, gaussPt=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True
-**name=eps22, elSet=all, result=strain, gaussPt=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True, export=eps22
+elSet=all, result=strain, name=strain, quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
+elSet=all, result=stress, name=stress, quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
+name=sig22, elSet=all, result=stress, quadraturePoint=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True
+**name=eps22, elSet=all, result=strain, quadraturePoint=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True, export=eps22
 
 ***output, type=ensight, jobName=c3d8job, name=test
 **create=perNode, fieldOutput=displacement
