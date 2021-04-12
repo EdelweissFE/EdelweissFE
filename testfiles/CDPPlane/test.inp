@@ -1,0 +1,36 @@
+*material, name=cdp, id=cdp 
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1, 
+
+*section, name=section1, thickness=1.0, material=cdp, type=plane
+all
+
+*job, name=cpe4job, domain=2d, solver=NIST
+*fieldOutput
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
+elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:,1], axis=1) '
+elSet=all, result=sdv, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:,2], axis=1) '
+
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=50
+y0=0, h=100
+elType=CPS4
+nX=5
+nY=5
+
+*output, type=ensight, jobName=cpe4job, name=esExport
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+create=perElement, fieldOutput=alphaP
+create=perElement, fieldOutput=alphaD
+create=perElement, fieldOutput=omega
+
+*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear, numThreads=2
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.5, 1=0.001
