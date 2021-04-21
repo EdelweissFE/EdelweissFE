@@ -1,8 +1,6 @@
 ** *include, input=mesh_quad.inp
 ** *include, input=mesh_quad_fine.inp
 *include, input=mesh_lin.inp
-** *material, name=GMBiotElastic, id=le, 
-** 3000.0, 0.15, 0.1, 10, 20.0, 1.499999
 *material, name=GMNeoHooke, id=le, 
 **E          nu         GcToG      lb         lt         polarRatio 
 3000.0,     0.15,       .1,        10,        20.0,      1.49999
