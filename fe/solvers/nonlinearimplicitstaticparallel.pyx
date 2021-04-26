@@ -129,7 +129,7 @@ class NISTParallelForMarmotElements(NISTParallel):
            
             minPNewDT = np.min(pNewDTVector) 
             if minPNewDT < 1.0:
-                raise CutbackRequest("An element requests for a cutbrack", minPNewDT)
+                raise CutbackRequest("An element requests for a cutback", minPNewDT)
            
             #successful elements evaluation: condense oversize Pe buffer -> P
             P_mView[:] = 0.0
