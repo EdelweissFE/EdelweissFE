@@ -28,7 +28,7 @@ class Plotter:
         self.rcParams = {
                 "pgf.texsystem": "pdflatex",        # change this if using xetex or lautex
                 "text.usetex": True,                # use LaTeX to write all text
-                'text.latex.preamble':r"\usepackage{mathpazo} \usepackage{siunitx}",
+                'text.latex.preamble':r" \usepackage[utf8]{inputenc} \usepackage{amsmath} \usepackage{amssymb} \usepackage{mathpazo} \usepackage{siunitx}",
                 "font.family": "serif",
 #                "font.serif": [],                   # blank entries should cause plots to inherit fonts from the document
 #                "font.sans-serif": [],
@@ -42,7 +42,8 @@ class Plotter:
                 "ytick.labelsize": 8,
                 'lines.linewidth': 1,
                 'lines.markeredgewidth': 0.4,
-                'lines.markersize':4
+                'lines.markersize':4,
+                'axes.unicode_minus': False
                 }
         plt.close('all')
         
@@ -86,8 +87,8 @@ class Plotter:
         ax = self.getAx(figureID, axSpec)
 
         # flatten arrays
-        x = x.flatten()
-        y = y.flatten()
+        x = np.asarray(x).flatten()
+        y = np.asarray(y).flatten()
 
         plotDefinition = {}
         if 'label' in plotOptions: plotDefinition['label'] = plotOptions['label']
