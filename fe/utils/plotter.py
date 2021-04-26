@@ -84,7 +84,11 @@ class Plotter:
         """ plots a single curve """        
         
         ax = self.getAx(figureID, axSpec)
-        
+
+        # flatten arrays
+        x = x.flatten()
+        y = y.flatten()
+
         plotDefinition = {}
         if 'label' in plotOptions: plotDefinition['label'] = plotOptions['label']
         if plotOptions.get('plotType', 'linePlot') == "scatter":
