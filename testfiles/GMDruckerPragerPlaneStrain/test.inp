@@ -1,6 +1,6 @@
 *material, name=GMDruckerPrager, id=le, 
-**E,     nu,    GcToG,  lb,   lt,       polarRatio,     sigmaYield,     h,      phi(deg), psi(deg) 
-100, 0.25,   .5,    4,   8,     1.4999999,          0.06,         0,           25,      0.0, 
+**E,     nu,    GcToG,  lb,   lt,       polarRatio,     sigmaYield,     hlin,  hExp,  hDeltaExp         phi(deg), psi(deg) 
+100, 0.25,   .5,    4,   8,     1.4999999,          0.06,               0,     1,     0,                 25,      0.0, 
 **a1,   a2,     a3,     a4,   lJ2,      softeningModulus,   weightingParemeter,     maxDamage,  nonLocalRadius
 0.5,   0.0,   0.5,     0.0,   10.0,        1e-0,               1.0,                    0.90,       8.0
 
