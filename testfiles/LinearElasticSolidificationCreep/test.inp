@@ -6,7 +6,7 @@ nY=10
 elType=CPS4
 
 *material, name=linearelasticsolidificationcreep, id=mat
-120, 50, 3, 15, 0.2, 0.04166666, 12, 1e-5, 0, 1e-2
+0.2, 120, 50, 3, 15, 0.1, 0.5, 12, 1e-5, 1e-2, 0.04166666, 0
 
 *section, name=section1, thickness=1.0, material=mat, type=plane
 all
@@ -18,7 +18,7 @@ name=Displacement,      elSet=all,           field=displacement, result=U,
 name=DisplacementN,      nSet=all,           field=displacement, result=U, 
 name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
-name=E,                 elSet=all,          result=sdv, f(x)='x[0,1]', quadraturePoint=0, saveHistory=True
+name=E,                 elSet=all,          result=EStatic, quadraturePoint=0, saveHistory=True
 
 *output, type=monitor, jobName=cps4nljob
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'

@@ -17,9 +17,9 @@ nY=50
 name=Displacement, elSet=all, field=displacement, result=U, 
 name=Stress, elSet=all, result=stress, quadraturePoint=1
 name=Strain, elSet=all, result=strain, quadraturePoint=1
-name=AlphaP, elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,0]'
-name=AlphaD, elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,2]'
-name=Omega,  elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,4]'
+name=AlphaP, elSet=all, result=alphaP, quadraturePoint=1
+name=AlphaD, elSet=all, result=alphaD, quadraturePoint=1
+name=Omega,  elSet=all, result=omega, quadraturePoint=1
 name=Displacement_Top, nSet=gen_top, field=displacement, result=U
 name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P, saveHistory=True, export=ReactionForce, f_export(x)='x[:,:,1]'
 

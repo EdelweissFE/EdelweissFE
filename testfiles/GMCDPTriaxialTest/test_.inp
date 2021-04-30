@@ -46,9 +46,9 @@ nSet=top, field=displacement, result=P, name=displacement, name=RF, f(x)=' sum(x
 nSet=top, field=displacement, result=U, name=UTop,  f(x)=' (x[0,2]) ', saveHistory=True, export=UTop
 elSet=all, field=nonlocal damage , result=U, name=nonlocal damage
 elSet=all, field=micro rotation, result=U, name=micro rotation
-elSet=all, result=sdv, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:,0], axis=1) '
-elSet=all, result=sdv, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:,1], axis=1) '
-elSet=all, result=sdv, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:,2], axis=1) '
+elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:], axis=1) '
+elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:], axis=1) '
+elSet=all, result=omega, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:], axis=1) '
 
 *output, type=meshplot, jobName=cpe4job, name=RFPlot
 create=xyData, x=time, y=RF, legend=RF
