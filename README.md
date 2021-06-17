@@ -4,8 +4,9 @@ EdelweissFE: A light-weight, platform-independent, parallel finite element frame
 
 EdelweissFE requires 
 - Python 3.5+*
-- Numpy*
-- Scipy*
+- NumPy*
+- SciPy*
+- SymPy*
 - Cython 0.28+*
 - Matplotlib*
 - Rich
