@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 #  ---------------------------------------------------------------------
 #
-#  _____    _      _              _         _____ _____ 
+#  _____    _      _              _         _____ _____
 # | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|
-# |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|  
-# | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___ 
+# |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|
+# | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___
 # |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|
-#                                                       
-# 
+#
+#
 #  Unit of Strength of Materials and Structural Analysis
 #  University of Innsbruck,
 #  2017 - today
-# 
+#
 #  Matthias Neuner matthias.neuner@uibk.ac.at
-# 
+#
 #  This file is part of EdelweissFE.
-# 
+#
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
 #  License as published by the Free Software Foundation; either
 #  version 2.1 of the License, or (at your option) any later version.
-# 
+#
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
@@ -33,36 +33,41 @@ Created on Mon Apr 18 17:36:07 2016
 import numpy as np
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
+
 def flagDict(configLine):
     parts = [x.strip() for x in configLine.split("=")]
     opt = parts[0]
-    val = True if (len(parts)>1 and parts[1] == "True") else False
+    val = True if (len(parts) > 1 and parts[1] == "True") else False
     return {opt: val}
-    
+
+
 def stringDict(listOfStringAssigments):
     resultDict = CaseInsensitiveDict()
     for entry in listOfStringAssigments:
         parts = [x.strip() for x in entry.split("=")]
         opt = parts[0]
-        val = '='.join(parts[1:]) if len(parts)>1 else 'True'
+        val = "=".join(parts[1:]) if len(parts) > 1 else "True"
         resultDict[opt] = val
     return resultDict
 
+
 def strToSlice(string):
-    if ':' in string:
-        idcs=[int (i) for i in string.split(':')]
+    if ":" in string:
+        idcs = [int(i) for i in string.split(":")]
         a, b = idcs
-        return slice(a,b)
+        return slice(a, b)
     else:
-        return slice ( int (string), int (string)+1)
-    
+        return slice(int(string), int(string) + 1)
+
+
 def strToRange(string):
-    if ':' in string:
-        idcs=[int (i) for i in string.split(':')]
+    if ":" in string:
+        idcs = [int(i) for i in string.split(":")]
         a, b = idcs
-        return range(a,b)
+        return range(a, b)
     else:
-        return range ( int (string))
+        return range(int(string))
+
 
 def isInteger(s):
     try:
@@ -70,9 +75,10 @@ def isInteger(s):
         return True
     except ValueError:
         return False
-    
+
+
 def filterByJobName(canditates, jobName):
-    return [cand for cand in canditates if 'jobName' not in cand or cand['jobName']  == jobName]    
+    return [cand for cand in canditates if "jobName" not in cand or cand["jobName"] == jobName]
 
 
 def mergeNumpyDataLines(multiLineData):

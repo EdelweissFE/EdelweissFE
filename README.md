@@ -1,4 +1,6 @@
-EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
+# EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
+
+EdelweissFE makes use of the [Marmot](https://github.com/MAteRialMOdelingToolbox/Marmot/) library for finite element and constitutive model formulations.
 
 ## Prerequisites
 
@@ -12,7 +14,7 @@ EdelweissFE requires
 - Rich
 - OpenMP*
 - Intel MKL for the PARDISO*  (binaries and header files; if you use Anaconda, install packages `mkl` and `mkl-include`)
-- bftUserLibrary (https://git.uibk.ac.at/afbDevelopers/bftUserLibrary)
+- [Marmot](https://github.com/MAteRialMOdelingToolbox/Marmot/)
 - Eigen Library for Linear Algebra (http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
 *: Provided via Anaconda packages
