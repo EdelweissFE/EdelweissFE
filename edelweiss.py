@@ -3,7 +3,7 @@
 """
 Created on Tue Jan  17 19:10:42 2017
 
-@author: matthias
+@author: Matthias Neuner
 """
 
 import argparse  
