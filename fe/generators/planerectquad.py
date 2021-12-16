@@ -99,6 +99,11 @@ def generateModelData(generatorDefinition, modelInfo, journal):
             currentElementLabel +=1
 
     #nodesets:
+    modelInfo['nodeSets'][ '{:}_all'.format(name) ] =  []
+    for n in np.ravel(nG):
+        if len(n.fields)>0:
+            modelInfo['nodeSets'][ '{:}_all'.format(name) ].append(n)
+
     modelInfo['nodeSets'][ '{:}_left'.format(name) ] =  [n for n in nG[0,:]]
     modelInfo['nodeSets'][ '{:}_right'.format(name) ] = [n for n in nG[-1,:]]
     modelInfo['nodeSets'][ '{:}_top'.format(name) ] =   [n for n in nG[:,-1]]
