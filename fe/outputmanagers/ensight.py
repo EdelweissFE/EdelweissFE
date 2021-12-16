@@ -211,10 +211,6 @@ class EnsightPerNodeVariable:
         f = fileHandle
         writeC80(f, self.description)
         for ensightPartID, (structureType,  values) in self.partsDict.items():   
-#            print(self.name)
-#            if self.name=='nonlocal_damage':
-#                print(np.max(values))
-
             writeC80(f, 'part')
             writeCInt(f, ensightPartID)
             writeC80(f, structureType)
@@ -238,15 +234,9 @@ class EnsightPerElementVariable:
         f = fileHandle
         writeC80(f, self.description)
         for ensightPartID, elTypeDict in self.partsDict.items():  
-#            print(self.varType)
- 
-#            print(self.name)
-#            if self.name=='nonlocal damage':
-#                print(np.max(values))
             writeC80(f, 'part')
             writeCInt(f, ensightPartID)
             for elType, values in elTypeDict.items():
-#                print(values.shape)           
                 writeC80(f, elType)
                 writeCFloat(f, values.T)
 

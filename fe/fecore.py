@@ -77,7 +77,7 @@ def collectStepActionsAndOptions(step, jobInfo, modelInfo, time, U, P,  stepActi
                                                                
     return  stepActions, stepOptions
 
-def finitElementSimulation(inputfile, verbose=False, suppressPlots=False):
+def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     """ This is the core of the finite element analysis:
     It assembles the model, and controls the respective solver based
     on the defined simulation steps.

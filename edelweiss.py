@@ -1,5 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#  ---------------------------------------------------------------------
+#
+#  _____    _      _              _         _____ _____ 
+# | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|
+# |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|  
+# | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___ 
+# |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|
+#                                                       
+# 
+#  Unit of Strength of Materials and Structural Analysis
+#  University of Innsbruck,
+#  2017 - today
+# 
+#  Matthias Neuner matthias.neuner@uibk.ac.at
+# 
+#  This file is part of EdelweissFE.
+# 
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+# 
+#  The full text of the license can be found in the file LICENSE.md at
+#  the top level directory of EdelweissFE.
+#  ---------------------------------------------------------------------
 """
 Created on Tue Jan  17 19:10:42 2017
 
@@ -9,9 +34,8 @@ Created on Tue Jan  17 19:10:42 2017
 import argparse  
 import matplotlib
 import numpy as np 
-from fe.fecore import finitElementSimulation
-from fe.parameteridentification.paramIdentification import parameterIdentification
-from fe.utils.inputfileparser import parseInputFile,printKeywords
+from fe.fecore import finiteElementSimulation
+from fe.utils.inputfileparser import parseInputFile, printKeywords
 from fe.utils.printdocumentation import printDocumentation
 
 if __name__ == "__main__":    
@@ -24,7 +48,6 @@ if __name__ == "__main__":
     parser.add_argument('--output', dest='output', default=None, type=str, help='write the final solution to a file') 
     parser.add_argument('--keywords', dest='kw', action='store_true', help='print keywords') 
     parser.add_argument('--doc=module', dest='doc', help='print keywords') 
-    parser.add_argument('--parameterIdentification', dest='parID', help='run parameter identification',  nargs='*',)
     args=parser.parse_args()
     
     fileList=args.file
@@ -50,15 +73,10 @@ if __name__ == "__main__":
     except (KeyError, ValueError) as e:
         print(str(e))
         exit(1)
-
-    
-    if args.parID:
-        for inputFile in inputFiles:
-            parameterIdentification(inputFile)
             
 #    #2 ) all computations and imports
     else:
         for inputFile in inputFiles:
-            success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = args.verbose, suppressPlots=args.noplot)
+            success, U, P, fieldOutputController = finiteElementSimulation(inputFile, verbose = args.verbose, suppressPlots=args.noplot)
             if args.output:
                 np.savetxt(args.output, U)

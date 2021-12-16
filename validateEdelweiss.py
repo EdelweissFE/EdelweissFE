@@ -36,7 +36,7 @@ import os
 import matplotlib
 matplotlib.use('Agg')
 
-from fe.fecore import finitElementSimulation
+from fe.fecore import finiteElementSimulation
 from fe.utils.inputfileparser import parseInputFile
 import numpy as np
 import argparse  
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         
         try:
             tic = timer()
-            success, U, P, fieldOutputController = finitElementSimulation(inputFile, verbose = False, suppressPlots=True)
+            success, U, P, fieldOutputController = finiteElementSimulation(inputFile, verbose = False, suppressPlots=True)
             toc = timer()
             
             if not args.create:

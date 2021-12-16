@@ -14,6 +14,7 @@
 #  2017 - today
 # 
 #  Matthias Neuner matthias.neuner@uibk.ac.at
+#  Magdalena Schreter magdalena.schreter@uibk.ac.at
 # 
 #  This file is part of EdelweissFE.
 # 
