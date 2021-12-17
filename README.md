@@ -38,11 +38,11 @@ Enforce recomipilation and installation with
 
 ## Run the validation examples
 
-`python validateEdelweiss.py`
+`python run_tests.py`
 
 Recreate the validation reference solutions (please only if you know what you are doing)
 
-`python validateEdelweiss.py --create`
+`python run_tests.py --create`
 
 ## Execute a simulation
 
