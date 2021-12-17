@@ -54,10 +54,6 @@ class Journal:
         self.outputWidths[2] = leftColumn - 5
         self._rightColumn = self.linewidth - leftColumn
 
-        # self.errorMessageTemplate =  " > > > {:<68}{:>18} < < < "
-        # self.leveledOutput = {0: " {:<80}{:>18} ",
-        #                       1: "   {:<78}{:>18} ",
-        #                       2: "     {:<76}{:>18} ",}
         self.errorMessageTemplate = " > > > {{:<{:}}}{{:>{:}}} < < < ".format(leftColumn - 12, self._rightColumn - 2)
         self.leveledOutput = {
             0: " {{:<{:}}}{{:>{:}}} ".format(leftColumn, self._rightColumn - 2),
@@ -66,7 +62,7 @@ class Journal:
         }
 
     def message(self, message, senderIdentification, level=1):
-        while len(message) > self.leftColumn - 2:
+        while len(message) >= self.leftColumn :
             self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
 
         if level < self.suppressLvl:
