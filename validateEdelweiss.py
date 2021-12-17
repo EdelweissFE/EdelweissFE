@@ -90,7 +90,7 @@ if __name__ == "__main__":
                     residual = U - UReference
 
                     if (np.max(np.abs(residual))) < 1e-6:
-                        print("Test {:50} [green]PASSED[/] \[{:2.1f}]".format(directory, toc - tic))
+                        print("Test {:50} [green]PASSED[/] [{:2.1f}]".format(directory, toc - tic))
                     else:
                         print("Test {:50} [red]FAILED[/]".format(directory))
                     os.chdir("..")
