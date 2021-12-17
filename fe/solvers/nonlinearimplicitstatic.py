@@ -534,13 +534,14 @@ class NIST:
         return dU, isExtrapolatedIncrement
 
     def checkDivergingSolution(self, incrementResidualHistory, maxGrowingIter):
+        """Check if the iterative scheme is diverging"""
         for previousFluxResidual, nGrew in incrementResidualHistory.values():
             if nGrew > maxGrowingIter:
                 return True
         return False
 
     def collectActiveStepActions(self, stepActions):
-
+        """ get the current active actions (loads, etc. ... ) for the current step"""
         activeActions = dict()
 
         activeActions["dirichlets"] = list(stepActions["dirichlet"].values()) + list(
