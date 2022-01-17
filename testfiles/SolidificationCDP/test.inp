@@ -1,5 +1,19 @@
-*material, name=cdp, id=cdp, statevars=5, 
-30000.0, 0.15, 13, 47.4, 55, 4.74, 0.85, 0.12, 0.003, 2.0, 0.000001, 15.0, 0.10, 0, 0 
+*material, name=solidificationcdp, id=cdp 
+** nu
+0.15,
+** q1   q2   q3   q4     n    m   nKelvin   tauMin 
+   20,  120, 9,    9,  0.1, 0.5,    12,     1e-5, 
+**  s    fcu28
+   0.2,   40,
+** fcy/fcu  fbu/fcu  ftu/fcu    Df
+     0.1,    1.16,     0.1,     0.85 
+** Ah     Bh    Ch     Dh
+  0.12,  0.003,    2,    1e-6,  
+** As   GfI   omegaMax
+   15,     0.1,   0.99
+** timeToDays, castTime
+  0.041666667, -28
+
 
 *section, name=section1, material=cdp, type=solid
 all
@@ -496,7 +510,8 @@ elSet=all, field=displacement, result=U, name=displacement
 create=perNode, fieldOutput=displacement 
 configuration, overwrite=yes
 
-*step, jobName=c3d8job, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, jobName=c3d8job, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=0.1
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left, nSet=nSetLeft,  field=displacement, 2=0, 1=0, 3=0.0
-dirichlet, name=right, nSet=nSetRight, field=displacement, 2=-0.15
+dirichlet, name=right, nSet=nSetRight, field=displacement, 2=-0.1
+*step, jobName=c3d8job, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=24
