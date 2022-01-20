@@ -65,7 +65,10 @@ cdef class MarmotElementWrapper:
             
         self.elNumber = elNumber
         
-        self.marmotElement = MarmotElementFactory.createElement( MarmotElementFactory.getElementCodeFromName( elementType.upper().encode('utf-8')), self.elNumber)
+        try:
+            self.marmotElement = MarmotElementFactory.createElement(MarmotElementFactory.getElementCodeFromName( elementType.upper().encode('utf-8')), self.elNumber)
+        except IndexError:
+            raise NotImplementedError("Marmot element {:} not found in library.".format(elementType))
         
         self.nNodes                         = self.marmotElement.getNNodes()
         
@@ -88,13 +91,16 @@ cdef class MarmotElementWrapper:
                 ElementProperties(
                         &self.elementProperties[0],
                         self.elementProperties.shape[0] ) )
-        
-        self.marmotElement.assignProperty(
-                MarmotMaterialSection(
-                        MarmotMaterialFactory.getMaterialCodeFromName(
-                                materialName.upper().encode('UTF-8')), 
-                        &self.materialProperties[0],
-                        self.materialProperties.shape[0] ) )
+
+        try:
+            self.marmotElement.assignProperty(
+                    MarmotMaterialSection(
+                            MarmotMaterialFactory.getMaterialCodeFromName(
+                                    materialName.upper().encode('UTF-8')), 
+                            &self.materialProperties[0],
+                            self.materialProperties.shape[0] ) )
+        except IndexError:
+            raise NotImplementedError("Marmot material {:} not found in library.".format(materialName))
         
         self.nStateVars =           self.marmotElement.getNumberOfRequiredStateVars()
         
