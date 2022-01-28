@@ -50,6 +50,7 @@ inputLanguage = {
     "*element": (
         "definition of element(s)",
         {
+            "elSet": ("string", "name"),
             "type": ("string", "assign one of the types definied in the elementlibrary"),
             "provider": ("string", "provider (library) for the element type. Default: Marmot"),
             "data": ("numpy integer array", "Abaqus like element definiton lines"),
@@ -66,6 +67,7 @@ inputLanguage = {
     "*node": (
         "definition of nodes",
         {
+            "nSet": ("string", "name"),
             "data": ("numpy float array", "Abaqus like node definiton lines: label, x, [y], [z]"),
         },
     ),
@@ -276,7 +278,6 @@ def parseInputFile(fileName, currentKeyword=None, existingFileDict=None):
                     raise ValueError("{:} data line: cannot convert {:} to {:}".format(keyword, data, dataType))
 
                 fileDict[keyword][-1]["data"].append(data)
-
     return fileDict
 
 

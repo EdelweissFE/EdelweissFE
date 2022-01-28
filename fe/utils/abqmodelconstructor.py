@@ -59,6 +59,11 @@ class AbqModelConstructor:
                     label,
                     coordinates,
                 )
+            if "nset" in nodeDefs.keys():
+                name = nodeDefs['nset']
+                nodeNumbers = [int(line[0]) for line in nodeDefs["data"]]
+                nodes = [nodeDefinitions[n] for n in nodeNumbers]
+                modelInfo['nodeSets'][name] = nodes
 
         # returns an OrderedDict of {element Label: element}
         elements = modelInfo["elements"]
@@ -69,11 +74,16 @@ class AbqModelConstructor:
             ElementClass = getElementByName(elementType, elementProvider)
 
             for defLine in elDefs["data"]:
-                label = defLine[0]
+                label = int(defLine[0])
                 # store nodeObjects in elNodes list
                 elNodes = [nodeDefinitions[n] for n in defLine[1:]]
                 newEl = ElementClass(elementType, elNodes, label)
                 elements[label] = newEl
+            if "elset" in elDefs.keys():
+                name = elDefs['elset']
+                elNumbers = [int(line[0]) for line in elDefs["data"]]
+                els = [elements[n] for n in elNumbers]
+                modelInfo['elementSets'][name] = els
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
