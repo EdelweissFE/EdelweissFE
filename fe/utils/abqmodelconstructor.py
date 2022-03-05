@@ -154,7 +154,7 @@ class AbqModelConstructor:
             if sType == "element":
                 for l in surfaceDef["data"]:
                     elSet, faceNumber = l
-                    faceNumber = int(faceNumber)
+                    faceNumber = int(faceNumber.replace('S',''))
                     elements = modelInfo["elementSets"][elSet]
                     elements += surface.setdefault(faceNumber, [])
                     surface[faceNumber] = elements
@@ -170,10 +170,6 @@ class AbqModelConstructor:
             data = constraintDef["data"]
 
             constraint = getConstraintByName(constraint)(name, data, modelInfo)
-
-            #            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
-            #                node.fields.update( [ (f, True) for f in nodeFields]  )
-
             modelInfo["constraints"][name] = constraint
 
         return modelInfo

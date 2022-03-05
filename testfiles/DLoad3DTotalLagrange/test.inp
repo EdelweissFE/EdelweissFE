@@ -3844,7 +3844,7 @@
  1449, 1450, 1451, 1452, 1453, 1454, 1455, 1456, 1457, 1458, 1459, 1460, 1521, 1522, 1523, 1524
  1525, 1526, 1527, 1528, 1529, 1530, 1531, 1532, 1533, 1534, 1535, 1536, 1537, 1538, 1539, 1540
 *Surface, type=ELEMENT, name=loadsurf
-_loadsurf_S3, 3
+_loadsurf_S3, S3
 *material, name=stvenantkirchhoffisotropic, id=stvenantkirchhoffisotropic, statevars=0
 5000, 0.25 
 
