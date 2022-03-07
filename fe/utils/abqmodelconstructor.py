@@ -51,19 +51,19 @@ class AbqModelConstructor:
         # returns an OrderedDict of {node label: node}
         nodeDefinitions = modelInfo["nodes"]
         for nodeDefs in inputFile["*node"]:
+            if "nset" in nodeDefs.keys():
+                setName = nodeDefs['nset']
+                modelInfo['nodeSets'][setName] = []
             for defLine in nodeDefs["data"]:
-                label = int(defLine[0])
+                label = defLine[0]
                 coordinates = np.zeros(domainSize)
                 coordinates[:] = defLine[1:]
                 nodeDefinitions[label] = Node(
                     label,
                     coordinates,
                 )
-            if "nset" in nodeDefs.keys():
-                name = nodeDefs['nset']
-                nodeNumbers = [int(line[0]) for line in nodeDefs["data"]]
-                nodes = [nodeDefinitions[n] for n in nodeNumbers]
-                modelInfo['nodeSets'][name] = nodes
+                if "nset" in nodeDefs.keys():
+                    modelInfo['nodeSets'][setName].append( nodeDefinitions[label] )
 
         # returns an OrderedDict of {element Label: element}
         elements = modelInfo["elements"]
@@ -73,17 +73,17 @@ class AbqModelConstructor:
             elementProvider = elDefs.get("provider", False)
             ElementClass = getElementByName(elementType, elementProvider)
 
+            if "elset" in elDefs.keys():
+                setName = elDefs['elset']
+                modelInfo['elementSets'][setName] = []
             for defLine in elDefs["data"]:
                 label = int(defLine[0])
                 # store nodeObjects in elNodes list
                 elNodes = [nodeDefinitions[n] for n in defLine[1:]]
                 newEl = ElementClass(elementType, elNodes, label)
                 elements[label] = newEl
-            if "elset" in elDefs.keys():
-                name = elDefs['elset']
-                elNumbers = [int(line[0]) for line in elDefs["data"]]
-                els = [elements[n] for n in elNumbers]
-                modelInfo['elementSets'][name] = els
+                if "elset" in elDefs.keys():
+                    modelInfo['elementSets'][setName].append( newEl )
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
