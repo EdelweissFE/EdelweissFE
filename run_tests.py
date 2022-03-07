@@ -31,7 +31,7 @@ Created on Wed Jun 14 21:40:55 2017
 @author: Matthias Neuner
 """
 
-import os
+import os, sys
 
 import matplotlib
 
@@ -68,6 +68,8 @@ if __name__ == "__main__":
     if "all" not in tests:
         testsDirs = list(set(testsDirs).intersection(set(tests)))
 
+    failedTests = 0
+
     for directory in testsDirs:
 
         os.chdir(os.path.join(testfilesDir, directory))
@@ -93,14 +95,24 @@ if __name__ == "__main__":
                         print("Test {:50} [green]PASSED[/] [{:2.1f}]".format(directory, toc - tic))
                     else:
                         print("Test {:50} [red]FAILED[/]".format(directory))
+                        failedTests += 1
                     os.chdir("..")
                 else:
                     print("Test {:50} [red]FAILED[/]: ".format(directory) + "Test not completed!")
+                    failedTests += 1
 
             else:
                 print("")
                 np.savetxt(referenceSolutionFile, U)
 
+        except NotImplementedError as e:
+            print("Test {:50} [grey]SKIPPED[/]: ".format(directory) + str(e))
+            continue
         except Exception as e:
             print("Test {:50} [red]FAILED[/]: ".format(directory) + str(e))
+            failedTests += 1
             continue
+
+    print("[blue]Tests failed: {:3}[/]".format(failedTests) )
+    if failedTests > 0:
+        sys.exit(1)
