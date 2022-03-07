@@ -77,7 +77,7 @@ class AbqModelConstructor:
                 setName = elDefs['elset']
                 modelInfo['elementSets'][setName] = []
             for defLine in elDefs["data"]:
-                label = int(defLine[0])
+                label = defLine[0]
                 # store nodeObjects in elNodes list
                 elNodes = [nodeDefinitions[n] for n in defLine[1:]]
                 newEl = ElementClass(elementType, elNodes, label)
