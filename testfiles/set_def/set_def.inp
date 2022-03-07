@@ -1,0 +1,31 @@
+*material, name=LINEARELASTIC, id=mat1
+ 30000, 0.2
+
+*material, name=LINEARELASTIC, id=mat2
+ 5000, 0.49
+
+*section, name=section1, material=mat1, type=solid
+block1
+
+*section, name=section1, material=mat2, type=solid
+block2
+
+*job, name=set_def, domain=3d, solver=NISTParallel
+
+*include, input=set_def.inc
+
+*fieldOutput,
+elSet=all,  name=displacement,  field=displacement, result=U
+elSet=all,  name=stress,        result=stress,      quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
+elSet=all,  name=strain,        result=strain,      quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
+
+*output, type=ensight, jobName=set_def, name=esExport
+create=perNode,     fieldOutput=displacement 
+create=perElement,  fieldOutput=stress
+create=perElement,  fieldOutput=strain
+configuration, overwrite=yes
+
+*step, jobName=set_def, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+dirichlet, name=bot, nSet=n_bot, field=displacement, 1=0., 2=0., 3=0.
+dirichlet, name=top, nSet=n_top, field=displacement, 1=0., 2=-1., 3=0.
+
