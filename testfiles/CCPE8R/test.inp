@@ -1,10 +1,10 @@
 *material, name=cosseratDruckerPrager, id=cosseratDruckerPrager
-**E, nu, GcToG, lb,  lBending, polarRatio, sigmaYield, phi(deg), psi(deg) 
-10000, 0.20, 1., 4,  8,     1.4999,      1,         25,      5,
-**a1,   a2,     a3,     a4,     lJ2
-0.50,   0.00,   .5,     .0,     4.0
-**hardening modulus
-000
+**E, nu, GcToG, lb,  lBending, lJ2, polarRatio, cohesion, phi(deg), psi(deg) 
+10000, 0.20, 1., 4,  8,        4.0,     1.4999,      1,         25,      5,
+** A, hExpDelta, hExp, hDilatation
+1.,    1.,         1400, 1.,
+**a1,   a2,     a3,     a4,     
+0.50,   0.00,   .5,     .0,
 
 
 *section, name=section1, thickness=1.0, material=cosseratDruckerPrager, type=plane
