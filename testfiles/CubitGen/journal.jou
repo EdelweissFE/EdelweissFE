@@ -1,0 +1,47 @@
+# single foundation
+reset
+
+reset
+brick x {Lx} y {Ly} z {Lz}
+#{vol1 = Id("volume")}
+brick x {Lx} y {Ly} z {Lz}
+#{vol2 = Id("volume")}
+brick x {Lx} y {Ly} z {Lz}
+#{vol3 = Id("volume")}
+brick x {Lx} y {Ly} z {Lz}
+#{vol4 = Id("volume")}
+
+move volume 2 y {Ly} include_merged 
+move volume 3 y {2*Ly} include_merged 
+move volume 4 y {3*Ly} include_merged 
+
+imprint volume all
+merge volume all
+
+control skew surface all
+volume all size 10
+#volume all  scheme map
+mesh volume all
+
+create block {NumBlocks()+1}
+block {NumBlocks()} name "block1"
+block {NumBlocks()} add volume 1 2
+
+create block {NumBlocks()+1}
+block {NumBlocks()} name "block2"
+block {NumBlocks()} add volume 3 4
+
+block all element type hex8
+
+create group "allvolumes"
+group allvolumes add volume all
+#{allvolumes_gId = Id("group")}
+
+create nodeset {NumNodesets()+1}
+nodeset {NumNodesets()} name 'n_bot'
+nodeset {NumNodesets()} add node in surface with y_max = {BBox_YMin("group", allvolumes_gId)}
+
+create nodeset {NumNodesets()+1}
+nodeset {NumNodesets()} name 'n_top'
+nodeset {NumNodesets()} add node in surface with y_min = {BBox_YMax("group", allvolumes_gId)}
+
