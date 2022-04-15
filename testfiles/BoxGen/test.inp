@@ -1,0 +1,39 @@
+*material, name=LinearElastic, id=myMaterial
+**Isotropic
+**E    nu
+1.8e4, 0.22
+
+*job, name=job, domain=3d, solver=NISTParallel
+
+*modelGenerator, generator=boxGen, name=gen
+nX      =4
+nY      =8
+nZ      =2
+lX      =20
+lY      =40
+lZ      =1
+elType  =C3D20R
+
+*section, name=section1, material=myMaterial, type=solid
+all
+
+*fieldOutput,
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, result=strain, name=strain, quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
+elSet=all, result=stress, name=stress, quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
+
+*output, type=ensight, jobName=job, name=test
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+configuration, overwrite=yes
+
+*output, type=monitor, jobName=job
+
+*step, jobName=job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+dirichlet,  name=x0u, nSet=gen_left,      field=displacement, 1=0.
+dirichlet,  name=y0u, nSet=gen_bottom,    field=displacement, 2=0.
+dirichlet,  name=z0u, nSet=gen_back,      field=displacement, 3=0.
+
+dirichlet,  name=y1u, nSet=gen_top,       field=displacement, 2=-5.
+
