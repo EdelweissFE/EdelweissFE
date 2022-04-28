@@ -320,6 +320,19 @@ def generateModelData(generatorDefinition, modelInfo, journal):
         n for n in np.ravel(nG[:, :, 0]) if len(n.fields) > 0
     ]
 
+    modelInfo["nodeSets"]["{:}_bottomLeft".format(name)] = [
+            n for n in np.ravel(nG[0, 0, :]) if len(n.fields) > 0
+    ]
+    modelInfo["nodeSets"]["{:}_bottomRight".format(name)] = [
+            n for n in np.ravel(nG[-1, 0, :]) if len(n.fields) > 0
+    ]
+    modelInfo["nodeSets"]["{:}_bottomFront".format(name)] = [
+        n for n in np.ravel(nG[:, 0, -1]) if len(n.fields) > 0
+    ]
+    modelInfo["nodeSets"]["{:}_bottomBack".format(name)] = [
+        n for n in np.ravel(nG[:, 0, 0]) if len(n.fields) > 0
+    ]
+
     # modelInfo["nodeSets"]["{:}_leftBottom".format(name)]  = [nG[0, 0]]
     # modelInfo["nodeSets"]["{:}_leftTop".format(name)]     = [nG[0, -1]]
     # modelInfo["nodeSets"]["{:}_rightBottom".format(name)] = [nG[-1, 0]]
