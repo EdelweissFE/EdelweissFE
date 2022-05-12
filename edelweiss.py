@@ -70,19 +70,20 @@ if __name__ == "__main__":
 
     inputFiles = []
     # 1 ) parse all files
-    try:
-        for file in fileList:
-            inputFiles.append(parseInputFile(file))
+    # try:
+    for file in fileList:
+        inputFiles.append(parseInputFile(file))
 
-    except (KeyError, ValueError) as e:
-        print(str(e))
-        exit(1)
+    # except (KeyError, ValueError) as e:
+    #     print(str(e))
+    #     exit(1)
 
     #    #2 ) all computations and imports
-    else:
-        for inputFile in inputFiles:
-            success, U, P, fieldOutputController = finiteElementSimulation(
-                inputFile, verbose=args.verbose, suppressPlots=args.noplot
-            )
-            if args.output:
-                np.savetxt(args.output, U)
+    # else:
+    for inputFile in inputFiles:
+        success, U, P, fieldOutputController = finiteElementSimulation(
+            inputFile, verbose=args.verbose, suppressPlots=args.noplot
+        )
+
+        if args.output:
+            np.savetxt(args.output, U)

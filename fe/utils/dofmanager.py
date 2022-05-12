@@ -167,6 +167,10 @@ class DofManager:
             if indexList:
                 indicesOfFieldsInDofVector[field] = indexList
 
+        self.indexToNodeMapping = {
+            index: node for node in nodes.values() for field in node.fields.values() for index in field
+        }
+
         for constraint in constraints.values():
             # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
             # we create them here, and assign them directly to the constraints
@@ -331,3 +335,6 @@ class DofManager:
         entitiesInDofVector = self.entitiesInDofVector
 
         return DofVector(nDof, entitiesInDofVector)
+
+    def getNodeForIndexInDofVector(self, index):
+        return self.indexToNodeMapping[index]

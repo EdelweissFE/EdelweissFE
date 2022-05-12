@@ -31,11 +31,11 @@ Created on Tue Apr  3 09:44:10 2018
 @author: Matthias Neuner
 """
 
-from typing import OrderedDict
 from fe.elements.node import Node
 from fe.config.elementlibrary import getElementByName
 from fe.utils.misc import isInteger
 from fe.config.constraints import getConstraintByName
+from fe.config.sections import getSectionByName
 import numpy as np
 
 
@@ -49,25 +49,25 @@ class AbqModelConstructor:
 
         domainSize = modelInfo["domainSize"]
 
-        # returns an OrderedDict of {node label: node}
+        # returns an dict of {node label: node}
         nodeDefinitions = modelInfo["nodes"]
         for nodeDefs in inputFile["*node"]:
-            currNodeDefs = OrderedDict()
+            currNodeDefs = {}
             for defLine in nodeDefs["data"]:
-                label = int( defLine[0] )
+                label = int(defLine[0])
                 coordinates = np.zeros(domainSize)
                 coordinates[:] = defLine[1:]
                 currNodeDefs[label] = Node(
                     label,
                     coordinates,
                 )
-            nodeDefinitions.update( currNodeDefs )
+            nodeDefinitions.update(currNodeDefs)
 
             if "nset" in nodeDefs.keys():
-                setName = nodeDefs['nset']
-                modelInfo['nodeSets'][setName] = list( currNodeDefs.keys() )
+                setName = nodeDefs["nset"]
+                modelInfo["nodeSets"][setName] = list(currNodeDefs.keys())
 
-        # returns an OrderedDict of {element Label: element}
+        # returns an dict of {element Label: element}
         elements = modelInfo["elements"]
 
         for elDefs in inputFile["*element"]:
@@ -75,20 +75,19 @@ class AbqModelConstructor:
             elementProvider = elDefs.get("provider", False)
             ElementClass = getElementByName(elementType, elementProvider)
 
-            currElDefs = OrderedDict()
-            currElList = []
+            currElDefs = {}
             for defLine in elDefs["data"]:
                 label = defLine[0]
                 # store nodeObjects in elNodes list
                 elNodes = [nodeDefinitions[n] for n in defLine[1:]]
-                newEl = ElementClass( elementType, elNodes, label )
+                newEl = ElementClass(elementType, label)
+                newEl.setNodes(elNodes)
                 currElDefs[label] = newEl
-                currElList.append( newEl )
-            elements.update( currElDefs )
+            elements.update(currElDefs)
 
             if "elset" in elDefs.keys():
-                setName = elDefs['elset']
-                modelInfo['elementSets'][setName] = currElList
+                setName = elDefs["elset"]
+                modelInfo["elementSets"][setName] = list(currElDefs.values())
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
@@ -169,12 +168,23 @@ class AbqModelConstructor:
             if sType == "element":
                 for l in surfaceDef["data"]:
                     elSet, faceNumber = l
-                    faceNumber = int(faceNumber.replace('S',''))
+                    faceNumber = int(faceNumber.replace("S", ""))
                     elements = modelInfo["elementSets"][elSet]
                     elements += surface.setdefault(faceNumber, [])
                     surface[faceNumber] = elements
 
             modelInfo["surfaces"][name] = surface
+
+        return modelInfo
+
+    def createMaterialsFromInputFile(self, modelInfo, inputFile):
+        for materialDef in inputFile["*material"]:
+
+            materialName = materialDef["name"]
+            materialID = materialDef.get("id", materialName)
+            materialProperties = np.hstack(materialDef["data"])
+
+            modelInfo["materials"][materialID] = {"name": materialName, "properties": materialProperties}
 
         return modelInfo
 
@@ -189,26 +199,25 @@ class AbqModelConstructor:
 
         return modelInfo
 
-    def assignSectionsFromInputFile(self, modelInfo, inputFile):
+    def createSectionsFromInputFile(self, modelInfo, inputFile):
         """Assign properties and section properties to all elements by
         the given section definitions."""
 
         elementSets = modelInfo["elementSets"]
 
         for secDef in inputFile["*section"]:
-            if secDef["type"] == "plane" or secDef["type"] == "solid":
-                material = [mat for mat in inputFile["*material"] if mat["id"] == secDef["material"]][0]
-                if secDef["type"] == "plane":
-                    elProperties = np.asarray([secDef["thickness"]], dtype=float)
-                else:
-                    elProperties = np.array([], dtype=float)
+            name = secDef["name"]
+            sec = secDef["type"]
+            data = secDef["data"]
+            materialID = secDef["material"]
 
-                umatProperties = np.hstack(material["data"])
-                for line in secDef["data"]:
-                    for elSet in line:
-                        for el in elementSets[elSet]:
-                            el.setProperties(elProperties, material["name"], umatProperties)
-            else:
-                raise Exception("Undefined section")
+            Section = getSectionByName(sec)
+
+            # this was a bad design decision, and will be deprecated sooner or later:
+            thickness = float(secDef.get("thickness", 0.0))
+
+            theSection = Section(name, data, materialID, thickness, modelInfo)
+
+            modelInfo = theSection.assignSectionPropertiesToModel(modelInfo)
 
         return modelInfo

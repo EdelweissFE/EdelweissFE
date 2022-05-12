@@ -62,7 +62,7 @@ class Journal:
         }
 
     def message(self, message, senderIdentification, level=1):
-        while len(message) >= self.leftColumn :
+        while len(message) >= self.leftColumn:
             self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
 
         if level < self.suppressLvl:

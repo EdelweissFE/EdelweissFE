@@ -95,7 +95,7 @@ class StepAction(StepActionBase):
             self.nodeForcesDelta = 0
             self.idle = True
 
-    def updateStepAction(self, action):
+    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.idle = False
         nodeForceDelta = []

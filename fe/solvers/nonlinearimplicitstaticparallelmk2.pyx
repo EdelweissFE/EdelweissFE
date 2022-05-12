@@ -52,7 +52,7 @@ class NISTParallel(NIST):
     
     identification = "NISTPSolver"
     
-    def solveStep(self, step, time, stepActions, stepOptions, U, P):
+    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
         
@@ -62,7 +62,7 @@ class NISTParallel(NIST):
         else:
             self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', cpu_count() ))
         self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
-        return super().solveStep(step, time, stepActions, stepOptions, U, P)
+        return super().solveStep(step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers)
     
     def applyDirichletK(self, K, dirichlets):
         """ Apply the dirichlet bcs on the global stiffnes matrix
@@ -97,7 +97,7 @@ class NISTParallel(NIST):
         
         return K
     
-    def computeElements(self, Un1, dU, P, K, F, increment):
+    def computeElements(self, elements, Un1, dU, P, K, F, increment):
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
         instead of element(Un, dUn+1)
@@ -115,8 +115,8 @@ class NISTParallel(NIST):
         cdef:
             int elNDof, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
             int desiredThreads = self.numThreads
-            int nElements = len(self.elements.values())
-            list elList = list(self.elements.values())
+            int nElements = len(elements.values())
+            list elList = list(elements.values())
         
             long[::1] I             = K.I
             double[::1] K_mView     = K

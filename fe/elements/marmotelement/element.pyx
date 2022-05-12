@@ -58,10 +58,7 @@ mapStateTypes={
 @cython.final # no subclassing -> cpdef with nogil possible
 cdef class MarmotElementWrapper:
     
-    def __cinit__(self, elementType, nodes, elNumber):
-        self.nodes = nodes
-        if self.nodes:
-            self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
+    def __cinit__(self, elementType, elNumber):
             
         self.elNumber = elNumber
         
@@ -81,17 +78,25 @@ cdef class MarmotElementWrapper:
         self.dofIndicesPermutation          = np.asarray(permutationPattern)
         
         self.ensightType                    = self.marmotElement.getElementShape().decode('utf-8')
+
+    def setNodes (self, nodes):
+        self.nodes = nodes
+        self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
+        self.marmotElement.assignNodeCoordinates(&self.nodeCoordinates[0])
         
-    def setProperties(self, elementProperties, materialName, materialProperties):
-        
+    def setProperties(self, elementProperties):
         self.elementProperties =    elementProperties
-        self.materialProperties =   materialProperties
         
         self.marmotElement.assignProperty( 
                 ElementProperties(
                         &self.elementProperties[0],
                         self.elementProperties.shape[0] ) )
 
+    def initializeElement(self, ):
+        self.marmotElement.initializeYourself()
+
+    def setMaterial(self, materialName, materialProperties):
+        self.materialProperties =   materialProperties
         try:
             self.marmotElement.assignProperty(
                     MarmotMaterialSection(
@@ -108,8 +113,6 @@ cdef class MarmotElementWrapper:
         self.stateVarsTemp =        np.zeros(self.nStateVars)
         
         self.marmotElement.assignStateVars(&self.stateVarsTemp[0], self.nStateVars)
-        
-        self.marmotElement.initializeYourself(&self.nodeCoordinates[0])
         
     cpdef void initializeStateVarsTemp(self, ) nogil:
         self.stateVarsTemp[:] = self.stateVars
@@ -196,6 +199,9 @@ cdef class MarmotElementWrapper:
         cdef StateView res = self.marmotElement.getStateView(result, quadraturePoint )
 
         return <double[:res.stateSize]> ( res.stateLocation )
+
+    def getCoordinatesAtCenter(self):
+        return np.asarray ( self.marmotElement.getCoordinatesAtCenter() )
     
     def __dealloc__(self):
         del self.marmotElement

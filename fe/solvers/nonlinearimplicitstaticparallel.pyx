@@ -64,7 +64,7 @@ class NISTParallelForMarmotElements(NISTParallel):
    
     identification = "NISTPSolver"
 
-    def computeElements(self, Un1, dU, P, K, F, increment):
+    def computeElements(self, elements, Un1, dU, P, K, F, increment):
         
         """ Loop over all elements, and evalute them. 
         Note that ABAQUS style is employed: element(Un+1, dUn+1) 
@@ -82,8 +82,8 @@ class NISTParallelForMarmotElements(NISTParallel):
         cdef:
             int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   
             int desiredThreads = self.numThreads
-            int nElements = len(self.elements.values())
-            list elList = list(self.elements.values())
+            int nElements = len(elements.values())
+            list elList = list(elements.values())
         
             long[::1] I             = K.I
             double[::1] K_mView     = K

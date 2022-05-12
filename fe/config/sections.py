@@ -26,38 +26,13 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 """
-Created on Mo July 29 10:50:53 2019
+Created on Sun Apr 03 11:27:14 2022
 
 @author: Matthias Neuner
-
 """
-
-from fe.stepactions.stepactionbase import StepActionBase
-import numpy as np
+import importlib
 
 
-documentation = {}
-
-
-class StepAction(StepActionBase):
-    """Initializes materials"""
-
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-
-        self.name = name
-
-        self.theElements = modelInfo["elementSets"][action.get("elSet", "all")]
-        self.active = True
-        self.emptyDef = np.array([0.0])
-
-    def finishStep(self, U, P, stepMagnitude=None):
-        self.active = False
-
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-        pass
-
-    def apply(
-        self,
-    ):
-        for el in self.theElements:
-            el.setInitialCondition("initialize material", self.emptyDef)
+def getSectionByName(name):
+    module = importlib.import_module("fe.sections." + name.lower())
+    return module.Section

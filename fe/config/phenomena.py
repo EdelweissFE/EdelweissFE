@@ -40,6 +40,8 @@ phenomena = OrderedDict(
         ("micro rotation", "rotation vector"),
         ("thermal", "scalar"),
         ("nonlocal damage", "scalar"),
+        ("concentration", "scalar"),
+        ("chemical potential", "scalar"),
     ]
 )
 
@@ -50,6 +52,8 @@ fieldCorrectionTolerance = {
     "rotation": 1e-3,
     "micro rotation": 1e-8,
     "nonlocal damage": 1e-8,
+    "concentration": 1e-1,
+    "chemical potential": 1e-1,
 }
 
 fluxResidualTolerance = {
@@ -57,6 +61,8 @@ fluxResidualTolerance = {
     "rotation": 1e-4,
     "micro rotation": 1e-8,
     "nonlocal damage": 1e-8,
+    "concentration": 1e-1,
+    "chemical potential": 1e-2,
 }
 
 fluxResidualToleranceAlternative = {
@@ -64,6 +70,8 @@ fluxResidualToleranceAlternative = {
     "rotation": 5e-3,
     "micro rotation": 5e-3,
     "nonlocal damage": 5e-3,
+    "concentration": 5e-2,
+    "chemical potential": 5e-2,
 }
 
 # domain                 dimensions
