@@ -113,6 +113,6 @@ if __name__ == "__main__":
             failedTests += 1
             continue
 
-    print("[blue]Tests failed: {:3}[/]".format(failedTests) )
+    print("[blue]Tests failed: {:3}[/]".format(failedTests))
     if failedTests > 0:
         sys.exit(1)

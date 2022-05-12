@@ -45,7 +45,7 @@ class StepActionBase(ABC):
         pass
 
     @abstractmethod
-    def updateStepAction(self, definition):
+    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
         """is called when an updated definition is present for a new step"""
         pass
 

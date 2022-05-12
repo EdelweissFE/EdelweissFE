@@ -35,13 +35,30 @@ from fe.utils.misc import stringDict
 
 
 def loadConfiguration(jobInfo):
+    """load the default (field) tolerance settings from phenomena.py"""
     jobInfo["fieldCorrectionTolerance"] = fieldCorrectionTolerance
     jobInfo["fluxResidualTolerance"] = fluxResidualTolerance
     jobInfo["fluxResidualToleranceAlternative"] = fluxResidualToleranceAlternative
     return jobInfo
 
 
-def updateConfiguration(newConfiguration, jobInfo):
-    target = newConfiguration["configuration"]
+def updateConfiguration(newConfiguration, jobInfo, journal):
+    """update configurations of the job, such as tolerances"""
+    configurationType = newConfiguration["configuration"]
+    if configurationType not in jobInfo:
+        raise KeyError("configuration type {:} invalid".format(configurationType))
+
     settings = stringDict([setting for line in newConfiguration["data"] for setting in line])
-    jobInfo[target].update({key: type(jobInfo[target][key])(val) for key, val in settings.items()})
+    for key, val in settings.items():
+        if key not in jobInfo[configurationType]:
+            raise KeyError("configuration type {:}/{:} invalid".format(configurationType, key))
+
+        configurationValueType = type(jobInfo[configurationType][key])
+        val = configurationValueType(val)
+
+        journal.message(
+            "Setting {:}/{:} to {:}".format(configurationType, key, val),
+            "configuration",
+            level=1,
+        )
+        jobInfo[configurationType][key] = val

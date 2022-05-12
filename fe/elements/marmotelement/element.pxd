@@ -89,7 +89,9 @@ cdef extern from "Marmot/MarmotElement.h":
 
         void assignProperty( const MarmotMaterialSection& property ) except +ValueError
 
-        void initializeYourself(const double* elementCoordinates)
+        void assignNodeCoordinates(const double* elementCoordinates)
+
+        void initializeYourself()
 
         void computeYourself( const double* QTotal,
                                             const double* dQ,
@@ -131,6 +133,8 @@ cdef extern from "Marmot/MarmotElement.h":
         int getNNodes()
     
         int getNDofPerElement()
+
+        vector[double] getCoordinatesAtCenter()
         
 cdef class MarmotElementWrapper:
     
@@ -143,10 +147,10 @@ cdef class MarmotElementWrapper:
     cdef readonly dofIndicesPermutation
     
     cdef public double[::1] stateVars, nodeCoordinates
-    cdef double[::1] elementProperties, stateVarsTemp , materialProperties
+    cdef public double[::1] elementProperties, stateVarsTemp , materialProperties
     cdef int nStateVars
     cdef double[::1] getStateView(self, string stateName, int gaussPt)
-    
+
     # nogil methods are already declared here:
     
     cpdef void initializeStateVarsTemp(self, ) nogil

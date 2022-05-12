@@ -57,7 +57,7 @@ documentation = {
 import numpy as np
 from fe.utils.misc import stringDict, strToRange, isInteger
 from fe.utils.meshtools import extractNodesFromElementSet
-from fe.utils.math import createMathExpression
+from fe.utils.math import createMathExpression, createModelAccessibleFunction
 from fe.utils.elementresultcollector import ElementResultCollector
 
 
@@ -115,6 +115,13 @@ class FieldOutput:
                 self.quadraturePoints = quadraturePoints
 
                 self.elementResultCollector = ElementResultCollector(self.elSet, quadraturePoints, self.resultName)
+
+        elif "modelData" in definition:
+            self.domainType = "model"
+            self.type = "modelData"
+            self.getCurrentModelDataResult = createModelAccessibleFunction(definition["modelData"], modelInfo=modelInfo)
+            # self.resultName = definition["result"]
+
         else:
             raise Exception("invalid field output requested: " + definition["name"])
 
@@ -163,6 +170,9 @@ class FieldOutput:
 
         elif self.type == "elementResult":
             incrementResult = self.elementResultCollector.getCurrentResults()
+
+        elif self.type == "modelData":
+            incrementResult = self.getCurrentModelDataResult()
 
         if self.f:
             incrementResult = self.f(incrementResult)

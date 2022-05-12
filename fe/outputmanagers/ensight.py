@@ -58,6 +58,7 @@ from distutils.util import strtobool
 from fe.utils.misc import stringDict
 from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
+from fe.utils.math import evalModelAccessibleExpression
 
 
 def writeCFloat(f, ndarray):
@@ -426,6 +427,9 @@ class OutputManager(OutputManagerBase):
         self.fieldOutputController = fieldOutputController
         self.journal = journal
 
+        self.transientTAndFSetNumber = 1
+        self.staticTAndFSetNumber = 2
+
         exportName = "{:}_{:}".format(name, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
 
         for defLine in definitionLines:
@@ -437,8 +441,10 @@ class OutputManager(OutputManagerBase):
         self.elSetToEnsightPartMappings = {}
         self.ensightCase = EnsightChunkWiseCase(exportName)
 
-        self.perNodeJobs = []
-        self.perElementJobs = []
+        self.ensightCase.setCurrentTime(self.staticTAndFSetNumber, 0.0)
+
+        self.transientPerNodeJobs = []
+        self.transientPerElementJobs = []
 
         elementSets = modelInfo["elementSets"]
 
@@ -457,7 +463,9 @@ class OutputManager(OutputManagerBase):
 
         for defLine in definitionLines:
             definition = stringDict(defLine)
-            if "create" in definition:
+
+            # standard, transient jobs accessing the fieldoutput:
+            if "fieldOutput" in definition:
                 varType = definition["create"]
 
                 fieldOutput = fieldOutputController.fieldOutputs[definition["fieldOutput"]]
@@ -472,17 +480,46 @@ class OutputManager(OutputManagerBase):
                     field = perNodeJob["fieldOutput"].field
                     perNodeJob["varSize"] = variableTypes[fe.config.phenomena.phenomena[field]]
                     perNodeJob["dimensions"] = fe.config.phenomena.getFieldSize(field, self.domainSize)
-                    self.perNodeJobs.append(perNodeJob)
+                    self.transientPerNodeJobs.append(perNodeJob)
 
                 if varType == "perElement":
                     perElementJob = {}
                     perElementJob["fieldOutput"] = fieldOutput
                     perElementJob["part"] = self.elSetToEnsightPartMappings[perElementJob["fieldOutput"].elSetName]
+
+                    # TODO: don't do this for each output job, but only once!
                     perElementJob["elementsOfShape"] = disassembleElsetToEnsightShapes(
                         perElementJob["fieldOutput"].elSet
                     )
                     perElementJob["name"] = definition.get("name", perElementJob["fieldOutput"].name).replace(" ", "_")
-                    self.perElementJobs.append(perElementJob)
+                    self.transientPerElementJobs.append(perElementJob)
+
+            # one time, static jobs, which may output model data; they are executed immediately
+            elif "modeldata" in definition:
+                varType = definition["create"]
+                if varType == "perElement":
+                    perElementJob = {}
+                    name = definition["name"]
+                    elSet = modelInfo["elementSets"][definition["elSet"]]
+                    part = self.elSetToEnsightPartMappings[definition["elSet"]]
+
+                    # TODO: don't do this for each output job, but only once!
+                    elementsOfShape = disassembleElsetToEnsightShapes(elSet)
+
+                    thedata = evalModelAccessibleExpression(definition["modeldata"], modelInfo)
+                    result = np.asarray(thedata, dtype=float)
+
+                    varDict = {shape: result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items()}
+
+                    if len(result.shape) == 1:
+                        dimension = 1
+                    else:
+                        dimension = result.shape[1]
+
+                    partsDict = {part.partNumber: varDict}
+                    enSightVar = EnsightPerElementVariable(name, dimension, partsDict)
+                    self.ensightCase.writeVariableTrendChunk(enSightVar, self.staticTAndFSetNumber)
+                    del enSightVar
 
     def initializeStep(self, step, stepActions, stepOptions):
         if self.name in stepOptions or "Ensight" in stepOptions:
@@ -498,18 +535,18 @@ class OutputManager(OutputManagerBase):
             )
             return
 
-        self.ensightCase.setCurrentTime(1, totalTime + dT)
+        self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, totalTime + dT)
 
-        for perNodeJob in self.perNodeJobs:
+        for perNodeJob in self.transientPerNodeJobs:
             resultTypeLength = perNodeJob["varSize"]
             jobName = perNodeJob["name"]
             nodalVarTable = perNodeJob["fieldOutput"].getLastResult()
             partsDict = {perNodeJob["part"].partNumber: ("coordinates", nodalVarTable)}
             enSightVar = EnsightPerNodeVariable(jobName, resultTypeLength, partsDict)
-            self.ensightCase.writeVariableTrendChunk(enSightVar, 1)
+            self.ensightCase.writeVariableTrendChunk(enSightVar, self.transientTAndFSetNumber)
             del enSightVar
 
-        for perElementJob in self.perElementJobs:
+        for perElementJob in self.transientPerElementJobs:
             name = perElementJob["name"]
             part = perElementJob["part"]
             elementsOfShape = perElementJob["elementsOfShape"]
@@ -523,7 +560,7 @@ class OutputManager(OutputManagerBase):
 
             partsDict = {part.partNumber: varDict}
             enSightVar = EnsightPerElementVariable(name, dimension, partsDict)
-            self.ensightCase.writeVariableTrendChunk(enSightVar, 1)
+            self.ensightCase.writeVariableTrendChunk(enSightVar, self.transientTAndFSetNumber)
             del enSightVar
 
         # intermediate save of the case

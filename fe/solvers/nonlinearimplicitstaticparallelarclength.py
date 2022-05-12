@@ -33,7 +33,7 @@ Created on Thu Nov  2 13:43:01 2017
 (Parallel) Arc Length Solver, based on the proposed approach in Jirásek/Bažant 2001.
 Replaces the NewtonRaphson scheme of the NISTParallel Solver.
 """
-from fe.solvers.nonlinearimplicitstaticparallelmk2 import NISTParallel
+from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
 
 import numpy as np
 from fe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
@@ -43,18 +43,18 @@ from fe.utils.math import createModelAccessibleFunction
 class NISTPArcLength(NISTParallel):
     identification = "NISTPArcLength"
 
-    def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
+    def __init__(self, jobInfo, journal):
 
         self.Lambda = 0.0
-        self.fieldOutputs = fieldOutputController.fieldOutputs
-        self.modelInfo = modelInfo
 
-        return super().__init__(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
+        return super().__init__(jobInfo, journal)
 
-    def solveStep(self, step, time, stepActions, stepOptions, U, P):
+    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
 
         options = stepOptions["NISTArcLength"]
         arcLengthControllerType = options["arcLengthController"]
+
+        self.dLambda = 0.0
 
         if arcLengthControllerType == "off":
             self.arcLengthController = None
@@ -65,24 +65,47 @@ class NISTPArcLength(NISTParallel):
 
             if "stopCondition" in options and options["stopCondition"] != "False":
                 self.checkConditionalStop = createModelAccessibleFunction(
-                    options["stopCondition"], self.modelInfo, self.fieldOutputs
+                    options["stopCondition"], modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
                 )
             else:
                 self.checkConditionalStop = lambda: False
 
-        self.dLambda = 0.0
-
-        return super().solveStep(step, time, stepActions, stepOptions, U, P)
+        return super().solveStep(
+            step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers
+        )
 
     def solveIncrement(
-        self, U, dU, P, K, activeStepActions, increment, lastIncrementSize, extrapolation, maxIter, maxGrowingIter
+        self,
+        U,
+        dU,
+        P,
+        K,
+        elements,
+        activeStepActions,
+        constraints,
+        increment,
+        lastIncrementSize,
+        extrapolation,
+        maxIter,
+        maxGrowingIter,
     ):
         """Arc length method to solve for an increment
         Implementation based on the proposed approach by"""
 
         if self.arcLengthController == None:
             return super().solveIncrement(
-                U, dU, P, K, activeStepActions, increment, lastIncrementSize, extrapolation, maxIter, maxGrowingIter
+                U,
+                dU,
+                P,
+                K,
+                elements,
+                activeStepActions,
+                constraints,
+                increment,
+                lastIncrementSize,
+                extrapolation,
+                maxIter,
+                maxGrowingIter,
             )
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -97,7 +120,6 @@ class NISTPArcLength(NISTParallel):
         concentratedLoads = activeStepActions["concentratedLoads"]
         distributedLoads = activeStepActions["distributedLoads"]
         bodyForces = activeStepActions["bodyForces"]
-        constraints = activeStepActions["constraints"]
 
         R_ = np.tile(self.theDofManager.constructDofVector(), (2, 1)).T  # 2 RHSs
         R_0 = R_[:, 0]
@@ -107,6 +129,7 @@ class NISTPArcLength(NISTParallel):
         P_0 = self.theDofManager.constructDofVector()
         P_f = self.theDofManager.constructDofVector()
         K_f = self.theDofManager.constructVIJSystemMatrix()
+        K_0 = self.theDofManager.constructVIJSystemMatrix()
         Un1 = self.theDofManager.constructDofVector()
         ddU = None
 
@@ -128,25 +151,27 @@ class NISTPArcLength(NISTParallel):
             Un1[:] = U
             Un1 += dU
 
-            P[:] = K[:] = F[:] = P_0[:] = P_f[:] = K_f[:] = 0.0
+            P[:] = K[:] = F[:] = P_0[:] = P_f[:] = K_f[:] = K_0[:] = 0.0
 
-            P, K, F = self.computeElements(Un1, dU, P, K, F, increment)
+            P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
             P, K = self.assembleConstraints(constraints, Un1, P, K, increment)
 
-            P_0, K = self.assembleLoads(
-                concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K, zeroIncrement
+            P_0, K_0 = self.assembleLoads(
+                concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K_0, zeroIncrement
             )  # compute 'dead' deadloads, like gravity
             P_f, K_f = self.assembleLoads(
                 concentratedLoads, distributedLoads, bodyForces, Un1, P_f, K_f, referenceIncrement
             )  # compute 'dead' deadloads, like gravity
 
             P_f -= P_0  # and subtract the dead part, since we are only interested in the homogeneous linear part
+            K_f -= K_0
 
             # Dead and Reference load ..
             R_0[:] = P_0 + (Lambda + dLambda) * P_f + P
             R_f[:] = P_f
 
             # add stiffness contribution
+            K[:] += K_0
             K[:] += (Lambda + dLambda) * K_f
 
             # Dirichlets ..
@@ -159,14 +184,23 @@ class NISTPArcLength(NISTParallel):
             R_f = self.applyDirichlet(referenceIncrement, R_f, dirichlets)
 
             if iterationCounter > 0 or isExtrapolatedIncrement:
-                if self.checkConvergence(R_0, ddU, F, iterationCounter, incrementResidualHistory):
+                converged, nodesWithLargestResidual = self.checkConvergence(
+                    R_0, ddU, F, iterationCounter, incrementResidualHistory
+                )
+
+                if converged:
                     break
 
                 if self.checkDivergingSolution(incrementResidualHistory, maxGrowingIter):
+                    self.printResidualOutlierNodes(nodesWithLargestResidual)
                     raise DivergingSolution("Residual grew {:} times, cutting back".format(maxGrowingIter))
 
-            if iterationCounter == maxIter:
-                raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
+                if iterationCounter == maxIter:
+                    self.printResidualOutlierNodes(nodesWithLargestResidual)
+                    raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
+
+            # if iterationCounter == maxIter:
+            #     raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
 
             K_ = self.assembleStiffnessCSR(K)
             K_ = self.applyDirichletK(K_, dirichlets)
@@ -191,6 +225,12 @@ class NISTPArcLength(NISTParallel):
         self.Lambda += dLambda
         self.dLambda = dLambda
         self.arcLengthController.finishIncrement(U, dU, dLambda)
+
+        self.journal.message(
+            "Current load parameter: lambda={:6.2e}, last increment: dLambda={:6.2e}".format(self.Lambda, self.dLambda),
+            self.identification,
+            level=1,
+        )
 
         return Un1, dU, P, iterationCounter, incrementResidualHistory
 

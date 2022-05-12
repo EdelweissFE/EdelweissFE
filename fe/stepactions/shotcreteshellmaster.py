@@ -73,7 +73,7 @@ class StepAction(StepActionBase):
     ):
         pass
 
-    def updateStepAction(self, definition):
+    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
         pass
 
     def getDelta(self, increment):

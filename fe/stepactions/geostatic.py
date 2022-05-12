@@ -80,7 +80,7 @@ class StepAction(StepActionBase):
     def finishStep(self, U, P, stepMagnitude=None):
         self.active = False
 
-    def updateStepAction(self, definition):
+    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
         pass
 
     def apply(

@@ -49,16 +49,21 @@ mathModules = {
 }
 
 
-def createModelAccessibleFunction(expression, modelInfo, fieldOutputs):
-    """Create a function from a string expression, which can access the complete model and fieldOutput"""
-    scope = {**modelInfo, **locals()}
-    f = eval("lambda:" + expression, scope)
-    return f
+def createFunction(expression, *argnames, **kwargs):
+    """Create a function from a string expression"""
+    scope = {**locals(), **kwargs}
+    return lambda *args: eval(expression, globals(), {**dict(zip(argnames, args)), **kwargs})
 
 
-def evalModelAccessibleExpression(expression, modelInfo, fieldOutputs):
+def createModelAccessibleFunction(expression, modelInfo, *argnames, **kwargs):
+    """Create a function from a string expression, which can access the complete model any given objects"""
+    kwargs = {**kwargs, **modelInfo}
+    return createFunction(expression, *argnames, **kwargs)
+
+
+def evalModelAccessibleExpression(expression, modelInfo, *args, **kwargs):
     """Evalualate a string expression, which can access the complete model and fieldOutput"""
-    return createModelAccessibleFunction(expression, modelInfo, fieldOutputs)()
+    return createModelAccessibleFunction(expression, modelInfo, *args, **kwargs)()
 
 
 def createMathExpression(expression, symbol="x"):

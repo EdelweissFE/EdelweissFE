@@ -73,7 +73,9 @@ def collectStepActionsAndOptions(
             moduleName = options.get("name", module)
 
             if moduleName in stepActions[module]:
-                stepActions[module][moduleName].updateStepAction(options)
+                stepActions[module][moduleName].updateStepAction(
+                    moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+                )
                 journal.message('Stepaction "{:}" will be updated'.format(moduleName), "stepActionManager", 1)
             else:
                 stepActions[module][moduleName] = stepActionFactory(module)(
@@ -107,6 +109,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         "elementSets": {},
         "surfaces": {},
         "constraints": {},
+        "materials": {},
         "domainSize": domainSize,
     }
 
@@ -118,7 +121,8 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # the standard 'Abaqus like' model generator is invoked unconditionally, and it has direct access to the inputfile
     abqModelConstructor = AbqModelConstructor(journal)
     modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.assignSectionsFromInputFile(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.createMaterialsFromInputFile(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
 
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
@@ -132,16 +136,22 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # store job info
     jobInfo = {"dofManager": dofManager, "computationTime": 0.0}
 
-    # add or update additional job info such as inputfile, domain, name
+    # add or update additional job info such as inputfile, domain, name, tolerances
     jobInfo.update(job)
     jobInfo = loadConfiguration(jobInfo)
     for updateConfig in inputfile["*updateConfiguration"]:
-        updateConfiguration(updateConfig, jobInfo)
+        updateConfiguration(updateConfig, jobInfo, journal)
 
     # collect all job steps in a list of stepDictionaries
     jobSteps = filterByJobName(inputfile["*step"], jobName)
 
     plotter = Plotter(journal, inputfile)
+
+    # generate an instance of the desired solver
+    Solver = getSolverByName(job.get("solver", "NIST"))
+    solver = Solver(jobInfo, journal)
+    U, P = solver.initialize()
+    modelInfo["solver"] = solver
 
     fieldOutputController = FieldOutputController(modelInfo, inputfile, journal)
 
@@ -154,11 +164,6 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         outputmanagers.append(
             OutputManager(managerName, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter)
         )
-
-    # generate an instance of the desired solver
-    Solver = getSolverByName(job.get("solver", "NIST"))
-    solver = Solver(jobInfo, modelInfo, journal, fieldOutputController, outputmanagers)
-    U, P = solver.initialize()
 
     stepActions = defaultdict(CaseInsensitiveDict)
     stepOptions = defaultdict(CaseInsensitiveDict)
@@ -181,12 +186,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
                 # solve the step
                 tic = getCurrentTime()
                 success, U, P, time = solver.solveStep(
-                    step,
-                    time,
-                    stepActions,
-                    stepOptions,
-                    U,
-                    P,
+                    step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers
                 )
                 toc = getCurrentTime()
 
@@ -215,8 +215,10 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     except KeyboardInterrupt:
         print("")
         journal.errorMessage("Interrupted by user", identification)
+        success = True
 
     except StepFailed:
+        success = False
         journal.errorMessage("Step not finished", identification)
 
     finally:
@@ -239,4 +241,5 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         plotter.finalize()
         if not suppressPlots:
             plotter.show()
-        return success, U, P, fieldOutputController
+
+    return success, U, P, fieldOutputController

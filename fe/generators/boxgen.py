@@ -89,7 +89,6 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 
     testEl = elType(
         options["elType"],
-        [],
         0,
     )
 
@@ -283,7 +282,9 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 
                 # plotNodeList( nodeList )
 
-                newEl = elType(options["elType"], nodeList, currentElementLabel)
+                # newEl = elType(options["elType"], nodeList, currentElementLabel)
+                newEl = elType(options["elType"], currentElementLabel)
+                newEl.setNodes(nodeList)
 
                 elements.append(newEl)
                 modelInfo["elements"][currentElementLabel] = newEl

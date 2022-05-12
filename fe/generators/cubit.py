@@ -132,7 +132,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 
     abqModelConstructor = AbqModelConstructor(journal)
     modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, fileDict)
-    modelInfo = abqModelConstructor.assignSectionsFromInputFile(modelInfo, fileDict)
+    modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, fileDict)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, fileDict)
 
     return modelInfo

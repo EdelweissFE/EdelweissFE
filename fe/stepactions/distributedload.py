@@ -79,7 +79,7 @@ class StepAction(StepActionBase):
             self.delta = 0
             self.idle = True
 
-    def updateStepAction(self, action):
+    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         if "magnitude" in action:
             self.delta = np.asarray([float(action["magnitude"])]) - self.magnitudeAtStepStart

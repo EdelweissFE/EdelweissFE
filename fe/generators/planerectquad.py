@@ -84,7 +84,6 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 
     testEl = elType(
         options["elType"],
-        [],
         0,
     )
     if testEl.nNodes == 4:
@@ -118,13 +117,15 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     for x in range(nX):
         for y in range(nY):
             if testEl.nNodes == 4:
-                newEl = elType(
-                    options["elType"], [nG[x, y], nG[x + 1, y], nG[x + 1, y + 1], nG[x, y + 1]], currentElementLabel
-                )
+                newEl = elType(options["elType"], currentElementLabel)
+                newEl.setNodes([nG[x, y], nG[x + 1, y], nG[x + 1, y + 1], nG[x, y + 1]])
 
             elif testEl.nNodes == 8:
                 newEl = elType(
                     options["elType"],
+                    currentElementLabel,
+                )
+                newEl.setNodes(
                     [
                         nG[2 * x, 2 * y],
                         nG[2 * x + 2, 2 * y],
@@ -134,8 +135,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                         nG[2 * x + 2, 2 * y + 1],
                         nG[2 * x + 1, 2 * y + 2],
                         nG[2 * x, 2 * y + 1],
-                    ],
-                    currentElementLabel,
+                    ]
                 )
             elements.append(newEl)
             modelInfo["elements"][currentElementLabel] = newEl

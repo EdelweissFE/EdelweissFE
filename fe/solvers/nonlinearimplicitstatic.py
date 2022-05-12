@@ -65,12 +65,7 @@ class NIST:
     defaultCriticalIter = 5
     defaultMaxGrowingIter = 10
 
-    def __init__(self, jobInfo, modelInfo, journal, fieldOutputController, outputmanagers):
-        self.nodes = modelInfo["nodes"]
-        self.elements = modelInfo["elements"]
-        self.nodeSets = modelInfo["nodeSets"]
-        self.elementSets = modelInfo["elementSets"]
-        self.constraints = modelInfo["constraints"]
+    def __init__(self, jobInfo, journal):
 
         self.linSolver = getLinSolverByName(jobInfo["linsolver"]) if "linsolver" in jobInfo else getDefaultLinSolver()
 
@@ -86,8 +81,6 @@ class NIST:
         self.iterationMessageTemplate = "{:11.2e}{:1}{:11.2e}{:1} "
 
         self.journal = journal
-        self.fieldOutputController = fieldOutputController
-        self.outputmanagers = outputmanagers
 
         self.systemMatrix = self.theDofManager.constructVIJSystemMatrix()
 
@@ -103,7 +96,7 @@ class NIST:
 
         return U, P
 
-    def solveStep(self, step, time, stepActions, stepOptions, U, P):
+    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
         """Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time"""
 
@@ -129,9 +122,13 @@ class NIST:
 
         dU = self.theDofManager.constructDofVector()
 
+        elements = modelInfo["elements"]
+
         activeStepActions = self.collectActiveStepActions(stepActions)
+        constraints = modelInfo["constraints"]
 
         lastIncrementSize = False
+        success = False
 
         for setfield in activeStepActions["setfields"]:
             setfield.apply()
@@ -159,7 +156,9 @@ class NIST:
                         dU,
                         P,
                         K,
+                        elements,
                         activeStepActions,
+                        constraints,
                         increment,
                         lastIncrementSize,
                         extrapolation,
@@ -182,15 +181,15 @@ class NIST:
                     if iterationCounter >= criticalIter:
                         incGen.preventIncrementIncrease()
 
-                    for el in self.elements.values():
+                    for el in elements.values():
                         el.acceptLastState()
 
                     self.journal.message(
                         "Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1
                     )
 
-                    self.fieldOutputController.finalizeIncrement(U, P, increment)
-                    for man in self.outputmanagers:
+                    fieldOutputController.finalizeIncrement(U, P, increment)
+                    for man in outputmanagers:
                         man.finalizeIncrement(U, P, increment)
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
@@ -227,7 +226,19 @@ class NIST:
         return success, U, P, finishedTime
 
     def solveIncrement(
-        self, Un, dU, P, K, activeStepActions, increment, lastIncrementSize, extrapolation, maxIter, maxGrowingIter
+        self,
+        Un,
+        dU,
+        P,
+        K,
+        elements,
+        activeStepActions,
+        constraints,
+        increment,
+        lastIncrementSize,
+        extrapolation,
+        maxIter,
+        maxGrowingIter,
     ):
         """Standard Newton-Raphson scheme to solve for an increment"""
 
@@ -245,7 +256,7 @@ class NIST:
         concentratedLoads = activeStepActions["concentratedLoads"]
         distributedLoads = activeStepActions["distributedLoads"]
         bodyForces = activeStepActions["bodyForces"]
-        constraints = activeStepActions["constraints"]
+        # constraints = activeStepActions["constraints"]
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
             extrapolation, increment, dU, dirichlets, lastIncrementSize
@@ -260,7 +271,7 @@ class NIST:
 
             P[:] = K[:] = F[:] = PExt[:] = 0.0
 
-            P, K, F = self.computeElements(Un1, dU, P, K, F, increment)
+            P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
             PExt, K = self.assembleLoads(concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment)
             PExt, K = self.assembleConstraints(constraints, Un1, PExt, K, increment)
 
@@ -274,14 +285,21 @@ class NIST:
                 # iteration cycle 1 or higher, time to check the convergence
                 for dirichlet in dirichlets:
                     R[dirichlet.indices] = 0.0
-                if self.checkConvergence(R, ddU, F, iterationCounter, incrementResidualHistory):
+
+                converged, nodesWithLargestResidual = self.checkConvergence(
+                    R, ddU, F, iterationCounter, incrementResidualHistory
+                )
+
+                if converged:
                     break
 
                 if self.checkDivergingSolution(incrementResidualHistory, maxGrowingIter):
+                    self.printResidualOutlierNodes(nodesWithLargestResidual)
                     raise DivergingSolution("Residual grew {:} times, cutting back".format(maxGrowingIter))
 
-            if iterationCounter == maxIter:
-                raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
+                if iterationCounter == maxIter:
+                    self.printResidualOutlierNodes(nodesWithLargestResidual)
+                    raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
 
             K_ = self.assembleStiffnessCSR(K)
             K_ = self.applyDirichletK(K_, dirichlets)
@@ -292,7 +310,7 @@ class NIST:
 
         return Un1, dU, P, iterationCounter, incrementResidualHistory
 
-    def computeElements(self, Un1, dU, P, K, F, increment):
+    def computeElements(self, elements, Un1, dU, P, K, F, increment):
         """Loop over all elements, and evalute them.
         Note that ABAQUS style is employed: element(Un+1, dUn+1)
         instead of element(Un, dUn+1)
@@ -303,7 +321,7 @@ class NIST:
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         time = np.array([stepTime, totalTime])
 
-        for el in self.elements.values():
+        for el in elements.values():
 
             Ke = K[el]
             Pe = np.zeros(el.nDof)
@@ -411,6 +429,7 @@ class NIST:
 
         iterationMessage = ""
         convergedAtAll = True
+        nodesWithLargestResidual = {}
 
         spatialAveragedFluxes = self.computeSpatialAveragedFluxes(F)
 
@@ -420,11 +439,17 @@ class NIST:
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
 
         for field, fieldIndices in self.theDofManager.indicesOfFieldsInDofVector.items():
-            fluxResidual = np.linalg.norm(R[fieldIndices], np.inf)
+            fieldResidualAbs = np.abs(R[fieldIndices])
+
+            indexOfMax = np.argmax(fieldResidualAbs)
+            fluxResidual = fieldResidualAbs[indexOfMax]
+
+            nodesWithLargestResidual[field] = self.theDofManager.getNodeForIndexInDofVector(indexOfMax)
+
             fieldCorrection = np.linalg.norm(ddU[fieldIndices], np.inf) if ddU is not None else 0.0
 
             convergedCorrection = fieldCorrection < self.fieldCorrectionTolerances[field]
-            convergedFlux = fluxResidual <= max(fluxResidualTolerances[field] * spatialAveragedFluxes[field], 1e-10)
+            convergedFlux = fluxResidual <= max(fluxResidualTolerances[field] * spatialAveragedFluxes[field], 1e-7)
 
             previousFluxResidual, nGrew = residualHistory[field]
             if fluxResidual > previousFluxResidual:
@@ -446,7 +471,7 @@ class NIST:
         toc = getCurrentTime()
         self.computationTimes["convergence check"] += toc - tic
 
-        return convergedAtAll
+        return convergedAtAll, nodesWithLargestResidual
 
     def linearSolve(self, A, b):
         """Interface to the linear eq. system solver"""
@@ -455,6 +480,10 @@ class NIST:
         ddU = self.linSolver(A, b)
         toc = getCurrentTime()
         self.computationTimes["linear solve"] += toc - tic
+
+        if np.isnan(ddU).any():
+            raise DivergingSolution("Obtained NaN in linear solve")
+
         return ddU
 
     def assembleStiffnessCSR(self, K):
@@ -492,7 +521,7 @@ class NIST:
 
         tic = getCurrentTime()
 
-        for constraint in constraints:
+        for constraint in constraints.values():
 
             Ke = K[constraint]
             Pe = np.zeros(constraint.nDof)
@@ -541,7 +570,7 @@ class NIST:
         return False
 
     def collectActiveStepActions(self, stepActions):
-        """ get the current active actions (loads, etc. ... ) for the current step"""
+        """get the current active actions (loads, etc. ... ) for the current step"""
         activeActions = dict()
 
         activeActions["dirichlets"] = list(stepActions["dirichlet"].values()) + list(
@@ -552,7 +581,7 @@ class NIST:
         activeActions["concentratedLoads"] = stepActions["nodeforces"].values()
 
         activeActions["geostatics"] = [g for g in stepActions["geostatic"].values() if g.active]
-        activeActions["constraints"] = [c for c in self.constraints.values()]
+        # activeActions["constraints"] = [c for c in modelInfo.constraints.values()]
         activeActions["setfields"] = [s for s in stepActions["setfield"].values() if s.active]
         activeActions["initializematerial"] = [s for s in stepActions["initializematerial"].values() if s.active]
 
@@ -562,3 +591,16 @@ class NIST:
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
                 action.finishStep(U, P)
+
+    def printResidualOutlierNodes(self, residualOutliers):
+        self.journal.message(
+            "Residual outliers:",
+            self.identification,
+            level=1,
+        )
+        for field, node in residualOutliers.items():
+            self.journal.message(
+                "|{:20}|node {:10}|".format(field, node.label),
+                self.identification,
+                level=2,
+            )
