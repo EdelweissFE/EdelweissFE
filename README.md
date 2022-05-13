@@ -12,6 +12,7 @@ EdelweissFE requires
 - Cython 0.28+*
 - Matplotlib*
 - Rich
+- Gstools
 - OpenMP*
 - Intel MKL for the PARDISO*  (binaries and header files; if you use Anaconda, install packages `mkl` and `mkl-include`)
 - [Marmot](https://github.com/MAteRialMOdelingToolbox/Marmot/)
