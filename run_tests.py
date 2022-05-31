@@ -64,6 +64,7 @@ if __name__ == "__main__":
     testfilesDir = os.path.join(os.getcwd(), "testfiles")
     os.chdir(testfilesDir)
     testsDirs = next(os.walk("."))[1]
+    testsDirs = sorted(testsDirs, key=str.casefold)
 
     if "all" not in tests:
         testsDirs = list(set(testsDirs).intersection(set(tests)))
