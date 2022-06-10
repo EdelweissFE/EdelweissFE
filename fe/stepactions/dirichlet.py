@@ -37,6 +37,7 @@ documentation = {
     "nSet": "nSet for application of the BC",
     "1,2,3": "prescribed values in directions",
     "field": "field for BC",
+    "analyticalField": "(optional) scales the defined BCs",
     "f(t)": "(optional) define an amplitude",
 }
 
@@ -58,6 +59,9 @@ class StepAction(StepActionBase):
         nodeSets = modelInfo["nodeSets"]
         self.field = action["field"]
 
+        if "analyticalField" in action:
+            self.analyticalField = modelInfo["analyticalFields"][action["analyticalField"]]
+
         self.action = action
         self.nSet = nodeSets[action["nSet"]]
 
@@ -65,7 +69,19 @@ class StepAction(StepActionBase):
             if direction in action:
                 directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 dirichletIndices += directionIndices
-                dirichletDelta += [float(action[direction])] * len(directionIndices)
+
+                if "analyticalField" in action:
+                    scaleFactors = [self.analyticalField.evaluateAtCoordinates(node.coordinates) for node in self.nSet]
+
+                    unScaledDelta = [float(action[direction])] * len(directionIndices)
+                    scaledDelta = []
+                    for val1, val2 in zip(scaleFactors, unScaledDelta):
+                        scaledDelta.append(val1 * val2)
+
+                    dirichletDelta += scaledDelta
+
+                else:
+                    dirichletDelta += [float(action[direction])] * len(directionIndices)
 
         self.indices = np.array(dirichletIndices)
         self.delta = np.array(dirichletDelta)

@@ -33,8 +33,8 @@ Created on Tue Feb 9 10:05:41 2021
 
 documentation = {
     "fieldOutput": "field output to set",
-    "type": "const",
-    "value": "values",
+    "type": "'const or 'analyticalField'",
+    "value": "scalar value if type 'const'; name of analyticalField if type 'analyticalField'",
 }
 
 from fe.stepactions.stepactionbase import StepActionBase
@@ -54,6 +54,12 @@ class StepAction(StepActionBase):
         self.type = action["type"]
         self.value = action["value"]
 
+        if not self.type in ["uniform", "analyticalField"]:
+            raise Exception("Invalid type: {}".format(self.type))
+    
+        if self.type == "analyticalField":
+            self.analyticalField = modelInfo["analyticalFields"][self.value]
+
     def finishStep(self, U, P, stepMagnitude=None):
         self.active = False
 
@@ -70,3 +76,22 @@ class StepAction(StepActionBase):
                 "setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.identification
             )
             self.fieldOutput.setResults(currentResults)
+
+        if self.type == "analyticalField":
+
+            currentResults = np.zeros_like(self.fieldOutput.getLastResult())
+            
+            if self.analyticalField.type == "scalarExpression" and not currentResults.shape[2] == 1:
+                raise Exception("Cannot map scalar value to {}-dimensional result.".format(currentResults.shape[2]))
+
+            elementList = self.fieldOutput.elSet
+
+            for i1, element in enumerate(elementList):
+                coordinatesAtCenter = element.getCoordinatesAtCenter()
+                #for i2, quadraturePoint in enumerate(self.fieldOutput.quadraturePoints):
+                #    currentResults[i1][i2] = self.analyticalField.evaluateAtCoordinates(coordinatesAtCenter)
+                currentResults[i1] = self.analyticalField.evaluateAtCoordinates(coordinatesAtCenter)
+
+            self.fieldOutput.setResults(currentResults)
+
+

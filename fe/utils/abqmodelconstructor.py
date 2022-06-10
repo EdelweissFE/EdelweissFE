@@ -36,6 +36,7 @@ from fe.config.elementlibrary import getElementByName
 from fe.utils.misc import isInteger
 from fe.config.constraints import getConstraintByName
 from fe.config.sections import getSectionByName
+from fe.config.analyticalFields import getAnalyticalFieldByName
 import numpy as np
 
 
@@ -219,5 +220,18 @@ class AbqModelConstructor:
             theSection = Section(name, data, materialID, thickness, modelInfo)
 
             modelInfo = theSection.assignSectionPropertiesToModel(modelInfo)
+
+        return modelInfo
+
+    def createAnalyticalFieldsFromInputFile(self, modelInfo, inputFile):
+        for fieldDef in inputFile["*analyticalField"]:
+            analyticalFieldName = fieldDef["name"]
+            analyticalFieldType = fieldDef["type"]
+            analyticalFieldData = fieldDef["data"]
+
+            analyticalFieldClass = getAnalyticalFieldByName(analyticalFieldType)
+            analyticalField = analyticalFieldClass(analyticalFieldName, analyticalFieldData, modelInfo)
+
+            modelInfo["analyticalFields"][analyticalFieldName] = analyticalField
 
         return modelInfo
