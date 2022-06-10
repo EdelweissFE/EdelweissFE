@@ -113,6 +113,14 @@ inputLanguage = {
             "data": ("string", "defintions lines for the output module"),
         },
     ),
+    "*analyticalField": (
+        "define an analytical field",
+        {
+            "name": ("string", "name of analytical field"),
+            "type": ("string", "type of analytical field (currently 'expression' only)"),
+            "data": ("string", "definition"),
+        },
+    ),
     "*output": (
         "define an output module",
         {

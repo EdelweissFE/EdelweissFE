@@ -31,6 +31,7 @@ Created on Tue Jan  17 19:10:42 2017
 @author: Matthias Neuner
 """
 from collections import OrderedDict, defaultdict
+from fe.config import analyticalFields
 from fe.config.phenomena import domainMapping
 from fe.config.generators import getGeneratorByName
 from fe.config.stepactions import stepActionFactory
@@ -110,6 +111,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         "surfaces": {},
         "constraints": {},
         "materials": {},
+        "analyticalFields": {},
         "domainSize": domainSize,
     }
 
@@ -124,6 +126,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     modelInfo = abqModelConstructor.createMaterialsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
 
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     dofManager = DofManager(modelInfo)
