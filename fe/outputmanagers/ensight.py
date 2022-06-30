@@ -420,6 +420,8 @@ class OutputManager(OutputManagerBase):
     def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         self.name = name
 
+        self.timeAtLastOutput = -1e16
+        self.minDTForOutput = -1e16
         self.finishedSteps = 0
         self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
@@ -434,9 +436,9 @@ class OutputManager(OutputManagerBase):
 
         for defLine in definitionLines:
             definition = stringDict(defLine)
-            if "configuration" in definition and strtobool(definition.get("overwrite", "True")):
-                exportName = "{:}".format(name)
-                break
+            if "configuration" in definition:
+                if strtobool(definition.get("overwrite", "True")):
+                    exportName = "{:}".format(name)
 
         self.elSetToEnsightPartMappings = {}
         self.ensightCase = EnsightChunkWiseCase(exportName)
@@ -525,9 +527,17 @@ class OutputManager(OutputManagerBase):
         if self.name in stepOptions or "Ensight" in stepOptions:
             options = stepOptions.get(self.name, False) or stepOptions["Ensight"]
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
+            self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 
     def finalizeIncrement(self, U, P, increment):
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        incNumber, incrementSize, stepProgress, dT, stepTimeAtIncrementStart, totalTimeAtIncrementStart = increment
+        time = totalTimeAtIncrementStart + dT
+
+        # check if we should write output, i.e., if enough time has passed:
+        timeSinceLastOutput = time - self.timeAtLastOutput
+        if  self.minDTForOutput - timeSinceLastOutput > 1e-12 :
+            self.journal.message( "skipping output", self.identification, 1)
+            return 
 
         if dT <= 0.0 and self.finishedSteps > 0:
             self.journal.message(
@@ -535,7 +545,12 @@ class OutputManager(OutputManagerBase):
             )
             return
 
-        self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, totalTime + dT)
+        self.writeOutput ( U, P, time)
+
+    def writeOutput(self, U, P, time):
+
+        self.timeAtLastOutput = time 
+        self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, time)
 
         for perNodeJob in self.transientPerNodeJobs:
             resultTypeLength = perNodeJob["varSize"]
@@ -574,7 +589,11 @@ class OutputManager(OutputManagerBase):
         self,
         U,
         P,
+        time,
     ):
+        if time - self.timeAtLastOutput > 1e-12:
+            self.writeOutput(U, P, time)
+
         self.finishedSteps += 1
 
     def finalizeJob(

@@ -59,6 +59,7 @@ class OutputManager(OutputManagerBase):
         self,
         U,
         P,
+        time
     ):
         pass
 

@@ -53,7 +53,7 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeStep(self, U, P):
+    def finalizeStep(self, U, P, time):
         pass
 
     @abstractmethod

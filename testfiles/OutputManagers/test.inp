@@ -40,7 +40,7 @@ fieldOutput=Force_Bottom, f(x)='sum(x[:,1])'
 fieldOutput=Displacement_Top, label=Ualongtopsurface, f(x)='x[:,1]', nStages=5, export=True
 
 *step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
-options, category=Ensight, intermediateSaveInterval=2,
+options, category=Ensight, intermediateSaveInterval=2, minDTForOutput=20
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0
 dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,
