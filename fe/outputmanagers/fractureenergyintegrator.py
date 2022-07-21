@@ -72,7 +72,7 @@ class OutputManager(OutputManagerBase):
     def finalizeIncrement(self, U, P, increment):
         pass
 
-    def finalizeStep(self, U, P):
+    def finalizeStep(self, U, P, time):
         pass
 
     def finalizeJob(self, U, P):

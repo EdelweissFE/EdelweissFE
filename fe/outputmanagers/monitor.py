@@ -73,7 +73,7 @@ class OutputManager(OutputManagerBase):
                 self.identification,
             )
 
-    def finalizeStep(self, U, P):
+    def finalizeStep(self, U, P, time):
         pass
 
     def finalizeJob(self, U, P):

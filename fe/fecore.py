@@ -213,6 +213,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
                     manager.finalizeStep(
                         U,
                         P,
+                        time
                     )
 
     except KeyboardInterrupt:
