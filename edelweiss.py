@@ -35,7 +35,7 @@ import argparse
 import matplotlib
 import numpy as np
 from fe.fecore import finiteElementSimulation
-from fe.utils.inputfileparser import parseInputFile, printKeywords
+from fe.utils.inputfileparser import parseInputFile, printKeywords, printKeywordsRST
 from fe.utils.printdocumentation import printDocumentation
 
 if __name__ == "__main__":
@@ -51,6 +51,7 @@ if __name__ == "__main__":
     parser.add_argument("--mplBackend", dest="mplBackend", default=None, type=str, help="define a matplotlib backend")
     parser.add_argument("--output", dest="output", default=None, type=str, help="write the final solution to a file")
     parser.add_argument("--keywords", dest="kw", action="store_true", help="print keywords")
+    parser.add_argument("--keywordsRST", dest="kwRST", action="store_true", help="print keywords in RST format")
     parser.add_argument("--doc=module", dest="doc", help="print keywords")
     args = parser.parse_args()
 
@@ -58,6 +59,10 @@ if __name__ == "__main__":
 
     if args.kw:
         printKeywords()
+        exit(0)
+
+    if args.kwRST:
+        printKeywordsRST()
         exit(0)
 
     if args.doc:

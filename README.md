@@ -34,7 +34,7 @@ EdelweissFE depends on several Cython modules, which must be compiled prior to f
 Simply run
 `python setup.py build_ext -i`
 
-Enforce recomipilation and installation with
+Enforce recompilation and installation with
 `python setup.py build_ext -i --force`
 
 ## Run the validation examples
@@ -58,3 +58,7 @@ However, it is RECOMMENDED to enforce a fixed number of threads by running
 
 This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).
 
+
+### Build the documentation (requires sphinx and the sphinx_rtd_theme)
+
+`sphinx-build ./doc/source/ ./docs -b html` 

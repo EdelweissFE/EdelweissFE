@@ -1,0 +1,85 @@
+Documentation
+=============
+
+Parallelization
+***************
+
+EdelweissFE makes use of OpenMP to parallelize the computation of finite elements and for certain solvers, such as SuperLU, UFMPACK, or PARDISO.
+
+If a parallel solver (e.g, NISTParallel, NISTPArcLength) is selected in the .inp file, EdelweissFE  automatically determines the max. number of threads dependent on the host architecture.
+However, it is RECOMMENDED to enforce a fixed number of threads by running
+
+.. code-block:: console
+
+    OMP_NUM_THREADS=XX python edelweiss.py INPUT.inp
+
+This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).
+
+Stepactions
+***********
+
+Bodyforce 
+---------
+
+.. automodule:: fe.stepactions.bodyforce
+   :members: __doc__
+
+Dirichlet BC
+---------------
+
+.. automodule:: fe.stepactions.dirichlet
+   :members: __doc__
+
+
+Distributed load
+-----------------
+
+.. automodule:: fe.stepactions.distributedload
+    :members: __doc__
+
+Geostatic stress
+-----------------
+
+.. automodule:: fe.stepactions.geostatic
+    :members: __doc__
+
+
+Indirect displacement control
+-----------------------------
+
+.. automodule:: fe.stepactions.indirectcontrol
+    :members: __doc__
+
+Indirect displacement -- contraction ring control
+-------------------------------------------------
+
+.. automodule:: fe.stepactions.indirectcontractioncontrol
+    :members: __doc__
+
+Initialize a material
+---------------------
+
+.. automodule:: fe.stepactions.initializematerial
+    :members: __doc__
+
+Concentrated node forces
+------------------------
+
+.. automodule:: fe.stepactions.nodeforces
+    :members: __doc__
+
+Set field to prescribed value
+-----------------------------
+
+.. automodule:: fe.stepactions.setfield
+    :members: __doc__
+
+.. Solvers
+.. *******
+
+.. Constraints
+.. ***********
+
+.. Outputmanagers
+.. **************
+
