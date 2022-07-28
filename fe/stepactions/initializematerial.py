@@ -30,7 +30,6 @@
 # @author: Matthias Neuner
 """
 Let materials initialize themselves (e.g., state vars depending on material parameters...) !
-
 """
 
 from fe.stepactions.stepactionbase import StepActionBase

@@ -25,10 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mon Sep 24 13:52:01 2018
+# Created on Mon Sep 24 13:52:01 2018
 
-@author: matthias
+# @author: matthias
+"""
+Parallel implementation of the NIST solver.
 """
 from fe.solvers.nonlinearimplicitstatic import NIST
 

@@ -25,13 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sun Jan  8 20:37:35 2017
+
+# @author: Matthias Neuner
 """
-Created on Sun Jan  8 20:37:35 2017
-
-@author: Matthias Neuner
-
-Standard nonlinear, implicit static solver.
-
+A standard nonlinear, implicit static solver.
 """
 import numpy as np
 from fe.utils.incrementgenerator import IncrementGenerator
@@ -588,11 +586,13 @@ class NIST:
         return activeActions
 
     def finishStepActions(self, U, P, stepActions):
+        """called when all step actions should finish a step"""
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
                 action.finishStep(U, P)
 
     def printResidualOutlierNodes(self, residualOutliers):
+        """print which nodes have the largest residuals"""
         self.journal.message(
             "Residual outliers:",
             self.identification,

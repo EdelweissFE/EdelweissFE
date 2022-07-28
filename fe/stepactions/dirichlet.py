@@ -29,7 +29,6 @@
 
 # @author: Matthias Neuner
 """
-
 Dirichlet boundary condition.
 If not modified in subsequent steps, the BC is held constant.
 """

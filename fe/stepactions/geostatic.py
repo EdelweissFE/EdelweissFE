@@ -31,7 +31,7 @@
 
 # @ Magdalena
 """
-Possible keywords for stepaction module geostatic
+Initialize materials to an geostatic stress state
 """
 
 from fe.stepactions.stepactionbase import StepActionBase

@@ -29,9 +29,12 @@
 
 # @author: Matthias Neuner
 """
-
 Indirect (displacement) controller for the NISTArcLength solver
-uses a ring to control the contraction
+uses a ring to control the contraction, e.g., for tunneling simulations.
+
+Currently 2D only!
+
+The center is autotically computed from the bounding node coordinates.
 """
 
 documentation = {

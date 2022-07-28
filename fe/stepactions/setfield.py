@@ -25,10 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Tue Feb 9 10:05:41 2021
+# Created on Tue Feb 9 10:05:41 2021
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Set a field (via fieldOutput) to a predefined value.
 """
 
 documentation = {
