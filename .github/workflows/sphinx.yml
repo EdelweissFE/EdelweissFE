@@ -22,14 +22,14 @@ jobs:
           miniforge-version: latest
           activate-environment: anaconda-client-env
               
-       - name: Install conda packages
+      - name: Install conda packages
         shell: bash -l {0}
         run: |
           mamba install -c conda-forge cython compilers openmp gfortran make numpy scipy rich cmake matplotlib sympy gstools
           mamba install -c anaconda mkl mkl-include
           mamba install sphinx sphinx-rtd-theme
 
-       - name: Install Eigen
+      - name: Install Eigen
         shell: bash -l {0}
         run: |
           git clone https://gitlab.com/libeigen/eigen.git
@@ -40,7 +40,7 @@ jobs:
           make install
           cd ../..
 
-       - name: Install Autodiff
+      - name: Install Autodiff
         shell: bash -l {0}
         run: |
           git clone https://github.com/autodiff/autodiff.git
@@ -51,7 +51,7 @@ jobs:
           make install
           cd ../..
 
-       - name: Install Fastor
+      - name: Install Fastor
         shell: bash -l {0}
         run: |
           git clone https://github.com/romeric/Fastor.git
