@@ -26,7 +26,7 @@ jobs:
         run: |
           mamba install -c conda-forge cython compilers openmp gfortran make numpy scipy rich cmake matplotlib sympy gstools
           mamba install -c anaconda mkl mkl-include
-          mamba install sphinx sphinx-rtd-theme
+          mamba install sphinx sphinx_rtd_theme
 
       - name: Install Eigen
         shell: bash -l {0}
