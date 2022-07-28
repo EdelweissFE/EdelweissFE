@@ -25,11 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Thu Nov  2 18:35:44 2017
+
+# @author: Matthias Neuner
+
 """
-Created on Thu Nov  2 18:35:44 2017
-
-@author: Matthias Neuner
-
 Indirect (displacement) controller for the NISTArcLength solver
 """
 

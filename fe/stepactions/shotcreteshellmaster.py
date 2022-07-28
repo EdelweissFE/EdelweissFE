@@ -25,11 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sun Sep 10 14:10:20 2017
+
+# @author: Matthias Neuner
 """
-Created on Sun Sep 10 14:10:20 2017
-
-@author: Matthias Neuner
-
 Module for applying displacements on a shotcrete shell
 """
 

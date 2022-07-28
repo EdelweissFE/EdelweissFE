@@ -25,10 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mon Jan 23 13:03:09 2017
+# Created on Mon Jan 23 13:03:09 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
 
 Dirichlet boundary condition.
 If not modified in subsequent steps, the BC is held constant.

@@ -25,10 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mo July 29 10:50:53 2019
+# Created on Mo July 29 10:50:53 2019
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Let materials initialize themselves (e.g., state vars depending on material parameters...) !
 
 """
 

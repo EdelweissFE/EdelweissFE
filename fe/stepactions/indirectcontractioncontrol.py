@@ -25,10 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Thu May 12 18:35:44 2022
+# Created on Thu May 12 18:35:44 2022
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
 
 Indirect (displacement) controller for the NISTArcLength solver
 uses a ring to control the contraction

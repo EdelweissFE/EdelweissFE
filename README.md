@@ -59,6 +59,6 @@ However, it is RECOMMENDED to enforce a fixed number of threads by running
 This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).
 
 
-### Build the documentation (requires sphinx and the sphinx_rtd_theme)
+### Build the documentation (requires sphinx and sphinx_rtd_theme)
 
 `sphinx-build ./doc/source/ ./docs -b html` 

@@ -25,12 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Thu Nov 15 13:15:14 2018
+
+# @author: Matthias Neuner
 """
-Created on Thu Nov 15 13:15:14 2018
-
-@author: Matthias Neuner
-
-Body force load.
+Simple body force load.
 If not modified in subsequent steps, the load held constant.
 """
 

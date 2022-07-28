@@ -25,12 +25,12 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Tue May  9 19:52:53 2017
+
+# @author: Matthias Neuner
+
+# @ Magdalena
 """
-Created on Tue May  9 19:52:53 2017
-
-@author: Matthias Neuner
-
-@ Magdalena
 Possible keywords for stepaction module geostatic
 """
 

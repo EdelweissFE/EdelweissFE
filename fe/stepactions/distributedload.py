@@ -25,11 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Wed May 10 13:12:40 2017
+
+# @author: Matthias Neuner
 """
-Created on Wed May 10 13:12:40 2017
-
-@author: Matthias Neuner
-
 Distributed load, applied on a surface set.
 If not modified in subsequent steps, the load held constant.
 """

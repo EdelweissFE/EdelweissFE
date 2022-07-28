@@ -25,11 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Tue Jan 24 19:33:06 2017
+
+# @author: Matthias Neuner
+
 """
-Created on Tue Jan 24 19:33:06 2017
-
-@author: Matthias Neuner
-
 Apply simple node forces on a nSet.
 """
 
