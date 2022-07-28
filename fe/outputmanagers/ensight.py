@@ -25,19 +25,16 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sun Jan 15 14:22:48 2017
+
+# @author: Matthias Neuner
 """
-Created on Sun Jan 15 14:22:48 2017
-
-@author: Matthias Neuner
-
 Output manager for Ensight exports.
 If loaded, it automatically exports all elSets as Ensight parts.
 For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.
 
 ATTENTION: 
     fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.
-
-Datalines:
 """
 
 documentation = {

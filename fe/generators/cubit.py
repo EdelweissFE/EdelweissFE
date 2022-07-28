@@ -25,14 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on 2022-03-08
+
+# @author: Paul Hofer
 """
-Created on 2022-03-08
-
-@author: Paul Hofer
-
 Interface to Cubit. Generate mesh using Cubit .jou files.
-
-Datalines:
 """
 
 documentation = {

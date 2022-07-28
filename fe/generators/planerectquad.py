@@ -25,24 +25,27 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Wed Apr 12 15:41:51 2017
+# Created on Wed Apr 12 15:41:51 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
 
 A mesh generator, for rectangular geometries and structured quad meshes:
-    
-    <-----l----->
-     nX elements
-     __ __ __ __
-    |__|__|__|__|  A
-    |__|__|__|__|  |
-    |__|__|__|__|  | h
-    |__|__|__|__|  | nY elements
-  | |__|__|__|__|  |
-  | |__|__|__|__|  V
-x0|_____
-  y0
+
+
+.. code-block:: console
+
+        <-----l----->
+         nX elements
+         __ __ __ __
+        |__|__|__|__|  A
+        |__|__|__|__|  |
+        |__|__|__|__|  | h
+        |__|__|__|__|  | nY elements
+      | |__|__|__|__|  |
+      | |__|__|__|__|  V
+    x0|_____
+      y0
   
 nSets, elSets, surface : 'name'_top, _bottom, _left, _right, ...
 are automatically generated

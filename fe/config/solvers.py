@@ -25,10 +25,15 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Fri Feb 10 19:20:25 2017
+# Created on Fri Feb 10 19:20:25 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Currently, EdelweissFE provides
+
+ * a nonlinear implicit static solver (NIST),
+ * a parallel nonlinear implicit static solver (NISTParallelForMarmotElements), 
+ * and a parallel arc length solver (NISTPArcLength).
 """
 
 import importlib

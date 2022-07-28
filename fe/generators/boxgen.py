@@ -28,25 +28,25 @@
 """
 A mesh generator for cuboid geometries and structured hex meshes:
     
-                      __ __ __ __                          
-                    /__/__/__/__/|    A                               back
-                   /__/__/__/__/ |    |                           top / 
-                  /__/__/__/__/ /|    | lY                         | /
-                  |__|__|__|__|//|    | nY elements                |/
-       y          |__|__|__|__|//|    |                    left----/----right
-       |          |__|__|__|__|//|    V                           /| 
-       |___x      |__|__|__|__|//|   /                           / |   
-      /           |__|__|__|__|//   / lZ                        / bottom
-     z            |__|__|__|__|/   /  nZ elements           front             
-                                                                    
-                 <----lX-----> 
-                  nX elements
+.. code-block:: console
 
+                          __ __ __ __                          
+                        /__/__/__/__/|    A                               back
+                       /__/__/__/__/ |    |                           top / 
+                      /__/__/__/__/ /|    | lY                         | /
+                      |__|__|__|__|//|    | nY elements                |/
+           y          |__|__|__|__|//|    |                    left----/----right
+           |          |__|__|__|__|//|    V                           /| 
+           |___x      |__|__|__|__|//|   /                           / |   
+          /           |__|__|__|__|//   / lZ                        / bottom
+         z            |__|__|__|__|/   /  nZ elements           front             
+                                                                        
+                     <----lX-----> 
+                      nX elements
+    
 nSets, elSets, surface : 'name'_left, _right, _bottom, _top, _front, _back, _all, 
 elSets : 'name'_centralFrontToBack, _shearBandFrontToBack, _shearBandCenterFrontToBack
 are automatically generated
-
-Datalines:
 """
 documentation = {
     "x0": "(optional) origin at x axis",

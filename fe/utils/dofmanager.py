@@ -25,10 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Tue Dec 18 09:18:25 2018
+# Created on Tue Dec 18 09:18:25 2018
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+This module contains import classes for describing the global equation system by means of a sparse system
 """
 
 from collections import OrderedDict

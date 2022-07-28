@@ -25,18 +25,14 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sun May 21 11:34:35 2017
+
+# @author: Matthias Neuner
 """
-Created on Sun May 21 11:34:35 2017
-
-@author: Matthias Neuner
-
 Linearized rigid body constraint:
 Constrains a nodeset to a reference point.
 Currently only available for spatialdomain = 2D.
-    
-Datalines:
 """
-
 
 documentation = {
     "nSet": "(slave) node set, which is constrained to the reference point",

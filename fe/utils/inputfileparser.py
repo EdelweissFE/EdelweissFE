@@ -310,18 +310,10 @@ def printKeywords():
         
 def printKeywordsRST():
     """print the input file language set RST conform"""
-    # kwString = "    {:}    "
-    # kwDataString = "        {:22}{:20}"
-
-
 
     for kw, (kwDoc, optiondict) in sorted(inputLanguage.items()):
         print("``{:}`` : {:}".format(kw, kwDoc))
         print(" ")
-        # wrapper.initial_indent = kwString.format(str(kw))
-        # wrapper.subsequent_indent = " " * len(wrapper.initial_indent)
-        # print(wrapper.fill(kwDoc))
-        # print("")
         print(".. list-table:: Options")
         print("    :widths: 25 25 40")
         print("    :header-rows: 1")
@@ -336,7 +328,4 @@ def printKeywordsRST():
             print("    * - ``{:}``".format(optionName))
             print("      - ``{:}``".format(dType))
             print("      - "+description)
-            # wrapper.initial_indent = kwDataString.format(str(optionName), dType)
-            # wrapper.subsequent_indent = " " * len(wrapper.initial_indent)
-            # print(wrapper.fill(description))
         print(" ")

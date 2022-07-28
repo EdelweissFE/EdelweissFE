@@ -60,7 +60,7 @@ class PrettyPrintDirective(Directive):
         literal['language'] = 'python'
 
         return [
-                addnodes.desc_name(text='Options'),
+                addnodes.desc_name(text=''),
                 addnodes.desc_content('', literal)
         ]
 

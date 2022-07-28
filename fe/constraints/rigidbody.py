@@ -25,10 +25,13 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Tue Dec 11 11:21:39 2018
+# Created on Tue Dec 11 11:21:39 2018
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Geometrically exact rigid body constraint:
+Constrains a nodeset to a reference point.
+Currently only available for spatialdomain = 3D.
 """
 
 documentation = {

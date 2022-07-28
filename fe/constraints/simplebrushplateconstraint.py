@@ -25,11 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Fri Jan 10 09:03:42 2020
-
-@author: Matthias Neuner
-"""
+# Created on Fri Jan 10 09:03:42 2020
+# @author: Matthias Neuner
+"""Simple brush plate constraint (Concrete Tests by Kupfer),
+ONLY in global principal directions!"""
 
 documentation = {
     "nSet": "(slave) node set, which is constrained to the reference point",

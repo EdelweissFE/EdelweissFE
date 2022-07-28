@@ -25,22 +25,19 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sat Jul 22 14:57:48 2017
+
+# @author: Matthias Neuner
 """
-Created on Sat Jul 22 14:57:48 2017
-
-@author: Matthias Neuner
-
 FieldOutputs store all kind of analysis results, 
-and are defined via the keyword *fieldOutput.
+and are defined via the keyword ``*fieldOutput``.
 All fieldOutputs are accessable to all outputmanagers at the end of each 
 increment, step and job.
-Furthermore, they can be exported to *.csv files at the end of the analysis job.
+Furthermore, they can be exported to ``*.csv`` files at the end of the analysis job.
 
 ATTENTION: 
     If the results are exported to a .csv file with enabled "saveHistory", 
     the time History is automatically appended to the .csv file"
-
-Datalines:
 """
 
 documentation = {

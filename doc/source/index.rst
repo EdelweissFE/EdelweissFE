@@ -25,11 +25,10 @@ EdelweissFE does not want to ...
    :maxdepth: 2
    :hidden:
 
+   features
    prerequisites
    installation
-   features
    documentation/index
-   syntax
    contributors
    publications
 
