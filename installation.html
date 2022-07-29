@@ -132,9 +132,10 @@ environment:</p>
 </pre></div>
 </div>
 <p>Install necessary mamba packages:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mamba install --no-confirm python=3.10 cython numpy sympy matplotlib scipy</span>
-<span class="go">mamba install --no-confirm compilers cmake gfortran gstools</span>
-<span class="go">mamba install --no-confirm -c anaconda mkl mkl-include intel-openmp</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mamba install --yes python=3.10 cython numpy sympy matplotlib scipy</span>
+<span class="go">mamba install --yes compilers cmake gfortran gstools</span>
+<span class="go">mamba install --yes -c anaconda mkl mkl-include intel-openmp</span>
+<span class="go">mamba install --yes sphinx sphinx_rtd_theme</span>
 </pre></div>
 </div>
 <p>Get Eigen (for EdelweissFE and Marmot):</p>
@@ -167,11 +168,15 @@ environment:</p>
 <span class="go">cd ../../</span>
 </pre></div>
 </div>
-<p>Get EdelweissFE:</p>
+<p>Get, build and test EdelweissFE:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone https://github.com/EdelweissFE/EdelweissFE.git</span>
 <span class="go">cd EdelweissFE</span>
 <span class="go">python setup.py build_ext -i</span>
 <span class="go">python run_tests.py</span>
+</pre></div>
+</div>
+<p>Build this documentation:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sphinx-build ./doc/source/ ./docs -b html</span>
 </pre></div>
 </div>
 </section>
