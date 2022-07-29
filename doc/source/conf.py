@@ -9,7 +9,7 @@
 project = 'EdelweissFE'
 copyright = '2022, Matthias Neuner'
 author = 'Matthias Neuner'
-release = '2022_07'
+release = 'v22.07'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -27,7 +27,7 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_static_path = []
 html_logo = "./logo.png"
 
 
@@ -54,7 +54,7 @@ class PrettyPrintDirective(Directive):
         module_path, member_name = self.arguments[0].rsplit('.', 1)
 
         member_data = getattr(import_module(module_path), member_name)
-        code = pformat(member_data, 2, width=68)
+        code = pformat(member_data, 2, width=80)
        
         literal = nodes.literal_block(code, code)
         literal['language'] = 'python'

@@ -1,6 +1,14 @@
 Outputmanagers
 ==============
 
+Outputmanagers are used for monitoring and exporting results to variuous formats.
+
+Example: ``testfiles/OutputManagers/test.inp``
+
+.. literalinclude:: ../../../testfiles/OutputManagers/test.inp
+   :language: console
+
+
 ``ensight`` - Export to Ensight Gold format
 -------------------------------------------
 

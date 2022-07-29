@@ -25,10 +25,12 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Thu Apr 27 08:35:06 2017
+# Created on Thu Apr 27 08:35:06 2017
 
-@author: matthias
+# @author: matthias
+"""
+This module contains the interface element to Marmot C++ finite elements elements
+It is implemented as a Cython class
 """
 
 import numpy as np

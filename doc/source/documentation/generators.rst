@@ -24,6 +24,11 @@ Generate meshes on the fly. Usage:
    :members: __doc__
 
 .. pprint:: fe.generators.boxgen.documentation
+   
+Example: ``testfiles/BoxGen/test.inp``
+
+.. literalinclude:: ../../../testfiles/BoxGen/test.inp
+   :language: console
 
 ``planerectquad`` - A 2D plane rectangular mesh generator
 ---------------------------------------------------------
@@ -33,6 +38,11 @@ Generate meshes on the fly. Usage:
 
 .. pprint:: fe.generators.planerectquad.documentation
 
+Example: ``testfiles/NodeForces/test.inp``
+
+.. literalinclude:: ../../../testfiles/NodeForces/test.inp
+   :language: console
+
 ``cubit`` - A cubit mesh generator
 ---------------------------------------------------------
 
@@ -40,3 +50,8 @@ Generate meshes on the fly. Usage:
    :members: __doc__
 
 .. pprint:: fe.generators.cubit.documentation
+
+Example: ``testfiles/CubitGen/test.inp``
+
+.. literalinclude:: ../../../testfiles/CubitGen/test.inp
+   :language: console

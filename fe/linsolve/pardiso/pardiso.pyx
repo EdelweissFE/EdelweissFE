@@ -25,10 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Fri Feb  9 20:38:16 2018
+# Created on Fri Feb  9 20:38:16 2018
 
-@author: matthias
+# @author: matthias
+"""
+This module provides an interface to the Intel PARDISO solver using the Eigen library
 """
 
 import numpy as np

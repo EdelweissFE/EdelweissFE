@@ -25,11 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Tue Jan  17 19:10:42 2017
+
+# @author: Matthias Neuner
 """
-Created on Tue Jan  17 19:10:42 2017
-
-@author: Matthias Neuner
-
 Inputfileparser for inputfiles employing the Abaqus syntax.
 """
 import numpy as np

@@ -23,6 +23,11 @@ by specifying their ``name`` and a list of ``option=value``, for example
 
 .. pprint:: fe.stepactions.bodyforce.documentation
 
+Example: ``testfiles/BodyForce3D/test.inp``
+
+.. literalinclude:: ../../../testfiles/BodyForce3D/test.inp
+   :language: console
+
 
 ``dirichlet`` - Standard birichlet BC
 -------------------------------------
@@ -41,6 +46,11 @@ by specifying their ``name`` and a list of ``option=value``, for example
 
 .. pprint:: fe.stepactions.distributedload.documentation
 
+Example: ``testfiles/DLoad/test.inp``
+
+.. literalinclude:: ../../../testfiles/DLoad/test.inp
+   :language: console
+
 ``geostatic`` - Geostatic stress definition
 -------------------------------------------
 
@@ -49,6 +59,11 @@ by specifying their ``name`` and a list of ``option=value``, for example
 
 .. pprint:: fe.stepactions.geostatic.documentation
 
+Example: ``testfiles/GeoStatic/test.inp``
+
+.. literalinclude:: ../../../testfiles/GeoStatic/test.inp
+   :language: console
+
 ``indirectcontrol`` - Indirect displacement control
 ---------------------------------------------------
 
@@ -56,6 +71,11 @@ by specifying their ``name`` and a list of ``option=value``, for example
     :members: __doc__
 
 .. pprint:: fe.stepactions.indirectcontrol.documentation
+
+Example: ``testfiles/IndirectDisplacementControl/test.inp``
+
+.. literalinclude:: ../../../testfiles/IndirectDisplacementControl//test.inp
+   :language: console
 
 ``indirectcontractioncontrol`` - Indirect displacement -- contraction ring control
 ----------------------------------------------------------------------------------
@@ -78,6 +98,11 @@ by specifying their ``name`` and a list of ``option=value``, for example
     :members: __doc__
 
 .. pprint:: fe.stepactions.nodeforces.documentation
+
+Example: ``testfiles/NodeForces/test.inp``
+
+.. literalinclude:: ../../../testfiles/NodeForces/test.inp
+   :language: console
 
 ``setfield`` - Set field to prescribed value
 --------------------------------------------

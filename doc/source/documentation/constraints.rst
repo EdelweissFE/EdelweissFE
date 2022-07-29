@@ -11,13 +11,19 @@ equations into the global equation system.
     nSet=right
     referencePoint=rBottom
 
-``linearlizedrigidbody`` - Linearized rigid body constraints in 2D
+``linearizedrigidbody`` - Linearized rigid body constraints in 2D
 ------------------------------------------------------------------
 
 .. automodule:: fe.constraints.linearizedrigidbody
    :members: __doc__
 
 .. pprint:: fe.constraints.linearizedrigidbody.documentation
+
+   
+Example: ``testfiles/LinearizedRigidBodyConstraint/test.inp``
+
+.. literalinclude:: ../../../testfiles/LinearizedRigidBodyConstraint/test.inp
+   :language: console
 
 ``rigidbody`` - Geometrically exact rigid body constraints in 3D
 ---------------------------------------------------------------------------
@@ -26,3 +32,8 @@ equations into the global equation system.
    :members: __doc__
 
 .. pprint:: fe.constraints.rigidbody.documentation
+
+Example: ``testfiles/RigidBodyConstraintLargeDeformations3D/test.inp``
+
+.. literalinclude:: ../../../testfiles/RigidBodyConstraintLargeDeformations3D/test.inp
+   :language: console

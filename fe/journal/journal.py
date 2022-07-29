@@ -25,10 +25,11 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Sun Jan 15 11:30:59 2017
+# Created on Sun Jan 15 11:30:59 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+This module provides journaling capabilities
 """
 
 import math

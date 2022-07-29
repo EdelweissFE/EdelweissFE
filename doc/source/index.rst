@@ -15,11 +15,11 @@ EdelweissFE aims to be...
  * ... an easy to use tool for coupled problems
  * ... a learning platform for learning the finite element method
  * ... a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique), which are often difficult to implement in mature, MPI-parallelized codes
- * ... an efficient tool for nonlinear simulations up to medium sized problems
+ * ... an efficient tool for nonlinear simulations up to medium sized problems (10^5 degrees of freedom)
 
 EdelweissFE does not want to ...
 
-* ... compete with mature MPI-parallelized codes such as `MOOSE <https://mooseframework.inl.gov/>`_, which are also compatibel with the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library, but less easy to use. Usually, EdelweissFE is used for developing and debugging constitutive models until they are ready for production runs on HPC system using more mature frameworks.
+* ... compete with more mature (MPI-parallelized) codes such as `MOOSE <https://mooseframework.inl.gov/>`_, which are also compatibel with the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library, but less easy to use. Usually, EdelweissFE is used for developing and debugging constitutive models until they are ready for production runs on HPC system using more mature frameworks.
 
 .. toctree::
    :maxdepth: 2
@@ -39,7 +39,7 @@ Run a simulation simply by calling
 
 .. code-block:: console
 
-    python edelweiss.py INPUT.inp
+    python edelweiss.py inputfile.inp
 
 Example input file
 ******************

@@ -25,10 +25,21 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Tue Apr  3 09:44:10 2018
+# Created on Tue Apr  3 09:44:10 2018
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+This is the default model generator,
+creating finite element meshes using the keywords
+
+ * ``*node``
+ * ``*element``
+ * ``*nset``
+ * ``*elset``
+ * ``*surface``
+ * ``*section``
+ * ``*constraint``
+
 """
 
 from fe.elements.node import Node

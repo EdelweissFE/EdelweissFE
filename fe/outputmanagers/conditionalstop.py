@@ -25,18 +25,17 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sat Jul 22 21:26:01 2017
+
+# @author: Matthias Neuner
 """
-Created on Sat Jul 22 21:26:01 2017
-
-@author: Matthias Neuner
-
-A simple monitor to observe results in the console during analysis.
+A conditional stop conditions wenn an expression becomes true.
 
 Datalines:
 """
 documentation = {
     "fieldOutput": "fieldOutput to be monitored",
-    "f(x)": "(optional), apply math on the increment fieldOutput",
+    "f(x)": "(optional), apply a model accesible expression on the fieldOutput",
 }
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
@@ -46,8 +45,6 @@ from fe.utils.exceptions import ConditionalStop
 
 
 class OutputManager(OutputManagerBase):
-    """Simple monitor for nodes, nodeSets, elements and elementSets"""
-
     identification = "ConditionalStop"
     printTemplate = "{:}, {:}: {:}"
 
@@ -71,12 +68,7 @@ class OutputManager(OutputManagerBase):
             result = nJob["f(x)"](nJob["fieldOutput"].getResultHistory())
 
             if result == True:
-                # self.journal.message("conditional stop")
                 raise ConditionalStop()
-            # self.journal.message(self.printTemplate.format(nJob['fieldOutput'].name,
-            #                                                nJob['fieldOutput'].type,
-            #                                                result),
-            #                      self.identification)
 
     def finalizeStep(self, U, P, time):
         pass

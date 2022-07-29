@@ -14,7 +14,7 @@ EdelweissFE requires
 * OpenMP
 * Intel MKL for the PARDISO  (binaries and header files; if you use Anaconda, install packages ``mkl`` and ``mkl-include``)
 * `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_
-* Eigen Library for Linear Algebra `<http://eigen.tuxfamily.org/index.php?title=Main_Page>`_
+* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ library for linear algebra 
 
 All those packages can be easily installed using Anaconda.
 A recent version of Anaconda `<https://anaconda.org/>`_ is sufficient to compile and run EdelweissFE on a Linux system.
