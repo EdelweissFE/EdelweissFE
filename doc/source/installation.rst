@@ -72,9 +72,10 @@ Install necessary mamba packages:
 
 .. code-block:: console
 
-    mamba install --no-confirm python=3.10 cython numpy sympy matplotlib scipy 
-    mamba install --no-confirm compilers cmake gfortran gstools  
-    mamba install --no-confirm -c anaconda mkl mkl-include intel-openmp
+    mamba install --yes python=3.10 cython numpy sympy matplotlib scipy 
+    mamba install --yes compilers cmake gfortran gstools  
+    mamba install --yes -c anaconda mkl mkl-include intel-openmp
+    mamba install --yes sphinx sphinx_rtd_theme
 
 Get Eigen (for EdelweissFE and Marmot):
 
@@ -122,7 +123,7 @@ Get Marmot:
     make install
     cd ../../
 
-Get EdelweissFE:
+Get, build and test EdelweissFE:
 
 .. code-block:: console
 
@@ -131,3 +132,8 @@ Get EdelweissFE:
     python setup.py build_ext -i
     python run_tests.py
 
+Build this documentation:
+
+.. code-block:: console
+
+    sphinx-build ./doc/source/ ./docs -b html

@@ -2,7 +2,7 @@ name: Documentation
 
 on:
   push:
-    branches: [ master, doc ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -64,12 +64,10 @@ jobs:
         run: |
           git clone --recurse-submodules https://github.com/MAteRialMOdelingToolbox/Marmot/
           cd Marmot
-          #
           mkdir build
           cd build
           cmake -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)")  ..
           make install
-          # 
           cd ../../
 
       - name: Build EdelweissFE
@@ -77,7 +75,7 @@ jobs:
         run: |
           python setup.py build_ext -i 
 
-      - name: Building EdelwessFE documentation
+      - name: Building EdelweissFE documentation
         shell: bash -l {0}
         run: |
           sphinx-build ./doc/source/ ./docs -b html
