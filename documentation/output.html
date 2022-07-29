@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outputmanagers &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Solvers" href="solvers.html" />
+    <link rel="prev" title="The DOF manager" href="dofmanager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Outputmanagers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.ensight"><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.monitor"><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.meshplot"><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.fractureenergyintegrator"><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.plotalongpath"><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>Outputmanagers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/output.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="outputmanagers">
+<h1>Outputmanagers<a class="headerlink" href="#outputmanagers" title="Permalink to this heading"></a></h1>
+<p>Outputmanagers are used for monitoring and exporting results to variuous formats.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/OutputManagers/test.inp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon, statevars=5, </span>
+<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
+
+<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
+<span class="go">all</span>
+
+<span class="go">*job, name=cps4job, domain=2d, solver=NIST</span>
+
+<span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
+<span class="go">x0=0, l=50</span>
+<span class="go">y0=0, h=100</span>
+<span class="go">elType=CPS4</span>
+<span class="go">nX=25</span>
+<span class="go">nY=50</span>
+
+<span class="go">*fieldOutput,</span>
+<span class="go">name=Displacement, elSet=all, field=displacement, result=U, </span>
+<span class="go">name=Stress, elSet=all, result=stress, quadraturePoint=1</span>
+<span class="go">name=Strain, elSet=all, result=strain, quadraturePoint=1</span>
+<span class="go">name=AlphaP, elSet=all, result=alphaP, quadraturePoint=1</span>
+<span class="go">name=AlphaD, elSet=all, result=alphaD, quadraturePoint=1</span>
+<span class="go">name=Omega,  elSet=all, result=omega, quadraturePoint=1</span>
+<span class="go">name=Displacement_Top, nSet=gen_top, field=displacement, result=U</span>
+<span class="go">name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P, saveHistory=True, export=ReactionForce, f_export(x)=&#39;x[:,:,1]&#39;</span>
+
+<span class="go">*output, type=ensight, jobName=cps4job, name=myEnsightExport</span>
+<span class="go">create=perNode,    elSet=all, fieldOutput=Displacement</span>
+<span class="go">create=perElement, elSet=all, fieldOutput=Stress</span>
+<span class="go">create=perElement, elSet=all, fieldOutput=Strain</span>
+<span class="go">create=perElement, elSet=all, fieldOutput=AlphaP</span>
+<span class="go">create=perElement, elSet=all, fieldOutput=AlphaD</span>
+<span class="go">create=perElement, elSet=all, fieldOutput=Omega</span>
+<span class="go">configuration, overwrite=yes</span>
+
+<span class="go">*output, type=monitor, jobName=cps4job, name=myNodeSetMonitor</span>
+<span class="go">fieldOutput=Displacement_Top, f(x)=&#39;mean(x[:,1])&#39;</span>
+<span class="go">fieldOutput=Force_Bottom, f(x)=&#39;sum(x[:,1])&#39;</span>
+
+<span class="go">*output, type=plotAlongPath, jobName=cps4job, name=myNodeSetPlotter</span>
+<span class="go">fieldOutput=Displacement_Top, label=Ualongtopsurface, f(x)=&#39;x[:,1]&#39;, nStages=5, export=True</span>
+
+<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
+<span class="go">options, category=Ensight, intermediateSaveInterval=2, minDTForOutput=20</span>
+<span class="go">options, category=NISTSolver, extrapolation=linear, numThreads=2</span>
+<span class="go">dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0</span>
+<span class="go">dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,</span>
+<span class="go">nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2</span>
+</pre></div>
+</div>
+<section id="module-fe.outputmanagers.ensight">
+<span id="ensight-export-to-ensight-gold-format"></span><h2><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format<a class="headerlink" href="#module-fe.outputmanagers.ensight" title="Permalink to this heading"></a></h2>
+<p>Output manager for Ensight exports.
+If loaded, it automatically exports all elSets as Ensight parts.
+For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.</p>
+<dl class="simple">
+<dt>ATTENTION: </dt><dd><p>fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.</p>
+</dd>
+</dl>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="s1">&#39;overwrite=y|n|yes|no|True|False|&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;create&#39;</span><span class="p">:</span> <span class="s1">&#39;perNode|perElement&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;name of the result, defined on an elSet (also for perNode &#39;</span>
+                 <span class="s1">&#39;results)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;intermediateSaveInterval&#39;</span><span class="p">:</span> <span class="s1">&#39;step option in category &quot;Ensight&quot;: save .case &#39;</span>
+                              <span class="s1">&#39;file every N increments&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), standard = fieldOutputs name&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.outputmanagers.monitor">
+<span id="monitor-monitor-quantities-in-the-terminal"></span><h2><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal<a class="headerlink" href="#module-fe.outputmanagers.monitor" title="Permalink to this heading"></a></h2>
+<p>Created on Sat Jul 22 21:26:01 2017</p>
+<p>&#64;author: Matthias Neuner</p>
+<p>A simple monitor to observe results in the console during analysis.</p>
+<p>Datalines:</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math on the increment fieldOutput&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be monitored&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.outputmanagers.meshplot">
+<span id="meshplot-export-to-matplotlib"></span><h2><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib<a class="headerlink" href="#module-fe.outputmanagers.meshplot" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Magdalena</p>
+<dl class="simple">
+<dt>Module meshplot divided into classes:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Triangulation:</dt><dd><p>creates triangles out of rectangles in order to use matplotlib plotting
+options</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Plotter:</dt><dd><p>creates figures, axes, grid, labels</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Outputmanager:</dt><dd><p>creats the plotting specific for the defined keyword lines</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;axis specification according to matplotlib syntax, (default=111)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;create=meshOnly&#39;</span><span class="p">:</span> <span class="s1">&#39;plot the mesh only&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;create=perElement&#39;</span><span class="p">:</span> <span class="s1">&#39;result per element is plotted in a meshplot&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;create=perNode&#39;</span><span class="p">:</span> <span class="s1">&#39;result per node is plotted in a meshplot&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;create=xyData&#39;</span><span class="p">:</span> <span class="s1">&#39;2D Plot of results&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="s1">&#39;figure number, (default=1)&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.outputmanagers.fractureenergyintegrator">
+<span id="fractureenergyintegrator-determine-the-fracture-energy"></span><h2><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy<a class="headerlink" href="#module-fe.outputmanagers.fractureenergyintegrator" title="Permalink to this heading"></a></h2>
+<p>Created on Tue Dec 17 08:26:01 2019</p>
+<p>&#64;author: Matthias Neuner</p>
+<p>A simple integrator to compute the fracture energy</p>
+<p>Datalines:</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;displacementFieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput for displacement (with time history)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;forceFieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput for force (with time history)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;fractureArea&#39;</span><span class="p">:</span> <span class="s1">&#39;(math expression for) area of fracture&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.outputmanagers.plotalongpath">
+<span id="plotalongpath-plot-a-result-along-a-line"></span><h2><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line<a class="headerlink" href="#module-fe.outputmanagers.plotalongpath" title="Permalink to this heading"></a></h2>
+<p>Created on Mon Apr 17 11:37:26 2017</p>
+<p>&#64;author: Matthias Neuner</p>
+<p>Plot result for a nodeSet or an elementSet along the true geometrical distance.
+Corresponds to the plot along path functionality in Abaqus.</p>
+<p>Datalines:</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), axSpec (MATLAB syntax) in the figure&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be plotted (defined on a nodeSet/elementSet)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), figure of the Plotter&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), label, standard=fieldOutputs name&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;normalize&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), normalize peak to 1.0&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.outputmanagers.conditionalstop">
+<span id="conditionalstop-conditional-stop-if-expression-becomes-true"></span><h2><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true<a class="headerlink" href="#module-fe.outputmanagers.conditionalstop" title="Permalink to this heading"></a></h2>
+<p>A conditional stop conditions wenn an expression becomes true.</p>
+<p>Datalines:</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply a model accesible expression on the fieldOutput&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be monitored&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dofmanager.html" class="btn btn-neutral float-left" title="The DOF manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="solvers.html" class="btn btn-neutral float-right" title="Solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stepactions &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Constraints" href="constraints.html" />
+    <link rel="prev" title="Meshgenerators" href="generators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Stepactions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.bodyforce"><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.dirichlet"><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard birichlet BC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.distributedload"><code class="docutils literal notranslate"><span class="pre">distributedload</span></code> - surfaces loads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.geostatic"><code class="docutils literal notranslate"><span class="pre">geostatic</span></code> - Geostatic stress definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.indirectcontrol"><code class="docutils literal notranslate"><span class="pre">indirectcontrol</span></code> - Indirect displacement control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.indirectcontractioncontrol"><code class="docutils literal notranslate"><span class="pre">indirectcontractioncontrol</span></code> - Indirect displacement – contraction ring control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.initializematerial"><code class="docutils literal notranslate"><span class="pre">initalizemateiral</span></code> - Initialize materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.nodeforces"><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.stepactions.setfield"><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set field to prescribed value</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>Stepactions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/stepactions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="stepactions">
+<h1>Stepactions<a class="headerlink" href="#stepactions" title="Permalink to this heading"></a></h1>
+<p>Stepactions are defined within a <code class="docutils literal notranslate"><span class="pre">*step</span></code> defintion,
+by specifying their <code class="docutils literal notranslate"><span class="pre">name</span></code> and a list of <code class="docutils literal notranslate"><span class="pre">option=value</span></code>, for example</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*step, jobName=myJob, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1</span>
+
+<span class="go">dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0</span>
+<span class="go">dirichlet, name=top, nSet=gen_rightTop, field=displacement, 2=0,</span>
+
+<span class="go">distributedload, name=dloadt, surface=gen_top, type=pressure, magnitude=0, f(t)=t</span>
+<span class="go">distributedload, name=dloadl, surface=gen_left, type=pressure, magnitude=0, f(t)=t</span>
+</pre></div>
+</div>
+<section id="module-fe.stepactions.bodyforce">
+<span id="bodyforce-bodyforce-loads"></span><h2><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads<a class="headerlink" href="#module-fe.stepactions.bodyforce" title="Permalink to this heading"></a></h2>
+<p>Simple body force load.
+If not modified in subsequent steps, the load held constant.</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="s1">&#39;in subsequent steps only: define the new force vector &#39;</span>
+           <span class="s1">&#39;incrementally&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;forceVector&#39;</span><span class="p">:</span> <span class="s1">&#39;force vector&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/BodyForce3D/test.inp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*include, input=mesh.inp</span>
+
+<span class="go">*material, name=linearelastic, id=le</span>
+<span class="go">30000.0, 0.15,</span>
+
+<span class="go">*section, name=section1, material=le, type=solid</span>
+<span class="go">all</span>
+
+<span class="go">*job, name=c3d8job, domain=3d</span>
+
+<span class="go">*fieldOutput,</span>
+<span class="go">name=displacement, elSet=all, field=displacement, result=U, name=displacement</span>
+<span class="go">name=stress, elSet=all, result=stress, quadraturePoint=1</span>
+<span class="go">name=strain, elSet=all, result=strain, quadraturePoint=1</span>
+<span class="go">name=RF, nSet=top, result=P, field=displacement</span>
+
+<span class="go">*output, type=ensight, jobName=c3d8job, name=ensightExport</span>
+<span class="go">create=perNode,    fieldOutput=displacement</span>
+<span class="go">create=perElement, fieldOutput=stress</span>
+<span class="go">create=perElement, fieldOutput=strain</span>
+<span class="go">configuration, overwrite=yes</span>
+
+<span class="go">*output, type=monitor, jobName=c3d8job, name=myNodeSetMonitor</span>
+<span class="go">fieldOutput=RF, f(x)=&#39;sum(x[:,0])&#39;, name=ForceX</span>
+<span class="go">fieldOutput=RF, f(x)=&#39;sum(x[:,1])&#39;, name=ForceY</span>
+<span class="go">fieldOutput=RF, f(x)=&#39;sum(x[:,2])&#39;, name=ForceZ</span>
+
+<span class="go">*step, jobName=c3d8job, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1</span>
+<span class="go">options, category=NISTSolver, extrapolation=linear</span>
+<span class="go">dirichlet, name=top,  nSet=top,   field=displacement, 1=0.0, 2=0.0, 3=.0</span>
+<span class="go">bodyforce, name=bforce, elset=all, forceVector=&#39;0.0, 10.0, 20.0&#39;, f(t)=t</span>
+</pre></div>
+</div>
+</section>
+<section id="module-fe.stepactions.dirichlet">
+<span id="dirichlet-standard-birichlet-bc"></span><h2><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard birichlet BC<a class="headerlink" href="#module-fe.stepactions.dirichlet" title="Permalink to this heading"></a></h2>
+<p>Dirichlet boundary condition.
+If not modified in subsequent steps, the BC is held constant.</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;1,2,3&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values in directions&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;analyticalField&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) scales the defined BCs&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;field for BC&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;nSet for application of the BC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.stepactions.distributedload">
+<span id="distributedload-surfaces-loads"></span><h2><code class="docutils literal notranslate"><span class="pre">distributedload</span></code> - surfaces loads<a class="headerlink" href="#module-fe.stepactions.distributedload" title="Permalink to this heading"></a></h2>
+<p>Distributed load, applied on a surface set.
+If not modified in subsequent steps, the load held constant.</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="s1">&#39;in subsequent steps only: define the new magnitude incrementally&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;magnitude&#39;</span><span class="p">:</span> <span class="s1">&#39;dLoad magnitude&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;surface&#39;</span><span class="p">:</span> <span class="s1">&#39;surface for application of the distributed load&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/DLoad/test.inp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
+<span class="go">elType=CPE4</span>
+<span class="go">nX=20</span>
+<span class="go">nY=5</span>
+<span class="go">l=100,</span>
+<span class="go">h=25</span>
+
+<span class="go">*elSet, elSet=loadEls</span>
+<span class="go">100,95,90,85,80</span>
+
+<span class="go">*surface, type=element, name=surfaceLoad</span>
+<span class="go">**elset, faceID</span>
+<span class="go">loadEls, 3</span>
+
+<span class="go">*material, name=modleon, id=modleon, statevars=5</span>
+<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.125, 1</span>
+
+<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
+<span class="go">all</span>
+
+<span class="go">*job, name=cpe4job, domain=2d</span>
+
+<span class="go">*fieldOutput,</span>
+<span class="go">name=displacement, elSet=all, field=displacement, result=U, name=displacement</span>
+<span class="go">name=displacement, nSet=gen_left, field=displacement, result=P, name=RF</span>
+<span class="go">name=stress, elSet=all, result=stress, quadraturePoint=1</span>
+<span class="go">name=strain, elSet=all, result=strain, quadraturePoint=1</span>
+
+<span class="go">*output, type=monitor, jobName=cpe4job, name=ensightExport</span>
+<span class="go">fieldOutput = RF, f(x) = &#39;sum ( x[:, 1])&#39;</span>
+
+<span class="go">*output, type=ensight, jobName=cpe4job, name=ensightExport</span>
+<span class="go">create=perNode,    fieldOutput=displacement</span>
+<span class="go">create=perElement, fieldOutput=stress</span>
+<span class="go">create=perElement, fieldOutput=strain</span>
+<span class="go">configuration, overwrite=yes</span>
+<span class="go">*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1</span>
+<span class="go">options, category=NISTSolver, extrapolation=linear</span>
+<span class="go">dirichlet, name=left,  nSet=gen_left,   field=displacement, 1=0.0, 2=0.0</span>
+<span class="go">distributedload, name=dload, surface=gen_top, type=pressure, magnitude=0.15, f(t)=t</span>
+</pre></div>
+</div>
+</section>
+<section id="module-fe.stepactions.geostatic">
+<span id="geostatic-geostatic-stress-definition"></span><h2><code class="docutils literal notranslate"><span class="pre">geostatic</span></code> - Geostatic stress definition<a class="headerlink" href="#module-fe.stepactions.geostatic" title="Permalink to this heading"></a></h2>
+<p>Initialize materials to an geostatic stress state</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;h1&#39;</span><span class="p">:</span> <span class="s1">&#39;y coordinate of first point, default=1.0&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;h2&#39;</span><span class="p">:</span> <span class="s1">&#39;y coordinate of second point, default=-1.0&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;p1&#39;</span><span class="p">:</span> <span class="s1">&#39;sig_x=sig_y=sig_z in first point&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;p2&#39;</span><span class="p">:</span> <span class="s1">&#39;s11=s22=s33 in second point, default=p1&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;xLateral&#39;</span><span class="p">:</span> <span class="s1">&#39;ratio of sig_x/sig_y, default=1.0&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;zLateral&#39;</span><span class="p">:</span> <span class="s1">&#39;ratio of sig_z/sig_y, default=1.0&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/GeoStatic/test.inp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
+<span class="go">l=50</span>
+<span class="go">h=150</span>
+<span class="go">nX=10</span>
+<span class="go">nY=30</span>
+<span class="go">elType=CPE4</span>
+
+<span class="go">*material, name=linearElastic, id=le, statevars=0</span>
+<span class="go">210000, 0.3</span>
+
+<span class="go">*section, name=section1, thickness=1.0, material=le, type=plane</span>
+<span class="go">all</span>
+
+<span class="go">*job, name=cpe4job, domain=2d, solver=NIST</span>
+<span class="go">*fieldOutput,</span>
+<span class="go">name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)=&#39;mean(x[:,1])&#39;</span>
+<span class="go">name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)=&#39;sum(x[:,1])&#39;</span>
+<span class="go">elSet=all,  field=displacement, result=U, name=displacement</span>
+<span class="go">elSet=all,  result=stress,  name=S11,  quadraturePoint=1, f(x)=&#39;x[:,0]&#39;</span>
+<span class="go">elSet=all,  result=stress,  name=S22,  quadraturePoint=1, f(x)=&#39;x[:,1]&#39;</span>
+<span class="go">elSet=all,  result=stress,  name=S33,  quadraturePoint=1, f(x)=&#39;x[:,2]&#39;</span>
+
+<span class="go">*output, type=monitor, jobName=cpe4job</span>
+<span class="go">fieldOutput=dispTop</span>
+<span class="go">*output, type=monitor, jobName=cpe4job</span>
+<span class="go">fieldOutput=RFBottom</span>
+
+<span class="go">*output, type=ensight, jobName=cpe4job, name=ensightExport</span>
+<span class="go">create=perNode, fieldOutput=displacement</span>
+<span class="go">create=perElement, fieldOutput=S11</span>
+<span class="go">create=perElement, fieldOutput=S22</span>
+<span class="go">create=perElement, fieldOutput=S33</span>
+<span class="go">configuration, overwrite=yes</span>
+
+
+<span class="go">*step, jobName=cpe4job, maxInc=0.5</span>
+<span class="go">dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, </span>
+<span class="go">dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=0.0,</span>
+<span class="go">dirichlet, name=bottom, nSet=gen_bottom,   field=displacement, 2=0.0, </span>
+<span class="go">geostatic, name=geo, elSet=all, p1=-10, h1=150, p2=-5, h2=0, xLateral=1.0, zLateral=1.0</span>
+<span class="go">distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure</span>
+
+<span class="go">*step, jobName=cpe4job, maxInc=1e-1, </span>
+<span class="go">distributedload, name=dlTop, delta=-10.0, f(t)=t</span>
+</pre></div>
+</div>
+</section>
+<section id="module-fe.stepactions.indirectcontrol">
+<span id="indirectcontrol-indirect-displacement-control"></span><h2><code class="docutils literal notranslate"><span class="pre">indirectcontrol</span></code> - Indirect displacement control<a class="headerlink" href="#module-fe.stepactions.indirectcontrol" title="Permalink to this heading"></a></h2>
+<p>Indirect (displacement) controller for the NISTArcLength solver</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="s1">&#39;Final distance (e.g. crack opening)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;dof1&#39;</span><span class="p">:</span> <span class="s1">&#39;Degree of freedom for the constraint ( model access expression )&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;dof2&#39;</span><span class="p">:</span> <span class="s1">&#39;Degree of freedom for the constraint ( model access expression )&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/IndirectDisplacementControl/test.inp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleonNonLocal, id=modleon</span>
+<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1</span>
+
+<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
+<span class="go">all</span>
+<span class="go">*elSet, elSet=weak</span>
+<span class="go">20,61,</span>
+<span class="go">*section, name=sectionweak, thickness=.8, material=modleon, type=plane</span>
+<span class="go">weak</span>
+
+<span class="go">*job, name=cpe4job, domain=2d, solver=NISTPArcLength</span>
+<span class="go">*fieldOutput</span>
+<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
+<span class="go">elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)=&#39;mean(x, axis=1)&#39;</span>
+<span class="go">elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)=&#39;mean(x, axis=1)&#39;</span>
+<span class="go">elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f(x)=&#39;mean( x[:,:], axis=1) &#39;</span>
+<span class="go">elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)=&#39;mean( x[:,:], axis=1) &#39;</span>
+<span class="go">elSet=all, result=omega, quadraturePoint=0:4, name=omega, f(x)=&#39;mean( x[:,:], axis=1) &#39;</span>
+<span class="go">elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas0, f(x)=&#39;mean( x[:,:,0], axis=1) &#39;</span>
+<span class="go">elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas1, f(x)=&#39;mean( x[:,:,1], axis=1) &#39;</span>
+<span class="go">nSet=gen_top, field=displacement, result=P, f(x)=&#39;( sum(x[:, 1]) ) &#39;, name=RFTop, saveHistory=true</span>
+<span class="go">nSet=gen_top, field=displacement, result=U, f(x)=&#39;( x[0, 1] ) &#39;, name=UTop, saveHistory=true</span>
+
+<span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
+<span class="go">x0=0, l=50</span>
+<span class="go">y0=0, h=200</span>
+<span class="go">elType=GCPE4EAS2</span>
+<span class="go">nX=10</span>
+<span class="go">nY=40</span>
+
+<span class="go">*output, type=ensight, jobName=cpe4job, name=esExport</span>
+<span class="go">create=perNode,    fieldOutput=displacement</span>
+<span class="go">create=perElement, fieldOutput=stress</span>
+<span class="go">create=perElement, fieldOutput=eas0</span>
+<span class="go">create=perElement, fieldOutput=eas1</span>
+<span class="go">create=perElement, fieldOutput=strain</span>
+<span class="go">create=perElement, fieldOutput=alphaP</span>
+<span class="go">create=perElement, fieldOutput=alphaD</span>
+<span class="go">create=perElement, fieldOutput=omega</span>
+<span class="go">configuration, overwrite=yes</span>
+
+<span class="go">*output, type=meshplot, jobName=cpe4job, name=RFPlot</span>
+<span class="go">create=xyData, x=time, y=RFTop, legend=RF</span>
+<span class="go">create=xyData, x=time, y=UTop, legend=U, figure=2</span>
+
+<span class="go">*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100</span>
+<span class="go">options, category=NISTSolver, extrapolation=off, numThreads=2</span>
+<span class="go">options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition = &#39; fieldOutputs[&quot;UTop&quot;] &lt; -1.0 &#39;</span>
+<span class="go">indirectcontrol, dof1=&#39; nodes[18].fields[&quot;displacement&quot;][1] &#39;, dof2=&#39; nodes[24].fields[&quot;displacement&quot;][1] &#39; , L=-0.1, </span>
+
+<span class="go">dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, </span>
+<span class="go">dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0</span>
+<span class="go">dirichlet, name=top, nSet=gen_top, field=displacement, 2=-1</span>
+</pre></div>
+</div>
+</section>
+<section id="module-fe.stepactions.indirectcontractioncontrol">
+<span id="indirectcontractioncontrol-indirect-displacement-contraction-ring-control"></span><h2><code class="docutils literal notranslate"><span class="pre">indirectcontractioncontrol</span></code> - Indirect displacement – contraction ring control<a class="headerlink" href="#module-fe.stepactions.indirectcontractioncontrol" title="Permalink to this heading"></a></h2>
+<p>Indirect (displacement) controller for the NISTArcLength solver
+uses a ring to control the contraction, e.g., for tunneling simulations.</p>
+<p>Currently 2D only!</p>
+<p>The center is autotically computed from the bounding node coordinates.</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="s1">&#39;Final distance (e.g. crack opening)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;contractionNSet&#39;</span><span class="p">:</span> <span class="s1">&#39;The node set defining the contraction ring&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;exportCVector&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) file to export the computed c vector&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+<section id="module-fe.stepactions.initializematerial">
+<span id="initalizemateiral-initialize-materials"></span><h2><code class="docutils literal notranslate"><span class="pre">initalizemateiral</span></code> - Initialize materials<a class="headerlink" href="#module-fe.stepactions.initializematerial" title="Permalink to this heading"></a></h2>
+<p>Let materials initialize themselves (e.g., state vars depending on material parameters…) !</p>
+</section>
+<section id="module-fe.stepactions.nodeforces">
+<span id="nodeforces-concentrated-node-forces"></span><h2><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces<a class="headerlink" href="#module-fe.stepactions.nodeforces" title="Permalink to this heading"></a></h2>
+<p>Apply simple node forces on a nSet.</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;1,2,3&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values in directions&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;field for BC&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;nSet for application of the BC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/NodeForces/test.inp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon</span>
+<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
+
+<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
+<span class="go">all</span>
+
+<span class="go">*job, name=cps4job, domain=2d, solver=NIST</span>
+
+<span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
+<span class="go">x0=0, l=50</span>
+<span class="go">y0=0, h=100</span>
+<span class="go">elType=CPS4</span>
+<span class="go">nX=10</span>
+<span class="go">nY=10</span>
+
+<span class="go">*fieldOutput</span>
+<span class="go">nSet=gen_bottom, result=P, field=displacement, name=RF</span>
+<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
+
+<span class="go">*output, type=monitor, jobName=cps4job</span>
+<span class="go">fieldOutput=RF, f(x)=&#39;mean(x[:,1])&#39;</span>
+
+<span class="go">*output, type=ensight, jobName=cps4job, name=esExport</span>
+<span class="go">create=perNode, fieldOutput=displacement</span>
+<span class="go">configuration, overwrite=yes</span>
+
+<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=50, maxIter=25, stepLength=100</span>
+<span class="go">dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0</span>
+<span class="go">nodeforces, name=cloadTop, nSet=gen_top, field=displacement, 2=-50</span>
+<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
+<span class="go">nodeforces, name=cloadTop, nSet=gen_top, 2=-10, f(t)=sin(t*2*pi)</span>
+<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
+<span class="go">nodeforces, name=cloadTop, nSet=gen_top, 2=+50, f(t)=t</span>
+</pre></div>
+</div>
+</section>
+<section id="module-fe.stepactions.setfield">
+<span id="setfield-set-field-to-prescribed-value"></span><h2><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set field to prescribed value<a class="headerlink" href="#module-fe.stepactions.setfield" title="Permalink to this heading"></a></h2>
+<p>Set a field (via fieldOutput) to a predefined value.</p>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;field output to set&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;const or &#39;analyticalField&#39;&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s2">&quot;scalar value if type &#39;const&#39;; name of analyticalField if type &quot;</span>
+           <span class="s2">&quot;&#39;analyticalField&#39;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generators.html" class="btn btn-neutral float-left" title="Meshgenerators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="constraints.html" class="btn btn-neutral float-right" title="Constraints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

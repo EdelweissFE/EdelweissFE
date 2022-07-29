@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvers &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Parallelization" href="parallelization.html" />
+    <link rel="prev" title="Outputmanagers" href="output.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelarclength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>Solvers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/solvers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-fe.config.solvers">
+<span id="solvers"></span><h1>Solvers<a class="headerlink" href="#module-fe.config.solvers" title="Permalink to this heading"></a></h1>
+<p>Currently, EdelweissFE provides</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a nonlinear implicit static solver (NIST),</p></li>
+<li><p>a parallel nonlinear implicit static solver (NISTParallelForMarmotElements),</p></li>
+<li><p>and a parallel arc length solver (NISTPArcLength).</p></li>
+</ul>
+</div></blockquote>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;NIST&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstatic&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;NISTPArcLength&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstaticparallelarclength&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;NISTParallel&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstaticparallelmk2&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;NISTParallelForMarmotElements&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstaticparallel&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Choose the solver in the <code class="docutils literal notranslate"><span class="pre">*job</span></code> definition:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*job, name=myJob, domain=2d, solver=NISTParallel</span>
+</pre></div>
+</div>
+<section id="module-fe.solvers.nonlinearimplicitstatic">
+<span id="nist-nonlinear-implicit-static"></span><h2><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static<a class="headerlink" href="#module-fe.solvers.nonlinearimplicitstatic" title="Permalink to this heading"></a></h2>
+<p>A standard nonlinear, implicit static solver.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.solvers.nonlinearimplicitstatic.</span></span><span class="sig-name descname"><span class="pre">NIST</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST" title="Permalink to this definition"></a></dt>
+<dd><p>This is the Nonlinear Implicit STatic – solver.
+Designed to interface with Abaqus UELs
+Public methods are: __init__(), initializeUP() and solveStep(…).
+OutputManagers are updated at the end of each increment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet">
+<span class="sig-name descname"><span class="pre">applyDirichlet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the dirichlet bcs on the Residual vector
+-&gt; is called by solveStep() before solving the global sys.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK">
+<span class="sig-name descname"><span class="pre">applyDirichletK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the dirichlet bcs on the global stiffnes matrix
+-&gt; is called by solveStep() before solving the global sys.
+<a class="reference external" href="http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros">http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints">
+<span class="sig-name descname"><span class="pre">assembleConstraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints" title="Permalink to this definition"></a></dt>
+<dd><p>Assemble the sub stiffness matrix for a linear constraint (independent of the solution)
+-&gt; once per Increment</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads">
+<span class="sig-name descname"><span class="pre">assembleLoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concentratedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads" title="Permalink to this definition"></a></dt>
+<dd><p>Assemble all loads into a right hand side vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.assembleStiffnessCSR">
+<span class="sig-name descname"><span class="pre">assembleStiffnessCSR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleStiffnessCSR" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a CSR matrix from VIJ</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.checkConvergence">
+<span class="sig-name descname"><span class="pre">checkConvergence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterationCounter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residualHistory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.checkConvergence" title="Permalink to this definition"></a></dt>
+<dd><p>Check the convergency, indivudually for each field,
+similar to ABAQUS based on the current total flux residual and the field correction
+-&gt; is called by solveStep() to decide wether to continue iterating or stop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.checkDivergingSolution">
+<span class="sig-name descname"><span class="pre">checkDivergingSolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incrementResidualHistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.checkDivergingSolution" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the iterative scheme is diverging</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.collectActiveStepActions">
+<span class="sig-name descname"><span class="pre">collectActiveStepActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.collectActiveStepActions" title="Permalink to this definition"></a></dt>
+<dd><p>get the current active actions (loads, etc. … ) for the current step</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">
+<span class="sig-name descname"><span class="pre">computeBodyForces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodyForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces" title="Permalink to this definition"></a></dt>
+<dd><p>Loop over all elements, and evalute them.
+Note that ABAQUS style is employed: element(Un+1, dUn+1)
+instead of element(Un, dUn+1)
+-&gt; is called by solveStep() in each iteration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads">
+<span class="sig-name descname"><span class="pre">computeDistributedLoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distributedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads" title="Permalink to this definition"></a></dt>
+<dd><p>Loop over all elements, and evalute them.
+Note that ABAQUS style is employed: element(Un+1, dUn+1)
+instead of element(Un, dUn+1)
+-&gt; is called by solveStep() in each iteration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeElements">
+<span class="sig-name descname"><span class="pre">computeElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeElements" title="Permalink to this definition"></a></dt>
+<dd><p>Loop over all elements, and evalute them.
+Note that ABAQUS style is employed: element(Un+1, dUn+1)
+instead of element(Un, dUn+1)
+-&gt; is called by solveStep() in each iteration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">
+<span class="sig-name descname"><span class="pre">computeSpatialAveragedFluxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the spatial averaged flux for every field
+-&gt; Called by checkConvergence()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement">
+<span class="sig-name descname"><span class="pre">extrapolateLastIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>if active, extrapolate the solution of the last increment.
+Also returns a boolean for information of an extrapolation was computed
+-&gt; at the beginning of each increment</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.finishStepActions">
+<span class="sig-name descname"><span class="pre">finishStepActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.finishStepActions" title="Permalink to this definition"></a></dt>
+<dd><p>called when all step actions should finish a step</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the solver and return the 2 vectors for field (U) and flux (P)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.linearSolve">
+<span class="sig-name descname"><span class="pre">linearSolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.linearSolve" title="Permalink to this definition"></a></dt>
+<dd><p>Interface to the linear eq. system solver</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes">
+<span class="sig-name descname"><span class="pre">printResidualOutlierNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">residualOutliers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes" title="Permalink to this definition"></a></dt>
+<dd><p>print which nodes have the largest residuals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.resetDisplacements">
+<span class="sig-name descname"><span class="pre">resetDisplacements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.resetDisplacements" title="Permalink to this definition"></a></dt>
+<dd><p>-&gt; May be called at the end of a geostatic step, the zero all displacments after
+applying the geostatic stress</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement">
+<span class="sig-name descname"><span class="pre">solveIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Un</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activeStepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Standard Newton-Raphson scheme to solve for an increment</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.solveStep">
+<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.solveStep" title="Permalink to this definition"></a></dt>
+<dd><p>Public interface to solve for an ABAQUS like step
+returns: boolean Success, U vector, P vector, and the new current total time</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-fe.solvers.nonlinearimplicitstaticparallelmk2">
+<span id="nistparallelformarmotelements-nonlinear-implicit-static-parallel"></span><h2><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)<a class="headerlink" href="#module-fe.solvers.nonlinearimplicitstaticparallelmk2" title="Permalink to this heading"></a></h2>
+<p>Parallel implementation of the NIST solver.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.solvers.nonlinearimplicitstaticparallelmk2.</span></span><span class="sig-name descname"><span class="pre">NISTParallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel" title="Permalink to this definition"></a></dt>
+<dd><p>This is the Nonlinear Implicit STatic – solver ** Parallel version**.
+Designed to interface with Abaqus UELs
+Public methods are: __init__(), initializeUP() and solveStep(…).
+OutputManagers are updated at the end of each increment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.applyDirichletK">
+<span class="sig-name descname"><span class="pre">applyDirichletK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.applyDirichletK" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the dirichlet bcs on the global stiffnes matrix
+-&gt; is called by solveStep() before solving the global sys.
+<a class="reference external" href="http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros">http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros</a></p>
+<p>Cythonized version for speed!</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.computeElements">
+<span class="sig-name descname"><span class="pre">computeElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.computeElements" title="Permalink to this definition"></a></dt>
+<dd><p>Loop over all elements, and evalute them. 
+Note that ABAQUS style is employed: element(Un+1, dUn+1) 
+instead of element(Un, dUn+1)
+-&gt; is called by solveStep() in each iteration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.solveStep">
+<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.solveStep" title="Permalink to this definition"></a></dt>
+<dd><p>Public interface to solve for an ABAQUS like step
+returns: boolean Success, U vector, P vector, and the new current total time</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-fe.solvers.nonlinearimplicitstaticparallelarclength">
+<span id="nistparclength-nonlinear-implicit-static-arc-length"></span><h2><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length<a class="headerlink" href="#module-fe.solvers.nonlinearimplicitstaticparallelarclength" title="Permalink to this heading"></a></h2>
+<p>(Parallel) Arc Length Solver, based on the proposed approach in Jirásek/Bažant 2001.
+Replaces the NewtonRaphson scheme of the NISTParallel Solver.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.solvers.nonlinearimplicitstaticparallelarclength.</span></span><span class="sig-name descname"><span class="pre">NISTPArcLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.extrapolateLastIncrement">
+<span class="sig-name descname"><span class="pre">extrapolateLastIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dLambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.extrapolateLastIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Modified extrapolation to account for a load multiplier predictor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.finishStepActions">
+<span class="sig-name descname"><span class="pre">finishStepActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.finishStepActions" title="Permalink to this definition"></a></dt>
+<dd><p>Modified finish to communicate the ‘correct’ magnitude of external loads,
+i.e., the load multiplier,
+to the stepactions (nodeforces, distributedloads, … )</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement">
+<span class="sig-name descname"><span class="pre">solveIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activeStepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Arc length method to solve for an increment
+Implementation based on the proposed approach by</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep">
+<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep" title="Permalink to this definition"></a></dt>
+<dd><p>Public interface to solve for an ABAQUS like step
+returns: boolean Success, U vector, P vector, and the new current total time</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="output.html" class="btn btn-neutral float-left" title="Outputmanagers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parallelization.html" class="btn btn-neutral float-right" title="Parallelization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

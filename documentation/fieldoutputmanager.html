@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The fieldoutput manager &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The DOF manager" href="dofmanager.html" />
+    <link rel="prev" title="Constraints" href="constraints.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>The fieldoutput manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/fieldoutputmanager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-fe.utils.fieldoutput">
+<span id="the-fieldoutput-manager"></span><h1>The fieldoutput manager<a class="headerlink" href="#module-fe.utils.fieldoutput" title="Permalink to this heading"></a></h1>
+<p>FieldOutputs store all kind of analysis results, 
+and are defined via the keyword <code class="docutils literal notranslate"><span class="pre">*fieldOutput</span></code>.
+All fieldOutputs are accessable to all outputmanagers at the end of each 
+increment, step and job.
+Furthermore, they can be exported to <code class="docutils literal notranslate"><span class="pre">*.csv</span></code> files at the end of the analysis job.</p>
+<dl class="simple">
+<dt>ATTENTION: </dt><dd><p>If the results are exported to a .csv file with enabled “saveHistory”, 
+the time History is automatically appended to the .csv file”</p>
+</dd>
+</dl>
+<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;export&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), export the fieldOutput to a file at the end of the &#39;</span>
+            <span class="s1">&#39;job&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math (in each increment)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;f_export(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math on the final result (table)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;nSet|elSet|node|element&#39;</span><span class="p">:</span> <span class="s1">&#39;entity, for which the fieldOutput is defined&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;name of the fieldOutput&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;quadraturePoint&#39;</span><span class="p">:</span> <span class="s1">&#39;for element based fieldOutputs only, integers or slices&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s1">&#39;e.g., U, P, stress, strain ...&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;saveHistory&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), save complete History or only last (increment) &#39;</span>
+                 <span class="s1">&#39;result. Default: True (node, element) and False (nSet, &#39;</span>
+                 <span class="s1">&#39;elSet)&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd><p>Example usage:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon</span>
+<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
+
+<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
+<span class="go">all</span>
+
+<span class="go">*job, name=cps4job, domain=2d, solver=NIST</span>
+
+<span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
+<span class="go">x0=0, l=50</span>
+<span class="go">y0=0, h=100</span>
+<span class="go">elType=CPS4</span>
+<span class="go">nX=20</span>
+<span class="go">nY=20</span>
+
+<span class="go">*fieldOutput,</span>
+<span class="go">name=displacement,              nSet=all,           field=displacement, result=U,</span>
+<span class="go">name=displacement_top,          nSet=gen_top,       field=displacement, result=U, saveHistory=True</span>
+<span class="go">name=displacement_top_mean_1,   nSet=gen_top,       field=displacement, result=U, saveHistory=True, f(x)=&#39;mean( x[:,1])&#39;</span>
+<span class="go">name=RF_bottom,                 nSet=gen_bottom,    field=displacement, result=P, saveHistory=True</span>
+<span class="go">name=RF_bottom_sum_1,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True, f(x)=&#39;sum(x[:,1])&#39;</span>
+<span class="go">name=stress,                    elSet=all,          result=stress,      quadraturePoint=1</span>
+<span class="go">name=stress_top,                elSet=gen_top,      result=stress,      quadraturePoint=1</span>
+<span class="go">name=alphaP,                    elSet=all,          result=alphaP,      quadraturePoint=1</span>
+
+<span class="go">*output, type=meshPlot, jobName=cps4job, </span>
+<span class="go">figure=1, axSpec=221, create=perNode,       fieldOutput=displacement,       f(x)=&#39;x[:,1]&#39;, label=U2</span>
+<span class="go">figure=1, axSpec=222, create=perElement,    fieldOutput=stress,             f(x)=&#39;x[:,1]&#39;, label=S2</span>
+<span class="go">figure=1, axSpec=212, c=red, ls=dashed, create=xyData, x=time, y=RF_bottom, f(y)=&#39;sum ( y[:,:,1], axis=1)&#39;, label=Sum(RF)</span>
+
+<span class="go">*output, type=ensight, jobName=cps4job, name=myEnsightExport</span>
+<span class="go">create=perNode,    fieldOutput=displacement, </span>
+<span class="go">create=perElement, fieldOutput=stress,</span>
+<span class="go">create=perElement, fieldOutput=alphaP,</span>
+<span class="go">configuration, overwrite=yes</span>
+
+
+<span class="go">*output, type=monitor, jobName=cps4job, name=myNodeMonitor</span>
+<span class="go">fieldOutput=RF_bottom, f(x)=&#39;sum ( x[:,1] )&#39;</span>
+
+<span class="go">*output, type=plotAlongPath, jobName=cps4job, name=myNodeSetPlotter</span>
+<span class="go">figure=2, nSet=gen_top, fieldOutput=RF_bottom, f(x)=&#39;x[:,1]&#39;, label=P along bottom, normalize=True</span>
+
+<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
+<span class="go">options, category=Ensight, intermediateSaveInterval=2,</span>
+<span class="go">options, category=NISTSolver, extrapolation=linear, numThreads=2</span>
+<span class="go">dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0</span>
+<span class="go">dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,</span>
+<span class="go">nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-80, f(t)=t**2</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutput" title="Permalink to this definition"></a></dt>
+<dd><p>Entity of a fieldOutput request</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutputController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController" title="Permalink to this definition"></a></dt>
+<dd><p>The central module for managing field outputs, which can be used by output managers</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="constraints.html" class="btn btn-neutral float-left" title="Constraints" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dofmanager.html" class="btn btn-neutral float-right" title="The DOF manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

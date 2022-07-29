@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The DOF manager &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Outputmanagers" href="output.html" />
+    <link rel="prev" title="The fieldoutput manager" href="fieldoutputmanager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>The DOF manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/dofmanager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-fe.utils.dofmanager">
+<span id="the-dof-manager"></span><h1>The DOF manager<a class="headerlink" href="#module-fe.utils.dofmanager" title="Permalink to this heading"></a></h1>
+<p>This module contains import classes for describing the global equation system by means of a sparse system</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
+<dd><p>The DofManager
+- analyzes the domain (nodes and constraints),
+- collects information about the necessary structure of the degrees of freedom
+- handles the active fields on each node
+- counts the accumulated number of associated elements on each dof (for the Abaqus like convergence test)
+- supplies the framework with DofVectors and VIJSystemMatrices</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.activateFieldsOnNodes">
+<span class="sig-name descname"><span class="pre">activateFieldsOnNodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.activateFieldsOnNodes" title="Permalink to this definition"></a></dt>
+<dd><p>activate all fields on nodes, which are required in the analysis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.constructDofVector">
+<span class="sig-name descname"><span class="pre">constructDofVector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.constructDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a vector with size=nDof and which has knowledge about
+the location of each entity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.constructVIJSystemMatrix">
+<span class="sig-name descname"><span class="pre">constructVIJSystemMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.constructVIJSystemMatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a VIJ (COO) Sparse System matrix object, which also has knowledge about
+the location of each entity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.countAccumulatedEntityDofs">
+<span class="sig-name descname"><span class="pre">countAccumulatedEntityDofs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.countAccumulatedEntityDofs" title="Permalink to this definition"></a></dt>
+<dd><p>generates some auxiliary information,
+which may be required by some modules of EdelweissFE</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.countNodalFluxes">
+<span class="sig-name descname"><span class="pre">countNodalFluxes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.countNodalFluxes" title="Permalink to this definition"></a></dt>
+<dd><p>for the VIJ (COO) system matrix and the Abaqus like convergence test,
+the number of dofs ‘entity-wise’ is needed:
+= Σ_(elements+constraints) Σ_nodes ( nDof (field) )</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.initializeDofVectorStructure">
+<span class="sig-name descname"><span class="pre">initializeDofVectorStructure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.initializeDofVectorStructure" title="Permalink to this definition"></a></dt>
+<dd><p>Loop over all nodes to generate the global field-dof indices.
+output is a tuple of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>number of total DOFS</p></li>
+<li><dl class="simple">
+<dt>orderedDict( (mechanical, indices),</dt><dd><p>(nonlocalDamage, indices)
+(thermal, indices)
+…).</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.initializeVIJPattern">
+<span class="sig-name descname"><span class="pre">initializeVIJPattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.initializeVIJPattern" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the IJ pattern for VIJ (COO) system matrices</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofManager.locateEntitiesInDofVector">
+<span class="sig-name descname"><span class="pre">locateEntitiesInDofVector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofManager.locateEntitiesInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a dictionary containing the location (indices) of each entity (elements, constraints)
+within the DofVector structure</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.DofVector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entitiesInDofVector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.DofVector" title="Permalink to this definition"></a></dt>
+<dd><p>This class represents a Dof Vector, which also has knowledge of each entities (elements, constraints) location within.
+The [] operator allows to access (non-contigouos read, write) &#64; each entities location</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.dofmanager.VIJSystemMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.dofmanager.</span></span><span class="sig-name descname"><span class="pre">VIJSystemMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entitiesInVIJ</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.dofmanager.VIJSystemMatrix" title="Permalink to this definition"></a></dt>
+<dd><p>This class represents the V Vector of VIJ triple (sparse matrix in COO format),
+which</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>also contains the I and J vectors as class members,</p></li>
+<li><p>allows to directly access (contiguous read and write) access of each entity
+via the [] operator</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fieldoutputmanager.html" class="btn btn-neutral float-left" title="The fieldoutput manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="output.html" class="btn btn-neutral float-right" title="Outputmanagers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
