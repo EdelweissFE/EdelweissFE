@@ -7,6 +7,12 @@ The fieldoutput manager
 .. pprint:: fe.utils.fieldoutput.documentation
 
 
+Example usage:
+
+.. literalinclude:: ../../../testfiles/FieldOutput/fieldOutput.inp
+   :language: console
+
+
 .. autoclass:: fe.utils.fieldoutput.FieldOutput
    :members:
 
