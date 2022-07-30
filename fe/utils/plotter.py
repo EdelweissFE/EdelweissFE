@@ -57,7 +57,9 @@ class Plotter:
     def __init__(self, journal, inputfile):
         self.journal = journal
 
-        latexAvailable = find_executable('latex')
+        latexAvailable = False
+        if find_executable('latex'):
+            latexAvailable = True
 
         self.rcParams = {
             "pgf.texsystem": "pdflatex",  # change this if using xetex or lautex
