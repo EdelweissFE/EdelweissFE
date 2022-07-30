@@ -134,7 +134,7 @@ Get Marmot:
     cmake -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
     make install
 
-Get, build and test EdelweissFE:
+Build and test EdelweissFE:
 
 .. code-block:: console
    :caption: Step 8
