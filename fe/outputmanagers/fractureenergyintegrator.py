@@ -25,15 +25,19 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Tue Dec 17 08:26:01 2019
+
+# @author: Matthias Neuner
 """
-Created on Tue Dec 17 08:26:01 2019
+A simple integrator to compute the fracture energy by integrating a load-displacement curve.
 
-@author: Matthias Neuner
+.. code-block:: console
+    :caption: Example: 
 
-A simple integrator to compute the fracture energy
-
-Datalines:
+    *output, type=fractureenergyintegrator, jobName=myJob, name=gfi
+        forceFieldOutput=RF, displacementFieldOutput=U, fractureArea='100.0*1.0'
 """
+
 documentation = {
     "forceFieldOutput": "fieldOutput for force (with time history)",
     "displacementFieldOutput": "fieldOutput for displacement (with time history)",
@@ -48,8 +52,7 @@ import numpy as np
 
 
 class OutputManager(OutputManagerBase):
-    """Simple Integrator for fracture energies"""
-
+    """Simple Integrator for fracture energy"""
     identification = "FEI"
     printTemplate = "{:}, {:}: {:}"
 

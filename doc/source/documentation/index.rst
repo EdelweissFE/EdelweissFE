@@ -5,6 +5,7 @@ Documentation
    :maxdepth: 2
 
    syntax
+   jobs
    generators
    stepactions
    constraints
@@ -13,3 +14,4 @@ Documentation
    output
    solvers
    parallelization
+   exceptions

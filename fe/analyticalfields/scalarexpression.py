@@ -27,51 +27,33 @@
 #  ---------------------------------------------------------------------
 
 documentation = {
-    "model": "(optional) default = Gaussian",
-    "mean": "(optional) default = 0.",
-    "variance": "(optional) default = 1.",
-    "lengthScale": "(optimal) default = 10.",
-    "seed": "(optimal) default = 0",
+    "f(x,y,z)": "python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed",
 }
 
-import numpy as np
-import sympy as sp
-import gstools
 from fe.utils.misc import stringDict
-from fe.utils.math import createFunction
-from fe.analyticalFields.base.analyticalFieldBase import (
+from fe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
 )
-from inspect import signature
+from fe.utils.math import createModelAccessibleFunction
 
 
 class AnalyticalField(AnalyticalFieldBase):
     def __init__(self, name, data, modelInfo):
-
         self.name = name
-        self.type = "randomScalar"
-
-        options = stringDict([e for l in data for e in l])
+        self.type = "scalarExpression"
 
         self.domainSize = modelInfo["domainSize"]
+        self.options = stringDict([e for l in data for e in l])
 
-        modelType = options.get("model", "Gaussian")
-        mean = float(options.get("mean", 0.0))
-        variance = float(options.get("variance", 1.0))
-        lengthScale = float(options.get("lengthScale", 10.0))
-        seed = int(options.get("seed", 0))
+        expressionString = self.options["f(x,y,z)"]
 
-        modelMethod = getattr(gstools, modelType)
-        model = modelMethod(
-            dim=self.domainSize,
-            var=variance,
-            len_scale=lengthScale,
+        self.expression = createModelAccessibleFunction(
+            expressionString, modelInfo, *"xyz"[: self.domainSize]
         )
-        self.srf = gstools.SRF(model, seed=seed, mean=mean)
 
         return
 
     def evaluateAtCoordinates(self, coords):
         for i1 in range(self.domainSize - len(coords)):
             coords.append(0)
-        return float(self.srf(coords))
+        return self.expression(*coords)

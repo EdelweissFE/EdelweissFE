@@ -25,10 +25,20 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Thu Jan 26 09:27:14 2017
+# Created on Thu Jan 26 09:27:14 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Outputmanagers are used for monitoring and exporting results to variuous formats.
+They are defined globally:
+
+.. code-block:: console
+
+    *output, type=ensight, jobName=cps4job, name=myEnsightExport
+        create=perNode,    elSet=all, fieldOutput=Displacement
+        create=perElement, elSet=all, fieldOutput=Stress
+        create=perElement, elSet=all, fieldOutput=Strain
+
 """
 import importlib
 

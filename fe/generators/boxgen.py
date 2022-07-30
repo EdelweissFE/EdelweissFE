@@ -47,7 +47,22 @@ A mesh generator for cuboid geometries and structured hex meshes:
 nSets, elSets, surface : 'name'_left, _right, _bottom, _top, _front, _back, _all, 
 elSets : 'name'_centralFrontToBack, _shearBandFrontToBack, _shearBandCenterFrontToBack
 are automatically generated
+
+.. code-block:: console
+    :caption: Generate meshes on the fly. Example: 
+
+    *job, name=job, domain=3d, solver=NIST
+    
+    *modelGenerator, generator=boxGen, name=gen
+    nX      =4
+    nY      =8
+    nZ      =2
+    lX      =20
+    lY      =40
+    lZ      =1
+    elType  =C3D20R
 """
+
 documentation = {
     "x0": "(optional) origin at x axis",
     "y0": "(optional) origin at y axis",
@@ -67,7 +82,6 @@ from fe.utils.misc import stringDict
 
 import numpy as np
 import os
-
 
 def generateModelData(generatorDefinition, modelInfo, journal):
 

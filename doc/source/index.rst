@@ -15,7 +15,7 @@ EdelweissFE aims to be...
  * ... an easy to use tool for coupled problems
  * ... a learning platform for learning the finite element method
  * ... a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique), which are often difficult to implement in mature, MPI-parallelized codes
- * ... an efficient tool for nonlinear simulations up to medium sized problems (10^5 degrees of freedom)
+ * ... an efficient tool for nonlinear simulations up to medium sized problems (:math:`10^5` degrees of freedom)
 
 EdelweissFE does not want to ...
 
@@ -46,6 +46,7 @@ Example input file
 
 .. literalinclude:: ../../testfiles/LinearElasticIsotropic/test.inp
    :language: console
+   :caption: File: ``../../testfiles/LinearElasticIsotropic/test.inp``
 
 More example files can be found in the ``testfiles`` folder!
 

@@ -1,57 +1,59 @@
 Meshgenerators
 ==============
 
-Generate meshes on the fly. Usage:
+Creating meshes by hand
+-----------------------
 
-.. code-block:: console
+Module ``fe.utils.abqmodelconstructor``
 
-    *job, name=job, domain=3d, solver=NISTParallel
-    
-    *modelGenerator, generator=boxGen, name=gen
-    nX      =4
-    nY      =8
-    nZ      =2
-    lX      =20
-    lY      =40
-    lZ      =1
-    elType  =C3D20R
+.. automodule:: fe.utils.abqmodelconstructor
+   :members: __doc__
 
+.. literalinclude:: ../../../testfiles/LinearElasticIsotropic/test.inp
+    :language: console
+    :caption: Example: ``testfiles/LinearElasticIsotropic/test.inp``
 
 ``boxgen`` - A 3D box mesh generator
 ------------------------------------
 
+Relevant module ``fe.generators.boxgen``
+
 .. automodule:: fe.generators.boxgen
-   :members: __doc__
+    :members: __doc__
 
 .. pprint:: fe.generators.boxgen.documentation
-   
-Example: ``testfiles/BoxGen/test.inp``
+   :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BoxGen/test.inp
-   :language: console
+    :language: console
+    :caption: Example: ``testfiles/BoxGen/test.inp``
 
 ``planerectquad`` - A 2D plane rectangular mesh generator
 ---------------------------------------------------------
 
+Relevant module ``fe.generators.planerectquad``
+
 .. automodule:: fe.generators.planerectquad
-   :members: __doc__
+   :members: __doc__, 
 
 .. pprint:: fe.generators.planerectquad.documentation
-
-Example: ``testfiles/NodeForces/test.inp``
+   :caption: Options:
 
 .. literalinclude:: ../../../testfiles/NodeForces/test.inp
-   :language: console
+    :language: console
+    :caption: Example: ``testfiles/NodeForces/test.inp``
 
 ``cubit`` - A cubit mesh generator
 ---------------------------------------------------------
+
+Relevant module ``fe.generators.cubit``
 
 .. automodule:: fe.generators.cubit
    :members: __doc__
 
 .. pprint:: fe.generators.cubit.documentation
-
-Example: ``testfiles/CubitGen/test.inp``
+   :caption: Options:
 
 .. literalinclude:: ../../../testfiles/CubitGen/test.inp
-   :language: console
+    :language: console
+    :caption: Example: ``testfiles/CubitGen/test.inp``

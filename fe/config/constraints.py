@@ -25,10 +25,21 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Sun May 26 11:27:14 2017
+# Created on Sun May 26 11:27:14 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Constraints are defined globally,
+and may be used for introducing additional scalar
+equations into the global equation system.
+
+Example syntax:
+
+.. code-block:: console
+
+    *constraint, type=rigidbody, name=myRigigBody
+        nSet=right
+        referencePoint=rBottom
 """
 import importlib
 

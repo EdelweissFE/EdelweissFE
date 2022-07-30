@@ -25,14 +25,23 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mon Jan 23 13:05:53 2017
+# Created on Mon Jan 23 13:05:53 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Stepactions are defined within a ``*step`` definition, 
+by specifying their ``name`` and a list of ``option=value``, for example
+
+.. code-block:: console
+
+    *step, jobName=myJob, 
+        dirichlet, name=bottom,   nSet=bottom,   field=displacement, 2=0, 1=0
+        dirichlet, name=rightTop, nSet=rightTop, field=displacement, 2=0, 
+        distributedload, name=dload1, surface=top,  type=pressure, magnitude=10, f(t)=t*2
+        distributedload, name=dload2, surface=left, type=pressure, magnitude=50, f(t)=t
 """
 
 import importlib
-
 
 def stepActionFactory(name):
     module = importlib.import_module("fe.stepactions." + name.lower())

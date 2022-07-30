@@ -6,8 +6,6 @@
 *section, name=section1, material=myMaterial, type=solid
 all
 
-*job, name=c3d8job, domain=3d, solver=NISTParallel
-
 *node
 0, 0, 0, 0
 1, 0.100, 0, 0
@@ -57,29 +55,31 @@ all, 5
 *surface, type=element, name=surfaceLeft
 all, 6
 
-*fieldOutput,
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=strain, name=strain, quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
-elSet=all, result=stress, name=stress, quadraturePoint=0:7, f(x)='np.mean(x,axis=1)'
-name=sig22, elSet=all, result=stress, quadraturePoint=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True
-**name=eps22, elSet=all, result=strain, quadraturePoint=0:7, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True, export=eps22
+*job, name=mySingleElementJob, domain=3d, solver=NIST
 
-**output, type=ensight, jobName=c3d8job, name=test
-**create=perNode, fieldOutput=displacement
-**create=perElement, fieldOutput=stress
-**create=perElement, fieldOutput=strain
-**configuration, overwrite=yes
-
-***output, type=meshPlot, jobName=c3d8job
-**figure=1, axSpec=111, c=red, create=xyData, x=eps22, y=sig22
-
-*output, type=monitor, jobName=c3d8job
-fieldOutput=sig22
-
-*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+*step, jobName=mySingleElementJob, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
 dirichlet, name=1, nSet=left, field=displacement, 2=0
 dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0
 dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
 
-*step, jobName=c3d8job, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
+*step, jobName=mySingleElementJob, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
 dirichlet, name=right, nSet=right, field=displacement, 2=-0.01
+
+*fieldOutput,
+elSet=all, field=displacement, result=U, name=displacement
+elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=sig22, elSet=all, result=stress, quadraturePoint=0:8, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True
+name=eps22, elSet=all, result=strain, quadraturePoint=0:8, f(x)='-np.mean(x[:,:,1],axis=1)', saveHistory=True, export=eps22
+
+*output, type=ensight, jobName=mySingleElementJob, name=myEnsightOutput
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+configuration, overwrite=yes
+
+*output, type=meshPlot, jobName=mySingleElementJob
+figure=1, axSpec=111, c=red, create=xyData, x=eps22, y=sig22
+
+*output, type=monitor, jobName=mySingleElementJob
+fieldOutput=sig22

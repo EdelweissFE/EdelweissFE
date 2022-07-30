@@ -25,18 +25,22 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sat Jul 22 21:26:01 2017
+
+# @author: Matthias Neuner
 """
-Created on Sat Jul 22 21:26:01 2017
+A simple monitor to observe results (fieldOutputs) in the console during analysis.
 
-@author: Matthias Neuner
+.. code-block:: console
+    :caption: Example:
 
-A simple monitor to observe results in the console during analysis.
-
-Datalines:
+    *output, type=monitor, jobName=cpe4job, name=omegaMon
+        fieldOutput=omega, f(x)='max(x)'
 """
+
 documentation = {
     "fieldOutput": "fieldOutput to be monitored",
-    "f(x)": "(optional), apply math on the increment fieldOutput",
+    "f(x)": "(optional), apply math on the fieldOutput",
 }
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase

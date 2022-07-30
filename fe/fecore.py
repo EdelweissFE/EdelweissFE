@@ -25,13 +25,16 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Tue Jan  17 19:10:42 2017
+# Created on Tue Jan  17 19:10:42 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""This is the main module of EdelweissFE.
+
+Heart is the ``*job`` keyword, which defines the spatial dimension
+A ``*job`` defintion consists of multiple ``*steps``, associated with that job.
 """
 from collections import OrderedDict, defaultdict
-from fe.config import analyticalFields
+from fe.config import analyticalfields
 from fe.config.phenomena import domainMapping
 from fe.config.generators import getGeneratorByName
 from fe.config.stepactions import stepActionFactory
@@ -47,6 +50,7 @@ from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
+
 
 
 def collectStepActionsAndOptions(
@@ -87,9 +91,17 @@ def collectStepActionsAndOptions(
 
 
 def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
-    """This is the core of the finite element analysis:
-    It assembles the model, and controls the respective solver based
-    on the defined simulation steps.
+    """This is core function of the finite element analysis.
+    Based on the keyword ``*job``, the finite element model is defined.
+
+    It assembles 
+     * jobInfo
+     * modeInfo
+     * steps
+     * fieldOutputs
+     * outputManagers
+
+    and controls the respective solver based on the defined simulation steps.
     For each step, the step-actions (dirichlet, nodeforces) are collected by
     external modules."""
 

@@ -34,5 +34,5 @@ import importlib
 
 
 def getAnalyticalFieldByName(name):
-    module = importlib.import_module("fe.analyticalFields." + name.lower())
+    module = importlib.import_module("fe.analyticalfields." + name.lower())
     return module.AnalyticalField

@@ -55,9 +55,10 @@ environment:
 Steps
 _____
 
-Get mamba:
+If necessary, get mamba:
 
 .. code-block:: console
+   :caption: Step 1
 
     curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
     bash Mambaforge-Linux-x86_64.sh -b -p ./mambaforge3
@@ -65,41 +66,50 @@ Get mamba:
 Add mamba to your environment (repeat this step if you close your shell):
 
 .. code-block:: console
+   :caption: Step 2
 
-    export PATH=$PWD/mambaforge3/bin:$PATH
+    export EWROOT=$PWD
+    export PATH=$EWROOT/mambaforge3/bin:$PATH
+
+Get EdelweissFE:
+
+.. code-block:: console
+   :caption: Step 4
+
+    git clone https://github.com/EdelweissFE/EdelweissFE.git
 
 Install necessary mamba packages:
 
 .. code-block:: console
+   :caption: Step 5
 
-    mamba install --yes python=3.10 cython numpy sympy matplotlib scipy 
-    mamba install --yes compilers cmake gfortran gstools  
-    mamba install --yes -c anaconda mkl mkl-include intel-openmp
-    mamba install --yes sphinx sphinx_rtd_theme
+    mamba install --file EdelweissFE/requirements.txt
 
 Get Eigen (for EdelweissFE and Marmot):
 
 .. code-block:: console
+   :caption: Step 5
 
+    cd $EWROOT
     git clone   https://gitlab.com/libeigen/eigen.git
     cd eigen
     mkdir build
     cd build
     cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
     make install
-    cd ../../
 
 Get autodiff (for Marmot):
 
 .. code-block:: console
+   :caption: Step 6
 
+    cd $EWROOT
     git clone  https://github.com/autodiff/autodiff.git
     cd autodiff
     mkdir build
     cd build
     cmake -DAUTODIFF_BUILD_TESTS=OFF -DAUTODIFF_BUILD_PYTHON=OFF -DAUTODIFF_BUILD_EXAMPLES=OFF -DAUTODIFF_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
     make install
-    cd ../
 
 .. Get Fastor:
 
@@ -114,20 +124,22 @@ Get autodiff (for Marmot):
 Get Marmot: 
 
 .. code-block:: console
+   :caption: Step 7
 
+    cd $EWROOT
     git clone --recurse https://github.com/MAteRialMOdelingToolbox/Marmot.git
     cd Marmot
     mkdir build
     cd build
     cmake -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
     make install
-    cd ../../
 
 Get, build and test EdelweissFE:
 
 .. code-block:: console
+   :caption: Step 8
 
-    git clone https://github.com/EdelweissFE/EdelweissFE.git
+    cd $EWROOT
     cd EdelweissFE
     python setup.py build_ext -i
     python run_tests.py
@@ -135,5 +147,6 @@ Get, build and test EdelweissFE:
 Build this documentation:
 
 .. code-block:: console
+   :caption: Step 9
 
     sphinx-build ./doc/source/ ./docs -b html

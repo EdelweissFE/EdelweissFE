@@ -1,6 +1,5 @@
-``*analyticalfield`` : define an analytical field
- 
-.. list-table:: Options
+.. list-table:: ``*analyticalfield`` : define an analytical field
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -17,9 +16,8 @@
       - ``string``
       - type of analytical field (currently 'expression' only)
  
-``*configureplots`` : customize the figures and axes
- 
-.. list-table:: Options
+.. list-table:: ``*configureplots`` : customize the figures and axes
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -30,9 +28,8 @@
       - ``string``
       - key=value pairs for configuration of figures and axes
  
-``*constraint`` : define a constraint
- 
-.. list-table:: Options
+.. list-table:: ``*constraint`` : define a constraint
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -49,9 +46,8 @@
       - ``string``
       - constraint type
  
-``*element`` : definition of element(s)
- 
-.. list-table:: Options
+.. list-table:: ``*element`` : definition of element(s)
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -71,9 +67,8 @@
       - ``string``
       - assign one of the types definied in the elementlibrary
  
-``*elset`` : definition of an element set
- 
-.. list-table:: Options
+.. list-table:: ``*elset`` : definition of an element set
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -90,9 +85,8 @@
       - ``string``
       - set True to generate from data line 1: start-element, end-element, step
  
-``*exportplots`` : export your figures
- 
-.. list-table:: Options
+.. list-table:: ``*exportplots`` : export your figures
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -103,9 +97,8 @@
       - ``string``
       - key=value pairs for exporting of figures and axes
  
-``*fieldoutput`` : define fieldoutput, which is used by outputmanagers
- 
-.. list-table:: Options
+.. list-table:: ``*fieldoutput`` : define fieldoutput, which is used by outputmanagers
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -119,9 +112,8 @@
       - ``string``
       - (optional), name of job, standard=defaultJob
  
-``*include`` : (optional) load extra .inp file (fragment), use relative path to current .inp
- 
-.. list-table:: Options
+.. list-table:: ``*include`` : (optional) load extra .inp file (fragment), use relative path to current .inp
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -132,9 +124,8 @@
       - ``string``
       - filename
  
-``*job`` : definition of an analysis job
- 
-.. list-table:: Options
+.. list-table:: ``*job`` : definition of an analysis job
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -157,9 +148,8 @@
       - ``float``
       - (optional) start time of job, standard = 0.0
  
-``*material`` : definition of a material
- 
-.. list-table:: Options
+.. list-table:: ``*material`` : definition of a material
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -179,9 +169,8 @@
       - ``integer``
       - (deprecated and ignored) number of statevars
  
-``*modelgenerator`` : define a model generator, loaded from a module
- 
-.. list-table:: Options
+.. list-table:: ``*modelgenerator`` : define a model generator, loaded from a module
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -198,9 +187,8 @@
       - ``string``
       - (optional) name of the generator
  
-``*node`` : definition of nodes
- 
-.. list-table:: Options
+.. list-table:: ``*node`` : definition of nodes
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -214,9 +202,8 @@
       - ``string``
       - name
  
-``*nset`` : definition of an element set
- 
-.. list-table:: Options
+.. list-table:: ``*nset`` : definition of an element set
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -233,9 +220,8 @@
       - ``string``
       - name
  
-``*output`` : define an output module
- 
-.. list-table:: Options
+.. list-table:: ``*output`` : define an output module
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -255,9 +241,8 @@
       - ``string``
       - output module 
  
-``*parameteridentification`` : identify material parameter for given x and y data
- 
-.. list-table:: Options
+.. list-table:: ``*parameteridentification`` : identify material parameter for given x and y data
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -286,9 +271,8 @@
       - ``string``
       - filename where yData is given
  
-``*section`` : definition of an section
- 
-.. list-table:: Options
+.. list-table:: ``*section`` : definition of an section
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -311,9 +295,8 @@
       - ``string``
       - type of the section
  
-``*step`` : definition of job steps
- 
-.. list-table:: Options
+.. list-table:: ``*step`` : definition of job steps
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -345,9 +328,8 @@
       - ``float``
       - time period of step
  
-``*surface`` : definition of surface set
- 
-.. list-table:: Options
+.. list-table:: ``*surface`` : definition of surface set
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  
@@ -364,9 +346,8 @@
       - ``string``
       - type of surface (currently 'element' only)
  
-``*updateconfiguration`` : update an configuration
- 
-.. list-table:: Options
+.. list-table:: ``*updateconfiguration`` : update an configuration
+    :width: 100%
     :widths: 25 25 40
     :header-rows: 1
  

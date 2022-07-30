@@ -29,7 +29,7 @@
 
 # @author: Matthias Neuner
 """
-Distributed load, applied on a surface set.
+Standard distributed load, applied on a surface set.
 If not modified in subsequent steps, the load held constant.
 """
 

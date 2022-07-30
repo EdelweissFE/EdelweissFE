@@ -29,7 +29,7 @@
 
 # @author: Matthias Neuner
 """
-Inputfileparser for inputfiles employing the Abaqus syntax.
+Inputfileparser for inputfiles employing the Abaqus-like syntax.
 """
 import numpy as np
 from os.path import dirname, join
@@ -311,9 +311,8 @@ def printKeywordsRST():
     """print the input file language set RST conform"""
 
     for kw, (kwDoc, optiondict) in sorted(inputLanguage.items()):
-        print("``{:}`` : {:}".format(kw, kwDoc))
-        print(" ")
-        print(".. list-table:: Options")
+        print(".. list-table:: " + "``{:}`` : {:}".format(kw, kwDoc))
+        print("    :width: 100%")
         print("    :widths: 25 25 40")
         print("    :header-rows: 1")
         print(" ")

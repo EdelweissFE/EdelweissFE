@@ -1,0 +1,16 @@
+python=3.10 
+cython 
+numpy 
+sympy 
+matplotlib 
+scipy=1.8.1
+compilers 
+cmake 
+gfortran 
+gstools
+mkl 
+mkl-include 
+intel-openmp
+sphinx 
+sphinx_rtd_theme
+

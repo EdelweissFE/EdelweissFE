@@ -30,12 +30,17 @@
 # @author: Matthias Neuner
 """
 A conditional stop conditions wenn an expression becomes true.
+Useful, e.g., for indirect displacement control.
 
-Datalines:
+.. code-block:: console
+    :caption: Example: 
+
+    *output, type=conditionalstop, jobName=myJob, name=condStop
+        fieldOutput=damage, f(x)='x  >= .99'
 """
 documentation = {
     "fieldOutput": "fieldOutput to be monitored",
-    "f(x)": "(optional), apply a model accesible expression on the fieldOutput",
+    "f(x)": "create the expression to formulate the stop condition",
 }
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase

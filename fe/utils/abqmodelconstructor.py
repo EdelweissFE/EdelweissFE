@@ -47,7 +47,7 @@ from fe.config.elementlibrary import getElementByName
 from fe.utils.misc import isInteger
 from fe.config.constraints import getConstraintByName
 from fe.config.sections import getSectionByName
-from fe.config.analyticalFields import getAnalyticalFieldByName
+from fe.config.analyticalfields import getAnalyticalFieldByName
 import numpy as np
 
 
@@ -214,8 +214,6 @@ class AbqModelConstructor:
     def createSectionsFromInputFile(self, modelInfo, inputFile):
         """Assign properties and section properties to all elements by
         the given section definitions."""
-
-        elementSets = modelInfo["elementSets"]
 
         for secDef in inputFile["*section"]:
             name = secDef["name"]

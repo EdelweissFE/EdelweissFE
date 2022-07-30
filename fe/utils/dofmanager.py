@@ -41,9 +41,9 @@ class VIJSystemMatrix(np.ndarray):
     """
     This class represents the V Vector of VIJ triple (sparse matrix in COO format),
     which
-        - also contains the I and J vectors as class members,
-        - allows to directly access (contiguous read and write) access of each entity
-          via the [] operator
+
+      * also contains the I and J vectors as class members,
+      * allows to directly access (contiguous read and write) access of each entity via the [] operator
     """
 
     def __new__(cls, nDof, I, J, entitiesInVIJ):
@@ -68,7 +68,7 @@ class VIJSystemMatrix(np.ndarray):
 class DofVector(np.ndarray):
     """
     This class represents a Dof Vector, which also has knowledge of each entities (elements, constraints) location within.
-    The [] operator allows to access (non-contigouos read, write) @ each entities location
+    The [] operator allows to access (non-contigouos read, write) at each entities location
     """
 
     def __new__(cls, nDof, entitiesInDofVector):
@@ -91,12 +91,14 @@ class DofVector(np.ndarray):
 
 
 class DofManager:
-    """The DofManager
-    - analyzes the domain (nodes and constraints),
-    - collects information about the necessary structure of the degrees of freedom
-    - handles the active fields on each node
-    - counts the accumulated number of associated elements on each dof (for the Abaqus like convergence test)
-    - supplies the framework with DofVectors and VIJSystemMatrices
+    """
+    The DofManager
+
+     * analyzes the domain (nodes and constraints),
+     * collects information about the necessary structure of the degrees of freedom
+     * handles the active fields on each node
+     * counts the accumulated number of associated elements on each dof (for the Abaqus like convergence test)
+     * supplies the framework with DofVectors and VIJSystemMatrices
     """
 
     def __init__(self, modelInfo):
@@ -136,15 +138,11 @@ class DofManager:
                 for field in nodeFields:
                     node.fields[field] = True
 
-    #
     def initializeDofVectorStructure(self):
-        """Loop over all nodes to generate the global field-dof indices.
-        output is a tuple of:
-            - number of total DOFS
-            - orderedDict( (mechanical, indices),
-                           (nonlocalDamage, indices)
-                           (thermal, indices)
-                           ...)."""
+        """Loop over all nodes to generate the global field-dof indices. output is a tuple of:
+
+         * number of total DOFS
+         * orderedDict( (mechanical, indices), (nonlocalDamage, indices) (thermal, indices) ...)."""
 
         nodes = self.modelInfo["nodes"]
         domainSize = self.modelInfo["domainSize"]

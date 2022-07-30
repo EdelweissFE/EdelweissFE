@@ -24,20 +24,17 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Sat Jan  21 12:18:10 2017
+
+# @author: Matthias
 """
-Created on Sat Jan  21 12:18:10 2017
-
-@author: Matthias
-
 Provides an increment generator for incremental-iterative simulations
 """
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 
 
 class IncrementGenerator:
-    """Version 2 of the increment generator,
-    based on Version 1 of the  Abaqus-Workbench.
-    Implementation as generator class !"""
+    """Implementation as generator class"""
 
     identification = "IncGen"
 
