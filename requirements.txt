@@ -6,6 +6,7 @@ matplotlib
 scipy=1.8.1
 compilers 
 cmake 
+make
 gfortran 
 gstools
 mkl 
@@ -13,4 +14,3 @@ mkl-include
 intel-openmp
 sphinx 
 sphinx_rtd_theme
-
