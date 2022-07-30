@@ -39,6 +39,10 @@ import sys
 import itertools
 from fe.utils.misc import stringDict
 
+from distutils.spawn import find_executable
+
+
+
 defaultMarkerCycle = itertools.cycle(("o", "v", "D", "s", "^"))
 defaultLinePlotColorCycle = itertools.cycle(("k"))
 defaultScatterPlotColorCycle = itertools.cycle(("k", "r", "b", "g"))
@@ -52,9 +56,12 @@ class Plotter:
 
     def __init__(self, journal, inputfile):
         self.journal = journal
+
+        latexAvailable = find_executable('latex')
+
         self.rcParams = {
             "pgf.texsystem": "pdflatex",  # change this if using xetex or lautex
-            "text.usetex": True,  # use LaTeX to write all text
+            "text.usetex": latexAvailable,  # use LaTeX to write all text
             "text.latex.preamble": r" \usepackage[utf8]{inputenc} \usepackage{amsmath} \usepackage{amssymb} \usepackage{mathpazo} \usepackage{siunitx}",
             "font.family": "serif",
             #                "font.serif": [],                   # blank entries should cause plots to inherit fonts from the document
