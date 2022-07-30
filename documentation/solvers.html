@@ -7,6 +7,7 @@
   <title>Solvers &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -45,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -58,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -99,15 +102,18 @@
 <li><p>and a parallel arc length solver (NISTPArcLength).</p></li>
 </ul>
 </div></blockquote>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;NIST&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstatic&#39;</span><span class="p">,</span>
+<p>Choose the solver in the <code class="docutils literal notranslate"><span class="pre">*job</span></code> definition:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*job, name=myJob, domain=2d, solver=NISTParallel</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Currently available:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;NIST&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstatic&#39;</span><span class="p">,</span>
   <span class="s1">&#39;NISTPArcLength&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstaticparallelarclength&#39;</span><span class="p">,</span>
   <span class="s1">&#39;NISTParallel&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstaticparallelmk2&#39;</span><span class="p">,</span>
   <span class="s1">&#39;NISTParallelForMarmotElements&#39;</span><span class="p">:</span> <span class="s1">&#39;nonlinearimplicitstaticparallel&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd><p>Choose the solver in the <code class="docutils literal notranslate"><span class="pre">*job</span></code> definition:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*job, name=myJob, domain=2d, solver=NISTParallel</span>
-</pre></div>
 </div>
 <section id="module-fe.solvers.nonlinearimplicitstatic">
 <span id="nist-nonlinear-implicit-static"></span><h2><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static<a class="headerlink" href="#module-fe.solvers.nonlinearimplicitstatic" title="Permalink to this heading"></a></h2>

@@ -1,17 +1,19 @@
 The fieldoutput manager
 =======================
 
+Relevant module: ``fe.utils.fieldoutput``
+
 .. automodule:: fe.utils.fieldoutput
    :members: __doc__
 
 .. pprint:: fe.utils.fieldoutput.documentation
-
-
-Example usage:
+   :caption: Options:
 
 .. literalinclude:: ../../../testfiles/FieldOutput/fieldOutput.inp
    :language: console
+   :caption: Example file: ``../../../testfiles/FieldOutput/fieldOutput.inp``
 
+Module documentation:
 
 .. autoclass:: fe.utils.fieldoutput.FieldOutput
    :members:

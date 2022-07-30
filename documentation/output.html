@@ -7,6 +7,7 @@
   <title>Outputmanagers &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -45,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -61,6 +63,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -92,10 +95,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="outputmanagers">
-<h1>Outputmanagers<a class="headerlink" href="#outputmanagers" title="Permalink to this heading"></a></h1>
-<p>Outputmanagers are used for monitoring and exporting results to variuous formats.</p>
-<p>Example: <code class="docutils literal notranslate"><span class="pre">testfiles/OutputManagers/test.inp</span></code></p>
+  <section id="module-fe.config.outputmanagers">
+<span id="outputmanagers"></span><h1>Outputmanagers<a class="headerlink" href="#module-fe.config.outputmanagers" title="Permalink to this heading"></a></h1>
+<p>Outputmanagers are used for monitoring and exporting results to variuous formats.
+They are defined globally:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=ensight, jobName=cps4job, name=myEnsightExport</span>
+<span class="go">    create=perNode,    elSet=all, fieldOutput=Displacement</span>
+<span class="go">    create=perElement, elSet=all, fieldOutput=Stress</span>
+<span class="go">    create=perElement, elSet=all, fieldOutput=Strain</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Full example: <code class="docutils literal notranslate"><span class="pre">testfiles/OutputManagers/test.inp</span></code></span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon, statevars=5, </span>
 <span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
 
@@ -145,6 +156,7 @@
 <span class="go">nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2</span>
 </pre></div>
 </div>
+</div>
 <section id="module-fe.outputmanagers.ensight">
 <span id="ensight-export-to-ensight-gold-format"></span><h2><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format<a class="headerlink" href="#module-fe.outputmanagers.ensight" title="Permalink to this heading"></a></h2>
 <p>Output manager for Ensight exports.
@@ -154,7 +166,9 @@ For each part, perNode and perElement results can be exported, which are importe
 <dt>ATTENTION: </dt><dd><p>fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.</p>
 </dd>
 </dl>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="s1">&#39;overwrite=y|n|yes|no|True|False|&#39;</span><span class="p">,</span>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="s1">&#39;overwrite=y|n|yes|no|True|False|&#39;</span><span class="p">,</span>
   <span class="s1">&#39;create&#39;</span><span class="p">:</span> <span class="s1">&#39;perNode|perElement&#39;</span><span class="p">,</span>
   <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;name of the result, defined on an elSet (also for perNode &#39;</span>
                  <span class="s1">&#39;results)&#39;</span><span class="p">,</span>
@@ -163,18 +177,26 @@ For each part, perNode and perElement results can be exported, which are importe
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), standard = fieldOutputs name&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd></section>
+</div>
+</section>
 <section id="module-fe.outputmanagers.monitor">
 <span id="monitor-monitor-quantities-in-the-terminal"></span><h2><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal<a class="headerlink" href="#module-fe.outputmanagers.monitor" title="Permalink to this heading"></a></h2>
-<p>Created on Sat Jul 22 21:26:01 2017</p>
-<p>&#64;author: Matthias Neuner</p>
-<p>A simple monitor to observe results in the console during analysis.</p>
-<p>Datalines:</p>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math on the increment fieldOutput&#39;</span><span class="p">,</span>
+<p>A simple monitor to observe results (fieldOutputs) in the console during analysis.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=monitor, jobName=cpe4job, name=omegaMon</span>
+<span class="go">    fieldOutput=omega, f(x)=&#39;max(x)&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math on the fieldOutput&#39;</span><span class="p">,</span>
   <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be monitored&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd></section>
+</div>
+</section>
 <section id="module-fe.outputmanagers.meshplot">
 <span id="meshplot-export-to-matplotlib"></span><h2><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib<a class="headerlink" href="#module-fe.outputmanagers.meshplot" title="Permalink to this heading"></a></h2>
 <p>&#64;author: Magdalena</p>
@@ -199,7 +221,9 @@ options</p>
 </ul>
 </dd>
 </dl>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;axis specification according to matplotlib syntax, (default=111)&#39;</span><span class="p">,</span>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;axis specification according to matplotlib syntax, (default=111)&#39;</span><span class="p">,</span>
   <span class="s1">&#39;create=meshOnly&#39;</span><span class="p">:</span> <span class="s1">&#39;plot the mesh only&#39;</span><span class="p">,</span>
   <span class="s1">&#39;create=perElement&#39;</span><span class="p">:</span> <span class="s1">&#39;result per element is plotted in a meshplot&#39;</span><span class="p">,</span>
   <span class="s1">&#39;create=perNode&#39;</span><span class="p">:</span> <span class="s1">&#39;result per node is plotted in a meshplot&#39;</span><span class="p">,</span>
@@ -207,19 +231,27 @@ options</p>
   <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="s1">&#39;figure number, (default=1)&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd></section>
+</div>
+</section>
 <section id="module-fe.outputmanagers.fractureenergyintegrator">
 <span id="fractureenergyintegrator-determine-the-fracture-energy"></span><h2><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy<a class="headerlink" href="#module-fe.outputmanagers.fractureenergyintegrator" title="Permalink to this heading"></a></h2>
-<p>Created on Tue Dec 17 08:26:01 2019</p>
-<p>&#64;author: Matthias Neuner</p>
-<p>A simple integrator to compute the fracture energy</p>
-<p>Datalines:</p>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;displacementFieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput for displacement (with time history)&#39;</span><span class="p">,</span>
+<p>A simple integrator to compute the fracture energy by integrating a load-displacement curve.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=fractureenergyintegrator, jobName=myJob, name=gfi</span>
+<span class="go">    forceFieldOutput=RF, displacementFieldOutput=U, fractureArea=&#39;100.0*1.0&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;displacementFieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput for displacement (with time history)&#39;</span><span class="p">,</span>
   <span class="s1">&#39;forceFieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput for force (with time history)&#39;</span><span class="p">,</span>
   <span class="s1">&#39;fractureArea&#39;</span><span class="p">:</span> <span class="s1">&#39;(math expression for) area of fracture&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd></section>
+</div>
+</section>
 <section id="module-fe.outputmanagers.plotalongpath">
 <span id="plotalongpath-plot-a-result-along-a-line"></span><h2><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line<a class="headerlink" href="#module-fe.outputmanagers.plotalongpath" title="Permalink to this heading"></a></h2>
 <p>Created on Mon Apr 17 11:37:26 2017</p>
@@ -227,7 +259,9 @@ options</p>
 <p>Plot result for a nodeSet or an elementSet along the true geometrical distance.
 Corresponds to the plot along path functionality in Abaqus.</p>
 <p>Datalines:</p>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), axSpec (MATLAB syntax) in the figure&#39;</span><span class="p">,</span>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), axSpec (MATLAB syntax) in the figure&#39;</span><span class="p">,</span>
   <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math&#39;</span><span class="p">,</span>
   <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be plotted (defined on a nodeSet/elementSet)&#39;</span><span class="p">,</span>
   <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), figure of the Plotter&#39;</span><span class="p">,</span>
@@ -235,16 +269,27 @@ Corresponds to the plot along path functionality in Abaqus.</p>
   <span class="s1">&#39;normalize&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), normalize peak to 1.0&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd></section>
+</div>
+</section>
 <section id="module-fe.outputmanagers.conditionalstop">
 <span id="conditionalstop-conditional-stop-if-expression-becomes-true"></span><h2><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true<a class="headerlink" href="#module-fe.outputmanagers.conditionalstop" title="Permalink to this heading"></a></h2>
-<p>A conditional stop conditions wenn an expression becomes true.</p>
-<p>Datalines:</p>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply a model accesible expression on the fieldOutput&#39;</span><span class="p">,</span>
+<p>A conditional stop conditions wenn an expression becomes true.
+Useful, e.g., for indirect displacement control.</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=conditionalstop, jobName=myJob, name=condStop</span>
+<span class="go">    fieldOutput=damage, f(x)=&#39;x  &gt;= .99&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;create the expression to formulate the stop condition&#39;</span><span class="p">,</span>
   <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be monitored&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd></section>
+</div>
+</section>
 </section>
 
 

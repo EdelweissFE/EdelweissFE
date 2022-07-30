@@ -7,6 +7,7 @@
   <title>The fieldoutput manager &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -45,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -53,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -84,9 +87,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-fe.utils.fieldoutput">
-<span id="the-fieldoutput-manager"></span><h1>The fieldoutput manager<a class="headerlink" href="#module-fe.utils.fieldoutput" title="Permalink to this heading"></a></h1>
-<p>FieldOutputs store all kind of analysis results, 
+  <section id="the-fieldoutput-manager">
+<h1>The fieldoutput manager<a class="headerlink" href="#the-fieldoutput-manager" title="Permalink to this heading"></a></h1>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.utils.fieldoutput</span></code></p>
+<span class="target" id="module-fe.utils.fieldoutput"></span><p>FieldOutputs store all kind of analysis results, 
 and are defined via the keyword <code class="docutils literal notranslate"><span class="pre">*fieldOutput</span></code>.
 All fieldOutputs are accessable to all outputmanagers at the end of each 
 increment, step and job.
@@ -96,7 +100,9 @@ Furthermore, they can be exported to <code class="docutils literal notranslate">
 the time History is automatically appended to the .csv file”</p>
 </dd>
 </dl>
-<span class="sig-name descname"></span><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;export&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), export the fieldOutput to a file at the end of the &#39;</span>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;export&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), export the fieldOutput to a file at the end of the &#39;</span>
             <span class="s1">&#39;job&#39;</span><span class="p">,</span>
   <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math (in each increment)&#39;</span><span class="p">,</span>
   <span class="s1">&#39;f_export(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math on the final result (table)&#39;</span><span class="p">,</span>
@@ -109,7 +115,9 @@ the time History is automatically appended to the .csv file”</p>
                  <span class="s1">&#39;elSet)&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd><p>Example usage:</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Example file: <code class="docutils literal notranslate"><span class="pre">../../../testfiles/FieldOutput/fieldOutput.inp</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon</span>
 <span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
 
@@ -161,6 +169,8 @@ the time History is automatically appended to the .csv file”</p>
 <span class="go">nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-80, f(t)=t**2</span>
 </pre></div>
 </div>
+</div>
+<p>Module documentation:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutput">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutput" title="Permalink to this definition"></a></dt>

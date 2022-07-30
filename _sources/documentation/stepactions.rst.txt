@@ -1,92 +1,98 @@
 Stepactions
 ===========
 
-Stepactions are defined within a ``*step`` defintion, 
-by specifying their ``name`` and a list of ``option=value``, for example
-
-.. code-block:: console
-
-    *step, jobName=myJob, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
-
-    dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
-    dirichlet, name=top, nSet=gen_rightTop, field=displacement, 2=0, 
-
-    distributedload, name=dloadt, surface=gen_top, type=pressure, magnitude=0, f(t)=t
-    distributedload, name=dloadl, surface=gen_left, type=pressure, magnitude=0, f(t)=t
-
+.. automodule:: fe.config.stepactions
+   :members: __doc__
 
 ``bodyforce`` - Bodyforce loads 
 -------------------------------
+
+Relevant module: ``fe.stepactions.bodyforce``
 
 .. automodule:: fe.stepactions.bodyforce
    :members: __doc__
 
 .. pprint:: fe.stepactions.bodyforce.documentation
-
-Example: ``testfiles/BodyForce3D/test.inp``
+   :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BodyForce3D/test.inp
-   :language: console
-
+   :language: console 
+   :caption: Example: ``testfiles/BodyForce3D/test.inp``
 
 ``dirichlet`` - Standard birichlet BC
 -------------------------------------
+
+Relevant module: ``fe.stepactions.dirichlet``
 
 .. automodule:: fe.stepactions.dirichlet
    :members: __doc__
 
 .. pprint:: fe.stepactions.dirichlet.documentation
-
+   :caption: Options:
 
 ``distributedload`` - surfaces loads
 ------------------------------------
+
+Relevant module: ``fe.stepactions.distributedload``
 
 .. automodule:: fe.stepactions.distributedload
     :members: __doc__
 
 .. pprint:: fe.stepactions.distributedload.documentation
+   :caption: Options:
 
-Example: ``testfiles/DLoad/test.inp``
 
 .. literalinclude:: ../../../testfiles/DLoad/test.inp
-   :language: console
+   :language: console 
+   :caption: Example: ``testfiles/DLoad/test.inp``
 
 ``geostatic`` - Geostatic stress definition
 -------------------------------------------
+
+Relevant module: ``fe.stepactions.geostatic``
 
 .. automodule:: fe.stepactions.geostatic
     :members: __doc__
 
 .. pprint:: fe.stepactions.geostatic.documentation
+   :caption: Options:
 
-Example: ``testfiles/GeoStatic/test.inp``
 
 .. literalinclude:: ../../../testfiles/GeoStatic/test.inp
-   :language: console
+   :language: console 
+   :caption: Example: ``testfiles/GeoStatic/test.inp``
 
 ``indirectcontrol`` - Indirect displacement control
 ---------------------------------------------------
+
+Relevant module: ``fe.stepactions.indirectcontrol``
 
 .. automodule:: fe.stepactions.indirectcontrol
     :members: __doc__
 
 .. pprint:: fe.stepactions.indirectcontrol.documentation
+   :caption: Options:
 
-Example: ``testfiles/IndirectDisplacementControl/test.inp``
 
 .. literalinclude:: ../../../testfiles/IndirectDisplacementControl//test.inp
    :language: console
+   :caption: Example: ``testfiles/IndirectDisplacementControl/test.inp``
 
 ``indirectcontractioncontrol`` - Indirect displacement -- contraction ring control
 ----------------------------------------------------------------------------------
+
+Relevant module: ``fe.stepactions.indirectcontrol``
 
 .. automodule:: fe.stepactions.indirectcontractioncontrol
     :members: __doc__
 
 .. pprint:: fe.stepactions.indirectcontractioncontrol.documentation
+   :caption: Options:
 
 ``initalizemateiral`` - Initialize materials
 --------------------------------------------
+
+Relevant module: ``fe.stepactions.initializematerial``
 
 .. automodule:: fe.stepactions.initializematerial
     :members: __doc__
@@ -94,30 +100,26 @@ Example: ``testfiles/IndirectDisplacementControl/test.inp``
 ``nodeforces`` - Concentrated node forces
 -----------------------------------------
 
+Relevant module: ``fe.stepactions.nodeforces``
+
 .. automodule:: fe.stepactions.nodeforces
     :members: __doc__
 
 .. pprint:: fe.stepactions.nodeforces.documentation
+   :caption: Options:
 
-Example: ``testfiles/NodeForces/test.inp``
 
 .. literalinclude:: ../../../testfiles/NodeForces/test.inp
-   :language: console
+   :language: console 
+   :caption: Example: ``testfiles/NodeForces/test.inp``
 
 ``setfield`` - Set field to prescribed value
 --------------------------------------------
+
+Relevant module: ``fe.stepactions.setfield``
 
 .. automodule:: fe.stepactions.setfield
     :members: __doc__
 
 .. pprint:: fe.stepactions.setfield.documentation
-
-.. Solvers
-.. *******
-
-.. Constraints
-.. ***********
-
-.. Outputmanagers
-.. **************
-
+   :caption: Options:

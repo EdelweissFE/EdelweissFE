@@ -5,12 +5,7 @@ Solvers
    :members: 
 
 .. pprint:: fe.config.solvers.solverLibrary
-
-Choose the solver in the ``*job`` definition:
-
-.. code-block:: console
-
-    *job, name=myJob, domain=2d, solver=NISTParallel
+   :caption: Currently available:
 
 
 ``NIST`` - Nonlinear Implicit Static

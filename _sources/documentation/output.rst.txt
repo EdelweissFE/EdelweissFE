@@ -1,13 +1,12 @@
 Outputmanagers
 ==============
 
-Outputmanagers are used for monitoring and exporting results to variuous formats.
-
-Example: ``testfiles/OutputManagers/test.inp``
+.. automodule:: fe.config.outputmanagers
+   :members: __doc__
 
 .. literalinclude:: ../../../testfiles/OutputManagers/test.inp
    :language: console
-
+   :caption: Full example: ``testfiles/OutputManagers/test.inp``
 
 ``ensight`` - Export to Ensight Gold format
 -------------------------------------------
@@ -15,8 +14,9 @@ Example: ``testfiles/OutputManagers/test.inp``
 .. automodule:: fe.outputmanagers.ensight
    :members: __doc__
 
-.. pprint:: fe.outputmanagers.ensight.documentation
 
+.. pprint:: fe.outputmanagers.ensight.documentation
+    :caption: Options:
 
 ``monitor`` - Monitor quantities in the terminal
 ------------------------------------------------
@@ -24,7 +24,9 @@ Example: ``testfiles/OutputManagers/test.inp``
 .. automodule:: fe.outputmanagers.monitor
    :members: __doc__
 
+
 .. pprint:: fe.outputmanagers.monitor.documentation
+    :caption: Options:
 
 
 ``meshplot`` - Export to matplotlib
@@ -33,7 +35,9 @@ Example: ``testfiles/OutputManagers/test.inp``
 .. automodule:: fe.outputmanagers.meshplot
    :members: __doc__
 
+
 .. pprint:: fe.outputmanagers.meshplot.documentation
+    :caption: Options:
 
 ``fractureenergyintegrator`` - Determine the fracture energy
 ------------------------------------------------------------
@@ -42,6 +46,7 @@ Example: ``testfiles/OutputManagers/test.inp``
    :members: __doc__
 
 .. pprint:: fe.outputmanagers.fractureenergyintegrator.documentation
+    :caption: Options:
 
 ``plotalongpath`` - Plot a result along a line
 ------------------------------------------------
@@ -49,7 +54,9 @@ Example: ``testfiles/OutputManagers/test.inp``
 .. automodule:: fe.outputmanagers.plotalongpath
    :members: __doc__
 
+
 .. pprint:: fe.outputmanagers.plotalongpath.documentation
+    :caption: Options:
 
 ``conditionalstop`` - Conditional stop if expression becomes true
 -----------------------------------------------------------------
@@ -58,3 +65,4 @@ Example: ``testfiles/OutputManagers/test.inp``
    :members: __doc__
 
 .. pprint:: fe.outputmanagers.conditionalstop.documentation
+    :caption: Options:

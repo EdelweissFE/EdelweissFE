@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parallelization &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Jobs &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Exceptions" href="exceptions.html" />
-    <link rel="prev" title="Solvers" href="solvers.html" /> 
+    <link rel="next" title="Meshgenerators" href="generators.html" />
+    <link rel="prev" title="Input file syntax" href="syntax.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,7 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -54,7 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -77,9 +77,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">Documentation</a> &raquo;</li>
-      <li>Parallelization</li>
+      <li>Jobs</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/documentation/parallelization.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/documentation/jobs.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -87,23 +87,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="parallelization">
-<h1>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this heading"></a></h1>
-<p>EdelweissFE makes use of OpenMP to parallelize the computation of finite elements and for certain solvers, such as SuperLU, UFMPACK, or PARDISO.</p>
-<p>If a parallel solver (e.g, NISTParallel, NISTPArcLength) is selected in the .inp file, EdelweissFE  automatically determines the max. number of threads dependent on the host architecture.
-However, it is RECOMMENDED to enforce a fixed number of threads by running</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OMP_NUM_THREADS=XX python edelweiss.py INPUT.inp</span>
-</pre></div>
-</div>
-<p>This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).</p>
+  <section id="jobs">
+<h1>Jobs<a class="headerlink" href="#jobs" title="Permalink to this heading"></a></h1>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.fecore</span></code></p>
+<span class="target" id="module-fe.fecore"></span><p>This is the main module of EdelweissFE.</p>
+<p>Heart is the <code class="docutils literal notranslate"><span class="pre">*job</span></code> keyword, which defines the spatial dimension
+A <code class="docutils literal notranslate"><span class="pre">*job</span></code> defintion consists of multiple <code class="docutils literal notranslate"><span class="pre">*steps</span></code>, associated with that job.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="fe.fecore.collectStepActionsAndOptions">
+<span class="sig-prename descclassname"><span class="pre">fe.fecore.</span></span><span class="sig-name descname"><span class="pre">collectStepActionsAndOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.fecore.collectStepActionsAndOptions" title="Permalink to this definition"></a></dt>
+<dd><p>Parses all the defined actions for the current step,
+and calls the respective modules, which generate step-actions based on
+computed results, model info and job information.
+The step-actions are stored in a dictionary, which is handed to
+solveStep() in the feCore main routine afterwards.
+The step action modules decide if old step-action definitions are
+overwritten or extended. Returns a dictionary with keys as defined in
+stepactions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fe.fecore.finiteElementSimulation">
+<span class="sig-prename descclassname"><span class="pre">fe.fecore.</span></span><span class="sig-name descname"><span class="pre">finiteElementSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressPlots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.fecore.finiteElementSimulation" title="Permalink to this definition"></a></dt>
+<dd><p>This is core function of the finite element analysis.
+Based on the keyword <code class="docutils literal notranslate"><span class="pre">*job</span></code>, the finite element model is defined.</p>
+<dl class="simple">
+<dt>It assembles </dt><dd><ul class="simple">
+<li><p>jobInfo</p></li>
+<li><p>modeInfo</p></li>
+<li><p>steps</p></li>
+<li><p>fieldOutputs</p></li>
+<li><p>outputManagers</p></li>
+</ul>
+</dd>
+</dl>
+<p>and controls the respective solver based on the defined simulation steps.
+For each step, the step-actions (dirichlet, nodeforces) are collected by
+external modules.</p>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="solvers.html" class="btn btn-neutral float-left" title="Solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="syntax.html" class="btn btn-neutral float-left" title="Input file syntax" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generators.html" class="btn btn-neutral float-right" title="Meshgenerators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
