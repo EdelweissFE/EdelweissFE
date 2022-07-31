@@ -93,5 +93,15 @@ class PrettyPrintDirective(CodeBlock):
         return cb
 
 
+
+
+def doi_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+    # rendered = nodes.Text(text)
+    uri = 'http://dx.doi.org/' + text
+    ref = nodes.reference(rawtext, text, refuri=uri)
+    return [nodes.literal('', '', ref)], []
+
 def setup(app):
     app.add_directive('pprint', PrettyPrintDirective)
+
+    app.add_role("doi", doi_role)
