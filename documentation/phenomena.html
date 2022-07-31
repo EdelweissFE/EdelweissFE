@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parallelization &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Physical phenomena &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Exceptions" href="exceptions.html" />
-    <link rel="prev" title="Nonlinear solvers" href="solvers.html" /> 
+    <link rel="next" title="Finite elements" href="elements.html" />
+    <link rel="prev" title="Jobs" href="jobs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,7 +47,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
@@ -58,7 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -81,9 +81,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">Documentation</a> &raquo;</li>
-      <li>Parallelization</li>
+      <li>Physical phenomena</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/documentation/parallelization.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/documentation/phenomena.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -91,23 +91,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="parallelization">
-<h1>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this heading"></a></h1>
-<p>EdelweissFE makes use of OpenMP to parallelize the computation of finite elements and for certain solvers, such as SuperLU, UFMPACK, or PARDISO.</p>
-<p>If a parallel solver (e.g, NISTParallel, NISTPArcLength) is selected in the .inp file, EdelweissFE  automatically determines the max. number of threads dependent on the host architecture.
-However, it is RECOMMENDED to enforce a fixed number of threads by running</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OMP_NUM_THREADS=XX python edelweiss.py INPUT.inp</span>
-</pre></div>
-</div>
-<p>This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).</p>
+  <section id="physical-phenomena">
+<h1>Physical phenomena<a class="headerlink" href="#physical-phenomena" title="Permalink to this heading"></a></h1>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.config.phenomena</span></code></p>
+<span class="target" id="module-fe.config.phenomena"></span><p>This module contains the central definition of 
+the known physics, 
+i.e.,</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the available physical fields</p></li>
+<li><p>their tensorial order</p></li>
+<li><p>their default residual tolerances</p></li>
+</ul>
+</div></blockquote>
+<p>If a new physical field should be added to EdelweissFE,
+then this should happen (only) here.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="solvers.html" class="btn btn-neutral float-left" title="Nonlinear solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jobs.html" class="btn btn-neutral float-left" title="Jobs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="elements.html" class="btn btn-neutral float-right" title="Finite elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

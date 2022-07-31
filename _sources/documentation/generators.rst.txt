@@ -1,17 +1,10 @@
 Meshgenerators
 ==============
 
-Creating meshes by hand
------------------------
+Relevant module: ``fe.config.generators``
 
-Module ``fe.utils.abqmodelconstructor``
-
-.. automodule:: fe.utils.abqmodelconstructor
+.. automodule:: fe.config.generators
    :members: __doc__
-
-.. literalinclude:: ../../../testfiles/LinearElasticIsotropic/test.inp
-    :language: console
-    :caption: Example: ``testfiles/LinearElasticIsotropic/test.inp``
 
 ``boxgen`` - A 3D box mesh generator
 ------------------------------------

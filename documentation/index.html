@@ -47,13 +47,17 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
@@ -95,13 +99,19 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elements.html">Finite elements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="elements.html#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generators.html">Meshgenerators</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="generators.html#creating-meshes-by-hand">Creating meshes by hand</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html#boxgen-a-3d-box-mesh-generator"><code class="docutils literal notranslate"><span class="pre">boxgen</span></code> - A 3D box mesh generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html#planerectquad-a-2d-plane-rectangular-mesh-generator"><code class="docutils literal notranslate"><span class="pre">planerectquad</span></code> - A 2D plane rectangular mesh generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html#cubit-a-cubit-mesh-generator"><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stepactions.html">Stepactions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html#bodyforce-bodyforce-loads"><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html#dirichlet-standard-birichlet-bc"><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard birichlet BC</a></li>
@@ -130,7 +140,7 @@
 <li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="solvers.html">Solvers</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="solvers.html">Nonlinear solvers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstaticparallelarclength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length</a></li>

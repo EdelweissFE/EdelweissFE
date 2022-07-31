@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solvers &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Nonlinear solvers &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -47,13 +47,17 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Solvers</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Nonlinear solvers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelarclength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length</a></li>
@@ -82,7 +86,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">Documentation</a> &raquo;</li>
-      <li>Solvers</li>
+      <li>Nonlinear solvers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/documentation/solvers.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -93,7 +97,7 @@
            <div itemprop="articleBody">
              
   <section id="module-fe.config.solvers">
-<span id="solvers"></span><h1>Solvers<a class="headerlink" href="#module-fe.config.solvers" title="Permalink to this heading"></a></h1>
+<span id="nonlinear-solvers"></span><h1>Nonlinear solvers<a class="headerlink" href="#module-fe.config.solvers" title="Permalink to this heading"></a></h1>
 <p>Currently, EdelweissFE provides</p>
 <blockquote>
 <div><ul class="simple">

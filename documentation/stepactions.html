@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Constraints" href="constraints.html" />
-    <link rel="prev" title="Meshgenerators" href="generators.html" /> 
+    <link rel="prev" title="Sections" href="sections.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,7 +47,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Stepactions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bodyforce-bodyforce-loads"><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dirichlet-standard-birichlet-bc"><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard birichlet BC</a></li>
@@ -64,7 +68,7 @@
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
@@ -206,7 +210,7 @@ If not modified in subsequent steps, the load held constant.</p>
 <span class="go">**elset, faceID</span>
 <span class="go">loadEls, 3</span>
 
-<span class="go">*material, name=modleon, id=modleon, statevars=5</span>
+<span class="go">*material, name=modleon, id=modleon</span>
 <span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.125, 1</span>
 
 <span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
@@ -260,7 +264,7 @@ If not modified in subsequent steps, the load held constant.</p>
 <span class="go">nY=30</span>
 <span class="go">elType=CPE4</span>
 
-<span class="go">*material, name=linearElastic, id=le, statevars=0</span>
+<span class="go">*material, name=linearElastic, id=le</span>
 <span class="go">210000, 0.3</span>
 
 <span class="go">*section, name=section1, thickness=1.0, material=le, type=plane</span>
@@ -465,7 +469,7 @@ uses a ring to control the contraction, e.g., for tunneling simulations.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="generators.html" class="btn btn-neutral float-left" title="Meshgenerators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sections.html" class="btn btn-neutral float-left" title="Sections" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="constraints.html" class="btn btn-neutral float-right" title="Constraints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

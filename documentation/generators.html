@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Stepactions" href="stepactions.html" />
-    <link rel="prev" title="Jobs" href="jobs.html" /> 
+    <link rel="next" title="Sections" href="sections.html" />
+    <link rel="prev" title="Creating finite element meshes" href="mesh.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,19 +47,22 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Meshgenerators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creating-meshes-by-hand">Creating meshes by hand</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#boxgen-a-3d-box-mesh-generator"><code class="docutils literal notranslate"><span class="pre">boxgen</span></code> - A 3D box mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#planerectquad-a-2d-plane-rectangular-mesh-generator"><code class="docutils literal notranslate"><span class="pre">planerectquad</span></code> - A 2D plane rectangular mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cubit-a-cubit-mesh-generator"><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
@@ -95,113 +98,19 @@
              
   <section id="meshgenerators">
 <h1>Meshgenerators<a class="headerlink" href="#meshgenerators" title="Permalink to this heading"></a></h1>
-<section id="creating-meshes-by-hand">
-<h2>Creating meshes by hand<a class="headerlink" href="#creating-meshes-by-hand" title="Permalink to this heading"></a></h2>
-<p>Module <code class="docutils literal notranslate"><span class="pre">fe.utils.abqmodelconstructor</span></code></p>
-<span class="target" id="module-fe.utils.abqmodelconstructor"></span><p>This is the default model generator,
-creating finite element meshes using the keywords</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">*node</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*element</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*nset</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*elset</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*surface</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*section</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*constraint</span></code></p></li>
-</ul>
-</div></blockquote>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.config.generators</span></code></p>
+<span class="target" id="module-fe.config.generators"></span><p>Mesh generators are used to create meshes,
+using different methods.</p>
+<p>Keyword: <code class="docutils literal notranslate"><span class="pre">*generator</span></code></p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/LinearElasticIsotropic/test.inp</span></code></span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=LinearElastic, id=myMaterial</span>
-<span class="go">**Isotropic</span>
-<span class="go">**E   | nu |</span>
-<span class="go">1.8e4, 0.22</span>
-
-<span class="go">*section, name=section1, material=myMaterial, type=solid</span>
-<span class="go">all</span>
-
-<span class="go">*node</span>
-<span class="go">0, 0, 0, 0</span>
-<span class="go">1, 0.100, 0, 0</span>
-<span class="go">2, 0.100, 0.100, 0</span>
-<span class="go">3, 0, 0.100, 0</span>
-<span class="go">4, 0, 0, 0.100</span>
-<span class="go">5, 0.100, 0, 0.100</span>
-<span class="go">6, 0.100, 0.100, 0.100</span>
-<span class="go">7, 0, 0.100, 0.100</span>
-
-<span class="go">*nSet, nSet=bottom</span>
-<span class="go">0,1,2,3</span>
-<span class="go">*nSet, nSet=top</span>
-<span class="go">4,5,6,7</span>
-<span class="go">*nSet, nSet=back</span>
-<span class="go">0,3,4,7</span>
-<span class="go">*nSet, nSet=front</span>
-<span class="go">1,2,5,6</span>
-<span class="go">*nSet, nSet=left</span>
-<span class="go">0,1,4,5</span>
-<span class="go">*nSet, nSet=right</span>
-<span class="go">2,3,6,7</span>
-<span class="go">*nSet, nSet=bottomleft</span>
-<span class="go">1</span>
-<span class="go">*nSet, nSet=bottomback</span>
-<span class="go">0</span>
-
-
-<span class="go">*element, Type=C3D8</span>
-<span class="go">1, 0,1,2,3,4,5,6,7</span>
-
-<span class="go">*elSet, elSet=all</span>
-<span class="go">1</span>
-
-<span class="go">*surface, type=element, name=surfaceTop</span>
-<span class="go">**elset, faceID</span>
-<span class="go">all, 2</span>
-<span class="go">*surface, type=element, name=surfaceFront</span>
-<span class="go">**elset, faceID</span>
-<span class="go">all, 3</span>
-<span class="go">*surface, type=element, name=surfaceRight</span>
-<span class="go">**elset, faceID</span>
-<span class="go">all, 4</span>
-<span class="go">*surface, type=element, name=surfaceBack</span>
-<span class="go">**elset, faceID</span>
-<span class="go">all, 5</span>
-<span class="go">*surface, type=element, name=surfaceLeft</span>
-<span class="go">all, 6</span>
-
-<span class="go">*job, name=mySingleElementJob, domain=3d, solver=NIST</span>
-
-<span class="go">*step, jobName=mySingleElementJob, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1</span>
-<span class="go">dirichlet, name=1, nSet=left, field=displacement, 2=0</span>
-<span class="go">dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0</span>
-<span class="go">dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0</span>
-
-<span class="go">*step, jobName=mySingleElementJob, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1</span>
-<span class="go">dirichlet, name=right, nSet=right, field=displacement, 2=-0.01</span>
-
-<span class="go">*fieldOutput,</span>
-<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
-<span class="go">elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">name=sig22, elSet=all, result=stress, quadraturePoint=0:8, f(x)=&#39;-np.mean(x[:,:,1],axis=1)&#39;, saveHistory=True</span>
-<span class="go">name=eps22, elSet=all, result=strain, quadraturePoint=0:8, f(x)=&#39;-np.mean(x[:,:,1],axis=1)&#39;, saveHistory=True, export=eps22</span>
-
-<span class="go">*output, type=ensight, jobName=mySingleElementJob, name=myEnsightOutput</span>
-<span class="go">create=perNode, fieldOutput=displacement</span>
-<span class="go">create=perElement, fieldOutput=stress</span>
-<span class="go">create=perElement, fieldOutput=strain</span>
-<span class="go">configuration, overwrite=yes</span>
-
-<span class="go">*output, type=meshPlot, jobName=mySingleElementJob</span>
-<span class="go">figure=1, axSpec=111, c=red, create=xyData, x=eps22, y=sig22</span>
-
-<span class="go">*output, type=monitor, jobName=mySingleElementJob</span>
-<span class="go">fieldOutput=sig22</span>
+<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*modelGenerator, generator=theGeneratorType, name=myGeneratorName</span>
+<span class="go">    multiple lines of defintion ...</span>
+<span class="go">    multiple lines of defintion ...</span>
+<span class="go">    multiple lines of defintion ...</span>
 </pre></div>
 </div>
 </div>
-</section>
 <section id="boxgen-a-3d-box-mesh-generator">
 <h2><code class="docutils literal notranslate"><span class="pre">boxgen</span></code> - A 3D box mesh generator<a class="headerlink" href="#boxgen-a-3d-box-mesh-generator" title="Permalink to this heading"></a></h2>
 <p>Relevant module <code class="docutils literal notranslate"><span class="pre">fe.generators.boxgen</span></code></p>
@@ -277,8 +186,8 @@ are automatically generated</p>
 
 <span class="go">*fieldOutput,</span>
 <span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
-<span class="go">elSet=all, result=strain, name=strain, quadraturePoint=0:7, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">elSet=all, result=stress, name=stress, quadraturePoint=0:7, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="go">elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="go">elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
 
 <span class="go">*output, type=ensight, jobName=job, name=test</span>
 <span class="go">create=perNode, fieldOutput=displacement</span>
@@ -418,8 +327,8 @@ are automatically generated</p>
 
 <span class="go">*fieldOutput,</span>
 <span class="go">elSet=all,  name=displacement,  field=displacement, result=U</span>
-<span class="go">elSet=all,  name=stress,        result=stress,      quadraturePoint=0:7, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">elSet=all,  name=strain,        result=strain,      quadraturePoint=0:7, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="go">elSet=all,  name=stress,        result=stress,      quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="go">elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
 
 <span class="go">*output, type=ensight, jobName=set_def, name=esExport</span>
 <span class="go">create=perNode,     fieldOutput=displacement </span>
@@ -440,8 +349,8 @@ are automatically generated</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="jobs.html" class="btn btn-neutral float-left" title="Jobs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="stepactions.html" class="btn btn-neutral float-right" title="Stepactions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mesh.html" class="btn btn-neutral float-left" title="Creating finite element meshes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sections.html" class="btn btn-neutral float-right" title="Sections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

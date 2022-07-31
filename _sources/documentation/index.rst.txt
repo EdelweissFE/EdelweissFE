@@ -6,7 +6,11 @@ Documentation
 
    syntax
    jobs
+   phenomena
+   elements
+   mesh
    generators
+   sections
    stepactions
    constraints
    fieldoutputmanager

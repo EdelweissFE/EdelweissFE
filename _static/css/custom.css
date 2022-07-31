@@ -1,11 +1,10 @@
 .caption-text {
     font-size: normal;
     font-style: normal;
-    text-align: left;
+    text-align: left !important;
     font-weight: bold;
 }
 
-.code-block-caption {
-    align: left;
+.wy-nav-content {
+    max-width: 90%;
 }
-

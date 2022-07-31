@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parallelization &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Sections &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Exceptions" href="exceptions.html" />
-    <link rel="prev" title="Nonlinear solvers" href="solvers.html" /> 
+    <link rel="next" title="Stepactions" href="stepactions.html" />
+    <link rel="prev" title="Meshgenerators" href="generators.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,14 +51,14 @@
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -81,9 +81,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">Documentation</a> &raquo;</li>
-      <li>Parallelization</li>
+      <li>Sections</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/documentation/parallelization.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/documentation/sections.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -91,23 +91,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="parallelization">
-<h1>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this heading"></a></h1>
-<p>EdelweissFE makes use of OpenMP to parallelize the computation of finite elements and for certain solvers, such as SuperLU, UFMPACK, or PARDISO.</p>
-<p>If a parallel solver (e.g, NISTParallel, NISTPArcLength) is selected in the .inp file, EdelweissFE  automatically determines the max. number of threads dependent on the host architecture.
-However, it is RECOMMENDED to enforce a fixed number of threads by running</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OMP_NUM_THREADS=XX python edelweiss.py INPUT.inp</span>
+  <section id="sections">
+<h1>Sections<a class="headerlink" href="#sections" title="Permalink to this heading"></a></h1>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.config.sections</span></code></p>
+<span class="target" id="module-fe.config.sections"></span><p>Keyword: <code class="docutils literal notranslate"><span class="pre">*section</span></code></p>
+<p>Sections combine domains (expressed in terms of element sets)
+with properties, such as materials.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*section, name=mySection, thickness=1.0, material=myMaterial, type=plane</span>
+<span class="go">    all</span>
 </pre></div>
 </div>
-<p>This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).</p>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="solvers.html" class="btn btn-neutral float-left" title="Nonlinear solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generators.html" class="btn btn-neutral float-left" title="Meshgenerators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stepactions.html" class="btn btn-neutral float-right" title="Stepactions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
