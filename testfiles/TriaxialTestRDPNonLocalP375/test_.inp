@@ -5,7 +5,7 @@
 ** 
 ** MATERIALS
 ** 
-*material, name=UntereggerRockMassNonLocal, id=urm, statevars=6
+*material, name=UntereggerRockMassNonLocal, id=urm
 ** Quartzphyllite
 ** pre-peak parameters identified with bayesian logic for 0degree loading angle
 ** post-peak parameters (As, Bs, GFI) estimated
@@ -15,7 +15,7 @@
   56665,     0.2040,  	41.60,    	11.95,  	0.51,   9.943,   	29.53,    
 	0.004467,    1e-05,     8.817,  	 1e-6,    	0,  	40,	2,  			 100,   
     0.,     	 0.99,  2, 1.005, 5e-5
-*material, name=UntereggerRockMassNonLocal, id=urm-weak, statevars=6
+*material, name=UntereggerRockMassNonLocal, id=urm-weak
 ** Quartzphyllite
 ** pre-peak parameters identified with bayesian logic for 0degree loading angle
 ** post-peak parameters (As, Bs, GFI) estimated

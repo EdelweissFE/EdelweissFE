@@ -1,4 +1,4 @@
-*material, name=linearelastic, id=linearElastic, statevars=0
+*material, name=linearelastic, id=linearElastic
 30000, 0.15 
 
 *section, name=section1, material=linearElastic, type=solid

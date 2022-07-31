@@ -1,4 +1,4 @@
-*material, name=linearelastic, id=linearelastic, statevars=5
+*material, name=linearelastic, id=linearelastic
 30000.0, 0.4 
 
 *section, name=section1, thickness=1.0, material=linearelastic, type=plane

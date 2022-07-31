@@ -14098,7 +14098,7 @@ _Surf-PressureR_S4, 4
 ** Constraint: Constraint-2
 ***Rigid Body, ref node=_PickedSet19, tie nset=_PickedSet20
 
-***material, name=UntereggerRockMassNonLocal, id=urmnl, statevars=6,
+***material, name=UntereggerRockMassNonLocal, id=urmnl,
 *****include, input=identifiedParameters_GSI100.inp 
 *****include, input=identifiedParameters_GSI40.inp 
 *****include, input=identifiedParameters_GSI100_h015.inp 
@@ -14112,7 +14112,7 @@ _Surf-PressureR_S4, 4
 ******** omegaMax, nonlocalRadius nonlocalweight              epsilonF   
 **0.999999,   2.0,        1.050,     6.5815e-02 
 
-*material, name=UntereggerRockMassNonLocal, id=urmnl, statevars=6,
+*material, name=UntereggerRockMassNonLocal, id=urmnl,
 ***include, input=identifiedParameters_GSI100.inp 
 ***include, input=identifiedParameters_GSI40.inp 
 ***include, input=identifiedParameters_GSI100_h015.inp 

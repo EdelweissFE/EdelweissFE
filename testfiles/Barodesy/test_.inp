@@ -5,7 +5,7 @@ nY=40
 l=0.037
 h=0.1
 
-*material, name=Barodesy, id=wealdClay, statevars=4
+*material, name=Barodesy, id=wealdClay
 ** phiC N lambda* kappa* sigma* (1 when calculating in kpa) numericalCohesion
 24, 0.8, 0.059, 0.018, 1, 0.1
 

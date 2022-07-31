@@ -7,7 +7,7 @@ nX=10
 nY=10
 elType=GCPS4
 
-*material, name=ShotLeonV2NonLocal, id=scdp, statevars=125
+*material, name=ShotLeonV2NonLocal, id=scdp
 **E28,          E1,         flowMag,        flowExponent,       flowDelay,      nu,         tTransition,        tDelay,
 21537,          13943,      34,             1.2207,               0.0,            0.2,        0.5,                0.3,
 **vResidual,    nKelvin,    kelvinMin,      strainShrInf,       TauShr,         fcu28,      fcu1,               ratioFcy,

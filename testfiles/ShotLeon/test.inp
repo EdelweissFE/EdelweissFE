@@ -5,7 +5,7 @@ nX=10
 nY=10
 elType=CPS4
 
-*material, name=ShotLeon, id=scdp, statevars=125
+*material, name=ShotLeon, id=scdp
 **             q1,             q2,             q3,             q4,             nu,             E1,        nKelvin,      kelvinMin,
        2.1700e+01,     1.4900e+02,     8.7000e+00,     1.4000e+01,     2.1000e-01,     1.8000e+04,    1.2000e+01,      1.0000e-05,
 **   strainShrInf,         TauShr,           kHum,          fcu28,           fcu1,       ratioFcy,       ratioFbu,       ratioFtu,

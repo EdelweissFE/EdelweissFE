@@ -1,4 +1,4 @@
-*material, name=StVenantKirchhoffIsotropic, id=StVenantKirchhoffIsotropic, statevars=0
+*material, name=StVenantKirchhoffIsotropic, id=StVenantKirchhoffIsotropic
 30000.0, 0.15
 
 *section, name=section1, material=StVenantKirchhoffIsotropic, type=solid

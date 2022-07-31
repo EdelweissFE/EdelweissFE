@@ -38,7 +38,7 @@ all, 4
 **elset, faceID
 all, 5
 
-*material, name=ModifiedCamClay, id=MCC, statevars=5
+*material, name=ModifiedCamClay, id=MCC
 **** G kappa lambda M
 100000, 0.01, 0.08, 1.01
 
