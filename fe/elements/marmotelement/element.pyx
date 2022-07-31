@@ -30,7 +30,7 @@
 # @author: matthias
 """
 This module contains the interface element to Marmot C++ finite elements elements
-It is implemented as a Cython class
+It is implemented as a Cython class.
 """
 
 import numpy as np
@@ -59,8 +59,13 @@ mapStateTypes={
     
 @cython.final # no subclassing -> cpdef with nogil possible
 cdef class MarmotElementWrapper:
+    """Cython cdef class serving as a wrapper to MarmotElements"""
     
     def __cinit__(self, elementType, elNumber):
+        """Assign the elementType and the number. 
+        Create the correct MarmotElement.
+        Determine the number of required nodes, the fields, the permutation pattern from
+        the respective MarmotElement"""
             
         self.elNumber = elNumber
         
@@ -82,11 +87,13 @@ cdef class MarmotElementWrapper:
         self.ensightType                    = self.marmotElement.getElementShape().decode('utf-8')
 
     def setNodes (self, nodes):
+        """Assign the nodes coordinates to the underyling MarmotElement"""
         self.nodes = nodes
         self.nodeCoordinates = np.concatenate([ node.coordinates for node in nodes])
         self.marmotElement.assignNodeCoordinates(&self.nodeCoordinates[0])
         
     def setProperties(self, elementProperties):
+        """Assign a set of properties to the underyling MarmotElement"""
         self.elementProperties =    elementProperties
         
         self.marmotElement.assignProperty( 
@@ -95,9 +102,18 @@ cdef class MarmotElementWrapper:
                         self.elementProperties.shape[0] ) )
 
     def initializeElement(self, ):
+        """Let the underlying MarmotElement initialize itself"""
         self.marmotElement.initializeYourself()
 
     def setMaterial(self, materialName, materialProperties):
+        """Assign a material and material properties to the underlying MarmotElement.
+        Furthermore, create two sets of state vars:
+
+            * the actual set,
+            * and a temporary set for backup in nonlinear iteration schemes
+        
+        """
+
         self.materialProperties =   materialProperties
         try:
             self.marmotElement.assignProperty(
@@ -122,6 +138,7 @@ cdef class MarmotElementWrapper:
     def setInitialCondition(self, 
                             stateType,
                             const double[::1] values):
+        """Assign initial conditions to the underlying Marmot element"""
         
         self.initializeStateVarsTemp()
         self.marmotElement.setInitialConditions(mapStateTypes[stateType], &values[0])
@@ -134,6 +151,8 @@ cdef class MarmotElementWrapper:
                          const double[::1] dU, 
                          const double[::1] time, 
                          double dTime, ) nogil except *:
+        """Evaluate residual and stiffness for given time, field, and field increment."""
+
         cdef double pNewDT 
         with nogil:
             self.initializeStateVarsTemp()
@@ -158,6 +177,7 @@ cdef class MarmotElementWrapper:
                                const double[::1] U, 
                                const double[::1] time,
                                double dTime):
+        """Evaluate residual and stiffness for given time, field, and field increment due to a surface load."""
         
         self.marmotElement.computeDistributedLoad(mapLoadTypes[loadType],
                                     &P[0], 
@@ -175,6 +195,7 @@ cdef class MarmotElementWrapper:
            const double[::1] U, 
            const double[::1] time,
            double dTime):
+        """Evaluate residual and stiffness for given time, field, and field increment due to a volume load."""
         
         self.marmotElement.computeBodyForce(
                                     &P[0], 
@@ -184,25 +205,33 @@ cdef class MarmotElementWrapper:
                                     &time[0],
                                     dTime)
     def acceptLastState(self,):
+        """Accept the computed state (in nonlinear iteration schemes)."""
+
         self.stateVars[:] = self.stateVarsTemp
         
     def resetToLastValidState(self,):
+        """Rest to the last valid state."""
+
         pass
     
     def getResultArray(self, result, quadraturePoint, getPersistentView=True):    
-        """ get the array of a result, possibly as a persistent view which is continiously
-        updated by the element """
+        """Get the array of a result, possibly as a persistent view which is continiously
+        updated by the underlying MarmotElement."""
+
         cdef string result_ =  result.encode('UTF-8')
         return np.array(  self.getStateView(result_, quadraturePoint), copy= not getPersistentView)
         
             
     cdef double[::1] getStateView(self, string result, int quadraturePoint, ):
-        """ direct access the the stateVars of the element / underlying material"""
+        """Directly access the state vars of the underlying MarmotElement"""
+
         cdef StateView res = self.marmotElement.getStateView(result, quadraturePoint )
 
         return <double[:res.stateSize]> ( res.stateLocation )
 
     def getCoordinatesAtCenter(self):
+        """Compute the underlying MarmotElement centroid coordinates."""
+
         return np.asarray ( self.marmotElement.getCoordinatesAtCenter() )
     
     def __dealloc__(self):

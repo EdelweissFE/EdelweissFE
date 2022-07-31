@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to EdelweissFE !
-========================
+Welcome to EdelweissFE
+======================
 
 EdelweissFE is a light-weight, platform-independent, parallel finite element framework.
 EdelweissFE makes use of the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library for finite element and constitutive model formulations.
@@ -20,6 +20,11 @@ EdelweissFE aims to be...
 EdelweissFE does not want to ...
 
 * ... compete with more mature (MPI-parallelized) codes such as `MOOSE <https://mooseframework.inl.gov/>`_, which are also compatibel with the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library, but less easy to use. Usually, EdelweissFE is used for developing and debugging constitutive models until they are ready for production runs on HPC system using more mature frameworks.
+
+
+.. figure:: borehole.png
+   :align: center
+   :width: 240px
 
 .. toctree::
    :maxdepth: 2

@@ -25,10 +25,20 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Sun Apr 03 11:27:14 2022
+# Created on Sun Apr 03 11:27:14 2022
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Keyword: ``*section``
+
+Sections combine domains (expressed in terms of element sets)
+with properties, such as materials.
+
+.. code-block:: console
+    :caption: Example:
+
+    *section, name=mySection, thickness=1.0, material=myMaterial, type=plane
+        all
 """
 import importlib
 

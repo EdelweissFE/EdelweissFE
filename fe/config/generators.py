@@ -25,14 +25,25 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Wed Apr 12 15:37:28 2017
+# Created on Wed Apr 12 15:37:28 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Mesh generators are used to create meshes,
+using different methods. 
+
+Keyword: ``*generator``
+
+.. code-block:: console
+    :caption: Example: 
+
+    *modelGenerator, generator=theGeneratorType, name=myGeneratorName
+        multiple lines of defintion ...
+        multiple lines of defintion ...
+        multiple lines of defintion ...
 """
 
 import importlib
-
 
 def getGeneratorByName(name):
     module = importlib.import_module("fe.generators." + name.lower())

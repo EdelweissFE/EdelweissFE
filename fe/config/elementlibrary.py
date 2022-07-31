@@ -25,16 +25,27 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+# Created on Tue Jan  17 19:10:42 2017
+
+# @author: Matthias Neuner
 """
-Created on Tue Jan  17 19:10:42 2017
+EdelweissFE currently supports finite element implementations provided by the Marmot library.
+In future, elements by other providers or elements directly implemented in EdelweissFE may be added here.
 
-@author: Matthias Neuner
+.. code-block:: console
+    :caption: Example:
+
+    *element, type=C3D8, provider=marmot
+        ** el_label, node1, node2, node3, node4, ... 
+        1000,        1,     2,     3,     4,     ...
 """
 
+def getElementByName(name, provider=None):
+    """Get a finite element instance by name, and by specifying the provider"""
 
-def getElementByName(name, provider):
+    if provider == None:
+        provider = "marmot"
 
-    if provider == "marmot" or not provider:
+    if provider == "marmot":
         from fe.elements.marmotelement.element import MarmotElementWrapper
-
         return MarmotElementWrapper

@@ -29,17 +29,16 @@
 
 # @author: Matthias Neuner
 """
-This is the default model generator,
-creating finite element meshes using the keywords
+The default way to create finit element meshes
+is using the keywords
 
  * ``*node``
  * ``*element``
  * ``*nset``
  * ``*elset``
  * ``*surface``
- * ``*section``
- * ``*constraint``
 
+employing an Abaqus-like syntax.
 """
 
 from fe.elements.node import Node
@@ -84,7 +83,7 @@ class AbqModelConstructor:
 
         for elDefs in inputFile["*element"]:
             elementType = elDefs["type"]
-            elementProvider = elDefs.get("provider", False)
+            elementProvider = elDefs.get("provider")
             ElementClass = getElementByName(elementType, elementProvider)
 
             currElDefs = {}

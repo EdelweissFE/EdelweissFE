@@ -25,11 +25,22 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Tue Jan  10 19:10:42 2017
+# Created on Tue Jan  10 19:10:42 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
 """
+This module contains the central definition of 
+the known physics, 
+i.e.,
+
+ * the available physical fields
+ * their tensorial order
+ * their default residual tolerances
+
+If a new physical field should be added to EdelweissFE,
+then this should happen (only) here.
+"""
+
 from collections import OrderedDict
 
 # field                  field type
