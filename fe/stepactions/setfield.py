@@ -43,7 +43,6 @@ import numpy as np
 
 
 class StepAction(StepActionBase):
-    """Defines node based load, defined on a nodeset."""
 
     def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 

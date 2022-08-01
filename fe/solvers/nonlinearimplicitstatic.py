@@ -49,9 +49,6 @@ from fe.utils.csrgenerator import CSRGenerator
 
 class NIST:
     """This is the Nonlinear Implicit STatic -- solver.
-    Designed to interface with Abaqus UELs
-    Public methods are: __init__(), initializeUP() and solveStep(...).
-    OutputManagers are updated at the end of each increment.
     """
 
     identification = "NISTSolver"
@@ -130,6 +127,7 @@ class NIST:
 
         for setfield in activeStepActions["setfields"]:
             setfield.apply()
+
         for initmaterial in activeStepActions["initializematerial"]:
             initmaterial.apply()
 
@@ -254,7 +252,11 @@ class NIST:
         concentratedLoads = activeStepActions["concentratedLoads"]
         distributedLoads = activeStepActions["distributedLoads"]
         bodyForces = activeStepActions["bodyForces"]
-        # constraints = activeStepActions["constraints"]
+
+        # for setField in activeStepActions
+
+        for changeMaterialProperty in activeStepActions["changeMaterialProperties"]:
+            changeMaterialProperty.changeTheProperties(increment, self.journal)
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
             extrapolation, increment, dU, dirichlets, lastIncrementSize
@@ -263,6 +265,7 @@ class NIST:
         while True:
             for geostatic in activeStepActions["geostatics"]:
                 geostatic.apply()
+
 
             Un1[:] = Un
             Un1 += dU
@@ -493,7 +496,7 @@ class NIST:
         return KCsr
 
     def resetDisplacements(self, U):
-        """-> May be called at the end of a geostatic step, the zero all displacments after
+        """May be called at the end of a geostatic step, the zero all displacments after
         applying the geostatic stress"""
 
         self.journal.printSeperationLine()
@@ -504,7 +507,7 @@ class NIST:
 
     def computeSpatialAveragedFluxes(self, F):
         """Compute the spatial averaged flux for every field
-        -> Called by checkConvergence()"""
+        Called by checkConvergence()"""
         spatialAveragedFluxes = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, 0.0)
         for field, nDof in self.theDofManager.nAccumulatedNodalFluxesFieldwise.items():
             spatialAveragedFluxes[field] = max(
@@ -579,6 +582,7 @@ class NIST:
         activeActions["concentratedLoads"] = stepActions["nodeforces"].values()
 
         activeActions["geostatics"] = [g for g in stepActions["geostatic"].values() if g.active]
+        activeActions["changeMaterialProperties"] = [c for c in stepActions["changematerialproperty"].values() if c.active]
         # activeActions["constraints"] = [c for c in modelInfo.constraints.values()]
         activeActions["setfields"] = [s for s in stepActions["setfield"].values() if s.active]
         activeActions["initializematerial"] = [s for s in stepActions["initializematerial"].values() if s.active]
