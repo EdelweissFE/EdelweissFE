@@ -24,9 +24,7 @@ jobs:
       - name: Install conda packages
         shell: bash -l {0}
         run: |
-          mamba install -c conda-forge cython compilers openmp gfortran make numpy scipy rich cmake matplotlib sympy gstools
-          mamba install -c anaconda mkl mkl-include
-          mamba install sphinx sphinx_rtd_theme
+          mamba install -c conda-forge -c anaconda --file requirements.txt
 
       - name: Install Eigen
         shell: bash -l {0}

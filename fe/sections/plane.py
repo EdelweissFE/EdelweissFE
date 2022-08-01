@@ -31,14 +31,12 @@
 """This section represents a classical plane solid materal section.
 """
 
-documentation=
-{"elementSets": "comma separated list of element sets for this section",
+documentation= {"elementSets": "comma separated list of element sets for this section",
         "material": "the material to be assigned"}
 
 import numpy as np
 import gstools
 from fe.utils.misc import stringDict
-
 
 class Section:
     def __init__(self, name, options, materialName, thickness, modelInfo):

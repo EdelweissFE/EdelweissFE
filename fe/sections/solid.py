@@ -31,8 +31,7 @@
 """This section represents a classical solid materal section.
 """
 
-documentation=
-{"elementSets": "comma separated list of element sets for this section",
+documentation= {"elementSets": "comma separated list of element sets for this section",
         "material": "the material to be assigned"}
 
 import numpy as np
