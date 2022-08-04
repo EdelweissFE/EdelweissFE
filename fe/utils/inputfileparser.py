@@ -50,9 +50,9 @@ inputLanguage = {
         "definition of element(s)",
         {
             "elSet": ("string", "name"),
-            "type": ("string", "assign one of the types definied in the elementlibrary"),
+            "type": ("string", "assign one of the types defined in the elementlibrary"),
             "provider": ("string", "provider (library) for the element type. Default: Marmot"),
-            "data": ("numpy integer array", "Abaqus like element definiton lines"),
+            "data": ("numpy integer array", "Abaqus like element definition lines"),
         },
     ),
     "*elSet": (
@@ -60,14 +60,14 @@ inputLanguage = {
         {
             "elSet": ("string", "name"),
             "generate": ("string", "set True to generate from data line 1: start-element, end-element, step"),
-            "data": ("string", "Abaqus like element set definiton lines"),
+            "data": ("string", "Abaqus like element set definition lines"),
         },
     ),
     "*node": (
         "definition of nodes",
         {
             "nSet": ("string", "name"),
-            "data": ("numpy float array", "Abaqus like node definiton lines: label, x, [y], [z]"),
+            "data": ("numpy float array", "Abaqus like node definition lines: label, x, [y], [z]"),
         },
     ),
     "*nSet": (
@@ -75,7 +75,7 @@ inputLanguage = {
         {
             "nSet": ("string", "name"),
             "generate": ("string", "set True to generate from data line 1: start-node, end-node, step"),
-            "data": ("string", "Abaqus like node set definiton lines"),
+            "data": ("string", "Abaqus like node set definition lines"),
         },
     ),
     "*surface": (
@@ -87,7 +87,7 @@ inputLanguage = {
         },
     ),
     "*section": (
-        "definition of an section",
+        "definition of a section",
         {
             "name": ("string", "name"),
             "thickness": ("float", "associated element set"),
@@ -109,7 +109,7 @@ inputLanguage = {
         "define fieldoutput, which is used by outputmanagers",
         {
             "jobName": ("string", "(optional), name of job, standard=defaultJob"),
-            "data": ("string", "defintions lines for the output module"),
+            "data": ("string", "definition lines for the output module"),
         },
     ),
     "*analyticalField": (
@@ -126,7 +126,7 @@ inputLanguage = {
             "name": ("string", "(optional), name of manager, standard=None"),
             "jobName": ("string", "(optional), name of job, standard=defaultJob"),
             "type": ("string", "output module "),
-            "data": ("string", "defintions lines for the output module"),
+            "data": ("string", "definition lines for the output module"),
         },
     ),
     "*job": (
@@ -153,7 +153,7 @@ inputLanguage = {
         },
     ),
     "*updateConfiguration": (
-        "update an configuration",
+        "update a configuration",
         {
             "configuration": ("string", " name of the modified settings category"),
             "data": ("string", "key=value pairs"),
@@ -211,7 +211,7 @@ inputLanguage = inputLanguage_
 
 
 def parseInputFile(fileName, currentKeyword=None, existingFileDict=None):
-    """Parse an Abaqus like input file to generate an dictionary with its content"""
+    """Parse an Abaqus like input file to generate a dictionary with its content"""
 
     if not existingFileDict:
         fileDict = CaseInsensitiveDict({key: [] for key in inputLanguage.keys()})
