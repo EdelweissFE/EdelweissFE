@@ -520,9 +520,9 @@ class OutputManager(OutputManagerBase):
                     self.ensightCase.writeVariableTrendChunk(enSightVar, self.staticTAndFSetNumber)
                     del enSightVar
 
-    def initializeStep(self, step, stepActions, stepOptions):
-        if self.name in stepOptions or "Ensight" in stepOptions:
-            options = stepOptions.get(self.name, False) or stepOptions["Ensight"]
+    def initializeStep(self, step, stepActions):
+        if self.name in stepActions["options"] or "Ensight" in stepActions["options"]:
+            options = stepActions["options"].get(self.name, False) or stepActions["options"]["Ensight"]
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
             self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 

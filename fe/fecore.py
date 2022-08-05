@@ -45,6 +45,7 @@ from fe.utils.misc import filterByJobName, stringDict
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.utils.dofmanager import DofManager
+from fe.elements.scalarvariable import ScalarVariable
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
@@ -53,42 +54,64 @@ from time import time as getCurrentTime
 
 
 
-def collectStepActionsAndOptions(
-    step, jobInfo, modelInfo, time, U, P, stepActions, stepOptions, fieldOutputController, journal
+def gatherStepActions(
+    step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
 ):
     """Parses all the defined actions for the current step,
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
-    The step-actions are stored in a dictionary, which is handed to
+    The stepi actions are stored in a dictionary, which is handed to
     solveStep() in the feCore main routine afterwards.
-    The step action modules decide if old step-action definitions are
+    The step action modules decide if old stepaction definitions are
     overwritten or extended. Returns a dictionary with keys as defined in
     stepactions."""
 
     for actionType, *definition in step["data"]:
-        if actionType.startswith("options"):
-            # line is a option
-            options = stringDict(definition)
-            category = options["category"]
-            stepOptions[category].update(options)
+        options = stringDict(definition)
+        
+        module = actionType.lower()
+        moduleName = options.get("name", options.get("category", module))
+
+        if moduleName in stepActions[module]:
+            stepActions[module][moduleName].updateStepAction(
+                moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+            )
+            journal.message('Stepaction "{:}" will be updated'.format(moduleName), "stepActionManager", 1)
         else:
-            # line is an action
-            module = actionType.lower()
-            options = stringDict(definition)
-            moduleName = options.get("name", module)
+            stepActions[module][moduleName] = stepActionFactory(module)(
+                moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+            )
 
-            if moduleName in stepActions[module]:
-                stepActions[module][moduleName].updateStepAction(
-                    moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
-                )
-                journal.message('Stepaction "{:}" will be updated'.format(moduleName), "stepActionManager", 1)
-            else:
-                stepActions[module][moduleName] = stepActionFactory(module)(
-                    moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
-                )
+    return stepActions
 
-    return stepActions, stepOptions
 
+# def performModelChanges(modelChangeDefinitions : dict , modelInfo : dict):
+#     """We may change something fundamentally in the model.
+
+#     Parameters
+#     ----------
+#     modelChangeDefinitions
+#         the dictionary containing the definition of the change.
+#         Requires at least the entry 'change' to determine the kind of change.
+#     modelInfo
+#         The modelInfo tree.
+
+#     Returns
+#     -------
+#     tuple
+#         Updated modelInfo, and a boolean determining if the DofManager must be recreated.
+
+#     """
+
+#     rebuildDofManager = False
+
+#     for up in modelUpdates:
+
+#         if up['change'].lower() == 'updateconstraint':
+#             constraint = up['constraint']
+#             modelInfo['constraints'][constraint].update(up)
+
+#     return modelInfo, rebuildDofManager
 
 def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     """This is core function of the finite element analysis.
@@ -103,7 +126,8 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
 
     and controls the respective solver based on the defined simulation steps.
     For each step, the step-actions (dirichlet, nodeforces) are collected by
-    external modules."""
+    external modules.
+    """
 
     identification = "feCore"
 
@@ -124,6 +148,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         "constraints": {},
         "materials": {},
         "analyticalFields": {},
+        "scalarVariables": [], 
         "domainSize": domainSize,
     }
 
@@ -139,6 +164,19 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
+
+    
+    # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
+    for constraintName, constraint in modelInfo['constraints'].items():
+
+        nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables() 
+        journal.message("constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables), identification, 0)
+
+        scalarVariables = [ ScalarVariable() for i in range (nAdditionalScalarVariables ) ]
+        modelInfo['scalarVariables'] += scalarVariables
+
+        constraint.assignAdditionalScalarVariables( scalarVariables )
+
 
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     dofManager = DofManager(modelInfo)
@@ -181,27 +219,27 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         )
 
     stepActions = defaultdict(CaseInsensitiveDict)
-    stepOptions = defaultdict(CaseInsensitiveDict)
 
     fieldOutputController.initializeJob(time, U, P)
 
     try:
         for step in jobSteps:
             try:
-                # collect all step actions in a dictionary with key of actionType
-                # and concerned values
-                stepActions, stepOptions = collectStepActionsAndOptions(
-                    step, jobInfo, modelInfo, time, U, P, stepActions, stepOptions, fieldOutputController, journal
+                stepActions = gatherStepActions(
+                    step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
                 )
 
-                fieldOutputController.initializeStep(step, stepActions, stepOptions)
+                for modelUpdate in stepActions['modelupdate'].values():
+                    modelInfo = modelUpdate.updateModel(modelInfo, journal)
+
+                fieldOutputController.initializeStep(step, stepActions )
                 for manager in outputmanagers:
-                    manager.initializeStep(step, stepActions, stepOptions)
+                    manager.initializeStep(step, stepActions )
 
                 # solve the step
                 tic = getCurrentTime()
                 success, U, P, time = solver.solveStep(
-                    step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers
+                    step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
                 )
                 toc = getCurrentTime()
 

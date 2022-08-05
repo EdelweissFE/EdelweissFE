@@ -48,7 +48,7 @@ class OutputManager(OutputManagerBase):
         self.exportFile = defDict["export"]
         self.timeVals = []
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions):
         pass
 
     def finalizeIncrement(self, U, P, increment):

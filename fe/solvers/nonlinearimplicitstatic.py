@@ -86,6 +86,8 @@ class NIST:
 
         self.residualHistories = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector)
 
+        self.extrapolation = "linear"
+
     def initialize(self):
         """Initialize the solver and return the 2 vectors for field (U) and flux (P)"""
 
@@ -94,7 +96,7 @@ class NIST:
 
         return U, P
 
-    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
+    def solveStep(self, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers):
         """Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time"""
 
@@ -103,7 +105,13 @@ class NIST:
         K = self.systemMatrix
 
         stepLength = step.get("stepLength", 1.0)
-        extrapolation = stepOptions["NISTSolver"].get("extrapolation", "linear")
+
+    
+        extrapolation = self.extrapolation
+        try:
+            extrapolation = stepActions["options"]["NISTSolver"]["extapolation"]
+        except KeyError: 
+            pass
 
         incGen = IncrementGenerator(
             time,
@@ -271,7 +279,7 @@ class NIST:
 
             P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
             PExt, K = self.assembleLoads(concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment)
-            PExt, K = self.assembleConstraints(constraints, Un1, PExt, K, increment)
+            PExt, K = self.assembleConstraints(constraints, Un1, dU, PExt, K, increment)
 
             R[:] = P
             R += PExt
@@ -308,31 +316,6 @@ class NIST:
 
         return Un1, dU, P, iterationCounter, incrementResidualHistory
 
-    def computeElements(self, elements, Un1, dU, P, K, F, increment):
-        """Loop over all elements, and evalute them.
-        Note that ABAQUS style is employed: element(Un+1, dUn+1)
-        instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration"""
-
-        tic = getCurrentTime()
-
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        time = np.array([stepTime, totalTime])
-
-        for el in elements.values():
-
-            Ke = K[el]
-            Pe = np.zeros(el.nDof)
-
-            el.computeYourself(Ke, Pe, Un1[el], dU[el], time, dT)
-
-            P[el] += Pe
-            F[el] += abs(Pe)
-
-        toc = getCurrentTime()
-        self.computationTimes["elements"] += toc - tic
-
-        return P, K, F
 
     def computeDistributedLoads(self, distributedLoads, Un1, PExt, K, increment):
         """Loop over all elements, and evalute them.
@@ -513,9 +496,34 @@ class NIST:
 
         return spatialAveragedFluxes
 
-    def assembleConstraints(self, constraints, Un1, PExt, K, increment):
-        """Assemble the sub stiffness matrix for a linear constraint (independent of the solution)
-        -> once per Increment"""
+    def computeElements(self, elements, Un1, dU, P, K, F, increment):
+        """Loop over all elements, and evalute them.
+        Note that ABAQUS style is employed: element(Un+1, dUn+1)
+        instead of element(Un, dUn+1)
+        -> is called by solveStep() in each iteration"""
+
+        tic = getCurrentTime()
+
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        time = np.array([stepTime, totalTime])
+
+        for el in elements.values():
+
+            Ke = K[el]
+            Pe = np.zeros(el.nDof)
+
+            el.computeYourself(Ke, Pe, Un1[el], dU[el], time, dT)
+
+            P[el] += Pe
+            F[el] += abs(Pe)
+
+        toc = getCurrentTime()
+        self.computationTimes["elements"] += toc - tic
+
+        return P, K, F
+
+    def assembleConstraints(self, constraints, Un1, dU, PExt, K, increment):
+        """Assemble the sub stiffness matrix for a constraints"""
 
         tic = getCurrentTime()
 
@@ -524,9 +532,10 @@ class NIST:
             Ke = K[constraint]
             Pe = np.zeros(constraint.nDof)
 
-            constraint.applyConstraint(Un1[constraint], Pe, Ke, increment)
-
-            PExt[constraint] += Pe
+            constraint.applyConstraint(Un1[constraint], dU[constraint], Pe, Ke, increment)
+           
+            # instead of PExt[constraint] += Pe, np.add.at allows for repeated indices
+            np.add.at( PExt, PExt.entitiesInDofVector[constraint], Pe)
 
         toc = getCurrentTime()
         self.computationTimes["constraints"] += toc - tic
@@ -579,7 +588,6 @@ class NIST:
         activeActions["concentratedLoads"] = stepActions["nodeforces"].values()
 
         activeActions["geostatics"] = [g for g in stepActions["geostatic"].values() if g.active]
-        # activeActions["constraints"] = [c for c in modelInfo.constraints.values()]
         activeActions["setfields"] = [s for s in stepActions["setfield"].values() if s.active]
         activeActions["initializematerial"] = [s for s in stepActions["initializematerial"].values() if s.active]
 

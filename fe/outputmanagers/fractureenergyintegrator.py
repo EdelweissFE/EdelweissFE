@@ -69,7 +69,7 @@ class OutputManager(OutputManagerBase):
         self.A = createMathExpression(defDict["fractureArea"])(0.0)
         self.fractureEnergy = 0.0
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions ):
         pass
 
     def finalizeIncrement(self, U, P, increment):

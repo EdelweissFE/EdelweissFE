@@ -53,17 +53,21 @@ class NISTParallel(NIST):
     
     identification = "NISTPSolver"
     
-    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
+    def solveStep(self, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers):
         """ Public interface to solve for an ABAQUS like step
         returns: boolean Success, U vector, P vector, and the new current total time """
         
         #determine number of threads
+        self.numThreads = cpu_count()
+
         if 'OMP_NUM_THREADS' in os.environ:
             self.numThreads = int( os.environ ['OMP_NUM_THREADS'] ) # higher priority than .inp settings
         else:
-            self.numThreads = int(stepOptions['NISTSolver'].get('numThreads', cpu_count() ))
+            if "NISTSolver" in stepActions["options"]:
+                self.numThreads = int(stepActions["options"]['NISTSolver'].get('numThreads', self.numThreads))
+
         self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
-        return super().solveStep(step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers)
+        return super().solveStep(step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
     
     def applyDirichletK(self, K, dirichlets):
         """ Apply the dirichlet bcs on the global stiffnes matrix

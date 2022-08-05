@@ -283,7 +283,7 @@ class OutputManager(OutputManagerBase):
 
             self.meshPlot = MeshPlot(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions ):
         pass
 
     def finalizeIncrement(self, U, P, increment):

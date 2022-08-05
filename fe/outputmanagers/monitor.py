@@ -66,7 +66,7 @@ class OutputManager(OutputManagerBase):
             entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
             self.monitorJobs.append(entry)
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions ):
         pass
 
     def finalizeIncrement(self, U, P, increment):

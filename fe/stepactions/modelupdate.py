@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#  ---------------------------------------------------------------------
+#
+#  _____    _      _              _         _____ _____
+# | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|
+# |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|
+# | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___
+# |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|
+#
+#
+#  Unit of Strength of Materials and Structural Analysis
+#  University of Innsbruck,
+#  2017 - today
+#
+#  Matthias Neuner matthias.neuner@uibk.ac.at
+#
+#  This file is part of EdelweissFE.
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#
+#  The full text of the license can be found in the file LICENSE.md at
+#  the top level directory of EdelweissFE.
+#  ---------------------------------------------------------------------
+# Created on Mon Jan 23 13:03:09 2017
+
+# @author: Matthias Neuner
+"""This step action may be used for updating something in the model at the beginning
+of a step.
+"""
+
+from fe.stepactions.stepactionbase import StepActionBase
+from fe.utils.misc import stringDict
+from fe.utils.math import execModelAccessibleExpression
+
+class StepAction(StepActionBase):
+
+    def __init__(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
+        self.name = name
+        self.updateStepAction(name, options, jobInfo, modelInfo, fieldOutputController, journal)
+
+    def finishStep(self, U, P):
+        """By default, this action is only executed once.
+        """
+
+        self.active = False
+
+    def updateStepAction(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
+        """Update the expression, and set the action active again.
+        """
+
+        self.updateExpression = options['update']
+        self.active = True
+
+    def updateModel(self, modelInfo, journal):
+        """Update the model based on an executable provided Python expression.
+        """
+
+        journal.message("Updating model: {:}".format(self.updateExpression), self.name) 
+        execModelAccessibleExpression ( self.updateExpression , modelInfo )
+        return modelInfo
+

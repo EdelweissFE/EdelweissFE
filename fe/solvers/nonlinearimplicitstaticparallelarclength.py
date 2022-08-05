@@ -49,29 +49,40 @@ class NISTPArcLength(NISTParallel):
 
         return super().__init__(jobInfo, journal)
 
-    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
+    def solveStep(self, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers):
 
-        options = stepOptions["NISTArcLength"]
-        arcLengthControllerType = options["arcLengthController"]
+        self.arcLengthController = None
+        self.checkConditionalStop = lambda: False
+        # self.
+
+        try:
+            arcLengthControllerType = stepActions["options"]["NISTArcLength"]["arcLengthController"]
+            if arcLengthControllerType == "off":
+                self.arcLengthController = None
+            else:
+                self.arcLengthController = stepActions[arcLengthControllerType][arcLengthControllerType]
+        except KeyError:
+            pass
+
+        try:
+            stopCondition= stepActions["options"]["NISTArcLength"]["stopCondition"]
+            # if stopCondition != "False":
+            self.checkConditionalStop = createModelAccessibleFunction(
+            stopCondition, modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
+            )
+        except KeyError:
+            pass
+
+
 
         self.dLambda = 0.0
 
-        if arcLengthControllerType == "off":
-            self.arcLengthController = None
-        else:
-            self.arcLengthController = stepActions[arcLengthControllerType][
-                arcLengthControllerType
-            ]  # name = module designation
 
-            if "stopCondition" in options and options["stopCondition"] != "False":
-                self.checkConditionalStop = createModelAccessibleFunction(
-                    options["stopCondition"], modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
-                )
-            else:
-                self.checkConditionalStop = lambda: False
+            # if "stopCondition" in options:
+            # else:
 
         return super().solveStep(
-            step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers
+            step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
         )
 
     def solveIncrement(
@@ -154,7 +165,7 @@ class NISTPArcLength(NISTParallel):
             P[:] = K[:] = F[:] = P_0[:] = P_f[:] = K_f[:] = K_0[:] = 0.0
 
             P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
-            P, K = self.assembleConstraints(constraints, Un1, P, K, increment)
+            P, K = self.assembleConstraints(constraints, Un1, dU, P, K, increment)
 
             P_0, K_0 = self.assembleLoads(
                 concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K_0, zeroIncrement

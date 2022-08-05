@@ -134,7 +134,7 @@ class DofManager:
                     node.fields[field] = True
 
         for constraint in modelInfo["constraints"].values():
-            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
+            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOnNodes):
                 for field in nodeFields:
                     node.fields[field] = True
 
@@ -146,7 +146,7 @@ class DofManager:
 
         nodes = self.modelInfo["nodes"]
         domainSize = self.modelInfo["domainSize"]
-        constraints = self.modelInfo["constraints"]
+        # constraints = self.modelInfo["constraints"]
 
         indicesOfFieldsInDofVector = OrderedDict()
         currentIndexInDofVector = 0
@@ -170,16 +170,20 @@ class DofManager:
             index: node for node in nodes.values() for field in node.fields.values() for index in field
         }
 
-        for constraint in constraints.values():
-            # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
-            # we create them here, and assign them directly to the constraints
-            # (In contrast to true field indices, which are not directly
-            # assigned to elements/constraints but to the nodes)
-            nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
-            indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)]
-            # TODO: Store here in dofmanager
-            constraint.assignAdditionalGlobalDofIndices(indicesOfConstraintAdditionalDofs)
-            currentIndexInDofVector += nNeededDofs
+        for scalarVariable in self.modelInfo['scalarVariables']:
+            scalarVariable.index = currentIndexInDofVector
+            currentIndexInDofVector += 1
+
+        # for constraint in constraints.values():
+        #     # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
+        #     # we create them here, and assign them directly to the constraints
+        #     # (In contrast to true field indices, which are not directly
+        #     # assigned to elements/constraints but to the nodes)
+        #     nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
+        #     indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)]
+        #     # TODO: Store here in dofmanager
+        #     constraint.assignAdditionalGlobalDofIndices(indicesOfConstraintAdditionalDofs)
+        #     currentIndexInDofVector += nNeededDofs
 
         nDof = currentIndexInDofVector
 
@@ -265,8 +269,17 @@ class DofManager:
             entitiesInDofVector[el] = destList[el.dofIndicesPermutation]
 
         for constraint in constraints.values():
-            destList = constraint.globalDofIndices
-
+            # destList = constraint.globalDofIndices
+            destList = np.asarray(
+                    [
+                        i
+                        for iNode, node in enumerate(constraint.nodes)  # for each node of the constraint
+                        for nodeField in constraint.fieldsOnNodes[iNode]  # for each field of this node
+                        for i in node.fields[nodeField]
+                    ]
+                    +
+                    [v.index for v in constraint.scalarVariables]
+                    )
             entitiesInDofVector[constraint] = destList
 
         return entitiesInDofVector
