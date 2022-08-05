@@ -138,8 +138,8 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     domainSize = domainMapping[modelDomain]
 
     modelInfo = {
-        "nodes": OrderedDict(),
-        "elements": OrderedDict(),
+        "nodes": {},
+        "elements": {},
         "nodeSets": {},
         "elementSets": {},
         "surfaces": {},
@@ -168,7 +168,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
 
         nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables()
         journal.message(
-            "constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables),
+            "Constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables),
             identification,
             0,
         )
@@ -230,7 +230,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
                 )
 
                 for modelUpdate in stepActions["modelupdate"].values():
-                    modelInfo = modelUpdate.updateModel(modelInfo, journal)
+                    modelInfo = modelUpdate.updateModel(modelInfo, fieldOutputController, journal)
 
                 fieldOutputController.initializeStep(step, stepActions)
                 for manager in outputmanagers:

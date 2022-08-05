@@ -53,9 +53,9 @@ class StepAction(StepActionBase):
         self.updateExpression = options["update"]
         self.active = True
 
-    def updateModel(self, modelInfo, journal):
+    def updateModel(self, modelInfo, fieldOutputController, journal):
         """Update the model based on an executable provided Python expression."""
 
         journal.message("Updating model: {:}".format(self.updateExpression), self.name)
-        execModelAccessibleExpression(self.updateExpression, modelInfo)
+        execModelAccessibleExpression(self.updateExpression, modelInfo, fieldOutputs = fieldOutputController.fieldOutputs)
         return modelInfo

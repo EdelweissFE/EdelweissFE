@@ -40,6 +40,7 @@ documentation = {
     "loadVector": "the vector (in correct) dimensions and tensorial order  determining the load",
     "length": "the value of the constraint (e.g., CMOD)",
     "penaltyStiffness": "the stiffness for formulating the constraint",
+    "offset": "(optional) a correction value for the computation of the constraint (e.g, initial displacement)",
 }
 
 import numpy as np
@@ -73,6 +74,8 @@ class Constraint(ConstraintBase):
         else:
             self.amplitude = lambda x: x
 
+        self.offset = float(definition.get("offset", 0.0))
+
         self.nodes = self.loadNSet + self.constrainedNSet
 
         self.fieldsOnNodes = [
@@ -97,6 +100,10 @@ class Constraint(ConstraintBase):
 
         self.active = True
 
+        self.constrainedValue = 0.0
+        
+        self.normalizedResidual = np.tile(self.loadVector, len(self.loadNSet))
+
     def getNumberOfAdditionalNeededScalarVariables(self):
         return 0
 
@@ -113,19 +120,22 @@ class Constraint(ConstraintBase):
         sBC = self.startBlock_constrainedNodes
         eBC = self.endBlock_constrainedNodes
 
-        dU_c = dU[sBC:eBC]
+        U_c = Un1[sBC:eBC]
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
-        dL = self.l * incrementSize
+        L = self.l * self.amplitude(stepProgress)
+
         cVector = self.cVector
 
-        loadFactor = self.penaltyStiffness * (cVector.dot(dU_c) - dL)
+        self.constrainedValue = cVector.dot(U_c)
+
+        loadFactor = self.penaltyStiffness * (self.constrainedValue - self.offset - L)
         dLoadFactor_ddU = self.penaltyStiffness * cVector
 
         K = V.reshape(self.nDof, self.nDof, order="F")
-
-        t = np.tile(self.loadVector, len(self.loadNSet))
+        
+        t = self.normalizedResidual
 
         PExt[sBL:eBL] = -t * loadFactor
         K[sBL:eBL, sBC:eBC] = np.outer(t, dLoadFactor_ddU)

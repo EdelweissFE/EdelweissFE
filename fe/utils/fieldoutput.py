@@ -42,7 +42,7 @@ ATTENTION:
 
 documentation = {
     "name": "name of the fieldOutput",
-    "nSet|elSet|node|element": "entity, for which the fieldOutput is defined",
+    "nSet|elSet|node|element|modelData": "entity, for which the fieldOutput is defined",
     "result": "e.g., U, P, stress, strain ...",
     "quadraturePoint": "for element based fieldOutputs only, integers or slices",
     "f(x)": "(optional), apply math (in each increment)",
@@ -117,7 +117,6 @@ class FieldOutput:
             self.domainType = "model"
             self.type = "modelData"
             self.getCurrentModelDataResult = createModelAccessibleFunction(definition["modelData"], modelInfo=modelInfo)
-            # self.resultName = definition["result"]
 
         else:
             raise Exception("invalid field output requested: " + definition["name"])
@@ -260,6 +259,11 @@ class FieldOutput:
     def __getitem__(self, index):
         return self.getLastResult()[index]
 
+    def __add__(self, other):
+        return self.getLastResult() + other
+
+    def __sub__(self, other):
+        return self.getLastResult() - other
 
 class FieldOutputController:
     """

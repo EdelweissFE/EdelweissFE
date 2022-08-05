@@ -36,16 +36,16 @@ Useful, e.g., for indirect displacement control.
     :caption: Example: 
 
     *output, type=conditionalstop, jobName=myJob, name=condStop
-        fieldOutput=damage, f(x)='x  >= .99'
+        stop='fieldOutputs["damage"]  >= .99'
+        stop='fieldOutputs["displacement"]  < -5'
 """
 documentation = {
-    "fieldOutput": "fieldOutput to be monitored",
-    "f(x)": "create the expression to formulate the stop condition",
+    "stop" : "model accessible function describing the stop condition"
 }
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
-from fe.utils.math import createMathExpression
+from fe.utils.math import createModelAccessibleFunction
 from fe.utils.exceptions import ConditionalStop
 
 
@@ -61,8 +61,7 @@ class OutputManager(OutputManagerBase):
         for defline in definitionLines:
             entry = {}
             defDict = stringDict(defline)
-            entry["fieldOutput"] = fieldOutputController.fieldOutputs[defDict["fieldOutput"]]
-            entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
+            entry["stop"] = createModelAccessibleFunction(defDict["stop"], modelInfo, fieldOutputs = fieldOutputController.fieldOutputs)
             self.monitorJobs.append(entry)
 
     def initializeStep(self, step, stepActions):
@@ -70,9 +69,7 @@ class OutputManager(OutputManagerBase):
 
     def finalizeIncrement(self, U, P, increment):
         for nJob in self.monitorJobs:
-            result = nJob["f(x)"](nJob["fieldOutput"].getResultHistory())
-
-            if result == True:
+            if nJob["stop"]():
                 raise ConditionalStop()
 
     def finalizeStep(self, U, P, time):
