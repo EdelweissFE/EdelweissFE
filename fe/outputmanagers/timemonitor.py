@@ -55,12 +55,7 @@ class OutputManager(OutputManagerBase):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeVals.append(totalTime + dT)
 
-    def finalizeStep(
-        self,
-        U,
-        P,
-        time
-    ):
+    def finalizeStep(self, U, P, time):
         pass
 
     def finalizeJob(

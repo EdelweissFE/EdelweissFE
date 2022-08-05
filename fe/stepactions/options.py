@@ -37,40 +37,35 @@ import numpy as np
 import sympy as sp
 from collections import defaultdict
 
-class StepAction(StepActionBase):
 
+class StepAction(StepActionBase):
     def __init__(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
         self.name = name
         self.options = dict()
         self.updateStepAction(name, options, jobInfo, modelInfo, fieldOutputController, journal)
 
     def __contains__(self, key):
-        """We may work with this action like a dictionary.
-        """
+        """We may work with this action like a dictionary."""
 
         return key.lower() in self.options
 
     def __getitem__(self, key):
-        """We may work with this action like a dictionary.
-        """
+        """We may work with this action like a dictionary."""
 
         return self.options[key.lower()]
 
     def __setitem__(self, key, val):
-        """We may work with this action like a dictionary.
-        """
+        """We may work with this action like a dictionary."""
 
         self.options[key.lower()] = val
 
     def get(self, key, default):
-        """We may work with this action like a  dictionary.
-        """
+        """We may work with this action like a  dictionary."""
 
-        return self.options.get(key.lower(),default)
+        return self.options.get(key.lower(), default)
 
     def finishStep(self, U, P):
         pass
 
     def updateStepAction(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
         self.options.update(options)
-

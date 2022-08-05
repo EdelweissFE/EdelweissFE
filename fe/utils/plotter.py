@@ -42,7 +42,6 @@ from fe.utils.misc import stringDict
 from distutils.spawn import find_executable
 
 
-
 defaultMarkerCycle = itertools.cycle(("o", "v", "D", "s", "^"))
 defaultLinePlotColorCycle = itertools.cycle(("k"))
 defaultScatterPlotColorCycle = itertools.cycle(("k", "r", "b", "g"))
@@ -58,7 +57,7 @@ class Plotter:
         self.journal = journal
 
         latexAvailable = False
-        if find_executable('latex'):
+        if find_executable("latex"):
             latexAvailable = True
 
         self.rcParams = {

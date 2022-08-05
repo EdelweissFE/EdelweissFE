@@ -53,10 +53,7 @@ from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
 
 
-
-def gatherStepActions(
-    step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
-):
+def gatherStepActions(step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal):
     """Parses all the defined actions for the current step,
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
@@ -68,7 +65,7 @@ def gatherStepActions(
 
     for actionType, *definition in step["data"]:
         options = stringDict(definition)
-        
+
         module = actionType.lower()
         moduleName = options.get("name", options.get("category", module))
 
@@ -113,11 +110,12 @@ def gatherStepActions(
 
 #     return modelInfo, rebuildDofManager
 
+
 def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     """This is core function of the finite element analysis.
     Based on the keyword ``*job``, the finite element model is defined.
 
-    It assembles 
+    It assembles
      * jobInfo
      * modeInfo
      * steps
@@ -148,7 +146,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         "constraints": {},
         "materials": {},
         "analyticalFields": {},
-        "scalarVariables": [], 
+        "scalarVariables": [],
         "domainSize": domainSize,
     }
 
@@ -165,18 +163,20 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
 
-    
     # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
-    for constraintName, constraint in modelInfo['constraints'].items():
+    for constraintName, constraint in modelInfo["constraints"].items():
 
-        nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables() 
-        journal.message("constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables), identification, 0)
+        nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables()
+        journal.message(
+            "constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables),
+            identification,
+            0,
+        )
 
-        scalarVariables = [ ScalarVariable() for i in range (nAdditionalScalarVariables ) ]
-        modelInfo['scalarVariables'] += scalarVariables
+        scalarVariables = [ScalarVariable() for i in range(nAdditionalScalarVariables)]
+        modelInfo["scalarVariables"] += scalarVariables
 
-        constraint.assignAdditionalScalarVariables( scalarVariables )
-
+        constraint.assignAdditionalScalarVariables(scalarVariables)
 
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     dofManager = DofManager(modelInfo)
@@ -229,12 +229,12 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
                     step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
                 )
 
-                for modelUpdate in stepActions['modelupdate'].values():
+                for modelUpdate in stepActions["modelupdate"].values():
                     modelInfo = modelUpdate.updateModel(modelInfo, journal)
 
-                fieldOutputController.initializeStep(step, stepActions )
+                fieldOutputController.initializeStep(step, stepActions)
                 for manager in outputmanagers:
-                    manager.initializeStep(step, stepActions )
+                    manager.initializeStep(step, stepActions)
 
                 # solve the step
                 tic = getCurrentTime()
@@ -260,11 +260,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
             finally:
                 fieldOutputController.finalizeStep(U, P)
                 for manager in outputmanagers:
-                    manager.finalizeStep(
-                        U,
-                        P,
-                        time
-                    )
+                    manager.finalizeStep(U, P, time)
 
     except KeyboardInterrupt:
         print("")

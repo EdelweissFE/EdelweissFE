@@ -43,6 +43,7 @@ by specifying their ``name`` and a list of ``option=value``, for example
 
 import importlib
 
+
 def stepActionFactory(name):
     module = importlib.import_module("fe.stepactions." + name.lower())
     return module.StepAction

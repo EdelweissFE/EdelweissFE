@@ -106,11 +106,10 @@ class NIST:
 
         stepLength = step.get("stepLength", 1.0)
 
-    
         extrapolation = self.extrapolation
         try:
             extrapolation = stepActions["options"]["NISTSolver"]["extapolation"]
-        except KeyError: 
+        except KeyError:
             pass
 
         incGen = IncrementGenerator(
@@ -315,7 +314,6 @@ class NIST:
             iterationCounter += 1
 
         return Un1, dU, P, iterationCounter, incrementResidualHistory
-
 
     def computeDistributedLoads(self, distributedLoads, Un1, PExt, K, increment):
         """Loop over all elements, and evalute them.
@@ -533,9 +531,9 @@ class NIST:
             Pe = np.zeros(constraint.nDof)
 
             constraint.applyConstraint(Un1[constraint], dU[constraint], Pe, Ke, increment)
-           
+
             # instead of PExt[constraint] += Pe, np.add.at allows for repeated indices
-            np.add.at( PExt, PExt.entitiesInDofVector[constraint], Pe)
+            np.add.at(PExt, PExt.entitiesInDofVector[constraint], Pe)
 
         toc = getCurrentTime()
         self.computationTimes["constraints"] += toc - tic

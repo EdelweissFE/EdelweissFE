@@ -61,8 +61,8 @@ class StepAction(StepActionBase):
 
         self.generateCVectorAndIndices(name, action, jobInfo, modelInfo, fieldOutputController, journal)
 
-        if 'exportCVector' in action:
-            np.savetxt( action['exportCVector'] + '.csv', self.cVector)
+        if "exportCVector" in action:
+            np.savetxt(action["exportCVector"] + ".csv", self.cVector)
 
         self.definition = str(action.get("definition", "absolute"))
 

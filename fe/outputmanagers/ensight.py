@@ -532,9 +532,9 @@ class OutputManager(OutputManagerBase):
 
         # check if we should write output, i.e., if enough time has passed:
         timeSinceLastOutput = time - self.timeAtLastOutput
-        if  self.minDTForOutput - timeSinceLastOutput > 1e-12 :
-            self.journal.message( "skipping output", self.identification, 1)
-            return 
+        if self.minDTForOutput - timeSinceLastOutput > 1e-12:
+            self.journal.message("skipping output", self.identification, 1)
+            return
 
         if dT <= 0.0 and self.finishedSteps > 0:
             self.journal.message(
@@ -542,11 +542,11 @@ class OutputManager(OutputManagerBase):
             )
             return
 
-        self.writeOutput ( U, P, time)
+        self.writeOutput(U, P, time)
 
     def writeOutput(self, U, P, time):
 
-        self.timeAtLastOutput = time 
+        self.timeAtLastOutput = time
         self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, time)
 
         for perNodeJob in self.transientPerNodeJobs:

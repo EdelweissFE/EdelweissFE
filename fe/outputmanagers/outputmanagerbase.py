@@ -45,7 +45,7 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def initializeStep(self, step, stepActions ):
+    def initializeStep(self, step, stepActions):
         pass
 
     @abstractmethod

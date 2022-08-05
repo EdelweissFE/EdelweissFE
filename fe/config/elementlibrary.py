@@ -40,6 +40,7 @@ In future, elements by other providers or elements directly implemented in Edelw
         1000,        1,     2,     3,     4,     ...
 """
 
+
 def getElementByName(name, provider=None):
     """Get a finite element instance by name, and by specifying the provider"""
 
@@ -48,4 +49,5 @@ def getElementByName(name, provider=None):
 
     if provider == "marmot":
         from fe.elements.marmotelement.element import MarmotElementWrapper
+
         return MarmotElementWrapper

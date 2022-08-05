@@ -65,25 +65,20 @@ class NISTPArcLength(NISTParallel):
             pass
 
         try:
-            stopCondition= stepActions["options"]["NISTArcLength"]["stopCondition"]
+            stopCondition = stepActions["options"]["NISTArcLength"]["stopCondition"]
             # if stopCondition != "False":
             self.checkConditionalStop = createModelAccessibleFunction(
-            stopCondition, modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
+                stopCondition, modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
             )
         except KeyError:
             pass
 
-
-
         self.dLambda = 0.0
 
+        # if "stopCondition" in options:
+        # else:
 
-            # if "stopCondition" in options:
-            # else:
-
-        return super().solveStep(
-            step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
-        )
+        return super().solveStep(step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
 
     def solveIncrement(
         self,

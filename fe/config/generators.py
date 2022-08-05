@@ -45,6 +45,7 @@ Keyword: ``*generator``
 
 import importlib
 
+
 def getGeneratorByName(name):
     module = importlib.import_module("fe.generators." + name.lower())
     return module.generateModelData

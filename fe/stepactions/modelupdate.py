@@ -36,30 +36,26 @@ from fe.stepactions.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict
 from fe.utils.math import execModelAccessibleExpression
 
-class StepAction(StepActionBase):
 
+class StepAction(StepActionBase):
     def __init__(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
         self.name = name
         self.updateStepAction(name, options, jobInfo, modelInfo, fieldOutputController, journal)
 
     def finishStep(self, U, P):
-        """By default, this action is only executed once.
-        """
+        """By default, this action is only executed once."""
 
         self.active = False
 
     def updateStepAction(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
-        """Update the expression, and set the action active again.
-        """
+        """Update the expression, and set the action active again."""
 
-        self.updateExpression = options['update']
+        self.updateExpression = options["update"]
         self.active = True
 
     def updateModel(self, modelInfo, journal):
-        """Update the model based on an executable provided Python expression.
-        """
+        """Update the model based on an executable provided Python expression."""
 
-        journal.message("Updating model: {:}".format(self.updateExpression), self.name) 
-        execModelAccessibleExpression ( self.updateExpression , modelInfo )
+        journal.message("Updating model: {:}".format(self.updateExpression), self.name)
+        execModelAccessibleExpression(self.updateExpression, modelInfo)
         return modelInfo
-

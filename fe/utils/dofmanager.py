@@ -60,7 +60,7 @@ class VIJSystemMatrix(np.ndarray):
     def __getitem__(self, key):
         try:
             idxInVIJ = self.entitiesInVIJ[key]
-            return super().__getitem__(slice(idxInVIJ, idxInVIJ + key.nDof ** 2))
+            return super().__getitem__(slice(idxInVIJ, idxInVIJ + key.nDof**2))
         except:
             return super().__getitem__(key)
 
@@ -141,8 +141,8 @@ class DofManager:
     def initializeDofVectorStructure(self):
         """Loop over all nodes to generate the global field-dof indices. output is a tuple of:
 
-         * number of total DOFS
-         * orderedDict( (mechanical, indices), (nonlocalDamage, indices) (thermal, indices) ...)."""
+        * number of total DOFS
+        * orderedDict( (mechanical, indices), (nonlocalDamage, indices) (thermal, indices) ...)."""
 
         nodes = self.modelInfo["nodes"]
         domainSize = self.modelInfo["domainSize"]
@@ -170,7 +170,7 @@ class DofManager:
             index: node for node in nodes.values() for field in node.fields.values() for index in field
         }
 
-        for scalarVariable in self.modelInfo['scalarVariables']:
+        for scalarVariable in self.modelInfo["scalarVariables"]:
             scalarVariable.index = currentIndexInDofVector
             currentIndexInDofVector += 1
 
@@ -234,7 +234,7 @@ class DofManager:
 
         for el in elements.values():
             accumulatedElementNDof += el.nDof
-            sizeVIJ += el.nDof ** 2
+            sizeVIJ += el.nDof**2
 
             largestNumberOfElNDof = max(el.nDof, largestNumberOfElNDof)
 
@@ -242,7 +242,7 @@ class DofManager:
         for constraint in constraints.values():
             nNDofAccumulatedConstraints += constraint.nDof
 
-            sizeVIJ += constraint.nDof ** 2
+            sizeVIJ += constraint.nDof**2
 
         return accumulatedElementNDof, nNDofAccumulatedConstraints, sizeVIJ, largestNumberOfElNDof
 
@@ -271,15 +271,14 @@ class DofManager:
         for constraint in constraints.values():
             # destList = constraint.globalDofIndices
             destList = np.asarray(
-                    [
-                        i
-                        for iNode, node in enumerate(constraint.nodes)  # for each node of the constraint
-                        for nodeField in constraint.fieldsOnNodes[iNode]  # for each field of this node
-                        for i in node.fields[nodeField]
-                    ]
-                    +
-                    [v.index for v in constraint.scalarVariables]
-                    )
+                [
+                    i
+                    for iNode, node in enumerate(constraint.nodes)  # for each node of the constraint
+                    for nodeField in constraint.fieldsOnNodes[iNode]  # for each field of this node
+                    for i in node.fields[nodeField]
+                ]
+                + [v.index for v in constraint.scalarVariables]
+            )
             entitiesInDofVector[constraint] = destList
 
         return entitiesInDofVector
@@ -308,9 +307,9 @@ class DofManager:
 
             # looks like black magic, but it's an efficient way to generate all indices of Ke in K:
             elDofLocations = np.tile(destList, (destList.shape[0], 1))
-            I[idxInVIJ : idxInVIJ + el.nDof ** 2] = elDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ + el.nDof ** 2] = elDofLocations.ravel("F")
-            idxInVIJ += el.nDof ** 2
+            I[idxInVIJ : idxInVIJ + el.nDof**2] = elDofLocations.ravel()
+            J[idxInVIJ : idxInVIJ + el.nDof**2] = elDofLocations.ravel("F")
+            idxInVIJ += el.nDof**2
 
         for constraint in constraints.values():
             destList = entitiesInDofVector[constraint]
@@ -318,9 +317,9 @@ class DofManager:
             entitiesInVIJ[constraint] = idxInVIJ
 
             constraintDofLocations = np.tile(destList, (destList.shape[0], 1))
-            I[idxInVIJ : idxInVIJ + constraint.nDof ** 2] = constraintDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ + constraint.nDof ** 2] = constraintDofLocations.ravel("F")
-            idxInVIJ += constraint.nDof ** 2
+            I[idxInVIJ : idxInVIJ + constraint.nDof**2] = constraintDofLocations.ravel()
+            J[idxInVIJ : idxInVIJ + constraint.nDof**2] = constraintDofLocations.ravel("F")
+            idxInVIJ += constraint.nDof**2
 
         return I, J, entitiesInVIJ
 

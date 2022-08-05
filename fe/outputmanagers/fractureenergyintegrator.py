@@ -53,6 +53,7 @@ import numpy as np
 
 class OutputManager(OutputManagerBase):
     """Simple Integrator for fracture energy"""
+
     identification = "FEI"
     printTemplate = "{:}, {:}: {:}"
 
@@ -69,7 +70,7 @@ class OutputManager(OutputManagerBase):
         self.A = createMathExpression(defDict["fractureArea"])(0.0)
         self.fractureEnergy = 0.0
 
-    def initializeStep(self, step, stepActions ):
+    def initializeStep(self, step, stepActions):
         pass
 
     def finalizeIncrement(self, U, P, increment):

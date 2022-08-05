@@ -182,7 +182,7 @@ class FieldOutput:
     def initializeJob(self, startTime, U, P):
         self.updateResults(startTime, U, P)
 
-    def initializeStep(self, step, stepActions ):
+    def initializeStep(self, step, stepActions):
         pass
 
     def finalizeIncrement(self, U, P, increment):
@@ -290,9 +290,9 @@ class FieldOutputController:
         for output in self.fieldOutputs.values():
             output.finalizeStep(U, P)
 
-    def initializeStep(self, step, stepActions ):
+    def initializeStep(self, step, stepActions):
         for output in self.fieldOutputs.values():
-            output.initializeStep(step, stepActions )
+            output.initializeStep(step, stepActions)
 
     def initializeJob(
         self,

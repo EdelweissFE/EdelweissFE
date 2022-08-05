@@ -47,9 +47,7 @@ class AnalyticalField(AnalyticalFieldBase):
 
         expressionString = self.options["f(x,y,z)"]
 
-        self.expression = createModelAccessibleFunction(
-            expressionString, modelInfo, *"xyz"[: self.domainSize]
-        )
+        self.expression = createModelAccessibleFunction(expressionString, modelInfo, *"xyz"[: self.domainSize])
 
         return
 

@@ -39,6 +39,7 @@ import numpy as np
 from fe.constraints.base.constraintbase import ConstraintBase
 from fe.utils.misc import stringDict
 
+
 class Constraint(ConstraintBase):
     """
     Geometrically exact rigid body constraint: Constrains a nodeset to a reference point.
@@ -95,8 +96,7 @@ class Constraint(ConstraintBase):
         self.nRot = 3
 
     def update(self, options):
-        """No updates are possible for this constraint.
-        """
+        """No updates are possible for this constraint."""
 
         pass
 

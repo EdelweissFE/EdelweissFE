@@ -33,13 +33,13 @@ A penalty based constraint used for indirect (displacement) control.
 """
 
 documentation = {
-    "field" : "the field this constraint acts on",
-    "cVector": "the projection vector for the constrained nodes (e.g., CMOD)"
-    "constrainedNSet" : "the node set for determining the constraint (e.g., CMOD)",
-    "loadNSet" : "the node set for application of the controlled load",
+    "field": "the field this constraint acts on",
+    "cVector": "the projection vector for the constrained nodes (e.g., CMOD)",
+    "constrainedNSet": "the node set for determining the constraint (e.g., CMOD)",
+    "loadNSet": "the node set for application of the controlled load",
     "loadVector": "the vector (in correct) dimensions and tensorial order  determining the load",
-    "length" : "the value of the constraint (e.g., CMOD)",
-    "penaltyStiffness" : "the stiffness for formulating the constraint",
+    "length": "the value of the constraint (e.g., CMOD)",
+    "penaltyStiffness": "the stiffness for formulating the constraint",
 }
 
 import numpy as np
@@ -51,22 +51,21 @@ from fe.constraints.base.constraintbase import ConstraintBase
 
 
 class Constraint(ConstraintBase):
-
     def __init__(self, name, definitionLines, modelInfo):
         super().__init__(name, definitionLines, modelInfo)
 
         definition = stringDict([e for line in definitionLines for e in line])
 
-        self.theField = definition.get("field", "displacement") 
+        self.theField = definition.get("field", "displacement")
 
-        self.cVector =      np.fromstring( definition['cVector'], dtype=np.float, sep=',')
+        self.cVector = np.fromstring(definition["cVector"], dtype=np.float, sep=",")
         self.constrainedNSet = modelInfo["nodeSets"][definition["constrainedNSet"]]
 
-        self.loadNSet =     modelInfo["nodeSets"][definition["loadNSet"]]
-        self.loadVector =   np.fromstring( definition['loadVector'], dtype=np.float, sep=',')
+        self.loadNSet = modelInfo["nodeSets"][definition["loadNSet"]]
+        self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
 
-        self.penaltyStiffness = float( definition["penaltyStiffness"] )
-        self.l = np.float ( definition['length'] )
+        self.penaltyStiffness = float(definition["penaltyStiffness"])
+        self.l = np.float(definition["length"])
 
         if "f(t)" in definition:
             t = sp.symbols("t")
@@ -74,13 +73,17 @@ class Constraint(ConstraintBase):
         else:
             self.amplitude = lambda x: x
 
-        self.nodes = self.loadNSet + self.constrainedNSet 
+        self.nodes = self.loadNSet + self.constrainedNSet
 
-        self.fieldsOnNodes = [[self.theField,] ] * len(self.nodes)
+        self.fieldsOnNodes = [
+            [
+                self.theField,
+            ]
+        ] * len(self.nodes)
 
-        sizeField = getFieldSize(self.theField, modelInfo['domainSize'])
+        sizeField = getFieldSize(self.theField, modelInfo["domainSize"])
 
-        nDim = modelInfo['domainSize']
+        nDim = modelInfo["domainSize"]
 
         sizeBlock_loadNodes = nDim * len(self.loadNSet)
         self.startBlock_loadNodes = 0
@@ -108,23 +111,21 @@ class Constraint(ConstraintBase):
         sBL = self.startBlock_loadNodes
         eBL = self.endBlock_loadNodes
         sBC = self.startBlock_constrainedNodes
-        eBC = self.endBlock_constrainedNodes 
+        eBC = self.endBlock_constrainedNodes
 
-        dU_c = dU[sBC : eBC]
+        dU_c = dU[sBC:eBC]
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
         dL = self.l * incrementSize
         cVector = self.cVector
 
-        loadFactor = self.penaltyStiffness * ( cVector.dot( dU_c  ) - dL )
+        loadFactor = self.penaltyStiffness * (cVector.dot(dU_c) - dL)
         dLoadFactor_ddU = self.penaltyStiffness * cVector
-
 
         K = V.reshape(self.nDof, self.nDof, order="F")
 
-        t  = np.tile( self.loadVector, len(self.loadNSet))
+        t = np.tile(self.loadVector, len(self.loadNSet))
 
-        PExt[sBL : eBL ] =  -t * loadFactor
-        K[sBL : eBL, sBC : eBC]= np.outer ( t,  dLoadFactor_ddU )
-
+        PExt[sBL:eBL] = -t * loadFactor
+        K[sBL:eBL, sBC:eBC] = np.outer(t, dLoadFactor_ddU)

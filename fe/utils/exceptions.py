@@ -35,16 +35,19 @@ This module contains a collection of commonly used exceptions
 
 class WrongDomain(Exception):
     """Is thrown when a required module does not fit the spatial domain"""
+
     pass
 
 
 class StepFailed(Exception):
     """Is hrown when the computation of a step fails"""
+
     pass
 
 
 class CutbackRequest(Exception):
     """The evaluation of the residuel fails due to a too large time increment"""
+
     def __init__(self, message, cutbackSize):
         super().__init__(message)
         self.cutbackSize = float(cutbackSize)
@@ -52,29 +55,35 @@ class CutbackRequest(Exception):
 
 class ReachedMaxIterations(Exception):
     """The maximum number of nonlinear iterations as attained"""
+
     pass
 
 
 class ReachedMaxIncrements(Exception):
     """The maximum number of incremeents within a step as attained"""
+
     pass
 
 
 class ReachedMinIncrementSize(Exception):
     """The minimum size of a incremeent within a step as attained"""
+
     pass
 
 
 class DivergingSolution(Exception):
     """The solutions seems to be diverging within the nonlinear solving scheme"""
+
     pass
 
 
 class ConditionalStop(Exception):
     """Simulation stops sucessfully"""
+
     pass
 
 
 class InputExecption(Exception):
     """Invalid input file parameters"""
+
     pass
