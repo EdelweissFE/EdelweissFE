@@ -39,9 +39,7 @@ Useful, e.g., for indirect displacement control.
         stop='fieldOutputs["damage"]  >= .99'
         stop='fieldOutputs["displacement"]  < -5'
 """
-documentation = {
-    "stop" : "model accessible function describing the stop condition"
-}
+documentation = {"stop": "model accessible function describing the stop condition"}
 
 from fe.outputmanagers.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
@@ -61,7 +59,9 @@ class OutputManager(OutputManagerBase):
         for defline in definitionLines:
             entry = {}
             defDict = stringDict(defline)
-            entry["stop"] = createModelAccessibleFunction(defDict["stop"], modelInfo, fieldOutputs = fieldOutputController.fieldOutputs)
+            entry["stop"] = createModelAccessibleFunction(
+                defDict["stop"], modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
+            )
             self.monitorJobs.append(entry)
 
     def initializeStep(self, step, stepActions):

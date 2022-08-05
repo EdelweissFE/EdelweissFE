@@ -265,6 +265,7 @@ class FieldOutput:
     def __sub__(self, other):
         return self.getLastResult() - other
 
+
 class FieldOutputController:
     """
     The central module for managing field outputs, which can be used by output managers

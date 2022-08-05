@@ -127,16 +127,11 @@ class Constraint(ConstraintBase):
 
         self.nConstraints = nConstraints
 
-    def update(self, options, modelInfo):
-        """No updates are possible for this constraint."""
-
-        pass
-
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
 
-    def assignAdditionalScalarVariables(self, scalarVariables):
-        super().assignAdditionalScalarVariables(scalarVariables)
+    # def assignAdditionalScalarVariables(self, scalarVariables):
+    #     super().assignAdditionalScalarVariables(scalarVariables)
 
     def applyConstraint(self, Un1, dU, PExt, V, increment):
 

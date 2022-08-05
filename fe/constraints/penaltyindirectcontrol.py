@@ -101,14 +101,14 @@ class Constraint(ConstraintBase):
         self.active = True
 
         self.constrainedValue = 0.0
-        
+
         self.normalizedResidual = np.tile(self.loadVector, len(self.loadNSet))
 
     def getNumberOfAdditionalNeededScalarVariables(self):
         return 0
 
-    def assignAdditionalScalarVariables(self, scalarVariables):
-        pass
+    # def assignAdditionalScalarVariables(self, scalarVariables):
+    #     pass
 
     def applyConstraint(self, Un1, dU, PExt, V, increment):
 
@@ -134,7 +134,7 @@ class Constraint(ConstraintBase):
         dLoadFactor_ddU = self.penaltyStiffness * cVector
 
         K = V.reshape(self.nDof, self.nDof, order="F")
-        
+
         t = self.normalizedResidual
 
         PExt[sBL:eBL] = -t * loadFactor

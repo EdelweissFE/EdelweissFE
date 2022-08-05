@@ -34,7 +34,7 @@
 Initialize materials to an geostatic stress state
 """
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
 

@@ -43,7 +43,7 @@ documentation = {
     "L": "Final distance (e.g. crack opening)",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 from fe.utils.math import evalModelAccessibleExpression
 

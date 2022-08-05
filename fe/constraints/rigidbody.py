@@ -103,8 +103,8 @@ class Constraint(ConstraintBase):
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
 
-    def assignAdditionalScalarVariables(self, scalarVariables):
-        super().assignAdditionalScalarVariables(scalarVariables)
+    # def assignAdditionalScalarVariables(self, scalarVariables):
+    #     super().assignAdditionalScalarVariables(scalarVariables)
 
     def Rz_2D(self, phi, derivative):
         phi = phi + np.pi / 2 * derivative

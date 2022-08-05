@@ -37,7 +37,7 @@ documentation = {
     "displacements": "file containing the node displacements over time (column 0)",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
 

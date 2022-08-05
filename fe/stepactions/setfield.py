@@ -38,7 +38,7 @@ documentation = {
     "value": "scalar value if type 'const'; name of analyticalField if type 'analyticalField'",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
 

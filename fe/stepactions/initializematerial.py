@@ -32,7 +32,7 @@
 Let materials initialize themselves (e.g., state vars depending on material parameters...) !
 """
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
 

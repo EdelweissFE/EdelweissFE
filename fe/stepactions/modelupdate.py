@@ -32,7 +32,7 @@
 of a step.
 """
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict
 from fe.utils.math import execModelAccessibleExpression
 
@@ -57,5 +57,5 @@ class StepAction(StepActionBase):
         """Update the model based on an executable provided Python expression."""
 
         journal.message("Updating model: {:}".format(self.updateExpression), self.name)
-        execModelAccessibleExpression(self.updateExpression, modelInfo, fieldOutputs = fieldOutputController.fieldOutputs)
+        execModelAccessibleExpression(self.updateExpression, modelInfo, fieldOutputs=fieldOutputController.fieldOutputs)
         return modelInfo

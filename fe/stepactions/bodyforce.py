@@ -39,14 +39,12 @@ documentation = {
     "f(t)": "(optional) define an amplitude",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
 
 
 class StepAction(StepActionBase):
-    """Simple Body Force"""
-
     def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.name = name

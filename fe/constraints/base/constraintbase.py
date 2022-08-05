@@ -1,10 +1,23 @@
 from abc import ABC, abstractmethod
 from fe.elements.scalarvariable import ScalarVariable
+from numpy import ndarray
 
 
 class ConstraintBase(ABC):
     @abstractmethod
-    def __init__(self, name, options, modelInfo):
+    def __init__(self, name: str, options: dict, modelInfo: dict):
+        """The constraint base class.
+
+        Parameters
+        ----------
+        name
+            The name of the constraint.
+        options
+            A dictionary containing the options for the constraint.
+        modelInfo
+            A dictionary containing the model tree.
+        """
+
         self.name = name
         self.nodes = []
         self.fieldsOnNodes = [
@@ -12,21 +25,6 @@ class ConstraintBase(ABC):
         ]
         self.scalarVariables = []
         self.nDof = 0
-
-    # @abstractmethod
-    # def update(self, options : dict[str], modelInfo : dict):
-    #     """Update the options of a constraint.
-
-    #     Parameters
-    #     ----------
-    #     options
-    #         options in string format.
-    #     modelInfo
-    #         The modelInfo tree.
-
-    #     """
-
-    #     pass
 
     @abstractmethod
     def getNumberOfAdditionalNeededScalarVariables(
@@ -44,7 +42,7 @@ class ConstraintBase(ABC):
 
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def assignAdditionalScalarVariables(self, scalarVariables: list[ScalarVariable]):
         """Assign a list of scalar variables associated with this constraint.
 
@@ -54,4 +52,25 @@ class ConstraintBase(ABC):
             The list of ScalarVariables associated with this constraint.
 
         """
+
         self.scalarVariables = scalarVariables
+
+    @abstractmethod
+    def applyConstraint(self, Un1: ndarray, dU: ndarray, PExt: ndarray, V: ndarray, increment: tuple):
+        """Apply the constraint, and add the contributions to the external load vector and the system matrix.
+
+        Parameters
+        ----------
+        Un1
+            The current total solution vector.
+        dU
+            The current increment since the last time the constraint was applied.
+        PExt
+            The external load vector.
+        V
+            The system matrix in vector form.
+        increment
+            The time increment information.
+        """
+
+        pass
