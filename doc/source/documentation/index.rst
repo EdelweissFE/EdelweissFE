@@ -7,6 +7,7 @@ Documentation
    syntax
    jobs
    phenomena
+   variables
    elements
    mesh
    generators
@@ -18,4 +19,5 @@ Documentation
    output
    solvers
    parallelization
+   journal
    exceptions

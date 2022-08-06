@@ -29,7 +29,8 @@
 
 # @author: Matthias Neuner
 """
-This module provides journaling capabilities
+This module provides journaling capabilities,
+which can be used troughout EdelweissFE.
 """
 
 import math
@@ -39,14 +40,34 @@ class Journal:
     """This class provides an interface to present messages to the user via console
     output and/or file output.
     Information messages can be sorted by the importance level.
-    Suppressing certain levels of output is possible."""
+    Suppressing certain levels of output is possible.
 
-    def __init__(self, verbose=True, outputFile=None, suppressFromLevel=3):
+    Parameters
+    ----------
+    verbose
+        Print to the terminal.
+    outputFile
+        Write to a file.
+    suppressFromLevel
+        Suppress certain levels.
+    """
+
+    def __init__(self, verbose: bool = True, outputFile: str = None, suppressFromLevel: int = 3):
         self.suppressLvl = suppressFromLevel
         self.verbose = verbose
         self.setNewLineWidth(newWidth=100, leftColumn=80)
 
-    def setNewLineWidth(self, newWidth=100, leftColumn=80):
+    def setNewLineWidth(self, newWidth: int = 100, leftColumn: int = 80):
+        """Set the line width of the log file.
+
+        Parameters
+        ----------
+        newWidth
+            New total width.
+        leftColumn
+            Width of the main column.
+        """
+
         self.linewidth = newWidth
         self.leftColumn = leftColumn
         self.outputWidths = {}
@@ -62,7 +83,19 @@ class Journal:
             2: "     {{:<{:}}}{{:>{:}}} ".format(leftColumn - 4, self._rightColumn - 2),
         }
 
-    def message(self, message, senderIdentification, level=1):
+    def message(self, message: str, senderIdentification: str, level: int = 1):
+        """Write message to log.
+
+        Parameters
+        ----------
+        message
+            The message.
+        senderIdentification
+            The name of the sender.
+        level
+            Level of message.
+        """
+
         while len(message) >= self.leftColumn:
             self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
 
@@ -71,15 +104,42 @@ class Journal:
                 print(self.leveledOutput[level].format(message, senderIdentification))
 
     def errorMessage(self, errorMessage, senderIdentification):
+        """Print an error message.
+
+        Parameters
+        ----------
+        errorMessage
+            The message.
+        senderIdentification
+            The name of the sender.
+        """
+
         print(self.errorMessageTemplate.format(errorMessage, senderIdentification))
 
     def printSeperationLine(
         self,
     ):
+        """Write a seperation file to log."""
+
         if self.verbose:
             print("+" + "-" * (self.linewidth - 2) + "+")
 
-    def printTable(self, table, senderIdentification, level=1, printHeaderRow=True):
+    def printTable(
+        self, table: list[list[str]], senderIdentification: str, level: int = 1, printHeaderRow: bool = True
+    ):
+        """Print a pretty table.
+
+        Parameters
+        ----------
+        table
+            The table as nested list.
+        senderIdentification
+            The name of the sender.
+        level
+            The level of the mesage.
+        printHeaderRow
+            Special formatting for first row.
+        """
 
         nCols = len(table[0])
 
@@ -97,7 +157,11 @@ class Journal:
     def setVerbose(
         self,
     ):
+        """Set highes verbose."""
+
         self.suppressLvl = 3
 
     def squelch(self, level):
+        """Suppress all messages."""
+
         self.suppressLvl = level

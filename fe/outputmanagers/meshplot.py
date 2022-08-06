@@ -38,7 +38,7 @@ Module meshplot divided into classes:
     * Outputmanager:
         creats the plotting specific for the defined keyword lines
 """
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 import numpy as np
 from fe.utils.misc import stringDict
 from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
@@ -283,7 +283,7 @@ class OutputManager(OutputManagerBase):
 
             self.meshPlot = MeshPlot(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions):
         pass
 
     def finalizeIncrement(self, U, P, increment):

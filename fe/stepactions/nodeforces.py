@@ -40,7 +40,7 @@ documentation = {
     "f(t)": "(optional) define an amplitude",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
 

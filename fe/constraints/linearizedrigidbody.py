@@ -28,11 +28,6 @@
 # Created on Sun May 21 11:34:35 2017
 
 # @author: Matthias Neuner
-"""
-Linearized rigid body constraint:
-Constrains a nodeset to a reference point.
-Currently only available for spatialdomain = 2D.
-"""
 
 documentation = {
     "nSet": "(slave) node set, which is constrained to the reference point",
@@ -43,22 +38,22 @@ import numpy as np
 
 from fe.utils.misc import stringDict
 from fe.utils.exceptions import WrongDomain
+from fe.constraints.base.constraintbase import ConstraintBase
 
 
-class Constraint:
-    """linearized Rigid Body constraint"""
+class Constraint(ConstraintBase):
+    """Linearized Rigid Body constraint.
 
-    # linear constraints are independent of the solution vector,
-    # and, thus, need only be evaluated once (per step)
-    linearConstraint = True
+    A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D."""
 
-    def __init__(self, name, definitionLines, modelInfo):
+    def __init__(self, name, options, modelInfo):
+        super().__init__(name, options, modelInfo)
 
         if modelInfo["domainSize"] != 2:
-            raise WrongDomain("Liniearized Rigid Body is currently only available for 2d domain size")
+            raise WrongDomain("Linearized rigid body constraint is currently only available for 2d domain size")
 
-        self.name = name
-        definition = stringDict([e for line in definitionLines for e in line])
+        # self.name = name
+        definition = stringDict([e for line in options for e in line])
 
         rbNset = definition["nSet"]
         nodeSets = modelInfo["nodeSets"]
@@ -75,7 +70,7 @@ class Constraint:
         nSlaves = len(self.slaveNodes)
         self.slaveNodesFields = [["displacement"]] * nSlaves
         self.referencePointFields = [["displacement", "rotation"]]
-        self.fieldsOfNodes = self.slaveNodesFields + self.referencePointFields
+        self.fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
 
         nDim = modelInfo["domainSize"]
 
@@ -126,27 +121,12 @@ class Constraint:
         self.K = K
         self.dG_dU = dG_dU
 
-        self.additionalGlobalDofIndices = []
         self.nConstraints = nConstraints
 
-    def getNumberOfAdditionalNeededDofs(self):
+    def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
 
-    def assignAdditionalGlobalDofIndices(self, additionalGlobalDofIndices):
-        self.additionalGlobalDofIndices = additionalGlobalDofIndices
-
-        # TODO: .. move away from constraint, since this should be not handled by a constraint intself
-        self.globalDofIndices = np.asarray(
-            [
-                i
-                for node, nodeFields in zip(self.nodes, self.fieldsOfNodes)
-                for nodeField in nodeFields
-                for i in node.fields[nodeField]
-            ]
-            + self.additionalGlobalDofIndices
-        )
-
-    def applyConstraint(self, Un1, PExt, V, increment):
+    def applyConstraint(self, Un1, dU, PExt, V, increment):
 
         LambdaN1 = Un1[-self.nConstraints :]
 

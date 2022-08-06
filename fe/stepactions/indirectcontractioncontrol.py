@@ -43,7 +43,7 @@ documentation = {
     "L": "Final distance (e.g. crack opening)",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 from fe.utils.math import evalModelAccessibleExpression
 
@@ -61,8 +61,8 @@ class StepAction(StepActionBase):
 
         self.generateCVectorAndIndices(name, action, jobInfo, modelInfo, fieldOutputController, journal)
 
-        if 'exportCVector' in action:
-            np.savetxt( action['exportCVector'] + '.csv', self.cVector)
+        if "exportCVector" in action:
+            np.savetxt(action["exportCVector"] + ".csv", self.cVector)
 
         self.definition = str(action.get("definition", "absolute"))
 

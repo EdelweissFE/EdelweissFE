@@ -42,7 +42,7 @@ ATTENTION:
 
 documentation = {
     "name": "name of the fieldOutput",
-    "nSet|elSet|node|element": "entity, for which the fieldOutput is defined",
+    "nSet|elSet|node|element|modelData": "entity, for which the fieldOutput is defined",
     "result": "e.g., U, P, stress, strain ...",
     "quadraturePoint": "for element based fieldOutputs only, integers or slices",
     "f(x)": "(optional), apply math (in each increment)",
@@ -56,19 +56,31 @@ from fe.utils.misc import stringDict, strToRange, isInteger
 from fe.utils.meshtools import extractNodesFromElementSet
 from fe.utils.math import createMathExpression, createModelAccessibleFunction
 from fe.utils.elementresultcollector import ElementResultCollector
+from fe.utils.dofmanager import DofVector
+from fe.journal.journal import Journal
+from numpy import ndarray
 
 
 class FieldOutput:
     """
-    Entity of a fieldOutput request
+    Entity of a fieldOutput request.
+
+    Carries the history or the latest result.
+
+    Parameters
+    ----------
+    modelInfo
+        A dictionary containing the model tree.
+    definition
+        A dictionary containing the definition of the field output.
+    journal
+        The journal object for logging.
     """
 
-    def __init__(self, modelInfo, definition, journal):
+    def __init__(self, modelInfo: dict, definition: dict, journal: Journal):
         self.name = definition["name"]
         self.journal = journal
         self.timeTotal = 0.0
-        # determination of type:
-        # perNode, perElement, nodalResult, perElset...
 
         if "nSet" in definition:
             self.domainType = "nSet"
@@ -117,7 +129,6 @@ class FieldOutput:
             self.domainType = "model"
             self.type = "modelData"
             self.getCurrentModelDataResult = createModelAccessibleFunction(definition["modelData"], modelInfo=modelInfo)
-            # self.resultName = definition["result"]
 
         else:
             raise Exception("invalid field output requested: " + definition["name"])
@@ -132,19 +143,37 @@ class FieldOutput:
 
         self.timeHistory = []
 
-        # handle export of the fieldout at the end of the job:
         self.export = definition.get("export", False)
         if "f_export(x)" in definition:
             self.f_export = createMathExpression(definition["f_export(x)"])
         else:
             self.f_export = None
 
-    def getLastResult(self, **kw):
+    def getLastResult(
+        self,
+    ) -> ndarray:
+        """Get the last result, no matter if the history is stored or not.
+
+        Returns
+        -------
+        ndarray
+            The result array.
+        """
+
         return self.result[-1] if self.appendResults else self.result
 
     def getResultHistory(
         self,
-    ):
+    ) -> ndarray:
+        """Get the history.
+        Throws an exception if the history is not stored.
+
+        Returns
+        -------
+        ndarray
+            The result history.
+        """
+
         if not self.appendResults:
             raise Exception(
                 "fieldOuput {:} does not save any history; please define it with saveHistory=True!".format(self.name)
@@ -153,10 +182,30 @@ class FieldOutput:
 
     def getTimeHistory(
         self,
-    ):
+    ) -> ndarray:
+        """Get the time history.
+
+        Returns
+        -------
+        ndarray
+            The time history.
+        """
+
         return np.asarray(self.timeHistory)
 
-    def updateResults(self, currentTime, U, P):
+    def updateResults(self, currentTime: float, U: DofVector, P: DofVector):
+        """Update the field output.
+        Will use the current solution and reaction vector if result is a nodal result.
+
+        Parameters
+        ----------
+        currentTime
+            The current solution time.
+        U
+            The current solution vector.
+        P
+            The current reaction force vector.
+        """
 
         self.timeHistory.append(currentTime)
         incrementResult = None
@@ -180,12 +229,37 @@ class FieldOutput:
             self.result = incrementResult
 
     def initializeJob(self, startTime, U, P):
+        """Initalize everything. Will also update the results
+        based on the proved start time and solution.
+
+        Parameters
+        ----------
+        startTime
+            The initial solution time.
+        U
+            The initial solution vector.
+        P
+            The initial reaction force vector.
+        """
+
         self.updateResults(startTime, U, P)
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions):
         pass
 
-    def finalizeIncrement(self, U, P, increment):
+    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):
+        """Finalize an increment, i.e. store the current results.
+
+        Parameters
+        ----------
+        U
+            The current solution vector.
+        P
+            The current reaction force vector.
+        increment
+            The finished time increment.
+        """
+
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         newTime = totalTime + dT
         self.updateResults(newTime, U, P)
@@ -202,6 +276,16 @@ class FieldOutput:
         U,
         P,
     ):
+        """Finalize everything.
+        If results are to be exported, it is done now.
+
+        Parameters
+        ----------
+            U
+                The final solution vector.
+            P
+                The final reaction force vector.
+        """
 
         if self.export:
             res = np.asarray(self.result)
@@ -223,7 +307,15 @@ class FieldOutput:
                 resultTable,
             )
 
-    def setResults(self, values):
+    def setResults(self, values: ndarray):
+        """Modifies a result at it's origin, if possible.
+        Throws an exception if not possible.
+
+        Parameters
+        ----------
+        values
+            The values.
+        """
         if self.type == "elementResult":
             if self.f:
                 raise Exception("cannot set field output for modified results (f(x) != None) !")
@@ -260,13 +352,28 @@ class FieldOutput:
     def __getitem__(self, index):
         return self.getLastResult()[index]
 
+    def __add__(self, other):
+        return self.getLastResult() + other
+
+    def __sub__(self, other):
+        return self.getLastResult() - other
+
 
 class FieldOutputController:
     """
-    The central module for managing field outputs, which can be used by output managers
+    The central module for managing field outputs, which can be used by output managers.
+
+    Parameters
+    ----------
+    modelInfo
+        A dictionary containing the model tree.
+    inputFile
+        A dictonary containing the field output definitios.
+    journal
+        The journal instance for logging.
     """
 
-    def __init__(self, modelInfo, inputFile, journal):
+    def __init__(self, modelInfo: dict, inputFile: dict, journal: Journal):
 
         self.fieldOutputs = {}
 
@@ -278,38 +385,87 @@ class FieldOutputController:
             fpDef = stringDict(defLine)
             self.fieldOutputs[fpDef["name"]] = FieldOutput(modelInfo, fpDef, journal)
 
-    def finalizeIncrement(self, U, P, increment):
+    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):
+        """Finalize all field outputs at the end of an increment.
+
+        Parameters
+        ----------
+        U
+            The current solution vector.
+        P
+            The current raction vector.
+        increment
+            The time increment.
+        """
+
         for output in self.fieldOutputs.values():
             output.finalizeIncrement(U, P, increment)
 
     def finalizeStep(
         self,
-        U,
-        P,
+        U: DofVector,
+        P: DofVector,
     ):
+        """Finalize all field outputs at the end of a step.
+
+        Parameters
+        ----------
+        U
+            The current solution vector.
+        P
+            The current reaction vector.
+        """
+
         for output in self.fieldOutputs.values():
             output.finalizeStep(U, P)
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions):
+        """Initalize an step.
+
+        Parameters
+        ----------
+        step
+            The step information.
+        stepActions
+            The list of stepActions.
+        """
+
         for output in self.fieldOutputs.values():
-            output.initializeStep(step, stepActions, stepOptions)
+            output.initializeStep(step, stepActions)
 
     def initializeJob(
         self,
-        startTime,
-        U,
-        P,
+        startTime: float,
+        U: DofVector,
+        P: DofVector,
     ):
+        """Initialize all field outputs at the beginning of a job.
+
+        Parameters
+        ----------
+        startTime
+            The initial time.
+        U
+            The initial solution vector.
+        P
+            The initial reaction vector.
+        """
         for output in self.fieldOutputs.values():
             output.initializeJob(startTime, U, P)
 
     def finalizeJob(
         self,
-        U,
-        P,
+        U: DofVector,
+        P: DofVector,
     ):
+        """Finalize all field outputs at the end of a job.
+
+        Parameters
+        ----------
+        U
+            The final solution vector.
+        P
+            The final reaction vector.
+        """
         for output in self.fieldOutputs.values():
             output.finalizeJob(U, P)
-
-    def getRequestData(self, request):
-        pass

@@ -306,7 +306,8 @@ def printKeywords():
             wrapper.subsequent_indent = " " * len(wrapper.initial_indent)
             print(wrapper.fill(description))
         print("\n")
-        
+
+
 def printKeywordsRST():
     """print the input file language set RST conform"""
 
@@ -325,5 +326,5 @@ def printKeywordsRST():
 
             print("    * - ``{:}``".format(optionName))
             print("      - ``{:}``".format(dType))
-            print("      - "+description)
+            print("      - " + description)
         print(" ")

@@ -40,10 +40,9 @@ cimport libcpp.cast
 cimport cython
 
 from fe.utils.exceptions import CutbackRequest
-
 from libcpp.memory cimport unique_ptr, allocator, make_unique
-
 from libc.stdlib cimport malloc, free
+from fe.elements.base.baseelement import BaseElement
 
 mapLoadTypes={
         'pressure' : DistributedLoadTypes.Pressure,

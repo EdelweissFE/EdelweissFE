@@ -57,20 +57,10 @@ from multiprocessing import cpu_count
 import os
 
 class NISTParallelForMarmotElements(NISTParallel):
-    """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
-    Designed to interface with Abaqus UELs
-    Public methods are: __init__(), initializeUP() and solveStep(...).
-    OutputManagers are updated at the end of each increment. """
    
     identification = "NISTPSolver"
 
     def computeElements(self, elements, Un1, dU, P, K, F, increment):
-        
-        """ Loop over all elements, and evalute them. 
-        Note that ABAQUS style is employed: element(Un+1, dUn+1) 
-        instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration"""
-
         tic = getCurrentTime()
         cdef:
             double[::1] time

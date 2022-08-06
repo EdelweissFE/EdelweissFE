@@ -43,7 +43,7 @@ documentation = {
     "f(x)": "(optional), apply math on the fieldOutput",
 }
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
 from fe.utils.math import createMathExpression
 
@@ -66,7 +66,7 @@ class OutputManager(OutputManagerBase):
             entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
             self.monitorJobs.append(entry)
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions):
         pass
 
     def finalizeIncrement(self, U, P, increment):

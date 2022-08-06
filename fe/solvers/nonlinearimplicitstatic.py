@@ -28,9 +28,7 @@
 # Created on Sun Jan  8 20:37:35 2017
 
 # @author: Matthias Neuner
-"""
-A standard nonlinear, implicit static solver.
-"""
+
 import numpy as np
 from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import (
@@ -45,13 +43,24 @@ from time import time as getCurrentTime
 from collections import defaultdict
 from fe.config.linsolve import getLinSolverByName, getDefaultLinSolver
 from fe.utils.csrgenerator import CSRGenerator
+from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from fe.utils.dofmanager import DofVector, VIJSystemMatrix
+from fe.utils.fieldoutput import FieldOutputController
+from fe.constraints.base.constraintbase import ConstraintBase
+from scipy.sparse import csr_matrix
+from numpy import ndarray
 
 
 class NIST:
     """This is the Nonlinear Implicit STatic -- solver.
-    Designed to interface with Abaqus UELs
-    Public methods are: __init__(), initializeUP() and solveStep(...).
-    OutputManagers are updated at the end of each increment.
+
+    Parameters
+    ----------
+    jobInfo
+        A dictionary containing the job information.
+    journal
+        The journal instance for logging.
     """
 
     identification = "NISTSolver"
@@ -86,24 +95,67 @@ class NIST:
 
         self.residualHistories = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector)
 
+        self.extrapolation = "linear"
+
     def initialize(self):
-        """Initialize the solver and return the 2 vectors for field (U) and flux (P)"""
+        """Initialize the solver and return the 2 vectors for field (U) and flux (P)."""
 
         U = self.theDofManager.constructDofVector()
         P = self.theDofManager.constructDofVector()
 
         return U, P
 
-    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
-        """Public interface to solve for an ABAQUS like step
-        returns: boolean Success, U vector, P vector, and the new current total time"""
+    def solveStep(
+        self,
+        step: dict,
+        time: float,
+        stepActions: dict[str, StepActionBase],
+        modelInfo: dict,
+        U: DofVector,
+        P: DofVector,
+        fieldOutputController: FieldOutputController,
+        outputmanagers: dict[str, OutputManagerBase],
+    ) -> tuple[bool, DofVector, DofVector, float]:
+        """Public interface to solve for a step.
+
+        Parameters
+        ----------
+        step
+            The dictionary containing the step defintion.
+        time
+            The time at beginning of the step.
+        stepActions
+            The dictionary containing all step actions.
+        modelInfo
+            A dictionary containing the model tree.
+        U
+            The current solution vector.
+        P
+            The current reaction vector.
+        fieldOutputController
+            The field output controller.
+
+        Returns
+        -------
+        tuple[bool,DofVector,DofVector,float]
+            - Truth value of success.
+            - The new solution vector.
+            - The new reaction vector.
+            - Thew new current time.
+
+        """
 
         self.computationTimes = defaultdict(lambda: 0.0)
 
         K = self.systemMatrix
 
         stepLength = step.get("stepLength", 1.0)
-        extrapolation = stepOptions["NISTSolver"].get("extrapolation", "linear")
+
+        extrapolation = self.extrapolation
+        try:
+            extrapolation = stepActions["options"]["NISTSolver"]["extapolation"]
+        except KeyError:
+            pass
 
         incGen = IncrementGenerator(
             time,
@@ -225,20 +277,58 @@ class NIST:
 
     def solveIncrement(
         self,
-        Un,
-        dU,
-        P,
-        K,
-        elements,
-        activeStepActions,
-        constraints,
-        increment,
-        lastIncrementSize,
-        extrapolation,
-        maxIter,
-        maxGrowingIter,
-    ):
-        """Standard Newton-Raphson scheme to solve for an increment"""
+        Un: DofVector,
+        dU: DofVector,
+        P: DofVector,
+        K: VIJSystemMatrix,
+        elements: dict,
+        activeStepActions: list,
+        constraints: dict,
+        increment: tuple,
+        lastIncrementSize: float,
+        extrapolation: str,
+        maxIter: int,
+        maxGrowingIter: int,
+    ) -> tuple[DofVector, DofVector, DofVector, int, dict]:
+        """Standard Newton-Raphson scheme to solve for an increment.
+
+        Parameters
+        ----------
+        Un
+            The old solution vector.
+        dU
+            The old solution increment.
+        P
+            The old reaction vector.
+        K
+            The system matrix to be used.
+        elements
+            The dictionary containing all elements.
+        activeStepActions
+            The list of active step actions.
+        constraints
+            The dictionary containg all elements.
+        increment
+            The increment.
+        lastIncrementSize
+            The size of the previous increment.
+        extrapolation
+            The type of extrapolation to be used.
+        maxIter
+            The maximum number of iterations to be used.
+        maxGrowingIter
+            The maximum number of growing residuals until the Newton-Raphson is terminated.
+
+        Returns
+        -------
+        tuple[DofVector,DofVector,DofVector,int,dict]
+            A tuple containing
+                - the new solution vector
+                - the solution increment
+                - the new reaction vector
+                - the number of required iterations
+                - the history of residuals per field
+        """
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         iterationCounter = 0
@@ -254,7 +344,6 @@ class NIST:
         concentratedLoads = activeStepActions["concentratedLoads"]
         distributedLoads = activeStepActions["distributedLoads"]
         bodyForces = activeStepActions["bodyForces"]
-        # constraints = activeStepActions["constraints"]
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
             extrapolation, increment, dU, dirichlets, lastIncrementSize
@@ -271,7 +360,7 @@ class NIST:
 
             P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
             PExt, K = self.assembleLoads(concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment)
-            PExt, K = self.assembleConstraints(constraints, Un1, PExt, K, increment)
+            PExt, K = self.assembleConstraints(constraints, Un1, dU, PExt, K, increment)
 
             R[:] = P
             R += PExt
@@ -308,37 +397,35 @@ class NIST:
 
         return Un1, dU, P, iterationCounter, incrementResidualHistory
 
-    def computeElements(self, elements, Un1, dU, P, K, F, increment):
-        """Loop over all elements, and evalute them.
-        Note that ABAQUS style is employed: element(Un+1, dUn+1)
-        instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration"""
+    def computeDistributedLoads(
+        self,
+        distributedLoads: list[StepActionBase],
+        Un1: DofVector,
+        PExt: DofVector,
+        K: VIJSystemMatrix,
+        increment: tuple,
+    ) -> tuple[DofVector, VIJSystemMatrix]:
+        """Loop over all distributed loads acting on elements, and evalute them.
+        Assembles into the global external load vector and the system matrix.
 
-        tic = getCurrentTime()
+        Parameters
+        ----------
+        distributedLoads
+            The list of distributed loads.
+        Un1
+            The current solution vector.
+        PExt
+            The external load vector to be augmented.
+        K
+            The system matrix to be augmented.
+        increment
+            The increment.
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        time = np.array([stepTime, totalTime])
-
-        for el in elements.values():
-
-            Ke = K[el]
-            Pe = np.zeros(el.nDof)
-
-            el.computeYourself(Ke, Pe, Un1[el], dU[el], time, dT)
-
-            P[el] += Pe
-            F[el] += abs(Pe)
-
-        toc = getCurrentTime()
-        self.computationTimes["elements"] += toc - tic
-
-        return P, K, F
-
-    def computeDistributedLoads(self, distributedLoads, Un1, PExt, K, increment):
-        """Loop over all elements, and evalute them.
-        Note that ABAQUS style is employed: element(Un+1, dUn+1)
-        instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration"""
+        Returns
+        -------
+        tuple[DofVector,VIJSystemMatrix]
+            The augmented load vector and system matrix.
+        """
 
         tic = getCurrentTime()
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -359,11 +446,30 @@ class NIST:
         self.computationTimes["distributed loads"] += toc - tic
         return PExt, K
 
-    def computeBodyForces(self, bodyForces, Un1, PExt, K, increment):
-        """Loop over all elements, and evalute them.
-        Note that ABAQUS style is employed: element(Un+1, dUn+1)
-        instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration"""
+    def computeBodyForces(
+        self, bodyForces: list[StepActionBase], Un1: DofVector, PExt: DofVector, K: VIJSystemMatrix, increment: tuple
+    ) -> tuple[DofVector, VIJSystemMatrix]:
+        """Loop over all body forces loads acting on elements, and evalute them.
+        Assembles into the global external load vector and the system matrix.
+
+        Parameters
+        ----------
+        distributedLoads
+            The list of distributed loads.
+        Un1
+            The current solution vector.
+        PExt
+            The external load vector to be augmented.
+        K
+            The system matrix to be augmented.
+        increment
+            The increment.
+
+        Returns
+        -------
+        tuple[DofVector,VIJSystemMatrix]
+            The augmented load vector and system matrix.
+        """
 
         tic = getCurrentTime()
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -383,10 +489,23 @@ class NIST:
         self.computationTimes["body forces"] += toc - tic
         return PExt, K
 
-    def applyDirichletK(self, K, dirichlets):
+    def applyDirichletK(self, K: VIJSystemMatrix, dirichlets: list[StepActionBase]) -> VIJSystemMatrix:
         """Apply the dirichlet bcs on the global stiffnes matrix
-        -> is called by solveStep() before solving the global sys.
-        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros"""
+        Is called by solveStep() before solving the global sys.
+        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros
+
+        Parameters
+        ----------
+        K
+            The system matrix.
+        dirichlets
+            The list of dirichlet boundary conditions.
+
+        Returns
+        -------
+        VIJSystemMatrix
+            The modified system matrix.
+        """
 
         tic = getCurrentTime()
         for dirichlet in dirichlets:
@@ -405,9 +524,24 @@ class NIST:
 
         return K
 
-    def applyDirichlet(self, increment, R, dirichlets):
-        """Apply the dirichlet bcs on the Residual vector
-        -> is called by solveStep() before solving the global sys."""
+    def applyDirichlet(self, increment: tuple, R: DofVector, dirichlets: list[StepActionBase]):
+        """Apply the dirichlet bcs on the residual vector
+        Is called by solveStep() before solving the global equatuon system.
+
+        Parameters
+        ----------
+        increment
+            The increment.
+        R
+            The residual vector of the global equation system to be modified.
+        dirichlets
+            The list of dirichlet boundary conditions.
+
+        Returns
+        -------
+        DofVector
+            The modified residual vector.
+        """
 
         tic = getCurrentTime()
         for dirichlet in dirichlets:
@@ -418,10 +552,33 @@ class NIST:
 
         return R
 
-    def checkConvergence(self, R, ddU, F, iterationCounter, residualHistory):
-        """Check the convergency, indivudually for each field,
-        similar to ABAQUS based on the current total flux residual and the field correction
-        -> is called by solveStep() to decide wether to continue iterating or stop"""
+    def checkConvergence(
+        self, R: DofVector, ddU: DofVector, F: DofVector, iterationCounter: int, residualHistory: dict
+    ) -> tuple[bool, dict]:
+        """Check the convergency, individually for each field,
+        similar to Abaqus based on the current total flux residual and the field correction
+        Is called by solveStep() to decide wether to continue iterating or stop.
+
+        Parameters
+        ----------
+        R
+            The current residual.
+        ddU
+            The current correction increment.
+        F
+            The accumulated fluxes.
+        iterationCounter
+            The current iteration number.
+        residualHistory
+            The previous residuals.
+
+        Returns
+        -------
+        tuple[bool,dict]
+            - True if converged.
+            - The residual histories field wise.
+
+        """
 
         tic = getCurrentTime()
 
@@ -471,8 +628,21 @@ class NIST:
 
         return convergedAtAll, nodesWithLargestResidual
 
-    def linearSolve(self, A, b):
-        """Interface to the linear eq. system solver"""
+    def linearSolve(self, A: csr_matrix, b: DofVector) -> ndarray:
+        """Solve the linear equation system.
+
+        Parameters
+        ----------
+        A
+            The system matrix in compressed spare row format.
+        b
+            The right hand side.
+
+        Returns
+        -------
+        ndarray
+            The solution 'x'.
+        """
 
         tic = getCurrentTime()
         ddU = self.linSolver(A, b)
@@ -484,17 +654,37 @@ class NIST:
 
         return ddU
 
-    def assembleStiffnessCSR(self, K):
-        """Construct a CSR matrix from VIJ"""
+    def assembleStiffnessCSR(self, K: VIJSystemMatrix) -> csr_matrix:
+        """Construct a CSR matrix from VIJ format.
+
+        Parameters
+        ----------
+        K
+            The system matrix in VIJ format.
+        Returns
+        -------
+        csr_matrix
+            The system matrix in compressed sparse row format.
+        """
         tic = getCurrentTime()
         KCsr = self.csrGenerator.updateCSR(K)
         toc = getCurrentTime()
         self.computationTimes["CSR generation"] += toc - tic
         return KCsr
 
-    def resetDisplacements(self, U):
-        """-> May be called at the end of a geostatic step, the zero all displacments after
-        applying the geostatic stress"""
+    def resetDisplacements(self, U: DofVector) -> DofVector:
+        """May be called at the end of a geostatic step, the zero all displacments after
+        applying the geostatic stress.
+
+        Parameters
+        ----------
+        U
+            The current solution vector.
+        Returns
+        -------
+        DofVector
+            The modified solution vector.
+        """
 
         self.journal.printSeperationLine()
         self.journal.message("Geostatic step, resetting displacements", self.identification, level=1)
@@ -502,9 +692,20 @@ class NIST:
         U[self.theDofManager.indicesOfFieldsInDofVector["displacement"]] = 0.0
         return U
 
-    def computeSpatialAveragedFluxes(self, F):
+    def computeSpatialAveragedFluxes(self, F: DofVector) -> np.float:
         """Compute the spatial averaged flux for every field
-        -> Called by checkConvergence()"""
+        Is usually called by checkConvergence().
+
+        Parameters
+        ----------
+        F
+            The accumulated flux vector.
+
+        Returns
+        -------
+        dict[str,np.float]
+            A dictioary containg the spatial average fluxes for every field.
+        """
         spatialAveragedFluxes = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, 0.0)
         for field, nDof in self.theDofManager.nAccumulatedNodalFluxesFieldwise.items():
             spatialAveragedFluxes[field] = max(
@@ -513,9 +714,97 @@ class NIST:
 
         return spatialAveragedFluxes
 
-    def assembleConstraints(self, constraints, Un1, PExt, K, increment):
-        """Assemble the sub stiffness matrix for a linear constraint (independent of the solution)
-        -> once per Increment"""
+    def computeElements(
+        self,
+        elements: list,
+        Un1: DofVector,
+        dU: DofVector,
+        P: DofVector,
+        K: VIJSystemMatrix,
+        F: DofVector,
+        increment: tuple,
+    ) -> tuple[DofVector, VIJSystemMatrix, DofVector]:
+        """Loop over all elements, and evalute them.
+        Is is called by solveStep() in each iteration.
+
+        Parameters
+        ----------
+        elements
+            The list of finite elements.
+        Un1
+            The current solution vector.
+        dU
+            The current solution increment vector.
+        P
+            The reaction vector.
+        K
+            The system matrix.
+        F
+            The vector of accumulated fluxes for convergence checks.
+        increment
+            The increment.
+
+        Returns
+        -------
+        tuple[DofVector,VIJSystemMatrix,DofVector]
+            - The modified reaction vector.
+            - The modified system matrix.
+            - The modified accumulated flux vector.
+        """
+
+        tic = getCurrentTime()
+
+        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        time = np.array([stepTime, totalTime])
+
+        for el in elements.values():
+
+            Ke = K[el]
+            Pe = np.zeros(el.nDof)
+
+            el.computeYourself(Ke, Pe, Un1[el], dU[el], time, dT)
+
+            P[el] += Pe
+            F[el] += abs(Pe)
+
+        toc = getCurrentTime()
+        self.computationTimes["elements"] += toc - tic
+
+        return P, K, F
+
+    def assembleConstraints(
+        self,
+        constraints: list[ConstraintBase],
+        Un1: DofVector,
+        dU: DofVector,
+        PExt: DofVector,
+        K: VIJSystemMatrix,
+        increment: tuple,
+    ) -> tuple[DofVector, VIJSystemMatrix]:
+        """Loop over all elements, and evalute them.
+        Is is called by solveStep() in each iteration.
+
+        Parameters
+        ----------
+        constraints
+            The list of constraints.
+        Un1
+            The current solution vector.
+        dU
+            The current solution increment vector.
+        PExt
+            The external load vector.
+        K
+            The system matrix.
+        increment
+            The increment.
+
+        Returns
+        -------
+        tuple[DofVector,VIJSystemMatrix,DofVector]
+            - The modified external load vector.
+            - The modified system matrix.
+        """
 
         tic = getCurrentTime()
 
@@ -524,17 +813,51 @@ class NIST:
             Ke = K[constraint]
             Pe = np.zeros(constraint.nDof)
 
-            constraint.applyConstraint(Un1[constraint], Pe, Ke, increment)
+            constraint.applyConstraint(Un1[constraint], dU[constraint], Pe, Ke, increment)
 
-            PExt[constraint] += Pe
+            # instead of PExt[constraint] += Pe, np.add.at allows for repeated indices
+            np.add.at(PExt, PExt.entitiesInDofVector[constraint], Pe)
 
         toc = getCurrentTime()
         self.computationTimes["constraints"] += toc - tic
 
         return PExt, K
 
-    def assembleLoads(self, concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment):
-        """Assemble all loads into a right hand side vector"""
+    def assembleLoads(
+        self,
+        concentratedLoads: list[StepActionBase],
+        distributedLoads: list[StepActionBase],
+        bodyForces: list[StepActionBase],
+        Un1: DofVector,
+        PExt: DofVector,
+        K: VIJSystemMatrix,
+        increment: tuple,
+    ) -> tuple[DofVector, VIJSystemMatrix]:
+        """Assemble all loads into a right hand side vector.
+
+        Parameters
+        ----------
+        concentratedLoads
+            The list of concentrated (nodal) loads.
+        distributedLoads
+            The list of distributed (surface) loads.
+        bodyForces
+            The list of body (volumetric) loads.
+        Un1
+            The current solution vector.
+        PExt
+            The external load vector.
+        K
+            The system matrix.
+        increment
+            The increment.
+
+        Returns
+        -------
+        tuple[DofVector,VIJSystemMatrix]
+            - The modified external load vector.
+            - The modified system matrix.
+        """
         # cloads
         for cLoad in concentratedLoads:
             PExt = cLoad.applyOnP(PExt, increment)
@@ -544,10 +867,31 @@ class NIST:
 
         return PExt, K
 
-    def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize):
-        """if active, extrapolate the solution of the last increment.
-        Also returns a boolean for information of an extrapolation was computed
-        -> at the beginning of each increment"""
+    def extrapolateLastIncrement(
+        self, extrapolation: str, increment: tuple, dU: DofVector, dirichlets: list, lastIncrementSize: float
+    ) -> tuple[DofVector, bool]:
+        """Depending on the current setting, extrapolate the solution of the last increment.
+
+        Parameters
+        ----------
+        extrapolation
+            The type of extrapolation.
+        increment
+            The current time increment.
+        dU
+            The last solution increment.
+        dirichlets
+            The list of active dirichlet boundary conditions.
+        lastIncrementSize
+            The size of the last increment.
+
+        Returns
+        -------
+        tuple[DofVector,bool]
+            - The extrapolated solution increment.
+            - True if an extrapolation was performed.
+        """
+
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
         if extrapolation == "linear" and lastIncrementSize:
@@ -560,15 +904,38 @@ class NIST:
 
         return dU, isExtrapolatedIncrement
 
-    def checkDivergingSolution(self, incrementResidualHistory, maxGrowingIter):
-        """Check if the iterative scheme is diverging"""
+    def checkDivergingSolution(self, incrementResidualHistory: dict, maxGrowingIter: int) -> bool:
+        """Check if the iterative solution scheme is diverging.
+
+        Parameters
+        ----------
+        incrementResidualHistory
+            The dictionary containg the residual history of all fields.
+        maxGrowingIter
+            The maximum allows number of growths of a residual during the iterative solution scheme.
+
+        Returns
+        -------
+        bool
+            True if solution is diverging.
+        """
         for previousFluxResidual, nGrew in incrementResidualHistory.values():
             if nGrew > maxGrowingIter:
                 return True
         return False
 
-    def collectActiveStepActions(self, stepActions):
-        """get the current active actions (loads, etc. ... ) for the current step"""
+    def collectActiveStepActions(self, stepActions: dict) -> list[StepActionBase]:
+        """Get the current active actions (loads, etc. ... ) for the current step.
+
+        Parameters
+        ----------
+        stepActions
+            The dictionary containing all existing step actions.
+
+        Returns
+        ------
+            The list of active step actions.
+        """
         activeActions = dict()
 
         activeActions["dirichlets"] = list(stepActions["dirichlet"].values()) + list(
@@ -579,20 +946,35 @@ class NIST:
         activeActions["concentratedLoads"] = stepActions["nodeforces"].values()
 
         activeActions["geostatics"] = [g for g in stepActions["geostatic"].values() if g.active]
-        # activeActions["constraints"] = [c for c in modelInfo.constraints.values()]
         activeActions["setfields"] = [s for s in stepActions["setfield"].values() if s.active]
         activeActions["initializematerial"] = [s for s in stepActions["initializematerial"].values() if s.active]
 
         return activeActions
 
-    def finishStepActions(self, U, P, stepActions):
-        """called when all step actions should finish a step"""
+    def finishStepActions(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+        """Called when all step actions should finish a step.
+
+        Parameters
+        ----------
+        U
+            The solution vector.
+        P
+            The reaction vector.
+        stepActions
+            The list of active step actions.
+        """
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
                 action.finishStep(U, P)
 
-    def printResidualOutlierNodes(self, residualOutliers):
-        """print which nodes have the largest residuals"""
+    def printResidualOutlierNodes(self, residualOutliers: dict):
+        """Print which nodes have the largest residuals.
+
+        Parameters
+        ----------
+        residualOutliers
+            The dictionary containing the outlier nodes for every field.
+        """
         self.journal.message(
             "Residual outliers:",
             self.identification,

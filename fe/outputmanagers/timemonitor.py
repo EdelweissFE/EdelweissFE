@@ -32,7 +32,7 @@ Created on Thu Apr 13 14:08:32 2017
 """
 
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import stringDict
 import numpy as np
@@ -48,19 +48,14 @@ class OutputManager(OutputManagerBase):
         self.exportFile = defDict["export"]
         self.timeVals = []
 
-    def initializeStep(self, step, stepActions, stepOptions):
+    def initializeStep(self, step, stepActions):
         pass
 
     def finalizeIncrement(self, U, P, increment):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeVals.append(totalTime + dT)
 
-    def finalizeStep(
-        self,
-        U,
-        P,
-        time
-    ):
+    def finalizeStep(self, U, P, time):
         pass
 
     def finalizeJob(

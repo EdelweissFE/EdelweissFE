@@ -36,15 +36,16 @@ A ``*job`` defintion consists of multiple ``*steps``, associated with that job.
 from collections import OrderedDict, defaultdict
 from fe.config import analyticalfields
 from fe.config.phenomena import domainMapping
-from fe.config.generators import getGeneratorByName
+from fe.config.generators import getGeneratorFunction
 from fe.config.stepactions import stepActionFactory
-from fe.config.outputmanagers import getOutputManagerByName
+from fe.config.outputmanagers import getOutputManagerClass
 from fe.config.solvers import getSolverByName
 from fe.utils.fieldoutput import FieldOutputController
 from fe.utils.misc import filterByJobName, stringDict
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.utils.dofmanager import DofManager
+from fe.variables.scalarvariable import ScalarVariable
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
@@ -52,49 +53,40 @@ from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
 
 
-
-def collectStepActionsAndOptions(
-    step, jobInfo, modelInfo, time, U, P, stepActions, stepOptions, fieldOutputController, journal
-):
+def gatherStepActions(step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal):
     """Parses all the defined actions for the current step,
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
-    The step-actions are stored in a dictionary, which is handed to
+    The stepi actions are stored in a dictionary, which is handed to
     solveStep() in the feCore main routine afterwards.
-    The step action modules decide if old step-action definitions are
+    The step action modules decide if old stepaction definitions are
     overwritten or extended. Returns a dictionary with keys as defined in
     stepactions."""
 
     for actionType, *definition in step["data"]:
-        if actionType.startswith("options"):
-            # line is a option
-            options = stringDict(definition)
-            category = options["category"]
-            stepOptions[category].update(options)
+        options = stringDict(definition)
+
+        module = actionType.lower()
+        moduleName = options.get("name", options.get("category", module))
+
+        if moduleName in stepActions[module]:
+            stepActions[module][moduleName].updateStepAction(
+                moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+            )
+            journal.message('Stepaction "{:}" will be updated'.format(moduleName), "stepActionManager", 1)
         else:
-            # line is an action
-            module = actionType.lower()
-            options = stringDict(definition)
-            moduleName = options.get("name", module)
+            stepActions[module][moduleName] = stepActionFactory(module)(
+                moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+            )
 
-            if moduleName in stepActions[module]:
-                stepActions[module][moduleName].updateStepAction(
-                    moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
-                )
-                journal.message('Stepaction "{:}" will be updated'.format(moduleName), "stepActionManager", 1)
-            else:
-                stepActions[module][moduleName] = stepActionFactory(module)(
-                    moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
-                )
-
-    return stepActions, stepOptions
+    return stepActions
 
 
 def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     """This is core function of the finite element analysis.
     Based on the keyword ``*job``, the finite element model is defined.
 
-    It assembles 
+    It assembles
      * jobInfo
      * modeInfo
      * steps
@@ -103,7 +95,8 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
 
     and controls the respective solver based on the defined simulation steps.
     For each step, the step-actions (dirichlet, nodeforces) are collected by
-    external modules."""
+    external modules.
+    """
 
     identification = "feCore"
 
@@ -116,21 +109,22 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     domainSize = domainMapping[modelDomain]
 
     modelInfo = {
-        "nodes": OrderedDict(),
-        "elements": OrderedDict(),
+        "nodes": {},
+        "elements": {},
         "nodeSets": {},
         "elementSets": {},
         "surfaces": {},
         "constraints": {},
         "materials": {},
         "analyticalFields": {},
+        "scalarVariables": [],
         "domainSize": domainSize,
     }
 
     # call individual optional model generators
     for generatorDefinition in inputfile["*modelGenerator"]:
         gen = generatorDefinition["generator"]
-        modelInfo = getGeneratorByName(gen)(generatorDefinition, modelInfo, journal)
+        modelInfo = getGeneratorFunction(gen)(generatorDefinition, modelInfo, journal)
 
     # the standard 'Abaqus like' model generator is invoked unconditionally, and it has direct access to the inputfile
     abqModelConstructor = AbqModelConstructor(journal)
@@ -139,6 +133,21 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
+
+    # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
+    for constraintName, constraint in modelInfo["constraints"].items():
+
+        nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables()
+        journal.message(
+            "Constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables),
+            identification,
+            0,
+        )
+
+        scalarVariables = [ScalarVariable() for i in range(nAdditionalScalarVariables)]
+        modelInfo["scalarVariables"] += scalarVariables
+
+        constraint.assignAdditionalScalarVariables(scalarVariables)
 
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
     dofManager = DofManager(modelInfo)
@@ -173,7 +182,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # collect all output managers in a list of objects
     outputmanagers = []
     for outputDef in filterByJobName(inputfile["*output"], jobName):
-        OutputManager = getOutputManagerByName(outputDef["type"].lower())
+        OutputManager = getOutputManagerClass(outputDef["type"].lower())
         managerName = outputDef.get("name", jobName + outputDef["type"])
         definitionLines = outputDef["data"]
         outputmanagers.append(
@@ -181,27 +190,27 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
         )
 
     stepActions = defaultdict(CaseInsensitiveDict)
-    stepOptions = defaultdict(CaseInsensitiveDict)
 
     fieldOutputController.initializeJob(time, U, P)
 
     try:
         for step in jobSteps:
             try:
-                # collect all step actions in a dictionary with key of actionType
-                # and concerned values
-                stepActions, stepOptions = collectStepActionsAndOptions(
-                    step, jobInfo, modelInfo, time, U, P, stepActions, stepOptions, fieldOutputController, journal
+                stepActions = gatherStepActions(
+                    step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
                 )
 
-                fieldOutputController.initializeStep(step, stepActions, stepOptions)
+                for modelUpdate in stepActions["modelupdate"].values():
+                    modelInfo = modelUpdate.updateModel(modelInfo, fieldOutputController, journal)
+
+                fieldOutputController.initializeStep(step, stepActions)
                 for manager in outputmanagers:
-                    manager.initializeStep(step, stepActions, stepOptions)
+                    manager.initializeStep(step, stepActions)
 
                 # solve the step
                 tic = getCurrentTime()
                 success, U, P, time = solver.solveStep(
-                    step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers
+                    step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
                 )
                 toc = getCurrentTime()
 
@@ -222,11 +231,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
             finally:
                 fieldOutputController.finalizeStep(U, P)
                 for manager in outputmanagers:
-                    manager.finalizeStep(
-                        U,
-                        P,
-                        time
-                    )
+                    manager.finalizeStep(U, P, time)
 
     except KeyboardInterrupt:
         print("")

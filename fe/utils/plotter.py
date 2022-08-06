@@ -25,10 +25,12 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mon Jul 24 15:30:36 2017
+# Created on Mon Jul 24 15:30:36 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
+Plotting in EdelweissFE throught matplotlib can be performed easily
+throught a global plotting module, which is passed to all output managers.
 """
 
 import matplotlib
@@ -42,7 +44,6 @@ from fe.utils.misc import stringDict
 from distutils.spawn import find_executable
 
 
-
 defaultMarkerCycle = itertools.cycle(("o", "v", "D", "s", "^"))
 defaultLinePlotColorCycle = itertools.cycle(("k"))
 defaultScatterPlotColorCycle = itertools.cycle(("k", "r", "b", "g"))
@@ -51,14 +52,14 @@ defaultLineStyleCycle = itertools.cycle(("-", "0-3-2", "0-3-1-1-1", "0-1-1"))
 
 class Plotter:
     """
-    A Unified Plotter, which can be accessed and used by all outputmanagers
+    The Unified Plotter, which can be accessed and used by all outputmanagers
     """
 
     def __init__(self, journal, inputfile):
         self.journal = journal
 
         latexAvailable = False
-        if find_executable('latex'):
+        if find_executable("latex"):
             latexAvailable = True
 
         self.rcParams = {

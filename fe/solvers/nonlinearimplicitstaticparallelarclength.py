@@ -38,6 +38,10 @@ from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
 import numpy as np
 from fe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
 from fe.utils.math import createModelAccessibleFunction
+from fe.utils.dofmanager import DofVector, VIJSystemMatrix
+from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.utils.fieldoutput import FieldOutputController
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 
 class NISTPArcLength(NISTParallel):
@@ -49,52 +53,100 @@ class NISTPArcLength(NISTParallel):
 
         return super().__init__(jobInfo, journal)
 
-    def solveStep(self, step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers):
+    def solveStep(
+        self,
+        step: dict,
+        time: float,
+        stepActions: dict[str, StepActionBase],
+        modelInfo: dict,
+        U: DofVector,
+        P: DofVector,
+        fieldOutputController: FieldOutputController,
+        outputmanagers: dict[str, OutputManagerBase],
+    ) -> tuple[bool, DofVector, DofVector, float]:
 
-        options = stepOptions["NISTArcLength"]
-        arcLengthControllerType = options["arcLengthController"]
+        self.arcLengthController = None
+        self.checkConditionalStop = lambda: False
+
+        try:
+            arcLengthControllerType = stepActions["options"]["NISTArcLength"]["arcLengthController"]
+            if arcLengthControllerType == "off":
+                self.arcLengthController = None
+            else:
+                self.arcLengthController = stepActions[arcLengthControllerType][arcLengthControllerType]
+        except KeyError:
+            pass
+
+        try:
+            stopCondition = stepActions["options"]["NISTArcLength"]["stopCondition"]
+            self.checkConditionalStop = createModelAccessibleFunction(
+                stopCondition, modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
+            )
+        except KeyError:
+            pass
 
         self.dLambda = 0.0
 
-        if arcLengthControllerType == "off":
-            self.arcLengthController = None
-        else:
-            self.arcLengthController = stepActions[arcLengthControllerType][
-                arcLengthControllerType
-            ]  # name = module designation
-
-            if "stopCondition" in options and options["stopCondition"] != "False":
-                self.checkConditionalStop = createModelAccessibleFunction(
-                    options["stopCondition"], modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
-                )
-            else:
-                self.checkConditionalStop = lambda: False
-
-        return super().solveStep(
-            step, time, stepActions, stepOptions, modelInfo, U, P, fieldOutputController, outputmanagers
-        )
+        return super().solveStep(step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
 
     def solveIncrement(
         self,
-        U,
-        dU,
-        P,
-        K,
-        elements,
-        activeStepActions,
-        constraints,
-        increment,
-        lastIncrementSize,
-        extrapolation,
-        maxIter,
-        maxGrowingIter,
-    ):
-        """Arc length method to solve for an increment
-        Implementation based on the proposed approach by"""
+        Un: DofVector,
+        dU: DofVector,
+        P: DofVector,
+        K: VIJSystemMatrix,
+        elements: dict,
+        activeStepActions: list,
+        constraints: dict,
+        increment: tuple,
+        lastIncrementSize: float,
+        extrapolation: str,
+        maxIter: int,
+        maxGrowingIter: int,
+    ) -> tuple[DofVector, DofVector, DofVector, int, dict]:
+        """Arc length method scheme to solve for an increment.
+
+        Parameters
+        ----------
+        Un
+            The old solution vector.
+        dU
+            The old solution increment.
+        P
+            The old reaction vector.
+        K
+            The system matrix to be used.
+        elements
+            The dictionary containing all elements.
+        activeStepActions
+            The list of active step actions.
+        constraints
+            The dictionary containg all elements.
+        increment
+            The increment.
+        lastIncrementSize
+            The size of the previous increment.
+        extrapolation
+            The type of extrapolation to be used.
+        maxIter
+            The maximum number of iterations to be used.
+        maxGrowingIter
+            The maximum number of growing residuals until the Newton-Raphson is terminated.
+
+        Returns
+        -------
+        tuple[DofVector,DofVector,DofVector,int,dict]
+            A tuple containing
+                - the new solution vector
+                - the solution increment
+                - the new reaction vector
+                - the number of required iterations
+                - the history of residuals per field
+        """
 
         if self.arcLengthController == None:
             return super().solveIncrement(
-                U,
+                Un,
                 dU,
                 P,
                 K,
@@ -148,13 +200,13 @@ class NISTPArcLength(NISTParallel):
             for geostatic in activeStepActions["geostatics"]:
                 geostatic.apply()
 
-            Un1[:] = U
+            Un1[:] = Un
             Un1 += dU
 
             P[:] = K[:] = F[:] = P_0[:] = P_f[:] = K_f[:] = K_0[:] = 0.0
 
             P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
-            P, K = self.assembleConstraints(constraints, Un1, P, K, increment)
+            P, K = self.assembleConstraints(constraints, Un1, dU, P, K, increment)
 
             P_0, K_0 = self.assembleLoads(
                 concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K_0, zeroIncrement
@@ -224,7 +276,7 @@ class NISTPArcLength(NISTParallel):
 
         self.Lambda += dLambda
         self.dLambda = dLambda
-        self.arcLengthController.finishIncrement(U, dU, dLambda)
+        self.arcLengthController.finishIncrement(Un, dU, dLambda)
 
         self.journal.message(
             "Current load parameter: lambda={:6.2e}, last increment: dLambda={:6.2e}".format(self.Lambda, self.dLambda),
@@ -234,8 +286,37 @@ class NISTPArcLength(NISTParallel):
 
         return Un1, dU, P, iterationCounter, incrementResidualHistory
 
-    def extrapolateLastIncrement(self, extrapolation, increment, dU, dirichlets, lastIncrementSize, dLambda=None):
-        """Modified extrapolation to account for a load multiplier predictor"""
+    def extrapolateLastIncrement(
+        self,
+        extrapolation: str,
+        increment: tuple,
+        dU: DofVector,
+        dirichlets: list,
+        lastIncrementSize: float,
+        dLambda: float = None,
+    ) -> tuple[DofVector, bool]:
+        """Depending on the current setting, extrapolate the solution of the last increment.
+        Also accounts for the arc length loading parameter.
+
+        Parameters
+        ----------
+        extrapolation
+            The type of extrapolation.
+        increment
+            The current time increment.
+        dU
+            The last solution increment.
+        dirichlets
+            The list of active dirichlet boundary conditions.
+        lastIncrementSize
+            The size of the last increment.
+
+        Returns
+        -------
+        tuple[DofVector,bool]
+            - The extrapolated solution increment.
+            - True if an extrapolation was performed.
+        """
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
@@ -255,10 +336,18 @@ class NISTPArcLength(NISTParallel):
 
         return dU, isExtrapolatedIncrement, dLambda
 
-    def finishStepActions(self, U, P, stepActions):
-        """Modified finish to communicate the 'correct' magnitude of external loads,
-        i.e., the load multiplier,
-        to the stepactions (nodeforces, distributedloads, ... )"""
+    def finishStepActions(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+        """Called when all step actions should finish a step.
+
+        Parameters
+        ----------
+        U
+            The solution vector.
+        P
+            The reaction vector.
+        stepActions
+            The list of active step actions.
+        """
 
         if self.arcLengthController != None:
             for stepAction in stepActions["nodeforces"].values():

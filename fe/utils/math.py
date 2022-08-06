@@ -61,9 +61,24 @@ def createModelAccessibleFunction(expression, modelInfo, *argnames, **kwargs):
     return createFunction(expression, *argnames, **kwargs)
 
 
+def evalExpression(expression, **kwargs):
+    """Create a function from a string expression"""
+    return eval(expression, globals(), kwargs)
+
+
 def evalModelAccessibleExpression(expression, modelInfo, *args, **kwargs):
-    """Evalualate a string expression, which can access the complete model and fieldOutput"""
-    return createModelAccessibleFunction(expression, modelInfo, *args, **kwargs)()
+    """Evalualate a string expression, which can access the complete model"""
+    return evalExpression(expression, **modelInfo, **kwargs)
+
+
+def execExpression(expression, **kwargs):
+    """Create a function from a string expression"""
+    return exec(expression, globals(), kwargs)
+
+
+def execModelAccessibleExpression(expression, modelInfo, *args, **kwargs):
+    """Evalualate a string expression, which can access the complete model"""
+    return execExpression(expression, **modelInfo, **kwargs)
 
 
 def createMathExpression(expression, symbol="x"):

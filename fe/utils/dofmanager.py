@@ -29,11 +29,12 @@
 
 # @author: Matthias Neuner
 """
-This module contains import classes for describing the global equation system by means of a sparse system
+This module contains important classes for describing the global equation system by means of a sparse system.
 """
 
 from collections import OrderedDict
 from fe.config.phenomena import getFieldSize, phenomena
+from fe.variables.node import Node
 import numpy as np
 
 
@@ -44,9 +45,20 @@ class VIJSystemMatrix(np.ndarray):
 
       * also contains the I and J vectors as class members,
       * allows to directly access (contiguous read and write) access of each entity via the [] operator
+
+    Parameters
+    ----------
+    nDof
+        The size of the system.
+    I
+        The I vector for the VIJ triple.
+    J
+        The J vector for the VIJ triple.
+    entitiesInVIJ
+        A dictionary containing the indices of an entitiy in the value vector.
     """
 
-    def __new__(cls, nDof, I, J, entitiesInVIJ):
+    def __new__(cls, nDof: int, I: np.ndarray, J: np.ndarray, entitiesInVIJ: dict):
 
         obj = np.zeros_like(I, dtype=float).view(cls)
 
@@ -60,7 +72,7 @@ class VIJSystemMatrix(np.ndarray):
     def __getitem__(self, key):
         try:
             idxInVIJ = self.entitiesInVIJ[key]
-            return super().__getitem__(slice(idxInVIJ, idxInVIJ + key.nDof ** 2))
+            return super().__getitem__(slice(idxInVIJ, idxInVIJ + key.nDof**2))
         except:
             return super().__getitem__(key)
 
@@ -69,9 +81,16 @@ class DofVector(np.ndarray):
     """
     This class represents a Dof Vector, which also has knowledge of each entities (elements, constraints) location within.
     The [] operator allows to access (non-contigouos read, write) at each entities location
+
+    Parameters
+    ----------
+    nDof
+        The size of the system.
+    entitiesInVIJ
+        A dictionary containing the indices of an entitiy in the value vector.
     """
 
-    def __new__(cls, nDof, entitiesInDofVector):
+    def __new__(cls, nDof: int, entitiesInDofVector: dict):
         obj = np.zeros(nDof, dtype=float).view(cls)
         obj.entitiesInDofVector = entitiesInDofVector
 
@@ -99,9 +118,14 @@ class DofManager:
      * handles the active fields on each node
      * counts the accumulated number of associated elements on each dof (for the Abaqus like convergence test)
      * supplies the framework with DofVectors and VIJSystemMatrices
+
+    Parameters
+    ----------
+    modelInfo
+        A dictionary containing the model tree.
     """
 
-    def __init__(self, modelInfo):
+    def __init__(self, modelInfo: dict):
 
         self.modelInfo = modelInfo
 
@@ -125,7 +149,8 @@ class DofManager:
     def activateFieldsOnNodes(
         self,
     ):
-        """activate all fields on nodes, which are required in the analysis"""
+        """Activate all fields on nodes, which are required in the analysis."""
+
         modelInfo = self.modelInfo
 
         for element in modelInfo["elements"].values():
@@ -134,19 +159,26 @@ class DofManager:
                     node.fields[field] = True
 
         for constraint in modelInfo["constraints"].values():
-            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOfNodes):
+            for node, nodeFields in zip(constraint.nodes, constraint.fieldsOnNodes):
                 for field in nodeFields:
                     node.fields[field] = True
 
-    def initializeDofVectorStructure(self):
-        """Loop over all nodes to generate the global field-dof indices. output is a tuple of:
+    def initializeDofVectorStructure(self) -> tuple[int, dict[str, np.ndarray]]:
+        """Loop over all nodes to generate the global field-dof indices.
 
-         * number of total DOFS
-         * orderedDict( (mechanical, indices), (nonlocalDamage, indices) (thermal, indices) ...)."""
+        Returns
+        -------
+        tuple
+            output is a tuple of:
+             * number of total DOFS
+             * dictionary of fields and indices:
+                * field
+                * indices
+        """
 
         nodes = self.modelInfo["nodes"]
         domainSize = self.modelInfo["domainSize"]
-        constraints = self.modelInfo["constraints"]
+        # constraints = self.modelInfo["constraints"]
 
         indicesOfFieldsInDofVector = OrderedDict()
         currentIndexInDofVector = 0
@@ -170,26 +202,38 @@ class DofManager:
             index: node for node in nodes.values() for field in node.fields.values() for index in field
         }
 
-        for constraint in constraints.values():
-            # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
-            # we create them here, and assign them directly to the constraints
-            # (In contrast to true field indices, which are not directly
-            # assigned to elements/constraints but to the nodes)
-            nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
-            indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)]
-            # TODO: Store here in dofmanager
-            constraint.assignAdditionalGlobalDofIndices(indicesOfConstraintAdditionalDofs)
-            currentIndexInDofVector += nNeededDofs
+        for scalarVariable in self.modelInfo["scalarVariables"]:
+            scalarVariable.index = currentIndexInDofVector
+            currentIndexInDofVector += 1
+
+        # for constraint in constraints.values():
+        #     # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
+        #     # we create them here, and assign them directly to the constraints
+        #     # (In contrast to true field indices, which are not directly
+        #     # assigned to elements/constraints but to the nodes)
+        #     nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
+        #     indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)]
+        #     # TODO: Store here in dofmanager
+        #     constraint.assignAdditionalGlobalDofIndices(indicesOfConstraintAdditionalDofs)
+        #     currentIndexInDofVector += nNeededDofs
 
         nDof = currentIndexInDofVector
 
         return nDof, indicesOfFieldsInDofVector
 
-    def countNodalFluxes(self):
-        """
-        for the VIJ (COO) system matrix and the Abaqus like convergence test,
+    def countNodalFluxes(self) -> tuple[int, dict[str, int]]:
+        """For the VIJ (COO) system matrix and the Abaqus like convergence test,
         the number of dofs 'entity-wise' is needed:
-        = Σ_(elements+constraints) Σ_nodes ( nDof (field) )"""
+        = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).
+
+        Returns
+        -------
+        tuple
+            - Number of accumulated fluxes in total
+            - Number of accumulated fluxes per field:
+                - Field
+                - Number of accumulated fluxes
+        """
 
         indicesOfFieldsInDofVector = self.indicesOfFieldsInDofVector
 
@@ -217,9 +261,19 @@ class DofManager:
             accumulatedNumberOfFieldFluxes,
         )
 
-    def countAccumulatedEntityDofs(self):
-        """generates some auxiliary information,
-        which may be required by some modules of EdelweissFE"""
+    def countAccumulatedEntityDofs(self) -> tuple[int, int, int, int]:
+        """Generates some auxiliary information,
+        which may be required by some modules of EdelweissFE.
+
+        Returns
+        -------
+        tuple[int,int,int,int]
+            The tuple of
+                - number of elemental degrees of freedom,
+                - number of constraint degrees of freedom,
+                - size of system matrix,
+                - largest number of dofs on a element
+        """
 
         elements = self.modelInfo["elements"]
         constraints = self.modelInfo["constraints"]
@@ -230,7 +284,7 @@ class DofManager:
 
         for el in elements.values():
             accumulatedElementNDof += el.nDof
-            sizeVIJ += el.nDof ** 2
+            sizeVIJ += el.nDof**2
 
             largestNumberOfElNDof = max(el.nDof, largestNumberOfElNDof)
 
@@ -238,15 +292,21 @@ class DofManager:
         for constraint in constraints.values():
             nNDofAccumulatedConstraints += constraint.nDof
 
-            sizeVIJ += constraint.nDof ** 2
+            sizeVIJ += constraint.nDof**2
 
         return accumulatedElementNDof, nNDofAccumulatedConstraints, sizeVIJ, largestNumberOfElNDof
 
     def locateEntitiesInDofVector(
         self,
-    ):
+    ) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
-        within the DofVector structure"""
+        within the DofVector structure.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the location mapping.
+        """
 
         elements = self.modelInfo["elements"]
         constraints = self.modelInfo["constraints"]
@@ -265,16 +325,32 @@ class DofManager:
             entitiesInDofVector[el] = destList[el.dofIndicesPermutation]
 
         for constraint in constraints.values():
-            destList = constraint.globalDofIndices
-
+            # destList = constraint.globalDofIndices
+            destList = np.asarray(
+                [
+                    i
+                    for iNode, node in enumerate(constraint.nodes)  # for each node of the constraint
+                    for nodeField in constraint.fieldsOnNodes[iNode]  # for each field of this node
+                    for i in node.fields[nodeField]
+                ]
+                + [v.index for v in constraint.scalarVariables]
+            )
             entitiesInDofVector[constraint] = destList
 
         return entitiesInDofVector
 
     def initializeVIJPattern(
         self,
-    ):
-        """Generate the IJ pattern for VIJ (COO) system matrices"""
+    ) -> tuple[np.ndarray, np.ndarray, dict]:
+        """Generate the IJ pattern for VIJ (COO) system matrices.
+
+        Returns
+        -------
+        tuple
+             - I vector
+             - J vector
+             - the entities to system matrix entry mapping.
+        """
 
         elements = self.modelInfo["elements"]
         constraints = self.modelInfo["constraints"]
@@ -295,9 +371,9 @@ class DofManager:
 
             # looks like black magic, but it's an efficient way to generate all indices of Ke in K:
             elDofLocations = np.tile(destList, (destList.shape[0], 1))
-            I[idxInVIJ : idxInVIJ + el.nDof ** 2] = elDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ + el.nDof ** 2] = elDofLocations.ravel("F")
-            idxInVIJ += el.nDof ** 2
+            I[idxInVIJ : idxInVIJ + el.nDof**2] = elDofLocations.ravel()
+            J[idxInVIJ : idxInVIJ + el.nDof**2] = elDofLocations.ravel("F")
+            idxInVIJ += el.nDof**2
 
         for constraint in constraints.values():
             destList = entitiesInDofVector[constraint]
@@ -305,17 +381,23 @@ class DofManager:
             entitiesInVIJ[constraint] = idxInVIJ
 
             constraintDofLocations = np.tile(destList, (destList.shape[0], 1))
-            I[idxInVIJ : idxInVIJ + constraint.nDof ** 2] = constraintDofLocations.ravel()
-            J[idxInVIJ : idxInVIJ + constraint.nDof ** 2] = constraintDofLocations.ravel("F")
-            idxInVIJ += constraint.nDof ** 2
+            I[idxInVIJ : idxInVIJ + constraint.nDof**2] = constraintDofLocations.ravel()
+            J[idxInVIJ : idxInVIJ + constraint.nDof**2] = constraintDofLocations.ravel("F")
+            idxInVIJ += constraint.nDof**2
 
         return I, J, entitiesInVIJ
 
     def constructVIJSystemMatrix(
         self,
-    ):
+    ) -> VIJSystemMatrix:
         """Construct a VIJ (COO) Sparse System matrix object, which also has knowledge about
-        the location of each entity"""
+        the location of each entity.
+
+        Returns
+        -------
+        VIJSystemMatrix
+            The system Matrix.
+        """
 
         nDof = self.nDof
         I = self.I
@@ -326,14 +408,22 @@ class DofManager:
 
     def constructDofVector(
         self,
-    ):
+    ) -> DofVector:
         """Construct a vector with size=nDof and which has knowledge about
-        the location of each entity"""
+        the location of each entity.
+
+        Returns
+        -------
+        DofVector
+            A DofVector.
+        """
 
         nDof = self.nDof
         entitiesInDofVector = self.entitiesInDofVector
 
         return DofVector(nDof, entitiesInDofVector)
 
-    def getNodeForIndexInDofVector(self, index):
+    def getNodeForIndexInDofVector(self, index: int) -> Node:
+        """Find the node for a given index in the equuation system."""
+
         return self.indexToNodeMapping[index]

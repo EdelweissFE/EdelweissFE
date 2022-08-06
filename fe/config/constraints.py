@@ -44,6 +44,19 @@ Example syntax:
 import importlib
 
 
-def getConstraintByName(name):
+def getConstraintClass(name: str) -> type:
+    """Get the class type of the requested constraint.
+
+    Parameters
+    ----------
+    name
+        The name of the constraint to load.
+
+    Returns
+    -------
+    type
+        The constraint class type.
+    """
+
     module = importlib.import_module("fe.constraints." + name.lower())
     return module.Constraint

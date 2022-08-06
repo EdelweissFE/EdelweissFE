@@ -25,26 +25,16 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Fri Jan 27 19:53:45 2017
+# Created on Fri Jan 27 19:53:45 2017
 
-@author: Matthias Neuner
-"""
+# @author: Matthias Neuner
 
 
-class Node:
-    """Base class for a finite element node,
-    currently nothing more than a dictioniary for label and coordinates"""
+class ScalarVariable:
+    """A basic scalar variable, not tied to a spatial position."""
 
     def __init__(
         self,
-        label,
-        coordinates,
     ):
 
-        self.label = label
-        self.coordinates = coordinates
-        self.fields = {}
-
-    def setFields(self, *fields):
-        self.fields.update(fields)
+        self.index = None

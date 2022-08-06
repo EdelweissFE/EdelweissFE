@@ -28,11 +28,6 @@
 # Created on Tue Dec 11 11:21:39 2018
 
 # @author: Matthias Neuner
-"""
-Geometrically exact rigid body constraint:
-Constrains a nodeset to a reference point.
-Currently only available for spatialdomain = 3D.
-"""
 
 documentation = {
     "nSet": "(slave) node set, which is constrained to the reference point",
@@ -41,17 +36,20 @@ documentation = {
 
 import numpy as np
 
+from fe.constraints.base.constraintbase import ConstraintBase
 from fe.utils.misc import stringDict
 
-# from numba import jit
 
-
-class Constraint:
-    """Rigid Body constraint"""
+class Constraint(ConstraintBase):
+    """
+    Geometrically exact rigid body constraint: Constrains a nodeset to a reference point.
+    Currently only available for spatialdomain = 3D.
+    """
 
     def __init__(self, name, definitionLines, modelInfo):
+        super().__init__(name, definitionLines, modelInfo)
 
-        self.name = name
+        # self.name = name
         definition = stringDict([e for line in definitionLines for e in line])
 
         self.nDim = modelInfo["domainSize"]
@@ -81,7 +79,7 @@ class Constraint:
 
         self.slaveNodesFields = [["displacement"]] * nSlaves
         self.referencePointFields = [["displacement", "rotation"]]
-        self.fieldsOfNodes = self.slaveNodesFields + self.referencePointFields
+        self.fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
 
         nConstraints = nSlaves * nDim
         nRp = 1
@@ -93,39 +91,20 @@ class Constraint:
         self.nDof = self.nDofsOnNodes + nConstraints
         self.sizeStiffness = self.nDof * self.nDof
 
-        self.additionalGlobalDofIndices = []
         self.nConstraints = nConstraints
 
         self.nRot = 3
 
-    def getNodes(self):
-        return self.nodes
+    def update(self, options):
+        """No updates are possible for this constraint."""
 
-    def getNodeFields(self):
-        # TODO: use
-        return self.slaveNodesFields + self.referencePointFields
+        pass
 
-    def getNumberOfAdditionalNeededDofs(self):
+    def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
 
-    def assignAdditionalGlobalDofIndices(self, additionalGlobalDofIndices):
-        self.additionalGlobalDofIndices = additionalGlobalDofIndices
-
-        self.globalDofIndices = np.asarray(
-            [
-                i
-                for node, nodeFields in zip(self.nodes, self.fieldsOfNodes)
-                for nodeField in nodeFields
-                for i in node.fields[nodeField]
-            ]
-            + self.additionalGlobalDofIndices
-        )
-
-    def assignGlobalDofIndices(self):
-        pass
-
-    def getGlobalDofIndices(self):
-        pass
+    # def assignAdditionalScalarVariables(self, scalarVariables):
+    #     super().assignAdditionalScalarVariables(scalarVariables)
 
     def Rz_2D(self, phi, derivative):
         phi = phi + np.pi / 2 * derivative
@@ -181,7 +160,7 @@ class Constraint:
             ]
         )
 
-    def applyConstraint(self, Un1, PExt, V, increment):
+    def applyConstraint(self, Un1, dU, PExt, V, increment):
 
         nConstraints = self.nConstraints
         nDim = self.nDim

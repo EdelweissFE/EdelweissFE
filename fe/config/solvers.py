@@ -52,6 +52,19 @@ solverLibrary = {
 }
 
 
-def getSolverByName(name):
+def getSolverByName(name: str) -> type:
+    """Get the class type of the requested solver.
+
+    Parameters
+    ----------
+    name
+        The name of the solver to load.
+
+    Returns
+    -------
+    type
+        The solver class type.
+    """
+
     solver = importlib.import_module("fe.solvers.{:}".format(solverLibrary[name]))
     return getattr(solver, name)

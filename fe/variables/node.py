@@ -25,31 +25,41 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Sat May  6 20:05:41 2017
+# Created on Fri Jan 27 19:53:45 2017
 
-@author: Matthias Neuner
-"""
+# @author: Matthias Neuner
 
-from abc import ABC, abstractmethod
+import numpy as np
 
 
-class StepActionBase(ABC):
-    """This is the abstract base class for all step actions managers.
-    User defined step actions must implement the abstract methods."""
+class Node:
+    """A basic node.
+    It has a label, a spatial position, and may be associated with an arbitrary number of fields.
 
-    identification = "StepActionBase"
+    Parameters
+    ----------
+    label
+        The unique label for this node.
+    coordinates
+        The coordinates of this node.
+    """
 
-    @abstractmethod
-    def __init__(self, name, definition, jobInfo, modelInfo, fieldOutputController, journal):
-        pass
+    def __init__(
+        self,
+        label: int,
+        coordinates: np.ndarray,
+    ):
 
-    @abstractmethod
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-        """is called when an updated definition is present for a new step"""
-        pass
+        self.label = label
+        self.coordinates = coordinates
+        self.fields = {}
 
-    @abstractmethod
-    def finishStep(self, U, P):
-        """is called when a step successfully finished"""
-        pass
+    def setFields(self, *fields):
+        """Activate fields on this node.
+
+        Parameters
+        ----------
+        fields
+           The fields to activate
+        """
+        self.fields.update(fields)

@@ -38,7 +38,7 @@ documentation = {
     "value": "scalar value if type 'const'; name of analyticalField if type 'analyticalField'",
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
 
@@ -57,7 +57,7 @@ class StepAction(StepActionBase):
 
         if not self.type in ["uniform", "analyticalField"]:
             raise Exception("Invalid type: {}".format(self.type))
-    
+
         if self.type == "analyticalField":
             self.analyticalField = modelInfo["analyticalFields"][self.value]
 
@@ -74,14 +74,14 @@ class StepAction(StepActionBase):
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
             currentResults[:] = float(self.value)
             self.journal.message(
-                "setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.identification
+                "Setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.name
             )
             self.fieldOutput.setResults(currentResults)
 
         if self.type == "analyticalField":
 
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
-            
+
             if self.analyticalField.type == "scalarExpression" and not currentResults.shape[2] == 1:
                 raise Exception("Cannot map scalar value to {}-dimensional result.".format(currentResults.shape[2]))
 
@@ -89,10 +89,8 @@ class StepAction(StepActionBase):
 
             for i1, element in enumerate(elementList):
                 coordinatesAtCenter = element.getCoordinatesAtCenter()
-                #for i2, quadraturePoint in enumerate(self.fieldOutput.quadraturePoints):
+                # for i2, quadraturePoint in enumerate(self.fieldOutput.quadraturePoints):
                 #    currentResults[i1][i2] = self.analyticalField.evaluateAtCoordinates(coordinatesAtCenter)
                 currentResults[i1] = self.analyticalField.evaluateAtCoordinates(coordinatesAtCenter)
 
             self.fieldOutput.setResults(currentResults)
-
-

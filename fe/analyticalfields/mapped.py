@@ -33,5 +33,3 @@ documentation = {
     "f(xyz)": "(optional) define a spatial field for scaling the BC",
     "f(xyzt)": "(optional) define a spatial field for scaling the BC",
 }
-
-
