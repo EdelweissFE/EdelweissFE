@@ -41,8 +41,19 @@ In future, elements by other providers or elements directly implemented in Edelw
 """
 
 
-def getElementByName(name, provider=None):
-    """Get a finite element instance by name, and by specifying the provider"""
+def getElementClass(provider: str = None) -> type:
+    """Get the class type of the requested element provider.
+
+    Parameters
+    ----------
+    provider
+        The name of the element provider ot load.
+
+    Returns
+    -------
+    type
+        The element provider class type.
+    """
 
     if provider == None:
         provider = "marmot"

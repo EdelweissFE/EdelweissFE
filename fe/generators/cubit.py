@@ -70,7 +70,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     runCubit = options.get("runCubit", "False")
     silent = options.get("silent", "False")
 
-    # getElementByName(options["elType"], options.get("elProvider", None))
+    # getElementClass(options["elType"], options.get("elProvider", None))
 
     generate = False
     if not os.path.exists(outFile) or strtobool(overwrite):

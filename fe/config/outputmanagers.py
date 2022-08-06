@@ -43,6 +43,19 @@ They are defined globally:
 import importlib
 
 
-def getOutputManagerByName(name):
+def getOutputManagerClass(name: str) -> type:
+    """Get the class type of the requested output manager.
+
+    Parameters
+    ----------
+    name
+        The name of the output manager to load.
+
+    Returns
+    -------
+    type
+        The output manager class type.
+    """
+
     module = importlib.import_module("fe.outputmanagers." + name.lower())
     return module.OutputManager

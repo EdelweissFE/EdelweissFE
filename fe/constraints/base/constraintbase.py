@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from fe.elements.scalarvariable import ScalarVariable
+from fe.variables.scalarvariable import ScalarVariable
 from numpy import ndarray
 
 

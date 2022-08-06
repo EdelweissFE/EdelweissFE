@@ -63,8 +63,8 @@ documentation = {
     "elType": "type of element",
 }
 
-from fe.elements.node import Node
-from fe.config.elementlibrary import getElementByName
+from fe.variables.node import Node
+from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import stringDict
 
 import numpy as np
@@ -83,7 +83,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     l = float(options.get("l", 1.0))
     nX = int(options.get("nX", 10))
     nY = int(options.get("nY", 10))
-    elType = getElementByName(options["elType"], options.get("elProvider", None))
+    elType = getElementClass(options.get("elProvider", None))
 
     testEl = elType(
         options["elType"],

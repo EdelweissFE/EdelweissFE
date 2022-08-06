@@ -7,6 +7,7 @@ Documentation
    syntax
    jobs
    phenomena
+   variables
    elements
    mesh
    generators

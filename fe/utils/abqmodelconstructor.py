@@ -41,11 +41,11 @@ is using the keywords
 employing an Abaqus-like syntax.
 """
 
-from fe.elements.node import Node
-from fe.config.elementlibrary import getElementByName
+from fe.variables.node import Node
+from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import isInteger
-from fe.config.constraints import getConstraintByName
-from fe.config.sections import getSectionByName
+from fe.config.constraints import getConstraintClass
+from fe.config.sections import getSectionClass
 from fe.config.analyticalfields import getAnalyticalFieldByName
 import numpy as np
 
@@ -97,7 +97,7 @@ class AbqModelConstructor:
         for elDefs in inputFile["*element"]:
             elementType = elDefs["type"]
             elementProvider = elDefs.get("provider")
-            ElementClass = getElementByName(elementType, elementProvider)
+            ElementClass = getElementClass(elementProvider)
 
             currElDefs = {}
             for defLine in elDefs["data"]:
@@ -249,7 +249,7 @@ class AbqModelConstructor:
             constraint = constraintDef["type"]
             data = constraintDef["data"]
 
-            constraint = getConstraintByName(constraint)(name, data, modelInfo)
+            constraint = getConstraintClass(constraint)(name, data, modelInfo)
             modelInfo["constraints"][name] = constraint
 
         return modelInfo
@@ -278,7 +278,7 @@ class AbqModelConstructor:
             data = secDef["data"]
             materialID = secDef["material"]
 
-            Section = getSectionByName(sec)
+            Section = getSectionClass(sec)
 
             # this was a bad design decision, and will be deprecated sooner or later:
             thickness = float(secDef.get("thickness", 0.0))

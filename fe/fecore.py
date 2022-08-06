@@ -36,16 +36,16 @@ A ``*job`` defintion consists of multiple ``*steps``, associated with that job.
 from collections import OrderedDict, defaultdict
 from fe.config import analyticalfields
 from fe.config.phenomena import domainMapping
-from fe.config.generators import getGeneratorByName
+from fe.config.generators import getGeneratorFunction
 from fe.config.stepactions import stepActionFactory
-from fe.config.outputmanagers import getOutputManagerByName
+from fe.config.outputmanagers import getOutputManagerClass
 from fe.config.solvers import getSolverByName
 from fe.utils.fieldoutput import FieldOutputController
 from fe.utils.misc import filterByJobName, stringDict
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.utils.dofmanager import DofManager
-from fe.elements.scalarvariable import ScalarVariable
+from fe.variables.scalarvariable import ScalarVariable
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
@@ -124,7 +124,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # call individual optional model generators
     for generatorDefinition in inputfile["*modelGenerator"]:
         gen = generatorDefinition["generator"]
-        modelInfo = getGeneratorByName(gen)(generatorDefinition, modelInfo, journal)
+        modelInfo = getGeneratorFunction(gen)(generatorDefinition, modelInfo, journal)
 
     # the standard 'Abaqus like' model generator is invoked unconditionally, and it has direct access to the inputfile
     abqModelConstructor = AbqModelConstructor(journal)
@@ -182,7 +182,7 @@ def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     # collect all output managers in a list of objects
     outputmanagers = []
     for outputDef in filterByJobName(inputfile["*output"], jobName):
-        OutputManager = getOutputManagerByName(outputDef["type"].lower())
+        OutputManager = getOutputManagerClass(outputDef["type"].lower())
         managerName = outputDef.get("name", jobName + outputDef["type"])
         definitionLines = outputDef["data"]
         outputmanagers.append(

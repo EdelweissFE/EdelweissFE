@@ -44,6 +44,19 @@ by specifying their ``name`` and a list of ``option=value``, for example
 import importlib
 
 
-def stepActionFactory(name):
+def stepActionFactory(name: str) -> type:
+    """Get the class type of the requested step action.
+
+    Parameters
+    ----------
+    name
+        The name of the step action to load.
+
+    Returns
+    -------
+    type
+        The step action class type.
+    """
+
     module = importlib.import_module("fe.stepactions." + name.lower())
     return module.StepAction

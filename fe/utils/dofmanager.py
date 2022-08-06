@@ -34,9 +34,8 @@ This module contains important classes for describing the global equation system
 
 from collections import OrderedDict
 from fe.config.phenomena import getFieldSize, phenomena
-from fe.elements.node import Node
+from fe.variables.node import Node
 import numpy as np
-from numpy import ndarray
 
 
 class VIJSystemMatrix(np.ndarray):
@@ -59,7 +58,7 @@ class VIJSystemMatrix(np.ndarray):
         A dictionary containing the indices of an entitiy in the value vector.
     """
 
-    def __new__(cls, nDof: int, I: ndarray, J: ndarray, entitiesInVIJ: dict):
+    def __new__(cls, nDof: int, I: np.ndarray, J: np.ndarray, entitiesInVIJ: dict):
 
         obj = np.zeros_like(I, dtype=float).view(cls)
 
@@ -126,7 +125,7 @@ class DofManager:
         A dictionary containing the model tree.
     """
 
-    def __init__(self, modelInfo):
+    def __init__(self, modelInfo: dict):
 
         self.modelInfo = modelInfo
 
@@ -164,7 +163,7 @@ class DofManager:
                 for field in nodeFields:
                     node.fields[field] = True
 
-    def initializeDofVectorStructure(self) -> tuple[int, dict]:
+    def initializeDofVectorStructure(self) -> tuple[int, dict[str, np.ndarray]]:
         """Loop over all nodes to generate the global field-dof indices.
 
         Returns
@@ -172,7 +171,9 @@ class DofManager:
         tuple
             output is a tuple of:
              * number of total DOFS
-             * dict( field : indices )
+             * dictionary of fields and indices:
+                * field
+                * indices
         """
 
         nodes = self.modelInfo["nodes"]
@@ -220,7 +221,7 @@ class DofManager:
 
         return nDof, indicesOfFieldsInDofVector
 
-    def countNodalFluxes(self) -> tuple[int, dict[str:int]]:
+    def countNodalFluxes(self) -> tuple[int, dict[str, int]]:
         """For the VIJ (COO) system matrix and the Abaqus like convergence test,
         the number of dofs 'entity-wise' is needed:
         = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).
@@ -229,7 +230,9 @@ class DofManager:
         -------
         tuple
             - Number of accumulated fluxes in total
-            - Number of accumulated fluxes per field
+            - Number of accumulated fluxes per field:
+                - Field
+                - Number of accumulated fluxes
         """
 
         indicesOfFieldsInDofVector = self.indicesOfFieldsInDofVector
@@ -265,7 +268,11 @@ class DofManager:
         Returns
         -------
         tuple[int,int,int,int]
-            nElDofs, nConstraintDofs, size of system matrix, largest number of dofs on a element
+            The tuple of
+                - number of elemental degrees of freedom,
+                - number of constraint degrees of freedom,
+                - size of system matrix,
+                - largest number of dofs on a element
         """
 
         elements = self.modelInfo["elements"]
@@ -291,7 +298,7 @@ class DofManager:
 
     def locateEntitiesInDofVector(
         self,
-    ):
+    ) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
         within the DofVector structure.
 
@@ -334,7 +341,7 @@ class DofManager:
 
     def initializeVIJPattern(
         self,
-    ) -> tuple[ndarray, ndarray, dict]:
+    ) -> tuple[np.ndarray, np.ndarray, dict]:
         """Generate the IJ pattern for VIJ (COO) system matrices.
 
         Returns

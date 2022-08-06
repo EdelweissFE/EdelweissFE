@@ -53,7 +53,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from distutils.util import strtobool
 from fe.utils.misc import stringDict
-from fe.elements.node import Node
+from fe.variables.node import Node
 from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
 from fe.utils.math import evalModelAccessibleExpression

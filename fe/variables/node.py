@@ -25,21 +25,29 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Fri Jan 27 19:53:45 2017
+# Created on Fri Jan 27 19:53:45 2017
 
-@author: Matthias Neuner
-"""
+# @author: Matthias Neuner
+
+import numpy as np
 
 
 class Node:
-    """Base class for a finite element node,
-    currently nothing more than a dictioniary for label and coordinates"""
+    """A basic node.
+    It has a label, a spatial position, and may be associated with an arbitrary number of fields.
+
+    Parameters
+    ----------
+    label
+        The unique label for this node.
+    coordinates
+        The coordinates of this node.
+    """
 
     def __init__(
         self,
-        label,
-        coordinates,
+        label: int,
+        coordinates: np.ndarray,
     ):
 
         self.label = label
@@ -47,4 +55,11 @@ class Node:
         self.fields = {}
 
     def setFields(self, *fields):
+        """Activate fields on this node.
+
+        Parameters
+        ----------
+        fields
+           The fields to activate
+        """
         self.fields.update(fields)

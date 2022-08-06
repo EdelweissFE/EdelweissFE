@@ -46,6 +46,18 @@ Keyword: ``*generator``
 import importlib
 
 
-def getGeneratorByName(name):
+def getGeneratorFunction(name: str) -> type:
+    """Get the function type of the requested generator.
+
+    Parameters
+    ----------
+    name
+        The name of the generator class type to load.
+    Returns
+    -------
+    type
+        The generator function type.
+    """
+
     module = importlib.import_module("fe.generators." + name.lower())
     return module.generateModelData
