@@ -36,7 +36,7 @@ documentation = {
     "f(t)": "define a function depending on time"
 }
 
-from fe.stepactions.stepactionbase import StepActionBase
+from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
 

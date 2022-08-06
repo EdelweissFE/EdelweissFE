@@ -45,4 +45,3 @@ dirichlet,  name=z0u, nSet=gen_back,      field=displacement, 3=0.
 *step, jobName=job, maxInc=2e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1
 changeMaterialProperty, name=chProp,  material=myMaterial, index=0, f(t)='1000 - 500 * t'
 bodyforce, elSet=all, name=theBodyforce, forceVector='0, -10, 0'
-resetSolution, name=solReset, f(t)='True'
