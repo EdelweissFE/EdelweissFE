@@ -46,17 +46,9 @@ from multiprocessing import cpu_count
 import os
 
 class NISTParallel(NIST):
-    """ This is the Nonlinear Implicit STatic -- solver ** Parallel version**.
-    Designed to interface with Abaqus UELs
-    Public methods are: __init__(), initializeUP() and solveStep(...).
-    OutputManagers are updated at the end of each increment. """
-    
     identification = "NISTPSolver"
     
     def solveStep(self, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers):
-        """ Public interface to solve for an ABAQUS like step
-        returns: boolean Success, U vector, P vector, and the new current total time """
-        
         #determine number of threads
         self.numThreads = cpu_count()
 
@@ -70,11 +62,23 @@ class NISTParallel(NIST):
         return super().solveStep(step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
     
     def applyDirichletK(self, K, dirichlets):
-        """ Apply the dirichlet bcs on the global stiffnes matrix
-        -> is called by solveStep() before solving the global sys.
+        """Apply the dirichlet bcs on the global stiffnes matrix
+        Is called by solveStep() before solving the global sys.
         http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros
-        
+
         Cythonized version for speed!
+
+        Parameters
+        ----------
+        K
+            The system matrix.
+        dirichlets
+            The list of dirichlet boundary conditions.
+
+        Returns
+        -------
+        VIJSystemMatrix
+            The modified system matrix.
         """
             
         cdef int  i, j
@@ -103,10 +107,6 @@ class NISTParallel(NIST):
         return K
     
     def computeElements(self, elements, Un1, dU, P, K, F, increment):
-        """ Loop over all elements, and evalute them. 
-        Note that ABAQUS style is employed: element(Un+1, dUn+1) 
-        instead of element(Un, dUn+1)
-        -> is called by solveStep() in each iteration"""
 
         tic = getCurrentTime()
         

@@ -6,6 +6,29 @@ from numpy import ndarray
 class ConstraintBase(ABC):
     """The constraint base class.
 
+    Constraints can act on nodal variables, and scalar variables.
+    If scalar variables are required, the can be created on demand by
+    defining
+    :func:`~ConstraintBase.getNumberOfAdditionalNeededScalarVariables` and
+    :func:`~ConstraintBase.assignAdditionalScalarVariables`, which are called at the beginning of an analysis.
+
+    If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt (and the stiffness)
+    to be of the form
+
+    .. code-block:: console
+
+        [ node 1 - dofs field 1,
+          node 1 - dofs field 2,
+          node 1 - ... ,
+          node 1 - dofs field n,
+          node 2 - dofs field 1,
+          ... ,
+          node N - dofs field n,
+          scalar variable 1,
+          scalar variable 2,
+          ... ,
+          scalar variable J ].
+
     Parameters
     ----------
     name

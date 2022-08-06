@@ -322,11 +322,12 @@ class NIST:
         Returns
         -------
         tuple[DofVector,DofVector,DofVector,int,dict]
-            - The new solution vector.
-            - The solution increment.
-            - The new reaction vector.
-            - The number of required iterations
-            - The history of residuals per field
+            A tuple containing
+                - the new solution vector
+                - the solution increment
+                - the new reaction vector
+                - the number of required iterations
+                - the history of residuals per field
         """
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
@@ -343,7 +344,6 @@ class NIST:
         concentratedLoads = activeStepActions["concentratedLoads"]
         distributedLoads = activeStepActions["distributedLoads"]
         bodyForces = activeStepActions["bodyForces"]
-        # constraints = activeStepActions["constraints"]
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
             extrapolation, increment, dU, dirichlets, lastIncrementSize
@@ -951,7 +951,7 @@ class NIST:
 
         return activeActions
 
-    def finishStepActions(self, U: DofVector, P: DofVector, stepActions: list[StepActionBase]):
+    def finishStepActions(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
         """Called when all step actions should finish a step.
 
         Parameters
