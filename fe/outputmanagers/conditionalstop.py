@@ -41,7 +41,7 @@ Useful, e.g., for indirect displacement control.
 """
 documentation = {"stop": "model accessible function describing the stop condition"}
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
 from fe.utils.math import createModelAccessibleFunction
 from fe.utils.exceptions import ConditionalStop

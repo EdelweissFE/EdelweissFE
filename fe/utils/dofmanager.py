@@ -29,12 +29,14 @@
 
 # @author: Matthias Neuner
 """
-This module contains import classes for describing the global equation system by means of a sparse system
+This module contains important classes for describing the global equation system by means of a sparse system.
 """
 
 from collections import OrderedDict
 from fe.config.phenomena import getFieldSize, phenomena
+from fe.elements.node import Node
 import numpy as np
+from numpy import ndarray
 
 
 class VIJSystemMatrix(np.ndarray):
@@ -44,9 +46,20 @@ class VIJSystemMatrix(np.ndarray):
 
       * also contains the I and J vectors as class members,
       * allows to directly access (contiguous read and write) access of each entity via the [] operator
+
+    Parameters
+    ----------
+    nDof
+        The size of the system.
+    I
+        The I vector for the VIJ triple.
+    J
+        The J vector for the VIJ triple.
+    entitiesInVIJ
+        A dictionary containing the indices of an entitiy in the value vector.
     """
 
-    def __new__(cls, nDof, I, J, entitiesInVIJ):
+    def __new__(cls, nDof: int, I: ndarray, J: ndarray, entitiesInVIJ: dict):
 
         obj = np.zeros_like(I, dtype=float).view(cls)
 
@@ -69,9 +82,16 @@ class DofVector(np.ndarray):
     """
     This class represents a Dof Vector, which also has knowledge of each entities (elements, constraints) location within.
     The [] operator allows to access (non-contigouos read, write) at each entities location
+
+    Parameters
+    ----------
+    nDof
+        The size of the system.
+    entitiesInVIJ
+        A dictionary containing the indices of an entitiy in the value vector.
     """
 
-    def __new__(cls, nDof, entitiesInDofVector):
+    def __new__(cls, nDof: int, entitiesInDofVector: dict):
         obj = np.zeros(nDof, dtype=float).view(cls)
         obj.entitiesInDofVector = entitiesInDofVector
 
@@ -99,6 +119,11 @@ class DofManager:
      * handles the active fields on each node
      * counts the accumulated number of associated elements on each dof (for the Abaqus like convergence test)
      * supplies the framework with DofVectors and VIJSystemMatrices
+
+    Parameters
+    ----------
+    modelInfo
+        A dictionary containing the model tree.
     """
 
     def __init__(self, modelInfo):
@@ -125,7 +150,8 @@ class DofManager:
     def activateFieldsOnNodes(
         self,
     ):
-        """activate all fields on nodes, which are required in the analysis"""
+        """Activate all fields on nodes, which are required in the analysis."""
+
         modelInfo = self.modelInfo
 
         for element in modelInfo["elements"].values():
@@ -138,11 +164,16 @@ class DofManager:
                 for field in nodeFields:
                     node.fields[field] = True
 
-    def initializeDofVectorStructure(self):
-        """Loop over all nodes to generate the global field-dof indices. output is a tuple of:
+    def initializeDofVectorStructure(self) -> tuple[int, dict]:
+        """Loop over all nodes to generate the global field-dof indices.
 
-        * number of total DOFS
-        * orderedDict( (mechanical, indices), (nonlocalDamage, indices) (thermal, indices) ...)."""
+        Returns
+        -------
+        tuple
+            output is a tuple of:
+             * number of total DOFS
+             * dict( field : indices )
+        """
 
         nodes = self.modelInfo["nodes"]
         domainSize = self.modelInfo["domainSize"]
@@ -189,11 +220,17 @@ class DofManager:
 
         return nDof, indicesOfFieldsInDofVector
 
-    def countNodalFluxes(self):
-        """
-        for the VIJ (COO) system matrix and the Abaqus like convergence test,
+    def countNodalFluxes(self) -> tuple[int, dict[str:int]]:
+        """For the VIJ (COO) system matrix and the Abaqus like convergence test,
         the number of dofs 'entity-wise' is needed:
-        = Σ_(elements+constraints) Σ_nodes ( nDof (field) )"""
+        = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).
+
+        Returns
+        -------
+        tuple
+            - Number of accumulated fluxes in total
+            - Number of accumulated fluxes per field
+        """
 
         indicesOfFieldsInDofVector = self.indicesOfFieldsInDofVector
 
@@ -221,9 +258,15 @@ class DofManager:
             accumulatedNumberOfFieldFluxes,
         )
 
-    def countAccumulatedEntityDofs(self):
-        """generates some auxiliary information,
-        which may be required by some modules of EdelweissFE"""
+    def countAccumulatedEntityDofs(self) -> tuple[int, int, int, int]:
+        """Generates some auxiliary information,
+        which may be required by some modules of EdelweissFE.
+
+        Returns
+        -------
+        tuple[int,int,int,int]
+            nElDofs, nConstraintDofs, size of system matrix, largest number of dofs on a element
+        """
 
         elements = self.modelInfo["elements"]
         constraints = self.modelInfo["constraints"]
@@ -250,7 +293,13 @@ class DofManager:
         self,
     ):
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
-        within the DofVector structure"""
+        within the DofVector structure.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the location mapping.
+        """
 
         elements = self.modelInfo["elements"]
         constraints = self.modelInfo["constraints"]
@@ -285,8 +334,16 @@ class DofManager:
 
     def initializeVIJPattern(
         self,
-    ):
-        """Generate the IJ pattern for VIJ (COO) system matrices"""
+    ) -> tuple[ndarray, ndarray, dict]:
+        """Generate the IJ pattern for VIJ (COO) system matrices.
+
+        Returns
+        -------
+        tuple
+             - I vector
+             - J vector
+             - the entities to system matrix entry mapping.
+        """
 
         elements = self.modelInfo["elements"]
         constraints = self.modelInfo["constraints"]
@@ -325,9 +382,15 @@ class DofManager:
 
     def constructVIJSystemMatrix(
         self,
-    ):
+    ) -> VIJSystemMatrix:
         """Construct a VIJ (COO) Sparse System matrix object, which also has knowledge about
-        the location of each entity"""
+        the location of each entity.
+
+        Returns
+        -------
+        VIJSystemMatrix
+            The system Matrix.
+        """
 
         nDof = self.nDof
         I = self.I
@@ -338,14 +401,22 @@ class DofManager:
 
     def constructDofVector(
         self,
-    ):
+    ) -> DofVector:
         """Construct a vector with size=nDof and which has knowledge about
-        the location of each entity"""
+        the location of each entity.
+
+        Returns
+        -------
+        DofVector
+            A DofVector.
+        """
 
         nDof = self.nDof
         entitiesInDofVector = self.entitiesInDofVector
 
         return DofVector(nDof, entitiesInDofVector)
 
-    def getNodeForIndexInDofVector(self, index):
+    def getNodeForIndexInDofVector(self, index: int) -> Node:
+        """Find the node for a given index in the equuation system."""
+
         return self.indexToNodeMapping[index]

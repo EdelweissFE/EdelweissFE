@@ -29,7 +29,7 @@
 
 # @author: Matthias Neuner
 """
-The default way to create finit element meshes
+The default way to create finite element meshes
 is using the keywords
 
  * ``*node``
@@ -52,11 +52,24 @@ import numpy as np
 
 class AbqModelConstructor:
     def __init__(self, journal):
-        self.journal = journal
+        pass
 
-    def createGeometryFromInputFile(self, modelInfo, inputFile):
+    def createGeometryFromInputFile(self, modelInfo: dict, inputFile: dict) -> dict:
         """Collects nodes, elements, node sets and element sets from
-        the input file."""
+        the input file.
+
+        Parameters
+        ----------
+        modelInfo
+            A dictionary containing the model tree.
+        inputFile
+            A dictionary contaning the input file tree.
+
+        Returns
+        -------
+        dict
+            The updated model tree.
+        """
 
         domainSize = modelInfo["domainSize"]
 
@@ -189,6 +202,22 @@ class AbqModelConstructor:
         return modelInfo
 
     def createMaterialsFromInputFile(self, modelInfo, inputFile):
+        """Collects material defintions from the input file.
+        Creates instances of materials.
+
+        Parameters
+        ----------
+        modelInfo
+            A dictionary containing the model tree.
+        inputFile
+            A dictionary contaning the input file tree.
+
+        Returns
+        -------
+        dict
+            The updated model tree.
+        """
+
         for materialDef in inputFile["*material"]:
 
             materialName = materialDef["name"]
@@ -200,6 +229,21 @@ class AbqModelConstructor:
         return modelInfo
 
     def createConstraintsFromInputFile(self, modelInfo, inputFile):
+        """Collects constraint defintions from the input file.
+
+        Parameters
+        ----------
+        modelInfo
+            A dictionary containing the model tree.
+        inputFile
+            A dictionary contaning the input file tree.
+
+        Returns
+        -------
+        dict
+            The updated model tree.
+        """
+
         for constraintDef in inputFile["*constraint"]:
             name = constraintDef["name"]
             constraint = constraintDef["type"]
@@ -211,8 +255,22 @@ class AbqModelConstructor:
         return modelInfo
 
     def createSectionsFromInputFile(self, modelInfo, inputFile):
-        """Assign properties and section properties to all elements by
-        the given section definitions."""
+        """Collects section defintions from the input file.
+        Assigns properties and section properties to all elements by
+        the given section definitions.
+
+        Parameters
+        ----------
+        modelInfo
+            A dictionary containing the model tree.
+        inputFile
+            A dictionary contaning the input file tree.
+
+        Returns
+        -------
+        dict
+            The updated model tree.
+        """
 
         for secDef in inputFile["*section"]:
             name = secDef["name"]
@@ -232,6 +290,21 @@ class AbqModelConstructor:
         return modelInfo
 
     def createAnalyticalFieldsFromInputFile(self, modelInfo, inputFile):
+        """Collects field defintions from the input file.
+
+        Parameters
+        ----------
+        modelInfo
+            A dictionary containing the model tree.
+        inputFile
+            A dictionary contaning the input file tree.
+
+        Returns
+        -------
+        dict
+            The updated model tree.
+        """
+
         for fieldDef in inputFile["*analyticalField"]:
             analyticalFieldName = fieldDef["name"]
             analyticalFieldType = fieldDef["type"]

@@ -46,10 +46,6 @@ class Constraint(ConstraintBase):
 
     A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D."""
 
-    # linear constraints are independent of the solution vector,
-    # and, thus, need only be evaluated once (per step)
-    linearConstraint = True
-
     def __init__(self, name, options, modelInfo):
         super().__init__(name, options, modelInfo)
 
@@ -129,9 +125,6 @@ class Constraint(ConstraintBase):
 
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
-
-    # def assignAdditionalScalarVariables(self, scalarVariables):
-    #     super().assignAdditionalScalarVariables(scalarVariables)
 
     def applyConstraint(self, Un1, dU, PExt, V, increment):
 

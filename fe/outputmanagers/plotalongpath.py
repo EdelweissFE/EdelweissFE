@@ -25,15 +25,13 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mon Apr 17 11:37:26 2017
+# Created on Mon Apr 17 11:37:26 2017
 
-@author: Matthias Neuner
+# @author: Matthias Neuner
+"""
 
 Plot result for a nodeSet or an elementSet along the true geometrical distance.
 Corresponds to the plot along path functionality in Abaqus.
-
-Datalines:
 """
 documentation = {
     "fieldOutput": "fieldOutput to be plotted (defined on a nodeSet/elementSet)",
@@ -44,7 +42,7 @@ documentation = {
     "normalize": "(optional), normalize peak to 1.0",
 }
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import stringDict
 from fe.utils.math import createMathExpression

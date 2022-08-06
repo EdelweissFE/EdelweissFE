@@ -38,7 +38,7 @@ Module meshplot divided into classes:
     * Outputmanager:
         creats the plotting specific for the defined keyword lines
 """
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 import numpy as np
 from fe.utils.misc import stringDict
 from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset

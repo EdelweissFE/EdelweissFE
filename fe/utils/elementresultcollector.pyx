@@ -26,9 +26,8 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 """
-Created on Tue Sep 19 20:57:09 2017
-
-@author: matthias
+Collecting elemental results may be a perfomance critical part.
+This module provides a cdef class for the efficient gathering.
 """
 
     

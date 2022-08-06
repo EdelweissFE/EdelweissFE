@@ -25,11 +25,6 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Sat May  6 20:05:41 2017
-
-@author: Matthias Neuner
-"""
 
 from abc import ABC, abstractmethod
 from fe.utils.fieldoutput import FieldOutputController
@@ -38,10 +33,25 @@ from fe.utils.dofmanager import DofVector
 
 
 class StepActionBase(ABC):
-    """This is the abstract base class for all step actions managers.
-    User defined step actions must implement the abstract methods."""
+    """This is the abstract base class for all step actions.
+    User defined step actions must implement the abstract methods.
 
-    identification = "StepActionBase"
+
+    Parameters
+    ----------
+    name
+        The name of this step action.
+    definition
+        A dictionary containing the options for this step action.
+    jobInfo
+        A dictionary containing the information about the job.
+    modelInfo
+        A dictionary containing the model tree.
+    fieldOutputController
+        The fieldput controlling object.
+    journal
+        The journal object for logging.
+    """
 
     @abstractmethod
     def __init__(
@@ -53,24 +63,6 @@ class StepActionBase(ABC):
         fieldOutputController: FieldOutputController,
         journal: Journal,
     ):
-        """Is called when an updated definition is present for a new step.
-
-        Parameters
-        ----------
-        name
-            The name of this step action.
-        definition
-            A dictionary containing the options for this step action.
-        jobInfo
-            A dictionary containing the information about the job.
-        modelInfo
-            A dictionary containing the model tree.
-        fieldOutputController
-            The fieldput controlling object.
-        journal
-            The journal object for logging.
-        """
-
         pass
 
     @abstractmethod

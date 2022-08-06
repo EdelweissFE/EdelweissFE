@@ -34,3 +34,12 @@ Module ``fe.constraints.rigidbody``
 .. literalinclude:: ../../../testfiles/RigidBodyConstraintLargeDeformations3D/test.inp
     :language: console
     :caption: Example: ``testfiles/RigidBodyConstraintLargeDeformations3D/test.inp``
+
+
+Implementing your own constraints
+---------------------------------
+
+Subclass from the constraint base class in module ``fe.constraints.base.constraintbase``
+
+.. automodule:: fe.constraints.base.constraintbase
+    :members: 

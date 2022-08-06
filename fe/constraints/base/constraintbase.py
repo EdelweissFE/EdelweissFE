@@ -4,19 +4,20 @@ from numpy import ndarray
 
 
 class ConstraintBase(ABC):
+    """The constraint base class.
+
+    Parameters
+    ----------
+    name
+        The name of the constraint.
+    options
+        A dictionary containing the options for the constraint.
+    modelInfo
+        A dictionary containing the model tree.
+    """
+
     @abstractmethod
     def __init__(self, name: str, options: dict, modelInfo: dict):
-        """The constraint base class.
-
-        Parameters
-        ----------
-        name
-            The name of the constraint.
-        options
-            A dictionary containing the options for the constraint.
-        modelInfo
-            A dictionary containing the model tree.
-        """
 
         self.name = name
         self.nodes = []
@@ -42,7 +43,6 @@ class ConstraintBase(ABC):
 
         pass
 
-    # @abstractmethod
     def assignAdditionalScalarVariables(self, scalarVariables: list[ScalarVariable]):
         """Assign a list of scalar variables associated with this constraint.
 
@@ -57,7 +57,7 @@ class ConstraintBase(ABC):
 
     @abstractmethod
     def applyConstraint(self, Un1: ndarray, dU: ndarray, PExt: ndarray, V: ndarray, increment: tuple):
-        """Apply the constraint, and add the contributions to the external load vector and the system matrix.
+        """Apply the constraint.  Add the contributions to the external load vector and the system matrix.
 
         Parameters
         ----------

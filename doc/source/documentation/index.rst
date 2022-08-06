@@ -18,4 +18,5 @@ Documentation
    output
    solvers
    parallelization
+   journal
    exceptions

@@ -74,7 +74,7 @@ class StepAction(StepActionBase):
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
             currentResults[:] = float(self.value)
             self.journal.message(
-                "setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.identification
+                "Setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.name
             )
             self.fieldOutput.setResults(currentResults)
 

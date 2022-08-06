@@ -19,10 +19,15 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../../"))
 
-extensions = ["sphinx.ext.autodoc"]
+extensions = [
+        "sphinx.ext.autodoc", 
+        "sphinx.ext.napoleon", 
+        ]
 
 templates_path = ["_templates"]
 exclude_patterns = []
+
+autodoc_typehints = "both"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -36,7 +41,6 @@ html_static_path = ["_static"]
 html_css_files = [
     "css/custom.css",
 ]
-
 
 # for execution python code in text
 import sys

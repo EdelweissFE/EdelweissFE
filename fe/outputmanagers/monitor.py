@@ -43,7 +43,7 @@ documentation = {
     "f(x)": "(optional), apply math on the fieldOutput",
 }
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import stringDict
 from fe.utils.math import createMathExpression
 

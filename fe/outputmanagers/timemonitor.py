@@ -32,7 +32,7 @@ Created on Thu Apr 13 14:08:32 2017
 """
 
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import stringDict
 import numpy as np

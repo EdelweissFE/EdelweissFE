@@ -82,35 +82,6 @@ def gatherStepActions(step, jobInfo, modelInfo, time, U, P, stepActions, fieldOu
     return stepActions
 
 
-# def performModelChanges(modelChangeDefinitions : dict , modelInfo : dict):
-#     """We may change something fundamentally in the model.
-
-#     Parameters
-#     ----------
-#     modelChangeDefinitions
-#         the dictionary containing the definition of the change.
-#         Requires at least the entry 'change' to determine the kind of change.
-#     modelInfo
-#         The modelInfo tree.
-
-#     Returns
-#     -------
-#     tuple
-#         Updated modelInfo, and a boolean determining if the DofManager must be recreated.
-
-#     """
-
-#     rebuildDofManager = False
-
-#     for up in modelUpdates:
-
-#         if up['change'].lower() == 'updateconstraint':
-#             constraint = up['constraint']
-#             modelInfo['constraints'][constraint].update(up)
-
-#     return modelInfo, rebuildDofManager
-
-
 def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
     """This is core function of the finite element analysis.
     Based on the keyword ``*job``, the finite element model is defined.

@@ -45,7 +45,7 @@ documentation = {
     "intermediateSaveInterval": 'step option in category "Ensight": save .case file every N increments',
 }
 
-from fe.outputmanagers.outputmanagerbase import OutputManagerBase
+from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 import os
 import datetime
@@ -53,9 +53,11 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from distutils.util import strtobool
 from fe.utils.misc import stringDict
+from fe.elements.node import Node
 from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
 from fe.utils.math import evalModelAccessibleExpression
+from io import TextIOBase
 
 
 def writeCFloat(f, ndarray):
@@ -83,16 +85,32 @@ ensightPerElementVariableTypes = {
 
 
 class EnsightUnstructuredPart:
-    """define an unstructured part, by a list of nodes and a dictionary of elements.
+    """Represents an unstructured ENsight part, defined by a list of nodes and a dictionary of elements.
     Each dictionary entry consists of a list of tuples of elementlabel and nodelist:
-    {strElementType : [ ( intLabel = None, [nodeList] ) ]}"""
+
+    Parameters
+    ----------
+    description
+        A string describing the name of this part
+    partNumber
+        A unique integer identifying this part
+    nodes
+        The list of nodes in this part
+    elementTree
+        A dictionary, with entries for
+            - each element shape,
+            - containing a list of elements
+                - defined by a tuple of
+                    - a label and
+                    - the node index list.
+    """
 
     def __init__(
         self,
-        description,
-        partNumber,
-        nodes,
-        elementTree,
+        description: str,
+        partNumber: int,
+        nodes: list[Node],
+        elementTree: dict[str, list[tuple[int, list[Node]]]],
     ):
 
         self.structureType = "coordinates"
@@ -105,7 +123,19 @@ class EnsightUnstructuredPart:
         self.partNumber = partNumber
         self.nodeCoordinateArray = np.asarray([node.coordinates for node in nodes])
 
-    def writeToFile(self, binaryFileHandle, printNodeLabels=True, printElementLabels=True):
+    def writeToFile(self, binaryFileHandle=TextIOBase, printNodeLabels: bool = True, printElementLabels: bool = True):
+        """
+        Write the part to a file.
+
+        Parameters
+        ----------
+        binaryFileHandle
+            The file handle for writing.
+        printNodeLabels
+            Write the node labels.
+        printElementLabels
+            Write the element labels.
+        """
 
         if len(self.nodeCoordinateArray.shape) > 1 and self.nodeCoordinateArray.shape[1] < 3:
             extendTo3D = True
@@ -146,10 +176,29 @@ class EnsightUnstructuredPart:
 
 
 class EnsightTimeSet:
-    """defines a set which may be used by EnsightGeometry, EnsightStructuredPart, EnsightUnstructuredPart and is written into the case file"""
+    """Represents a set which may be used by EnsightGeometry, EnsightStructuredPart, EnsightUnstructuredPart and is written into the case file.
+
+    Parameters
+    ----------
+    number
+        The unique number of this time set.
+    description
+        A description of this time set.
+    fileNameStartNumber
+        Counter start of the multiple files counter.
+    fileNameNumberIncrement
+        Counter increment of the multpple files counter.
+    timeValues
+        A list of time values.
+    """
 
     def __init__(
-        self, number=1, description="timeStepDesc", fileNameStartNumber=0, fileNameNumberIncrement=1, timeValues=None
+        self,
+        number: int = 1,
+        description: str = "timeStepDesc",
+        fileNameStartNumber: int = 0,
+        fileNameNumberIncrement: int = 1,
+        timeValues: list = None,
     ):
         self.number = number
         self.description = description
@@ -158,26 +207,33 @@ class EnsightTimeSet:
         self.timeValues = timeValues if timeValues is not None else []
 
 
-class EnsightGeometryTrend:
-    """container class for the time dependent evolution of the geometry,
-    establishes the connection between the geometry entities and a EnsightTimeSet"""
-
-    def __init__(self, ensightTimeSet, ensightGeometryList=None):
-        self.timeSet = ensightTimeSet
-        self.geometryList = ensightGeometryList if ensightGeometryList is not None else []
-
-
 class EnsightGeometry:
-    """container class for one or more EnsightParts at a certain time state, handles also the file writing operation"""
+    """Container class for one or more EnsightParts at a certain time state, handles also the file writing operation.
+
+    Parameters
+    ----------
+    name
+        The name.
+    descriptionLine1
+        Description line 1.
+    descriptionLine2
+        Description line 2.
+    ensightPartList
+        The list of unstructured parts in this geometry.
+    nodeIdOption
+        Ensight option for handling the node ids.
+    elementIdOption
+        Ensight option for handling the elemnt ids.
+    """
 
     def __init__(
         self,
-        name="geometry",
-        descriptionLine1="",
-        descriptionLine2="",
-        ensightPartList=None,
-        nodeIdOption="given",
-        elementIdOption="given",
+        name: str = "geometry",
+        descriptionLine1: str = "",
+        descriptionLine2: str = "",
+        ensightPartList: list[EnsightUnstructuredPart] = None,
+        nodeIdOption: str = "given",
+        elementIdOption: str = "given",
     ):
         self.name = name
         self.descLine1 = descriptionLine1
@@ -186,7 +242,14 @@ class EnsightGeometry:
         self.nodeIdOption = nodeIdOption
         self.elementIdOption = elementIdOption
 
-    def writeToFile(self, fileHandle):
+    def writeToFile(self, fileHandle: TextIOBase):
+        """Write the variable to a file."
+
+        Parameters
+        ----------
+        fileHandle
+            The file handle for writing the file.
+        """
         f = fileHandle
         writeC80(f, self.descLine1)
         writeC80(f, self.descLine2)
@@ -207,15 +270,46 @@ class EnsightGeometry:
             part.writeToFile(f, printNodeLabels, printElementLabels)
 
 
+class EnsightGeometryTrend:
+    """Container class for the time dependent evolution of the geometry,
+    establishes the connection between the geometry entities and a EnsightTimeSet.
+
+    Parameters
+    ----------
+    ensightTimeSet
+        The Timeset.
+    ensightGeometryList
+        A list of evolving Ensight Geometries.
+    """
+
+    def __init__(self, ensightTimeSet: EnsightTimeSet, ensightGeometryList: list[EnsightGeometry] = None):
+        self.timeSet = ensightTimeSet
+        self.geometryList = ensightGeometryList if ensightGeometryList is not None else []
+
+
 class EnsightVariableTrend:
-    """container class for the time dependent evolution of one variable,
-    establishes the connection between EnsightVariable entities and a EnsighTimeSet"""
+    """Container class for the time dependent evolution of one variable,
+    establishes the connection between EnsightVariable entities and a EnsighTimeSet.
+
+    Parameters
+    ----------
+    ensightTimeSet
+        The timeset.
+    variableName
+        The name of this variable.
+    ensightVariableList
+        The list of variables over time.
+    variableType
+        The Ensight valid type of this variable.
+    description
+        The description of this variable.
+    """
 
     def __init__(
         self,
-        ensightTimeSet,
-        variableName,
-        ensightVariableList=None,
+        ensightTimeSet: EnsightTimeSet,
+        variableName: str,
+        ensightVariableList: list = None,
         variableType="scalar per node",
         description="variableTrendDescription",
     ):
@@ -227,11 +321,23 @@ class EnsightVariableTrend:
 
 
 class EnsightPerNodeVariable:
-    """container class for data for one certain variable, defined for one or more parts (classification by partID), at a certain time state.
+    """Container class for data for one certain variable, defined for one or more parts (classification by partID), at a certain time state.
     For each part the structuretype ("coordinate" or "block") has to be defined.
-    Each part-variable assignment is defined by a dictionary entry of type: { EnsightPart: np.array(variableValues) }"""
+    Each part-variable assignment is defined by a dictionary entry of type: { EnsightPart: np.array(variableValues) }
 
-    def __init__(self, name, variableDimension, ensightPartsDict=None):
+    Parameters
+    ----------
+    name
+        The name of this variable.
+    variableDimension
+        The size of the variable per value.
+    ensightPartsDict
+        A dictionary defining the values for given Ensight parts.
+    """
+
+    def __init__(
+        self, name: str, variableDimension: int, ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray] = None
+    ):
         self.name = name
         self.description = name
         self.partsDict = ensightPartsDict or {}  # { EnsightPart: np.array(variableValues) }
@@ -240,8 +346,16 @@ class EnsightPerNodeVariable:
 
     def writeToFile(
         self,
-        fileHandle,
+        fileHandle: TextIOBase,
     ):
+        """Write the variable to a file.
+
+        Parameters
+        ----------
+        fileHandle
+            The file handle for writing.
+        """
+
         f = fileHandle
         writeC80(f, self.description)
         for ensightPartID, (structureType, values) in self.partsDict.items():
@@ -256,20 +370,38 @@ class EnsightPerNodeVariable:
 class EnsightPerElementVariable:
     """Container class for data for one certain variable, defined for one or more parts (classification by partID), at a certain time state.
     For each part the structuretype ("coordinate" or "block") has to be defined.
-    Each part-variable assignment is defined by a dictionary entry of type: { EnsightPart: np.array(variableValues) }"""
+    Each part-variable assignment is defined by a dictionary entry of type: { EnsightPart: np.array(variableValues) }
+
+    Parameters
+    ----------
+    name
+        The name of this variable.
+    variableDimension
+        The size of this variable per entry.
+    ensightPartsDict
+        The dictionary containing parts and their values.
+    """
 
     def __init__(
         self,
-        name,
-        variableDimension,
-        ensightPartsDict=None,
+        name: str,
+        variableDimension: int,
+        ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray] = None,
     ):
+
         self.name = name
         self.description = name
         self.partsDict = ensightPartsDict or {}
         self.varType = ensightPerElementVariableTypes[variableDimension]
 
-    def writeToFile(self, fileHandle):
+    def writeToFile(self, fileHandle: TextIOBase):
+        """Write the variable to a file.
+
+        Parameters
+        ----------
+        fileHandle
+            The file handle for writing.
+        """
 
         f = fileHandle
         writeC80(f, self.description)
@@ -282,7 +414,20 @@ class EnsightPerElementVariable:
 
 
 class EnsightChunkWiseCase:
-    def __init__(self, caseName, directory="", writeTransientSingleFiles=True):
+    """An Ensight case, containg of time sets, geometry trends and variable trends,
+    which can be written in chunks at certain times.
+
+    Parameters
+    ----------
+    caseName
+        The name of this case.
+    directory
+        The path to write.
+    writeTransientSingleFiles
+        Write single or multiple files.
+    """
+
+    def __init__(self, caseName: str, directory: str = "", writeTransientSingleFiles: bool = True):
         self.directory = directory
         self.caseName = caseName
         self.caseFileNamePrefix = os.path.join(directory, caseName)
@@ -295,13 +440,32 @@ class EnsightChunkWiseCase:
         if not os.path.exists(self.caseFileNamePrefix):
             os.mkdir(self.caseFileNamePrefix)
 
-    def setCurrentTime(self, timeAndFileSetNumber, timeValue):
+    def setCurrentTime(self, timeAndFileSetNumber: int, timeValue: float):
+        """Set the current time of the case.
+        Parameters
+        ----------
+        timeAndFileSetNumber
+            The number of the file and time set.
+        timeValue
+            The time value.
+        """
+
         if not timeAndFileSetNumber in self.timeAndFileSets:
             self.timeAndFileSets[timeAndFileSetNumber] = EnsightTimeSet(timeAndFileSetNumber, "noDesc", 0, 1)
         tfSet = self.timeAndFileSets[timeAndFileSetNumber]
         tfSet.timeValues.append(timeValue)
 
-    def writeGeometryTrendChunk(self, ensightGeometry, timeAndFileSetNumber=1):
+    def writeGeometryTrendChunk(self, ensightGeometry: EnsightGeometryTrend, timeAndFileSetNumber: int = 1):
+        """
+        Write a chunk of geometry trend.
+
+        Parameters
+        ----------
+        ensightGeometry
+            The trend to write.
+        timeAndFileSetNumber
+            The associated time and fileset number.
+        """
 
         if ensightGeometry.name not in self.fileHandles:
             fileName = os.path.join(
@@ -322,7 +486,17 @@ class EnsightChunkWiseCase:
             ensightGeometry.writeToFile(f)
             writeC80(f, "END TIME STEP")
 
-    def writeVariableTrendChunk(self, ensightVariable, timeAndFileSetNumber=2):
+    def writeVariableTrendChunk(self, ensightVariable: EnsightVariableTrend, timeAndFileSetNumber: int = 2):
+        """
+        Write a chunk of variable trend.
+
+        Parameters
+        ----------
+        ensightVariable
+            The trend to write.
+        timeAndFileSetNumber
+            The associated time and fileset number.
+        """
 
         if ensightVariable.name not in self.fileHandles:
 
@@ -341,7 +515,17 @@ class EnsightChunkWiseCase:
             ensightVariable.writeToFile(f)
             writeC80(f, "END TIME STEP")
 
-    def finalize(self, replaceTimeValuesByEnumeration=True, closeFileHandes=True):
+    def finalize(self, replaceTimeValuesByEnumeration: bool = True, closeFileHandes: bool = True):
+        """Write the file .case file containing all the required information."
+
+        Parameters
+        ----------
+        replaceTimeValuesByEnumeration
+            Remove the factor of time and make integers as discrete steps only.
+        closeFileHandes
+            Close the file handles after writing.
+        """
+
         caseFName = self.caseFileNamePrefix + ".case"
 
         if closeFileHandes:
@@ -388,10 +572,18 @@ class EnsightChunkWiseCase:
                 )
 
 
-def createUnstructuredPartFromElementSet(setName, elementSet, partID):
+def createUnstructuredPartFromElementSet(setName, elementSet: list, partID: int):
     """Determines the element and node list for an Ensightpart from an
     element set. The reduced, unique node set is generated, as well as
-    the element to node index mapping for the ensight part."""
+    the element to node index mapping for the ensight part.
+
+    Parameters
+    ----------
+    elementSet
+        The list of elements defining this part.
+    partID
+        The id of this part.
+    """
 
     nodeCounter = 0
     partNodes = OrderedDict()  # node -> index in nodelist
