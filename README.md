@@ -1,6 +1,6 @@
 # EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
 
-See the [documentation](https://edelweissfe.github.io/edelweissfe).
+See the [documentation](https://edelweissfe.github.io/EdelweissFE).
 
 EdelweissFE aims at an easy to understand, yet efficient implementation of the finite element method.
 Some features are:
