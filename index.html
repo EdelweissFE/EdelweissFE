@@ -17,7 +17,6 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -76,21 +75,26 @@
   <section id="welcome-to-edelweissfe">
 <h1>Welcome to EdelweissFE<a class="headerlink" href="#welcome-to-edelweissfe" title="Permalink to this heading"></a></h1>
 <p>EdelweissFE is a light-weight, platform-independent, parallel finite element framework.
-EdelweissFE makes use of the <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a> library for finite element and constitutive model formulations.</p>
+By default, it makes use of the <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a> library for finite element and constitutive model formulations.</p>
 <p>EdelweissFE aims to be…</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>… a development environment for constitutive models and finite elements</p></li>
-<li><p>… an easy to use tool for coupled problems</p></li>
-<li><p>… a learning platform for learning the finite element method</p></li>
-<li><p>… a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique), which are often difficult to implement in mature, MPI-parallelized codes</p></li>
-<li><p>… an efficient tool for nonlinear simulations up to medium sized problems (<span class="math notranslate nohighlight">\(10^5\)</span> degrees of freedom)</p></li>
+<li><p>… a development and learning environment for constitutive models and finite elements,</p></li>
+<li><p>… an easy to use tool for coupled problems,</p></li>
+<li><p>… a learning platform for learning the finite element method,</p></li>
+<li><p>… a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique),
+which are often more difficult and time consuming to implement in mature, MPI-parallelized codes,</p></li>
+<li><p>… an efficient tool for nonlinear simulations up to medium sized problems (~:math:<cite>10^5</cite> degrees of freedom).</p></li>
 </ul>
 </div></blockquote>
 <p>EdelweissFE does not want to …</p>
-<ul class="simple">
-<li><p>… compete with more mature (MPI-parallelized) codes such as <a class="reference external" href="https://mooseframework.inl.gov/">MOOSE</a>, which are also compatibel with the <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a> library, but less easy to use. Usually, EdelweissFE is used for developing and debugging constitutive models until they are ready for production runs on HPC system using more mature frameworks.</p></li>
+<blockquote>
+<div><ul class="simple">
+<li><p>… compete with more mature (MPI-parallelized) codes such as <a class="reference external" href="https://mooseframework.inl.gov/">MOOSE</a>,
+which are also compatible with the <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a> library, but less suitable as development environments.
+Usually, EdelweissFE is used for developing and debugging constitutive models until they meet the requirements for production runs on HPC system using more mature frameworks.</p></li>
 </ul>
+</div></blockquote>
 <figure class="align-center">
 <a class="reference internal image-reference" href="_images/borehole.png"><img alt="_images/borehole.png" src="_images/borehole.png" style="width: 240px;" /></a>
 </figure>

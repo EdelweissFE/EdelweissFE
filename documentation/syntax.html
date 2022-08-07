@@ -51,17 +51,20 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -119,6 +122,41 @@ and available keywords can be printed using</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python edelweiss.py --keywords</span>
 </pre></div>
 </div>
+<span class="target" id="module-fe.utils.inputfileparser"></span><p>Inputfileparser for inputfiles employing an Abaqus-like syntax.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="fe.utils.inputfileparser.parseInputFile">
+<span class="sig-prename descclassname"><span class="pre">fe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">parseInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentKeyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existingFileDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/inputfileparser.html#parseInputFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.inputfileparser.parseInputFile" title="Permalink to this definition"></a></dt>
+<dd><p>Parse an Abaqus-like input file to generate a dictionary with its content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – The name of the file to parse.</p></li>
+<li><p><strong>currentKeyword</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – If nested parsing is performed by using <code class="docutils literal notranslate"><span class="pre">*include</span></code>, this option tells which
+keyword is currently active.</p></li>
+<li><p><strong>existingFileDict</strong> (<em>Optional</em><em>[</em><em>CaseInsensitiveDict</em><em>]</em>) – An existing dictionary to append. If Nonde, a new dictionary is created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed input file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CaseInsensitiveDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fe.utils.inputfileparser.printKeywords">
+<span class="sig-prename descclassname"><span class="pre">fe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">printKeywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/inputfileparser.html#printKeywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.inputfileparser.printKeywords" title="Permalink to this definition"></a></dt>
+<dd><p>Print the input file language set.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fe.utils.inputfileparser.printKeywordsRST">
+<span class="sig-prename descclassname"><span class="pre">fe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">printKeywordsRST</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/inputfileparser.html#printKeywordsRST"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.inputfileparser.printKeywordsRST" title="Permalink to this definition"></a></dt>
+<dd><p>Print the input file language set in an RST conform format.</p>
+</dd></dl>
+
 <section id="keywords">
 <h2>Keywords<a class="headerlink" href="#keywords" title="Permalink to this heading"></a></h2>
 <table class="colwidths-given docutils align-default" id="id1" style="width: 100%">

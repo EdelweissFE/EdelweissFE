@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journal &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exceptions" href="exceptions.html" />
+    <link rel="prev" title="Parallelization" href="parallelization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>Journal</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/journal.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="journal">
+<h1>Journal<a class="headerlink" href="#journal" title="Permalink to this heading"></a></h1>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.journal.journal</span></code></p>
+<span class="target" id="module-fe.journal.journal"></span><p>This module provides journaling capabilities,
+which can be used troughout EdelweissFE.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.journal.journal.</span></span><span class="sig-name descname"><span class="pre">Journal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressFromLevel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal" title="Permalink to this definition"></a></dt>
+<dd><p>This class provides an interface to present messages to the user via console
+output and/or file output.
+Information messages can be sorted by the importance level.
+Suppressing certain levels of output is possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>verbose</strong> (<em>bool</em>) – Print to the terminal.</p></li>
+<li><p><strong>outputFile</strong> (<em>str</em>) – Write to a file.</p></li>
+<li><p><strong>suppressFromLevel</strong> (<em>int</em>) – Suppress certain levels.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.errorMessage" title="fe.journal.journal.Journal.errorMessage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errorMessage</span></code></a>(errorMessage, senderIdentification)</p></td>
+<td><p>Print an error message.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.message" title="fe.journal.journal.Journal.message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message</span></code></a>(message, senderIdentification[, level])</p></td>
+<td><p>Write message to log.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.printSeperationLine" title="fe.journal.journal.Journal.printSeperationLine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">printSeperationLine</span></code></a>()</p></td>
+<td><p>Write a seperation file to log.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.printTable" title="fe.journal.journal.Journal.printTable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">printTable</span></code></a>(table, senderIdentification[, ...])</p></td>
+<td><p>Print a pretty table.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.setNewLineWidth" title="fe.journal.journal.Journal.setNewLineWidth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNewLineWidth</span></code></a>([newWidth, leftColumn])</p></td>
+<td><p>Set the line width of the log file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.setVerbose" title="fe.journal.journal.Journal.setVerbose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVerbose</span></code></a>()</p></td>
+<td><p>Set highest verbosity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.journal.journal.Journal.squelch" title="fe.journal.journal.Journal.squelch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squelch</span></code></a>(level)</p></td>
+<td><p>Suppress all messages.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.errorMessage">
+<span class="sig-name descname"><span class="pre">errorMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">errorMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">senderIdentification</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.errorMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.errorMessage" title="Permalink to this definition"></a></dt>
+<dd><p>Print an error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>errorMessage</strong> – The message.</p></li>
+<li><p><strong>senderIdentification</strong> – The name of the sender.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.message">
+<span class="sig-name descname"><span class="pre">message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">senderIdentification</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.message" title="Permalink to this definition"></a></dt>
+<dd><p>Write message to log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – The message.</p></li>
+<li><p><strong>senderIdentification</strong> (<em>str</em>) – The name of the sender.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – Level of message.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.printSeperationLine">
+<span class="sig-name descname"><span class="pre">printSeperationLine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.printSeperationLine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.printSeperationLine" title="Permalink to this definition"></a></dt>
+<dd><p>Write a seperation file to log.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.printTable">
+<span class="sig-name descname"><span class="pre">printTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">senderIdentification</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">printHeaderRow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.printTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.printTable" title="Permalink to this definition"></a></dt>
+<dd><p>Print a pretty table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The table as nested list.</p></li>
+<li><p><strong>senderIdentification</strong> (<em>str</em>) – The name of the sender.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The level of the mesage.</p></li>
+<li><p><strong>printHeaderRow</strong> (<em>bool</em>) – Special formatting for first row.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.setNewLineWidth">
+<span class="sig-name descname"><span class="pre">setNewLineWidth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newWidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leftColumn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.setNewLineWidth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.setNewLineWidth" title="Permalink to this definition"></a></dt>
+<dd><p>Set the line width of the log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>newWidth</strong> (<em>int</em>) – New total width.</p></li>
+<li><p><strong>leftColumn</strong> (<em>int</em>) – Width of the main column.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.setVerbose">
+<span class="sig-name descname"><span class="pre">setVerbose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.setVerbose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.setVerbose" title="Permalink to this definition"></a></dt>
+<dd><p>Set highest verbosity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.journal.journal.Journal.squelch">
+<span class="sig-name descname"><span class="pre">squelch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/journal/journal.html#Journal.squelch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.journal.journal.Journal.squelch" title="Permalink to this definition"></a></dt>
+<dd><p>Suppress all messages.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parallelization.html" class="btn btn-neutral float-left" title="Parallelization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Nonlinear solvers" href="solvers.html" />
+    <link rel="next" title="Plotting" href="plotter.html" />
     <link rel="prev" title="The DOF manager" href="dofmanager.html" /> 
 </head>
 
@@ -48,13 +48,14 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Outputmanagers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.ensight"><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format</a></li>
@@ -65,8 +66,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -166,10 +169,10 @@ They are defined globally:</p>
 <p>Output manager for Ensight exports.
 If loaded, it automatically exports all elSets as Ensight parts.
 For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.</p>
-<dl class="simple">
-<dt>ATTENTION: </dt><dd><p>fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.</p>
-</dd>
-</dl>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.</p>
+</div>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="s1">&#39;overwrite=y|n|yes|no|True|False|&#39;</span><span class="p">,</span>
@@ -258,11 +261,8 @@ options</p>
 </section>
 <section id="module-fe.outputmanagers.plotalongpath">
 <span id="plotalongpath-plot-a-result-along-a-line"></span><h2><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line<a class="headerlink" href="#module-fe.outputmanagers.plotalongpath" title="Permalink to this heading"></a></h2>
-<p>Created on Mon Apr 17 11:37:26 2017</p>
-<p>&#64;author: Matthias Neuner</p>
 <p>Plot result for a nodeSet or an elementSet along the true geometrical distance.
 Corresponds to the plot along path functionality in Abaqus.</p>
-<p>Datalines:</p>
 <div class="literal-block-wrapper docutils container" id="id8">
 <div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;axSpec&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), axSpec (MATLAB syntax) in the figure&#39;</span><span class="p">,</span>
@@ -282,14 +282,14 @@ Useful, e.g., for indirect displacement control.</p>
 <div class="literal-block-wrapper docutils container" id="id9">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=conditionalstop, jobName=myJob, name=condStop</span>
-<span class="go">    fieldOutput=damage, f(x)=&#39;x  &gt;= .99&#39;</span>
+<span class="go">    stop=&#39;fieldOutputs[&quot;damage&quot;]  &gt;= .99&#39;</span>
+<span class="go">    stop=&#39;fieldOutputs[&quot;displacement&quot;]  &lt; -5&#39;</span>
 </pre></div>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id10">
 <div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;create the expression to formulate the stop condition&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;fieldOutput to be monitored&#39;</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;stop&#39;</span><span class="p">:</span> <span class="s1">&#39;model accessible function describing the stop condition&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -301,7 +301,7 @@ Useful, e.g., for indirect displacement control.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="dofmanager.html" class="btn btn-neutral float-left" title="The DOF manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="solvers.html" class="btn btn-neutral float-right" title="Nonlinear solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plotter.html" class="btn btn-neutral float-right" title="Plotting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

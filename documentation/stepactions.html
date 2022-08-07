@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stepactions &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Step actions &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -48,11 +48,12 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Stepactions</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Step actions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bodyforce-bodyforce-loads"><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dirichlet-standard-birichlet-bc"><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard birichlet BC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#distributedload-surfaces-loads"><code class="docutils literal notranslate"><span class="pre">distributedload</span></code> - surfaces loads</a></li>
@@ -62,14 +63,18 @@
 <li class="toctree-l3"><a class="reference internal" href="#initalizemateiral-initialize-materials"><code class="docutils literal notranslate"><span class="pre">initalizemateiral</span></code> - Initialize materials</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nodeforces-concentrated-node-forces"><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setfield-set-field-to-prescribed-value"><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set field to prescribed value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modelupdate-update-the-model"><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-your-own-step-actions">Implementation your own step actions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -92,7 +97,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">Documentation</a> &raquo;</li>
-      <li>Stepactions</li>
+      <li>Step actions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/documentation/stepactions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,12 +108,13 @@
            <div itemprop="articleBody">
              
   <section id="module-fe.config.stepactions">
-<span id="stepactions"></span><h1>Stepactions<a class="headerlink" href="#module-fe.config.stepactions" title="Permalink to this heading"></a></h1>
-<p>Stepactions are defined within a <code class="docutils literal notranslate"><span class="pre">*step</span></code> definition, 
+<span id="step-actions"></span><h1>Step actions<a class="headerlink" href="#module-fe.config.stepactions" title="Permalink to this heading"></a></h1>
+<p>Step actions define actions run during a simulation.
+They are defined within a <code class="docutils literal notranslate"><span class="pre">*step</span></code> definition, line by line,
 by specifying their <code class="docutils literal notranslate"><span class="pre">name</span></code> and a list of <code class="docutils literal notranslate"><span class="pre">option=value</span></code>, for example</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*step, jobName=myJob, </span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*step, jobName=myJob,</span>
 <span class="go">    dirichlet, name=bottom,   nSet=bottom,   field=displacement, 2=0, 1=0</span>
-<span class="go">    dirichlet, name=rightTop, nSet=rightTop, field=displacement, 2=0, </span>
+<span class="go">    dirichlet, name=rightTop, nSet=rightTop, field=displacement, 2=0,</span>
 <span class="go">    distributedload, name=dload1, surface=top,  type=pressure, magnitude=10, f(t)=t*2</span>
 <span class="go">    distributedload, name=dload2, surface=left, type=pressure, magnitude=50, f(t)=t</span>
 </pre></div>
@@ -462,6 +468,88 @@ uses a ring to control the contraction, e.g., for tunneling simulations.</p>
 </pre></div>
 </div>
 </div>
+</section>
+<section id="modelupdate-update-the-model">
+<h2><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model<a class="headerlink" href="#modelupdate-update-the-model" title="Permalink to this heading"></a></h2>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.modelupdate</span></code></p>
+<span class="target" id="module-fe.stepactions.modelupdate"></span><p>This step action may be used for updating something in the model at the beginning
+of a step.</p>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id14" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;update&#39;</span><span class="p">:</span> <span class="s1">&#39;model accessible, executable expression&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="implementation-your-own-step-actions">
+<h2>Implementation your own step actions<a class="headerlink" href="#implementation-your-own-step-actions" title="Permalink to this heading"></a></h2>
+<p>Subclass from the step action base class in module <code class="docutils literal notranslate"><span class="pre">fe.stepactions.base.stepactionbase</span></code></p>
+<span class="target" id="module-fe.stepactions.base.stepactionbase"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.stepactions.base.stepactionbase.</span></span><span class="sig-name descname"><span class="pre">StepActionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase" title="Permalink to this definition"></a></dt>
+<dd><p>This is the abstract base class for all step actions.
+User defined step actions must implement the abstract methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this step action.</p></li>
+<li><p><strong>definition</strong> (<em>dict</em>) – A dictionary containing the options for this step action.</p></li>
+<li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing the information about the job.</p></li>
+<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The fieldput controlling object.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.finishStep" title="fe.stepactions.base.stepactionbase.StepActionBase.finishStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finishStep</span></code></a>(U, P)</p></td>
+<td><p>Is called when a step successfully finished.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateStepAction</span></code></a>(name, definition, jobInfo, ...)</p></td>
+<td><p>Is called when an updated definition is present for a new step.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.finishStep">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">finishStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.finishStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.finishStep" title="Permalink to this definition"></a></dt>
+<dd><p>Is called when a step successfully finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
+<li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction force vector.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
+<dd><p>Is called when an updated definition is present for a new step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this step action.</p></li>
+<li><p><strong>definition</strong> (<em>dict</em>) – A dictionary containing the options for this step action.</p></li>
+<li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing the information about the job.</p></li>
+<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The fieldput controlling object.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

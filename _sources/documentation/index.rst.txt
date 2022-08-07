@@ -7,6 +7,7 @@ Documentation
    syntax
    jobs
    phenomena
+   variables
    elements
    mesh
    generators
@@ -16,6 +17,8 @@ Documentation
    fieldoutputmanager
    dofmanager
    output
+   plotter
    solvers
    parallelization
+   journal
    exceptions

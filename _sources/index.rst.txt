@@ -7,19 +7,22 @@ Welcome to EdelweissFE
 ======================
 
 EdelweissFE is a light-weight, platform-independent, parallel finite element framework.
-EdelweissFE makes use of the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library for finite element and constitutive model formulations.
+By default, it makes use of the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library for finite element and constitutive model formulations.
 
 EdelweissFE aims to be...
 
- * ... a development environment for constitutive models and finite elements
- * ... an easy to use tool for coupled problems
- * ... a learning platform for learning the finite element method
- * ... a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique), which are often difficult to implement in mature, MPI-parallelized codes
- * ... an efficient tool for nonlinear simulations up to medium sized problems (:math:`10^5` degrees of freedom)
+ - ... a development and learning environment for constitutive models and finite elements,
+ - ... an easy to use tool for coupled problems,
+ - ... a learning platform for learning the finite element method,
+ - ... a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique), 
+   which are often more difficult and time consuming to implement in mature, MPI-parallelized codes,
+ - ... an efficient tool for nonlinear simulations up to medium sized problems (~:math:`10^5` degrees of freedom).
 
 EdelweissFE does not want to ...
 
-* ... compete with more mature (MPI-parallelized) codes such as `MOOSE <https://mooseframework.inl.gov/>`_, which are also compatibel with the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library, but less easy to use. Usually, EdelweissFE is used for developing and debugging constitutive models until they are ready for production runs on HPC system using more mature frameworks.
+ - ... compete with more mature (MPI-parallelized) codes such as `MOOSE <https://mooseframework.inl.gov/>`_, 
+   which are also compatible with the `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_ library, but less suitable as development environments. 
+   Usually, EdelweissFE is used for developing and debugging constitutive models until they meet the requirements for production runs on HPC system using more mature frameworks.
 
 
 .. figure:: borehole.png

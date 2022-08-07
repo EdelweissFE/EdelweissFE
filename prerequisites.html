@@ -75,24 +75,34 @@
              
   <section id="prerequisites">
 <h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h1>
-<p>EdelweissFE requires</p>
+<p>It is recommended to use a recent version of Anaconda <a class="reference external" href="https://anaconda.org/">https://anaconda.org/</a> to compile and run EdelweissFE on a Linux system.
+Then EdelweissFE requires the packages</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span><span class="o">&gt;=</span><span class="mf">3.9</span>
+<span class="n">cython</span> 
+<span class="n">numpy</span> 
+<span class="n">sympy</span> 
+<span class="n">matplotlib</span> 
+<span class="n">scipy</span><span class="o">=</span><span class="mf">1.8.1</span>
+<span class="n">compilers</span> 
+<span class="n">cmake</span> 
+<span class="n">make</span>
+<span class="n">gfortran</span> 
+<span class="n">gstools</span>
+<span class="n">mkl</span> 
+<span class="n">mkl</span><span class="o">-</span><span class="n">include</span> 
+<span class="n">intel</span><span class="o">-</span><span class="n">openmp</span>
+<span class="n">sphinx</span> 
+<span class="n">sphinx_rtd_theme</span>
+<span class="n">numpydoc</span>
+</pre></div>
+</div>
+<p>Anaconda provides free access to Intel MKL binaries (via package <code class="docutils literal notranslate"><span class="pre">mkl</span></code>, usually installed by default) and header files (via package <code class="docutils literal notranslate"><span class="pre">mkl-include</span></code>, available via <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">mkl-include</span></code>), so no standalaone installation of the Intel MKL is required.</p>
+<p>In addition</p>
 <ul class="simple">
-<li><p>Python 3.5+</p></li>
-<li><p>NumPy</p></li>
-<li><p>SciPy</p></li>
-<li><p>SymPy</p></li>
-<li><p>Cython 0.28+</p></li>
-<li><p>Matplotlib*</p></li>
-<li><p>Rich</p></li>
-<li><p>Gstools</p></li>
-<li><p>OpenMP</p></li>
-<li><p>Intel MKL for the PARDISO  (binaries and header files; if you use Anaconda, install packages <code class="docutils literal notranslate"><span class="pre">mkl</span></code> and <code class="docutils literal notranslate"><span class="pre">mkl-include</span></code>)</p></li>
 <li><p><a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a></p></li>
 <li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> library for linear algebra</p></li>
 </ul>
-<p>All those packages can be easily installed using Anaconda.
-A recent version of Anaconda <a class="reference external" href="https://anaconda.org/">https://anaconda.org/</a> is sufficient to compile and run EdelweissFE on a Linux system.
-Anaconda also provides free access to Intel MKL binaries (via package <code class="docutils literal notranslate"><span class="pre">mkl</span></code>, usually installed by default) and header files (via package <code class="docutils literal notranslate"><span class="pre">mkl-include</span></code>, available via <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">mkl-include</span></code>), so no standalaone installation of the Intel MKL is required.</p>
+<p>are usually required.</p>
 </section>
 
 

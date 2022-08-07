@@ -34,3 +34,27 @@ Module ``fe.constraints.rigidbody``
 .. literalinclude:: ../../../testfiles/RigidBodyConstraintLargeDeformations3D/test.inp
     :language: console
     :caption: Example: ``testfiles/RigidBodyConstraintLargeDeformations3D/test.inp``
+
+``penaltyindirectcontrol`` - Penalty based inidirect control
+------------------------------------------------------------
+
+Module ``fe.constraints.penaltyindirectcontrol``
+
+.. automodule:: fe.constraints.penaltyindirectcontrol
+    :members: __doc__
+
+.. pprint:: fe.constraints.penaltyindirectcontrol.documentation
+    :caption: Options
+
+.. literalinclude:: ../../../testfiles/PenaltyBasedIndirectControl/test.inp
+    :language: console
+    :caption: Example: ``testfiles/PenaltyBasedIndirectControl/test.inp``
+
+
+Implementing your own constraints
+---------------------------------
+
+Subclass from the constraint base class in module ``fe.constraints.base.constraintbase``
+
+.. automodule:: fe.constraints.base.constraintbase
+    :members: 

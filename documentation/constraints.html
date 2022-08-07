@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="The fieldoutput manager" href="fieldoutputmanager.html" />
-    <link rel="prev" title="Stepactions" href="stepactions.html" /> 
+    <link rel="next" title="Managing field outputs" href="fieldoutputmanager.html" />
+    <link rel="prev" title="Step actions" href="stepactions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,21 +48,26 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Stepactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Constraints</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#linearizedrigidbody-linearized-rigid-body-constraints-in-2d"><code class="docutils literal notranslate"><span class="pre">linearizedrigidbody</span></code> - Linearized rigid body constraints in 2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rigidbody-geometrically-exact-rigid-body-constraints-in-3d"><code class="docutils literal notranslate"><span class="pre">rigidbody</span></code> - Geometrically exact rigid body constraints in 3D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#penaltyindirectcontrol-penalty-based-inidirect-control"><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based inidirect control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-constraints">Implementing your own constraints</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">The fieldoutput manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 </ul>
 </li>
@@ -109,10 +114,7 @@ equations into the global equation system.</p>
 <section id="linearizedrigidbody-linearized-rigid-body-constraints-in-2d">
 <h2><code class="docutils literal notranslate"><span class="pre">linearizedrigidbody</span></code> - Linearized rigid body constraints in 2D<a class="headerlink" href="#linearizedrigidbody-linearized-rigid-body-constraints-in-2d" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.linearizedrigidbody</span></code></p>
-<span class="target" id="module-fe.constraints.linearizedrigidbody"></span><p>Linearized rigid body constraint:
-Constrains a nodeset to a reference point.
-Currently only available for spatialdomain = 2D.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
+<span class="target" id="module-fe.constraints.linearizedrigidbody"></span><div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;(slave) node set, which is constrained to the reference point&#39;</span><span class="p">,</span>
   <span class="s1">&#39;referencePoint&#39;</span><span class="p">:</span> <span class="s1">&#39;(master) reference point&#39;</span><span class="p">}</span>
@@ -163,10 +165,7 @@ Currently only available for spatialdomain = 2D.</p>
 <section id="rigidbody-geometrically-exact-rigid-body-constraints-in-3d">
 <h2><code class="docutils literal notranslate"><span class="pre">rigidbody</span></code> - Geometrically exact rigid body constraints in 3D<a class="headerlink" href="#rigidbody-geometrically-exact-rigid-body-constraints-in-3d" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.rigidbody</span></code></p>
-<span class="target" id="module-fe.constraints.rigidbody"></span><p>Geometrically exact rigid body constraint:
-Constrains a nodeset to a reference point.
-Currently only available for spatialdomain = 3D.</p>
-<div class="literal-block-wrapper docutils container" id="id3">
+<span class="target" id="module-fe.constraints.rigidbody"></span><div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Options</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;(slave) node set, which is constrained to the reference point&#39;</span><span class="p">,</span>
   <span class="s1">&#39;referencePoint&#39;</span><span class="p">:</span> <span class="s1">&#39;(master) reference point&#39;</span><span class="p">}</span>
@@ -186,7 +185,7 @@ Currently only available for spatialdomain = 3D.</p>
 <span class="go">*job, name=c3d8job, domain=3d, solver=NISTParallel</span>
 <span class="go">*fieldOutput,</span>
 <span class="go">name=displacement, elSet=all, field=displacement, result=U, name=displacement</span>
-<span class="go">name=stress, elSet=all, result=stress, f(x)=&#39; mean(x, axis=2) &#39;, quadraturePoint=0:8</span>
+<span class="go">name=stress, elSet=all, result=stress, f(x)=&#39; mean(x, axis=1) &#39;, quadraturePoint=0:8</span>
 
 <span class="go">*constraint, type=rigidbody, name=rb1</span>
 <span class="go">nSet=right</span>
@@ -205,14 +204,196 @@ Currently only available for spatialdomain = 3D.</p>
 </div>
 </div>
 </section>
+<section id="penaltyindirectcontrol-penalty-based-inidirect-control">
+<h2><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based inidirect control<a class="headerlink" href="#penaltyindirectcontrol-penalty-based-inidirect-control" title="Permalink to this heading"></a></h2>
+<p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.penaltyindirectcontrol</span></code></p>
+<span class="target" id="module-fe.constraints.penaltyindirectcontrol"></span><p>A penalty based constraint used for indirect (displacement) control.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Options</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;cVector&#39;</span><span class="p">:</span> <span class="s1">&#39;the projection vector for the constrained nodes (e.g., CMOD)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;constrainedNSet&#39;</span><span class="p">:</span> <span class="s1">&#39;the node set for determining the constraint (e.g., CMOD)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;the field this constraint acts on&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="s1">&#39;the value of the constraint (e.g., CMOD)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;loadNSet&#39;</span><span class="p">:</span> <span class="s1">&#39;the node set for application of the controlled load&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;loadVector&#39;</span><span class="p">:</span> <span class="s1">&#39;the vector (in correct) dimensions and tensorial order  &#39;</span>
+                <span class="s1">&#39;determining the load&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) a correction value for the computation of the &#39;</span>
+            <span class="s1">&#39;constraint (e.g, initial displacement)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;penaltyStiffness&#39;</span><span class="p">:</span> <span class="s1">&#39;the stiffness for formulating the constraint&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/PenaltyBasedIndirectControl/test.inp</span></code></span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=LinearElastic, id=myMaterial</span>
+<span class="go">**Isotropic</span>
+<span class="go">**E    nu</span>
+<span class="go">1000, 0.2</span>
+
+<span class="go">*job, name=job, domain=2d, solver=NIST</span>
+
+<span class="go">*modelGenerator, generator=planerectquad, name=gen</span>
+<span class="go">nX      =5</span>
+<span class="go">nY      =5</span>
+<span class="go">l      =20</span>
+<span class="go">h      =50</span>
+<span class="go">elType  = CPE4</span>
+
+<span class="go">*section, name=section1, material=myMaterial, type=plane, thickness=1</span>
+<span class="go">all</span>
+
+<span class="go">*fieldOutput,</span>
+<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
+<span class="go">nSet=gen_top, field=displacement, result=U, name=disp_top</span>
+<span class="go">nSet=gen_bottom, field=displacement, result=P, name=RF</span>
+<span class="go">elSet=all, result=strain, name=strain, quadraturePoint=0:4, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="go">elSet=all, result=stress, name=stress, quadraturePoint=0:4, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+
+<span class="go">*output, type=ensight, jobName=job, </span>
+<span class="go">create=perNode, fieldOutput=displacement</span>
+<span class="go">create=perElement, fieldOutput=stress</span>
+<span class="go">create=perElement, fieldOutput=strain</span>
+<span class="go">configuration, overwrite=yes</span>
+
+<span class="go">*output, type=monitor, jobName=job, name=dispMon</span>
+<span class="go">fieldOutput=disp_top, f(x)=&#39;mean(x[:,1])&#39;</span>
+<span class="go">fieldOutput=RF, f(x)=&#39;sum(x[:,1])&#39;</span>
+
+<span class="go">*nset, nset=measurement_nodes</span>
+<span class="go">gen_leftBottom</span>
+<span class="go">gen_leftTop</span>
+
+<span class="go">*constraint, type=penaltyindirectcontrol, name=pc1</span>
+<span class="go">field=displacement,</span>
+<span class="go">cVector=&#39;0, 0, 0, -1&#39;</span>
+<span class="go">constrainedNSet=measurement_nodes</span>
+<span class="go">loadNSet=gen_rightTop</span>
+<span class="go">loadVector=&#39;0, -1&#39;</span>
+<span class="go">length=-1</span>
+<span class="go">penaltyStiffness=1e6</span>
+<span class="go">offset=0</span>
+
+<span class="go">*step, jobName=job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1</span>
+<span class="go">modelupdate, update=&#39;constraints[&quot;pc1&quot;].active=False&#39;</span>
+<span class="go">dirichlet,  name=fix_bottom, nSet=gen_bottom, field=displacement, 1=0, 2=0</span>
+
+<span class="go">*step, jobName=job, maxInc=2e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1</span>
+<span class="go">modelupdate, update=&#39;constraints[&quot;pc1&quot;].active=True&#39;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="implementing-your-own-constraints">
+<h2>Implementing your own constraints<a class="headerlink" href="#implementing-your-own-constraints" title="Permalink to this heading"></a></h2>
+<p>Subclass from the constraint base class in module <code class="docutils literal notranslate"><span class="pre">fe.constraints.base.constraintbase</span></code></p>
+<span class="target" id="module-fe.constraints.base.constraintbase"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.constraints.base.constraintbase.</span></span><span class="sig-name descname"><span class="pre">ConstraintBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase" title="Permalink to this definition"></a></dt>
+<dd><p>The constraint base class.</p>
+<p>Constraints can act on nodal variables, and scalar variables.
+If scalar variables are required, the can be created on demand by
+defining
+<a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables" title="fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><code class="xref py py-func docutils literal notranslate"><span class="pre">getNumberOfAdditionalNeededScalarVariables()</span></code></a> and
+<a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables" title="fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables"><code class="xref py py-func docutils literal notranslate"><span class="pre">assignAdditionalScalarVariables()</span></code></a>, which are called at the beginning of an analysis.</p>
+<p>If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt (and the stiffness)
+to be of the form</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[ node 1 - dofs field 1,</span>
+<span class="go">  node 1 - dofs field 2,</span>
+<span class="go">  node 1 - ... ,</span>
+<span class="go">  node 1 - dofs field n,</span>
+<span class="go">  node 2 - dofs field 1,</span>
+<span class="go">  ... ,</span>
+<span class="go">  node N - dofs field n,</span>
+<span class="go">  scalar variable 1,</span>
+<span class="go">  scalar variable 2,</span>
+<span class="go">  ... ,</span>
+<span class="go">  scalar variable J ].</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the constraint.</p></li>
+<li><p><strong>options</strong> (<em>dict</em>) – A dictionary containing the options for the constraint.</p></li>
+<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint" title="fe.constraints.base.constraintbase.ConstraintBase.applyConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyConstraint</span></code></a>(Un1, dU, PExt, V, increment)</p></td>
+<td><p>Apply the constraint.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables" title="fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assignAdditionalScalarVariables</span></code></a>(scalarVariables)</p></td>
+<td><p>Assign a list of scalar variables associated with this constraint.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables" title="fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfAdditionalNeededScalarVariables</span></code></a>()</p></td>
+<td><p>This method is called to determine the additional number of scalar variables this Constraint needs.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.applyConstraint">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">applyConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.applyConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the constraint.  Add the contributions to the external load vector and the system matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Un1</strong> (<em>ndarray</em>) – The current total solution vector.</p></li>
+<li><p><strong>dU</strong> (<em>ndarray</em>) – The current increment since the last time the constraint was applied.</p></li>
+<li><p><strong>PExt</strong> (<em>ndarray</em>) – The external load vector.</p></li>
+<li><p><strong>V</strong> (<em>ndarray</em>) – The system matrix in vector form.</p></li>
+<li><p><strong>increment</strong> (<em>tuple</em>) – The time increment information.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables">
+<span class="sig-name descname"><span class="pre">assignAdditionalScalarVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.assignAdditionalScalarVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables" title="Permalink to this definition"></a></dt>
+<dd><p>Assign a list of scalar variables associated with this constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list</strong> – The list of ScalarVariables associated with this constraint.</p></li>
+<li><p><strong>scalarVariables</strong> (<em>list</em><em>[</em><a class="reference internal" href="variables.html#fe.variables.scalarvariable.ScalarVariable" title="fe.variables.scalarvariable.ScalarVariable"><em>fe.variables.scalarvariable.ScalarVariable</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getNumberOfAdditionalNeededScalarVariables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables" title="Permalink to this definition"></a></dt>
+<dd><p>This method is called to determine the additional number of scalar variables
+this Constraint needs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of ScalarVariables required.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="stepactions.html" class="btn btn-neutral float-left" title="Stepactions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fieldoutputmanager.html" class="btn btn-neutral float-right" title="The fieldoutput manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="stepactions.html" class="btn btn-neutral float-left" title="Step actions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fieldoutputmanager.html" class="btn btn-neutral float-right" title="Managing field outputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

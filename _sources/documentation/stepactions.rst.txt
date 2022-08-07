@@ -1,5 +1,5 @@
-Stepactions
-===========
+Step actions
+============
 
 .. automodule:: fe.config.stepactions
    :members: __doc__
@@ -123,3 +123,23 @@ Relevant module: ``fe.stepactions.setfield``
 
 .. pprint:: fe.stepactions.setfield.documentation
    :caption: Options:
+
+
+``modelupdate`` - Update the model
+----------------------------------
+
+Relevant module: ``fe.stepactions.modelupdate``
+
+.. automodule:: fe.stepactions.modelupdate
+    :members: __doc__
+
+.. pprint:: fe.stepactions.modelupdate.documentation
+   :caption: Options:
+
+Implementation your own step actions
+------------------------------------
+
+Subclass from the step action base class in module ``fe.stepactions.base.stepactionbase``
+
+.. automodule:: fe.stepactions.base.stepactionbase    
+   :members: 

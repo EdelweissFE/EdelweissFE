@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fe.solvers.nonlinearimplicitstatic &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>fe.solvers.nonlinearimplicitstatic</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for fe.solvers.nonlinearimplicitstatic</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  _____    _      _              _         _____ _____</span>
+<span class="c1"># | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|</span>
+<span class="c1"># |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|</span>
+<span class="c1"># | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___</span>
+<span class="c1"># |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Unit of Strength of Materials and Structural Analysis</span>
+<span class="c1">#  University of Innsbruck,</span>
+<span class="c1">#  2017 - today</span>
+<span class="c1">#</span>
+<span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
+<span class="c1">#</span>
+<span class="c1">#  This file is part of EdelweissFE.</span>
+<span class="c1">#</span>
+<span class="c1">#  This library is free software; you can redistribute it and/or</span>
+<span class="c1">#  modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1">#  License as published by the Free Software Foundation; either</span>
+<span class="c1">#  version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#  The full text of the license can be found in the file LICENSE.md at</span>
+<span class="c1">#  the top level directory of EdelweissFE.</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1"># Created on Sun Jan  8 20:37:35 2017</span>
+
+<span class="c1"># @author: Matthias Neuner</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">fe.utils.incrementgenerator</span> <span class="kn">import</span> <span class="n">IncrementGenerator</span>
+<span class="kn">from</span> <span class="nn">fe.utils.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ReachedMaxIncrements</span><span class="p">,</span>
+    <span class="n">ReachedMaxIterations</span><span class="p">,</span>
+    <span class="n">ReachedMinIncrementSize</span><span class="p">,</span>
+    <span class="n">CutbackRequest</span><span class="p">,</span>
+    <span class="n">DivergingSolution</span><span class="p">,</span>
+    <span class="n">ConditionalStop</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">fe.config.linsolve</span> <span class="kn">import</span> <span class="n">getLinSolverByName</span><span class="p">,</span> <span class="n">getDefaultLinSolver</span>
+<span class="kn">from</span> <span class="nn">fe.utils.csrgenerator</span> <span class="kn">import</span> <span class="n">CSRGenerator</span>
+<span class="kn">from</span> <span class="nn">fe.stepactions.base.stepactionbase</span> <span class="kn">import</span> <span class="n">StepActionBase</span>
+<span class="kn">from</span> <span class="nn">fe.outputmanagers.base.outputmanagerbase</span> <span class="kn">import</span> <span class="n">OutputManagerBase</span>
+<span class="kn">from</span> <span class="nn">fe.utils.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span>
+<span class="kn">from</span> <span class="nn">fe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
+<span class="kn">from</span> <span class="nn">fe.constraints.base.constraintbase</span> <span class="kn">import</span> <span class="n">ConstraintBase</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+
+
+<div class="viewcode-block" id="NIST"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST">[docs]</a><span class="k">class</span> <span class="nc">NIST</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This is the Nonlinear Implicit STatic -- solver.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    jobInfo</span>
+<span class="sd">        A dictionary containing the job information.</span>
+<span class="sd">    journal</span>
+<span class="sd">        The journal instance for logging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;NISTSolver&quot;</span>
+
+    <span class="n">defaultMaxInc</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">defaultMinInc</span> <span class="o">=</span> <span class="mf">1e-4</span>
+    <span class="n">defaultMaxNumInc</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">defaultMaxIter</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">defaultCriticalIter</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">defaultMaxGrowingIter</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">linSolver</span> <span class="o">=</span> <span class="n">getLinSolverByName</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;linsolver&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;linsolver&quot;</span> <span class="ow">in</span> <span class="n">jobInfo</span> <span class="k">else</span> <span class="n">getDefaultLinSolver</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span> <span class="o">=</span> <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;dofManager&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fieldCorrectionTolerances</span> <span class="o">=</span> <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;fieldCorrectionTolerance&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fluxResidualTolerances</span> <span class="o">=</span> <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;fluxResidualTolerance&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fluxResidualTolerancesAlt</span> <span class="o">=</span> <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;fluxResidualToleranceAlternative&quot;</span><span class="p">]</span>
+
+        <span class="c1"># create headers for formatted output of solver</span>
+        <span class="n">nFields</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterationHeader</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{:^25}</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="n">nFields</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterationHeader2</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; </span><span class="si">{:&lt;10}</span><span class="s2">  </span><span class="si">{:&lt;10}</span><span class="s2">  &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;||R||∞&quot;</span><span class="p">,</span> <span class="s2">&quot;||ddU||∞&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">nFields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterationMessageTemplate</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:11.2e}{:1}{:11.2e}{:1}</span><span class="s2"> &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span> <span class="o">=</span> <span class="n">journal</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">systemMatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructVIJSystemMatrix</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">csrGenerator</span> <span class="o">=</span> <span class="n">CSRGenerator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">systemMatrix</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">residualHistories</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrapolation</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
+
+<div class="viewcode-block" id="NIST.initialize"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the solver and return the 2 vectors for field (U) and flux (P).&quot;&quot;&quot;</span>
+
+        <span class="n">U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span></div>
+
+<div class="viewcode-block" id="NIST.solveStep"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.solveStep">[docs]</a>    <span class="k">def</span> <span class="nf">solveStep</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">],</span>
+        <span class="n">modelInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
+        <span class="n">outputmanagers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OutputManagerBase</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Public interface to solve for a step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        step</span>
+<span class="sd">            The dictionary containing the step defintion.</span>
+<span class="sd">        time</span>
+<span class="sd">            The time at beginning of the step.</span>
+<span class="sd">        stepActions</span>
+<span class="sd">            The dictionary containing all step actions.</span>
+<span class="sd">        modelInfo</span>
+<span class="sd">            A dictionary containing the model tree.</span>
+<span class="sd">        U</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        P</span>
+<span class="sd">            The current reaction vector.</span>
+<span class="sd">        fieldOutputController</span>
+<span class="sd">            The field output controller.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[bool,DofVector,DofVector,float]</span>
+<span class="sd">            - Truth value of success.</span>
+<span class="sd">            - The new solution vector.</span>
+<span class="sd">            - The new reaction vector.</span>
+<span class="sd">            - Thew new current time.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">systemMatrix</span>
+
+        <span class="n">stepLength</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stepLength&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="n">extrapolation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrapolation</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">extrapolation</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTSolver&quot;</span><span class="p">][</span><span class="s2">&quot;extapolation&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">incGen</span> <span class="o">=</span> <span class="n">IncrementGenerator</span><span class="p">(</span>
+            <span class="n">time</span><span class="p">,</span>
+            <span class="n">stepLength</span><span class="p">,</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maxInc&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMaxInc</span><span class="p">),</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;minInc&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMinInc</span><span class="p">),</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maxNumInc&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMaxNumInc</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">maxIter</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maxIter&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMaxIter</span><span class="p">)</span>
+        <span class="n">criticalIter</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;criticalIter&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultCriticalIter</span><span class="p">)</span>
+        <span class="n">maxGrowingIter</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maxGrowIter&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMaxGrowingIter</span><span class="p">)</span>
+
+        <span class="n">dU</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
+
+        <span class="n">activeStepActions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collectActiveStepActions</span><span class="p">(</span><span class="n">stepActions</span><span class="p">)</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
+
+        <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">setfield</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;setfields&quot;</span><span class="p">]:</span>
+            <span class="n">setfield</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">initmaterial</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;initializematerial&quot;</span><span class="p">]:</span>
+            <span class="n">initmaterial</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">increment</span> <span class="ow">in</span> <span class="n">incGen</span><span class="o">.</span><span class="n">generateIncrement</span><span class="p">():</span>
+                <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="s2">&quot;increment </span><span class="si">{:}</span><span class="s2">: </span><span class="si">{:8f}</span><span class="s2">, </span><span class="si">{:8f}</span><span class="s2">; time </span><span class="si">{:10f}</span><span class="s2"> to </span><span class="si">{:10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">+</span> <span class="n">dT</span>
+                    <span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
+                    <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterationHeader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterationHeader2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">U</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">,</span> <span class="n">incrementResidualHistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solveIncrement</span><span class="p">(</span>
+                        <span class="n">U</span><span class="p">,</span>
+                        <span class="n">dU</span><span class="p">,</span>
+                        <span class="n">P</span><span class="p">,</span>
+                        <span class="n">K</span><span class="p">,</span>
+                        <span class="n">elements</span><span class="p">,</span>
+                        <span class="n">activeStepActions</span><span class="p">,</span>
+                        <span class="n">constraints</span><span class="p">,</span>
+                        <span class="n">increment</span><span class="p">,</span>
+                        <span class="n">lastIncrementSize</span><span class="p">,</span>
+                        <span class="n">extrapolation</span><span class="p">,</span>
+                        <span class="n">maxIter</span><span class="p">,</span>
+                        <span class="n">maxGrowingIter</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">except</span> <span class="n">CutbackRequest</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">incGen</span><span class="o">.</span><span class="n">discardAndChangeIncrement</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">cutbackSize</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
+                    <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">except</span> <span class="p">(</span><span class="n">ReachedMaxIterations</span><span class="p">,</span> <span class="n">DivergingSolution</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">incGen</span><span class="o">.</span><span class="n">discardAndChangeIncrement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+                    <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="n">incrementSize</span>
+                    <span class="k">if</span> <span class="n">iterationCounter</span> <span class="o">&gt;=</span> <span class="n">criticalIter</span><span class="p">:</span>
+                        <span class="n">incGen</span><span class="o">.</span><span class="n">preventIncrementIncrease</span><span class="p">()</span>
+
+                    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                        <span class="n">el</span><span class="o">.</span><span class="n">acceptLastState</span><span class="p">()</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                        <span class="s2">&quot;Converged in </span><span class="si">{:}</span><span class="s2"> iteration(s)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterationCounter</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="mi">1</span>
+                    <span class="p">)</span>
+
+                    <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="p">(</span><span class="n">ReachedMaxIncrements</span><span class="p">,</span> <span class="n">ReachedMinIncrementSize</span><span class="p">):</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">errorMessage</span><span class="p">(</span><span class="s2">&quot;Incrementation failed&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Interrupted by user&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">ConditionalStop</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Conditional Stop&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">finishStepActions</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Geostatic Step -- displacements are resetted&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+                <span class="n">U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resetDisplacements</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>  <span class="c1"># reset all displacements, if the present step is a geostatic step</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">finishStepActions</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">finishedTime</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">stepProgress</span> <span class="o">*</span> <span class="n">stepLength</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printTable</span><span class="p">(</span>
+                <span class="p">[(</span><span class="s2">&quot;Time in </span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="s2">&quot; </span><span class="si">{:10.4f}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">finishedTime</span></div>
+
+<div class="viewcode-block" id="NIST.solveIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">solveIncrement</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">Un</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
+        <span class="n">elements</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">activeStepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+        <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">maxIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Standard Newton-Raphson scheme to solve for an increment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Un</span>
+<span class="sd">            The old solution vector.</span>
+<span class="sd">        dU</span>
+<span class="sd">            The old solution increment.</span>
+<span class="sd">        P</span>
+<span class="sd">            The old reaction vector.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix to be used.</span>
+<span class="sd">        elements</span>
+<span class="sd">            The dictionary containing all elements.</span>
+<span class="sd">        activeStepActions</span>
+<span class="sd">            The list of active step actions.</span>
+<span class="sd">        constraints</span>
+<span class="sd">            The dictionary containg all elements.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+<span class="sd">        lastIncrementSize</span>
+<span class="sd">            The size of the previous increment.</span>
+<span class="sd">        extrapolation</span>
+<span class="sd">            The type of extrapolation to be used.</span>
+<span class="sd">        maxIter</span>
+<span class="sd">            The maximum number of iterations to be used.</span>
+<span class="sd">        maxGrowingIter</span>
+<span class="sd">            The maximum number of growing residuals until the Newton-Raphson is terminated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,DofVector,DofVector,int,dict]</span>
+<span class="sd">            A tuple containing</span>
+<span class="sd">                - the new solution vector</span>
+<span class="sd">                - the solution increment</span>
+<span class="sd">                - the new reaction vector</span>
+<span class="sd">                - the number of required iterations</span>
+<span class="sd">                - the history of residuals per field</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+        <span class="n">iterationCounter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">incrementResidualHistory</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+        <span class="n">PExt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+        <span class="n">Un1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+        <span class="n">ddU</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;dirichlets&quot;</span><span class="p">]</span>
+        <span class="n">concentratedLoads</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;concentratedLoads&quot;</span><span class="p">]</span>
+        <span class="n">distributedLoads</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;distributedLoads&quot;</span><span class="p">]</span>
+        <span class="n">bodyForces</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;bodyForces&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">changeMaterialProperty</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;changeMaterialProperties&quot;</span><span class="p">]:</span>
+            <span class="n">changeMaterialProperty</span><span class="o">.</span><span class="n">changeTheProperties</span><span class="p">(</span><span class="n">increment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="p">)</span>
+
+        <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span>
+            <span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span>
+        <span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
+                <span class="n">geostatic</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+
+            <span class="n">Un1</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Un</span>
+            <span class="n">Un1</span> <span class="o">+=</span> <span class="n">dU</span>
+
+            <span class="n">P</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">PExt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span><span class="n">concentratedLoads</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+
+            <span class="n">R</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P</span>
+            <span class="n">R</span> <span class="o">+=</span> <span class="n">PExt</span>
+
+            <span class="k">if</span> <span class="n">iterationCounter</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">isExtrapolatedIncrement</span> <span class="ow">and</span> <span class="n">dirichlets</span><span class="p">:</span>
+                <span class="c1"># first iteration? apply dirichlet bcs and unconditionally solve</span>
+                <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">increment</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># iteration cycle 1 or higher, time to check the convergence</span>
+                <span class="k">for</span> <span class="n">dirichlet</span> <span class="ow">in</span> <span class="n">dirichlets</span><span class="p">:</span>
+                    <span class="n">R</span><span class="p">[</span><span class="n">dirichlet</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+                <span class="n">converged</span><span class="p">,</span> <span class="n">nodesWithLargestResidual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConvergence</span><span class="p">(</span>
+                    <span class="n">R</span><span class="p">,</span> <span class="n">ddU</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">,</span> <span class="n">incrementResidualHistory</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">converged</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkDivergingSolution</span><span class="p">(</span><span class="n">incrementResidualHistory</span><span class="p">,</span> <span class="n">maxGrowingIter</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">printResidualOutlierNodes</span><span class="p">(</span><span class="n">nodesWithLargestResidual</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">DivergingSolution</span><span class="p">(</span><span class="s2">&quot;Residual grew </span><span class="si">{:}</span><span class="s2"> times, cutting back&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maxGrowingIter</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">iterationCounter</span> <span class="o">==</span> <span class="n">maxIter</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">printResidualOutlierNodes</span><span class="p">(</span><span class="n">nodesWithLargestResidual</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">ReachedMaxIterations</span><span class="p">(</span><span class="s2">&quot;Reached max. iterations in current increment, cutting back&quot;</span><span class="p">)</span>
+
+            <span class="n">K_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleStiffnessCSR</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+            <span class="n">K_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichletK</span><span class="p">(</span><span class="n">K_</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
+
+            <span class="n">ddU</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linearSolve</span><span class="p">(</span><span class="n">K_</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+            <span class="n">dU</span> <span class="o">+=</span> <span class="n">ddU</span>
+            <span class="n">iterationCounter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">,</span> <span class="n">incrementResidualHistory</span></div>
+
+<div class="viewcode-block" id="NIST.computeDistributedLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads">[docs]</a>    <span class="k">def</span> <span class="nf">computeDistributedLoads</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
+        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
+        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all distributed loads acting on elements, and evalute them.</span>
+<span class="sd">        Assembles into the global external load vector and the system matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        distributedLoads</span>
+<span class="sd">            The list of distributed loads.</span>
+<span class="sd">        Un1</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        PExt</span>
+<span class="sd">            The external load vector to be augmented.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix to be augmented.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,VIJSystemMatrix]</span>
+<span class="sd">            The augmented load vector and system matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">dLoad</span> <span class="ow">in</span> <span class="n">distributedLoads</span><span class="p">:</span>
+            <span class="n">magnitude</span> <span class="o">=</span> <span class="n">dLoad</span><span class="o">.</span><span class="n">getCurrentMagnitude</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">dLoad</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+
+                    <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
+                    <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
+
+                    <span class="n">el</span><span class="o">.</span><span class="n">computeDistributedLoad</span><span class="p">(</span><span class="n">dLoad</span><span class="o">.</span><span class="n">loadType</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">magnitude</span><span class="p">,</span> <span class="n">Un1</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+
+                    <span class="n">PExt</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Pe</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;distributed loads&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+        <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
+
+<div class="viewcode-block" id="NIST.computeBodyForces"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForces</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span> <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all body forces loads acting on elements, and evalute them.</span>
+<span class="sd">        Assembles into the global external load vector and the system matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        distributedLoads</span>
+<span class="sd">            The list of distributed loads.</span>
+<span class="sd">        Un1</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        PExt</span>
+<span class="sd">            The external load vector to be augmented.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix to be augmented.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,VIJSystemMatrix]</span>
+<span class="sd">            The augmented load vector and system matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">bForce</span> <span class="ow">in</span> <span class="n">bodyForces</span><span class="p">:</span>
+            <span class="n">force</span> <span class="o">=</span> <span class="n">bForce</span><span class="o">.</span><span class="n">getCurrentBodyForce</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">bForce</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+
+                <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
+                <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
+
+                <span class="n">el</span><span class="o">.</span><span class="n">computeBodyForce</span><span class="p">(</span><span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">Un1</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+
+                <span class="n">PExt</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Pe</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;body forces&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+        <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
+
+<div class="viewcode-block" id="NIST.applyDirichletK"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichletK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VIJSystemMatrix</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the global stiffnes matrix</span>
+<span class="sd">        Is called by solveStep() before solving the global sys.</span>
+<span class="sd">        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix.</span>
+<span class="sd">        dirichlets</span>
+<span class="sd">            The list of dirichlet boundary conditions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        VIJSystemMatrix</span>
+<span class="sd">            The modified system matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">dirichlet</span> <span class="ow">in</span> <span class="n">dirichlets</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dirichlet</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">K</span><span class="o">.</span><span class="n">indptr</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="p">:</span> <span class="n">K</span><span class="o">.</span><span class="n">indptr</span><span class="p">[</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># K[row, row] = 1.0 @ once, faster than within the loop above:</span>
+        <span class="n">diag</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+        <span class="n">diag</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">indices</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirichlets</span><span class="p">])]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">K</span><span class="o">.</span><span class="n">setdiag</span><span class="p">(</span><span class="n">diag</span><span class="p">)</span>
+
+        <span class="n">K</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;dirichlet K&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+        <span class="k">return</span> <span class="n">K</span></div>
+
+<div class="viewcode-block" id="NIST.applyDirichlet"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichlet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the residual vector</span>
+<span class="sd">        Is called by solveStep() before solving the global equatuon system.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+<span class="sd">        R</span>
+<span class="sd">            The residual vector of the global equation system to be modified.</span>
+<span class="sd">        dirichlets</span>
+<span class="sd">            The list of dirichlet boundary conditions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DofVector</span>
+<span class="sd">            The modified residual vector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">dirichlet</span> <span class="ow">in</span> <span class="n">dirichlets</span><span class="p">:</span>
+            <span class="n">R</span><span class="p">[</span><span class="n">dirichlet</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">dirichlet</span><span class="o">.</span><span class="n">getDelta</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;dirichlet R&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+        <span class="k">return</span> <span class="n">R</span></div>
+
+<div class="viewcode-block" id="NIST.checkConvergence"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.checkConvergence">[docs]</a>    <span class="k">def</span> <span class="nf">checkConvergence</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">ddU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">residualHistory</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Check the convergency, individually for each field,</span>
+<span class="sd">        similar to Abaqus based on the current total flux residual and the field correction</span>
+<span class="sd">        Is called by solveStep() to decide wether to continue iterating or stop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        R</span>
+<span class="sd">            The current residual.</span>
+<span class="sd">        ddU</span>
+<span class="sd">            The current correction increment.</span>
+<span class="sd">        F</span>
+<span class="sd">            The accumulated fluxes.</span>
+<span class="sd">        iterationCounter</span>
+<span class="sd">            The current iteration number.</span>
+<span class="sd">        residualHistory</span>
+<span class="sd">            The previous residuals.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[bool,dict]</span>
+<span class="sd">            - True if converged.</span>
+<span class="sd">            - The residual histories field wise.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+
+        <span class="n">iterationMessage</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">convergedAtAll</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">nodesWithLargestResidual</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">spatialAveragedFluxes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">iterationCounter</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span>  <span class="c1"># standard tolerance set</span>
+            <span class="n">fluxResidualTolerances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluxResidualTolerances</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># alternative tolerance set</span>
+            <span class="n">fluxResidualTolerances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluxResidualTolerancesAlt</span>
+
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">fieldIndices</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">fieldResidualAbs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="n">fieldIndices</span><span class="p">])</span>
+
+            <span class="n">indexOfMax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">fieldResidualAbs</span><span class="p">)</span>
+            <span class="n">fluxResidual</span> <span class="o">=</span> <span class="n">fieldResidualAbs</span><span class="p">[</span><span class="n">indexOfMax</span><span class="p">]</span>
+
+            <span class="n">nodesWithLargestResidual</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">getNodeForIndexInDofVector</span><span class="p">(</span><span class="n">indexOfMax</span><span class="p">)</span>
+
+            <span class="n">fieldCorrection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ddU</span><span class="p">[</span><span class="n">fieldIndices</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span> <span class="k">if</span> <span class="n">ddU</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+            <span class="n">convergedCorrection</span> <span class="o">=</span> <span class="n">fieldCorrection</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldCorrectionTolerances</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+            <span class="n">convergedFlux</span> <span class="o">=</span> <span class="n">fluxResidual</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">fluxResidualTolerances</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">*</span> <span class="n">spatialAveragedFluxes</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="mf">1e-7</span><span class="p">)</span>
+
+            <span class="n">previousFluxResidual</span><span class="p">,</span> <span class="n">nGrew</span> <span class="o">=</span> <span class="n">residualHistory</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">fluxResidual</span> <span class="o">&gt;</span> <span class="n">previousFluxResidual</span><span class="p">:</span>
+                <span class="n">nGrew</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">residualHistory</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fluxResidual</span><span class="p">,</span> <span class="n">nGrew</span><span class="p">)</span>
+
+            <span class="n">iterationMessage</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterationMessageTemplate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">fluxResidual</span><span class="p">,</span>
+                <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">convergedFlux</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+                <span class="n">fieldCorrection</span><span class="p">,</span>
+                <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">convergedCorrection</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># converged if residual and fieldCorrection are smaller than tolerance</span>
+            <span class="n">convergedAtAll</span> <span class="o">=</span> <span class="n">convergedAtAll</span> <span class="ow">and</span> <span class="n">convergedCorrection</span> <span class="ow">and</span> <span class="n">convergedFlux</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">iterationMessage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;convergence check&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+        <span class="k">return</span> <span class="n">convergedAtAll</span><span class="p">,</span> <span class="n">nodesWithLargestResidual</span></div>
+
+<div class="viewcode-block" id="NIST.linearSolve"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.linearSolve">[docs]</a>    <span class="k">def</span> <span class="nf">linearSolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Solve the linear equation system.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        A</span>
+<span class="sd">            The system matrix in compressed spare row format.</span>
+<span class="sd">        b</span>
+<span class="sd">            The right hand side.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            The solution &#39;x&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="n">ddU</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linSolver</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;linear solve&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ddU</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">DivergingSolution</span><span class="p">(</span><span class="s2">&quot;Obtained NaN in linear solve&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ddU</span></div>
+
+<div class="viewcode-block" id="NIST.assembleStiffnessCSR"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.assembleStiffnessCSR">[docs]</a>    <span class="k">def</span> <span class="nf">assembleStiffnessCSR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Construct a CSR matrix from VIJ format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix in VIJ format.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        csr_matrix</span>
+<span class="sd">            The system matrix in compressed sparse row format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="n">KCsr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrGenerator</span><span class="o">.</span><span class="n">updateCSR</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;CSR generation&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+        <span class="k">return</span> <span class="n">KCsr</span></div>
+
+<div class="viewcode-block" id="NIST.resetDisplacements"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.resetDisplacements">[docs]</a>    <span class="k">def</span> <span class="nf">resetDisplacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DofVector</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;May be called at the end of a geostatic step, the zero all displacments after</span>
+<span class="sd">        applying the geostatic stress.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        U</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DofVector</span>
+<span class="sd">            The modified solution vector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Geostatic step, resetting displacements&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
+        <span class="n">U</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">[</span><span class="s2">&quot;displacement&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">U</span></div>
+
+<div class="viewcode-block" id="NIST.computeSpatialAveragedFluxes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">[docs]</a>    <span class="k">def</span> <span class="nf">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Compute the spatial averaged flux for every field</span>
+<span class="sd">        Is usually called by checkConvergence().</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F</span>
+<span class="sd">            The accumulated flux vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str,np.float]</span>
+<span class="sd">            A dictioary containg the spatial average fluxes for every field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">spatialAveragedFluxes</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">nDof</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">nAccumulatedNodalFluxesFieldwise</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">spatialAveragedFluxes</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="mf">1e-10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">[</span><span class="n">field</span><span class="p">]],</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">nDof</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">spatialAveragedFluxes</span></div>
+
+<div class="viewcode-block" id="NIST.computeElements"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeElements">[docs]</a>    <span class="k">def</span> <span class="nf">computeElements</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
+        <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all elements, and evalute them.</span>
+<span class="sd">        Is is called by solveStep() in each iteration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        elements</span>
+<span class="sd">            The list of finite elements.</span>
+<span class="sd">        Un1</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        dU</span>
+<span class="sd">            The current solution increment vector.</span>
+<span class="sd">        P</span>
+<span class="sd">            The reaction vector.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix.</span>
+<span class="sd">        F</span>
+<span class="sd">            The vector of accumulated fluxes for convergence checks.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,VIJSystemMatrix,DofVector]</span>
+<span class="sd">            - The modified reaction vector.</span>
+<span class="sd">            - The modified system matrix.</span>
+<span class="sd">            - The modified accumulated flux vector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+
+        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+
+            <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
+            <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
+
+            <span class="n">el</span><span class="o">.</span><span class="n">computeYourself</span><span class="p">(</span><span class="n">Ke</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Un1</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">dU</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+
+            <span class="n">P</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Pe</span>
+            <span class="n">F</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Pe</span><span class="p">)</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+        <span class="k">return</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span></div>
+
+<div class="viewcode-block" id="NIST.assembleConstraints"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints">[docs]</a>    <span class="k">def</span> <span class="nf">assembleConstraints</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConstraintBase</span><span class="p">],</span>
+        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
+        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all elements, and evalute them.</span>
+<span class="sd">        Is is called by solveStep() in each iteration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        constraints</span>
+<span class="sd">            The list of constraints.</span>
+<span class="sd">        Un1</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        dU</span>
+<span class="sd">            The current solution increment vector.</span>
+<span class="sd">        PExt</span>
+<span class="sd">            The external load vector.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,VIJSystemMatrix,DofVector]</span>
+<span class="sd">            - The modified external load vector.</span>
+<span class="sd">            - The modified system matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+
+            <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">constraint</span><span class="p">]</span>
+            <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
+
+            <span class="n">constraint</span><span class="o">.</span><span class="n">applyConstraint</span><span class="p">(</span><span class="n">Un1</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">dU</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+
+            <span class="c1"># instead of PExt[constraint] += Pe, np.add.at allows for repeated indices</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">PExt</span><span class="p">,</span> <span class="n">PExt</span><span class="o">.</span><span class="n">entitiesInDofVector</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">Pe</span><span class="p">)</span>
+
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+        <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
+
+<div class="viewcode-block" id="NIST.assembleLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads">[docs]</a>    <span class="k">def</span> <span class="nf">assembleLoads</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">concentratedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
+        <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
+        <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
+        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
+        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Assemble all loads into a right hand side vector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        concentratedLoads</span>
+<span class="sd">            The list of concentrated (nodal) loads.</span>
+<span class="sd">        distributedLoads</span>
+<span class="sd">            The list of distributed (surface) loads.</span>
+<span class="sd">        bodyForces</span>
+<span class="sd">            The list of body (volumetric) loads.</span>
+<span class="sd">        Un1</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        PExt</span>
+<span class="sd">            The external load vector.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system matrix.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,VIJSystemMatrix]</span>
+<span class="sd">            - The modified external load vector.</span>
+<span class="sd">            - The modified system matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># cloads</span>
+        <span class="k">for</span> <span class="n">cLoad</span> <span class="ow">in</span> <span class="n">concentratedLoads</span><span class="p">:</span>
+            <span class="n">PExt</span> <span class="o">=</span> <span class="n">cLoad</span><span class="o">.</span><span class="n">applyOnP</span><span class="p">(</span><span class="n">PExt</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+        <span class="c1"># dloads</span>
+        <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeDistributedLoads</span><span class="p">(</span><span class="n">distributedLoads</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+        <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeBodyForces</span><span class="p">(</span><span class="n">bodyForces</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
+
+<div class="viewcode-block" id="NIST.extrapolateLastIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">extrapolateLastIncrement</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Depending on the current setting, extrapolate the solution of the last increment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        extrapolation</span>
+<span class="sd">            The type of extrapolation.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The current time increment.</span>
+<span class="sd">        dU</span>
+<span class="sd">            The last solution increment.</span>
+<span class="sd">        dirichlets</span>
+<span class="sd">            The list of active dirichlet boundary conditions.</span>
+<span class="sd">        lastIncrementSize</span>
+<span class="sd">            The size of the last increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[DofVector,bool]</span>
+<span class="sd">            - The extrapolated solution increment.</span>
+<span class="sd">            - True if an extrapolation was performed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+
+        <span class="k">if</span> <span class="n">extrapolation</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span> <span class="ow">and</span> <span class="n">lastIncrementSize</span><span class="p">:</span>
+            <span class="n">dU</span> <span class="o">*=</span> <span class="n">incrementSize</span> <span class="o">/</span> <span class="n">lastIncrementSize</span>
+            <span class="n">dU</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
+            <span class="n">isExtrapolatedIncrement</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">isExtrapolatedIncrement</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">dU</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span></div>
+
+<div class="viewcode-block" id="NIST.checkDivergingSolution"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.checkDivergingSolution">[docs]</a>    <span class="k">def</span> <span class="nf">checkDivergingSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incrementResidualHistory</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check if the iterative solution scheme is diverging.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        incrementResidualHistory</span>
+<span class="sd">            The dictionary containg the residual history of all fields.</span>
+<span class="sd">        maxGrowingIter</span>
+<span class="sd">            The maximum allows number of growths of a residual during the iterative solution scheme.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if solution is diverging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">previousFluxResidual</span><span class="p">,</span> <span class="n">nGrew</span> <span class="ow">in</span> <span class="n">incrementResidualHistory</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">nGrew</span> <span class="o">&gt;</span> <span class="n">maxGrowingIter</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="NIST.collectActiveStepActions"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.collectActiveStepActions">[docs]</a>    <span class="k">def</span> <span class="nf">collectActiveStepActions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get the current active actions (loads, etc. ... ) for the current step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stepActions</span>
+<span class="sd">            The dictionary containing all existing step actions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">            The list of active step actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">activeActions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;dirichlets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;dirichlet&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;shotcreteshellmaster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;distributedLoads&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;distributedload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;bodyForces&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;bodyforce&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;concentratedLoads&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;geostatic&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;changeMaterialProperties&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;changematerialproperty&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">active</span>
+        <span class="p">]</span>
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;setfields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;setfield&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
+        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;initializematerial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;initializematerial&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">activeActions</span></div>
+
+<div class="viewcode-block" id="NIST.finishStepActions"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.finishStepActions">[docs]</a>    <span class="k">def</span> <span class="nf">finishStepActions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        U</span>
+<span class="sd">            The solution vector.</span>
+<span class="sd">        P</span>
+<span class="sd">            The reaction vector.</span>
+<span class="sd">        stepActions</span>
+<span class="sd">            The list of active step actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">finishStep</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NIST.printResidualOutlierNodes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes">[docs]</a>    <span class="k">def</span> <span class="nf">printResidualOutlierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residualOutliers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print which nodes have the largest residuals.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        residualOutliers</span>
+<span class="sd">            The dictionary containing the outlier nodes for every field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="s2">&quot;Residual outliers:&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">residualOutliers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="s2">&quot;|</span><span class="si">{:20}</span><span class="s2">|node </span><span class="si">{:10}</span><span class="s2">|&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
+                <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

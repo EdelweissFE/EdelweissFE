@@ -87,7 +87,7 @@
 <section id="marmot">
 <h2>Marmot<a class="headerlink" href="#marmot" title="Permalink to this heading"></a></h2>
 <p>By default, a working instance of <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a>,
-containing specific implementations of finite elements and constutitive models,
+containing specific implementations of finite elements and constitutive models,
 is required.</p>
 <p>Please build Marmot before you build EdelweissFE.</p>
 </section>
@@ -98,12 +98,12 @@ Default paths are already defined, and usually only minor modifications should b
 </section>
 <section id="building-edelweissfe">
 <h2>Building EdelweissFE<a class="headerlink" href="#building-edelweissfe" title="Permalink to this heading"></a></h2>
-<p>EdelweissFE depends on several Cython modules, which must be compiled prior to first running the software.</p>
-<p>Simply run</p>
+<p>EdelweissFE depends on several Cython modules, which must be compiled prior to running the EdelweissFE.</p>
+<p>To build the modules (inplace), simply run</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py build_ext -i</span>
 </pre></div>
 </div>
-<p>Enforce recompilation and installation with</p>
+<p>Enforce a recompilation with</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py build_ext -i --force</span>
 </pre></div>
 </div>
@@ -111,7 +111,7 @@ Default paths are already defined, and usually only minor modifications should b
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python run_tests.py</span>
 </pre></div>
 </div>
-<p>Recreate the validation reference solutions (please only if you know what you are doing)</p>
+<p>Recreate the validation reference solutions (only if you know what you are doing)</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python run_tests.py --create</span>
 </pre></div>
 </div>
@@ -123,7 +123,7 @@ you can quickly get a working version of EdelweissFE in a Linux based
 environment:</p>
 <section id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this heading"></a></h3>
-<p>If necessary, get mamba:</p>
+<p>If necessary, get <a class="reference external" href="https://github.com/mamba-org/mamba">mamba</a>:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Step 1</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh</span>
