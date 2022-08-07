@@ -1,55 +1,15 @@
 # EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
 
+See the [documentation](https://edelweissfe.github.io/edelweissfe).
+
+EdelweissFE aims at an easy to understand, yet efficient implementation of the finite element method.
+Some features are:
+
+ * Python for non performance-critical routines
+ * Cython for performance-critical routines
+ * Parallelization 
+ * Modular system, which is easy to extend
+ * Output to Paraview, Ensight, CSV, matplotlib
+ * Interfaces to powerful direct and iterative linear solvers
+
 EdelweissFE makes use of the [Marmot](https://github.com/MAteRialMOdelingToolbox/Marmot/) library for finite element and constitutive model formulations.
-See the [documentation](edelweissfe.github.io/edelweissfe).
-
-## Prerequisites
-
-EdelweissFE requires 
-- Python 3.5+*
-- NumPy*
-- SciPy*
-- SymPy*
-- Cython 0.28+*
-- Matplotlib*
-- Rich
-- Gstools
-- OpenMP*
-- Intel MKL for the PARDISO*  (binaries and header files; if you use Anaconda, install packages `mkl` and `mkl-include`)
-- [Marmot](https://github.com/MAteRialMOdelingToolbox/Marmot/)
-- Eigen Library for Linear Algebra (http://eigen.tuxfamily.org/index.php?title=Main_Page)
-
-*: Provided via Anaconda packages
-A recent version of Anaconda (https://anaconda.org/) is sufficient to compile and run EdelweissFE on a Linux system.
-Anaconda also provides free access to Intel MKL binaries (via package `mkl`, usually installed by default) and header files (via package `mkl-include`, available via ```conda install mkl-include```), so no standalaone installation of the Intel MKL is required.
-
-## Configuration
-
-Customize setup.py by defining all paths pointing to the respective libraries.
-Default paths are already defined, and usually only minor modifications should be required.
-
-## Installation
-
-EdelweissFE depends on several Cython modules, which must be compiled prior to first running the software.
-
-Simply run
-`python setup.py build_ext -i`
-
-Enforce recompilation and installation with
-`python setup.py build_ext -i --force`
-
-## Run the validation examples
-
-`python run_tests.py`
-
-Recreate the validation reference solutions (please only if you know what you are doing)
-
-`python run_tests.py --create`
-
-## Execute a simulation
-
-`python edelweiss.py INPUT.inp`
-
-### Build the documentation (requires sphinx and sphinx_rtd_theme)
-
-`sphinx-build ./doc/source/ ./docs -b html` 

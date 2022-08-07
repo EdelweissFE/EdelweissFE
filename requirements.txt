@@ -14,3 +14,4 @@ mkl-include
 intel-openmp
 sphinx 
 sphinx_rtd_theme
+numpydoc
