@@ -29,8 +29,9 @@
 
 # @author: Matthias Neuner
 """
-Inputfileparser for inputfiles employing the Abaqus-like syntax.
+Inputfileparser for inputfiles employing an Abaqus-like syntax.
 """
+
 import numpy as np
 from os.path import dirname, join
 import textwrap
@@ -204,14 +205,33 @@ inputLanguage = {
         },
     ),
 }
+
 inputLanguage_ = CaseInsensitiveDict()
 for kw, (doc, opts) in inputLanguage.items():
     inputLanguage_[kw] = (doc, CaseInsensitiveDict(opts))
 inputLanguage = inputLanguage_
 
 
-def parseInputFile(fileName, currentKeyword=None, existingFileDict=None):
-    """Parse an Abaqus like input file to generate a dictionary with its content"""
+def parseInputFile(
+    fileName: str, currentKeyword: str = None, existingFileDict: CaseInsensitiveDict = None
+) -> CaseInsensitiveDict:
+    """Parse an Abaqus-like input file to generate a dictionary with its content.
+
+    Parameters
+    ----------
+    fileName
+        The name of the file to parse.
+    currentKeyword
+        If nested parsing is performed by using ``*include``, this option tells which
+        keyword is currently active.
+    existingFileDict
+        An existing dictionary to append. If Nonde, a new dictionary is created.
+
+    Returns
+    -------
+    CaseInsensitiveDict
+        The parsed input file.
+    """
 
     if not existingFileDict:
         fileDict = CaseInsensitiveDict({key: [] for key in inputLanguage.keys()})
@@ -289,7 +309,8 @@ def parseInputFile(fileName, currentKeyword=None, existingFileDict=None):
 
 
 def printKeywords():
-    """print the input file language set"""
+    """Print the input file language set."""
+
     kwString = "    {:}    "
     kwDataString = "        {:22}{:20}"
 
@@ -309,7 +330,7 @@ def printKeywords():
 
 
 def printKeywordsRST():
-    """print the input file language set RST conform"""
+    """Print the input file language set in an RST conform format."""
 
     for kw, (kwDoc, optiondict) in sorted(inputLanguage.items()):
         print(".. list-table:: " + "``{:}`` : {:}".format(kw, kwDoc))

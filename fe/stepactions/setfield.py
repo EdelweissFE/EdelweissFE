@@ -43,7 +43,6 @@ import numpy as np
 
 
 class StepAction(StepActionBase):
-
     def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.name = name

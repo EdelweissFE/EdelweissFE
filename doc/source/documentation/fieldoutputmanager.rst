@@ -1,5 +1,5 @@
-The fieldoutput manager
-=======================
+Managing field outputs
+======================
 
 Relevant module: ``fe.utils.fieldoutput``
 
@@ -19,3 +19,4 @@ Module documentation:
    :members:
 
 .. autoclass:: fe.utils.fieldoutput.FieldOutputController
+   :members:

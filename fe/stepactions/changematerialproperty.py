@@ -33,12 +33,13 @@ Stepaction to change material properties.
 documentation = {
     "material": "the id of the material to be changed",
     "index": "the index of the property in the material properties vector",
-    "f(t)": "define a function depending on time"
+    "f(t)": "define a function depending on time",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 import sympy as sp
+
 
 class StepAction(StepActionBase):
     """Action class for changing a material property"""
@@ -46,14 +47,14 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.name = name
-        self.theIndex = int (action ['index'])
-        self.theMaterial = modelInfo['materials'][action['material']]
+        self.theIndex = int(action["index"])
+        self.theMaterial = modelInfo["materials"][action["material"]]
 
         self.updateStepAction(name, action, jobInfo, modelInfo, fieldOutputController, journal)
 
     def finishStep(self, U, P, stepMagnitude=None):
         self.active = False
-        pass 
+        pass
 
     def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
         """Update the function describing the material property"""
@@ -61,7 +62,7 @@ class StepAction(StepActionBase):
 
         if "f(t)" in action:
             t = sp.symbols("t")
-            self.f_t= sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
+            self.f_t = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
 
     def changeTheProperties(self, increment, journal):
         """Change the actual properties depending on the current step time"""
@@ -70,9 +71,10 @@ class StepAction(StepActionBase):
 
         theCurrentProperty = self.f_t(stepTime_n + dT)
         journal.message(
-                "Changing property[{:}] of material {:} to {:}".format(self.theIndex, self.theMaterial["name"], theCurrentProperty),
+            "Changing property[{:}] of material {:} to {:}".format(
+                self.theIndex, self.theMaterial["name"], theCurrentProperty
+            ),
             self.name,
         )
 
-        self.theMaterial['properties'][self.theIndex] = theCurrentProperty
-
+        self.theMaterial["properties"][self.theIndex] = theCurrentProperty

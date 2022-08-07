@@ -30,6 +30,8 @@ and available keywords can be printed using
 
     python edelweiss.py --keywords
 
+.. automodule:: fe.utils.inputfileparser
+   :members: 
 
 Keywords
 ********

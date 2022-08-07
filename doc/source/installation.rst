@@ -4,7 +4,7 @@ Installation
 Marmot
 ******
 By default, a working instance of `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_, 
-containing specific implementations of finite elements and constutitive models,
+containing specific implementations of finite elements and constitutive models,
 is required.
 
 Please build Marmot before you build EdelweissFE.
@@ -18,15 +18,15 @@ Default paths are already defined, and usually only minor modifications should b
 Building EdelweissFE
 ********************
 
-EdelweissFE depends on several Cython modules, which must be compiled prior to first running the software.
+EdelweissFE depends on several Cython modules, which must be compiled prior to running the EdelweissFE.
 
-Simply run
+To build the modules (inplace), simply run
 
 .. code-block:: console
 
     python setup.py build_ext -i
 
-Enforce recompilation and installation with
+Enforce a recompilation with
 
 .. code-block:: console
 
@@ -38,7 +38,7 @@ Run the validation examples
 
     python run_tests.py
 
-Recreate the validation reference solutions (please only if you know what you are doing)
+Recreate the validation reference solutions (only if you know what you are doing)
 
 .. code-block:: console
 
@@ -55,7 +55,7 @@ environment:
 Steps
 _____
 
-If necessary, get mamba:
+If necessary, get `mamba <https://github.com/mamba-org/mamba>`_:
 
 .. code-block:: console
    :caption: Step 1

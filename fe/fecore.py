@@ -31,8 +31,9 @@
 """This is the main module of EdelweissFE.
 
 Heart is the ``*job`` keyword, which defines the spatial dimension
-A ``*job`` defintion consists of multiple ``*steps``, associated with that job.
+A ``*job`` definition consists of multiple ``*steps``, associated with that job.
 """
+
 from collections import OrderedDict, defaultdict
 from fe.config import analyticalfields
 from fe.config.phenomena import domainMapping
@@ -44,7 +45,7 @@ from fe.utils.fieldoutput import FieldOutputController
 from fe.utils.misc import filterByJobName, stringDict
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
-from fe.utils.dofmanager import DofManager
+from fe.utils.dofmanager import DofManager, DofVector
 from fe.variables.scalarvariable import ScalarVariable
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
@@ -52,8 +53,20 @@ from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 from fe.utils.abqmodelconstructor import AbqModelConstructor
 from time import time as getCurrentTime
 
+from fe.stepactions.base.stepactionbase import StepActionBase
 
-def gatherStepActions(step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal):
+
+def gatherStepActions(
+    step: dict,
+    jobInfo: dict,
+    modelInfo: dict,
+    time: float,
+    U: DofVector,
+    P: DofVector,
+    stepActions: dict[str, StepActionBase],
+    fieldOutputController: FieldOutputController,
+    journal: Journal,
+) -> dict[str, StepActionBase]:
     """Parses all the defined actions for the current step,
     and calls the respective modules, which generate step-actions based on
     computed results, model info and job information.
@@ -61,7 +74,34 @@ def gatherStepActions(step, jobInfo, modelInfo, time, U, P, stepActions, fieldOu
     solveStep() in the feCore main routine afterwards.
     The step action modules decide if old stepaction definitions are
     overwritten or extended. Returns a dictionary with keys as defined in
-    stepactions."""
+    stepactions.
+
+    Parameters
+    ----------
+    step
+        The step active for which the actions are gathered.
+    jobInfo
+        A dictionary containing information on the job.
+    modelInfo
+        A dictionary containing the model tree.
+    time
+        The current time of the simulation.
+    U
+        The current solution vector.
+    P
+        The current reaction vector.
+    stepActions
+        A dictionary containing already existing step actions.
+    fieldOutputController
+        The field output controller.
+    journal
+        The journal instance for logging.
+
+    Returns
+    -------
+    dict[str,StepActionBase]
+        The updated dictionary of step actions.
+    """
 
     for actionType, *definition in step["data"]:
         options = stringDict(definition)
@@ -82,20 +122,41 @@ def gatherStepActions(step, jobInfo, modelInfo, time, U, P, stepActions, fieldOu
     return stepActions
 
 
-def finiteElementSimulation(inputfile, verbose=False, suppressPlots=False):
+def finiteElementSimulation(
+    inputfile: dict, verbose: bool = False, suppressPlots: bool = False
+) -> tuple[bool, DofVector, DofVector, FieldOutputController]:
     """This is core function of the finite element analysis.
     Based on the keyword ``*job``, the finite element model is defined.
 
     It assembles
-     * jobInfo
-     * modeInfo
+     * the information on the job
+     * the model tree
      * steps
-     * fieldOutputs
-     * outputManagers
+     * field outputs
+     * output managers
 
     and controls the respective solver based on the defined simulation steps.
     For each step, the step-actions (dirichlet, nodeforces) are collected by
     external modules.
+
+    Parameters
+    ----------
+    inputfile
+        The input file in dictionary form.
+    verbose
+        Be verbose during the simulation.
+    suppressPlots
+        Suppress plots at the end of simulation for batch runs.
+
+    Returns
+    -------
+    tuple
+        A tuple containing
+            - Truth value of success
+            - The solution vector.
+            - The reaction vector.
+            - The fieldoutput controller containing all results.
+
     """
 
     identification = "feCore"

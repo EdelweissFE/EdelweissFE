@@ -83,6 +83,7 @@ from fe.utils.misc import stringDict
 import numpy as np
 import os
 
+
 def generateModelData(generatorDefinition, modelInfo, journal):
 
     options = generatorDefinition["data"]
@@ -131,11 +132,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                 nodes.append(node)
                 currentNodeLabel += 1
                 # only add node to modelInfo if it will be part of an element
-                if (
-                    testEl.nNodes == 8
-                    or testEl.nNodes == 20
-                    and sum(np.mod([ix, iy, iz], 2)) < 2
-                ):
+                if testEl.nNodes == 8 or testEl.nNodes == 20 and sum(np.mod([ix, iy, iz], 2)) < 2:
                     modelInfo["nodes"][currentNodeLabel] = node
 
     # # 3d plot of nodes; for debugging
@@ -156,6 +153,8 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 
     # plotNodeList( nodes )
     # plotNodeList( [modelInfo["nodes"][n] for n in modelInfo["nodes"]] )
+
+    # fmt: off
 
     elements = []
     currentElementLabel = 1
@@ -307,6 +306,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                     node.fields.update([(f, True) for f in newEl.fields[i]])
 
                 currentElementLabel += 1
+    # fmt: on
 
     nG = np.asarray(nodes).reshape(nNodesX, nNodesY, nNodesZ)
 
@@ -316,37 +316,17 @@ def generateModelData(generatorDefinition, modelInfo, journal):
         if len(n.fields) > 0:
             modelInfo["nodeSets"]["{:}_all".format(name)].append(n)
 
-    modelInfo["nodeSets"]["{:}_left".format(name)] = [
-        n for n in np.ravel(nG[0, :, :]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_right".format(name)] = [
-        n for n in np.ravel(nG[-1, :, :]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_top".format(name)] = [
-        n for n in np.ravel(nG[:, -1, :]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_bottom".format(name)] = [
-        n for n in np.ravel(nG[:, 0, :]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_front".format(name)] = [
-        n for n in np.ravel(nG[:, :, -1]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_back".format(name)] = [
-        n for n in np.ravel(nG[:, :, 0]) if len(n.fields) > 0
-    ]
+    modelInfo["nodeSets"]["{:}_left".format(name)] = [n for n in np.ravel(nG[0, :, :]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_right".format(name)] = [n for n in np.ravel(nG[-1, :, :]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_top".format(name)] = [n for n in np.ravel(nG[:, -1, :]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_bottom".format(name)] = [n for n in np.ravel(nG[:, 0, :]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_front".format(name)] = [n for n in np.ravel(nG[:, :, -1]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_back".format(name)] = [n for n in np.ravel(nG[:, :, 0]) if len(n.fields) > 0]
 
-    modelInfo["nodeSets"]["{:}_bottomLeft".format(name)] = [
-            n for n in np.ravel(nG[0, 0, :]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_bottomRight".format(name)] = [
-            n for n in np.ravel(nG[-1, 0, :]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_bottomFront".format(name)] = [
-        n for n in np.ravel(nG[:, 0, -1]) if len(n.fields) > 0
-    ]
-    modelInfo["nodeSets"]["{:}_bottomBack".format(name)] = [
-        n for n in np.ravel(nG[:, 0, 0]) if len(n.fields) > 0
-    ]
+    modelInfo["nodeSets"]["{:}_bottomLeft".format(name)] = [n for n in np.ravel(nG[0, 0, :]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_bottomRight".format(name)] = [n for n in np.ravel(nG[-1, 0, :]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_bottomFront".format(name)] = [n for n in np.ravel(nG[:, 0, -1]) if len(n.fields) > 0]
+    modelInfo["nodeSets"]["{:}_bottomBack".format(name)] = [n for n in np.ravel(nG[:, 0, 0]) if len(n.fields) > 0]
 
     # modelInfo["nodeSets"]["{:}_leftBottom".format(name)]  = [nG[0, 0]]
     # modelInfo["nodeSets"]["{:}_leftTop".format(name)]     = [nG[0, -1]]
@@ -362,9 +342,7 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     modelInfo["elementSets"]["{:}_front".format(name)] = np.ravel(elGrid[:, :, -1])
     modelInfo["elementSets"]["{:}_back".format(name)] = np.ravel(elGrid[:, :, 0])
 
-    modelInfo["elementSets"]["{:}_centralFrontToBack".format(name)] = np.ravel(
-        elGrid[int(nX / 2), int(nY / 2), 0:nZ]
-    )
+    modelInfo["elementSets"]["{:}_centralFrontToBack".format(name)] = np.ravel(elGrid[int(nX / 2), int(nY / 2), 0:nZ])
 
     nShearBand = min(nX, nY)
     if nShearBand > 3:
@@ -379,14 +357,9 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                     ]
                 )
             )
-        modelInfo["elementSets"]["{:}_shearBandFrontToBack".format(name)] = [
-            e for e in shearBand
-        ]
+        modelInfo["elementSets"]["{:}_shearBandFrontToBack".format(name)] = [e for e in shearBand]
         modelInfo["elementSets"]["{:}_shearBandCenterFrontToBack".format(name)] = [
-            e
-            for e in shearBand[
-                (int(nShearBand / 2) - 1) * nZ : (int(nShearBand / 2) + 2) * nZ
-            ]
+            e for e in shearBand[(int(nShearBand / 2) - 1) * nZ : (int(nShearBand / 2) + 2) * nZ]
         ]
 
     # modelInfo["elementSets"]["{:}_sandwichHorizontal".format(name)] = []
@@ -405,25 +378,13 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     #         modelInfo["elementSets"]["{:}_core".format(name)].append(e)
 
     # surfaces
-    modelInfo["surfaces"]["{:}_bottom".format(name)] = {
-        1: [e for e in np.ravel(elGrid[:, 0, :])]
-    }
-    modelInfo["surfaces"]["{:}_top".format(name)] = {
-        2: [e for e in np.ravel(elGrid[:, -1, :])]
-    }
+    modelInfo["surfaces"]["{:}_bottom".format(name)] = {1: [e for e in np.ravel(elGrid[:, 0, :])]}
+    modelInfo["surfaces"]["{:}_top".format(name)] = {2: [e for e in np.ravel(elGrid[:, -1, :])]}
 
-    modelInfo["surfaces"]["{:}_right".format(name)] = {
-        5: [e for e in np.ravel(elGrid[-1, :, :])]
-    }
-    modelInfo["surfaces"]["{:}_left".format(name)] = {
-        3: [e for e in np.ravel(elGrid[0, :, :])]
-    }
+    modelInfo["surfaces"]["{:}_right".format(name)] = {5: [e for e in np.ravel(elGrid[-1, :, :])]}
+    modelInfo["surfaces"]["{:}_left".format(name)] = {3: [e for e in np.ravel(elGrid[0, :, :])]}
 
-    modelInfo["surfaces"]["{:}_front".format(name)] = {
-        4: [e for e in np.ravel(elGrid[:, :, -1])]
-    }  #
-    modelInfo["surfaces"]["{:}_back".format(name)] = {
-        6: [e for e in np.ravel(elGrid[:, :, 0])]
-    }
+    modelInfo["surfaces"]["{:}_front".format(name)] = {4: [e for e in np.ravel(elGrid[:, :, -1])]}  #
+    modelInfo["surfaces"]["{:}_back".format(name)] = {6: [e for e in np.ravel(elGrid[:, :, 0])]}
 
     return modelInfo

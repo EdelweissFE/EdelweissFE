@@ -35,6 +35,21 @@ Module ``fe.constraints.rigidbody``
     :language: console
     :caption: Example: ``testfiles/RigidBodyConstraintLargeDeformations3D/test.inp``
 
+``penaltyindirectcontrol`` - Penalty based inidirect control
+------------------------------------------------------------
+
+Module ``fe.constraints.penaltyindirectcontrol``
+
+.. automodule:: fe.constraints.penaltyindirectcontrol
+    :members: __doc__
+
+.. pprint:: fe.constraints.penaltyindirectcontrol.documentation
+    :caption: Options
+
+.. literalinclude:: ../../../testfiles/PenaltyBasedIndirectControl/test.inp
+    :language: console
+    :caption: Example: ``testfiles/PenaltyBasedIndirectControl/test.inp``
+
 
 Implementing your own constraints
 ---------------------------------

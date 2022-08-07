@@ -32,6 +32,8 @@
 of a step.
 """
 
+documentation = {"update": "model accessible, executable expression"}
+
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict
 from fe.utils.math import execModelAccessibleExpression

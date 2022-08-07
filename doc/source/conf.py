@@ -19,16 +19,35 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../../"))
 
+
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
+    "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.coverage",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",  
+    "numpydoc",
 ]
 
 templates_path = ["_templates"]
 exclude_patterns = []
 
-autodoc_typehints = "both"
+autosummary_generate = True
+autoclass_content = "class"
+autodoc_member_order = "groupwise"
+#autodoc_typehints = "both"
+# less crowded:
+autodoc_typehints = "description"
 
+napoleon_use_admonition_for_notes = True
+numpydoc_show_class_members = True
+numpydoc_class_members_toctree = False
+numpydoc_show_inherited_class_members = True
+
+pygments_style = "sphinx"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

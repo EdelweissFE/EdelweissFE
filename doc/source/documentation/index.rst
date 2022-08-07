@@ -17,6 +17,7 @@ Documentation
    fieldoutputmanager
    dofmanager
    output
+   plotter
    solvers
    parallelization
    journal

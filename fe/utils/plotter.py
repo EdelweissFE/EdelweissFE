@@ -29,9 +29,52 @@
 
 # @author: Matthias Neuner
 """
-Plotting in EdelweissFE throught matplotlib can be performed easily
-throught a global plotting module, which is passed to all output managers.
+Plotting in EdelweissFE through matplotlib can be performed easily
+through a global plotting instance, which is passed to all output managers.
+Output managers may use the plotter for visualizing all kinds of outputs.
+
+The style of the plots can be configured through
+the keyword ``*configurePlots``:
+
+.. code-block:: console
+
+    *configurePlots,
+        figure=1, axSpec=211, 
+        figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
+        figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
+        figure=4, axSpec=111, aspect=equal
+
+Plots can be exported to .pdf (and png) files using the ``*exportPlots`` keyword:
+
+.. code-block:: console
+
+    *exportPlots,
+        figure=1, fileName=fig1, png=True
+        figure=2, fileName=fig2
+
+The default style of plots can be configured via a classical rcparams.py file, which may be located in the current working directory.
 """
+
+documentation_configurePlots = {
+    "figure": "The figure to be configured",
+    "xLimits": "Specify x axis limits",
+    "yLimits": "Specify y axis limits",
+    "xLabel": "Specify x axis label",
+    "yLabel": "Specify y axis label",
+    "flipX": "Flip x axis",
+    "flipY": "Flip y axis",
+    "aspect": "Set aspect",
+    "grid": "Switch grid",
+}
+
+documentation_exportPlots = {
+    "figure": "The figure to be exported",
+    "fileName": "The export file name",
+    "width": "Width of the figure",
+    "heightRatio": "Ratio of height/width",
+    "png": "Set true to export .png additionally",
+    "scale": "Scale the figure",
+}
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -43,6 +86,8 @@ from fe.utils.misc import stringDict
 
 from distutils.spawn import find_executable
 
+from fe.journal.journal import Journal
+
 
 defaultMarkerCycle = itertools.cycle(("o", "v", "D", "s", "^"))
 defaultLinePlotColorCycle = itertools.cycle(("k"))
@@ -52,10 +97,17 @@ defaultLineStyleCycle = itertools.cycle(("-", "0-3-2", "0-3-1-1-1", "0-1-1"))
 
 class Plotter:
     """
-    The Unified Plotter, which can be accessed and used by all outputmanagers
+    The unified plotter, which can be accessed and used by all outputmanagers.
+
+    Parameters
+    ----------
+    journal
+        The journal instance for logging.
+    inputfile
+        The inputfile dictionary.
     """
 
-    def __init__(self, journal, inputfile):
+    def __init__(self, journal: Journal, inputfile: dict):
         self.journal = journal
 
         latexAvailable = False
@@ -99,8 +151,22 @@ class Plotter:
         ]
         self.exportJobs = [stringDict(c) for configEntry in inputfile["*exportPlots"] for c in configEntry["data"]]
 
-    def getAx(self, figureID=0, axSpec=111):
-        """create a figure with ax if it doesn't exist so far"""
+    def getAx(self, figureID: int = 0, axSpec: int = 111) -> matplotlib.axes.Axes:
+        """Get or create a figure with axes if it doesn't exist yet.
+
+        Parameters
+        ----------
+        figureID
+            The matplotlib figure ID.
+        axSpec
+            The matplotlib axis specification.
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The matplotlib Axes instance.
+        """
+
         if not figureID in self.figsWithAxes:
             self.figsWithAxes[figureID] = (plt.figure(figureID), {})
 
@@ -112,15 +178,40 @@ class Plotter:
 
         return self.figsWithAxes[figureID][1][axSpec]
 
-    def getFig(self, figureID=0):
-        """create a figure doesn't exist so far"""
+    def getFig(self, figureID: int = 0) -> matplotlib.figure.Figure:
+        """Get or create a figure doesn't exist yet.
+
+        Parameters
+        ----------
+        figureID
+            The matplotlib figure ID.
+        Returns
+        -------
+        matplotlib.figure.Figure
+            The matplotlib Figure instance.
+        """
+
         if not figureID in self.figsWithAxes:
             self.figsWithAxes[figureID] = (plt.figure(figureID), {})
 
         return self.figsWithAxes[figureID][0]
 
-    def plotXYData(self, x, y, figureID=1, axSpec=111, plotOptions=None):
-        """plots a single curve"""
+    def plotXYData(self, x: np.ndarray, y: np.ndarray, figureID: int = 1, axSpec: int = 111, plotOptions: dict = None):
+        """Plots a single curve.
+
+        Parameters
+        ----------
+        x
+            The x data.
+        y
+            The y data.
+        figureID
+            The matplotlib figure ID.
+        axSpec
+            The matpotlib axes.
+        plotOptions
+            A dictionary with additional plot options in matplotlib format.
+        """
 
         ax = self.getAx(figureID, axSpec)
 
@@ -147,6 +238,7 @@ class Plotter:
         ax.plot(x, y, **plotDefinition)
 
     def configurePlotter(self):
+        """Set global options of the plotter."""
 
         for configEntry in self.configurationLines:
 
@@ -174,6 +266,8 @@ class Plotter:
                 ax.grid()
 
     def exportPlots(self):
+        """Export all plots according to the export job definitions."""
+
         for exportJob in self.exportJobs:
             self.exportFigure(
                 exportJob.get("fileName"),
@@ -184,7 +278,9 @@ class Plotter:
                 exportJob.get("png", False),
             )
 
-    def fancyFigSize(self, scale, width, heightRatio=False):
+    def _fancyFigSize(self, scale: float, width: float, heightRatio: float = False) -> tuple[float, float]:
+        """Create a fancy figure size compatible with matplotlib specs."""
+
         fig_width_pt = width
         inches_per_pt = 1.0 / 72.27  # Convert pt to inch
         golden_mean = (np.sqrt(5.0) - 1.0) / 2.0  # Aesthetic ratio (you could change this)
@@ -193,9 +289,35 @@ class Plotter:
         fig_size = [fig_width, fig_height]
         return fig_size
 
-    def exportFigure(self, fileName, figureID, width=469.47, scale=1.0, heightRatio=False, png=False):
+    def exportFigure(
+        self,
+        fileName: str,
+        figureID: int,
+        width: float = 469.47,
+        scale: float = 1.0,
+        heightRatio: float = False,
+        png: bool = False,
+    ):
+        """Export a figure.
+
+        Parameters
+        ----------
+        fileName
+            The filename.
+        figureID
+            The matplotlib figure ID.
+        width
+            The width in pt.
+        scale
+            Scale the figure.
+        heightRatio.
+            Set the height ratio or take golden mean if False.
+        png
+            Also export a .png figure.
+        """
+
         fig, ax = self.figsWithAxes[figureID]
-        fig.set_size_inches(self.fancyFigSize(scale, width, heightRatio))
+        fig.set_size_inches(self._fancyFigSize(scale, width, heightRatio))
         fig.tight_layout(pad=0.15)
         fig.savefig("{}.pgf".format(fileName))
         fig.savefig("{}.pdf".format(fileName))
@@ -205,6 +327,8 @@ class Plotter:
     def finalize(
         self,
     ):
+        """Finalize and export plots."""
+
         import warnings
 
         with warnings.catch_warnings():
@@ -226,4 +350,6 @@ class Plotter:
     def show(
         self,
     ):
+        """Show the plots!"""
+
         plt.show()

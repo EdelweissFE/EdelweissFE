@@ -346,7 +346,6 @@ class NIST:
         distributedLoads = activeStepActions["distributedLoads"]
         bodyForces = activeStepActions["bodyForces"]
 
-
         for changeMaterialProperty in activeStepActions["changeMaterialProperties"]:
             changeMaterialProperty.changeTheProperties(increment, self.journal)
 
@@ -357,7 +356,6 @@ class NIST:
         while True:
             for geostatic in activeStepActions["geostatics"]:
                 geostatic.apply()
-
 
             Un1[:] = Un
             Un1 += dU
@@ -952,7 +950,9 @@ class NIST:
         activeActions["concentratedLoads"] = stepActions["nodeforces"].values()
 
         activeActions["geostatics"] = [g for g in stepActions["geostatic"].values() if g.active]
-        activeActions["changeMaterialProperties"] = [c for c in stepActions["changematerialproperty"].values() if c.active]
+        activeActions["changeMaterialProperties"] = [
+            c for c in stepActions["changematerialproperty"].values() if c.active
+        ]
         activeActions["setfields"] = [s for s in stepActions["setfield"].values() if s.active]
         activeActions["initializematerial"] = [s for s in stepActions["initializematerial"].values() if s.active]
 

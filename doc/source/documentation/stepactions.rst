@@ -124,6 +124,18 @@ Relevant module: ``fe.stepactions.setfield``
 .. pprint:: fe.stepactions.setfield.documentation
    :caption: Options:
 
+
+``modelupdate`` - Update the model
+----------------------------------
+
+Relevant module: ``fe.stepactions.modelupdate``
+
+.. automodule:: fe.stepactions.modelupdate
+    :members: __doc__
+
+.. pprint:: fe.stepactions.modelupdate.documentation
+   :caption: Options:
+
 Implementation your own step actions
 ------------------------------------
 

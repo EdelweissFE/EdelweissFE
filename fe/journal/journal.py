@@ -157,7 +157,7 @@ class Journal:
     def setVerbose(
         self,
     ):
-        """Set highes verbose."""
+        """Set highest verbosity."""
 
         self.suppressLvl = 3
 

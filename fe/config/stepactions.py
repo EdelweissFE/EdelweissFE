@@ -29,7 +29,8 @@
 
 # @author: Matthias Neuner
 """
-Stepactions are defined within a ``*step`` definition, 
+Step actions define actions run during a simulation. 
+They are defined within a ``*step`` definition, line by line, 
 by specifying their ``name`` and a list of ``option=value``, for example
 
 .. code-block:: console
