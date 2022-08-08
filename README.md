@@ -1,3 +1,5 @@
+![documentation](https://github.com/EdelweissFE/EdelweissFE/actions/workflows/sphinx.yml/badge.svg) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) 
+
 # EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
 
 See the [documentation](https://edelweissfe.github.io/EdelweissFE).
