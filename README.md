@@ -2,7 +2,10 @@
 
 # EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
 
-![Borehole breakout](./doc/source/borehole_damage_lowdilation.gif)
+
+<p align="center">
+  <img width="512" height="512" src="./doc/source/borehole_damage_lowdilation.gif">
+</p>
 
 See the [documentation](https://edelweissfe.github.io/EdelweissFE).
 
