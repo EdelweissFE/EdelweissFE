@@ -14,6 +14,14 @@ lY      =40
 lZ      =1
 elType  =C3D20R
 
+*modelGenerator, generator=findClosestNode, name=gen2
+location='0, 0, 0'
+storeIn=origin
+
+*modelGenerator, generator=findClosestNode, name=gen3
+location='10, 10, 20'
+storeIn=origin
+
 *section, name=section1, material=myMaterial, type=solid
 all
 

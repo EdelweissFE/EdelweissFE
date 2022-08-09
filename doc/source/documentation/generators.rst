@@ -37,7 +37,7 @@ Relevant module ``fe.generators.planerectquad``
     :caption: Example: ``testfiles/NodeForces/test.inp``
 
 ``cubit`` - A cubit mesh generator
----------------------------------------------------------
+----------------------------------
 
 Relevant module ``fe.generators.cubit``
 
@@ -50,3 +50,14 @@ Relevant module ``fe.generators.cubit``
 .. literalinclude:: ../../../testfiles/CubitGen/test.inp
     :language: console
     :caption: Example: ``testfiles/CubitGen/test.inp``
+
+``findclosestnode`` - Find the closest node 
+-------------------------------------------
+
+Relevant module ``fe.generators.findclosestnode``
+
+.. automodule:: fe.generators.findclosestnode
+   :members: __doc__
+
+.. pprint:: fe.generators.findclosestnode.documentation
+   :caption: Options:
