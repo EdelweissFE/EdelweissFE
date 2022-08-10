@@ -136,8 +136,8 @@ Relevant module: ``fe.stepactions.modelupdate``
 .. pprint:: fe.stepactions.modelupdate.documentation
    :caption: Options:
 
-Implementation your own step actions
-------------------------------------
+Implementing your own step actions
+----------------------------------
 
 Subclass from the step action base class in module ``fe.stepactions.base.stepactionbase``
 

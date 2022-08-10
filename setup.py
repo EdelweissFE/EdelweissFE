@@ -113,7 +113,7 @@ extensions += [
 ]
 
 """
-Build The (old) parallel NISTParallel solver with OpenMP
+Build The parallel NISTParallel, for Marmot elements only, solver with OpenMP
 """
 extensions += [
     Extension(
