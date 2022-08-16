@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Matthias Neuner matthias.neuner@uibk.ac.at
+#  Paul Hofer paul.hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -26,33 +27,43 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 # Created on Tue Jan  17 19:10:42 2017
+#
+# @author: Matthias Neuner, Paul Hofer
 
-# @author: Matthias Neuner
 """This section represents a classical solid materal section.
 """
 
 documentation = {
     "elementSets": "comma separated list of element sets for this section",
     "material": "the material to be assigned",
+    "materialParameterFromField, index=[index of material parameter], value=[name of analytical field], type=[either 'setToValue' or 'scale']": "(optional) set or scale a material parameter using the value of the given analytical field; modify the field value using the optional keyword f(p,f)=[...] (p...value of parameter from material definition; f...value of analytical field)",
 }
 
-import numpy as np
-import gstools
-from fe.utils.misc import stringDict
+from fe.sections.base.sectionbase import Section as SectionBase
 
 
-class Section:
-    def __init__(self, name, options, materialName, t, modelInfo):
-        self.elSetNames = [e for l in options for e in l]
-        self.materialName = materialName
+class Section(SectionBase):
+    def __init__(self, name, options, materialName, thickness, modelInfo):
+        super().__init__(name, options, materialName, thickness, modelInfo)
 
     def assignSectionPropertiesToModel(self, modelInfo):
         elSets = [modelInfo["elementSets"][setName] for setName in self.elSetNames]
         material = modelInfo["materials"][self.materialName]
 
-        for elSet in elSets:
-            for el in elSet:
-                el.initializeElement()
-                el.setMaterial(material["name"], material["properties"])
+        if any(self.materialParameterFromFieldDefs):
+            for elSet in elSets:
+                for el in elSet:
+                    materialProperties = super().propertiesFromField(
+                        el, material, modelInfo
+                    )
+
+                    el.initializeElement()
+                    el.setMaterial(material["name"], materialProperties)
+
+        else:
+            for elSet in elSets:
+                for el in elSet:
+                    el.initializeElement()
+                    el.setMaterial(material["name"], material["properties"])
 
         return modelInfo

@@ -1,11 +1,10 @@
 import numpy as np
-import gstools
-from fe.utils.misc import stringDict
 from fe.sections.base.randomfieldbase import Section as RandomBase
 
 
 class Section(RandomBase):
     def __init__(self, name, options, materialName, t, modelInfo):
+
         super().__init__(name, options, materialName, t, modelInfo)
 
         self.indexRandom = int(self.options["indexRandom"])

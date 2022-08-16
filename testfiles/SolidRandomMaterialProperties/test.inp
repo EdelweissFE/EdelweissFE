@@ -32,6 +32,17 @@ lengthScale=10
 seed=1
 'f(x,ref,rand)'='ref*(1+rand)'
 
+** *AnalyticalField, name=AnalyticalField-01, type=randomScalar
+** model       = Gaussian
+** mean        = 0
+** variance    = 0.001
+** lengthscale = 10
+** seed        = 1
+** 
+** *section, name=mat, material=mat, type=solid
+** materialParameterFromField, index=2, field=AnalyticalField-01, type=settovalue, "f(p,f)=p*(1+f)"
+** all
+
 
 *job, name=c3d8job, domain=3d, solver=NISTParallel
 
