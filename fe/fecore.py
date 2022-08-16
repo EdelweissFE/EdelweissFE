@@ -191,9 +191,9 @@ def finiteElementSimulation(
     abqModelConstructor = AbqModelConstructor(journal)
     modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createMaterialsFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
+    modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
 
     # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
     for constraintName, constraint in modelInfo["constraints"].items():
