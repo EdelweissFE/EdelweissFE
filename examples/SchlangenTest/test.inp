@@ -1,0 +1,65 @@
+*material, name=linearelastic, id=steel
+210000, 0.2
+
+*material, name=GMCDPFiniteStrain, id=concrete
+**E,        nu,     GcToG,  lbending,   lTorsion,   lJ2          polarRatio,     
+30000.0,    0.15 ,  0.1,     2,           4,       2,          1.499999
+**fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
+47.4,       13,     4.74,   55,         0.85,           0.0050,       .99,             2,       1.00
+**Ah,       Bh,     Ch,     Dh,         As,     
+0.08,       0.003,  2.0,    0.000001,   15.0
+**a1,       a2,     a3,     a4,         
+0.5,        0.00,   0.5,     0,           
+
+*modelGenerator, generator=cubit, name=gen
+cubitCmd        = False
+jouFile         = schlangen_mesh.jou
+outFile         = schlangen_mesh.inp
+elTypePerBlock  = 'concrete=GMC3D20RUL, steel=C3D20R'
+silent
+
+*section, name=sec_concrete, material=concrete, type=solid
+concrete
+
+*section, name=sec_steel, material=steel, type=solid
+steel
+
+
+*job, name=SchlangenTest, domain=3d, solver=NISTPArcLength
+
+*fieldOutput,
+elSet=all,  name=displacement,  field=displacement, result=U
+elSet=concrete,  name=nonlocal damage,  field=nonlocal damage, result=U
+name=RF, nSet=all_bc, field=displacement, result=P, f(x)='np.sum(x[:,1], axis=0)', saveHistory=True, export=RF
+name=CMOD, nSet=cmod, field=displacement, result=U, f(x)='x[0,0] - x[1,0]', export=CMOD, saveHistory=True
+name=CMSD, nSet=cmod, field=displacement, result=U, f(x)='x[0,1] - x[1,1]', export=CMOD, saveHistory=True
+elSet=concrete,  name=damage,  result=omega, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+*output, type=monitor, jobName=SchlangenTest, name=monitor
+fieldOutput=RF
+fieldOutput=CMOD
+fieldOutput=CMSD
+
+*output, type=ensight, jobName=SchlangenTest, name=esExport
+create=perNode,     fieldOutput=displacement 
+create=perNode,     fieldOutput=nonlocal damage
+create=perElement,  fieldOutput=damage
+configuration, overwrite=yes
+
+*step, jobName=SchlangenTest, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+options, category=NISTArcLength, arcLengthController=off
+initializematerial, name=init, elSet=concrete
+
+dirichlet, name=sym, nSet=face_back_concrete, field=displacement, 3=0
+dirichlet, name=sym_r, nSet=face_back_concrete, field=micro rotation, 1=0, 2=0
+dirichlet, name=sym_s, nSet=face_back_steel, field=displacement, 3=0
+
+dirichlet, name=fixed, nSet=fixed_bc, field=displacement, 1=0., 2=0., 3=0.
+dirichlet, name=supp, nSet=supp_y, field=displacement, 2=0, 3=0
+
+*step, jobName=SchlangenTest, maxInc=1e-2, minInc=1e-6, maxNumInc=1000, maxIter=10, stepLength=1
+options, category=NISTArcLength, arcLengthController=indirectcontrol,
+
+indirectcontrol, dof1=' nodeSets["cmod_left"][0].fields["displacement"][1] ', dof2='nodeSets["cmod_right"][0].fields["displacement"][1] ' , L=+0.5, 
+
+nodeforces, name=low_p, nSet=low_p, field=displacement, 2=1
+nodeforces, name=high_p, nSet=high_p, field=displacement, 2=10

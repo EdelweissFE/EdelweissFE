@@ -1,0 +1,100 @@
+reset
+
+brick x 440 y 100 z 5
+brick x 20 y 5 z 5
+vol 2 move -220 50
+vol 2 move -0 100
+vol 2 move -0 -100
+vol 2 move -0 -100
+vol 2 move -0 -100
+vol 2 move -0 100
+vol 2 move 20
+vol 2 move 0 -2.5
+brick x 20 y 5 z 5
+vol 3 move 20
+vol 3 move 0 -50
+vol 3 move 0 -2.5
+brick x 20 y 5 z 5
+vol 3 move 200 0
+vol 3 move -200 0
+vol 4 move 200 0
+vol 4 move  50
+vol 4 move  -50
+vol 4 move  0 50
+vol 4 move  0 2.5
+brick x 20 y 5 z 5
+vol 5 move -20 50
+vol 5 move -0 2.5
+brick x 5 y 5 z 20
+del vol 6
+brick x 5 y 20 z 5
+
+vol 7 move 0 50
+vol 7 move 0 -10
+subtract volume 7 from volume 1 
+
+webcut volume 1 with plane xplane offset 2.5 imprint merge
+webcut volume 1  with plane xplane offset 40 imprint merge
+webcut volume 9 with plane yplane offset 30 imprint merge
+webcut volume 9 with plane yplane offset 0 imprint merge
+webcut volume 9 11 with plane xplane offset 20 imprint merge
+
+webcut volume 11 with plane yplane offset 20 imprint merge
+webcut volume 12 with plane yplane offset -5 imprint merge
+
+imprint vol all
+merge vol all
+
+
+volume all size 5
+mesh vol all
+refine vol 9 11 13 15 using plane zplane depth 0
+
+block 1 add vol all
+block 1 remove vol 2 3 4 5
+block 1 name "concrete"
+
+block 2 add vol 2 3 4 5
+block 2 name "steel"
+block 1 2 element type hex20
+
+#nodeset 1 add node with x_coord = -200 and y_coord = -55 and z_coord=2.5
+nodeset 1 add node with x_coord >=  -210 and x_coord <= -190 and y_coord = -55 
+nodeset 1 name "low_p"
+
+#nodeset 2 add node with x_coord = 20 and y_coord = -55 and z_coord=2.5
+nodeset 2 add node with x_coord >= 10 and x_coord <= 30 and y_coord = -55 
+nodeset 2 name "high_p"
+
+#nodeset 3 add node with x_coord = -20 and y_coord = 55
+nodeset 3 add node with x_coord >=  -30 and x_coord <= -10 and y_coord = 55
+nodeset 3 name "fixed_bc"
+
+#nodeset 4 add node with x_coord = 200 and y_coord = 55
+nodeset 4 add node with x_coord <= 210 and x_coord >= 190 and y_coord = 55
+nodeset 4 name "supp_y"
+
+nodeset 5 add node with x_coord = -2.5 and y_coord=50 and z_coord=2.5
+nodeset 5 name "cmod_left"
+
+nodeset 6 add node with x_coord = 2.5 and y_coord=50 and z_coord=2.5
+nodeset 6 name "cmod_right"
+
+nodeset 7 add node in nodeset fixed_bc 
+nodeset 7 add node in nodeset supp_y 
+nodeset 7 name "all_bc"
+
+nodeset 8 add node with z_coord = 2.5 and y_coord >= -50 and y_coord <= 50
+nodeset 8 name "face_back_concrete"
+
+nodeset 9 add node with z_coord = 2.5 and ( y_coord < -50 or y_coord > 50 )
+nodeset 9 name "face_back_steel"
+
+nodeset 10 add node in cmod_left
+nodeset 10 add node in cmod_right
+nodeset 10 name "cmod"
+
+export abaqus schlangen_mesh.inp partial overwrite
+export mesh schlangen_mesh.e overwrite
+
+
