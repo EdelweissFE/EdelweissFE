@@ -55,6 +55,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#boxgen-a-3d-box-mesh-generator"><code class="docutils literal notranslate"><span class="pre">boxgen</span></code> - A 3D box mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#planerectquad-a-2d-plane-rectangular-mesh-generator"><code class="docutils literal notranslate"><span class="pre">planerectquad</span></code> - A 2D plane rectangular mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cubit-a-cubit-mesh-generator"><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#findclosestnode-find-the-closest-node"><code class="docutils literal notranslate"><span class="pre">findclosestnode</span></code> - Find the closest node</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
@@ -183,6 +184,14 @@ are automatically generated</p>
 <span class="go">lY      =40</span>
 <span class="go">lZ      =1</span>
 <span class="go">elType  =C3D20R</span>
+
+<span class="go">*modelGenerator, generator=findClosestNode, name=gen2</span>
+<span class="go">location=&#39;0, 0, 0&#39;</span>
+<span class="go">storeIn=origin</span>
+
+<span class="go">*modelGenerator, generator=findClosestNode, name=gen3</span>
+<span class="go">location=&#39;10, 10, 20&#39;</span>
+<span class="go">storeIn=origin</span>
 
 <span class="go">*section, name=section1, material=myMaterial, type=solid</span>
 <span class="go">all</span>
@@ -342,6 +351,17 @@ are automatically generated</p>
 <span class="go">*step, jobName=set_def, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1</span>
 <span class="go">dirichlet, name=bot, nSet=n_bot, field=displacement, 1=0., 2=0., 3=0.</span>
 <span class="go">dirichlet, name=top, nSet=n_top, field=displacement, 1=0., 2=-1., 3=0.</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="findclosestnode-find-the-closest-node">
+<h2><code class="docutils literal notranslate"><span class="pre">findclosestnode</span></code> - Find the closest node<a class="headerlink" href="#findclosestnode-find-the-closest-node" title="Permalink to this heading"></a></h2>
+<p>Relevant module <code class="docutils literal notranslate"><span class="pre">fe.generators.findclosestnode</span></code></p>
+<span class="target" id="module-fe.generators.findclosestnode"></span><p>Find the node closest to a given spatial position, and store it in an existing or new node set.</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;The location of the node&#39;</span><span class="p">,</span> <span class="s1">&#39;storeIn&#39;</span><span class="p">:</span> <span class="s1">&#39;Store in this node set&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
