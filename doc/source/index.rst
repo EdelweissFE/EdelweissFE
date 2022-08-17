@@ -16,7 +16,7 @@ EdelweissFE aims to be...
  - ... a learning platform for learning the finite element method,
  - ... a very flexible tool for implementing and employing special techniques (e.g., the indirect displacement control technique), 
    which are often more difficult and time consuming to implement in mature, MPI-parallelized codes,
- - ... an efficient tool for nonlinear simulations up to medium sized problems (~:math:`10^5` degrees of freedom).
+ - ... an efficient tool for nonlinear simulations up to medium sized problems (~ :math:`10^5` degrees of freedom).
 
 EdelweissFE does not want to ...
 

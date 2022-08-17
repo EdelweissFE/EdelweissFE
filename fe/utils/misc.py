@@ -34,6 +34,7 @@ import numpy as np
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 
+
 def flagDict(configLine):
     parts = [x.strip() for x in configLine.split("=")]
     opt = parts[0]
@@ -49,6 +50,10 @@ def stringDict(listOfStringAssigments):
         val = "=".join(parts[1:]) if len(parts) > 1 else "True"
         resultDict[opt] = val
     return resultDict
+
+
+def strCaseCmp(str1, str2):
+    return str1.casefold() == str2.casefold()
 
 
 def strToSlice(string):
