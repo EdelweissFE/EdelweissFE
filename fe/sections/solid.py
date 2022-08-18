@@ -53,9 +53,7 @@ class Section(SectionBase):
         if any(self.materialParameterFromFieldDefs):
             for elSet in elSets:
                 for el in elSet:
-                    materialProperties = super().propertiesFromField(
-                        el, material, modelInfo
-                    )
+                    materialProperties = super().propertiesFromField(el, material, modelInfo)
 
                     el.initializeElement()
                     el.setMaterial(material["name"], materialProperties)

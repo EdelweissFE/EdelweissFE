@@ -6,6 +6,7 @@ from fe.sections.base.sectionbase import Section as SectionBase
 
 import warnings
 
+
 class Section(SectionBase):
     def __init__(self, name, options, materialName, t, modelInfo):
         warnings.warn(

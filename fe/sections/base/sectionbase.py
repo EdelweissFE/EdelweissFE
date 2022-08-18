@@ -48,10 +48,7 @@ class Section(ABC):
 
                 if "type" in definition.keys():
                     if not any(
-                        [
-                            strCaseCmp(definition["type"], implementedType)
-                            for implementedType in ["setToValue", "scale"]
-                        ]
+                        [strCaseCmp(definition["type"], implementedType) for implementedType in ["setToValue", "scale"]]
                     ):
                         raise KeyError(
                             "{}: {} is not a known type; currently available types: 'setToValue', 'scale'".format(
@@ -60,19 +57,13 @@ class Section(ABC):
                         )
                 else:
                     raise KeyError(
-                        "{}: Type option must be set; currently available types: 'setToValue', 'scale'".format(
-                            name
-                        )
+                        "{}: Type option must be set; currently available types: 'setToValue', 'scale'".format(name)
                     )
 
                 if "f(p,f)" in definition.keys():
-                    definition["expression"] = createFunction(
-                        definition["f(p,f)"], "p", "f", modelInfo=modelInfo
-                    )
+                    definition["expression"] = createFunction(definition["f(p,f)"], "p", "f", modelInfo=modelInfo)
                 else:
-                    definition["expression"] = createFunction(
-                        "f", "p", "f", modelInfo=modelInfo
-                    )
+                    definition["expression"] = createFunction("f", "p", "f", modelInfo=modelInfo)
 
                 self.materialParameterFromFieldDefs.append(definition)
             else:
@@ -90,18 +81,12 @@ class Section(ABC):
 
         for definition in self.materialParameterFromFieldDefs:
             index = int(definition["index"])
-            fieldValue = modelInfo["analyticalFields"][
-                definition["field"]
-            ].evaluateAtCoordinates(coordinatesAtCenter)
+            fieldValue = modelInfo["analyticalFields"][definition["field"]].evaluateAtCoordinates(coordinatesAtCenter)
             parameterValue = materialProperties[index]
 
             if strCaseCmp(definition["type"], "setToValue"):
-                materialProperties[index] = definition["expression"](
-                    parameterValue, fieldValue
-                )
+                materialProperties[index] = definition["expression"](parameterValue, fieldValue)
             elif strCaseCmp(definition["type"], "scale"):
-                materialProperties[index] *= definition["expression"](
-                    parameterValue, fieldValue
-                )
+                materialProperties[index] *= definition["expression"](parameterValue, fieldValue)
 
         return materialProperties
