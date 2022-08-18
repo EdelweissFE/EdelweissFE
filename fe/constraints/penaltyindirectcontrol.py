@@ -41,7 +41,7 @@ documentation = {
     "length": "the value of the constraint (e.g., CMOD)",
     "penaltyStiffness": "the stiffness for formulating the constraint",
     "offset": "(optional) a correction value for the computation of the constraint (e.g, initial displacement)",
-    "normalizeLoad": "(optional) normalize the applied force per node wrt the number of nodes, i.e., apply a load irrespective of the total number of nodes in loadNSet"
+    "normalizeLoad": "(optional) normalize the applied force per node wrt the number of nodes, i.e., apply a load irrespective of the total number of nodes in loadNSet",
 }
 
 import numpy as np
@@ -51,6 +51,7 @@ from fe.config.phenomena import getFieldSize
 from fe.utils.misc import stringDict, strtobool
 from fe.utils.exceptions import WrongDomain
 from fe.constraints.base.constraintbase import ConstraintBase
+
 
 class Constraint(ConstraintBase):
     def __init__(self, name, definitionLines, modelInfo):
@@ -69,7 +70,7 @@ class Constraint(ConstraintBase):
         # we may normalize in order to end up with an identical load irrespective of the number of nodes
         # in the load node set
         if strtobool(definition.get("normalizeLoad", "True")):
-            self.loadVector *= 1./ len(self.loadNSet)
+            self.loadVector *= 1.0 / len(self.loadNSet)
 
         self.penaltyStiffness = float(definition["penaltyStiffness"])
         self.l = np.float(definition["length"])
