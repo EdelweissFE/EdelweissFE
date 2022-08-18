@@ -41,15 +41,16 @@ documentation = {
     "length": "the value of the constraint (e.g., CMOD)",
     "penaltyStiffness": "the stiffness for formulating the constraint",
     "offset": "(optional) a correction value for the computation of the constraint (e.g, initial displacement)",
+    "normalizeLoad": "(optional) normalize the applied force per node wrt the number of nodes, i.e., apply a load irrespective of the total number of nodes in loadNSet"
 }
 
 import numpy as np
+import sympy as sp
 
 from fe.config.phenomena import getFieldSize
-from fe.utils.misc import stringDict
+from fe.utils.misc import stringDict, strtobool
 from fe.utils.exceptions import WrongDomain
 from fe.constraints.base.constraintbase import ConstraintBase
-
 
 class Constraint(ConstraintBase):
     def __init__(self, name, definitionLines, modelInfo):
@@ -64,6 +65,11 @@ class Constraint(ConstraintBase):
 
         self.loadNSet = modelInfo["nodeSets"][definition["loadNSet"]]
         self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
+
+        # we may normalize in order to end up with an identical load irrespective of the number of nodes
+        # in the load node set
+        if strtobool(definition.get("normalizeLoad", "True")):
+            self.loadVector *= 1./ len(self.loadNSet)
 
         self.penaltyStiffness = float(definition["penaltyStiffness"])
         self.l = np.float(definition["length"])
@@ -84,8 +90,6 @@ class Constraint(ConstraintBase):
             ]
         ] * len(self.nodes)
 
-        sizeField = getFieldSize(self.theField, modelInfo["domainSize"])
-
         nDim = modelInfo["domainSize"]
 
         sizeBlock_loadNodes = nDim * len(self.loadNSet)
@@ -102,13 +106,10 @@ class Constraint(ConstraintBase):
 
         self.constrainedValue = 0.0
 
-        self.normalizedResidual = np.tile(self.loadVector, len(self.loadNSet))
+        self.unitResidual = np.tile(self.loadVector, len(self.loadNSet))
 
     def getNumberOfAdditionalNeededScalarVariables(self):
         return 0
-
-    # def assignAdditionalScalarVariables(self, scalarVariables):
-    #     pass
 
     def applyConstraint(self, Un1, dU, PExt, V, increment):
 
@@ -135,7 +136,7 @@ class Constraint(ConstraintBase):
 
         K = V.reshape(self.nDof, self.nDof, order="F")
 
-        t = self.normalizedResidual
+        t = self.unitResidual
 
         PExt[sBL:eBL] = -t * loadFactor
         K[sBL:eBL, sBC:eBC] = np.outer(t, dLoadFactor_ddU)
