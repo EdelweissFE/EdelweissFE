@@ -34,7 +34,6 @@ import numpy as np
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 
-
 def flagDict(configLine):
     parts = [x.strip() for x in configLine.split("=")]
     opt = parts[0]

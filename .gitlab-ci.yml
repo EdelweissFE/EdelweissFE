@@ -1,0 +1,9 @@
+stages:
+  - linting
+
+linting:
+  stage: linting
+  image: continuumio/miniconda3:latest
+  script:
+    - conda install black
+    - black --check fe edelweiss.py --line-length 120
