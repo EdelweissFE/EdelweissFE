@@ -329,7 +329,7 @@ to be of the form</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint" title="fe.constraints.base.constraintbase.ConstraintBase.applyConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyConstraint</span></code></a>(Un1, dU, PExt, V, increment)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint" title="fe.constraints.base.constraintbase.ConstraintBase.applyConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyConstraint</span></code></a>(U_np, dU, PExt, V, increment)</p></td>
 <td><p>Apply the constraint.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables" title="fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assignAdditionalScalarVariables</span></code></a>(scalarVariables)</p></td>
@@ -342,12 +342,12 @@ to be of the form</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.applyConstraint">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">applyConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.applyConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">applyConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.applyConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>Apply the constraint.  Add the contributions to the external load vector and the system matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Un1</strong> (<em>ndarray</em>) – The current total solution vector.</p></li>
+<li><p><strong>U_np</strong> (<em>ndarray</em>) – The current total solution vector.</p></li>
 <li><p><strong>dU</strong> (<em>ndarray</em>) – The current increment since the last time the constraint was applied.</p></li>
 <li><p><strong>PExt</strong> (<em>ndarray</em>) – The external load vector.</p></li>
 <li><p><strong>V</strong> (<em>ndarray</em>) – The system matrix in vector form.</p></li>

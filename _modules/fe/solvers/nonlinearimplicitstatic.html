@@ -194,7 +194,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        step</span>
-<span class="sd">            The dictionary containing the step defintion.</span>
+<span class="sd">            The dictionary containing the step definition.</span>
 <span class="sd">        time</span>
 <span class="sd">            The time at beginning of the step.</span>
 <span class="sd">        stepActions</span>
@@ -214,7 +214,7 @@
 <span class="sd">            - Truth value of success.</span>
 <span class="sd">            - The new solution vector.</span>
 <span class="sd">            - The new reaction vector.</span>
-<span class="sd">            - Thew new current time.</span>
+<span class="sd">            - The new current time.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -335,7 +335,7 @@
             <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">if</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Geostatic Step -- displacements are resetted&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Geostatic Step -- displacements are reset&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
                 <span class="n">U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resetDisplacements</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>  <span class="c1"># reset all displacements, if the present step is a geostatic step</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">finishStepActions</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
@@ -351,7 +351,7 @@
 
 <div class="viewcode-block" id="NIST.solveIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">solveIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">Un</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">U_n</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
@@ -381,7 +381,7 @@
 <span class="sd">        activeStepActions</span>
 <span class="sd">            The list of active step actions.</span>
 <span class="sd">        constraints</span>
-<span class="sd">            The dictionary containg all elements.</span>
+<span class="sd">            The dictionary containing all elements.</span>
 <span class="sd">        increment</span>
 <span class="sd">            The increment.</span>
 <span class="sd">        lastIncrementSize</span>
@@ -411,7 +411,7 @@
         <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
         <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
         <span class="n">PExt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
-        <span class="n">Un1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
+        <span class="n">U_np</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
         <span class="n">ddU</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;dirichlets&quot;</span><span class="p">]</span>
@@ -430,14 +430,14 @@
             <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
                 <span class="n">geostatic</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
 
-            <span class="n">Un1</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Un</span>
-            <span class="n">Un1</span> <span class="o">+=</span> <span class="n">dU</span>
+            <span class="n">U_np</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">U_n</span>
+            <span class="n">U_np</span> <span class="o">+=</span> <span class="n">dU</span>
 
             <span class="n">P</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">PExt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
-            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span><span class="n">concentratedLoads</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
-            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span><span class="n">concentratedLoads</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
             <span class="n">R</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P</span>
             <span class="n">R</span> <span class="o">+=</span> <span class="n">PExt</span>
@@ -472,24 +472,24 @@
             <span class="n">dU</span> <span class="o">+=</span> <span class="n">ddU</span>
             <span class="n">iterationCounter</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">,</span> <span class="n">incrementResidualHistory</span></div>
+        <span class="k">return</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">,</span> <span class="n">incrementResidualHistory</span></div>
 
 <div class="viewcode-block" id="NIST.computeDistributedLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads">[docs]</a>    <span class="k">def</span> <span class="nf">computeDistributedLoads</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
-        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all distributed loads acting on elements, and evalute them.</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all distributed loads acting on elements, and evaluate them.</span>
 <span class="sd">        Assembles into the global external load vector and the system matrix.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        distributedLoads</span>
 <span class="sd">            The list of distributed loads.</span>
-<span class="sd">        Un1</span>
+<span class="sd">        U_np</span>
 <span class="sd">            The current solution vector.</span>
 <span class="sd">        PExt</span>
 <span class="sd">            The external load vector to be augmented.</span>
@@ -515,7 +515,7 @@
                     <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
                     <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
 
-                    <span class="n">el</span><span class="o">.</span><span class="n">computeDistributedLoad</span><span class="p">(</span><span class="n">dLoad</span><span class="o">.</span><span class="n">loadType</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">magnitude</span><span class="p">,</span> <span class="n">Un1</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+                    <span class="n">el</span><span class="o">.</span><span class="n">computeDistributedLoad</span><span class="p">(</span><span class="n">dLoad</span><span class="o">.</span><span class="n">loadType</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">magnitude</span><span class="p">,</span> <span class="n">U_np</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 
                     <span class="n">PExt</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Pe</span>
 
@@ -524,16 +524,16 @@
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
 <div class="viewcode-block" id="NIST.computeBodyForces"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForces</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span> <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span> <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all body forces loads acting on elements, and evalute them.</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all body forces loads acting on elements, and evaluate them.</span>
 <span class="sd">        Assembles into the global external load vector and the system matrix.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        distributedLoads</span>
 <span class="sd">            The list of distributed loads.</span>
-<span class="sd">        Un1</span>
+<span class="sd">        U_np</span>
 <span class="sd">            The current solution vector.</span>
 <span class="sd">        PExt</span>
 <span class="sd">            The external load vector to be augmented.</span>
@@ -558,7 +558,7 @@
                 <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
                 <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
 
-                <span class="n">el</span><span class="o">.</span><span class="n">computeBodyForce</span><span class="p">(</span><span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">Un1</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+                <span class="n">el</span><span class="o">.</span><span class="n">computeBodyForce</span><span class="p">(</span><span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">U_np</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 
                 <span class="n">PExt</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Pe</span>
 
@@ -567,8 +567,8 @@
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
 <div class="viewcode-block" id="NIST.applyDirichletK"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichletK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VIJSystemMatrix</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the global stiffnes matrix</span>
-<span class="sd">        Is called by solveStep() before solving the global sys.</span>
+        <span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the global stiffness matrix</span>
+<span class="sd">        Is called by solveStep() before solving the global system.</span>
 <span class="sd">        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros</span>
 
 <span class="sd">        Parameters</span>
@@ -632,9 +632,9 @@
 <div class="viewcode-block" id="NIST.checkConvergence"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.checkConvergence">[docs]</a>    <span class="k">def</span> <span class="nf">checkConvergence</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">ddU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">residualHistory</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Check the convergency, individually for each field,</span>
+        <span class="sd">&quot;&quot;&quot;Check the convergence, individually for each field,</span>
 <span class="sd">        similar to Abaqus based on the current total flux residual and the field correction</span>
-<span class="sd">        Is called by solveStep() to decide wether to continue iterating or stop.</span>
+<span class="sd">        Is called by solveStep() to decide whether to continue iterating or stop.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -695,7 +695,7 @@
                 <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">convergedCorrection</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
-            <span class="c1"># converged if residual and fieldCorrection are smaller than tolerance</span>
+            <span class="c1"># converged if residual and field correction are smaller than tolerance</span>
             <span class="n">convergedAtAll</span> <span class="o">=</span> <span class="n">convergedAtAll</span> <span class="ow">and</span> <span class="n">convergedCorrection</span> <span class="ow">and</span> <span class="n">convergedFlux</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">iterationMessage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
@@ -750,7 +750,7 @@
         <span class="k">return</span> <span class="n">KCsr</span></div>
 
 <div class="viewcode-block" id="NIST.resetDisplacements"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.resetDisplacements">[docs]</a>    <span class="k">def</span> <span class="nf">resetDisplacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DofVector</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;May be called at the end of a geostatic step, the zero all displacments after</span>
+        <span class="sd">&quot;&quot;&quot;May be called at the end of a geostatic step, the zero all displacements after</span>
 <span class="sd">        applying the geostatic stress.</span>
 
 <span class="sd">        Parameters</span>
@@ -794,7 +794,7 @@
 <div class="viewcode-block" id="NIST.computeElements"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeElements">[docs]</a>    <span class="k">def</span> <span class="nf">computeElements</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
@@ -808,7 +808,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        elements</span>
 <span class="sd">            The list of finite elements.</span>
-<span class="sd">        Un1</span>
+<span class="sd">        U_np</span>
 <span class="sd">            The current solution vector.</span>
 <span class="sd">        dU</span>
 <span class="sd">            The current solution increment vector.</span>
@@ -839,7 +839,7 @@
             <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
             <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
 
-            <span class="n">el</span><span class="o">.</span><span class="n">computeYourself</span><span class="p">(</span><span class="n">Ke</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Un1</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">dU</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+            <span class="n">el</span><span class="o">.</span><span class="n">computeYourself</span><span class="p">(</span><span class="n">Ke</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">U_np</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">dU</span><span class="p">[</span><span class="n">el</span><span class="p">],</span> <span class="n">time</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 
             <span class="n">P</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Pe</span>
             <span class="n">F</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Pe</span><span class="p">)</span>
@@ -852,20 +852,20 @@
 <div class="viewcode-block" id="NIST.assembleConstraints"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints">[docs]</a>    <span class="k">def</span> <span class="nf">assembleConstraints</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConstraintBase</span><span class="p">],</span>
-        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all elements, and evalute them.</span>
+        <span class="sd">&quot;&quot;&quot;Loop over all elements, and evaluate them.</span>
 <span class="sd">        Is is called by solveStep() in each iteration.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        constraints</span>
 <span class="sd">            The list of constraints.</span>
-<span class="sd">        Un1</span>
+<span class="sd">        U_np</span>
 <span class="sd">            The current solution vector.</span>
 <span class="sd">        dU</span>
 <span class="sd">            The current solution increment vector.</span>
@@ -890,7 +890,7 @@
             <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">constraint</span><span class="p">]</span>
             <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
 
-            <span class="n">constraint</span><span class="o">.</span><span class="n">applyConstraint</span><span class="p">(</span><span class="n">Un1</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">dU</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">constraint</span><span class="o">.</span><span class="n">applyConstraint</span><span class="p">(</span><span class="n">U_np</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">dU</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">Ke</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
             <span class="c1"># instead of PExt[constraint] += Pe, np.add.at allows for repeated indices</span>
             <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">PExt</span><span class="p">,</span> <span class="n">PExt</span><span class="o">.</span><span class="n">entitiesInDofVector</span><span class="p">[</span><span class="n">constraint</span><span class="p">],</span> <span class="n">Pe</span><span class="p">)</span>
@@ -905,7 +905,7 @@
         <span class="n">concentratedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
-        <span class="n">Un1</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
@@ -920,7 +920,7 @@
 <span class="sd">            The list of distributed (surface) loads.</span>
 <span class="sd">        bodyForces</span>
 <span class="sd">            The list of body (volumetric) loads.</span>
-<span class="sd">        Un1</span>
+<span class="sd">        U_np</span>
 <span class="sd">            The current solution vector.</span>
 <span class="sd">        PExt</span>
 <span class="sd">            The external load vector.</span>
@@ -939,8 +939,8 @@
         <span class="k">for</span> <span class="n">cLoad</span> <span class="ow">in</span> <span class="n">concentratedLoads</span><span class="p">:</span>
             <span class="n">PExt</span> <span class="o">=</span> <span class="n">cLoad</span><span class="o">.</span><span class="n">applyOnP</span><span class="p">(</span><span class="n">PExt</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
         <span class="c1"># dloads</span>
-        <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeDistributedLoads</span><span class="p">(</span><span class="n">distributedLoads</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
-        <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeBodyForces</span><span class="p">(</span><span class="n">bodyForces</span><span class="p">,</span> <span class="n">Un1</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+        <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeDistributedLoads</span><span class="p">(</span><span class="n">distributedLoads</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+        <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeBodyForces</span><span class="p">(</span><span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
@@ -987,7 +987,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        incrementResidualHistory</span>
-<span class="sd">            The dictionary containg the residual history of all fields.</span>
+<span class="sd">            The dictionary containing the residual history of all fields.</span>
 <span class="sd">        maxGrowingIter</span>
 <span class="sd">            The maximum allows number of growths of a residual during the iterative solution scheme.</span>
 

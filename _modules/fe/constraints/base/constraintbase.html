@@ -152,12 +152,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span> <span class="o">=</span> <span class="n">scalarVariables</span></div>
 
 <div class="viewcode-block" id="ConstraintBase.applyConstraint"><a class="viewcode-back" href="../../../../documentation/constraints.html#fe.constraints.base.constraintbase.ConstraintBase.applyConstraint">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">applyConstraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Un1</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">dU</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">PExt</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">applyConstraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U_np</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">dU</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">PExt</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Apply the constraint.  Add the contributions to the external load vector and the system matrix.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        Un1</span>
+<span class="sd">        U_np</span>
 <span class="sd">            The current total solution vector.</span>
 <span class="sd">        dU</span>
 <span class="sd">            The current increment since the last time the constraint was applied.</span>
