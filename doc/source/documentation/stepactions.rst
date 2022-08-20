@@ -19,7 +19,7 @@ Relevant module: ``fe.stepactions.bodyforce``
    :language: console 
    :caption: Example: ``testfiles/BodyForce3D/test.inp``
 
-``dirichlet`` - Standard birichlet BC
+``dirichlet`` - Standard dirichlet BC
 -------------------------------------
 
 Relevant module: ``fe.stepactions.dirichlet``
@@ -30,8 +30,8 @@ Relevant module: ``fe.stepactions.dirichlet``
 .. pprint:: fe.stepactions.dirichlet.documentation
    :caption: Options:
 
-``distributedload`` - surfaces loads
-------------------------------------
+``distributedload`` - surface loads
+-----------------------------------
 
 Relevant module: ``fe.stepactions.distributedload``
 
@@ -46,8 +46,8 @@ Relevant module: ``fe.stepactions.distributedload``
    :language: console 
    :caption: Example: ``testfiles/DLoad/test.inp``
 
-``geostatic`` - Geostatic stress definition
--------------------------------------------
+``geostatic`` - Geostatic stress states 
+---------------------------------------
 
 Relevant module: ``fe.stepactions.geostatic``
 
@@ -89,7 +89,7 @@ Relevant module: ``fe.stepactions.indirectcontrol``
 .. pprint:: fe.stepactions.indirectcontractioncontrol.documentation
    :caption: Options:
 
-``initalizemateiral`` - Initialize materials
+``initalizematerial`` - Initialize materials
 --------------------------------------------
 
 Relevant module: ``fe.stepactions.initializematerial``

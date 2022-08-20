@@ -8,5 +8,5 @@ Some features are:
  * Cython for performance-critical routines
  * Parallelization 
  * Modular system, which is easy to extend
- * Output to Paraview and Ensight via Ensight Gold format, CSV, matplotlib
+ * Output to Paraview and Ensight via the Ensight Gold format, CSV, matplotlib
  * Interfaces to powerful direct and iterative linear solvers

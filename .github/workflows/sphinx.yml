@@ -24,7 +24,7 @@ jobs:
       - name: Install conda packages
         shell: bash -l {0}
         run: |
-          mamba install -c conda-forge -c anaconda --file requirements.txt
+          mamba install --file requirements.txt
 
       - name: Install Eigen
         shell: bash -l {0}

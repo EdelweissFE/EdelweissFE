@@ -45,7 +45,7 @@ if __name__ == "__main__":
         "file",
         type=str,
         nargs="*",
-    )  # multiple input files possible
+    )  
     parser.add_argument("--quiet", dest="verbose", action="store_false", help="suppress output")
     parser.add_argument("--noplot", dest="noplot", action="store_true", help="suppress plots")
     parser.add_argument("--mplBackend", dest="mplBackend", default=None, type=str, help="define a matplotlib backend")
@@ -74,17 +74,10 @@ if __name__ == "__main__":
         matplotlib.use(args.mplBackend)
 
     inputFiles = []
-    # 1 ) parse all files
-    # try:
+
     for file in fileList:
         inputFiles.append(parseInputFile(file))
 
-    # except (KeyError, ValueError) as e:
-    #     print(str(e))
-    #     exit(1)
-
-    #    #2 ) all computations and imports
-    # else:
     for inputFile in inputFiles:
         success, U, P, fieldOutputController = finiteElementSimulation(
             inputFile, verbose=args.verbose, suppressPlots=args.noplot
