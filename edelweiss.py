@@ -45,7 +45,7 @@ if __name__ == "__main__":
         "file",
         type=str,
         nargs="*",
-    )  
+    )
     parser.add_argument("--quiet", dest="verbose", action="store_false", help="suppress output")
     parser.add_argument("--noplot", dest="noplot", action="store_true", help="suppress plots")
     parser.add_argument("--mplBackend", dest="mplBackend", default=None, type=str, help="define a matplotlib backend")
