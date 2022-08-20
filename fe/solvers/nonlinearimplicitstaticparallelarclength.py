@@ -91,7 +91,7 @@ class NISTPArcLength(NISTParallel):
 
     def solveIncrement(
         self,
-        Un: DofVector,
+        U_n: DofVector,
         dU: DofVector,
         P: DofVector,
         K: VIJSystemMatrix,
@@ -108,7 +108,7 @@ class NISTPArcLength(NISTParallel):
 
         Parameters
         ----------
-        Un
+        U_n
             The old solution vector.
         dU
             The old solution increment.
@@ -121,7 +121,7 @@ class NISTPArcLength(NISTParallel):
         activeStepActions
             The list of active step actions.
         constraints
-            The dictionary containg all elements.
+            The dictionary containing all elements.
         increment
             The increment.
         lastIncrementSize
@@ -146,7 +146,7 @@ class NISTPArcLength(NISTParallel):
 
         if self.arcLengthController == None:
             return super().solveIncrement(
-                Un,
+                U_n,
                 dU,
                 P,
                 K,
@@ -182,7 +182,7 @@ class NISTPArcLength(NISTParallel):
         P_f = self.theDofManager.constructDofVector()
         K_f = self.theDofManager.constructVIJSystemMatrix()
         K_0 = self.theDofManager.constructVIJSystemMatrix()
-        Un1 = self.theDofManager.constructDofVector()
+        U_np = self.theDofManager.constructDofVector()
         ddU = None
 
         Lambda = self.Lambda
@@ -200,19 +200,19 @@ class NISTPArcLength(NISTParallel):
             for geostatic in activeStepActions["geostatics"]:
                 geostatic.apply()
 
-            Un1[:] = Un
-            Un1 += dU
+            U_np[:] = U_n
+            U_np += dU
 
             P[:] = K[:] = F[:] = P_0[:] = P_f[:] = K_f[:] = K_0[:] = 0.0
 
-            P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
-            P, K = self.assembleConstraints(constraints, Un1, dU, P, K, increment)
+            P, K, F = self.computeElements(elements, U_np, dU, P, K, F, increment)
+            P, K = self.assembleConstraints(constraints, U_np, dU, P, K, increment)
 
             P_0, K_0 = self.assembleLoads(
-                concentratedLoads, distributedLoads, bodyForces, Un1, P_0, K_0, zeroIncrement
+                concentratedLoads, distributedLoads, bodyForces, U_np, P_0, K_0, zeroIncrement
             )  # compute 'dead' deadloads, like gravity
             P_f, K_f = self.assembleLoads(
-                concentratedLoads, distributedLoads, bodyForces, Un1, P_f, K_f, referenceIncrement
+                concentratedLoads, distributedLoads, bodyForces, U_np, P_f, K_f, referenceIncrement
             )  # compute 'dead' deadloads, like gravity
 
             P_f -= P_0  # and subtract the dead part, since we are only interested in the homogeneous linear part
@@ -276,7 +276,7 @@ class NISTPArcLength(NISTParallel):
 
         self.Lambda += dLambda
         self.dLambda = dLambda
-        self.arcLengthController.finishIncrement(Un, dU, dLambda)
+        self.arcLengthController.finishIncrement(U_n, dU, dLambda)
 
         self.journal.message(
             "Current load parameter: lambda={:6.2e}, last increment: dLambda={:6.2e}".format(self.Lambda, self.dLambda),
@@ -284,7 +284,7 @@ class NISTPArcLength(NISTParallel):
             level=1,
         )
 
-        return Un1, dU, P, iterationCounter, incrementResidualHistory
+        return U_np, dU, P, iterationCounter, incrementResidualHistory
 
     def extrapolateLastIncrement(
         self,

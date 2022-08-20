@@ -125,11 +125,11 @@ class Constraint:
     def getGlobalDofIndices(self):
         pass
 
-    def applyConstraint(self, Un1, PExt, V, increment):
+    def applyConstraint(self, U_np, PExt, V, increment):
 
         idcsNodeDofs = np.arange(self.constraintDimension, (self.nConstraints + 1) * self.nDim, self.nDim)
 
-        LambdaN1 = Un1[-self.nConstraints :]
+        LambdaN1 = U_np[-self.nConstraints :]
 
         Ke = V.reshape((self.nDof, self.nDof))
 

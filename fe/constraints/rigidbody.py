@@ -160,7 +160,7 @@ class Constraint(ConstraintBase):
             ]
         )
 
-    def applyConstraint(self, Un1, dU, PExt, V, increment):
+    def applyConstraint(self, U_np, dU, PExt, V, increment):
 
         nConstraints = self.nConstraints
         nDim = self.nDim
@@ -169,9 +169,9 @@ class Constraint(ConstraintBase):
         nU = self.nDof - nConstraints  # nDofs (disp., rot.) without Lagrangian multipliers
         nSlaves = len(self.slaveNodes)
 
-        URp = Un1[self.indicesOfRPUinP]
-        PhiRp = Un1[self.indicesOfRPPhiInP]
-        Lambdas = Un1[nU:].reshape((nDim, -1), order="F")
+        URp = U_np[self.indicesOfRPUinP]
+        PhiRp = U_np[self.indicesOfRPPhiInP]
+        Lambdas = U_np[nU:].reshape((nDim, -1), order="F")
 
         K = V.reshape(self.nDof, self.nDof, order="F")
 
@@ -229,10 +229,10 @@ class Constraint(ConstraintBase):
 
             d0 = self.distancesSlaveNodeRP[i]
             indcsUNode = self.indicesOfSlaveNodesInP[i]
-            Un = Un1[indcsUNode]
+            U_n = U_np[indcsUNode]
             Lambda = Lambdas[:, i]
 
-            g = -d0 - (Un - URp) + T @ d0
+            g = -d0 - (U_n - URp) + T @ d0
 
             for i in range(nRot):
                 G[:, 2 * nDim + i] = RDerivativeProductsI[i] @ d0

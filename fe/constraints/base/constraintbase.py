@@ -79,12 +79,12 @@ class ConstraintBase(ABC):
         self.scalarVariables = scalarVariables
 
     @abstractmethod
-    def applyConstraint(self, Un1: ndarray, dU: ndarray, PExt: ndarray, V: ndarray, increment: tuple):
+    def applyConstraint(self, U_np: ndarray, dU: ndarray, PExt: ndarray, V: ndarray, increment: tuple):
         """Apply the constraint.  Add the contributions to the external load vector and the system matrix.
 
         Parameters
         ----------
-        Un1
+        U_np
             The current total solution vector.
         dU
             The current increment since the last time the constraint was applied.

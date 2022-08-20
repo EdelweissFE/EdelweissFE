@@ -112,7 +112,7 @@ class Constraint(ConstraintBase):
     def getNumberOfAdditionalNeededScalarVariables(self):
         return 0
 
-    def applyConstraint(self, Un1, dU, PExt, V, increment):
+    def applyConstraint(self, U_np, dU, PExt, V, increment):
 
         if self.active == False:
             return
@@ -122,7 +122,7 @@ class Constraint(ConstraintBase):
         sBC = self.startBlock_constrainedNodes
         eBC = self.endBlock_constrainedNodes
 
-        U_c = Un1[sBC:eBC]
+        U_c = U_np[sBC:eBC]
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 

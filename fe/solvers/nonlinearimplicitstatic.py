@@ -121,7 +121,7 @@ class NIST:
         Parameters
         ----------
         step
-            The dictionary containing the step defintion.
+            The dictionary containing the step definition.
         time
             The time at beginning of the step.
         stepActions
@@ -141,7 +141,7 @@ class NIST:
             - Truth value of success.
             - The new solution vector.
             - The new reaction vector.
-            - Thew new current time.
+            - The new current time.
 
         """
 
@@ -262,7 +262,7 @@ class NIST:
             success = True
 
             if activeStepActions["geostatics"]:
-                self.journal.message("Geostatic Step -- displacements are resetted", self.identification)
+                self.journal.message("Geostatic Step -- displacements are reset", self.identification)
                 U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
 
             self.finishStepActions(U, P, stepActions)
@@ -278,7 +278,7 @@ class NIST:
 
     def solveIncrement(
         self,
-        Un: DofVector,
+        U_n: DofVector,
         dU: DofVector,
         P: DofVector,
         K: VIJSystemMatrix,
@@ -308,7 +308,7 @@ class NIST:
         activeStepActions
             The list of active step actions.
         constraints
-            The dictionary containg all elements.
+            The dictionary containing all elements.
         increment
             The increment.
         lastIncrementSize
@@ -338,7 +338,7 @@ class NIST:
         R = self.theDofManager.constructDofVector()
         F = self.theDofManager.constructDofVector()
         PExt = self.theDofManager.constructDofVector()
-        Un1 = self.theDofManager.constructDofVector()
+        U_np = self.theDofManager.constructDofVector()
         ddU = None
 
         dirichlets = activeStepActions["dirichlets"]
@@ -357,14 +357,14 @@ class NIST:
             for geostatic in activeStepActions["geostatics"]:
                 geostatic.apply()
 
-            Un1[:] = Un
-            Un1 += dU
+            U_np[:] = U_n
+            U_np += dU
 
             P[:] = K[:] = F[:] = PExt[:] = 0.0
 
-            P, K, F = self.computeElements(elements, Un1, dU, P, K, F, increment)
-            PExt, K = self.assembleLoads(concentratedLoads, distributedLoads, bodyForces, Un1, PExt, K, increment)
-            PExt, K = self.assembleConstraints(constraints, Un1, dU, PExt, K, increment)
+            P, K, F = self.computeElements(elements, U_np, dU, P, K, F, increment)
+            PExt, K = self.assembleLoads(concentratedLoads, distributedLoads, bodyForces, U_np, PExt, K, increment)
+            PExt, K = self.assembleConstraints(constraints, U_np, dU, PExt, K, increment)
 
             R[:] = P
             R += PExt
@@ -399,24 +399,24 @@ class NIST:
             dU += ddU
             iterationCounter += 1
 
-        return Un1, dU, P, iterationCounter, incrementResidualHistory
+        return U_np, dU, P, iterationCounter, incrementResidualHistory
 
     def computeDistributedLoads(
         self,
         distributedLoads: list[StepActionBase],
-        Un1: DofVector,
+        U_np: DofVector,
         PExt: DofVector,
         K: VIJSystemMatrix,
         increment: tuple,
     ) -> tuple[DofVector, VIJSystemMatrix]:
-        """Loop over all distributed loads acting on elements, and evalute them.
+        """Loop over all distributed loads acting on elements, and evaluate them.
         Assembles into the global external load vector and the system matrix.
 
         Parameters
         ----------
         distributedLoads
             The list of distributed loads.
-        Un1
+        U_np
             The current solution vector.
         PExt
             The external load vector to be augmented.
@@ -442,7 +442,7 @@ class NIST:
                     Ke = K[el]
                     Pe = np.zeros(el.nDof)
 
-                    el.computeDistributedLoad(dLoad.loadType, Pe, Ke, faceID, magnitude, Un1[el], time, dT)
+                    el.computeDistributedLoad(dLoad.loadType, Pe, Ke, faceID, magnitude, U_np[el], time, dT)
 
                     PExt[el] += Pe
 
@@ -451,16 +451,16 @@ class NIST:
         return PExt, K
 
     def computeBodyForces(
-        self, bodyForces: list[StepActionBase], Un1: DofVector, PExt: DofVector, K: VIJSystemMatrix, increment: tuple
+        self, bodyForces: list[StepActionBase], U_np: DofVector, PExt: DofVector, K: VIJSystemMatrix, increment: tuple
     ) -> tuple[DofVector, VIJSystemMatrix]:
-        """Loop over all body forces loads acting on elements, and evalute them.
+        """Loop over all body forces loads acting on elements, and evaluate them.
         Assembles into the global external load vector and the system matrix.
 
         Parameters
         ----------
         distributedLoads
             The list of distributed loads.
-        Un1
+        U_np
             The current solution vector.
         PExt
             The external load vector to be augmented.
@@ -485,7 +485,7 @@ class NIST:
                 Pe = np.zeros(el.nDof)
                 Ke = K[el]
 
-                el.computeBodyForce(Pe, Ke, force, Un1[el], time, dT)
+                el.computeBodyForce(Pe, Ke, force, U_np[el], time, dT)
 
                 PExt[el] += Pe
 
@@ -494,8 +494,8 @@ class NIST:
         return PExt, K
 
     def applyDirichletK(self, K: VIJSystemMatrix, dirichlets: list[StepActionBase]) -> VIJSystemMatrix:
-        """Apply the dirichlet bcs on the global stiffnes matrix
-        Is called by solveStep() before solving the global sys.
+        """Apply the dirichlet bcs on the global stiffness matrix
+        Is called by solveStep() before solving the global system.
         http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros
 
         Parameters
@@ -559,9 +559,9 @@ class NIST:
     def checkConvergence(
         self, R: DofVector, ddU: DofVector, F: DofVector, iterationCounter: int, residualHistory: dict
     ) -> tuple[bool, dict]:
-        """Check the convergency, individually for each field,
+        """Check the convergence, individually for each field,
         similar to Abaqus based on the current total flux residual and the field correction
-        Is called by solveStep() to decide wether to continue iterating or stop.
+        Is called by solveStep() to decide whether to continue iterating or stop.
 
         Parameters
         ----------
@@ -622,7 +622,7 @@ class NIST:
                 "✓" if convergedCorrection else " ",
             )
 
-            # converged if residual and fieldCorrection are smaller than tolerance
+            # converged if residual and field correction are smaller than tolerance
             convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
 
         self.journal.message(iterationMessage, self.identification)
@@ -677,7 +677,7 @@ class NIST:
         return KCsr
 
     def resetDisplacements(self, U: DofVector) -> DofVector:
-        """May be called at the end of a geostatic step, the zero all displacments after
+        """May be called at the end of a geostatic step, the zero all displacements after
         applying the geostatic stress.
 
         Parameters
@@ -721,7 +721,7 @@ class NIST:
     def computeElements(
         self,
         elements: list,
-        Un1: DofVector,
+        U_np: DofVector,
         dU: DofVector,
         P: DofVector,
         K: VIJSystemMatrix,
@@ -735,7 +735,7 @@ class NIST:
         ----------
         elements
             The list of finite elements.
-        Un1
+        U_np
             The current solution vector.
         dU
             The current solution increment vector.
@@ -766,7 +766,7 @@ class NIST:
             Ke = K[el]
             Pe = np.zeros(el.nDof)
 
-            el.computeYourself(Ke, Pe, Un1[el], dU[el], time, dT)
+            el.computeYourself(Ke, Pe, U_np[el], dU[el], time, dT)
 
             P[el] += Pe
             F[el] += abs(Pe)
@@ -779,20 +779,20 @@ class NIST:
     def assembleConstraints(
         self,
         constraints: list[ConstraintBase],
-        Un1: DofVector,
+        U_np: DofVector,
         dU: DofVector,
         PExt: DofVector,
         K: VIJSystemMatrix,
         increment: tuple,
     ) -> tuple[DofVector, VIJSystemMatrix]:
-        """Loop over all elements, and evalute them.
+        """Loop over all elements, and evaluate them.
         Is is called by solveStep() in each iteration.
 
         Parameters
         ----------
         constraints
             The list of constraints.
-        Un1
+        U_np
             The current solution vector.
         dU
             The current solution increment vector.
@@ -817,7 +817,7 @@ class NIST:
             Ke = K[constraint]
             Pe = np.zeros(constraint.nDof)
 
-            constraint.applyConstraint(Un1[constraint], dU[constraint], Pe, Ke, increment)
+            constraint.applyConstraint(U_np[constraint], dU[constraint], Pe, Ke, increment)
 
             # instead of PExt[constraint] += Pe, np.add.at allows for repeated indices
             np.add.at(PExt, PExt.entitiesInDofVector[constraint], Pe)
@@ -832,7 +832,7 @@ class NIST:
         concentratedLoads: list[StepActionBase],
         distributedLoads: list[StepActionBase],
         bodyForces: list[StepActionBase],
-        Un1: DofVector,
+        U_np: DofVector,
         PExt: DofVector,
         K: VIJSystemMatrix,
         increment: tuple,
@@ -847,7 +847,7 @@ class NIST:
             The list of distributed (surface) loads.
         bodyForces
             The list of body (volumetric) loads.
-        Un1
+        U_np
             The current solution vector.
         PExt
             The external load vector.
@@ -866,8 +866,8 @@ class NIST:
         for cLoad in concentratedLoads:
             PExt = cLoad.applyOnP(PExt, increment)
         # dloads
-        PExt, K = self.computeDistributedLoads(distributedLoads, Un1, PExt, K, increment)
-        PExt, K = self.computeBodyForces(bodyForces, Un1, PExt, K, increment)
+        PExt, K = self.computeDistributedLoads(distributedLoads, U_np, PExt, K, increment)
+        PExt, K = self.computeBodyForces(bodyForces, U_np, PExt, K, increment)
 
         return PExt, K
 
@@ -914,7 +914,7 @@ class NIST:
         Parameters
         ----------
         incrementResidualHistory
-            The dictionary containg the residual history of all fields.
+            The dictionary containing the residual history of all fields.
         maxGrowingIter
             The maximum allows number of growths of a residual during the iterative solution scheme.
 

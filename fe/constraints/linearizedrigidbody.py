@@ -126,9 +126,9 @@ class Constraint(ConstraintBase):
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
 
-    def applyConstraint(self, Un1, dU, PExt, V, increment):
+    def applyConstraint(self, U_np, dU, PExt, V, increment):
 
-        LambdaN1 = Un1[-self.nConstraints :]
+        LambdaN1 = U_np[-self.nConstraints :]
 
         PExt[: -self.nConstraints] -= LambdaN1.dot(self.dG_dU)
         #        PExt[- self.nConstraints  : ] -= 0.0
