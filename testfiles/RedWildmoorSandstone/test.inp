@@ -1,6 +1,6 @@
 *material, name=RedWildmoorSandstone, id=le, 
-**E,    nu,     GcToG,      lb,     lt,         lj2,            polarRatio,     cohesion,       phi,    psi,        A,          hExpDelta,      hExp,   hDilationExp
-4500,   0.2,    1,          1,      2,          1,              1.49999,        3.5,            26,     20,         +1.00,      2.3,            3e-2,   1e-1
+**E,    nu,     GcToG,      lb,     lt,         lj2,            polarRatio,     cohesion,       phi,    hDilationExp,   hExp,   hDilationExp
+4500,   0.2,    1,          1,      2,          1,              1.49999,        3.5,            26,     2.3,            3e-2,   1e+1
 **a1,   a2,     a3,         a4,     softMod,    ductility,      maxDamage,      nonLocalRadius
 0.5,    0.0,    0.5,        0.0,    8e-2,       2e-1,           .3,             1 
 
