@@ -313,16 +313,18 @@
 
     <span class="n">keyword</span> <span class="o">=</span> <span class="n">currentKeyword</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">lexer</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">shlex</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">posix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># filter out empty lines and comments</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">lexer</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">shlex</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">lexer</span><span class="o">.</span><span class="n">whitespace_split</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">lexer</span><span class="o">.</span><span class="n">whitespace</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span>
+
             <span class="n">lineElements</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lexer</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">lineElements</span> <span class="ow">or</span> <span class="n">lineElements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">):</span>
-                <span class="c1"># line is a comment</span>
-                <span class="k">pass</span>
-            <span class="k">elif</span> <span class="n">lineElements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lineElements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
                 <span class="c1"># line is keywordline</span>
                 <span class="n">lastkeyword</span> <span class="o">=</span> <span class="n">keyword</span>
                 <span class="n">keyword</span> <span class="o">=</span> <span class="n">lineElements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

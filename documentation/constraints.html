@@ -57,7 +57,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Constraints</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#linearizedrigidbody-linearized-rigid-body-constraints-in-2d"><code class="docutils literal notranslate"><span class="pre">linearizedrigidbody</span></code> - Linearized rigid body constraints in 2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rigidbody-geometrically-exact-rigid-body-constraints-in-3d"><code class="docutils literal notranslate"><span class="pre">rigidbody</span></code> - Geometrically exact rigid body constraints in 3D</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#penaltyindirectcontrol-penalty-based-inidirect-control"><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based inidirect control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#penaltyindirectcontrol-penalty-based-indirect-control"><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based indirect control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-constraints">Implementing your own constraints</a></li>
 </ul>
 </li>
@@ -204,8 +204,8 @@ equations into the global equation system.</p>
 </div>
 </div>
 </section>
-<section id="penaltyindirectcontrol-penalty-based-inidirect-control">
-<h2><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based inidirect control<a class="headerlink" href="#penaltyindirectcontrol-penalty-based-inidirect-control" title="Permalink to this heading"></a></h2>
+<section id="penaltyindirectcontrol-penalty-based-indirect-control">
+<h2><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based indirect control<a class="headerlink" href="#penaltyindirectcontrol-penalty-based-indirect-control" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.penaltyindirectcontrol</span></code></p>
 <span class="target" id="module-fe.constraints.penaltyindirectcontrol"></span><p>A penalty based constraint used for indirect (displacement) control.</p>
 <div class="literal-block-wrapper docutils container" id="id5">
@@ -217,6 +217,9 @@ equations into the global equation system.</p>
   <span class="s1">&#39;loadNSet&#39;</span><span class="p">:</span> <span class="s1">&#39;the node set for application of the controlled load&#39;</span><span class="p">,</span>
   <span class="s1">&#39;loadVector&#39;</span><span class="p">:</span> <span class="s1">&#39;the vector (in correct) dimensions and tensorial order  &#39;</span>
                 <span class="s1">&#39;determining the load&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;normalizeLoad&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) normalize the applied force per node wrt the &#39;</span>
+                   <span class="s1">&#39;number of nodes, i.e., apply a load irrespective of the &#39;</span>
+                   <span class="s1">&#39;total number of nodes in loadNSet&#39;</span><span class="p">,</span>
   <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) a correction value for the computation of the &#39;</span>
             <span class="s1">&#39;constraint (e.g, initial displacement)&#39;</span><span class="p">,</span>
   <span class="s1">&#39;penaltyStiffness&#39;</span><span class="p">:</span> <span class="s1">&#39;the stiffness for formulating the constraint&#39;</span><span class="p">}</span>
