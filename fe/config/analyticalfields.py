@@ -25,11 +25,13 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on May 19 09:00:00 2022
+# Created on May 19 09:00:00 2022
 
-@author: Paul Hofer
+# @author: Paul Hofer
 """
+Analytical fields define values for spatial coordinates, e.g., for spatially varying material properties.
+"""
+
 import importlib
 
 

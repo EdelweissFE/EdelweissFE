@@ -25,13 +25,15 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+"""Define a random field using the GSTools library.
+"""
 
 documentation = {
     "model": "(optional) default = Gaussian",
     "mean": "(optional) default = 0.",
     "variance": "(optional) default = 1.",
-    "lengthScale": "(optimal) default = 10.",
-    "seed": "(optimal) default = 0",
+    "lengthScale": "(optional) default = 10.",
+    "seed": "(optional) default = 0",
 }
 
 import numpy as np
