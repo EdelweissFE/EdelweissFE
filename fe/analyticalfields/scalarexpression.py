@@ -25,6 +25,8 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+"""Define a field using a sclar expression.
+"""
 
 documentation = {
     "f(x,y,z)": "python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed",

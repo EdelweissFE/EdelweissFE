@@ -11,6 +11,7 @@ Documentation
    elements
    mesh
    generators
+   analyticalfields
    sections
    stepactions
    constraints
