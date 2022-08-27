@@ -59,13 +59,13 @@ def generateModelData(generatorDefinition: dict, modelInfo: dict, journal: Journ
 
     indexClosest = differenceNorm.argmin()
 
-    closestNodeID = list(modelInfo["nodes"].keys())[indexClosest]
+    closestNode = list(modelInfo["nodes"].values())[indexClosest]
 
     if options["storeIn"] in modelInfo["nodeSets"]:
-        modelInfo["nodeSets"][options["storeIn"]].append(closestNodeID)
+        modelInfo["nodeSets"][options["storeIn"]].append(closestNode)
     else:
         modelInfo["nodeSets"][options["storeIn"]] = [
-            closestNodeID,
+            closestNode,
         ]
 
     return modelInfo
