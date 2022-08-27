@@ -38,6 +38,7 @@ documentation = {
     "magnitude": "dLoad magnitude",
     "delta": "in subsequent steps only: define the new magnitude incrementally",
     "f(t)": "(optional) define an amplitude",
+    "type": "the load type"
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase
