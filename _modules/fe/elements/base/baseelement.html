@@ -102,33 +102,83 @@
 
 <span class="c1"># @author: Matthias Neuner</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Implementing your own finite elements can be done easily by subclassing from </span>
+<span class="sd">the abstract base class :class:`~BaseElement`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">fe.variables.node</span> <span class="kn">import</span> <span class="n">Node</span>
 
 
-<div class="viewcode-block" id="BaseElement"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement">[docs]</a><span class="k">class</span> <span class="nc">BaseElement</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Finite elements in EdelweissFE should be derived from this</span>
-<span class="sd">    base class in order to follow the general interface.</span>
+<div class="viewcode-block" id="BaseElement"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement">[docs]</a><span class="k">class</span> <span class="nc">BaseElement</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The unique number of this element&quot;&quot;&quot;</span>
 
-<span class="sd">    EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)</span>
-<span class="sd">    to be of the form</span>
+        <span class="k">pass</span>
 
-<span class="sd">    .. code-block:: console</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The number of nodes this element requires&quot;&quot;&quot;</span>
 
-<span class="sd">        [ node 1 - dofs field 1,</span>
-<span class="sd">          node 1 - dofs field 2,</span>
-<span class="sd">          node 1 - ... ,</span>
-<span class="sd">          node 1 - dofs field n,</span>
-<span class="sd">          node 2 - dofs field 1,</span>
-<span class="sd">          ... ,</span>
-<span class="sd">          node N - dofs field n].</span>
+        <span class="k">pass</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The list of nodes this element holds&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The total number of degrees of freedom this element has&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;The list of fields per nodes.&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">dofIndicesPermutation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The permutation pattern for the residual vector and the stiffness matrix to</span>
+<span class="sd">        aggregate all entries in order to resemble the defined fields nodewise.&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">ensightType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The shape of the element in Ensight Gold notation.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign the element type and the number.</span>
+        <span class="sd">&quot;&quot;&quot;Finite elements in EdelweissFE should be derived from this</span>
+<span class="sd">        base class in order to follow the general interface.</span>
+
+<span class="sd">        EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)</span>
+<span class="sd">        to be of the form</span>
+
+<span class="sd">        .. code-block:: console</span>
+
+<span class="sd">            [ node 1 - dofs field 1,</span>
+<span class="sd">              node 1 - dofs field 2,</span>
+<span class="sd">              node 1 - ... ,</span>
+<span class="sd">              node 1 - dofs field n,</span>
+<span class="sd">              node 2 - dofs field 1,</span>
+<span class="sd">              ... ,</span>
+<span class="sd">              node N - dofs field n].</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -226,6 +276,36 @@
 <span class="sd">            The magnitude (or vector) describing the load.</span>
 <span class="sd">        U</span>
 <span class="sd">            The current solution vector.</span>
+<span class="sd">        time</span>
+<span class="sd">            Array of step time and total time.</span>
+<span class="sd">        dTime</span>
+<span class="sd">            The time increment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="BaseElement.computeYourself"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.computeYourself">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">computeYourself</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        P</span>
+<span class="sd">            The external load vector to be defined.</span>
+<span class="sd">        K</span>
+<span class="sd">            The stiffness matrix to be defined.</span>
+<span class="sd">        U</span>
+<span class="sd">            The current solution vector.</span>
+<span class="sd">        dU</span>
+<span class="sd">            The current solution vector increment.</span>
 <span class="sd">        time</span>
 <span class="sd">            Array of step time and total time.</span>
 <span class="sd">        dTime</span>

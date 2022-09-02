@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Analytical fields &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -100,10 +99,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-fe.config.analyticalfields">
+  <div class="section" id="module-fe.config.analyticalfields">
 <span id="analytical-fields"></span><h1>Analytical fields<a class="headerlink" href="#module-fe.config.analyticalfields" title="Permalink to this heading"></a></h1>
 <p>Analytical fields define values for spatial coordinates, e.g., for spatially varying material properties.</p>
-<section id="scalarexpression-field-defined-by-expression">
+<div class="section" id="scalarexpression-field-defined-by-expression">
 <h2><code class="docutils literal notranslate"><span class="pre">scalarexpression</span></code> - Field defined by expression<a class="headerlink" href="#scalarexpression-field-defined-by-expression" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.analyticalfields.scalarexpression</span></code></p>
 <span class="target" id="module-fe.analyticalfields.scalarexpression"></span><p>Define a field using a sclar expression.</p>
@@ -165,8 +164,8 @@
 </pre></div>
 </div>
 </div>
-</section>
-<section id="randomscalar-a-random-field">
+</div>
+<div class="section" id="randomscalar-a-random-field">
 <h2><code class="docutils literal notranslate"><span class="pre">randomscalar</span></code> - A random field<a class="headerlink" href="#randomscalar-a-random-field" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.analyticalfields.randomscalar</span></code></p>
 <span class="target" id="module-fe.analyticalfields.randomscalar"></span><p>Define a random field using the GSTools library.</p>
@@ -237,14 +236,24 @@
 </pre></div>
 </div>
 </div>
-</section>
-<section id="implementing-your-own-fields">
+</div>
+<div class="section" id="implementing-your-own-fields">
 <h2>Implementing your own fields<a class="headerlink" href="#implementing-your-own-fields" title="Permalink to this heading"></a></h2>
 <p>Subclass from the field base class in module <code class="docutils literal notranslate"><span class="pre">fe.analyticalfields.base.analyticalfieldbase</span></code></p>
 <span class="target" id="module-fe.analyticalfields.base.analyticalfieldbase"></span><dl class="py class">
 <dt class="sig sig-object py" id="fe.analyticalfields.base.analyticalfieldbase.AnalyticalField">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.analyticalfields.base.analyticalfieldbase.</span></span><span class="sig-name descname"><span class="pre">AnalyticalField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/analyticalfields/base/analyticalfieldbase.html#AnalyticalField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.analyticalfields.base.analyticalfieldbase.AnalyticalField" title="Permalink to this definition"></a></dt>
-<dd><p class="rubric">Methods</p>
+<dd><p>The field base class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the field.</p></li>
+<li><p><strong>data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – The input file data lines.</p></li>
+<li><p><strong>modelInfo</strong> (<em>dict</em>) – The dictionary containing the model tree.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -256,15 +265,6 @@
 </tr>
 </tbody>
 </table>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – </p></li>
-<li><p><strong>data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.analyticalfields.base.analyticalfieldbase.AnalyticalField.evaluateAtCoordinates">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">evaluateAtCoordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/analyticalfields/base/analyticalfieldbase.html#AnalyticalField.evaluateAtCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.analyticalfields.base.analyticalfieldbase.AnalyticalField.evaluateAtCoordinates" title="Permalink to this definition"></a></dt>
@@ -284,8 +284,8 @@
 
 </dd></dl>
 
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

@@ -143,6 +143,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">linewidth</span> <span class="o">=</span> <span class="n">newWidth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span> <span class="o">=</span> <span class="n">leftColumn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leftColumnMaxSize</span> <span class="o">=</span> <span class="mi">120</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputWidths</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputWidths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">leftColumn</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputWidths</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">leftColumn</span> <span class="o">-</span> <span class="mi">4</span>
@@ -169,12 +170,15 @@
 <span class="sd">            Level of message.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setNewLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linewidth</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
 
-        <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">suppressLvl</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leveledOutput</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">))</span></div>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumnMaxSize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setNewLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linewidth</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">suppressLvl</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leveledOutput</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Journal.errorMessage"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.errorMessage">[docs]</a>    <span class="k">def</span> <span class="nf">errorMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errorMessage</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Print an error message.</span>

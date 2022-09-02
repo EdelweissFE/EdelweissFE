@@ -169,7 +169,7 @@
         <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">elements</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">activeStepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">stepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
         <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -224,7 +224,7 @@
                 <span class="n">P</span><span class="p">,</span>
                 <span class="n">K</span><span class="p">,</span>
                 <span class="n">elements</span><span class="p">,</span>
-                <span class="n">activeStepActions</span><span class="p">,</span>
+                <span class="n">stepActions</span><span class="p">,</span>
                 <span class="n">constraints</span><span class="p">,</span>
                 <span class="n">increment</span><span class="p">,</span>
                 <span class="n">lastIncrementSize</span><span class="p">,</span>
@@ -241,10 +241,14 @@
         <span class="n">iterationCounter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">incrementResidualHistory</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
-        <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;dirichlets&quot;</span><span class="p">]</span>
-        <span class="n">concentratedLoads</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;concentratedLoads&quot;</span><span class="p">]</span>
-        <span class="n">distributedLoads</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;distributedLoads&quot;</span><span class="p">]</span>
-        <span class="n">bodyForces</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;bodyForces&quot;</span><span class="p">]</span>
+        <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;dirichlet&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">nodeForces</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">distributedLoads</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;distributedload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">bodyForces</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;bodyforce&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
         <span class="n">R_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">(),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># 2 RHSs</span>
         <span class="n">R_0</span> <span class="o">=</span> <span class="n">R_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
@@ -270,7 +274,7 @@
         <span class="n">zeroIncrement</span> <span class="o">=</span> <span class="n">incNumber</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
                 <span class="n">geostatic</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
 
             <span class="n">U_np</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">U_n</span>
@@ -282,10 +286,10 @@
             <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
             <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span>
-                <span class="n">concentratedLoads</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span><span class="p">,</span> <span class="n">zeroIncrement</span>
+                <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span><span class="p">,</span> <span class="n">zeroIncrement</span>
             <span class="p">)</span>  <span class="c1"># compute &#39;dead&#39; deadloads, like gravity</span>
             <span class="n">P_f</span><span class="p">,</span> <span class="n">K_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span>
-                <span class="n">concentratedLoads</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_f</span><span class="p">,</span> <span class="n">K_f</span><span class="p">,</span> <span class="n">referenceIncrement</span>
+                <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_f</span><span class="p">,</span> <span class="n">K_f</span><span class="p">,</span> <span class="n">referenceIncrement</span>
             <span class="p">)</span>  <span class="c1"># compute &#39;dead&#39; deadloads, like gravity</span>
 
             <span class="n">P_f</span> <span class="o">-=</span> <span class="n">P_0</span>  <span class="c1"># and subtract the dead part, since we are only interested in the homogeneous linear part</span>
@@ -351,6 +355,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="n">dLambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">finishIncrement</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">)</span>
 
+        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
             <span class="s2">&quot;Current load parameter: lambda=</span><span class="si">{:6.2e}</span><span class="s2">, last increment: dLambda=</span><span class="si">{:6.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
@@ -409,8 +417,14 @@
 
         <span class="k">return</span> <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span><span class="p">,</span> <span class="n">dLambda</span></div>
 
-<div class="viewcode-block" id="NISTPArcLength.finishStepActions"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.finishStepActions">[docs]</a>    <span class="k">def</span> <span class="nf">finishStepActions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+<div class="viewcode-block" id="NISTPArcLength.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
+
+<span class="sd">        For the arc length controlled simulation,</span>
+<span class="sd">        external loads at the end of a step depend on the arc length parameter.</span>
+<span class="sd">        Hence, for subsequent steps, the new reference loads depend on this parameter.</span>
+<span class="sd">        We communicate this to the step actions before the parent solver tells them that the</span>
+<span class="sd">        step is finished.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -424,11 +438,13 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">stepAction</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">stepAction</span><span class="o">.</span><span class="n">finishStep</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
+                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">stepAction</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;distributedload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">stepAction</span><span class="o">.</span><span class="n">finishStep</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
+                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">stepAction</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;bodeforce&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">finishStepActions</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

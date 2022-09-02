@@ -89,13 +89,24 @@ Relevant module: ``fe.stepactions.indirectcontrol``
 .. pprint:: fe.stepactions.indirectcontractioncontrol.documentation
    :caption: Options:
 
-``initalizematerial`` - Initialize materials
---------------------------------------------
+``initializematerial`` - Initialize materials
+---------------------------------------------
 
 Relevant module: ``fe.stepactions.initializematerial``
 
 .. automodule:: fe.stepactions.initializematerial
     :members: __doc__
+
+``modelupdate`` - Update the model
+----------------------------------
+
+Relevant module: ``fe.stepactions.modelupdate``
+
+.. automodule:: fe.stepactions.modelupdate
+    :members: __doc__
+
+.. pprint:: fe.stepactions.modelupdate.documentation
+   :caption: Options:
 
 ``nodeforces`` - Concentrated node forces
 -----------------------------------------
@@ -124,16 +135,15 @@ Relevant module: ``fe.stepactions.setfield``
 .. pprint:: fe.stepactions.setfield.documentation
    :caption: Options:
 
+``setinitialconditions`` - Set initial conditions to elements
+-------------------------------------------------------------
 
-``modelupdate`` - Update the model
-----------------------------------
+Relevant module: ``fe.stepactions.setinitialconditions``
 
-Relevant module: ``fe.stepactions.modelupdate``
-
-.. automodule:: fe.stepactions.modelupdate
+.. automodule:: fe.stepactions.setinitialconditions
     :members: __doc__
 
-.. pprint:: fe.stepactions.modelupdate.documentation
+.. pprint:: fe.stepactions.setinitialconditions.documentation
    :caption: Options:
 
 Implementing your own step actions

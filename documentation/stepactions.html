@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Step actions &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -61,10 +60,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#geostatic-geostatic-stress-states"><code class="docutils literal notranslate"><span class="pre">geostatic</span></code> - Geostatic stress states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#indirectcontrol-indirect-displacement-control"><code class="docutils literal notranslate"><span class="pre">indirectcontrol</span></code> - Indirect displacement control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#indirectcontractioncontrol-indirect-displacement-contraction-ring-control"><code class="docutils literal notranslate"><span class="pre">indirectcontractioncontrol</span></code> - Indirect displacement – contraction ring control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#initalizematerial-initialize-materials"><code class="docutils literal notranslate"><span class="pre">initalizematerial</span></code> - Initialize materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initializematerial-initialize-materials"><code class="docutils literal notranslate"><span class="pre">initializematerial</span></code> - Initialize materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modelupdate-update-the-model"><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nodeforces-concentrated-node-forces"><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setfield-set-field-to-prescribed-value"><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set field to prescribed value</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#modelupdate-update-the-model"><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setinitialconditions-set-initial-conditions-to-elements"><code class="docutils literal notranslate"><span class="pre">setinitialconditions</span></code> - Set initial conditions to elements</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-step-actions">Implementing your own step actions</a></li>
 </ul>
 </li>
@@ -108,7 +108,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-fe.config.stepactions">
+  <div class="section" id="module-fe.config.stepactions">
 <span id="step-actions"></span><h1>Step actions<a class="headerlink" href="#module-fe.config.stepactions" title="Permalink to this heading"></a></h1>
 <p>Step actions define actions run during a simulation.
 They are defined within a <code class="docutils literal notranslate"><span class="pre">*step</span></code> definition, line by line,
@@ -120,7 +120,7 @@ by specifying their <code class="docutils literal notranslate"><span class="pre"
 <span class="go">    distributedload, name=dload2, surface=left, type=pressure, magnitude=50, f(t)=t</span>
 </pre></div>
 </div>
-<section id="bodyforce-bodyforce-loads">
+<div class="section" id="bodyforce-bodyforce-loads">
 <h2><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads<a class="headerlink" href="#bodyforce-bodyforce-loads" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.bodyforce</span></code></p>
 <span class="target" id="module-fe.stepactions.bodyforce"></span><p>Simple body force load.
@@ -170,24 +170,26 @@ If not modified in subsequent steps, the load held constant.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="dirichlet-standard-dirichlet-bc">
+</div>
+<div class="section" id="dirichlet-standard-dirichlet-bc">
 <h2><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard dirichlet BC<a class="headerlink" href="#dirichlet-standard-dirichlet-bc" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.dirichlet</span></code></p>
 <span class="target" id="module-fe.stepactions.dirichlet"></span><p>Standard Dirichlet boundary condition.
 If not modified in subsequent steps, the BC is held constant.</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;1,2,3&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values in directions&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;1,2,3,...&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values for components of the physical field&#39;</span><span class="p">,</span>
   <span class="s1">&#39;analyticalField&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) scales the defined BCs&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;components&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values using a np.ndarray for representation; use &#39;</span>
+                <span class="s2">&quot;&#39;x&#39; for ignored values&quot;</span><span class="p">,</span>
   <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
   <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;field for BC&#39;</span><span class="p">,</span>
   <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;nSet for application of the BC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="distributedload-surface-loads">
+</div>
+<div class="section" id="distributedload-surface-loads">
 <h2><code class="docutils literal notranslate"><span class="pre">distributedload</span></code> - surface loads<a class="headerlink" href="#distributedload-surface-loads" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.distributedload</span></code></p>
 <span class="target" id="module-fe.stepactions.distributedload"></span><p>Standard distributed load, applied on a surface set.
@@ -197,7 +199,8 @@ If not modified in subsequent steps, the load held constant.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="s1">&#39;in subsequent steps only: define the new magnitude incrementally&#39;</span><span class="p">,</span>
   <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
   <span class="s1">&#39;magnitude&#39;</span><span class="p">:</span> <span class="s1">&#39;dLoad magnitude&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;surface&#39;</span><span class="p">:</span> <span class="s1">&#39;surface for application of the distributed load&#39;</span><span class="p">}</span>
+  <span class="s1">&#39;surface&#39;</span><span class="p">:</span> <span class="s1">&#39;surface for application of the distributed load&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;the load type&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -246,8 +249,8 @@ If not modified in subsequent steps, the load held constant.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="geostatic-geostatic-stress-states">
+</div>
+<div class="section" id="geostatic-geostatic-stress-states">
 <h2><code class="docutils literal notranslate"><span class="pre">geostatic</span></code> - Geostatic stress states<a class="headerlink" href="#geostatic-geostatic-stress-states" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.geostatic</span></code></p>
 <span class="target" id="module-fe.stepactions.geostatic"></span><p>Initialize materials to an geostatic stress state</p>
@@ -311,8 +314,8 @@ If not modified in subsequent steps, the load held constant.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="indirectcontrol-indirect-displacement-control">
+</div>
+<div class="section" id="indirectcontrol-indirect-displacement-control">
 <h2><code class="docutils literal notranslate"><span class="pre">indirectcontrol</span></code> - Indirect displacement control<a class="headerlink" href="#indirectcontrol-indirect-displacement-control" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.indirectcontrol</span></code></p>
 <span class="target" id="module-fe.stepactions.indirectcontrol"></span><p>Indirect (displacement) controller for the NISTArcLength solver</p>
@@ -382,8 +385,8 @@ If not modified in subsequent steps, the load held constant.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="indirectcontractioncontrol-indirect-displacement-contraction-ring-control">
+</div>
+<div class="section" id="indirectcontractioncontrol-indirect-displacement-contraction-ring-control">
 <h2><code class="docutils literal notranslate"><span class="pre">indirectcontractioncontrol</span></code> - Indirect displacement – contraction ring control<a class="headerlink" href="#indirectcontractioncontrol-indirect-displacement-contraction-ring-control" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.indirectcontrol</span></code></p>
 <span class="target" id="module-fe.stepactions.indirectcontractioncontrol"></span><p>Indirect (displacement) controller for the NISTArcLength solver
@@ -398,27 +401,41 @@ uses a ring to control the contraction, e.g., for tunneling simulations.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="initalizematerial-initialize-materials">
-<h2><code class="docutils literal notranslate"><span class="pre">initalizematerial</span></code> - Initialize materials<a class="headerlink" href="#initalizematerial-initialize-materials" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="initializematerial-initialize-materials">
+<h2><code class="docutils literal notranslate"><span class="pre">initializematerial</span></code> - Initialize materials<a class="headerlink" href="#initializematerial-initialize-materials" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.initializematerial</span></code></p>
 <span class="target" id="module-fe.stepactions.initializematerial"></span><p>Let materials initialize themselves (e.g., state vars depending on material parameters…) !</p>
-</section>
-<section id="nodeforces-concentrated-node-forces">
+</div>
+<div class="section" id="modelupdate-update-the-model">
+<h2><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model<a class="headerlink" href="#modelupdate-update-the-model" title="Permalink to this heading"></a></h2>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.modelupdate</span></code></p>
+<span class="target" id="module-fe.stepactions.modelupdate"></span><p>This step action may be used for updating something in the model at the beginning
+of a step.</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;update&#39;</span><span class="p">:</span> <span class="s1">&#39;model accessible, executable expression&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="nodeforces-concentrated-node-forces">
 <h2><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces<a class="headerlink" href="#nodeforces-concentrated-node-forces" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.nodeforces</span></code></p>
 <span class="target" id="module-fe.stepactions.nodeforces"></span><p>Apply simple node forces on a nSet.</p>
-<div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;1,2,3&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values in directions&#39;</span><span class="p">,</span>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id12" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;1,2,3,...&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values for components of the physical field&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;components&#39;</span><span class="p">:</span> <span class="s1">&#39;prescribed values using a np.ndarray for representation; use &#39;</span>
+                <span class="s2">&quot;&#39;x&#39; for ignored values&quot;</span><span class="p">,</span>
   <span class="s1">&#39;f(t)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) define an amplitude&#39;</span><span class="p">,</span>
   <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;field for BC&#39;</span><span class="p">,</span>
   <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;nSet for application of the BC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id12">
-<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/NodeForces/test.inp</span></code></span><a class="headerlink" href="#id12" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/NodeForces/test.inp</span></code></span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon</span>
 <span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
 
@@ -455,13 +472,13 @@ uses a ring to control the contraction, e.g., for tunneling simulations.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="setfield-set-field-to-prescribed-value">
+</div>
+<div class="section" id="setfield-set-field-to-prescribed-value">
 <h2><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set field to prescribed value<a class="headerlink" href="#setfield-set-field-to-prescribed-value" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.setfield</span></code></p>
 <span class="target" id="module-fe.stepactions.setfield"></span><p>Set a field (via fieldOutput) to a predefined value.</p>
-<div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id14" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;fieldOutput&#39;</span><span class="p">:</span> <span class="s1">&#39;field output to set&#39;</span><span class="p">,</span>
   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;const or &#39;analyticalField&#39;&quot;</span><span class="p">,</span>
   <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s2">&quot;scalar value if type &#39;const&#39;; name of analyticalField if type &quot;</span>
@@ -469,27 +486,29 @@ uses a ring to control the contraction, e.g., for tunneling simulations.</p>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="modelupdate-update-the-model">
-<h2><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model<a class="headerlink" href="#modelupdate-update-the-model" title="Permalink to this heading"></a></h2>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.modelupdate</span></code></p>
-<span class="target" id="module-fe.stepactions.modelupdate"></span><p>This step action may be used for updating something in the model at the beginning
-of a step.</p>
-<div class="literal-block-wrapper docutils container" id="id14">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id14" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;update&#39;</span><span class="p">:</span> <span class="s1">&#39;model accessible, executable expression&#39;</span><span class="p">}</span>
+</div>
+<div class="section" id="setinitialconditions-set-initial-conditions-to-elements">
+<h2><code class="docutils literal notranslate"><span class="pre">setinitialconditions</span></code> - Set initial conditions to elements<a class="headerlink" href="#setinitialconditions-set-initial-conditions-to-elements" title="Permalink to this heading"></a></h2>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.stepactions.setinitialconditions</span></code></p>
+<span class="target" id="module-fe.stepactions.setinitialconditions"></span><p>Pass initial conditions to elements.</p>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id15" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;elSet&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) the element set for which the initaliziation is &#39;</span>
+           <span class="s1">&#39;performed&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;property&#39;</span><span class="p">:</span> <span class="s1">&#39;the name of the property to be initialized&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;values&#39;</span><span class="p">:</span> <span class="s1">&#39;the property values&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="implementing-your-own-step-actions">
+</div>
+<div class="section" id="implementing-your-own-step-actions">
 <h2>Implementing your own step actions<a class="headerlink" href="#implementing-your-own-step-actions" title="Permalink to this heading"></a></h2>
 <p>Subclass from the step action base class in module <code class="docutils literal notranslate"><span class="pre">fe.stepactions.base.stepactionbase</span></code></p>
 <span class="target" id="module-fe.stepactions.base.stepactionbase"></span><dl class="py class">
 <dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.stepactions.base.stepactionbase.</span></span><span class="sig-name descname"><span class="pre">StepActionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase" title="Permalink to this definition"></a></dt>
-<dd><p>This is the abstract base class for all step actions.
-User defined step actions must implement the abstract methods.</p>
+<dd><p>This is the abase class for all step actions.
+User defined step actions can override the methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -509,8 +528,14 @@ User defined step actions must implement the abstract methods.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.finishStep" title="fe.stepactions.base.stepactionbase.StepActionBase.finishStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finishStep</span></code></a>(U, P)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart" title="fe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyAtIncrementStart</span></code></a>(U_n, P, increment)</p></td>
+<td><p>Is called when a step increment starts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd" title="fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyAtStepEnd</span></code></a>(U, P)</p></td>
 <td><p>Is called when a step successfully finished.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart" title="fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyAtStepStart</span></code></a>(U, P)</p></td>
+<td><p>Is called when a step starts.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateStepAction</span></code></a>(name, definition, jobInfo, ...)</p></td>
 <td><p>Is called when an updated definition is present for a new step.</p></td>
@@ -518,8 +543,23 @@ User defined step actions must implement the abstract methods.</p>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.finishStep">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">finishStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.finishStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.finishStep" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart">
+<span class="sig-name descname"><span class="pre">applyAtIncrementStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.applyAtIncrementStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart" title="Permalink to this definition"></a></dt>
+<dd><p>Is called when a step increment starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U_n</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current converged solution vector at start of the increment.</p></li>
+<li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction force vector.</p></li>
+<li><p><strong>increment</strong> (<em>tuple</em>) – The defintion of the time increment.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd">
+<span class="sig-name descname"><span class="pre">applyAtStepEnd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.applyAtStepEnd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd" title="Permalink to this definition"></a></dt>
 <dd><p>Is called when a step successfully finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -532,8 +572,22 @@ User defined step actions must implement the abstract methods.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart">
+<span class="sig-name descname"><span class="pre">applyAtStepStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.applyAtStepStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart" title="Permalink to this definition"></a></dt>
+<dd><p>Is called when a step starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
+<li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction force vector.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
 <dd><p>Is called when an updated definition is present for a new step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -551,8 +605,8 @@ User defined step actions must implement the abstract methods.</p>
 
 </dd></dl>
 
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

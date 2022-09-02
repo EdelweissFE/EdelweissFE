@@ -247,17 +247,12 @@
 
         <span class="n">elements</span> <span class="o">=</span> <span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
 
-        <span class="n">activeStepActions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collectActiveStepActions</span><span class="p">(</span><span class="n">stepActions</span><span class="p">)</span>
         <span class="n">constraints</span> <span class="o">=</span> <span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
 
         <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">for</span> <span class="n">setfield</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;setfields&quot;</span><span class="p">]:</span>
-            <span class="n">setfield</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">initmaterial</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;initializematerial&quot;</span><span class="p">]:</span>
-            <span class="n">initmaterial</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applyStepActionsAtStepStart</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">increment</span> <span class="ow">in</span> <span class="n">incGen</span><span class="o">.</span><span class="n">generateIncrement</span><span class="p">():</span>
@@ -281,7 +276,7 @@
                         <span class="n">P</span><span class="p">,</span>
                         <span class="n">K</span><span class="p">,</span>
                         <span class="n">elements</span><span class="p">,</span>
-                        <span class="n">activeStepActions</span><span class="p">,</span>
+                        <span class="n">stepActions</span><span class="p">,</span>
                         <span class="n">constraints</span><span class="p">,</span>
                         <span class="n">increment</span><span class="p">,</span>
                         <span class="n">lastIncrementSize</span><span class="p">,</span>
@@ -328,17 +323,11 @@
         <span class="k">except</span> <span class="n">ConditionalStop</span><span class="p">:</span>
             <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Conditional Stop&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">finishStepActions</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
-
-            <span class="k">if</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Geostatic Step -- displacements are reset&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
-                <span class="n">U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resetDisplacements</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>  <span class="c1"># reset all displacements, if the present step is a geostatic step</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">finishStepActions</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
 
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">finishedTime</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">stepProgress</span> <span class="o">*</span> <span class="n">stepLength</span>
@@ -356,7 +345,7 @@
         <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">elements</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">activeStepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">stepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
         <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -378,7 +367,7 @@
 <span class="sd">            The system matrix to be used.</span>
 <span class="sd">        elements</span>
 <span class="sd">            The dictionary containing all elements.</span>
-<span class="sd">        activeStepActions</span>
+<span class="sd">        stepActions</span>
 <span class="sd">            The list of active step actions.</span>
 <span class="sd">        constraints</span>
 <span class="sd">            The dictionary containing all elements.</span>
@@ -414,21 +403,20 @@
         <span class="n">U_np</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
         <span class="n">ddU</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;dirichlets&quot;</span><span class="p">]</span>
-        <span class="n">concentratedLoads</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;concentratedLoads&quot;</span><span class="p">]</span>
-        <span class="n">distributedLoads</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;distributedLoads&quot;</span><span class="p">]</span>
-        <span class="n">bodyForces</span> <span class="o">=</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;bodyForces&quot;</span><span class="p">]</span>
+        <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;dirichlet&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">nodeforces</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">distributedLoads</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;distributedload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">bodyForces</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;bodyforce&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">changeMaterialProperty</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;changeMaterialProperties&quot;</span><span class="p">]:</span>
-            <span class="n">changeMaterialProperty</span><span class="o">.</span><span class="n">changeTheProperties</span><span class="p">(</span><span class="n">increment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applyStepActionsAtIncrementStart</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
 
         <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span>
             <span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span>
         <span class="p">)</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">activeStepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
-                <span class="n">geostatic</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;geostatic&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">geostatic</span><span class="o">.</span><span class="n">applyAtIterationStart</span><span class="p">()</span>
 
             <span class="n">U_np</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">U_n</span>
             <span class="n">U_np</span> <span class="o">+=</span> <span class="n">dU</span>
@@ -436,7 +424,7 @@
             <span class="n">P</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">PExt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
             <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
-            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span><span class="n">concentratedLoads</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span><span class="n">nodeforces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
             <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
             <span class="n">R</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P</span>
@@ -749,26 +737,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;CSR generation&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
         <span class="k">return</span> <span class="n">KCsr</span></div>
 
-<div class="viewcode-block" id="NIST.resetDisplacements"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.resetDisplacements">[docs]</a>    <span class="k">def</span> <span class="nf">resetDisplacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DofVector</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;May be called at the end of a geostatic step, the zero all displacements after</span>
-<span class="sd">        applying the geostatic stress.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        U</span>
-<span class="sd">            The current solution vector.</span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        DofVector</span>
-<span class="sd">            The modified solution vector.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Geostatic step, resetting displacements&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
-        <span class="n">U</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">[</span><span class="s2">&quot;displacement&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">return</span> <span class="n">U</span></div>
-
 <div class="viewcode-block" id="NIST.computeSpatialAveragedFluxes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">[docs]</a>    <span class="k">def</span> <span class="nf">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Compute the spatial averaged flux for every field</span>
 <span class="sd">        Is usually called by checkConvergence().</span>
@@ -902,7 +870,7 @@
 
 <div class="viewcode-block" id="NIST.assembleLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads">[docs]</a>    <span class="k">def</span> <span class="nf">assembleLoads</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">concentratedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
+        <span class="n">nodeForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -914,7 +882,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        concentratedLoads</span>
+<span class="sd">        nodeForces</span>
 <span class="sd">            The list of concentrated (nodal) loads.</span>
 <span class="sd">        distributedLoads</span>
 <span class="sd">            The list of distributed (surface) loads.</span>
@@ -936,7 +904,7 @@
 <span class="sd">            - The modified system matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># cloads</span>
-        <span class="k">for</span> <span class="n">cLoad</span> <span class="ow">in</span> <span class="n">concentratedLoads</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">cLoad</span> <span class="ow">in</span> <span class="n">nodeForces</span><span class="p">:</span>
             <span class="n">PExt</span> <span class="o">=</span> <span class="n">cLoad</span><span class="o">.</span><span class="n">applyOnP</span><span class="p">(</span><span class="n">PExt</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
         <span class="c1"># dloads</span>
         <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeDistributedLoads</span><span class="p">(</span><span class="n">distributedLoads</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
@@ -1001,52 +969,6 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="NIST.collectActiveStepActions"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.collectActiveStepActions">[docs]</a>    <span class="k">def</span> <span class="nf">collectActiveStepActions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get the current active actions (loads, etc. ... ) for the current step.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        stepActions</span>
-<span class="sd">            The dictionary containing all existing step actions.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        ------</span>
-<span class="sd">            The list of active step actions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">activeActions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;dirichlets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;dirichlet&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;shotcreteshellmaster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;distributedLoads&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;distributedload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;bodyForces&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;bodyforce&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;concentratedLoads&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;geostatic&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;changeMaterialProperties&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;changematerialproperty&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">active</span>
-        <span class="p">]</span>
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;setfields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;setfield&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
-        <span class="n">activeActions</span><span class="p">[</span><span class="s2">&quot;initializematerial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;initializematerial&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">activeActions</span></div>
-
-<div class="viewcode-block" id="NIST.finishStepActions"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.finishStepActions">[docs]</a>    <span class="k">def</span> <span class="nf">finishStepActions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        U</span>
-<span class="sd">            The solution vector.</span>
-<span class="sd">        P</span>
-<span class="sd">            The reaction vector.</span>
-<span class="sd">        stepActions</span>
-<span class="sd">            The list of active step actions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">action</span><span class="o">.</span><span class="n">finishStep</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="NIST.printResidualOutlierNodes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes">[docs]</a>    <span class="k">def</span> <span class="nf">printResidualOutlierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residualOutliers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Print which nodes have the largest residuals.</span>
 
@@ -1065,7 +987,62 @@
                 <span class="s2">&quot;|</span><span class="si">{:20}</span><span class="s2">|node </span><span class="si">{:10}</span><span class="s2">|&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
                 <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="p">)</span></div></div>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="NIST.applyStepActionsAtStepStart"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Called when all step actions should be appliet at the start a step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        U</span>
+<span class="sd">            The solution vector.</span>
+<span class="sd">        P</span>
+<span class="sd">            The reaction vector.</span>
+<span class="sd">        stepActions</span>
+<span class="sd">            The dictionary of active step actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtStepStart</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NIST.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        U</span>
+<span class="sd">            The solution vector.</span>
+<span class="sd">        P</span>
+<span class="sd">            The reaction vector.</span>
+<span class="sd">        stepActions</span>
+<span class="sd">            The dictionary of active step actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NIST.applyStepActionsAtIncrementStart"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtIncrementStart</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">U_n</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when all step actions should be applied at the start of a step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        U_n</span>
+<span class="sd">            The converged solution vector at the strt of an increment.</span>
+<span class="sd">        P</span>
+<span class="sd">            The reaction vector.</span>
+<span class="sd">        increment</span>
+<span class="sd">            The time increment.</span>
+<span class="sd">        stepActions</span>
+<span class="sd">            The dictionary of active step actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

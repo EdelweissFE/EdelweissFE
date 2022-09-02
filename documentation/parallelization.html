@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parallelization &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -95,7 +94,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="parallelization">
+  <div class="section" id="parallelization">
 <h1>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this heading"></a></h1>
 <p>EdelweissFE makes use of OpenMP to parallelize the computation of finite elements and for certain solvers, such as SuperLU, UFMPACK, or PARDISO.</p>
 <p>If a parallel solver (e.g, NISTParallel, NISTPArcLength) is selected in the .inp file, EdelweissFE  automatically determines the max. number of threads dependent on the host architecture.
@@ -104,7 +103,7 @@ However, it is RECOMMENDED to enforce a fixed number of threads by running</p>
 </pre></div>
 </div>
 <p>This ensures that the same number of threads XX is employed both in EdelweissFE as well as in the underlying Intel MKL (e.g., if the PARDISO linear solver is used).</p>
-</section>
+</div>
 
 
            </div>
