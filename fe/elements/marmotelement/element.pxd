@@ -32,6 +32,8 @@ Created on Thu Apr 27 08:35:06 2017
 """
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+cimport numpy as np
+import numpy as np
 
 cdef extern from "Marmot/MarmotElement.h" namespace "MarmotElement":
     cdef enum StateTypes:
@@ -67,10 +69,10 @@ cdef extern from "Marmot/MarmotElementProperty.h":
         pass
     
     cdef cppclass MarmotMaterialSection(MarmotElementProperty) nogil:
-        MarmotMaterialSection(int materialCode, const double* materialProperties, int nMaterialProperties)
+        MarmotMaterialSection(int materialCode, const double* _materialProperties, int nMaterialProperties)
         
     cdef cppclass ElementProperties(MarmotElementProperty) nogil:
-        ElementProperties(const double* elementProperties, int nElementProperties)
+        ElementProperties(const double* _elementProperties, int nElementProperties)
 
 cdef extern from "Marmot/MarmotUtils.h":
     cdef struct StateView:
@@ -83,7 +85,7 @@ cdef extern from "Marmot/MarmotElement.h":
         
         int getNumberOfRequiredStateVars()
 
-        void assignStateVars(double *stateVars, int nStateVars)
+        void assignStateVars(double *_stateVars, int nStateVars)
         
         void assignProperty( const MarmotElementProperty& property ) 
 
@@ -139,21 +141,21 @@ cdef extern from "Marmot/MarmotElement.h":
 cdef class MarmotElementWrapper:
     
     cdef MarmotElement* marmotElement
-    cdef public nodes, 
-    cdef public int elNumber, 
-    cdef public int nNodes, nDof
-    cdef public list fields
-    cdef public str ensightType
-    cdef readonly dofIndicesPermutation
+    cdef list _nodes, 
+    cdef int _elNumber, 
+    cdef int _nNodes, _nDof
+    cdef list _fields
+    cdef str _ensightType
+    cdef np.ndarray _dofIndicesPermutation
     
-    cdef public double[::1] stateVars, nodeCoordinates
-    cdef public double[::1] elementProperties, stateVarsTemp , materialProperties
+    cdef public double[::1] _stateVars, nodeCoordinates
+    cdef public double[::1] _elementProperties, _stateVarsTemp , _materialProperties
     cdef int nStateVars
     cdef double[::1] getStateView(self, string stateName, int gaussPt)
 
     # nogil methods are already declared here:
     
-    cpdef void initializeStateVarsTemp(self, ) nogil
+    cpdef void _initializeStateVarsTemp(self, ) nogil
 
     cpdef void computeYourself(self, 
                      double[::1] Ke, 

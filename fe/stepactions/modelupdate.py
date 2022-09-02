@@ -44,7 +44,7 @@ class StepAction(StepActionBase):
         self.name = name
         self.updateStepAction(name, options, jobInfo, modelInfo, fieldOutputController, journal)
 
-    def finishStep(self, U, P):
+    def applyAtStepEnd(self, U, P):
         """By default, this action is only executed once."""
 
         self.active = False
@@ -57,6 +57,9 @@ class StepAction(StepActionBase):
 
     def updateModel(self, modelInfo, fieldOutputController, journal):
         """Update the model based on an executable provided Python expression."""
+
+        if not self.active:
+            return
 
         journal.message("Updating model: {:}".format(self.updateExpression), self.name)
         execModelAccessibleExpression(self.updateExpression, modelInfo, fieldOutputs=fieldOutputController.fieldOutputs)

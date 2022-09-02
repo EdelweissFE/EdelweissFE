@@ -58,7 +58,12 @@ def getElementClass(provider: str = None) -> type:
     if provider == None:
         provider = "marmot"
 
-    if provider == "marmot":
+    if provider.lower() == "marmot":
         from fe.elements.marmotelement.element import MarmotElementWrapper
 
         return MarmotElementWrapper
+
+    if provider.lower() == "marmotsingleqpelement":
+        from fe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
+
+        return MarmotMaterialWrappingElement

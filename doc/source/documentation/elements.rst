@@ -11,8 +11,20 @@ Provider ``marmot``
 
 Relevant module: ``fe.elements.marmotelement.element``
 
-.. automodule:: fe.elements.marmotelement.element
-   :members: __doc__
+.. autoclass:: fe.elements.marmotelement.element.MarmotElementWrapper
+   :members: 
+
+Provider ``marmotsingleqpelement`` 
+----------------------------------
+
+Relevant module: ``fe.elements.marmotsingleqpelement.element``
+
+.. autoclass:: fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement
+   :members: 
+
+.. literalinclude:: ../../../testfiles/QPMarmotMaterialHypoElastic/test.inp
+    :language: console
+    :caption: Example: ``testfiles/QPMarmotMaterialHypoElastic/test.inp``
 
 Implementing your own elements
 ------------------------------

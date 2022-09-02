@@ -77,7 +77,7 @@ class StepAction(StepActionBase):
     def finishIncrement(self, U, dU, dLambda):
         pass
 
-    def finishStep(self, U, P):
+    def applyAtStepEnd(self, U, P):
         self.currentL0 = self.cVector.dot(U[self.idcs])
 
     def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):

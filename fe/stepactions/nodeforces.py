@@ -35,12 +35,14 @@ Apply simple node forces on a nSet.
 
 documentation = {
     "nSet": "nSet for application of the BC",
-    "1,2,3": "prescribed values in directions",
+    "1,2,3,...": "prescribed values for components of the physical field",
+    "components": "prescribed values using a np.ndarray for representation; use 'x' for ignored values",
     "field": "field for BC",
     "f(t)": "(optional) define an amplitude",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.config.phenomena import getFieldSize
 import numpy as np
 import sympy as sp
 
@@ -59,9 +61,14 @@ class StepAction(StepActionBase):
         self.idle = False
         self.nSet = nodeSets[action["nSet"]]
 
-        for x, direction in enumerate(["1", "2", "3"]):
+        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, modelInfo["domainSize"]))]
+
+        if "components" in action:
+            action = self._getDirectionsFromComponents(action)
+
+        for x, direction in enumerate(self.possibleComponents):
+            directionIndices = [node.fields[self.field][x] for node in self.nSet]
             if direction in action:
-                directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 nodeForceIndices += directionIndices
                 nodeForceDelta += [float(action[direction])] * len(directionIndices)
 
@@ -70,9 +77,21 @@ class StepAction(StepActionBase):
         self.nodeForcesDelta = np.asarray(nodeForceDelta)
         self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
 
-        self.amplitude = self.getAmplitude(action)
+        self.amplitude = self._getAmplitude(action)
 
-    def getAmplitude(self, action):
+    def _getAmplitude(self, action: dict) -> callable:
+        """Determine the amplitude for the step, depending on a potentially specified function.
+
+        Parameters
+        ----------
+        action
+            The dictionary defining this step action.
+
+        Returns
+        -------
+        callable
+            The function defining the amplitude depending on the step propress.
+        """
 
         if "f(t)" in action:
             t = sp.symbols("t")
@@ -82,7 +101,7 @@ class StepAction(StepActionBase):
 
         return amplitude
 
-    def finishStep(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, U, P, stepMagnitude=None):
 
         if not self.idle:
             if stepMagnitude == None:
@@ -96,16 +115,29 @@ class StepAction(StepActionBase):
             self.idle = True
 
     def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+        """Update the step action.
+
+        It is a reasonable requirement that the updated direction components cannot change.
+        """
 
         self.idle = False
         nodeForceDelta = []
-        for x, direction in enumerate(["1", "2", "3"]):
+        nodeForceIndices = []
+
+        if "components" in action:
+            action = self._getDirectionsFromComponents(action)
+
+        for x, direction in enumerate(self.possibleComponents):
+            directionIndices = [node.fields[self.field][x] for node in self.nSet]
             if direction in action:
-                directionIndices = [node.fields[self.field][x] for node in self.nSet]
+                nodeForceIndices += directionIndices
                 nodeForceDelta += [float(action[direction])] * len(directionIndices)
 
+        if not (nodeForceIndices == self.indices).all():
+            raise ValueError("Components for node forces action can not change!")
+
         self.nodeForcesDelta = np.asarray(nodeForceDelta)
-        self.amplitude = self.getAmplitude(action)
+        self.amplitude = self._getAmplitude(action)
 
     def applyOnP(self, P, increment):
 
@@ -118,3 +150,25 @@ class StepAction(StepActionBase):
             P[self.indices] += self.nodeForcesStepStart + self.nodeForcesDelta * amp
 
         return P
+
+    def _getDirectionsFromComponents(self, action: dict) -> dict:
+        """Determine the direction components from a numpy array representation.
+
+        Parameters
+        ----------
+        action
+            The dictionary defining this step action.
+
+        Returns
+        -------
+        dict
+            The updated dictionary defining this step action containing the directional definitions.
+        """
+
+        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=np.float)
+
+        for i, t in enumerate(components):
+            if not np.isnan(t):
+                action[str(i + 1)] = t
+
+        return action

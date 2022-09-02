@@ -26,16 +26,14 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from abc import ABC, abstractmethod
 from fe.utils.fieldoutput import FieldOutputController
 from fe.journal.journal import Journal
 from fe.utils.dofmanager import DofVector
 
 
-class StepActionBase(ABC):
-    """This is the abstract base class for all step actions.
-    User defined step actions must implement the abstract methods.
-
+class StepActionBase:
+    """This is the abase class for all step actions.
+    User defined step actions can override the methods.
 
     Parameters
     ----------
@@ -53,7 +51,6 @@ class StepActionBase(ABC):
         The journal object for logging.
     """
 
-    @abstractmethod
     def __init__(
         self,
         name: str,
@@ -65,7 +62,6 @@ class StepActionBase(ABC):
     ):
         pass
 
-    @abstractmethod
     def updateStepAction(
         self,
         name: str,
@@ -95,8 +91,19 @@ class StepActionBase(ABC):
 
         pass
 
-    @abstractmethod
-    def finishStep(self, U: DofVector, P: DofVector):
+    def applyAtStepStart(self, U: DofVector, P: DofVector):
+        """Is called when a step starts.
+
+        Parameters
+        ----------
+        U
+            The current solution vector.
+        P
+            The current reaction force vector.
+        """
+        pass
+
+    def applyAtStepEnd(self, U: DofVector, P: DofVector):
         """Is called when a step successfully finished.
 
         Parameters
@@ -105,5 +112,19 @@ class StepActionBase(ABC):
             The current solution vector.
         P
             The current reaction force vector.
+        """
+        pass
+
+    def applyAtIncrementStart(self, U_n: DofVector, P: DofVector, increment: tuple):
+        """Is called when a step increment starts.
+
+        Parameters
+        ----------
+        U_n
+            The current converged solution vector at start of the increment.
+        P
+            The current reaction force vector.
+        increment
+            The defintion of the time increment.
         """
         pass

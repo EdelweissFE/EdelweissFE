@@ -76,7 +76,7 @@ class StepAction(StepActionBase):
             self.identification,
         )
 
-    def finishStep(self, U, P):
+    def applyAtStepEnd(self, U, P):
         self.currentL0 = self.c.dot(U[self.idcs])
 
     def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):

@@ -105,7 +105,7 @@ class NISTParallelForMarmotElements(NISTParallel):
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing
             backendBasedCythonElement   = elList[i]
-            backendBasedCythonElement.initializeStateVarsTemp()
+            backendBasedCythonElement._initializeStateVarsTemp()
             cppElements[i]              = backendBasedCythonElement.marmotElement
             elIndicesInVIJ[i]           = self.theDofManager.entitiesInVIJ[backendBasedCythonElement] 
             elNDofs[i]                  = backendBasedCythonElement.nDof 

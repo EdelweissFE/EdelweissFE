@@ -32,7 +32,7 @@ create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 
-create=perElement, elSet=all, modeldata="[el.materialProperties[0] for el in elementSets['all']]", name=E
+create=perElement, elSet=all, modeldata="[el._materialProperties[0] for el in elementSets['all']]", name=E
 
 configuration, overwrite=yes
 

@@ -29,33 +29,83 @@
 
 # @author: Matthias Neuner
 
+"""
+Implementing your own finite elements can be done easily by subclassing from 
+the abstract base class :class:`~BaseElement`.
+"""
+
 from abc import ABC, abstractmethod
 import numpy as np
 from fe.variables.node import Node
 
 
-class BaseElement:
-    """Finite elements in EdelweissFE should be derived from this
-    base class in order to follow the general interface.
+class BaseElement(ABC):
+    @property
+    @abstractmethod
+    def elNumber(self) -> int:
+        """The unique number of this element"""
 
-    EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)
-    to be of the form
+        pass
 
-    .. code-block:: console
+    @property
+    @abstractmethod
+    def nNodes(self) -> int:
+        """The number of nodes this element requires"""
 
-        [ node 1 - dofs field 1,
-          node 1 - dofs field 2,
-          node 1 - ... ,
-          node 1 - dofs field n,
-          node 2 - dofs field 1,
-          ... ,
-          node N - dofs field n].
+        pass
 
-    """
+    @property
+    @abstractmethod
+    def nodes(self) -> int:
+        """The list of nodes this element holds"""
+
+        pass
+
+    @property
+    @abstractmethod
+    def nDof(self) -> int:
+        """The total number of degrees of freedom this element has"""
+
+        pass
+
+    @property
+    @abstractmethod
+    def fields(self) -> list[list[str]]:
+        """The list of fields per nodes."""
+
+        pass
+
+    @property
+    @abstractmethod
+    def dofIndicesPermutation(self) -> np.ndarray:
+        """The permutation pattern for the residual vector and the stiffness matrix to
+        aggregate all entries in order to resemble the defined fields nodewise."""
+
+        pass
+
+    @property
+    @abstractmethod
+    def ensightType(self) -> str:
+        """The shape of the element in Ensight Gold notation."""
+        pass
 
     @abstractmethod
     def __init__(self, elementType: str, elNumber: int):
-        """Assign the element type and the number.
+        """Finite elements in EdelweissFE should be derived from this
+        base class in order to follow the general interface.
+
+        EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)
+        to be of the form
+
+        .. code-block:: console
+
+            [ node 1 - dofs field 1,
+              node 1 - dofs field 2,
+              node 1 - ... ,
+              node 1 - dofs field n,
+              node 2 - dofs field 1,
+              ... ,
+              node N - dofs field n].
 
         Parameters
         ----------
@@ -153,6 +203,36 @@ class BaseElement:
             The magnitude (or vector) describing the load.
         U
             The current solution vector.
+        time
+            Array of step time and total time.
+        dTime
+            The time increment.
+        """
+
+        pass
+
+    @abstractmethod
+    def computeYourself(
+        self,
+        P: np.ndarray,
+        K: np.ndarray,
+        U: np.ndarray,
+        dU: np.ndarray,
+        time: np.ndarray,
+        dTime: float,
+    ):
+        """Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.
+
+        Parameters
+        ----------
+        P
+            The external load vector to be defined.
+        K
+            The stiffness matrix to be defined.
+        U
+            The current solution vector.
+        dU
+            The current solution vector increment.
         time
             Array of step time and total time.
         dTime

@@ -174,17 +174,12 @@ class NIST:
 
         elements = modelInfo["elements"]
 
-        activeStepActions = self.collectActiveStepActions(stepActions)
         constraints = modelInfo["constraints"]
 
         lastIncrementSize = False
         success = False
 
-        for setfield in activeStepActions["setfields"]:
-            setfield.apply()
-
-        for initmaterial in activeStepActions["initializematerial"]:
-            initmaterial.apply()
+        self.applyStepActionsAtStepStart(U, P, stepActions)
 
         try:
             for increment in incGen.generateIncrement():
@@ -208,7 +203,7 @@ class NIST:
                         P,
                         K,
                         elements,
-                        activeStepActions,
+                        stepActions,
                         constraints,
                         increment,
                         lastIncrementSize,
@@ -255,17 +250,11 @@ class NIST:
         except ConditionalStop:
             success = True
             self.journal.message("Conditional Stop", self.identification)
-
-            self.finishStepActions(U, P, stepActions)
+            self.applyStepActionsAtStepEnd(U, P, stepActions)
 
         else:
             success = True
-
-            if activeStepActions["geostatics"]:
-                self.journal.message("Geostatic Step -- displacements are reset", self.identification)
-                U = self.resetDisplacements(U)  # reset all displacements, if the present step is a geostatic step
-
-            self.finishStepActions(U, P, stepActions)
+            self.applyStepActionsAtStepEnd(U, P, stepActions)
 
         finally:
             finishedTime = time + stepProgress * stepLength
@@ -283,7 +272,7 @@ class NIST:
         P: DofVector,
         K: VIJSystemMatrix,
         elements: dict,
-        activeStepActions: list,
+        stepActions: list,
         constraints: dict,
         increment: tuple,
         lastIncrementSize: float,
@@ -305,7 +294,7 @@ class NIST:
             The system matrix to be used.
         elements
             The dictionary containing all elements.
-        activeStepActions
+        stepActions
             The list of active step actions.
         constraints
             The dictionary containing all elements.
@@ -341,21 +330,20 @@ class NIST:
         U_np = self.theDofManager.constructDofVector()
         ddU = None
 
-        dirichlets = activeStepActions["dirichlets"]
-        concentratedLoads = activeStepActions["concentratedLoads"]
-        distributedLoads = activeStepActions["distributedLoads"]
-        bodyForces = activeStepActions["bodyForces"]
+        dirichlets = stepActions["dirichlet"].values()
+        nodeforces = stepActions["nodeforces"].values()
+        distributedLoads = stepActions["distributedload"].values()
+        bodyForces = stepActions["bodyforce"].values()
 
-        for changeMaterialProperty in activeStepActions["changeMaterialProperties"]:
-            changeMaterialProperty.changeTheProperties(increment, self.journal)
+        self.applyStepActionsAtIncrementStart(U_n, P, increment, stepActions)
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
             extrapolation, increment, dU, dirichlets, lastIncrementSize
         )
 
         while True:
-            for geostatic in activeStepActions["geostatics"]:
-                geostatic.apply()
+            for geostatic in stepActions["geostatic"].values():
+                geostatic.applyAtIterationStart()
 
             U_np[:] = U_n
             U_np += dU
@@ -363,7 +351,7 @@ class NIST:
             P[:] = K[:] = F[:] = PExt[:] = 0.0
 
             P, K, F = self.computeElements(elements, U_np, dU, P, K, F, increment)
-            PExt, K = self.assembleLoads(concentratedLoads, distributedLoads, bodyForces, U_np, PExt, K, increment)
+            PExt, K = self.assembleLoads(nodeforces, distributedLoads, bodyForces, U_np, PExt, K, increment)
             PExt, K = self.assembleConstraints(constraints, U_np, dU, PExt, K, increment)
 
             R[:] = P
@@ -676,26 +664,6 @@ class NIST:
         self.computationTimes["CSR generation"] += toc - tic
         return KCsr
 
-    def resetDisplacements(self, U: DofVector) -> DofVector:
-        """May be called at the end of a geostatic step, the zero all displacements after
-        applying the geostatic stress.
-
-        Parameters
-        ----------
-        U
-            The current solution vector.
-        Returns
-        -------
-        DofVector
-            The modified solution vector.
-        """
-
-        self.journal.printSeperationLine()
-        self.journal.message("Geostatic step, resetting displacements", self.identification, level=1)
-        self.journal.printSeperationLine()
-        U[self.theDofManager.indicesOfFieldsInDofVector["displacement"]] = 0.0
-        return U
-
     def computeSpatialAveragedFluxes(self, F: DofVector) -> np.float:
         """Compute the spatial averaged flux for every field
         Is usually called by checkConvergence().
@@ -829,7 +797,7 @@ class NIST:
 
     def assembleLoads(
         self,
-        concentratedLoads: list[StepActionBase],
+        nodeForces: list[StepActionBase],
         distributedLoads: list[StepActionBase],
         bodyForces: list[StepActionBase],
         U_np: DofVector,
@@ -841,7 +809,7 @@ class NIST:
 
         Parameters
         ----------
-        concentratedLoads
+        nodeForces
             The list of concentrated (nodal) loads.
         distributedLoads
             The list of distributed (surface) loads.
@@ -863,7 +831,7 @@ class NIST:
             - The modified system matrix.
         """
         # cloads
-        for cLoad in concentratedLoads:
+        for cLoad in nodeForces:
             PExt = cLoad.applyOnP(PExt, increment)
         # dloads
         PExt, K = self.computeDistributedLoads(distributedLoads, U_np, PExt, K, increment)
@@ -928,52 +896,6 @@ class NIST:
                 return True
         return False
 
-    def collectActiveStepActions(self, stepActions: dict) -> list[StepActionBase]:
-        """Get the current active actions (loads, etc. ... ) for the current step.
-
-        Parameters
-        ----------
-        stepActions
-            The dictionary containing all existing step actions.
-
-        Returns
-        ------
-            The list of active step actions.
-        """
-        activeActions = dict()
-
-        activeActions["dirichlets"] = list(stepActions["dirichlet"].values()) + list(
-            stepActions["shotcreteshellmaster"].values()
-        )
-        activeActions["distributedLoads"] = stepActions["distributedload"].values()
-        activeActions["bodyForces"] = stepActions["bodyforce"].values()
-        activeActions["concentratedLoads"] = stepActions["nodeforces"].values()
-
-        activeActions["geostatics"] = [g for g in stepActions["geostatic"].values() if g.active]
-        activeActions["changeMaterialProperties"] = [
-            c for c in stepActions["changematerialproperty"].values() if c.active
-        ]
-        activeActions["setfields"] = [s for s in stepActions["setfield"].values() if s.active]
-        activeActions["initializematerial"] = [s for s in stepActions["initializematerial"].values() if s.active]
-
-        return activeActions
-
-    def finishStepActions(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
-        """Called when all step actions should finish a step.
-
-        Parameters
-        ----------
-        U
-            The solution vector.
-        P
-            The reaction vector.
-        stepActions
-            The list of active step actions.
-        """
-        for stepActionType in stepActions.values():
-            for action in stepActionType.values():
-                action.finishStep(U, P)
-
     def printResidualOutlierNodes(self, residualOutliers: dict):
         """Print which nodes have the largest residuals.
 
@@ -993,3 +915,58 @@ class NIST:
                 self.identification,
                 level=2,
             )
+
+    def applyStepActionsAtStepStart(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+        """Called when all step actions should be appliet at the start a step.
+
+        Parameters
+        ----------
+        U
+            The solution vector.
+        P
+            The reaction vector.
+        stepActions
+            The dictionary of active step actions.
+        """
+
+        for stepActionType in stepActions.values():
+            for action in stepActionType.values():
+                action.applyAtStepStart(U, P)
+
+    def applyStepActionsAtStepEnd(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+        """Called when all step actions should finish a step.
+
+        Parameters
+        ----------
+        U
+            The solution vector.
+        P
+            The reaction vector.
+        stepActions
+            The dictionary of active step actions.
+        """
+
+        for stepActionType in stepActions.values():
+            for action in stepActionType.values():
+                action.applyAtStepEnd(U, P)
+
+    def applyStepActionsAtIncrementStart(
+        self, U_n: DofVector, P: DofVector, increment: tuple, stepActions: dict[str, StepActionBase]
+    ):
+        """Called when all step actions should be applied at the start of a step.
+
+        Parameters
+        ----------
+        U_n
+            The converged solution vector at the strt of an increment.
+        P
+            The reaction vector.
+        increment
+            The time increment.
+        stepActions
+            The dictionary of active step actions.
+        """
+
+        for stepActionType in stepActions.values():
+            for action in stepActionType.values():
+                action.applyAtIncrementStart(U_n, P, increment)

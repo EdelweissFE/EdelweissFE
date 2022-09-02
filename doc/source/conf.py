@@ -42,12 +42,14 @@ autodoc_member_order = "groupwise"
 # less crowded:
 autodoc_typehints = "description"
 
+autoclass_content = 'init'
+
 napoleon_use_admonition_for_notes = True
 numpydoc_show_class_members = True
 numpydoc_class_members_toctree = False
 numpydoc_show_inherited_class_members = True
 
-pygments_style = "sphinx"
+pygments_style = "gruvbox-light"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
