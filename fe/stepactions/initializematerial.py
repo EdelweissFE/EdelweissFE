@@ -50,14 +50,12 @@ class StepAction(StepActionBase):
         self.active = True
         self.emptyDef = np.array([0.0])
 
-    def finishStep(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, U, P, stepMagnitude=None):
         self.active = False
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-        pass
+    def applyAtStepStart(self, U, P):
+        if not self.active:
+            return
 
-    def apply(
-        self,
-    ):
         for el in self.theElements:
             el.setInitialCondition("initialize material", self.emptyDef)

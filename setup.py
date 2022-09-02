@@ -60,9 +60,7 @@ print("Eigen directory (overwrite via environment var. EIGEN_INCLUDE_DIR):")
 print(eigen_include)
 print("*" * 80)
 
-"""
-Build Extension for the MarmotElement base element, linked to the Marmot library
-"""
+print("Gather the extension for the MarmotElement base element, linked to the Marmot library")
 extensions = [
     Extension(
         "*",
@@ -74,9 +72,39 @@ extensions = [
         language="c++",
     )
 ]
-"""
-Auxiliary extension modules
-"""
+
+print(
+    "Gather the extension for the single quadrature point element using MarmotMaterials, linked to the Marmot library"
+)
+extensions += [
+    Extension(
+        "*",
+        sources=[
+            "fe/elements/marmotsingleqpelement/marmot.pyx",
+        ],
+        include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
+        libraries=["Marmot"],
+        library_dirs=[join(marmot_dir, "lib")],
+        runtime_library_dirs=[join(marmot_dir, "lib")],
+        language="c++",
+    )
+]
+
+extensions += [
+    Extension(
+        "*",
+        sources=[
+            "fe/elements/marmotsingleqpelement/marmotmaterialhypoelasticwrapper.pyx",
+        ],
+        include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
+        libraries=["Marmot"],
+        library_dirs=[join(marmot_dir, "lib")],
+        runtime_library_dirs=[join(marmot_dir, "lib")],
+        language="c++",
+    )
+]
+
+print("Gather the extension for the fast element result collector")
 extensions += [
     Extension(
         "*",
@@ -86,6 +114,7 @@ extensions += [
     )
 ]
 
+print("Gather the extension for the fast CSR matrix generator")
 extensions += [
     Extension(
         "*",
@@ -95,9 +124,7 @@ extensions += [
     )
 ]
 
-"""
-Build The parallel NISTParallelMK2 solver with OpenMP
-"""
+print("Gather the extension for the NISTParallel solver")
 extensions += [
     Extension(
         "*",
@@ -112,9 +139,7 @@ extensions += [
     )
 ]
 
-"""
-Build The parallel NISTParallel, for Marmot elements only, solver with OpenMP
-"""
+print("Gather the extension for the NISTParallel (MarmotElements only) solver")
 extensions += [
     Extension(
         "*",
@@ -129,9 +154,7 @@ extensions += [
     )
 ]
 
-"""
-Build The Pardiso Interface
-"""
+print("Gather the pardiso interface")
 extensions += [
     Extension(
         "*",
@@ -154,7 +177,6 @@ extensions += [
     )
 ]
 
-"""
-Compile!
-"""
+print("Now compile!")
 setup(ext_modules=cythonize(extensions, compiler_directives=directives, annotate=True, language_level=3))
+print("Finish!")

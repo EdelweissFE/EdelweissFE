@@ -53,6 +53,7 @@ phenomena = OrderedDict(
         ("nonlocal damage", "scalar"),
         ("concentration", "scalar"),
         ("chemical potential", "scalar"),
+        ("strain symmetric", "symmetric tensor second order"),
     ]
 )
 
@@ -65,6 +66,7 @@ fieldCorrectionTolerance = {
     "nonlocal damage": 1e-8,
     "concentration": 1e-1,
     "chemical potential": 1e-1,
+    "strain symmetric": 1e-8,
 }
 
 fluxResidualTolerance = {
@@ -74,6 +76,7 @@ fluxResidualTolerance = {
     "nonlocal damage": 1e-8,
     "concentration": 1e-1,
     "chemical potential": 1e-2,
+    "strain symmetric": 1e-8,
 }
 
 fluxResidualToleranceAlternative = {
@@ -83,6 +86,7 @@ fluxResidualToleranceAlternative = {
     "nonlocal damage": 5e-3,
     "concentration": 5e-2,
     "chemical potential": 5e-2,
+    "strain symmetric": 5e-3,
 }
 
 # domain                 dimensions
@@ -105,3 +109,10 @@ def getFieldSize(field, domainSize):
             return 1
         elif domainSize == 3:
             return 3
+    if fType == "symmetric tensor second order":
+        if domainSize == 2:
+            return 3
+        elif domainSize == 3:
+            return 6
+
+    raise NotImplementedError("Invalid physical field {:} requested".format(field))

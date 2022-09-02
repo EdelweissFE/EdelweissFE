@@ -25,60 +25,41 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Stepaction to change material properties.
+# Created on Mo July 29 10:50:53 2019
 
+# @author: Matthias Neuner
 """
-
-documentation = {
-    "material": "the id of the material to be changed",
-    "index": "the index of the property in the material properties vector",
-    "f(t)": "define a function depending on time",
-}
+Pass initial conditions to elements.
+"""
 
 from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
-import sympy as sp
+
+documentation = {
+    "property": "the name of the property to be initialized",
+    "values": "the property values",
+    "elSet": "(optional) the element set for which the initaliziation is performed",
+}
 
 
 class StepAction(StepActionBase):
-    """Action class for changing a material property"""
+    """Set initial conditions to elements."""
 
     def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         self.name = name
-        self.theIndex = int(action["index"])
-        self.theMaterial = modelInfo["materials"][action["material"]]
 
-        self.updateStepAction(name, action, jobInfo, modelInfo, fieldOutputController, journal)
-
-        self.journal = journal
-
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-        """Update the function describing the material property"""
+        self.theElements = modelInfo["elementSets"][action.get("elSet", "all")]
+        self.theProperty = action["property"]
+        self.values = np.fromstring(action["values"], dtype=np.float, sep=",")
         self.active = True
-
-        if "f(t)" in action:
-            t = sp.symbols("t")
-            self.f_t = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):
         self.active = False
 
-    def applyAtIncrementStart(self, U, P, increment):
-        """Change the actual properties depending on the current step time"""
-
+    def applyAtStepStart(self, U, P):
         if not self.active:
             return
 
-        incNumber, incrementSize, stepProgress, dT, stepTime_n, totalTime_n = increment
-
-        theCurrentProperty = self.f_t(stepTime_n + dT)
-        self.journal.message(
-            "Changing property[{:}] of material {:} to {:}".format(
-                self.theIndex, self.theMaterial["name"], theCurrentProperty
-            ),
-            self.name,
-        )
-
-        self.theMaterial["properties"][self.theIndex] = theCurrentProperty
+        for el in self.theElements:
+            el.setInitialCondition(self.theProperty, self.values)

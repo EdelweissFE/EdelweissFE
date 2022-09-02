@@ -96,7 +96,7 @@ class NISTPArcLength(NISTParallel):
         P: DofVector,
         K: VIJSystemMatrix,
         elements: dict,
-        activeStepActions: list,
+        stepActions: list,
         constraints: dict,
         increment: tuple,
         lastIncrementSize: float,
@@ -151,7 +151,7 @@ class NISTPArcLength(NISTParallel):
                 P,
                 K,
                 elements,
-                activeStepActions,
+                stepActions,
                 constraints,
                 increment,
                 lastIncrementSize,
@@ -168,10 +168,14 @@ class NISTPArcLength(NISTParallel):
         iterationCounter = 0
         incrementResidualHistory = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, (0.0, 0))
 
-        dirichlets = activeStepActions["dirichlets"]
-        concentratedLoads = activeStepActions["concentratedLoads"]
-        distributedLoads = activeStepActions["distributedLoads"]
-        bodyForces = activeStepActions["bodyForces"]
+        dirichlets = stepActions["dirichlet"].values()
+        nodeForces = stepActions["nodeforces"].values()
+        distributedLoads = stepActions["distributedload"].values()
+        bodyForces = stepActions["bodyforce"].values()
+
+        for stepActionType in stepActions.values():
+            for action in stepActionType.values():
+                action.applyAtIncrementStart(U_n, P, increment)
 
         R_ = np.tile(self.theDofManager.constructDofVector(), (2, 1)).T  # 2 RHSs
         R_0 = R_[:, 0]
@@ -197,7 +201,7 @@ class NISTPArcLength(NISTParallel):
         zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0
 
         while True:
-            for geostatic in activeStepActions["geostatics"]:
+            for geostatic in stepActions["geostatics"]:
                 geostatic.apply()
 
             U_np[:] = U_n
@@ -209,10 +213,10 @@ class NISTPArcLength(NISTParallel):
             P, K = self.assembleConstraints(constraints, U_np, dU, P, K, increment)
 
             P_0, K_0 = self.assembleLoads(
-                concentratedLoads, distributedLoads, bodyForces, U_np, P_0, K_0, zeroIncrement
+                nodeForces, distributedLoads, bodyForces, U_np, P_0, K_0, zeroIncrement
             )  # compute 'dead' deadloads, like gravity
             P_f, K_f = self.assembleLoads(
-                concentratedLoads, distributedLoads, bodyForces, U_np, P_f, K_f, referenceIncrement
+                nodeForces, distributedLoads, bodyForces, U_np, P_f, K_f, referenceIncrement
             )  # compute 'dead' deadloads, like gravity
 
             P_f -= P_0  # and subtract the dead part, since we are only interested in the homogeneous linear part
@@ -278,6 +282,10 @@ class NISTPArcLength(NISTParallel):
         self.dLambda = dLambda
         self.arcLengthController.finishIncrement(U_n, dU, dLambda)
 
+        for stepActionType in stepActions.values():
+            for action in stepActionType.values():
+                action.applyAtIncrementStart(U_n, P, increment)
+
         self.journal.message(
             "Current load parameter: lambda={:6.2e}, last increment: dLambda={:6.2e}".format(self.Lambda, self.dLambda),
             self.identification,
@@ -336,8 +344,14 @@ class NISTPArcLength(NISTParallel):
 
         return dU, isExtrapolatedIncrement, dLambda
 
-    def finishStepActions(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+    def applyStepActionsAtStepEnd(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
         """Called when all step actions should finish a step.
+
+        For the arc length controlled simulation,
+        external loads at the end of a step depend on the arc length parameter.
+        Hence, for subsequent steps, the new reference loads depend on this parameter.
+        We communicate this to the step actions before the parent solver tells them that the
+        step is finished.
 
         Parameters
         ----------
@@ -351,8 +365,10 @@ class NISTPArcLength(NISTParallel):
 
         if self.arcLengthController != None:
             for stepAction in stepActions["nodeforces"].values():
-                stepAction.finishStep(U, P, stepMagnitude=self.Lambda)
+                stepAction.applyAtStepEnd(U, P, stepMagnitude=self.Lambda)
             for stepAction in stepActions["distributedload"].values():
-                stepAction.finishStep(U, P, stepMagnitude=self.Lambda)
+                stepAction.applyAtStepEnd(U, P, stepMagnitude=self.Lambda)
+            for stepAction in stepActions["bodeforce"].values():
+                stepAction.applyAtStepEnd(U, P, stepMagnitude=self.Lambda)
 
-        return super().finishStepActions(U, P, stepActions)
+        return super().applyStepActionsAtStepEnd(U, P, stepActions)

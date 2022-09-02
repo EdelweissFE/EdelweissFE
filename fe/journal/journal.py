@@ -70,6 +70,7 @@ class Journal:
 
         self.linewidth = newWidth
         self.leftColumn = leftColumn
+        self.leftColumnMaxSize = 120
         self.outputWidths = {}
         self.outputWidths[0] = leftColumn - 1
         self.outputWidths[1] = leftColumn - 4
@@ -96,12 +97,15 @@ class Journal:
             Level of message.
         """
 
-        while len(message) >= self.leftColumn:
-            self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
+        lines = message.splitlines()
+        for line in lines:
 
-        if level < self.suppressLvl:
-            if self.verbose:
-                print(self.leveledOutput[level].format(message, senderIdentification))
+            while len(line) >= self.leftColumn and self.leftColumn < self.leftColumnMaxSize:
+                self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
+
+            if level < self.suppressLvl:
+                if self.verbose:
+                    print(self.leveledOutput[level].format(line, senderIdentification))
 
     def errorMessage(self, errorMessage, senderIdentification):
         """Print an error message.

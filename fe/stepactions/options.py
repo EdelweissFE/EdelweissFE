@@ -64,8 +64,5 @@ class StepAction(StepActionBase):
 
         return self.options.get(key.lower(), default)
 
-    def finishStep(self, U, P):
-        pass
-
     def updateStepAction(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
         self.options.update(options)

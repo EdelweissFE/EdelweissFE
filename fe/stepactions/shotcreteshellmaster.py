@@ -67,14 +67,6 @@ class StepAction(StepActionBase):
         dirichletIndices = [node.fields["displacement"] for node in nodes]
         self.indices = np.array(dirichletIndices).ravel()
 
-    def finishStep(
-        self,
-    ):
-        pass
-
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-        pass
-
     def getDelta(self, increment):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         if dT == 0.0:

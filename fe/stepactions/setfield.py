@@ -59,15 +59,20 @@ class StepAction(StepActionBase):
         if self.type == "analyticalField":
             self.analyticalField = modelInfo["analyticalFields"][self.value]
 
-    def finishStep(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, U, P, stepMagnitude=None):
         self.active = False
 
     def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
         self.active = True
 
-    def apply(
+    def applyAtStepStart(
         self,
+        U,
+        P,
     ):
+        if not self.active:
+            return
+
         if self.type == "uniform":
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
             currentResults[:] = float(self.value)

@@ -34,13 +34,16 @@ If not modified in subsequent steps, the BC is held constant.
 """
 documentation = {
     "nSet": "nSet for application of the BC",
-    "1,2,3": "prescribed values in directions",
+    "1,2,3,...": "prescribed values for components of the physical field",
+    "components": "prescribed values using a np.ndarray for representation; use 'x' for ignored values",
     "field": "field for BC",
     "analyticalField": "(optional) scales the defined BCs",
     "f(t)": "(optional) define an amplitude",
 }
 
+
 from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.config.phenomena import getFieldSize
 import numpy as np
 import sympy as sp
 
@@ -64,7 +67,12 @@ class StepAction(StepActionBase):
         self.action = action
         self.nSet = nodeSets[action["nSet"]]
 
-        for x, direction in enumerate(["1", "2", "3"]):
+        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, modelInfo["domainSize"]))]
+
+        if "components" in action:
+            action = self._getDirectionsFromComponents(action)
+
+        for x, direction in enumerate(self.possibleComponents):
             if direction in action:
                 directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 dirichletIndices += directionIndices
@@ -82,18 +90,17 @@ class StepAction(StepActionBase):
                 else:
                     dirichletDelta += [float(action[direction])] * len(directionIndices)
 
+        if not dirichletIndices:
+            raise ValueError("Invalid dirichlet components specified")
+
         self.indices = np.array(dirichletIndices)
         self.delta = np.array(dirichletDelta)
 
-        if "f(t)" in action:
-            t = sp.symbols("t")
-            self.amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
-        else:
-            self.amplitude = lambda x: x
+        self.amplitude = self._getAmplitude(action)
 
         self.active = True
 
-    def finishStep(self, U, P):
+    def applyAtStepEnd(self, U, P):
 
         self.active = False
 
@@ -103,19 +110,20 @@ class StepAction(StepActionBase):
         dirichletIndices = []
         dirichletDelta = []
 
-        for x, direction in enumerate(["1", "2", "3"]):
+        if "components" in action:
+            action = self._getDirectionsFromComponents(action)
+
+        for x, direction in enumerate(self.possibleComponents):
             if direction in action:
                 directionIndices = [node.fields[self.field][x] for node in self.nSet]
                 dirichletIndices += directionIndices
                 dirichletDelta += [float(action[direction])] * len(directionIndices)
 
+        self.indices = np.array(dirichletIndices, dtype=np.int)
+
         self.delta = np.array(dirichletDelta)
 
-        if "f(t)" in action:
-            t = sp.symbols("t")
-            self.amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
-        else:
-            self.amplitude = lambda x: x
+        self.amplitude = self._getAmplitude(action)
 
     def getDelta(self, increment):
 
@@ -124,3 +132,47 @@ class StepAction(StepActionBase):
             return self.delta * (self.amplitude(stepProgress) - (self.amplitude(stepProgress - incrementSize)))
         else:
             return 0.0
+
+    def _getDirectionsFromComponents(self, action: dict) -> dict:
+        """Determine the direction components from a numpy array representation.
+
+        Parameters
+        ----------
+        action
+            The dictionary defining this step action.
+
+        Returns
+        -------
+        dict
+            The updated dictionary defining this step action containing the directional definitions.
+        """
+
+        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=np.float)
+
+        for i, t in enumerate(components):
+            if not np.isnan(t):
+                action[str(i + 1)] = t
+
+        return action
+
+    def _getAmplitude(self, action: dict) -> callable:
+        """Determine the amplitude for the step, depending on a potentially specified function.
+
+        Parameters
+        ----------
+        action
+            The dictionary defining this step action.
+
+        Returns
+        -------
+        callable
+            The function defining the amplitude depending on the step propress.
+        """
+
+        if "f(t)" in action:
+            t = sp.symbols("t")
+            amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
+        else:
+            amplitude = lambda x: x
+
+        return amplitude

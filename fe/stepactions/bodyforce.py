@@ -64,7 +64,7 @@ class StepAction(StepActionBase):
 
         self.idle = False
 
-    def finishStep(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, U, P, stepMagnitude=None):
 
         if not self.idle:
             if stepMagnitude == None:

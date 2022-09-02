@@ -4,6 +4,7 @@ anaconda::intel-openmp
 cmake 
 compilers 
 cython 
+docutils=0.16
 gfortran 
 gstools
 make
