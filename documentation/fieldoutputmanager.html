@@ -107,74 +107,95 @@ Furthermore, they can be exported to <code class="docutils literal notranslate">
 <p>If the results are exported to a .csv file with enabled “saveHistory”,
 the time History is automatically appended to the .csv file”</p>
 </div>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;export&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), export the fieldOutput to a file at the end of the &#39;</span>
-            <span class="s1">&#39;job&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;f(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math (in each increment)&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;f_export(x)&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), apply math on the final result (table)&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;nSet|elSet|node|element|modelData&#39;</span><span class="p">:</span> <span class="s1">&#39;entity, for which the fieldOutput is &#39;</span>
-                                       <span class="s1">&#39;defined&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;name of the fieldOutput&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;quadraturePoint&#39;</span><span class="p">:</span> <span class="s1">&#39;for element based fieldOutputs only, integers or slices&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s1">&#39;e.g., U, P, stress, strain ...&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;saveHistory&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional), save complete History or only last (increment) &#39;</span>
-                 <span class="s1">&#39;result. Default: True (node, element) and False (nSet, &#39;</span>
-                 <span class="s1">&#39;elSet)&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">name</span></code></td>
+<td><p>name of the fieldOutput</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nSet|elSet|node|element|modelData</span></code></td>
+<td><p>entity, for which the fieldOutput is defined</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">result</span></code></td>
+<td><p>e.g., U, P, stress, strain …</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">quadraturePoint</span></code></td>
+<td><p>for element based fieldOutputs only, integers or slices</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">f(x)</span></code></td>
+<td><p>(optional), apply math (in each increment)</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">saveHistory</span></code></td>
+<td><p>(optional), save complete History or only last (increment) result. Default: True (node, element) and False (nSet, elSet)</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">export</span></code></td>
+<td><p>(optional), export the fieldOutput to a file at the end of the job</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">f_export(x)</span></code></td>
+<td><p>(optional), apply math on the final result (table)</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Example file: <code class="docutils literal notranslate"><span class="pre">../../../testfiles/FieldOutput/fieldOutput.inp</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon</span>
-<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">modleon</span>
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
 
-<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
-<span class="go">all</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
+all
 
-<span class="go">*job, name=cps4job, domain=2d, solver=NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
 
-<span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
-<span class="go">x0=0, l=50</span>
-<span class="go">y0=0, h=100</span>
-<span class="go">elType=CPS4</span>
-<span class="go">nX=20</span>
-<span class="go">nY=20</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planeRectQuad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">x0</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> l</span><span class="ow">=</span><span class="m">50</span>
+<span class="nv">y0</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> h</span><span class="ow">=</span><span class="m">100</span>
+<span class="nv">elType</span><span class="ow">=</span><span class="m">CPS4</span>
+<span class="nv">nX</span><span class="ow">=</span><span class="m">20</span>
+<span class="nv">nY</span><span class="ow">=</span><span class="m">20</span>
 
-<span class="go">*fieldOutput,</span>
-<span class="go">name=displacement,              nSet=all,           field=displacement, result=U,</span>
-<span class="go">name=displacement_top,          nSet=gen_top,       field=displacement, result=U, saveHistory=True</span>
-<span class="go">name=displacement_top_mean_1,   nSet=gen_top,       field=displacement, result=U, saveHistory=True, f(x)=&#39;mean( x[:,1])&#39;</span>
-<span class="go">name=RF_bottom,                 nSet=gen_bottom,    field=displacement, result=P, saveHistory=True</span>
-<span class="go">name=RF_bottom_sum_1,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True, f(x)=&#39;sum(x[:,1])&#39;</span>
-<span class="go">name=stress,                    elSet=all,          result=stress,      quadraturePoint=1</span>
-<span class="go">name=stress_top,                elSet=gen_top,      result=stress,      quadraturePoint=1</span>
-<span class="go">name=alphaP,                    elSet=all,          result=alphaP,      quadraturePoint=1</span>
+<span class="k">*fieldOutput</span>,
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">              nSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">           field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement_top</span>,<span class="nv">          nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement_top_mean_1</span>,<span class="nv">   nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean( x[:,1])&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv">                 nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">RF_bottom_sum_1</span>,<span class="nv">           nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">stress_top</span>,<span class="nv">                elSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">      result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
 
-<span class="go">*output, type=meshPlot, jobName=cps4job, </span>
-<span class="go">figure=1, axSpec=221, create=perNode,       fieldOutput=displacement,       f(x)=&#39;x[:,1]&#39;, label=U2</span>
-<span class="go">figure=1, axSpec=222, create=perElement,    fieldOutput=stress,             f(x)=&#39;x[:,1]&#39;, label=S2</span>
-<span class="go">figure=1, axSpec=212, c=red, ls=dashed, create=xyData, x=time, y=RF_bottom, f(y)=&#39;sum ( y[:,:,1], axis=1)&#39;, label=Sum(RF)</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">meshPlot</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>, 
+<span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">221</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">       fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">       f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">U2</span>
+<span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">222</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">             f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">S2</span>
+<span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">212</span>,<span class="nv"> c</span><span class="ow">=</span><span class="m">red</span>,<span class="nv"> ls</span><span class="ow">=</span><span class="m">dashed</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">xyData</span>,<span class="nv"> x</span><span class="ow">=</span><span class="m">time</span>,<span class="nv"> y</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv"> f(y)</span><span class="ow">=</span><span class="s">&#39;sum ( y[:,:,1], axis=1)&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">Sum(RF)</span>
 
-<span class="go">*output, type=ensight, jobName=cps4job, name=myEnsightExport</span>
-<span class="go">create=perNode,    fieldOutput=displacement, </span>
-<span class="go">create=perElement, fieldOutput=stress,</span>
-<span class="go">create=perElement, fieldOutput=alphaP,</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myEnsightExport</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>,
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">alphaP</span>,
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
 
-<span class="go">*output, type=monitor, jobName=cps4job, name=myNodeMonitor</span>
-<span class="go">fieldOutput=RF_bottom, f(x)=&#39;sum ( x[:,1] )&#39;</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myNodeMonitor</span>
+<span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum ( x[:,1] )&#39;</span>
 
-<span class="go">*output, type=plotAlongPath, jobName=cps4job, name=myNodeSetPlotter</span>
-<span class="go">figure=2, nSet=gen_top, fieldOutput=RF_bottom, f(x)=&#39;x[:,1]&#39;, label=P along bottom, normalize=True</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plotAlongPath</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myNodeSetPlotter</span>
+<span class="nv">figure</span><span class="ow">=</span><span class="m">2</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">P along bottom</span>,<span class="nv"> normalize</span><span class="ow">=</span><span class="m">True</span>
 
-<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
-<span class="go">options, category=Ensight, intermediateSaveInterval=2,</span>
-<span class="go">options, category=NISTSolver, extrapolation=linear, numThreads=2</span>
-<span class="go">dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0</span>
-<span class="go">dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,</span>
-<span class="go">nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-80, f(t)=t**2</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>
+options,<span class="nv"> category</span><span class="ow">=</span><span class="m">Ensight</span>,<span class="nv"> intermediateSaveInterval</span><span class="ow">=</span><span class="m">2</span>,
+options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>,<span class="nv"> numThreads</span><span class="ow">=</span><span class="m">2</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">1</span>,<span class="nv">          nSet</span><span class="ow">=</span><span class="m">gen_leftBottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv">     nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">        field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>,
+nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">top</span>,<span class="nv">       nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">           field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-80</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="m">t**2</span>
 </pre></div>
 </div>
 </div>

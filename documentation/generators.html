@@ -108,10 +108,10 @@ using different methods.</p>
 <p>Keyword: <code class="docutils literal notranslate"><span class="pre">*generator</span></code></p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*modelGenerator, generator=theGeneratorType, name=myGeneratorName</span>
-<span class="go">    multiple lines of defintion ...</span>
-<span class="go">    multiple lines of defintion ...</span>
-<span class="go">    multiple lines of defintion ...</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">theGeneratorType</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myGeneratorName</span>
+    multiple lines of defintion ...
+    multiple lines of defintion ...
+    multiple lines of defintion ...
 </pre></div>
 </div>
 </div>
@@ -139,82 +139,111 @@ elSets : ‘name’_centralFrontToBack, _shearBandFrontToBack, _shearBandCenterF
 are automatically generated</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Generate meshes on the fly. Example:</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*job, name=job, domain=3d, solver=NIST</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
 
-<span class="go">*modelGenerator, generator=boxGen, name=gen</span>
-<span class="go">nX      =4</span>
-<span class="go">nY      =8</span>
-<span class="go">nZ      =2</span>
-<span class="go">lX      =20</span>
-<span class="go">lY      =40</span>
-<span class="go">lZ      =1</span>
-<span class="go">elType  =C3D20R</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">boxGen</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">    nX      </span><span class="ow">=</span><span class="m">4</span>
+<span class="nv">    nY      </span><span class="ow">=</span><span class="m">8</span>
+<span class="nv">    nZ      </span><span class="ow">=</span><span class="m">2</span>
+<span class="nv">    lX      </span><span class="ow">=</span><span class="m">20</span>
+<span class="nv">    lY      </span><span class="ow">=</span><span class="m">40</span>
+<span class="nv">    lZ      </span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">    elType  </span><span class="ow">=</span><span class="m">C3D20R</span>
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;elType&#39;</span><span class="p">:</span> <span class="s1">&#39;type of element&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;lX&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) length of the body along x axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;lY&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) length of the body along y axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;lZ&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) length of the body along z axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;nX&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) number of elements along x&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;nY&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) number of elements along y&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;nZ&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) number of elements along z&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) origin at x axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;y0&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) origin at y axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;z0&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) origin at z axis&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">x0</span></code></td>
+<td><p>(optional) origin at x axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">y0</span></code></td>
+<td><p>(optional) origin at y axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">z0</span></code></td>
+<td><p>(optional) origin at z axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">lX</span></code></td>
+<td><p>(optional) length of the body along x axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">lY</span></code></td>
+<td><p>(optional) length of the body along y axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">lZ</span></code></td>
+<td><p>(optional) length of the body along z axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nX</span></code></td>
+<td><p>(optional) number of elements along x</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nY</span></code></td>
+<td><p>(optional) number of elements along y</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nZ</span></code></td>
+<td><p>(optional) number of elements along z</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">elType</span></code></td>
+<td><p>type of element</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/BoxGen/test.inp</span></code></span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=LinearElastic, id=myMaterial</span>
-<span class="go">**Isotropic</span>
-<span class="go">**E    nu</span>
-<span class="go">1.8e4, 0.22</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">**Isotropic</span>
+<span class="c c-Singleline">**E    nu</span>
+1.8e4, 0.22
 
-<span class="go">*job, name=job, domain=3d, solver=NISTParallel</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
 
-<span class="go">*modelGenerator, generator=boxGen, name=gen</span>
-<span class="go">nX      =4</span>
-<span class="go">nY      =8</span>
-<span class="go">nZ      =2</span>
-<span class="go">lX      =20</span>
-<span class="go">lY      =40</span>
-<span class="go">lZ      =1</span>
-<span class="go">elType  =C3D20R</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">boxGen</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">nX      </span><span class="ow">=</span><span class="m">4</span>
+<span class="nv">nY      </span><span class="ow">=</span><span class="m">8</span>
+<span class="nv">nZ      </span><span class="ow">=</span><span class="m">2</span>
+<span class="nv">lX      </span><span class="ow">=</span><span class="m">20</span>
+<span class="nv">lY      </span><span class="ow">=</span><span class="m">40</span>
+<span class="nv">lZ      </span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">elType  </span><span class="ow">=</span><span class="m">C3D20R</span>
 
-<span class="go">*modelGenerator, generator=findClosestNode, name=gen2</span>
-<span class="go">location=&#39;0, 0, 0&#39;</span>
-<span class="go">storeIn=origin</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">findClosestNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen2</span>
+<span class="nv">location</span><span class="ow">=</span><span class="s">&#39;0, 0, 0&#39;</span>
+<span class="nv">storeIn</span><span class="ow">=</span><span class="m">origin</span>
 
-<span class="go">*modelGenerator, generator=findClosestNode, name=gen3</span>
-<span class="go">location=&#39;10, 10, 20&#39;</span>
-<span class="go">storeIn=origin</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">findClosestNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen3</span>
+<span class="nv">location</span><span class="ow">=</span><span class="s">&#39;10, 10, 20&#39;</span>
+<span class="nv">storeIn</span><span class="ow">=</span><span class="m">origin</span>
 
-<span class="go">*section, name=section1, material=myMaterial, type=solid</span>
-<span class="go">all</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">myMaterial</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
+all
 
-<span class="go">*fieldOutput,</span>
-<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
-<span class="go">elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="k">*fieldOutput</span>,
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 
-<span class="go">*output, type=ensight, jobName=job, name=test</span>
-<span class="go">create=perNode, fieldOutput=displacement</span>
-<span class="go">create=perElement, fieldOutput=stress</span>
-<span class="go">create=perElement, fieldOutput=strain</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">test</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="go">*output, type=monitor, jobName=job</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>
 
-<span class="go">*step, jobName=job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1</span>
-<span class="go">dirichlet,  name=x0u, nSet=gen_left,      field=displacement, 1=0.</span>
-<span class="go">dirichlet,  name=y0u, nSet=gen_bottom,    field=displacement, 2=0.</span>
-<span class="go">dirichlet,  name=z0u, nSet=gen_back,      field=displacement, 3=0.</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">x0u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv">      field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.</span>
+dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">y0u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.</span>
+dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">z0u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_back</span>,<span class="nv">      field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0.</span>
 
-<span class="go">dirichlet,  name=y1u, nSet=gen_top,       field=displacement, 2=-5.</span>
+dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">y1u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-5.</span>
 </pre></div>
 </div>
 </div>
@@ -239,53 +268,76 @@ are automatically generated</p>
 <p>nSets, elSets, surface : ‘name’_top, _bottom, _left, _right, …
 are automatically generated</p>
 <p>Datalines:</p>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;elType&#39;</span><span class="p">:</span> <span class="s1">&#39;type of element&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) height of the body&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) length of the body&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;nX&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) number of elements along x&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;nY&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) number of elements along y&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) origin at x axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;y0&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) origin at y axis&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">x0</span></code></td>
+<td><p>(optional) origin at x axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">y0</span></code></td>
+<td><p>(optional) origin at y axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">h</span></code></td>
+<td><p>(optional) height of the body</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">l</span></code></td>
+<td><p>(optional) length of the body</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nX</span></code></td>
+<td><p>(optional) number of elements along x</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nY</span></code></td>
+<td><p>(optional) number of elements along y</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">elType</span></code></td>
+<td><p>type of element</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id6">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/NodeForces/test.inp</span></code></span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=modleon, id=modleon</span>
-<span class="go">30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">modleon</span>
+30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
 
-<span class="go">*section, name=section1, thickness=1.0, material=modleon, type=plane</span>
-<span class="go">all</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
+all
 
-<span class="go">*job, name=cps4job, domain=2d, solver=NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
 
-<span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
-<span class="go">x0=0, l=50</span>
-<span class="go">y0=0, h=100</span>
-<span class="go">elType=CPS4</span>
-<span class="go">nX=10</span>
-<span class="go">nY=10</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planeRectQuad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">x0</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> l</span><span class="ow">=</span><span class="m">50</span>
+<span class="nv">y0</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> h</span><span class="ow">=</span><span class="m">100</span>
+<span class="nv">elType</span><span class="ow">=</span><span class="m">CPS4</span>
+<span class="nv">nX</span><span class="ow">=</span><span class="m">10</span>
+<span class="nv">nY</span><span class="ow">=</span><span class="m">10</span>
 
-<span class="go">*fieldOutput</span>
-<span class="go">nSet=gen_bottom, result=P, field=displacement, name=RF</span>
-<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
+<span class="k">*fieldOutput</span>
+<span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
 
-<span class="go">*output, type=monitor, jobName=cps4job</span>
-<span class="go">fieldOutput=RF, f(x)=&#39;mean(x[:,1])&#39;</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>
+<span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x[:,1])&#39;</span>
 
-<span class="go">*output, type=ensight, jobName=cps4job, name=esExport</span>
-<span class="go">create=perNode, fieldOutput=displacement</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">esExport</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=50, maxIter=25, stepLength=100</span>
-<span class="go">dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0</span>
-<span class="go">nodeforces, name=cloadTop, nSet=gen_top, field=displacement, 2=-50</span>
-<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
-<span class="go">nodeforces, name=cloadTop, nSet=gen_top, 2=-10, f(t)=sin(t*2*pi)</span>
-<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100</span>
-<span class="go">nodeforces, name=cloadTop, nSet=gen_top, 2=+50, f(t)=t</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">50</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">  field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0</span>
+nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">cloadTop</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-50</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>
+nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">cloadTop</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-10</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="m">sin(t*2*pi)</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>
+nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">cloadTop</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">+50</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="m">t</span>
 </pre></div>
 </div>
 </div>
@@ -294,63 +346,88 @@ are automatically generated</p>
 <h2><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator<a class="headerlink" href="#cubit-a-cubit-mesh-generator" title="Permalink to this heading"></a></h2>
 <p>Relevant module <code class="docutils literal notranslate"><span class="pre">fe.generators.cubit</span></code></p>
 <span class="target" id="module-fe.generators.cubit"></span><p>Interface to Cubit. Generate mesh using Cubit .jou files.</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;cubitCmd&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) Cubit executable; default=cubit&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;elType&#39;</span><span class="p">:</span> <span class="s1">&#39;specify element type for all sections&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;elTypePerBlock&#39;</span><span class="p">:</span> <span class="s2">&quot;specify element type for each section as string &#39;...&#39; of &quot;</span>
-                    <span class="s1">&#39;comma-separated &lt;key&gt;=&lt;value&gt; pairs&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;jouFile&#39;</span><span class="p">:</span> <span class="s1">&#39;path to Cubit journal (.jou) file&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;outFile&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) path to output file; default=mesh.inc&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;overwrite&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) overwrite existing outFiles; default=False&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;runCubit&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) run Cubit GUI for debugging purposes; default=False&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;silent&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) hide Cubit output; default=False&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;vars&#39;</span><span class="p">:</span> <span class="s2">&quot;(optional) APREPRO variables as string &#39;...&#39; of comma-separated &quot;</span>
-          <span class="s1">&#39;&lt;key&gt;=&lt;value&gt; pairs&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">cubitCmd</span></code></td>
+<td><p>(Optional) Cubit executable; default=cubit</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">jouFile</span></code></td>
+<td><p>Path to Cubit journal (.jou) file</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">outFile</span></code></td>
+<td><p>(Optional) path to output file; default=mesh.inc</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">vars</span></code></td>
+<td><p>(Optional) APREPRO variables as string ‘…’ of comma-separated &lt;key&gt;=&lt;value&gt; pairs</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">elType</span></code></td>
+<td><p>Specify element type for all sections</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">elTypePerBlock</span></code></td>
+<td><p>Specify element type for each section as string ‘…’ of comma-separated &lt;key&gt;=&lt;value&gt; pairs</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">overwrite</span></code></td>
+<td><p>(Optional) overwrite existing outFiles; default=False</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">runCubit</span></code></td>
+<td><p>(Optional) run Cubit GUI for debugging purposes; default=False</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">silent</span></code></td>
+<td><p>(Optional) hide Cubit output; default=False</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id8">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/CubitGen/test.inp</span></code></span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=LINEARELASTIC, id=mat1</span>
-<span class="go"> 35000, 0.2</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LINEARELASTIC</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">mat1</span>
+ 35000, 0.2
 
-<span class="go">*material, name=LINEARELASTIC, id=mat2</span>
-<span class="go"> 3000, 0.49</span>
+<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LINEARELASTIC</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">mat2</span>
+ 3000, 0.49
 
-<span class="go">*modelGenerator, generator=cubit, name=gen</span>
-<span class="go">**cubitCmd        = singularity exec &lt;pathToImage&gt;.smg coreform_cubit</span>
-<span class="go">cubitCmd        = cubit</span>
-<span class="go">jouFile         = journal.jou</span>
-<span class="go">APREPROVars     = &#39;Lx=4, Ly=2, Lz=5&#39;</span>
-<span class="go">elTypePerBlock  = &#39;block1=C3D8, block2=C3D8&#39;</span>
-<span class="go">silent</span>
-<span class="go">** runCubit    = True</span>
-<span class="go">** overwrite   = False</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">cubit</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">**cubitCmd        = singularity exec &lt;pathToImage&gt;.smg coreform_cubit</span>
+<span class="nv">cubitCmd        </span><span class="ow">=</span><span class="m"> cubit</span>
+<span class="nv">jouFile         </span><span class="ow">=</span><span class="m"> journal.jou</span>
+<span class="nv">APREPROVars     </span><span class="ow">=</span><span class="s"> &#39;Lx=4, Ly=2, Lz=5&#39;</span>
+<span class="nv">elTypePerBlock  </span><span class="ow">=</span><span class="s"> &#39;block1=C3D8, block2=C3D8&#39;</span>
+silent<span class="c c-Singleline"></span>
+<span class="c c-Singleline">** runCubit    = True</span>
+<span class="c c-Singleline">** overwrite   = False</span>
 
-<span class="go">*section, name=section1, material=mat1, type=solid</span>
-<span class="go">block1</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">mat1</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
+block1
 
-<span class="go">*section, name=section1, material=mat2, type=solid</span>
-<span class="go">block2</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">mat2</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
+block2
 
 
-<span class="go">*job, name=set_def, domain=3d, solver=NISTParallel</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">set_def</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
 
-<span class="go">*fieldOutput,</span>
-<span class="go">elSet=all,  name=displacement,  field=displacement, result=U</span>
-<span class="go">elSet=all,  name=stress,        result=stress,      quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="k">*fieldOutput</span>,
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">  name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">  field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">  name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">        result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">  name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv">        result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 
-<span class="go">*output, type=ensight, jobName=set_def, name=esExport</span>
-<span class="go">create=perNode,     fieldOutput=displacement </span>
-<span class="go">create=perElement,  fieldOutput=stress</span>
-<span class="go">create=perElement,  fieldOutput=strain</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">set_def</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">esExport</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">     fieldOutput</span><span class="ow">=</span><span class="m">displacement </span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv">  fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv">  fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="go">*step, jobName=set_def, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1</span>
-<span class="go">dirichlet, name=bot, nSet=n_bot, field=displacement, 1=0., 2=0., 3=0.</span>
-<span class="go">dirichlet, name=top, nSet=n_top, field=displacement, 1=0., 2=-1., 3=0.</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">set_def</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">5e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bot</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">n_bot</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0.</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">top</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">n_top</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-1.</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0.</span>
 </pre></div>
 </div>
 </div>
@@ -359,12 +436,26 @@ are automatically generated</p>
 <h2><code class="docutils literal notranslate"><span class="pre">findclosestnode</span></code> - Find the closest node<a class="headerlink" href="#findclosestnode-find-the-closest-node" title="Permalink to this heading"></a></h2>
 <p>Relevant module <code class="docutils literal notranslate"><span class="pre">fe.generators.findclosestnode</span></code></p>
 <span class="target" id="module-fe.generators.findclosestnode"></span><p>Find the node closest to a given spatial position, and store it in an existing or new node set.</p>
-<div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;The location of the node&#39;</span><span class="p">,</span> <span class="s1">&#39;storeIn&#39;</span><span class="p">:</span> <span class="s1">&#39;Store in this node set&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id9" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">location</span></code></td>
+<td><p>The location of the node</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">storeIn</span></code></td>
+<td><p>Store in this node set</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

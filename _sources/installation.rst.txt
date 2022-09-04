@@ -6,13 +6,15 @@ Marmot
 By default, a working instance of `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_, 
 containing specific implementations of finite elements and constitutive models,
 is required.
+Marmot itself requires the `Eigen <https://eigen.tuxfamily.org/>`_ library, 
+and potentially `Fastor <https://github.com/romeric/Fastor>`_, depending on the requested modules.
 
 Please build Marmot before you build EdelweissFE.
 
 Configuration
 *************
 
-Customize setup.py by defining all paths pointing to the respective libraries.
+Customize ``setup.py`` by defining all paths pointing to the respective libraries.
 Default paths are already defined, and usually only minor modifications should be required.
 
 Building EdelweissFE
@@ -60,7 +62,8 @@ If necessary, get `mamba <https://github.com/mamba-org/mamba>`_:
 .. code-block:: console
    :caption: Step 1
 
-    curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+    curl -L -O \
+        https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
     bash Mambaforge-Linux-x86_64.sh -b -p ./mambaforge3
 
 Add mamba to your environment (repeat this step if you close your shell):
@@ -95,7 +98,11 @@ Get Eigen (for EdelweissFE and Marmot):
     cd eigen
     mkdir build
     cd build
-    cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
+    cmake \
+        -DBUILD_TESTING=OFF  \
+        -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include \
+        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        ..
     make install
 
 Get autodiff (for Marmot):
@@ -108,7 +115,13 @@ Get autodiff (for Marmot):
     cd autodiff
     mkdir build
     cd build
-    cmake -DAUTODIFF_BUILD_TESTS=OFF -DAUTODIFF_BUILD_PYTHON=OFF -DAUTODIFF_BUILD_EXAMPLES=OFF -DAUTODIFF_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
+    cmake \
+        -DAUTODIFF_BUILD_TESTS=OFF \
+        -DAUTODIFF_BUILD_PYTHON=OFF \
+        -DAUTODIFF_BUILD_EXAMPLES=OFF \
+        -DAUTODIFF_BUILD_DOCS=OFF \
+        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        ..
     make install
 
 .. Get Fastor:
@@ -131,7 +144,9 @@ Get Marmot:
     cd Marmot
     mkdir build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        ..
     make install
 
 Build and test EdelweissFE:

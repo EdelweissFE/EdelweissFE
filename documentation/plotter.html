@@ -102,17 +102,17 @@ through a global plotting instance, which is passed to all output managers.
 Output managers may use the plotter for visualizing all kinds of outputs.</p>
 <p>The style of the plots can be configured through
 the keyword <code class="docutils literal notranslate"><span class="pre">*configurePlots</span></code>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*configurePlots,</span>
-<span class="go">    figure=1, axSpec=211,</span>
-<span class="go">    figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True</span>
-<span class="go">    figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True</span>
-<span class="go">    figure=4, axSpec=111, aspect=equal</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*configurePlots</span>,
+<span class="nv">    figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">211</span>,
+<span class="nv">    figure</span><span class="ow">=</span><span class="m">3</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">111</span>,<span class="nv">  xLabel</span><span class="ow">=</span><span class="m">U1</span>,<span class="nv"> yLabel</span><span class="ow">=</span><span class="m">P2</span>,<span class="nv"> flipX</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">    figure</span><span class="ow">=</span><span class="m">3</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">111</span>,<span class="nv">  xLabel</span><span class="ow">=</span><span class="m">U1</span>,<span class="nv"> yLabel</span><span class="ow">=</span><span class="m">P2</span>,<span class="nv"> flipX</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">    figure</span><span class="ow">=</span><span class="m">4</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">111</span>,<span class="nv"> aspect</span><span class="ow">=</span><span class="m">equal</span>
 </pre></div>
 </div>
 <p>Plots can be exported to .pdf (and png) files using the <code class="docutils literal notranslate"><span class="pre">*exportPlots</span></code> keyword:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*exportPlots,</span>
-<span class="go">    figure=1, fileName=fig1, png=True</span>
-<span class="go">    figure=2, fileName=fig2</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*exportPlots</span>,
+<span class="nv">    figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> fileName</span><span class="ow">=</span><span class="m">fig1</span>,<span class="nv"> png</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">    figure</span><span class="ow">=</span><span class="m">2</span>,<span class="nv"> fileName</span><span class="ow">=</span><span class="m">fig2</span>
 </pre></div>
 </div>
 <p>The default style of plots can be configured via a classical rcparams.py file, which may be located in the current working directory.</p>
@@ -260,31 +260,79 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 
 </dd></dl>
 
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Options <code class="docutils literal notranslate"><span class="pre">*configurePlots</span></code>:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="s1">&#39;Set aspect&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="s1">&#39;The figure to be configured&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;flipX&#39;</span><span class="p">:</span> <span class="s1">&#39;Flip x axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;flipY&#39;</span><span class="p">:</span> <span class="s1">&#39;Flip y axis&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;grid&#39;</span><span class="p">:</span> <span class="s1">&#39;Switch grid&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;xLabel&#39;</span><span class="p">:</span> <span class="s1">&#39;Specify x axis label&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;xLimits&#39;</span><span class="p">:</span> <span class="s1">&#39;Specify x axis limits&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;yLabel&#39;</span><span class="p">:</span> <span class="s1">&#39;Specify y axis label&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;yLimits&#39;</span><span class="p">:</span> <span class="s1">&#39;Specify y axis limits&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Options <code class="docutils literal notranslate"><span class="pre">*exportPlots</span></code>:</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="s1">&#39;The figure to be exported&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;fileName&#39;</span><span class="p">:</span> <span class="s1">&#39;The export file name&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;heightRatio&#39;</span><span class="p">:</span> <span class="s1">&#39;Ratio of height/width&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="s1">&#39;Set true to export .png additionally&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;Scale the figure&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;Width of the figure&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Options ``*configurePlots``:</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">figure</span></code></td>
+<td><p>The figure to be configured</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">xLimits</span></code></td>
+<td><p>Specify x axis limits</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">yLimits</span></code></td>
+<td><p>Specify y axis limits</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">xLabel</span></code></td>
+<td><p>Specify x axis label</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">yLabel</span></code></td>
+<td><p>Specify y axis label</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">flipX</span></code></td>
+<td><p>Flip x axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">flipY</span></code></td>
+<td><p>Flip y axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">aspect</span></code></td>
+<td><p>Set aspect</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">grid</span></code></td>
+<td><p>Switch grid</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Options ``*exportPlots``:</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">figure</span></code></td>
+<td><p>The figure to be exported</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">fileName</span></code></td>
+<td><p>The export file name</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">width</span></code></td>
+<td><p>Width of the figure</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">heightRatio</span></code></td>
+<td><p>Ratio of height/width</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">png</span></code></td>
+<td><p>Set true to export .png additionally</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">scale</span></code></td>
+<td><p>Scale the figure</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 

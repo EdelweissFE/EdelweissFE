@@ -105,21 +105,21 @@ The general syntax makes use of <code class="docutils literal notranslate"><span
 supplemented by data lines.
 In general, options and data entries are comma separated.
 Indentations and blank lines have no effect.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*keyword, option1=value, option2=another_value</span>
-<span class="go">data, data, data, data</span>
-<span class="go">data, data, data, data</span>
-<span class="go">data, data, data, data</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*keyword</span>,<span class="nv"> option1</span><span class="ow">=</span><span class="m">value</span>,<span class="nv"> option2</span><span class="ow">=</span><span class="m">another_value</span>
+data, data, data, data
+data, data, data, data
+data, data, data, data<span class="c c-Singleline"></span>
 
-<span class="go">**this is a comment</span>
-<span class="go">**again a comment</span>
+<span class="c c-Singleline">**this is a comment</span>
+<span class="c c-Singleline">**again a comment</span>
 
-<span class="go">*another_keyword, option1=value, option2=another_value</span>
-<span class="go">data, data, data, data</span>
+<span class="k">*another_keyword</span>,<span class="nv"> option1</span><span class="ow">=</span><span class="m">value</span>,<span class="nv"> option2</span><span class="ow">=</span><span class="m">another_value</span>
+data, data, data, data
 </pre></div>
 </div>
 <p>The available input syntax is defined in <code class="docutils literal notranslate"><span class="pre">fe/utils/inputfileparser.py</span></code>,
 and available keywords can be printed using</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python edelweiss.py --keywords</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span>python edelweiss.py --keywords
 </pre></div>
 </div>
 <span class="target" id="module-fe.utils.inputfileparser"></span><p>Inputfileparser for inputfiles employing an Abaqus-like syntax.</p>

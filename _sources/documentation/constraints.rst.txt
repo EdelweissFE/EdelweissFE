@@ -16,7 +16,7 @@ Module ``fe.constraints.linearizedrigidbody``
     :caption: Options:
 
 .. literalinclude:: ../../../testfiles/LinearizedRigidBodyConstraint/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/LinearizedRigidBodyConstraint/test.inp``
 
 
@@ -32,7 +32,7 @@ Module ``fe.constraints.rigidbody``
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/RigidBodyConstraintLargeDeformations3D/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/RigidBodyConstraintLargeDeformations3D/test.inp``
 
 ``penaltyindirectcontrol`` - Penalty based indirect control
@@ -47,7 +47,7 @@ Module ``fe.constraints.penaltyindirectcontrol``
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/PenaltyBasedIndirectControl/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/PenaltyBasedIndirectControl/test.inp``
 
 

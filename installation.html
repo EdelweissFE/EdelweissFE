@@ -87,12 +87,14 @@
 <h2>Marmot<a class="headerlink" href="#marmot" title="Permalink to this heading"></a></h2>
 <p>By default, a working instance of <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a>,
 containing specific implementations of finite elements and constitutive models,
-is required.</p>
+is required.
+Marmot itself requires the <a class="reference external" href="https://eigen.tuxfamily.org/">Eigen</a> library,
+and potentially <a class="reference external" href="https://github.com/romeric/Fastor">Fastor</a>, depending on the requested modules.</p>
 <p>Please build Marmot before you build EdelweissFE.</p>
 </div>
 <div class="section" id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
-<p>Customize setup.py by defining all paths pointing to the respective libraries.
+<p>Customize <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> by defining all paths pointing to the respective libraries.
 Default paths are already defined, and usually only minor modifications should be required.</p>
 </div>
 <div class="section" id="building-edelweissfe">
@@ -125,7 +127,8 @@ environment:</p>
 <p>If necessary, get <a class="reference external" href="https://github.com/mamba-org/mamba">mamba</a>:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Step 1</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> curl -L -O \</span>
+<span class="go">     https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh</span>
 <span class="go"> bash Mambaforge-Linux-x86_64.sh -b -p ./mambaforge3</span>
 </pre></div>
 </div>
@@ -160,7 +163,11 @@ environment:</p>
 <span class="go"> cd eigen</span>
 <span class="go"> mkdir build</span>
 <span class="go"> cd build</span>
-<span class="go"> cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c &quot;import sys; print(sys.prefix)&quot;)/include -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) ..</span>
+<span class="go"> cmake \</span>
+<span class="go">     -DBUILD_TESTING=OFF  \</span>
+<span class="go">     -DINCLUDE_INSTALL_DIR=$(python -c &quot;import sys; print(sys.prefix)&quot;)/include \</span>
+<span class="go">     -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) \</span>
+<span class="go">     ..</span>
 <span class="go"> make install</span>
 </pre></div>
 </div>
@@ -173,7 +180,13 @@ environment:</p>
 <span class="go"> cd autodiff</span>
 <span class="go"> mkdir build</span>
 <span class="go"> cd build</span>
-<span class="go"> cmake -DAUTODIFF_BUILD_TESTS=OFF -DAUTODIFF_BUILD_PYTHON=OFF -DAUTODIFF_BUILD_EXAMPLES=OFF -DAUTODIFF_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) ..</span>
+<span class="go"> cmake \</span>
+<span class="go">     -DAUTODIFF_BUILD_TESTS=OFF \</span>
+<span class="go">     -DAUTODIFF_BUILD_PYTHON=OFF \</span>
+<span class="go">     -DAUTODIFF_BUILD_EXAMPLES=OFF \</span>
+<span class="go">     -DAUTODIFF_BUILD_DOCS=OFF \</span>
+<span class="go">     -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) \</span>
+<span class="go">     ..</span>
 <span class="go"> make install</span>
 </pre></div>
 </div>
@@ -186,7 +199,9 @@ environment:</p>
 <span class="go"> cd Marmot</span>
 <span class="go"> mkdir build</span>
 <span class="go"> cd build</span>
-<span class="go"> cmake -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) ..</span>
+<span class="go"> cmake \</span>
+<span class="go">     -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) \</span>
+<span class="go">     ..</span>
 <span class="go"> make install</span>
 </pre></div>
 </div>

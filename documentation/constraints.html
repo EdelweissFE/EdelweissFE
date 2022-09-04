@@ -106,58 +106,71 @@
 and may be used for introducing additional scalar
 equations into the global equation system.</p>
 <p>Example syntax:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*constraint, type=rigidbody, name=myRigigBody</span>
-<span class="go">    nSet=right</span>
-<span class="go">    referencePoint=rBottom</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">rigidbody</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myRigigBody</span>
+<span class="nv">    nSet</span><span class="ow">=</span><span class="m">right</span>
+<span class="nv">    referencePoint</span><span class="ow">=</span><span class="m">rBottom</span>
 </pre></div>
 </div>
 <div class="section" id="linearizedrigidbody-linearized-rigid-body-constraints-in-2d">
 <h2><code class="docutils literal notranslate"><span class="pre">linearizedrigidbody</span></code> - Linearized rigid body constraints in 2D<a class="headerlink" href="#linearizedrigidbody-linearized-rigid-body-constraints-in-2d" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.linearizedrigidbody</span></code></p>
-<span class="target" id="module-fe.constraints.linearizedrigidbody"></span><div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;(slave) node set, which is constrained to the reference point&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;referencePoint&#39;</span><span class="p">:</span> <span class="s1">&#39;(master) reference point&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<span class="target" id="module-fe.constraints.linearizedrigidbody"></span><table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nSet</span></code></td>
+<td><p>(Slave) node set, which is constrained to the reference point</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">referencePoint</span></code></td>
+<td><p>(Master) reference point</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/LinearizedRigidBodyConstraint/test.inp</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*modelGenerator, generator=planeRectQuad, name=gen</span>
-<span class="go">l=100</span>
-<span class="go">h=10</span>
-<span class="go">nX=15</span>
-<span class="go">nY=5</span>
-<span class="go">elType=CPS4</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planeRectQuad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">l</span><span class="ow">=</span><span class="m">100</span>
+<span class="nv">h</span><span class="ow">=</span><span class="m">10</span>
+<span class="nv">nX</span><span class="ow">=</span><span class="m">15</span>
+<span class="nv">nY</span><span class="ow">=</span><span class="m">5</span>
+<span class="nv">elType</span><span class="ow">=</span><span class="m">CPS4</span>
 
-<span class="go">*material, name=linearElastic, id=le</span>
-<span class="go">30000.0, 0.15 </span>
+<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">linearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">le</span>
+30000.0, 0.15 
 
-<span class="go">*section, name=section1, thickness=1.0, material=le, type=plane</span>
-<span class="go">all</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">le</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
+all
 
-<span class="go">*job, name=cps4job, domain=2d, solver=NIST</span>
-<span class="go">*fieldOutput,</span>
-<span class="go">name=load,  nSet=gen_left, field=displacement, result=P, f(x)=&#39;sum(x[:,1])&#39;</span>
-<span class="go">name=displacement, elSet=all, field=displacement, result=U, name=displacement</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
+<span class="k">*fieldOutput</span>,
+<span class="nv">name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
 
 
-<span class="go">*output, type=monitor, jobName=cps4job</span>
-<span class="go">fieldOutput=load</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>
+<span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">load</span>
 
-<span class="go">*constraint, type=linearizedRigidBody, name=rb1</span>
-<span class="go">nSet=gen_right,</span>
-<span class="go">referencePoint=gen_rightTop</span>
+<span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">linearizedRigidBody</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">rb1</span>
+<span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_right</span>,
+<span class="nv">referencePoint</span><span class="ow">=</span><span class="m">gen_rightTop</span>
 
-<span class="go">*output, type=ensight, jobName=cps4job, name=ensightExport</span>
-<span class="go">create=perNode, fieldOutput=displacement</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="go">*step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4</span>
-<span class="go">options, category=NISTSolver, extrapolation=linear</span>
-<span class="go">dirichlet, name=leftCorner,  nSet=gen_leftBottom, field=displacement, 1=0.0, 2=0.0</span>
-<span class="go">dirichlet, name=rotRP,  nSet=gen_rightTop,   field=rotation, 1=0.05</span>
-<span class="go">dirichlet, name=movRP,  nSet=gen_rightTop,   field=displacement, 2=0.00</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">4</span>
+options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">leftCorner</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_leftBottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.05</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">movRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.00</span>
 </pre></div>
 </div>
 </div>
@@ -165,41 +178,54 @@ equations into the global equation system.</p>
 <div class="section" id="rigidbody-geometrically-exact-rigid-body-constraints-in-3d">
 <h2><code class="docutils literal notranslate"><span class="pre">rigidbody</span></code> - Geometrically exact rigid body constraints in 3D<a class="headerlink" href="#rigidbody-geometrically-exact-rigid-body-constraints-in-3d" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.rigidbody</span></code></p>
-<span class="target" id="module-fe.constraints.rigidbody"></span><div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Options</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;nSet&#39;</span><span class="p">:</span> <span class="s1">&#39;(slave) node set, which is constrained to the reference point&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;referencePoint&#39;</span><span class="p">:</span> <span class="s1">&#39;(master) reference point&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<span class="target" id="module-fe.constraints.rigidbody"></span><table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Options</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nSet</span></code></td>
+<td><p>(slave) node set, which is constrained to the reference point</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">referencePoint</span></code></td>
+<td><p>(master) reference point</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/RigidBodyConstraintLargeDeformations3D/test.inp</span></code></span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*include, input=mesh.inp</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*include</span>,<span class="nv"> input</span><span class="ow">=</span><span class="m">mesh.inp</span>
 
-<span class="go">*material, name=stvenantkirchhoffisotropic, id=le, </span>
-<span class="go">30000.0, 0.15 </span>
+<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stvenantkirchhoffisotropic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">le</span>, 
+30000.0, 0.15 
 
-<span class="go">*section, name=section1, material=le, type=solid</span>
-<span class="go">all</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">le</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
+all
 
-<span class="go">*job, name=c3d8job, domain=3d, solver=NISTParallel</span>
-<span class="go">*fieldOutput,</span>
-<span class="go">name=displacement, elSet=all, field=displacement, result=U, name=displacement</span>
-<span class="go">name=stress, elSet=all, result=stress, f(x)=&#39; mean(x, axis=1) &#39;, quadraturePoint=0:8</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
+<span class="k">*fieldOutput</span>,
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39; mean(x, axis=1) &#39;</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>
 
-<span class="go">*constraint, type=rigidbody, name=rb1</span>
-<span class="go">nSet=right</span>
-<span class="go">referencePoint=rBottom</span>
+<span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">rigidbody</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">rb1</span>
+<span class="nv">nSet</span><span class="ow">=</span><span class="m">right</span>
+<span class="nv">referencePoint</span><span class="ow">=</span><span class="m">rBottom</span>
 
-<span class="go">*output, type=ensight, jobName=c3d8job, name=ensightExport</span>
-<span class="go">create=perNode, fieldOutput=displacement</span>
-<span class="go">create=perElement, fieldOutput=stress</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="go">*step, jobName=c3d8job, maxInc=2e-1, minInc=1e-4, maxNumInc=1000, maxIter=10</span>
-<span class="go">options, category=NISTSolver, extrapolation=linear</span>
-<span class="go">dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0</span>
-<span class="go">dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=3.141,  </span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">10</span>
+options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">         field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">rBottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">3.141</span>,  
 </pre></div>
 </div>
 </div>
@@ -208,80 +234,103 @@ equations into the global equation system.</p>
 <h2><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based indirect control<a class="headerlink" href="#penaltyindirectcontrol-penalty-based-indirect-control" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.penaltyindirectcontrol</span></code></p>
 <span class="target" id="module-fe.constraints.penaltyindirectcontrol"></span><p>A penalty based constraint used for indirect (displacement) control.</p>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Options</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;cVector&#39;</span><span class="p">:</span> <span class="s1">&#39;the projection vector for the constrained nodes (e.g., CMOD)&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;constrainedNSet&#39;</span><span class="p">:</span> <span class="s1">&#39;the node set for determining the constraint (e.g., CMOD)&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;the field this constraint acts on&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="s1">&#39;the value of the constraint (e.g., CMOD)&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;loadNSet&#39;</span><span class="p">:</span> <span class="s1">&#39;the node set for application of the controlled load&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;loadVector&#39;</span><span class="p">:</span> <span class="s1">&#39;the vector (in correct) dimensions and tensorial order  &#39;</span>
-                <span class="s1">&#39;determining the load&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;normalizeLoad&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) normalize the applied force per node wrt the &#39;</span>
-                   <span class="s1">&#39;number of nodes, i.e., apply a load irrespective of the &#39;</span>
-                   <span class="s1">&#39;total number of nodes in loadNSet&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="s1">&#39;(optional) a correction value for the computation of the &#39;</span>
-            <span class="s1">&#39;constraint (e.g, initial displacement)&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;penaltyStiffness&#39;</span><span class="p">:</span> <span class="s1">&#39;the stiffness for formulating the constraint&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Options</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">field</span></code></td>
+<td><p>The field this constraint acts on</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">cVector</span></code></td>
+<td><p>The projection vector for the constrained nodes (e.g., CMOD)</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">constrainedNSet</span></code></td>
+<td><p>The node set for determining the constraint (e.g., CMOD)</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">loadNSet</span></code></td>
+<td><p>The node set for application of the controlled load</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">loadVector</span></code></td>
+<td><p>The vector (in correct) dimensions and tensorial order  determining the load</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">length</span></code></td>
+<td><p>The value of the constraint (e.g., CMOD)</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">penaltyStiffness</span></code></td>
+<td><p>The stiffness for formulating the constraint</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">offset</span></code></td>
+<td><p>(Optional) a correction value for the computation of the constraint (e.g, initial displacement)</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">normalizeLoad</span></code></td>
+<td><p>(Optional) normalize the applied force per node wrt. the number of nodes, i.e., apply a load irrespective of the total number of nodes in ``loadNSet``</p></td>
+</tr>
+</tbody>
+</table>
 <div class="literal-block-wrapper docutils container" id="id6">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/PenaltyBasedIndirectControl/test.inp</span></code></span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*material, name=LinearElastic, id=myMaterial</span>
-<span class="go">**Isotropic</span>
-<span class="go">**E    nu</span>
-<span class="go">1000, 0.2</span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">**Isotropic</span>
+<span class="c c-Singleline">**E    nu</span>
+1000, 0.2
 
-<span class="go">*job, name=job, domain=2d, solver=NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
 
-<span class="go">*modelGenerator, generator=planerectquad, name=gen</span>
-<span class="go">nX      =5</span>
-<span class="go">nY      =5</span>
-<span class="go">l      =20</span>
-<span class="go">h      =50</span>
-<span class="go">elType  = CPE4</span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planerectquad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">nX      </span><span class="ow">=</span><span class="m">5</span>
+<span class="nv">nY      </span><span class="ow">=</span><span class="m">5</span>
+<span class="nv">l      </span><span class="ow">=</span><span class="m">20</span>
+<span class="nv">h      </span><span class="ow">=</span><span class="m">50</span>
+<span class="nv">elType  </span><span class="ow">=</span><span class="m"> CPE4</span>
 
-<span class="go">*section, name=section1, material=myMaterial, type=plane, thickness=1</span>
-<span class="go">all</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">myMaterial</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1</span>
+all
 
-<span class="go">*fieldOutput,</span>
-<span class="go">elSet=all, field=displacement, result=U, name=displacement</span>
-<span class="go">nSet=gen_top, field=displacement, result=U, name=disp_top</span>
-<span class="go">nSet=gen_bottom, field=displacement, result=P, name=RF</span>
-<span class="go">elSet=all, result=strain, name=strain, quadraturePoint=0:4, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
-<span class="go">elSet=all, result=stress, name=stress, quadraturePoint=0:4, f(x)=&#39;np.mean(x,axis=1)&#39;</span>
+<span class="k">*fieldOutput</span>,
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">disp_top</span>
+<span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
+<span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 
-<span class="go">*output, type=ensight, jobName=job, </span>
-<span class="go">create=perNode, fieldOutput=displacement</span>
-<span class="go">create=perElement, fieldOutput=stress</span>
-<span class="go">create=perElement, fieldOutput=strain</span>
-<span class="go">configuration, overwrite=yes</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="go">*output, type=monitor, jobName=job, name=dispMon</span>
-<span class="go">fieldOutput=disp_top, f(x)=&#39;mean(x[:,1])&#39;</span>
-<span class="go">fieldOutput=RF, f(x)=&#39;sum(x[:,1])&#39;</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">dispMon</span>
+<span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">disp_top</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x[:,1])&#39;</span>
+<span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
 
-<span class="go">*nset, nset=measurement_nodes</span>
-<span class="go">gen_leftBottom</span>
-<span class="go">gen_leftTop</span>
+<span class="k">*nset</span>,<span class="nv"> nset</span><span class="ow">=</span><span class="m">measurement_nodes</span>
+gen_leftBottom
+gen_leftTop
 
-<span class="go">*constraint, type=penaltyindirectcontrol, name=pc1</span>
-<span class="go">field=displacement,</span>
-<span class="go">cVector=&#39;0, 0, 0, -1&#39;</span>
-<span class="go">constrainedNSet=measurement_nodes</span>
-<span class="go">loadNSet=gen_rightTop</span>
-<span class="go">loadVector=&#39;0, -1&#39;</span>
-<span class="go">length=-1</span>
-<span class="go">penaltyStiffness=1e6</span>
-<span class="go">offset=0</span>
+<span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">penaltyindirectcontrol</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">pc1</span>
+<span class="nv">field</span><span class="ow">=</span><span class="m">displacement</span>,
+<span class="nv">cVector</span><span class="ow">=</span><span class="s">&#39;0, 0, 0, -1&#39;</span>
+<span class="nv">constrainedNSet</span><span class="ow">=</span><span class="m">measurement_nodes</span>
+<span class="nv">loadNSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>
+<span class="nv">loadVector</span><span class="ow">=</span><span class="s">&#39;0, -1&#39;</span>
+<span class="nv">length</span><span class="ow">=</span><span class="m">-1</span>
+<span class="nv">penaltyStiffness</span><span class="ow">=</span><span class="m">1e6</span>
+<span class="nv">offset</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="go">*step, jobName=job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1</span>
-<span class="go">modelupdate, update=&#39;constraints[&quot;pc1&quot;].active=False&#39;</span>
-<span class="go">dirichlet,  name=fix_bottom, nSet=gen_bottom, field=displacement, 1=0, 2=0</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;constraints[&quot;pc1&quot;].active=False&#39;</span>
+dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">fix_bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="go">*step, jobName=job, maxInc=2e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1</span>
-<span class="go">modelupdate, update=&#39;constraints[&quot;pc1&quot;].active=True&#39;</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-2</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-6</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;constraints[&quot;pc1&quot;].active=True&#39;</span>
 </pre></div>
 </div>
 </div>

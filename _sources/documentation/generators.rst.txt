@@ -18,7 +18,7 @@ Relevant module ``fe.generators.boxgen``
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BoxGen/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/BoxGen/test.inp``
 
 ``planerectquad`` - A 2D plane rectangular mesh generator
@@ -33,7 +33,7 @@ Relevant module ``fe.generators.planerectquad``
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/NodeForces/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/NodeForces/test.inp``
 
 ``cubit`` - A cubit mesh generator
@@ -48,7 +48,7 @@ Relevant module ``fe.generators.cubit``
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/CubitGen/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/CubitGen/test.inp``
 
 ``findclosestnode`` - Find the closest node 
