@@ -33,9 +33,9 @@ Set a field (via fieldOutput) to a predefined value.
 """
 
 documentation = {
-    "fieldOutput": "field output to set",
-    "type": "'const or 'analyticalField'",
-    "value": "scalar value if type 'const'; name of analyticalField if type 'analyticalField'",
+    "fieldOutput": "Field output to be set",
+    "type": "'Const' or 'analyticalField'",
+    "value": "Scalar value if type 'const'; name of analyticalField if type 'analyticalField'",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase

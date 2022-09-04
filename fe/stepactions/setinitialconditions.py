@@ -36,9 +36,9 @@ from fe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
 documentation = {
-    "property": "the name of the property to be initialized",
-    "values": "the property values",
-    "elSet": "(optional) the element set for which the initaliziation is performed",
+    "property": "The name of the property to be initialized",
+    "values": "The property values",
+    "elSet": "(Optional) the element set for which the initaliziation is performed",
 }
 
 

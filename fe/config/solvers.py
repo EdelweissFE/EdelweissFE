@@ -38,7 +38,7 @@ Currently, EdelweissFE provides
 
 Choose the solver in the ``*job`` definition:
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     *job, name=myJob, domain=2d, solver=NISTParallel
 """

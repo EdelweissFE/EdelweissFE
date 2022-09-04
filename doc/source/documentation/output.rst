@@ -5,7 +5,7 @@ Outputmanagers
    :members: __doc__
 
 .. literalinclude:: ../../../testfiles/OutputManagers/test.inp
-   :language: console
+   :language: edelweiss
    :caption: Full example: ``testfiles/OutputManagers/test.inp``
 
 ``ensight`` - Export to Ensight Gold format

@@ -34,9 +34,9 @@ If not modified in subsequent steps, the load held constant.
 """
 
 documentation = {
-    "forceVector": "force vector",
-    "delta": "in subsequent steps only: define the new force vector incrementally",
-    "f(t)": "(optional) define an amplitude",
+    "forceVector": "The force vector",
+    "delta": "In subsequent steps only: define the updated force vector incrementally",
+    "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase

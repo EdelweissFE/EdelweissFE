@@ -10,7 +10,7 @@ Relevant module: ``fe.utils.fieldoutput``
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/FieldOutput/fieldOutput.inp
-   :language: console
+   :language: edelweiss
    :caption: Example file: ``../../../testfiles/FieldOutput/fieldOutput.inp``
 
 Module documentation:

@@ -29,11 +29,11 @@
 """
 
 documentation = {
-    "model": "(optional) default = Gaussian",
-    "mean": "(optional) default = 0.",
-    "variance": "(optional) default = 1.",
-    "lengthScale": "(optional) default = 10.",
-    "seed": "(optional) default = 0",
+    "model": "(Optional) default = Gaussian",
+    "mean": "(Optional) default = 0.",
+    "variance": "(Optional) default = 1.",
+    "lengthScale": "(Optional) default = 10.",
+    "seed": "(Optional) default = 0",
 }
 
 import numpy as np

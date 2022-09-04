@@ -33,15 +33,15 @@ A penalty based constraint used for indirect (displacement) control.
 """
 
 documentation = {
-    "field": "the field this constraint acts on",
-    "cVector": "the projection vector for the constrained nodes (e.g., CMOD)",
-    "constrainedNSet": "the node set for determining the constraint (e.g., CMOD)",
-    "loadNSet": "the node set for application of the controlled load",
-    "loadVector": "the vector (in correct) dimensions and tensorial order  determining the load",
-    "length": "the value of the constraint (e.g., CMOD)",
-    "penaltyStiffness": "the stiffness for formulating the constraint",
-    "offset": "(optional) a correction value for the computation of the constraint (e.g, initial displacement)",
-    "normalizeLoad": "(optional) normalize the applied force per node wrt the number of nodes, i.e., apply a load irrespective of the total number of nodes in loadNSet",
+    "field": "The field this constraint acts on",
+    "cVector": "The projection vector for the constrained nodes (e.g., CMOD)",
+    "constrainedNSet": "The node set for determining the constraint (e.g., CMOD)",
+    "loadNSet": "The node set for application of the controlled load",
+    "loadVector": "The vector (in correct) dimensions and tensorial order  determining the load",
+    "length": "The value of the constraint (e.g., CMOD)",
+    "penaltyStiffness": "The stiffness for formulating the constraint",
+    "offset": "(Optional) a correction value for the computation of the constraint (e.g, initial displacement)",
+    "normalizeLoad": "(Optional) normalize the applied force per node wrt. the number of nodes, i.e., apply a load irrespective of the total number of nodes in ``loadNSet``",
 }
 
 import numpy as np

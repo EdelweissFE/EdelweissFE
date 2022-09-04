@@ -27,18 +27,43 @@
 # Created on Sat Jan  21 12:18:10 2017
 
 # @author: Matthias
-"""
-Provides an increment generator for incremental-iterative simulations
-"""
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
+from fe.journal.journal import Journal
 
 
 class IncrementGenerator:
-    """Implementation as generator class"""
 
     identification = "IncGen"
 
-    def __init__(self, currentTime, stepLength, maxIncrement, minIncrement, maxNumberIncrements, journal):
+    def __init__(
+        self,
+        currentTime: float,
+        stepLength: float,
+        maxIncrement: float,
+        minIncrement: float,
+        maxNumberIncrements: int,
+        journal: Journal,
+    ) -> tuple:
+        """
+        An increment generator for incremental-iterative simulations.
+
+        Implementation as generator class.
+
+        Parameters
+        ----------
+        currentTime
+            The current (start) time.
+        stepLength
+            The total length of the step.
+        maxIncrement
+            The maximum size of an increment. Also serves as the size of the start increment.
+        minIncrement
+            The minimum size of an increment.
+        maxNumberIncrements
+            The maximum number of allowed increments.
+        journal
+            The journal instance for logging purposes.
+        """
 
         self.nPassedGoodIncrements = int(0)
         self.totalIncrements = int(0)
@@ -56,9 +81,13 @@ class IncrementGenerator:
         self.journal = journal
 
     def generateIncrement(self):
-        """Returns the hexatuple consisting of
-        (increment number, increment fraction, finished step progress,
-        dT, increment start time of step, increment start time total)"""
+        """
+        Generate the next increment.
+
+        Returns
+        -------
+        tuple
+            The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total)."""
 
         # zero increment; return value for first function call
         yield (0, 0.0, 0.0, 0.0, 0.0, self.currentTime)
@@ -100,12 +129,19 @@ class IncrementGenerator:
         self,
     ):
         """May be called before an increment is requested, to prevent from
-        automatically increasing, e.g. in case of bad convergency"""
+        automatically increasing, e.g. in case of bad convergency."""
+
         self.allowedToIncreasedNext = False
 
-    def discardAndChangeIncrement(self, scaleFactor):
+    def discardAndChangeIncrement(self, scaleFactor: float):
         """Change increment size between minIncrement and
-        maxIncrement by a given scale factor."""
+        maxIncrement by a given scale factor.
+
+        Parameters
+        ----------
+        scaleFactor
+            The factor for scaling based on the previous increment.
+        """
 
         if self.increment == self.minIncrement:
             self.journal.errorMessage("Cannot reduce increment size", self.identification)

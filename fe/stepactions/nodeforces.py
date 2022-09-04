@@ -34,11 +34,11 @@ Apply simple node forces on a nSet.
 """
 
 documentation = {
-    "nSet": "nSet for application of the BC",
-    "1,2,3,...": "prescribed values for components of the physical field",
-    "components": "prescribed values using a np.ndarray for representation; use 'x' for ignored values",
-    "field": "field for BC",
-    "f(t)": "(optional) define an amplitude",
+    "nSet": "Node set for application of the boundary condition",
+    "1,2,3,...": "Prescribed values for components of the physical field",
+    "components": "Prescribed values using a np.ndarray for representation; use 'x' for ignored values",
+    "field": "Field for which the boundary condition is active",
+    "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase

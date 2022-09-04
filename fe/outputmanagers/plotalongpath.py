@@ -34,12 +34,12 @@ Plot result for a nodeSet or an elementSet along the true geometrical distance.
 Corresponds to the plot along path functionality in Abaqus.
 """
 documentation = {
-    "fieldOutput": "fieldOutput to be plotted (defined on a nodeSet/elementSet)",
-    "figure": "(optional), figure of the Plotter",
-    "axSpec": "(optional), axSpec (MATLAB syntax) in the figure",
-    "label": "(optional), label, standard=fieldOutputs name",
-    "f(x)": "(optional), apply math",
-    "normalize": "(optional), normalize peak to 1.0",
+    "fieldOutput": "Name of the field output to be plotted (defined on a nodeSet/elementSet)",
+    "figure": "(Optional), figure of the Plotter",
+    "axSpec": "(Optional), axSpec (MATLAB syntax) in the figure",
+    "label": "(Optional), label, standard=fieldOutputs name",
+    "f(x)": "(Optional), apply math",
+    "normalize": "(Optional), normalize peak to 1.0",
 }
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase

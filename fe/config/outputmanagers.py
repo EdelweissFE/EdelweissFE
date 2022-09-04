@@ -32,7 +32,7 @@
 Outputmanagers are used for monitoring and exporting results to variuous formats.
 They are defined globally:
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     *output, type=ensight, jobName=cps4job, name=myEnsightExport
         create=perNode,    elSet=all, fieldOutput=Displacement

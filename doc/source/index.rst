@@ -53,8 +53,8 @@ Example input file
 ******************
 
 .. literalinclude:: ../../testfiles/LinearElasticIsotropic/test.inp
-   :language: console
-   :caption: File: ``../../testfiles/LinearElasticIsotropic/test.inp``
+   :language: edelweiss
+   :caption: File: ``testfiles/LinearElasticIsotropic/test.inp``
 
 More example files can be found in the ``testfiles`` folder!
 

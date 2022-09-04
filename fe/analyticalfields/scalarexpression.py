@@ -29,7 +29,7 @@
 """
 
 documentation = {
-    "f(x,y,z)": "python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed",
+    "f(x,y,z)": "Python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed",
 }
 
 from fe.utils.misc import stringDict

@@ -30,8 +30,8 @@
 # @author: Matthias Neuner
 
 documentation = {
-    "nSet": "(slave) node set, which is constrained to the reference point",
-    "referencePoint": "(master) reference point",
+    "nSet": "(Slave) node set, which is constrained to the reference point",
+    "referencePoint": "(Master) reference point",
 }
 
 import numpy as np

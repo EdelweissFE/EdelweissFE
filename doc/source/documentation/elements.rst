@@ -23,7 +23,7 @@ Relevant module: ``fe.elements.marmotsingleqpelement.element``
    :members: 
 
 .. literalinclude:: ../../../testfiles/QPMarmotMaterialHypoElastic/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/QPMarmotMaterialHypoElastic/test.inp``
 
 Implementing your own elements

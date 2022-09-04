@@ -31,7 +31,7 @@
 """
 A simple monitor to observe results (fieldOutputs) in the console during analysis.
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Example:
 
     *output, type=monitor, jobName=cpe4job, name=omegaMon
@@ -39,8 +39,8 @@ A simple monitor to observe results (fieldOutputs) in the console during analysi
 """
 
 documentation = {
-    "fieldOutput": "fieldOutput to be monitored",
-    "f(x)": "(optional), apply math on the fieldOutput",
+    "fieldOutput": "Name of the field output to be monitored",
+    "f(x)": "(Optional), apply a model accessible function on the result",
 }
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase

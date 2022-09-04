@@ -39,10 +39,10 @@ ATTENTION:
 
 documentation = {
     "configuration": "overwrite=y|n|yes|no|True|False|",
-    "create": "perNode|perElement",
-    "fieldOutput": "name of the result, defined on an elSet (also for perNode results)",
-    "name": "(optional), standard = fieldOutputs name",
-    "intermediateSaveInterval": 'step option in category "Ensight": save .case file every N increments',
+    "create": "The of the variabl; valid values: perNode|perElement",
+    "fieldOutput": "Name of the result, defined on an elSet (also for perNode results!)",
+    "name": "(Optional), default = the field output's name",
+    "intermediateSaveInterval": 'Step option in category "Ensight": save .case file every N increments',
 }
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase

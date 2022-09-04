@@ -32,7 +32,7 @@
 A conditional stop conditions wenn an expression becomes true.
 Useful, e.g., for indirect displacement control.
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Example: 
 
     *output, type=conditionalstop, jobName=myJob, name=condStop

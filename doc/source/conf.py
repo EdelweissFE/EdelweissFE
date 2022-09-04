@@ -49,7 +49,6 @@ numpydoc_show_class_members = True
 numpydoc_class_members_toctree = False
 numpydoc_show_inherited_class_members = True
 
-pygments_style = "gruvbox-light"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -79,6 +78,37 @@ from docutils import nodes
 from sphinx import addnodes
 from sphinx.directives.code import CodeBlock, dedent_lines, container_wrapper
 
+from pygments.lexer import RegexLexer
+from pygments.token import *
+
+from sphinx.highlighting import lexers
+
+class EdelweissFELexer(RegexLexer):
+    name = 'EdelweissFE lexer'
+    expression_in_quotes=r'(["\'])(?:(?=(\\?))\2.)*?\1'
+    expression_no_quotes=r'\w+'
+    expression_no_quotes=r'[^,\n\'"]+'
+    equalsign_with_potential_whitespaces = r'\s*=\s*'
+    tokens = {
+        'root': [
+            (r'\s*\*{2}.*\n', Comment.Singleline),
+            (r',', Text),
+            (r'\*{1}[^,\n]*', Keyword),
+
+            ( expression_in_quotes + r'\s*(?==)', Name.Variable),
+            ( r'(?<==)\s*'+ expression_in_quotes , Literal.String),
+
+            ( expression_no_quotes + r'\s*(?==)', Name.Variable),
+            ( r'(?<==)\s*'+ expression_no_quotes , Literal.Number),
+
+            (r'=', Operator.Word),
+            (r'[^=,\n]+', Text),
+        ],
+    }
+
+lexers['edelweiss'] = EdelweissFELexer(startinline=True)
+pygments_style = "nord"
+
 
 class PrettyPrintDirective(CodeBlock):
 
@@ -86,41 +116,38 @@ class PrettyPrintDirective(CodeBlock):
     optional_arguments = 1
     required_arguments = 1
 
-    option_spec = CodeBlock.option_spec
-
-    def get_codeblock_node(self, code, language):
-        """this is copied from sphinx.directives.code.CodeBlock.run
-
-        it has been changed to accept code and language as an arguments instead
-        of reading from self
-
-        """
-        document = self.state.document
-
-        literal = nodes.literal_block(code, code)
-        literal["language"] = language
-
-        caption = self.options.get("caption", "")
-        if caption:
-            try:
-                literal = container_wrapper(self, literal, caption)
-            except ValueError as exc:
-                return [document.reporter.warning(text_type(exc), line=self.lineno)]
-
-        self.add_name(literal)
-
-        return [literal]
-
     def run(self):
 
         module_path, member_name = self.arguments[0].rsplit(".", 1)
         member_data = getattr(import_module(module_path), member_name)
-        code = pformat(member_data, 2, width=80)
 
-        cb = self.get_codeblock_node(code, "python")
+        table = nodes.table(cols=2)
+        group = nodes.tgroup()
+        head = nodes.thead()
+        body = nodes.tbody()
+   
+        if "caption" in self.options:
+            title= nodes.title(text=self.options["caption"])
+            table += title
 
-        return cb
+        table += group
+        group += nodes.colspec(colwidth=6)
+        group += nodes.colspec(colwidth=6)
+        group += head
+        group += body
 
+        row = nodes.row()
+        row += nodes.entry('', nodes.paragraph('', nodes.Text('Option')))
+        row += nodes.entry('', nodes.paragraph('', nodes.Text('Description')))
+        head += row
+
+        for key, val in member_data.items():
+            row = nodes.row()
+            row += nodes.entry('', nodes.literal(text=key))
+            row += nodes.entry('', nodes.paragraph('', nodes.Text(val)))
+            body += row
+
+        return [table,]
 
 def doi_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
     # rendered = nodes.Text(text)

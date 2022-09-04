@@ -9,7 +9,7 @@ supplemented by data lines.
 In general, options and data entries are comma separated. 
 Indentations and blank lines have no effect.
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     *keyword, option1=value, option2=another_value
     data, data, data, data
@@ -26,7 +26,7 @@ Indentations and blank lines have no effect.
 The available input syntax is defined in ``fe/utils/inputfileparser.py``,
 and available keywords can be printed using
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     python edelweiss.py --keywords
 
