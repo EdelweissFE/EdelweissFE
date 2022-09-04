@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utilities &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributors" href="../contributors.html" />
+    <link rel="prev" title="Exceptions" href="exceptions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> EdelweissFE
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#matrix-conversion-from-coo-sparse-format-to-csr-format">Matrix conversion from COO sparse format to CSR format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gathering-efficiently-of-element-results">Gathering efficiently of element results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adaptive-time-stepping">Adaptive time stepping</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>Utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="utilities">
+<h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading"></a></h1>
+<p>EdelweissFE contains several classes and modules,
+which are not directly employed by the user,
+but very handy if fundamental new functionalities should be added.</p>
+<div class="section" id="matrix-conversion-from-coo-sparse-format-to-csr-format">
+<h2>Matrix conversion from COO sparse format to CSR format<a class="headerlink" href="#matrix-conversion-from-coo-sparse-format-to-csr-format" title="Permalink to this heading"></a></h2>
+<p>Module <code class="docutils literal notranslate"><span class="pre">fe.utils.csrgenerator</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.csrgenerator.CSRGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.csrgenerator.</span></span><span class="sig-name descname"><span class="pre">CSRGenerator</span></span><a class="headerlink" href="#fe.utils.csrgenerator.CSRGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>This cdef class generates Compressed Sparse Row Matrices from the COO format,
+and offers the possibility to update the matrix without reanalyzing the
+pattern (in contrast to SciPy).
+Very fast and convenient!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>systemMatrix</strong> – The system matrix in COO format, for the first initialization V can be a dummy (empty) vector.</p>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.csrgenerator.CSRGenerator.updateCSR" title="fe.utils.csrgenerator.CSRGenerator.updateCSR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateCSR</span></code></a></p></td>
+<td><p>Get updated copies of the CSR matrix.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.csrgenerator.CSRGenerator.updateCSR">
+<span class="sig-name descname"><span class="pre">updateCSR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.csrgenerator.CSRGenerator.updateCSR" title="Permalink to this definition"></a></dt>
+<dd><p>Get updated copies of the CSR matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The system matrix in CSR format.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>csr_matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gathering-efficiently-of-element-results">
+<h2>Gathering efficiently of element results<a class="headerlink" href="#gathering-efficiently-of-element-results" title="Permalink to this heading"></a></h2>
+<p>Module <code class="docutils literal notranslate"><span class="pre">fe.utils.elementresultcollector</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.elementresultcollector.ElementResultCollector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.elementresultcollector.</span></span><span class="sig-name descname"><span class="pre">ElementResultCollector</span></span><a class="headerlink" href="#fe.utils.elementresultcollector.ElementResultCollector" title="Permalink to this definition"></a></dt>
+<dd><p>A cdef class for collecting element results (by using the permanent results pointer (i.e., a numpy array)
+in large array of all elements and all quadrature points.</p>
+<p>Collecting elemental results may be a performance critical part.
+This cdef class allows for the efficient gathering.
+A 3D array is assembled if multiple quadrature points are requested (shape <code class="docutils literal notranslate"><span class="pre">[elements,</span> <span class="pre">quadraturePoints,</span> <span class="pre">resultVector]</span></code> )
+or a 2D array for one quadrature point ( shape <code class="docutils literal notranslate"><span class="pre">[elements,</span> <span class="pre">resultVector]</span></code> ).</p>
+<p>Method <a class="reference internal" href="#fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults" title="fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults"><code class="xref py py-func docutils literal notranslate"><span class="pre">getCurrentResults()</span></code></a> updates the assembly array and passes it back.</p>
+<p>The caller is responsible to make a copy of it, if persistent results are needed!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elements</strong> – The list of elements for which the results should be collected.</p></li>
+<li><p><strong>quadraturePoints</strong> – The slice defining the desired quadrature points.</p></li>
+<li><p><strong>result</strong> – The name of the requested result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>resultsTable</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults" title="fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCurrentResults</span></code></a></p></td>
+<td><p>Update and get current results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.elementresultcollector.ElementResultCollector.update" title="fe.utils.elementresultcollector.ElementResultCollector.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a></p></td>
+<td><p>Update all results.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults">
+<span class="sig-name descname"><span class="pre">getCurrentResults</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults" title="Permalink to this definition"></a></dt>
+<dd><p>Update and get current results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The results array.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.elementresultcollector.ElementResultCollector.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.utils.elementresultcollector.ElementResultCollector.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update all results.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="adaptive-time-stepping">
+<h2>Adaptive time stepping<a class="headerlink" href="#adaptive-time-stepping" title="Permalink to this heading"></a></h2>
+<p>Module <code class="docutils literal notranslate"><span class="pre">fe.utils.incrementgenerator</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.incrementgenerator.</span></span><span class="sig-name descname"><span class="pre">IncrementGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>An increment generator for incremental-iterative simulations.</p>
+<p>Implementation as generator class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currentTime</strong> (<em>float</em>) – The current (start) time.</p></li>
+<li><p><strong>stepLength</strong> (<em>float</em>) – The total length of the step.</p></li>
+<li><p><strong>maxIncrement</strong> (<em>float</em>) – The maximum size of an increment. Also serves as the size of the start increment.</p></li>
+<li><p><strong>minIncrement</strong> (<em>float</em>) – The minimum size of an increment.</p></li>
+<li><p><strong>maxNumberIncrements</strong> (<em>int</em>) – The maximum number of allowed increments.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging purposes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement" title="fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discardAndChangeIncrement</span></code></a>(scaleFactor)</p></td>
+<td><p>Change increment size between minIncrement and maxIncrement by a given scale factor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator.generateIncrement" title="fe.utils.incrementgenerator.IncrementGenerator.generateIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generateIncrement</span></code></a>()</p></td>
+<td><p>Generate the next increment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease" title="fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preventIncrementIncrease</span></code></a>()</p></td>
+<td><p>May be called before an increment is requested, to prevent from automatically increasing, e.g.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement">
+<span class="sig-name descname"><span class="pre">discardAndChangeIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaleFactor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator.discardAndChangeIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Change increment size between minIncrement and
+maxIncrement by a given scale factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scaleFactor</strong> (<em>float</em>) – The factor for scaling based on the previous increment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator.generateIncrement">
+<span class="sig-name descname"><span class="pre">generateIncrement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator.generateIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator.generateIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the next increment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease">
+<span class="sig-name descname"><span class="pre">preventIncrementIncrease</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator.preventIncrementIncrease"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease" title="Permalink to this definition"></a></dt>
+<dd><p>May be called before an increment is requested, to prevent from
+automatically increasing, e.g. in case of bad convergency.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="exceptions.html" class="btn btn-neutral float-left" title="Exceptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contributors.html" class="btn btn-neutral float-right" title="Contributors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
