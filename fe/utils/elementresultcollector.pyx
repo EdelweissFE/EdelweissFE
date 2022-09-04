@@ -39,7 +39,7 @@ cdef class ElementResultCollector:
     cdef double[:, :, ::1] res_
     cdef double** resultPointers
     
-    def __init__(self, elements:dict, quadraturePoints:slice, result:str):
+    def __init__(self, elements:list, quadraturePoints:slice, result:str):
         """
         A cdef class for collecting element results (by using the permanent results pointer (i.e., a numpy array) 
         in large array of all elements and all quadrature points.
@@ -55,8 +55,8 @@ cdef class ElementResultCollector:
 
         Parameters
         ----------
-        elements
-            The dictionary of elements.
+        elements 
+            The list of elements for which the results should be collected.
         quadraturePoints
             The slice defining the desired quadrature points.
         result
