@@ -16,7 +16,7 @@ Relevant module: ``fe.stepactions.bodyforce``
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BodyForce3D/test.inp
-   :language: console 
+   :language: edelweiss 
    :caption: Example: ``testfiles/BodyForce3D/test.inp``
 
 ``dirichlet`` - Standard dirichlet BC
@@ -30,8 +30,8 @@ Relevant module: ``fe.stepactions.dirichlet``
 .. pprint:: fe.stepactions.dirichlet.documentation
    :caption: Options:
 
-``distributedload`` - surface loads
------------------------------------
+``distributedload`` - Distributed surface loads
+-----------------------------------------------
 
 Relevant module: ``fe.stepactions.distributedload``
 
@@ -43,7 +43,7 @@ Relevant module: ``fe.stepactions.distributedload``
 
 
 .. literalinclude:: ../../../testfiles/DLoad/test.inp
-   :language: console 
+   :language: edelweiss 
    :caption: Example: ``testfiles/DLoad/test.inp``
 
 ``geostatic`` - Geostatic stress states 
@@ -59,7 +59,7 @@ Relevant module: ``fe.stepactions.geostatic``
 
 
 .. literalinclude:: ../../../testfiles/GeoStatic/test.inp
-   :language: console 
+   :language: edelweiss 
    :caption: Example: ``testfiles/GeoStatic/test.inp``
 
 ``indirectcontrol`` - Indirect displacement control
@@ -75,7 +75,7 @@ Relevant module: ``fe.stepactions.indirectcontrol``
 
 
 .. literalinclude:: ../../../testfiles/IndirectDisplacementControl//test.inp
-   :language: console
+   :language: edelweiss
    :caption: Example: ``testfiles/IndirectDisplacementControl/test.inp``
 
 ``indirectcontractioncontrol`` - Indirect displacement -- contraction ring control
@@ -121,11 +121,11 @@ Relevant module: ``fe.stepactions.nodeforces``
 
 
 .. literalinclude:: ../../../testfiles/NodeForces/test.inp
-   :language: console 
+   :language: edelweiss 
    :caption: Example: ``testfiles/NodeForces/test.inp``
 
-``setfield`` - Set field to prescribed value
---------------------------------------------
+``setfield`` - Set a field to a prescribed value
+------------------------------------------------
 
 Relevant module: ``fe.stepactions.setfield``
 

@@ -31,9 +31,9 @@ Stepaction to change material properties.
 """
 
 documentation = {
-    "material": "the id of the material to be changed",
-    "index": "the index of the property in the material properties vector",
-    "f(t)": "define a function depending on time",
+    "material": "The id of the material to be changed",
+    "index": "The index of the property in the material properties vector",
+    "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase

@@ -48,19 +48,19 @@ nSets, elSets, surface : 'name'_left, _right, _bottom, _top, _front, _back, _all
 elSets : 'name'_centralFrontToBack, _shearBandFrontToBack, _shearBandCenterFrontToBack
 are automatically generated
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Generate meshes on the fly. Example: 
 
     *job, name=job, domain=3d, solver=NIST
     
     *modelGenerator, generator=boxGen, name=gen
-    nX      =4
-    nY      =8
-    nZ      =2
-    lX      =20
-    lY      =40
-    lZ      =1
-    elType  =C3D20R
+        nX      =4
+        nY      =8
+        nZ      =2
+        lX      =20
+        lY      =40
+        lZ      =1
+        elType  =C3D20R
 """
 
 documentation = {

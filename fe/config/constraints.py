@@ -35,7 +35,7 @@ equations into the global equation system.
 
 Example syntax:
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     *constraint, type=rigidbody, name=myRigigBody
         nSet=right

@@ -32,7 +32,7 @@
 of a step.
 """
 
-documentation = {"update": "model accessible, executable expression"}
+documentation = {"update": "Model accessible, executable expression"}
 
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.utils.misc import stringDict

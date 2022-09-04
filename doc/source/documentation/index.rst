@@ -23,3 +23,4 @@ Documentation
    parallelization
    journal
    exceptions
+   utils

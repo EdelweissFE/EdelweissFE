@@ -7,7 +7,7 @@ Analytical fields
 ``scalarexpression`` - Field defined by expression
 --------------------------------------------------
 
-Module ``fe.analyticalfields.scalarexpression``
+Relevant module ``fe.analyticalfields.scalarexpression``
 
 .. automodule:: fe.analyticalfields.scalarexpression
     :members: __doc__
@@ -16,13 +16,13 @@ Module ``fe.analyticalfields.scalarexpression``
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/AnalyticalFieldsScalarExpression/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/AnalyticalFieldsScalarExpression/test.inp``
 
 ``randomscalar`` - A random field
 ---------------------------------
 
-Module ``fe.analyticalfields.randomscalar``
+Relevant module ``fe.analyticalfields.randomscalar``
 
 .. automodule:: fe.analyticalfields.randomscalar
     :members: __doc__
@@ -31,7 +31,7 @@ Module ``fe.analyticalfields.randomscalar``
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/AnalyticalFieldsRandomScalar/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/AnalyticalFieldsRandomScalar/test.inp``
 
 Implementing your own fields

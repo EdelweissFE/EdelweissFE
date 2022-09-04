@@ -25,28 +25,33 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Created on Mon Apr  9 10:44:29 2018
+# Created on Mon Apr  9 10:44:29 2018
 
-@author: matthias
-"""
+# @author: matthias
 
 from scipy.sparse import csr_matrix
+from fe.utils.dofmanager import VIJSystemMatrix
 import numpy as np
 cimport numpy as np
 
 cdef class CSRGenerator:
-    """ Generates Compressed Sparse Row Matrices from the COO format,
-    and offers the possibility to update the matrix without reanalyzing the 
-    pattern (in contrast to SciPy)"""
     
     cdef csrMatrix
     cdef int[:] x
     cdef double[::1] data
     cdef int nDof, nCooPairs
     
-    def __init__(self, systemMatrix ):
-        """ Initialize the pattern, V can be a dummy (empty) vector """
+    def __init__(self, systemMatrix: VIJSystemMatrix):
+        """This cdef class generates Compressed Sparse Row Matrices from the COO format,
+        and offers the possibility to update the matrix without reanalyzing the 
+        pattern (in contrast to SciPy).
+        Very fast and convenient!
+        
+        Parameters
+        ----------
+        systemMatrix
+            The system matrix in COO format, for the first initialization V can be a dummy (empty) vector.
+        """
         
         cdef:
             long[::1] I = systemMatrix.I
@@ -86,8 +91,15 @@ cdef class CSRGenerator:
                     self.x [ cooPairIdx ] = c 
                     break
             
-    def updateCSR(self, double[::1] V):
-        """ get updated copies of the CSR matrix """
+    def updateCSR(self, double[::1] V) -> csr_matrix:
+        """Get updated copies of the CSR matrix.
+
+        Returns
+        -------
+        csr_matrix
+            The system matrix in CSR format.
+        """
+
         cdef int cooPairIdx
         self.data[:] = 0.0
         

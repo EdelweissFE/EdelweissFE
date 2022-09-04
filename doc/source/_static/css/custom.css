@@ -8,3 +8,18 @@
 .wy-nav-content {
     max-width: 90%;
 }
+
+code.literal {
+    color: #5e81ac !important;
+    font-size: 0.9em;
+}
+
+.wy-side-nav-search{
+    background-color: #5e81ac;
+}
+
+.py{
+    font-family: monospace;
+    background-color: #eceff4;
+}
+

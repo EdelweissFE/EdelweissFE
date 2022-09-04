@@ -38,9 +38,9 @@ The center is autotically computed from the bounding node coordinates.
 """
 
 documentation = {
-    "exportCVector": "(optional) file to export the computed c vector",
     "contractionNSet": "The node set defining the contraction ring",
     "L": "Final distance (e.g. crack opening)",
+    "exportCVector": "(Optional) file to export the computed c vector",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase

@@ -33,15 +33,15 @@ Interface to Cubit. Generate mesh using Cubit .jou files.
 """
 
 documentation = {
-    "cubitCmd": "(optional) Cubit executable; default=cubit",
-    "jouFile": "path to Cubit journal (.jou) file",
-    "outFile": "(optional) path to output file; default=mesh.inc",
-    "vars": "(optional) APREPRO variables as string '...' of comma-separated <key>=<value> pairs",
-    "elType": "specify element type for all sections",
-    "elTypePerBlock": "specify element type for each section as string '...' of comma-separated <key>=<value> pairs",
-    "overwrite": "(optional) overwrite existing outFiles; default=False",
-    "runCubit": "(optional) run Cubit GUI for debugging purposes; default=False",
-    "silent": "(optional) hide Cubit output; default=False",
+    "cubitCmd": "(Optional) Cubit executable; default=cubit",
+    "jouFile": "Path to Cubit journal (.jou) file",
+    "outFile": "(Optional) path to output file; default=mesh.inc",
+    "vars": "(Optional) APREPRO variables as string '...' of comma-separated <key>=<value> pairs",
+    "elType": "Specify element type for all sections",
+    "elTypePerBlock": "Specify element type for each section as string '...' of comma-separated <key>=<value> pairs",
+    "overwrite": "(Optional) overwrite existing outFiles; default=False",
+    "runCubit": "(Optional) run Cubit GUI for debugging purposes; default=False",
+    "silent": "(Optional) hide Cubit output; default=False",
 }
 
 from fe.utils.misc import stringDict

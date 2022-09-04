@@ -36,7 +36,7 @@ Output managers may use the plotter for visualizing all kinds of outputs.
 The style of the plots can be configured through
 the keyword ``*configurePlots``:
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     *configurePlots,
         figure=1, axSpec=211, 
@@ -46,7 +46,7 @@ the keyword ``*configurePlots``:
 
 Plots can be exported to .pdf (and png) files using the ``*exportPlots`` keyword:
 
-.. code-block:: console
+.. code-block:: edelweiss
 
     *exportPlots,
         figure=1, fileName=fig1, png=True

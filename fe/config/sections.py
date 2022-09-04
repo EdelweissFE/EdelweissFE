@@ -34,7 +34,7 @@ Keyword: ``*section``
 Sections combine domains (expressed in terms of element sets)
 with properties, such as materials.
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Example:
 
     *section, name=mySection, thickness=1.0, material=myMaterial, type=plane

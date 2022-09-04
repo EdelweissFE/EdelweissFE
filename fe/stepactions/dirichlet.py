@@ -33,12 +33,12 @@ Standard Dirichlet boundary condition.
 If not modified in subsequent steps, the BC is held constant.
 """
 documentation = {
-    "nSet": "nSet for application of the BC",
-    "1,2,3,...": "prescribed values for components of the physical field",
-    "components": "prescribed values using a np.ndarray for representation; use 'x' for ignored values",
-    "field": "field for BC",
-    "analyticalField": "(optional) scales the defined BCs",
-    "f(t)": "(optional) define an amplitude",
+    "nSet": "The node set for application of the BC",
+    "1,2,3,...": "Prescribed values for components of the physical field",
+    "components": "Prescribed values using a np.ndarray for representation; use 'x' for ignored values",
+    "field": "Field for which the boundary condition is active",
+    "analyticalField": "(Optional) scales the defined boundary condition",
+    "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
 
 

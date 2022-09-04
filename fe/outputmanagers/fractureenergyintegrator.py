@@ -31,7 +31,7 @@
 """
 A simple integrator to compute the fracture energy by integrating a load-displacement curve.
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Example: 
 
     *output, type=fractureenergyintegrator, jobName=myJob, name=gfi

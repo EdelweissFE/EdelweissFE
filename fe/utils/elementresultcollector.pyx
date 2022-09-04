@@ -25,27 +25,13 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""
-Collecting elemental results may be a perfomance critical part.
-This module provides a cdef class for the efficient gathering.
-"""
 
-    
+        
 cimport numpy as np
 import numpy as np
 from libc.stdlib cimport malloc, free
 
 cdef class ElementResultCollector:
-    """
-    A cython class for collecting element results (by using the permanent results pointer (i.e., a numpy array) 
-    in large array of all elements and all gaussPoints.
-    A 3D array is assembled if multiple gaussPoints are requested (shape [elements, gaussPoints, resultVector] )
-    or a 2D array for one gaussPoint ( shape [elements, resultVector] ).
-    
-    method getCurrentResults() updates the assembly array and passes it back.
-    
-    The caller is responsible to make a copy of it, if persistent results are needed!
-    """
     
     cdef public  resultsTable
     
@@ -53,12 +39,34 @@ cdef class ElementResultCollector:
     cdef double[:, :, ::1] res_
     cdef double** resultPointers
     
-    def __init__(self, elements, gaussPoints, result):
+    def __init__(self, elements:dict, quadraturePoints:slice, result:str):
+        """
+        A cdef class for collecting element results (by using the permanent results pointer (i.e., a numpy array) 
+        in large array of all elements and all quadrature points.
+
+        Collecting elemental results may be a performance critical part.
+        This cdef class allows for the efficient gathering.
+        A 3D array is assembled if multiple quadrature points are requested (shape ``[elements, quadraturePoints, resultVector]`` )
+        or a 2D array for one quadrature point ( shape ``[elements, resultVector]`` ).
+        
+        Method :func:`~fe.utils.elementresultcollector.ElementResultCollector.getCurrentResults` updates the assembly array and passes it back.
+        
+        The caller is responsible to make a copy of it, if persistent results are needed!
+
+        Parameters
+        ----------
+        elements
+            The dictionary of elements.
+        quadraturePoints
+            The slice defining the desired quadrature points.
+        result
+            The name of the requested result.
+        """
         
         self.nEls = len(elements)
-        self.nGauss = len(gaussPoints)
+        self.nGauss = len(quadraturePoints)
         # assemble a 2d list of all permanent result arrays (=continously updated np arrays)
-        resultsPointerList = [ [ el.getResultArray(result, qp, getPersistentView=True) for qp in gaussPoints ] for el in elements ]
+        resultsPointerList = [ [ el.getResultArray(result, qp, getPersistentView=True) for qp in quadraturePoints ] for el in elements ]
         self.nSize = resultsPointerList[0][0].shape[0]
         
         # allocate an equivalent 2D C-array for the pointers to each elements results
@@ -84,7 +92,8 @@ cdef class ElementResultCollector:
             self.resultsTable = self.resultsTable.reshape(self.nEls, -1)
     
     def update(self, ):
-        #performant updating!
+        """Update all results."""
+
         cdef int i, j, k
         for i in range(self.nEls):
             for j in range(self.nGauss):
@@ -93,7 +102,15 @@ cdef class ElementResultCollector:
                     # but this version turned out to be faster!
                     self.res_[i,j,k] = self.resultPointers[ i * self.nGauss + j ][k]
     
-    def getCurrentResults(self,):
+    def getCurrentResults(self,) -> np.ndarray:
+        """Update and get current results.
+
+        Returns
+        -------
+        np.ndarray
+            The results array.
+        """
+
         self.update()
         return self.resultsTable
     

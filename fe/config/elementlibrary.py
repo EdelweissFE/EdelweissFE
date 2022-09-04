@@ -32,7 +32,7 @@
 EdelweissFE currently supports finite element implementations provided by the Marmot library.
 In future, elements by other providers or elements directly implemented in EdelweissFE may be added here.
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Example:
 
     *element, type=C3D8, provider=marmot

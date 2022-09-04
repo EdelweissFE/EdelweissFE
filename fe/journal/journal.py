@@ -166,6 +166,12 @@ class Journal:
         self.suppressLvl = 3
 
     def squelch(self, level):
-        """Suppress all messages."""
+        """Suppress all messages.
+
+        Parameters
+        ----------
+        level
+            The priority level of the message.
+        """
 
         self.suppressLvl = level

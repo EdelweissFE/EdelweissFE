@@ -1,7 +1,7 @@
 Prerequisites
 #############
 
-It is recommended to use a recent version of Anaconda `<https://anaconda.org/>`_ to compile and run EdelweissFE on a Linux system.
+It is recommended to use a recent version of `Anaconda <https://anaconda.org/>`_ to compile and run EdelweissFE on a Linux system.
 Then EdelweissFE requires the packages
 
 .. include:: ../../requirements.txt

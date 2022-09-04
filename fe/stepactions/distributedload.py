@@ -34,11 +34,11 @@ If not modified in subsequent steps, the load held constant.
 """
 
 documentation = {
-    "surface": "surface for application of the distributed load",
-    "magnitude": "dLoad magnitude",
-    "delta": "in subsequent steps only: define the new magnitude incrementally",
-    "f(t)": "(optional) define an amplitude",
-    "type": "the load type",
+    "surface": "Surface for application of the distributed load",
+    "magnitude": "Magnitude of the distributed load",
+    "delta": "In subsequent steps only: define the new magnitude incrementally",
+    "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
+    "type": "The load type, e.g., pressure or surface traction; Must be supported by the element type",
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase

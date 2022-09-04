@@ -34,7 +34,7 @@ using different methods.
 
 Keyword: ``*generator``
 
-.. code-block:: console
+.. code-block:: edelweiss
     :caption: Example: 
 
     *modelGenerator, generator=theGeneratorType, name=myGeneratorName

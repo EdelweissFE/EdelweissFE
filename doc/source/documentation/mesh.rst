@@ -7,5 +7,5 @@ Relevant module ``fe.utils.abqmodelconstructor``
    :members: __doc__
 
 .. literalinclude:: ../../../testfiles/LinearElasticIsotropic/test.inp
-    :language: console
+    :language: edelweiss
     :caption: Example: ``testfiles/LinearElasticIsotropic/test.inp``
