@@ -12,6 +12,7 @@ Documentation
    mesh
    generators
    analyticalfields
+   materials
    sections
    stepactions
    constraints
