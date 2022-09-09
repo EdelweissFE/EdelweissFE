@@ -48,7 +48,7 @@ import os
 class NISTParallel(NIST):
     identification = "NISTPSolver"
     
-    def solveStep(self, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers):
+    def solveStep(self, stepNumber, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers):
         #determine number of threads
         self.numThreads = cpu_count()
 
@@ -59,7 +59,7 @@ class NISTParallel(NIST):
                 self.numThreads = int(stepActions["options"]['NISTSolver'].get('numThreads', self.numThreads))
 
         self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
-        return super().solveStep(step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
+        return super().solveStep(stepNumber,step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
     
     def applyDirichletK(self, K, dirichlets):
         """Apply the dirichlet bcs on the global stiffnes matrix

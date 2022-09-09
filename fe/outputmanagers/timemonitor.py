@@ -51,9 +51,12 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step, stepActions):
         pass
 
-    def finalizeIncrement(self, U, P, increment):
+    def finalizeIncrement(self, U, P, increment, **kwargs):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.timeVals.append(totalTime + dT)
+
+    def finalizeFailedIncrement(self, **kwargs):
+        pass
 
     def finalizeStep(self, U, P, time):
         pass

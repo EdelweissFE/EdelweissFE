@@ -107,6 +107,7 @@ class NIST:
 
     def solveStep(
         self,
+        stepNumber: int,
         step: dict,
         time: float,
         stepActions: dict[str, StepActionBase],
@@ -120,6 +121,8 @@ class NIST:
 
         Parameters
         ----------
+        stepNumber
+            The step number.
         step
             The dictionary containing the step definition.
         time
@@ -185,6 +188,16 @@ class NIST:
             for increment in incGen.generateIncrement():
                 incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
+                statusInfoDict = {
+                    "step": stepNumber,
+                    "inc": incNumber,
+                    "iters": None,
+                    "converged": False,
+                    "time inc": dT,
+                    "time": totalTime + dT,
+                    "notes": "",
+                }
+
                 self.journal.printSeperationLine()
                 self.journal.message(
                     "increment {:}: {:8f}, {:8f}; time {:10f} to {:10f}".format(
@@ -217,10 +230,22 @@ class NIST:
                     incGen.discardAndChangeIncrement(max(e.cutbackSize, 0.25))
                     lastIncrementSize = False
 
+                    statusInfoDict["iters"] = np.inf
+                    statusInfoDict["notes"] = str(e)
+
+                    for man in outputmanagers:
+                        man.finalizeFailedIncrement(statusInfoDict=statusInfoDict)
+
                 except (ReachedMaxIterations, DivergingSolution) as e:
                     self.journal.message(str(e), self.identification, 1)
                     incGen.discardAndChangeIncrement(0.25)
                     lastIncrementSize = False
+
+                    statusInfoDict["iters"] = np.inf
+                    statusInfoDict["notes"] = str(e)
+
+                    for man in outputmanagers:
+                        man.finalizeFailedIncrement(statusInfoDict=statusInfoDict)
 
                 else:
                     lastIncrementSize = incrementSize
@@ -234,9 +259,12 @@ class NIST:
                         "Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1
                     )
 
+                    statusInfoDict["iters"] = iterationCounter
+                    statusInfoDict["converged"] = True
+
                     fieldOutputController.finalizeIncrement(U, P, increment)
                     for man in outputmanagers:
-                        man.finalizeIncrement(U, P, increment)
+                        man.finalizeIncrement(U, P, increment, statusInfoDict=statusInfoDict)
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
             success = False

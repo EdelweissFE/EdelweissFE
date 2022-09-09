@@ -255,7 +255,7 @@ def finiteElementSimulation(
     fieldOutputController.initializeJob(time, U, P)
 
     try:
-        for step in jobSteps:
+        for stepNumber, step in enumerate(jobSteps):
             try:
                 stepActions = gatherStepActions(
                     step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
@@ -271,7 +271,7 @@ def finiteElementSimulation(
                 # solve the step
                 tic = getCurrentTime()
                 success, U, P, time = solver.solveStep(
-                    step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
+                    stepNumber, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
                 )
                 toc = getCurrentTime()
 

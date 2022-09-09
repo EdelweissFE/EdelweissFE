@@ -52,7 +52,12 @@ class Journal:
         Suppress certain levels.
     """
 
-    def __init__(self, verbose: bool = True, outputFile: str = None, suppressFromLevel: int = 3):
+    def __init__(
+        self,
+        verbose: bool = True,
+        outputFile: str = None,
+        suppressFromLevel: int = 3,
+    ):
         self.suppressLvl = suppressFromLevel
         self.verbose = verbose
         self.setNewLineWidth(newWidth=100, leftColumn=80)

@@ -73,7 +73,10 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step, stepActions):
         pass
 
-    def finalizeIncrement(self, U, P, increment):
+    def finalizeIncrement(self, U, P, increment, **kwargs):
+        pass
+
+    def finalizeFailedIncrement(self, **kwargs):
         pass
 
     def finalizeStep(self, U, P, time):

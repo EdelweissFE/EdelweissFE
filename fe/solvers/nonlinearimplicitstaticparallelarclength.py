@@ -55,6 +55,7 @@ class NISTPArcLength(NISTParallel):
 
     def solveStep(
         self,
+        stepNumber: int,
         step: dict,
         time: float,
         stepActions: dict[str, StepActionBase],
@@ -87,7 +88,9 @@ class NISTPArcLength(NISTParallel):
 
         self.dLambda = 0.0
 
-        return super().solveStep(step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers)
+        return super().solveStep(
+            stepNumber, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
+        )
 
     def solveIncrement(
         self,
