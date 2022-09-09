@@ -86,7 +86,7 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):
+    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple, **kwargs):
         """Finalize the output at the end of an increment.
 
         Parameters
@@ -97,6 +97,20 @@ class OutputManagerBase(ABC):
             The initial reaction vector.
         increment
             The time increment.
+        **kwargs
+            Keyword arguments.
+        """
+
+        pass
+
+    @abstractmethod
+    def finalizeFailedIncrement(self, **kwargs):
+        """Finalize the output at the end of an failed increment.
+
+        Parameters
+        ----------
+        **kwargs
+            Keyword arguments.
         """
 
         pass

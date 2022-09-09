@@ -106,7 +106,7 @@ class OutputManager(OutputManagerBase):
         for nJob in self.monitorJobs:
             self.plotStages = np.linspace(0, step["steplength"], nJob["nStages"])
 
-    def finalizeIncrement(self, U, P, increment):
+    def finalizeIncrement(self, U, P, increment, **kwargs):
         totalTime = increment[3] + increment[4]
         if totalTime > self.plotStages[0]:
             for nJob in self.monitorJobs:
@@ -130,6 +130,9 @@ class OutputManager(OutputManagerBase):
                 self.plotter.plotXYData(nJob["pathDistances"], result, nJob["figure"], nJob["axSpec"], nJob_)
 
             self.plotStages = np.delete(self.plotStages, 0)
+
+    def finalizeFailedIncrement(self, **kwargs):
+        pass
 
     def finalizeStep(
         self,

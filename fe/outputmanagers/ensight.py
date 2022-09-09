@@ -718,7 +718,7 @@ class OutputManager(OutputManagerBase):
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
             self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 
-    def finalizeIncrement(self, U, P, increment):
+    def finalizeIncrement(self, U, P, increment, **kwargs):
         incNumber, incrementSize, stepProgress, dT, stepTimeAtIncrementStart, totalTimeAtIncrementStart = increment
         time = totalTimeAtIncrementStart + dT
 
@@ -735,6 +735,9 @@ class OutputManager(OutputManagerBase):
             return
 
         self.writeOutput(U, P, time)
+
+    def finalizeFailedIncrement(self, **kwargs):
+        pass
 
     def writeOutput(self, U, P, time):
 
