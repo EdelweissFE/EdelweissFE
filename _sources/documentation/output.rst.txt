@@ -66,3 +66,12 @@ Outputmanagers
 
 .. pprint:: fe.outputmanagers.conditionalstop.documentation
     :caption: Options:
+
+``statusfile`` - Write the status of the simulation to a file
+-----------------------------------------------------------------
+
+.. automodule:: fe.outputmanagers.statusfile
+   :members: __doc__
+
+.. pprint:: fe.outputmanagers.statusfile.documentation
+    :caption: Options:

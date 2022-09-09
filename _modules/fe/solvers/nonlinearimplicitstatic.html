@@ -180,6 +180,7 @@
 
 <div class="viewcode-block" id="NIST.solveStep"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.solveStep">[docs]</a>    <span class="k">def</span> <span class="nf">solveStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stepNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">],</span>
@@ -193,6 +194,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        stepNumber</span>
+<span class="sd">            The step number.</span>
 <span class="sd">        step</span>
 <span class="sd">            The dictionary containing the step definition.</span>
 <span class="sd">        time</span>
@@ -258,6 +261,16 @@
             <span class="k">for</span> <span class="n">increment</span> <span class="ow">in</span> <span class="n">incGen</span><span class="o">.</span><span class="n">generateIncrement</span><span class="p">():</span>
                 <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
 
+                <span class="n">statusInfoDict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">stepNumber</span><span class="p">,</span>
+                    <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="n">incNumber</span><span class="p">,</span>
+                    <span class="s2">&quot;iters&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;converged&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;time inc&quot;</span><span class="p">:</span> <span class="n">dT</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">totalTime</span> <span class="o">+</span> <span class="n">dT</span><span class="p">,</span>
+                    <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
                     <span class="s2">&quot;increment </span><span class="si">{:}</span><span class="s2">: </span><span class="si">{:8f}</span><span class="s2">, </span><span class="si">{:8f}</span><span class="s2">; time </span><span class="si">{:10f}</span><span class="s2"> to </span><span class="si">{:10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -290,10 +303,22 @@
                     <span class="n">incGen</span><span class="o">.</span><span class="n">discardAndChangeIncrement</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">cutbackSize</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
                     <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="kc">False</span>
 
+                    <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;iters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                    <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeFailedIncrement</span><span class="p">(</span><span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">)</span>
+
                 <span class="k">except</span> <span class="p">(</span><span class="n">ReachedMaxIterations</span><span class="p">,</span> <span class="n">DivergingSolution</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                     <span class="n">incGen</span><span class="o">.</span><span class="n">discardAndChangeIncrement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
                     <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;iters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                    <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeFailedIncrement</span><span class="p">(</span><span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="n">incrementSize</span>
@@ -307,9 +332,12 @@
                         <span class="s2">&quot;Converged in </span><span class="si">{:}</span><span class="s2"> iteration(s)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterationCounter</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="mi">1</span>
                     <span class="p">)</span>
 
+                    <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;iters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iterationCounter</span>
+                    <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;converged&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
                     <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="n">ReachedMaxIncrements</span><span class="p">,</span> <span class="n">ReachedMinIncrementSize</span><span class="p">):</span>
             <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>

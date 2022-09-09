@@ -128,6 +128,7 @@
 
 <div class="viewcode-block" id="NISTPArcLength.solveStep"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep">[docs]</a>    <span class="k">def</span> <span class="nf">solveStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stepNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">],</span>
@@ -160,7 +161,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">,</span> <span class="n">modelInfo</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputmanagers</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span>
+            <span class="n">stepNumber</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">,</span> <span class="n">modelInfo</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputmanagers</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="NISTPArcLength.solveIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">solveIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
