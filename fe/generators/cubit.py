@@ -44,7 +44,7 @@ documentation = {
     "silent": "(Optional) hide Cubit output; default=False",
 }
 
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.misc import strtobool
 from fe.utils.inputfileparser import parseInputFile
 from fe.utils.abqmodelconstructor import AbqModelConstructor
@@ -56,7 +56,7 @@ import shlex
 def generateModelData(generatorDefinition, modelInfo, journal):
 
     options = generatorDefinition["data"]
-    options = stringDict([e for l in options for e in l])
+    options = convertLinesToStringDictionary(options)
 
     name = generatorDefinition.get("name", "cubit")
 

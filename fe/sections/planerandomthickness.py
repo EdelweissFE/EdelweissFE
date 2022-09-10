@@ -1,13 +1,13 @@
 import numpy as np
 import gstools
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.math import createFunction
 
 
 class Section:
     def __init__(self, name, options, materialName, t, modelInfo):
 
-        self.options = stringDict([e for l in options for e in l])
+        self.options = convertLinesToStringDictionary(options)
         options = self.options
 
         self.materialName = materialName

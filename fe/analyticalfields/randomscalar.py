@@ -39,7 +39,7 @@ documentation = {
 import numpy as np
 import sympy as sp
 import gstools
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.math import createFunction
 from fe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
@@ -53,7 +53,7 @@ class AnalyticalField(AnalyticalFieldBase):
         self.name = name
         self.type = "randomScalar"
 
-        options = stringDict([e for l in data for e in l])
+        options = convertLinesToStringDictionary(data)
 
         self.domainSize = modelInfo["domainSize"]
 

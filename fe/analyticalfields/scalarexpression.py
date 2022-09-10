@@ -32,7 +32,7 @@ documentation = {
     "f(x,y,z)": "Python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed",
 }
 
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
 )
@@ -45,7 +45,7 @@ class AnalyticalField(AnalyticalFieldBase):
         self.type = "scalarExpression"
 
         self.domainSize = modelInfo["domainSize"]
-        self.options = stringDict([e for l in data for e in l])
+        self.options = convertLinesToStringDictionary(data)
 
         expressionString = self.options["f(x,y,z)"]
 

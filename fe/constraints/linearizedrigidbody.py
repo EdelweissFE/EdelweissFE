@@ -36,7 +36,7 @@ documentation = {
 
 import numpy as np
 
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.exceptions import WrongDomain
 from fe.constraints.base.constraintbase import ConstraintBase
 
@@ -53,7 +53,7 @@ class Constraint(ConstraintBase):
             raise WrongDomain("Linearized rigid body constraint is currently only available for 2d domain size")
 
         # self.name = name
-        definition = stringDict([e for line in options for e in line])
+        definition = convertLinesToStringDictionary(options)
 
         rbNset = definition["nSet"]
         nodeSets = modelInfo["nodeSets"]

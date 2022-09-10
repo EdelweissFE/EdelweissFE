@@ -78,7 +78,7 @@ documentation = {
 
 from fe.variables.node import Node
 from fe.config.elementlibrary import getElementClass
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 
 import numpy as np
 import os
@@ -87,7 +87,7 @@ import os
 def generateModelData(generatorDefinition, modelInfo, journal):
 
     options = generatorDefinition["data"]
-    options = stringDict([e for l in options for e in l])
+    options = convertLinesToStringDictionary(options)
 
     name = generatorDefinition.get("name", "boxGen")
 

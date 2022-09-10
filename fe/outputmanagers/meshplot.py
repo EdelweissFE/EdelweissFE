@@ -40,7 +40,7 @@ Module meshplot divided into classes:
 """
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 import numpy as np
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
 import fe.config.phenomena
 from fe.utils.fieldoutput import FieldOutput
@@ -198,7 +198,7 @@ class OutputManager(OutputManagerBase):
         fieldOutputController.fieldOutputs[fpDef["name"]] = FieldOutput(modelInfo, fpDef, journal)
 
         for defLine in definitionLines:
-            definition = stringDict(defLine)
+            definition = convertLineToStringDictionary(defLine)
 
             if "saveFigure" in definition:
                 saveJob = {}

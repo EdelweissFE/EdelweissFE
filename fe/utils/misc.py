@@ -31,6 +31,7 @@ Created on Mon Apr 18 17:36:07 2016
 """
 
 import numpy as np
+import shlex
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 
@@ -41,14 +42,109 @@ def flagDict(configLine):
     return {opt: val}
 
 
-def stringDict(listOfStringAssigments):
+def splitLineAtCommas(line: str) -> list:
+    """Split a line at commas and strip the individual parts.
+
+    Parameters
+    ----------
+    line
+        The line to be split.
+
+    Returns
+    -------
+    list
+        The list of parts.
+    """
+
+    lexer = shlex.shlex(line, posix=True)
+    lexer.whitespace_split = True
+    lexer.whitespace = ","
+
+    lineElements = [x.strip() for x in lexer]
+
+    return lineElements
+
+
+def convertAssignmentsToStringDictionary(assignments: list) -> dict:
+    """Create a dictionary from a list of assignments in
+    the form a=b.
+
+    Parameters
+    ----------
+    assignments
+        The list of assignments.
+
+    Returns
+    -------
+    dict
+        The resulting dictionary.
+    """
+
     resultDict = CaseInsensitiveDict()
-    for entry in listOfStringAssigments:
+    for entry in assignments:
+
         parts = [x.strip() for x in entry.split("=")]
         opt = parts[0]
         val = "=".join(parts[1:]) if len(parts) > 1 else "True"
         resultDict[opt] = val
+
     return resultDict
+
+
+def convertLineToStringDictionary(line: str) -> dict:
+    """Create a dictionary from a string containing multiple assigmnents in
+    the form a=b.
+
+    Parameters
+    ----------
+    line
+        The string containing the assignments.
+
+    Returns
+    -------
+    dict
+        The resulting dictionary.
+    """
+
+    lineElements = splitLineAtCommas(line)
+
+    return convertAssignmentsToStringDictionary(lineElements)
+
+
+def convertLinesToStringDictionary(lines: list) -> dict:
+    """Create a dictionary from a list of strings containing multiple assigmnents in
+    the form a=b.
+
+    Parameters
+    ----------
+    lines
+        The list of strings containing the assignments.
+
+    Returns
+    -------
+    dict
+        The resulting dictionary.
+    """
+
+    return convertLineToStringDictionary(",".join(lines))
+
+
+def convertLinesToFlatArray(lines: list, dtype: type = np.float) -> np.ndarray:
+    """Create a 1D numpy array from a list of lines with elements separated by commas.
+
+    Parameters
+    ----------
+    lines
+        The list of strings containing the elements.
+
+    Returns
+    -------
+    np.ndarray
+        The resulting 1D array.
+    """
+
+    theLines = [np.asarray(splitLineAtCommas(l), dtype=dtype) for l in lines]
+    return np.hstack(theLines)
 
 
 def strCaseCmp(str1, str2):
