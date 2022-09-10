@@ -52,7 +52,7 @@ documentation = {
 }
 
 import numpy as np
-from fe.utils.misc import stringDict, strToRange, isInteger
+from fe.utils.misc import convertLineToStringDictionary, strToRange, isInteger
 from fe.utils.meshtools import extractNodesFromElementSet
 from fe.utils.math import createMathExpression, createModelAccessibleFunction
 from fe.utils.elementresultcollector import ElementResultCollector
@@ -382,7 +382,7 @@ class FieldOutputController:
         definition = inputFile["*fieldOutput"][0]
 
         for defLine in definition["data"]:
-            fpDef = stringDict(defLine)
+            fpDef = convertLineToStringDictionary(defLine)
             self.fieldOutputs[fpDef["name"]] = FieldOutput(modelInfo, fpDef, journal)
 
     def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):

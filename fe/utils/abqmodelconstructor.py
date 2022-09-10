@@ -43,7 +43,7 @@ employing an Abaqus-like syntax.
 
 from fe.variables.node import Node
 from fe.config.elementlibrary import getElementClass
-from fe.utils.misc import isInteger
+from fe.utils.misc import isInteger, splitLineAtCommas, convertLinesToFlatArray
 from fe.config.constraints import getConstraintClass
 from fe.config.sections import getSectionClass
 from fe.config.analyticalfields import getAnalyticalFieldByName
@@ -77,7 +77,10 @@ class AbqModelConstructor:
         nodeDefinitions = modelInfo["nodes"]
         for nodeDefs in inputFile["*node"]:
             currNodeDefs = {}
-            for defLine in nodeDefs["data"]:
+            for l in nodeDefs["data"]:
+
+                defLine = splitLineAtCommas(l)
+
                 label = int(defLine[0])
                 coordinates = np.zeros(domainSize)
                 coordinates[:] = defLine[1:]
@@ -100,7 +103,10 @@ class AbqModelConstructor:
             ElementClass = getElementClass(elementProvider)
 
             currElDefs = {}
-            for defLine in elDefs["data"]:
+            for l in elDefs["data"]:
+
+                defLine = [int(i) for i in splitLineAtCommas(l)]
+
                 label = defLine[0]
                 # store nodeObjects in elNodes list
                 elNodes = [nodeDefinitions[n] for n in defLine[1:]]
@@ -120,9 +126,10 @@ class AbqModelConstructor:
         for elSetDefinition in inputFile["*elSet"]:
             name = elSetDefinition["elSet"]
 
+            data = [splitLineAtCommas(l) for l in elSetDefinition["data"]]
             # decide if entries are labels or existing nodeSets:
-            if isInteger(elSetDefinition["data"][0][0]):
-                elNumbers = [int(num) for line in elSetDefinition["data"] for num in line]
+            if isInteger(data[0][0]):
+                elNumbers = [int(num) for line in data for num in line]
 
                 if elSetDefinition.get("generate", False):
                     generateDef = elNumbers[0:3]
@@ -154,7 +161,7 @@ class AbqModelConstructor:
                 elementSets[name] = els
             else:
                 elementSets[name] = []
-                for line in elSetDefinition["data"]:
+                for line in data:
                     for elSet in line:
                         elementSets[name] += elementSets[elSet]
 
@@ -164,8 +171,9 @@ class AbqModelConstructor:
         for nSetDefinition in inputFile["*nSet"]:
             name = nSetDefinition["nSet"]
 
-            if isInteger(nSetDefinition["data"][0][0]):
-                nodes = [int(n) for line in nSetDefinition["data"] for n in line]
+            data = [splitLineAtCommas(l) for l in nSetDefinition["data"]]
+            if isInteger(data[0][0]):
+                nodes = [int(n) for line in data for n in line]
                 if nSetDefinition.get("generate", False):
                     generateDef = nodes  # nSetDefinition['data'][0][0:3]
                     nodes = [
@@ -177,7 +185,7 @@ class AbqModelConstructor:
                 nodeSets[name] = nodes
             else:
                 nodeSets[name] = []
-                for line in nSetDefinition["data"]:
+                for line in data:
                     for nSet in line:
                         nodeSets[name] += nodeSets[nSet]
 
@@ -190,7 +198,8 @@ class AbqModelConstructor:
             sType = surfaceDef.get("type", "element").lower()
             surface = {}
             if sType == "element":
-                for l in surfaceDef["data"]:
+                data = [splitLineAtCommas(l) for l in surfaceDef["data"]]
+                for l in data:
                     elSet, faceNumber = l
                     faceNumber = int(faceNumber.replace("S", ""))
                     elements = modelInfo["elementSets"][elSet]
@@ -222,7 +231,8 @@ class AbqModelConstructor:
 
             materialName = materialDef["name"]
             materialID = materialDef.get("id", materialName)
-            materialProperties = np.hstack(materialDef["data"])
+
+            materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=np.float)
 
             modelInfo["materials"][materialID] = {"name": materialName, "properties": materialProperties}
 

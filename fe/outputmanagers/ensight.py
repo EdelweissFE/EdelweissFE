@@ -52,7 +52,7 @@ import datetime
 import numpy as np
 from collections import defaultdict, OrderedDict
 from distutils.util import strtobool
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLineToStringDictionary
 from fe.variables.node import Node
 from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
@@ -624,7 +624,7 @@ class OutputManager(OutputManagerBase):
         exportName = "{:}_{:}".format(name, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
 
         for defLine in definitionLines:
-            definition = stringDict(defLine)
+            definition = convertLineToStringDictionary(defLine)
             if "configuration" in definition:
                 if strtobool(definition.get("overwrite", "True")):
                     exportName = "{:}".format(name)
@@ -653,7 +653,7 @@ class OutputManager(OutputManagerBase):
         self.ensightCase.writeGeometryTrendChunk(geometry, geometryTimesetNumber)
 
         for defLine in definitionLines:
-            definition = stringDict(defLine)
+            definition = convertLineToStringDictionary(defLine)
 
             # standard, transient jobs accessing the fieldoutput:
             if "fieldOutput" in definition:

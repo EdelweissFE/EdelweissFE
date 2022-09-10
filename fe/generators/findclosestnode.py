@@ -35,7 +35,7 @@ Find the node closest to a given spatial position, and store it in an existing o
 documentation = {"location": "The location of the node", "storeIn": "Store in this node set"}
 
 from fe.variables.node import Node
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.journal.journal import Journal
 
 from fe.utils.exceptions import WrongDomain
@@ -46,7 +46,7 @@ import numpy as np
 def generateModelData(generatorDefinition: dict, modelInfo: dict, journal: Journal):
 
     options = generatorDefinition["data"]
-    options = stringDict([e for l in options for e in l])
+    options = convertLinesToStringDictionary(options)
 
     loc = np.fromstring(options["location"], sep=",", dtype=np.float)
 

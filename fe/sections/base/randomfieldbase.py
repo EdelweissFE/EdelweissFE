@@ -1,6 +1,6 @@
 import numpy as np
 import gstools
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.math import createFunction
 from fe.sections.base.sectionbase import Section as SectionBase
 
@@ -13,7 +13,7 @@ class Section(SectionBase):
             "'solidrandommaterialproperties' section type is deprecated and will be removed in the future; use 'solid' or 'plane' section section with 'materialParametersFromField' option instead"
         )
 
-        self.options = stringDict([e for l in options for e in l])
+        self.options = convertLinesToStringDictionary(options)
         options = self.options
 
         self.materialName = materialName

@@ -34,7 +34,7 @@ Created on Thu Apr 13 14:08:32 2017
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 import numpy as np
 
 
@@ -44,7 +44,7 @@ class OutputManager(OutputManagerBase):
     def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
-        defDict = stringDict(definitionLines[0])
+        defDict = convertLinesToStringDictionary(definitionLines)
         self.exportFile = defDict["export"]
         self.timeVals = []
 

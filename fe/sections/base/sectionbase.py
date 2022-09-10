@@ -30,7 +30,7 @@
 # @author: Matthias Neuner, Paul Hofer
 
 import numpy as np
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertAssignmentsToStringDictionary, splitLineAtCommas
 from fe.utils.misc import strCaseCmp
 from fe.utils.math import createFunction
 
@@ -38,13 +38,16 @@ from abc import ABC, abstractmethod
 
 
 class Section(ABC):
-    def __init__(self, name, options, materialName, thickness, modelInfo):
+    def __init__(self, name, datalines, materialName, thickness, modelInfo):
         self.elSetNames = []
         self.materialParameterFromFieldDefs = []
 
-        for option in options:
-            if strCaseCmp(option[0], "materialParameterFromField"):
-                definition = stringDict(option[1:])
+        for line in datalines:
+
+            line = splitLineAtCommas(line)
+
+            if strCaseCmp(line[0], "materialParameterFromField"):
+                definition = convertAssignmentsToStringDictionary(line[1:])
 
                 if "type" in definition.keys():
                     if not any(
@@ -67,7 +70,7 @@ class Section(ABC):
 
                 self.materialParameterFromFieldDefs.append(definition)
             else:
-                self.elSetNames.extend(option)
+                self.elSetNames.extend(line)
 
         self.materialName = materialName
 

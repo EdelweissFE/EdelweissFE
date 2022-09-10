@@ -31,7 +31,7 @@ Created on Mon Apr 10 20:26:22 2017
 @author: Matthias Neuner
 """
 from fe.config.phenomena import fieldCorrectionTolerance, fluxResidualTolerance, fluxResidualToleranceAlternative
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 
 
 def loadConfiguration(jobInfo):
@@ -48,7 +48,7 @@ def updateConfiguration(newConfiguration, jobInfo, journal):
     if configurationType not in jobInfo:
         raise KeyError("configuration type {:} invalid".format(configurationType))
 
-    settings = stringDict([setting for line in newConfiguration["data"] for setting in line])
+    settings = convertLinesToStringDictionary(newConfiguration["data"])
     for key, val in settings.items():
         if key not in jobInfo[configurationType]:
             raise KeyError("configuration type {:}/{:} invalid".format(configurationType, key))

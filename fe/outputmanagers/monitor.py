@@ -44,7 +44,7 @@ documentation = {
 }
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.math import createMathExpression
 
 
@@ -61,7 +61,7 @@ class OutputManager(OutputManagerBase):
 
         for defline in definitionLines:
             entry = {}
-            defDict = stringDict(defline)
+            defDict = convertLineToStringDictionary(defline)
             entry["fieldOutput"] = fieldOutputController.fieldOutputs[defDict["fieldOutput"]]
             entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
             self.monitorJobs.append(entry)

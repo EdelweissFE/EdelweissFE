@@ -42,7 +42,7 @@ Useful, e.g., for indirect displacement control.
 documentation = {"stop": "model accessible function describing the stop condition"}
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.math import createModelAccessibleFunction
 from fe.utils.exceptions import ConditionalStop
 
@@ -58,7 +58,7 @@ class OutputManager(OutputManagerBase):
 
         for defline in definitionLines:
             entry = {}
-            defDict = stringDict(defline)
+            defDict = convertLineToStringDictionary
             entry["stop"] = createModelAccessibleFunction(
                 defDict["stop"], modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
             )

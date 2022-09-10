@@ -1,6 +1,5 @@
 import numpy as np
 import gstools
-from fe.utils.misc import stringDict
 from fe.sections.base.randomfieldbase import Section as RandomBase
 
 

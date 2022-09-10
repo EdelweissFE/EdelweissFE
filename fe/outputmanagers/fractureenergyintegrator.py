@@ -45,7 +45,7 @@ documentation = {
 }
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.math import createMathExpression
 
 import numpy as np
@@ -62,9 +62,7 @@ class OutputManager(OutputManagerBase):
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
 
-        mergedDefinition = [x for l in definitionLines for x in l]
-
-        defDict = stringDict(mergedDefinition)
+        defDict = convertLinesToStringDictionary(definitionLines)
         self.fpF = fieldOutputController.fieldOutputs[defDict["forceFieldOutput"]]
         self.fpU = fieldOutputController.fieldOutputs[defDict["displacementFieldOutput"]]
         self.A = createMathExpression(defDict["fractureArea"])(0.0)

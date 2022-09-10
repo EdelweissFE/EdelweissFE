@@ -42,7 +42,7 @@ from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerClass
 from fe.config.solvers import getSolverByName
 from fe.utils.fieldoutput import FieldOutputController
-from fe.utils.misc import filterByJobName, stringDict
+from fe.utils.misc import filterByJobName, convertAssignmentsToStringDictionary, splitLineAtCommas
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.utils.dofmanager import DofManager, DofVector
@@ -103,8 +103,10 @@ def gatherStepActions(
         The updated dictionary of step actions.
     """
 
-    for actionType, *definition in step["data"]:
-        options = stringDict(definition)
+    for dataline in step["data"]:
+
+        actionType, *definition = splitLineAtCommas(dataline)
+        options = convertAssignmentsToStringDictionary(definition)
 
         module = actionType.lower()
         moduleName = options.get("name", options.get("category", module))

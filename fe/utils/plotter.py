@@ -82,7 +82,7 @@ import numpy as np
 import os
 import sys
 import itertools
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLineToStringDictionary
 
 from distutils.spawn import find_executable
 
@@ -147,9 +147,13 @@ class Plotter:
         matplotlib.rcParams.update(self.rcParams)
 
         self.configurationLines = [
-            stringDict(c) for configEntry in inputfile["*configurePlots"] for c in configEntry["data"]
+            convertLineToStringDictionary(c)
+            for configEntry in inputfile["*configurePlots"]
+            for c in configEntry["data"]
         ]
-        self.exportJobs = [stringDict(c) for configEntry in inputfile["*exportPlots"] for c in configEntry["data"]]
+        self.exportJobs = [
+            convertLineToStringDictionary(c) for configEntry in inputfile["*exportPlots"] for c in configEntry["data"]
+        ]
 
     def getAx(self, figureID: int = 0, axSpec: int = 111) -> matplotlib.axes.Axes:
         """Get or create a figure with axes if it doesn't exist yet.

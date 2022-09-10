@@ -37,7 +37,7 @@ documentation = {
 import numpy as np
 
 from fe.constraints.base.constraintbase import ConstraintBase
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLinesToStringDictionary
 
 
 class Constraint(ConstraintBase):
@@ -50,7 +50,7 @@ class Constraint(ConstraintBase):
         super().__init__(name, definitionLines, modelInfo)
 
         # self.name = name
-        definition = stringDict([e for line in definitionLines for e in line])
+        definition = convertLinesToStringDictionary(definitionLines)
 
         self.nDim = modelInfo["domainSize"]
         nDim = self.nDim

@@ -45,10 +45,9 @@ documentation = {
 }
 
 import numpy as np
-import sympy as sp
 
 from fe.config.phenomena import getFieldSize
-from fe.utils.misc import stringDict, strtobool
+from fe.utils.misc import convertLinesToStringDictionary, strtobool
 from fe.utils.exceptions import WrongDomain
 from fe.constraints.base.constraintbase import ConstraintBase
 
@@ -57,7 +56,7 @@ class Constraint(ConstraintBase):
     def __init__(self, name, definitionLines, modelInfo):
         super().__init__(name, definitionLines, modelInfo)
 
-        definition = stringDict([e for line in definitionLines for e in line])
+        definition = convertLinesToStringDictionary(definitionLines)
 
         self.theField = definition.get("field", "displacement")
 

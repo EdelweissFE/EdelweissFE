@@ -24,6 +24,7 @@ configuration, overwrite=yes
 
 *analyticalField, name=f01, type=scalarExpression
 "f(x,y,z)"="-(z-.5)"
+cbv=3
 
 *analyticalField, name=f02, type=scalarExpression
 "f(x,y,z)"="(y-.5)"

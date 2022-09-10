@@ -42,9 +42,10 @@ typeMappings = {
     "integer": int,
     "float": float,
     "string": lambda x: x,
-    "numpy float array": lambda x: np.asarray(x, dtype=np.double),
-    "numpy integer array": lambda x: np.asarray(x, dtype=np.int),
+    # "numpy float array": lambda x: np.asarray(x, dtype=np.double),
+    # "numpy integer array": lambda x: np.asarray(x, dtype=np.int),
 }
+
 
 inputLanguage = {
     "*element": (
@@ -245,13 +246,15 @@ def parseInputFile(
         lines = (l for l in lines if l and not l.startswith("**"))
 
         for l in lines:
-            lexer = shlex.shlex(l, posix=True)
-            lexer.whitespace_split = True
-            lexer.whitespace = ","
 
-            lineElements = [x.strip() for x in lexer]
+            if l.startswith("*"):
 
-            if lineElements[0].startswith("*"):
+                lexer = shlex.shlex(l, posix=True)
+                lexer.whitespace_split = True
+                lexer.whitespace = ","
+
+                lineElements = [x.strip() for x in lexer]
+
                 # line is keywordline
                 lastkeyword = keyword
                 keyword = lineElements[0]
@@ -295,18 +298,7 @@ def parseInputFile(
                 if "data" not in inputLanguage[keyword][1]:
                     raise KeyError("{:} expects no data lines".format(keyword))
 
-                data = lineElements
-                dataType = inputLanguage[keyword][1]["data"][0]
-
-                try:
-                    if "numpy" in dataType:
-                        data = typeMappings[dataType](data)
-                    else:
-                        data = [typeMappings[dataType](d) for d in data]
-                except ValueError:
-                    raise ValueError("{:} data line: cannot convert {:} to {:}".format(keyword, data, dataType))
-
-                fileDict[keyword][-1]["data"].append(data)
+                fileDict[keyword][-1]["data"].append(l)
     return fileDict
 
 

@@ -40,7 +40,7 @@ documentation = {
 }
 
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from fe.utils.misc import stringDict
+from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.math import createMathExpression
 
 
@@ -54,7 +54,7 @@ class OutputManager(OutputManagerBase):
         self.journal = journal
         self.filename = "{:}.sta".format(jobInfo["name"])
         for defline in definitionLines:
-            defDict = stringDict(defline)
+            defDict = convertLineToStringDictionary(defLine)
             if "filename" in defDict.keys():
                 self.filename = defDict.get("filename")
 
