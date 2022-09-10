@@ -186,6 +186,8 @@ def finiteElementSimulation(
 
     # call individual optional model generators
     for generatorDefinition in inputfile["*modelGenerator"]:
+        if generatorDefinition.get("executeAfterManualGeneration", False):
+            continue
         gen = generatorDefinition["generator"]
         modelInfo = getGeneratorFunction(gen)(generatorDefinition, modelInfo, journal)
 
@@ -196,6 +198,13 @@ def finiteElementSimulation(
     modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
     modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
+
+    # call individual optional model generators,
+    for generatorDefinition in inputfile["*modelGenerator"]:
+        if not generatorDefinition.get("executeAfterManualGeneration", False):
+            continue
+        gen = generatorDefinition["generator"]
+        modelInfo = getGeneratorFunction(gen)(generatorDefinition, modelInfo, journal)
 
     # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
     for constraintName, constraint in modelInfo["constraints"].items():

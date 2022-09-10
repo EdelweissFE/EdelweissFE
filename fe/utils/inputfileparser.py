@@ -41,6 +41,7 @@ from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 typeMappings = {
     "integer": int,
     "float": float,
+    "bool": bool,
     "string": lambda x: x,
     # "numpy float array": lambda x: np.asarray(x, dtype=np.double),
     # "numpy integer array": lambda x: np.asarray(x, dtype=np.int),
@@ -166,6 +167,10 @@ inputLanguage = {
         {
             "generator": ("string", "generator module"),
             "name": ("string", "(optional) name of the generator"),
+            "executeAfterManualGeneration": (
+                "bool",
+                "(optional) Delay the execution of the generator after the manual creation of the mesh, default=False",
+            ),
             "data": ("string", "key=value pairs"),
         },
     ),
