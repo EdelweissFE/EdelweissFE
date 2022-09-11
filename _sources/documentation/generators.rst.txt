@@ -61,3 +61,19 @@ Relevant module ``fe.generators.findclosestnode``
 
 .. pprint:: fe.generators.findclosestnode.documentation
    :caption: Options:
+
+
+``executepythoncode`` - Script model generation using Python
+------------------------------------------------------------
+
+Relevant module ``fe.generators.executepythoncode``
+
+.. automodule:: fe.generators.executepythoncode
+    :members: __doc__
+
+.. pprint:: fe.generators.executepythoncode.documentation
+   :caption: Options:
+
+.. literalinclude:: ../../../testfiles/PythonCodeModelGeneration/test.inp
+    :language: edelweiss
+    :caption: Example: ``testfiles/PythonCodeModelGeneration/test.inp``

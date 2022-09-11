@@ -155,7 +155,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">fe.utils.misc</span> <span class="kn">import</span> <span class="n">stringDict</span>
+<span class="kn">from</span> <span class="nn">fe.utils.misc</span> <span class="kn">import</span> <span class="n">convertLineToStringDictionary</span>
 
 <span class="kn">from</span> <span class="nn">distutils.spawn</span> <span class="kn">import</span> <span class="n">find_executable</span>
 
@@ -220,9 +220,13 @@
         <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rcParams</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">configurationLines</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">stringDict</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">configEntry</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*configurePlots&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configEntry</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+            <span class="n">convertLineToStringDictionary</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">configEntry</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*configurePlots&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configEntry</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
         <span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exportJobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">stringDict</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">configEntry</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*exportPlots&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configEntry</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exportJobs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">convertLineToStringDictionary</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">configEntry</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*exportPlots&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configEntry</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
 
 <div class="viewcode-block" id="Plotter.getAx"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.getAx">[docs]</a>    <span class="k">def</span> <span class="nf">getAx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axSpec</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">111</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Get or create a figure with axes if it doesn&#39;t exist yet.</span>
