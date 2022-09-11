@@ -131,7 +131,11 @@ class DofManager:
 
         self.activateFieldsOnNodes()
 
-        (self.nDof, self.indicesOfFieldsInDofVector) = self.initializeDofVectorStructure()
+        (
+            self.nDof,
+            self.indicesOfFieldsInDofVector,
+            self.indicesOfScalarVariablesInDofVector,
+        ) = self.initializeDofVectorStructure()
 
         (self.nAccumulatedNodalFluxes, self.nAccumulatedNodalFluxesFieldwise) = self.countNodalFluxes()
 
@@ -202,24 +206,15 @@ class DofManager:
             index: node for node in nodes.values() for field in node.fields.values() for index in field
         }
 
+        indicesOfScalarVariablesInDofVector = []
         for scalarVariable in self.modelInfo["scalarVariables"]:
+            indicesOfScalarVariablesInDofVector.append(currentIndexInDofVector)
             scalarVariable.index = currentIndexInDofVector
             currentIndexInDofVector += 1
 
-        # for constraint in constraints.values():
-        #     # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)
-        #     # we create them here, and assign them directly to the constraints
-        #     # (In contrast to true field indices, which are not directly
-        #     # assigned to elements/constraints but to the nodes)
-        #     nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()
-        #     indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)]
-        #     # TODO: Store here in dofmanager
-        #     constraint.assignAdditionalGlobalDofIndices(indicesOfConstraintAdditionalDofs)
-        #     currentIndexInDofVector += nNeededDofs
-
         nDof = currentIndexInDofVector
 
-        return nDof, indicesOfFieldsInDofVector
+        return nDof, indicesOfFieldsInDofVector, indicesOfScalarVariablesInDofVector
 
     def countNodalFluxes(self) -> tuple[int, dict[str, int]]:
         """For the VIJ (COO) system matrix and the Abaqus like convergence test,

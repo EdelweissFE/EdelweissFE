@@ -82,9 +82,9 @@ class StepAction(StepActionBase):
     def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
 
         if "magnitude" in action:
-            self.delta = np.asarray([float(action["magnitude"])]) - self.magnitudeAtStepStart
+            self.delta = np.fromstring(action["magnitude"], sep=",") - self.magnitudeAtStepStart
         elif "delta" in action:
-            self.delta = np.asarray([float(action["delta"])])
+            self.delta = np.fromstring(action["delta"], sep=",")
 
         if "f(t)" in action:
             t = sp.symbols("t")

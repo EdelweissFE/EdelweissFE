@@ -67,6 +67,7 @@ fieldCorrectionTolerance = {
     "concentration": 1e-1,
     "chemical potential": 1e-1,
     "strain symmetric": 1e-8,
+    "scalar variables": 1e-3,
 }
 
 fluxResidualTolerance = {
@@ -77,6 +78,7 @@ fluxResidualTolerance = {
     "concentration": 1e-1,
     "chemical potential": 1e-2,
     "strain symmetric": 1e-8,
+    "scalar variables": 1e-8,
 }
 
 fluxResidualToleranceAlternative = {
@@ -87,6 +89,7 @@ fluxResidualToleranceAlternative = {
     "concentration": 5e-2,
     "chemical potential": 5e-2,
     "strain symmetric": 5e-3,
+    "scalar variables": 1e-8,
 }
 
 # domain                 dimensions
