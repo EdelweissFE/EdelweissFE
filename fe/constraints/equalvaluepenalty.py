@@ -58,37 +58,44 @@ class Constraint(ConstraintBase):
         self.sizeField = getFieldSize(theField, modelInfo["domainSize"])
         self.component = int(definition["component"])
         self.penalty = float(definition["penalty"])
-        self.nodes = modelInfo["nodeSets"][definition["nSet"]]
-        self.nNodes = len(self.nodes)
-        self.nDof = self.sizeField * self.nNodes
+        self._nodes = modelInfo["nodeSets"][definition["nSet"]]
+        self._nNodes = len(self._nodes)
+        self._nDof = self.sizeField * self._nNodes
 
-        self.indices_component = slice(self.component, self.nDof + self.component, self.sizeField)
+        self.indices_component = slice(self.component, self._nDof + self.component, self.sizeField)
 
-        self.fieldsOnNodes = [
+        self._fieldsOnNodes = [
             [
                 theField,
             ]
-        ] * self.nNodes
+        ] * self._nNodes
 
         self.active = True
 
-    def getNumberOfAdditionalNeededScalarVariables(self):
-        return 0
+    @property
+    def nodes(self) -> list:
+        return self._nodes
 
-    def applyConstraint(self, U_np, dU, PExt, V, increment):
+    @property
+    def fieldsOnNodes(self) -> list:
+        return self._fieldsOnNodes
+
+    @property
+    def nDof(self) -> int:
+        return self._nDof
+
+    def applyConstraint(self, U_np, dU, PExt, K, increment):
 
         if self.active == False:
             return
 
-        K = V.reshape(self.nDof, self.nDof, order="F")
-
         values = U_np[self.indices_component]
 
-        mean = np.sum(values) / self.nNodes
+        mean = np.sum(values) / self._nNodes
 
         PExt[self.indices_component] -= self.penalty * (values - mean)
 
         diag = np.diag(K)
         diag.setflags(write=True)  # bug in numpy
         diag[self.indices_component] += self.penalty
-        K[self.indices_component, self.indices_component] += -self.penalty * 1.0 / self.nNodes
+        K[self.indices_component, self.indices_component] += -self.penalty * 1.0 / self._nNodes

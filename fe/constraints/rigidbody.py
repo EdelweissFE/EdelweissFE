@@ -75,11 +75,11 @@ class Constraint(ConstraintBase):
         self.indicesOfRPPhiInP = [nSlaves * nDim + nDim + j for j in range(nRot)]
 
         # all nodes
-        self.nodes = self.slaveNodes + [self.referencePoint]
+        self._nodes = self.slaveNodes + [self.referencePoint]
 
         self.slaveNodesFields = [["displacement"]] * nSlaves
         self.referencePointFields = [["displacement", "rotation"]]
-        self.fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
+        self._fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
 
         nConstraints = nSlaves * nDim
         nRp = 1
@@ -88,12 +88,24 @@ class Constraint(ConstraintBase):
 
         self.distancesSlaveNodeRP = [s.coordinates - self.referencePoint.coordinates for s in self.slaveNodes]
 
-        self.nDof = self.nDofsOnNodes + nConstraints
-        self.sizeStiffness = self.nDof * self.nDof
+        self._nDof = self.nDofsOnNodes + nConstraints
+        self.sizeStiffness = self._nDof * self._nDof
 
         self.nConstraints = nConstraints
 
         self.nRot = 3
+
+    @property
+    def nodes(self) -> list:
+        return self._nodes
+
+    @property
+    def fieldsOnNodes(self) -> list:
+        return self._fieldsOnNodes
+
+    @property
+    def nDof(self) -> int:
+        return self._nDof
 
     def update(self, options):
         """No updates are possible for this constraint."""
@@ -102,9 +114,6 @@ class Constraint(ConstraintBase):
 
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
-
-    # def assignAdditionalScalarVariables(self, scalarVariables):
-    #     super().assignAdditionalScalarVariables(scalarVariables)
 
     def Rz_2D(self, phi, derivative):
         phi = phi + np.pi / 2 * derivative
@@ -160,20 +169,18 @@ class Constraint(ConstraintBase):
             ]
         )
 
-    def applyConstraint(self, U_np, dU, PExt, V, increment):
+    def applyConstraint(self, U_np, dU, PExt, K, increment):
 
         nConstraints = self.nConstraints
         nDim = self.nDim
         nRot = self.nRot
 
-        nU = self.nDof - nConstraints  # nDofs (disp., rot.) without Lagrangian multipliers
+        nU = self._nDof - nConstraints  # nDofs (disp., rot.) without Lagrangian multipliers
         nSlaves = len(self.slaveNodes)
 
         URp = U_np[self.indicesOfRPUinP]
         PhiRp = U_np[self.indicesOfRPPhiInP]
         Lambdas = U_np[nU:].reshape((nDim, -1), order="F")
-
-        K = V.reshape(self.nDof, self.nDof, order="F")
 
         G = np.zeros((nDim, 9))
         H = np.zeros((nDim, 9, 9))

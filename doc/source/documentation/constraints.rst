@@ -4,8 +4,8 @@ Constraints
 .. automodule:: fe.config.constraints
     :members: __doc__
 
-``equalvaluelagrangian`` - Contrain nodal values to equal values 
-----------------------------------------------------------------
+``equalvaluelagrangian`` - Constrain nodal values to equal values 
+-----------------------------------------------------------------
 
 Module ``fe.constraints.equalvaluelagrangian``
 
@@ -20,8 +20,8 @@ Module ``fe.constraints.equalvaluelagrangian``
     :caption: Example: ``testfiles/EqualValueLagrangianConstraint/test.inp``
 
 
-``equalvaluepenalty`` - Contrain nodal values to equal values 
-----------------------------------------------------------------
+``equalvaluepenalty`` - Constrain nodal values to equal values 
+--------------------------------------------------------------
 
 Module ``fe.constraints.equalvaluepenalty``
 
