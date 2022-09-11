@@ -4,6 +4,38 @@ Constraints
 .. automodule:: fe.config.constraints
     :members: __doc__
 
+``equalvaluelagrangian`` - Contrain nodal values to equal values 
+----------------------------------------------------------------
+
+Module ``fe.constraints.equalvaluelagrangian``
+
+.. automodule:: fe.constraints.equalvaluelagrangian
+    :members: __doc__
+
+.. pprint:: fe.constraints.equalvaluelagrangian.documentation
+    :caption: Options:
+
+.. literalinclude:: ../../../testfiles/EqualValueLagrangianConstraint/test.inp
+    :language: edelweiss
+    :caption: Example: ``testfiles/EqualValueLagrangianConstraint/test.inp``
+
+
+``equalvaluepenalty`` - Contrain nodal values to equal values 
+----------------------------------------------------------------
+
+Module ``fe.constraints.equalvaluepenalty``
+
+.. automodule:: fe.constraints.equalvaluepenalty
+    :members: __doc__
+
+.. pprint:: fe.constraints.equalvaluepenalty.documentation
+    :caption: Options:
+
+.. literalinclude:: ../../../testfiles/EqualValuePenaltyConstraint/test.inp
+    :language: edelweiss
+    :caption: Example: ``testfiles/EqualValuePenaltyConstraint/test.inp``
+
+
 ``linearizedrigidbody`` - Linearized rigid body constraints in 2D
 ------------------------------------------------------------------
 
