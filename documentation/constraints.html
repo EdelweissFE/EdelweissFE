@@ -56,8 +56,8 @@
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Constraints</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#equalvaluelagrangian-contrain-nodal-values-to-equal-values"><code class="docutils literal notranslate"><span class="pre">equalvaluelagrangian</span></code> - Contrain nodal values to equal values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#equalvaluepenalty-contrain-nodal-values-to-equal-values"><code class="docutils literal notranslate"><span class="pre">equalvaluepenalty</span></code> - Contrain nodal values to equal values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equalvaluelagrangian-constrain-nodal-values-to-equal-values"><code class="docutils literal notranslate"><span class="pre">equalvaluelagrangian</span></code> - Constrain nodal values to equal values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equalvaluepenalty-constrain-nodal-values-to-equal-values"><code class="docutils literal notranslate"><span class="pre">equalvaluepenalty</span></code> - Constrain nodal values to equal values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#linearizedrigidbody-linearized-rigid-body-constraints-in-2d"><code class="docutils literal notranslate"><span class="pre">linearizedrigidbody</span></code> - Linearized rigid body constraints in 2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rigidbody-geometrically-exact-rigid-body-constraints-in-3d"><code class="docutils literal notranslate"><span class="pre">rigidbody</span></code> - Geometrically exact rigid body constraints in 3D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#penaltyindirectcontrol-penalty-based-indirect-control"><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based indirect control</a></li>
@@ -115,8 +115,8 @@ equations into the global equation system.</p>
 <span class="nv">    referencePoint</span><span class="ow">=</span><span class="m">rBottom</span>
 </pre></div>
 </div>
-<div class="section" id="equalvaluelagrangian-contrain-nodal-values-to-equal-values">
-<h2><code class="docutils literal notranslate"><span class="pre">equalvaluelagrangian</span></code> - Contrain nodal values to equal values<a class="headerlink" href="#equalvaluelagrangian-contrain-nodal-values-to-equal-values" title="Permalink to this heading"></a></h2>
+<div class="section" id="equalvaluelagrangian-constrain-nodal-values-to-equal-values">
+<h2><code class="docutils literal notranslate"><span class="pre">equalvaluelagrangian</span></code> - Constrain nodal values to equal values<a class="headerlink" href="#equalvaluelagrangian-constrain-nodal-values-to-equal-values" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.equalvaluelagrangian</span></code></p>
 <span class="target" id="module-fe.constraints.equalvaluelagrangian"></span><p>A lagrangian multiplier based constraint used for constraining nodal values
 of a node set to be equal.</p>
@@ -149,7 +149,7 @@ of a node set to be equal.</p>
 <span class="nv">elType</span><span class="ow">=</span><span class="m">CPS8R</span>
 <span class="nv">nX</span><span class="ow">=</span><span class="m">20</span>
 <span class="nv">nY</span><span class="ow">=</span><span class="m">20</span>
-<span class="nv">l</span><span class="ow">=</span><span class="m">100</span>,
+<span class="nv">l</span><span class="ow">=</span><span class="m">100</span>
 <span class="nv">h</span><span class="ow">=</span><span class="m">100</span>
 
 <span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">equalValueLagrangian</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myConstraint</span>
@@ -166,30 +166,30 @@ all
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
 
 <span class="k">*fieldOutput</span>,
-<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">  elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">        field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
-<span class="nv">name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv">            nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
-<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">        elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv">        elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
+<span class="nv">name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
+<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theMonitor</span>
 <span class="nv">fieldOutput </span><span class="ow">=</span><span class="m"> RF</span>,<span class="nv"> f(x) </span><span class="ow">=</span><span class="s"> &#39;sum ( x, axis=0)&#39;</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
 <span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="equalvaluepenalty-contrain-nodal-values-to-equal-values">
-<h2><code class="docutils literal notranslate"><span class="pre">equalvaluepenalty</span></code> - Contrain nodal values to equal values<a class="headerlink" href="#equalvaluepenalty-contrain-nodal-values-to-equal-values" title="Permalink to this heading"></a></h2>
+<div class="section" id="equalvaluepenalty-constrain-nodal-values-to-equal-values">
+<h2><code class="docutils literal notranslate"><span class="pre">equalvaluepenalty</span></code> - Constrain nodal values to equal values<a class="headerlink" href="#equalvaluepenalty-constrain-nodal-values-to-equal-values" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.constraints.equalvaluepenalty</span></code></p>
 <span class="target" id="module-fe.constraints.equalvaluepenalty"></span><p>A penalty based constraint used for constraining nodal values
 of a node set to be equal.</p>
@@ -225,7 +225,7 @@ of a node set to be equal.</p>
 <span class="nv">elType</span><span class="ow">=</span><span class="m">CPS8R</span>
 <span class="nv">nX</span><span class="ow">=</span><span class="m">20</span>
 <span class="nv">nY</span><span class="ow">=</span><span class="m">20</span>
-<span class="nv">l</span><span class="ow">=</span><span class="m">100</span>,
+<span class="nv">l</span><span class="ow">=</span><span class="m">100</span>
 <span class="nv">h</span><span class="ow">=</span><span class="m">100</span>
 
 <span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">equalValuePenalty</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myConstraint</span>
@@ -243,24 +243,24 @@ all
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
 
 <span class="k">*fieldOutput</span>,
-<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">  elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">        field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
-<span class="nv">name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv">            nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
-<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">        elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv">        elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
+<span class="nv">name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
+<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theMonitor</span>
 <span class="nv">fieldOutput </span><span class="ow">=</span><span class="m"> RF</span>,<span class="nv"> f(x) </span><span class="ow">=</span><span class="s"> &#39;sum ( x, axis=0)&#39;</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
 <span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
 </pre></div>
 </div>
 </div>
@@ -524,6 +524,16 @@ to be of the form</p>
 <li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.fieldsOnNodes" title="fe.constraints.base.constraintbase.ConstraintBase.fieldsOnNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fieldsOnNodes</span></code></a></dt><dd><p>The fields on the nodes this constraint is acting on.</p>
+</dd>
+<dt><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.nDof" title="fe.constraints.base.constraintbase.ConstraintBase.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this constraint is associated with.</p>
+</dd>
+<dt><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase.nodes" title="fe.constraints.base.constraintbase.ConstraintBase.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The nodes this constraint is acting on.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
@@ -553,8 +563,9 @@ to be of the form</p>
 <li><p><strong>U_np</strong> (<em>ndarray</em>) – The current total solution vector.</p></li>
 <li><p><strong>dU</strong> (<em>ndarray</em>) – The current increment since the last time the constraint was applied.</p></li>
 <li><p><strong>PExt</strong> (<em>ndarray</em>) – The external load vector.</p></li>
-<li><p><strong>V</strong> (<em>ndarray</em>) – The system matrix in vector form.</p></li>
+<li><p><strong>K</strong> – The system (stiffness) matrix.</p></li>
 <li><p><strong>increment</strong> (<em>tuple</em>) – The time increment information.</p></li>
+<li><p><strong>V</strong> (<em>ndarray</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -576,7 +587,7 @@ to be of the form</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getNumberOfAdditionalNeededScalarVariables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getNumberOfAdditionalNeededScalarVariables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables" title="Permalink to this definition"></a></dt>
 <dd><p>This method is called to determine the additional number of scalar variables
 this Constraint needs.</p>
 <dl class="field-list simple">
@@ -587,6 +598,24 @@ this Constraint needs.</p>
 <dd class="field-even"><p>int</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.fieldsOnNodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fieldsOnNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.fieldsOnNodes" title="Permalink to this definition"></a></dt>
+<dd><p>The fields on the nodes this constraint is acting on.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.nDof">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.nDof" title="Permalink to this definition"></a></dt>
+<dd><p>The total number of degrees of freedom this constraint is associated with.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase.nodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase.nodes" title="Permalink to this definition"></a></dt>
+<dd><p>The nodes this constraint is acting on.</p>
 </dd></dl>
 
 </dd></dl>

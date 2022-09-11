@@ -204,7 +204,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">activateFieldsOnNodes</span><span class="p">()</span>
 
-        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializeDofVectorStructure</span><span class="p">()</span>
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">indicesOfScalarVariablesInDofVector</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializeDofVectorStructure</span><span class="p">()</span>
 
         <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nAccumulatedNodalFluxes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nAccumulatedNodalFluxesFieldwise</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">countNodalFluxes</span><span class="p">()</span>
 
@@ -275,24 +279,15 @@
             <span class="n">index</span><span class="p">:</span> <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">field</span>
         <span class="p">}</span>
 
+        <span class="n">indicesOfScalarVariablesInDofVector</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">scalarVariable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;scalarVariables&quot;</span><span class="p">]:</span>
+            <span class="n">indicesOfScalarVariablesInDofVector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">currentIndexInDofVector</span><span class="p">)</span>
             <span class="n">scalarVariable</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">currentIndexInDofVector</span>
             <span class="n">currentIndexInDofVector</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1"># for constraint in constraints.values():</span>
-        <span class="c1">#     # some constraints may need additional Degrees of freedom (e.g. lagrangian multipliers)</span>
-        <span class="c1">#     # we create them here, and assign them directly to the constraints</span>
-        <span class="c1">#     # (In contrast to true field indices, which are not directly</span>
-        <span class="c1">#     # assigned to elements/constraints but to the nodes)</span>
-        <span class="c1">#     nNeededDofs = constraint.getNumberOfAdditionalNeededDofs()</span>
-        <span class="c1">#     indicesOfConstraintAdditionalDofs = [i + currentIndexInDofVector for i in range(nNeededDofs)]</span>
-        <span class="c1">#     # TODO: Store here in dofmanager</span>
-        <span class="c1">#     constraint.assignAdditionalGlobalDofIndices(indicesOfConstraintAdditionalDofs)</span>
-        <span class="c1">#     currentIndexInDofVector += nNeededDofs</span>
-
         <span class="n">nDof</span> <span class="o">=</span> <span class="n">currentIndexInDofVector</span>
 
-        <span class="k">return</span> <span class="n">nDof</span><span class="p">,</span> <span class="n">indicesOfFieldsInDofVector</span></div>
+        <span class="k">return</span> <span class="n">nDof</span><span class="p">,</span> <span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span> <span class="n">indicesOfScalarVariablesInDofVector</span></div>
 
 <div class="viewcode-block" id="DofManager.countNodalFluxes"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.utils.dofmanager.DofManager.countNodalFluxes">[docs]</a>    <span class="k">def</span> <span class="nf">countNodalFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;For the VIJ (COO) system matrix and the Abaqus like convergence test,</span>

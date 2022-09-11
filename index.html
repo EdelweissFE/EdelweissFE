@@ -111,85 +111,75 @@ Usually, EdelweissFE is used for developing and debugging constitutive models un
 <h2>Example input file<a class="headerlink" href="#example-input-file" title="Permalink to this heading"></a></h2>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">File: <code class="docutils literal notranslate"><span class="pre">testfiles/LinearElasticIsotropic/test.inp</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span><span class="c c-Singleline"></span>
-<span class="c c-Singleline">**Isotropic</span>
-<span class="c c-Singleline">**E   | nu |</span>
-1.8e4, 0.22
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*node</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** Our  nodes</span>
+<span class="c c-Singleline">** ID   coordinates</span>
+0,  0,       0,      0
+1,  0.100,   0,      0
+2,  0.100,   0.100,  0
+3,  0,       0.100,  0
+4,  0,       0,      0.100
+5,  0.100,   0,      0.100
+6,  0.100,   0.100,  0.100
+7,  0,       0.100,  0.100
 
-<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">myMaterial</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
-all
+<span class="k">*element</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">C3D8</span>,<span class="nv"> provider</span><span class="ow">=</span><span class="m">marmot</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** We create a single hex8 element</span>
+<span class="c c-Singleline">** ID       node IDs </span>
+1,      0,1,2,3,4,5,6,7
 
-<span class="k">*node</span>
-0, 0, 0, 0
-1, 0.100, 0, 0
-2, 0.100, 0.100, 0
-3, 0, 0.100, 0
-4, 0, 0, 0.100
-5, 0.100, 0, 0.100
-6, 0.100, 0.100, 0.100
-7, 0, 0.100, 0.100
-
-<span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">bottom</span>
-0,1,2,3
-<span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">top</span>
-4,5,6,7
-<span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">back</span>
-0,3,4,7
-<span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">front</span>
-1,2,5,6
 <span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">left</span>
 0,1,4,5
-<span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">right</span>
-2,3,6,7
 <span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">bottomleft</span>
 1
 <span class="k">*nSet</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">bottomback</span>
 0
 
-<span class="k">*element</span>,<span class="nv"> Type</span><span class="ow">=</span><span class="m">C3D8</span>
-1, 0,1,2,3,4,5,6,7
-
-<span class="k">*elSet</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>
+<span class="k">*elSet</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">theOnlyElement</span>
 1
 
-<span class="k">*surface</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">element</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">surfaceTop</span><span class="c c-Singleline"></span>
-<span class="c c-Singleline">**elset, faceID</span>
-all, 2
-<span class="k">*surface</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">element</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">surfaceFront</span><span class="c c-Singleline"></span>
-<span class="c c-Singleline">**elset, faceID</span>
-all, 3
+<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">**Isotropic</span>
+<span class="c c-Singleline">**E   | nu |</span>
+1.8e4, 0.22
+
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">myMaterial</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** element set &#39;all&#39; is automatically created</span>
+<span class="c c-Singleline">** we could also use the set &#39;theOnlyElement&#39;</span>
+all
+
 <span class="k">*surface</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">element</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">surfaceRight</span><span class="c c-Singleline"></span>
-<span class="c c-Singleline">**elset, faceID</span>
-all, 4
-<span class="k">*surface</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">element</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">surfaceBack</span><span class="c c-Singleline"></span>
-<span class="c c-Singleline">**elset, faceID</span>
-all, 5
-<span class="k">*surface</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">element</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">surfaceLeft</span>
-all, 6
+<span class="c c-Singleline">** Elset,   faceID</span>
+all,        4
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** The first step: set the BCs</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">2</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">bottomback</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0</span>,<span class="nv">3</span><span class="ow">=</span><span class="m">0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">3</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">bottomleft</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">10</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">right</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">right</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-0.01</span>
+<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">10</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** The second step: apply the load</span>
+distributedload,<span class="nv"> name</span><span class="ow">=</span><span class="m">dload</span>,<span class="nv"> surface</span><span class="ow">=</span><span class="m">surfaceRight</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">pressure</span>,<span class="nv"> magnitude</span><span class="ow">=</span><span class="m">0.15</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="s">&#39;t**2&#39;</span>
 
-<span class="k">*fieldOutput</span>,
+<span class="k">*fieldOutput</span>,<span class="c c-Singleline"></span>
+<span class="c c-Singleline">** The results we are interested in</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv">       elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">       elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">RF_left</span>,<span class="nv">      nSet</span><span class="ow">=</span><span class="m">left</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.sum(x[:,1])&#39;</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">theOnlyElement</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myEnsightOutput</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myEnsightOutput</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** For visualization in Paraview etc.</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myMonitor</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myMonitor</span><span class="c c-Singleline"></span>
+<span class="c c-Singleline">** Directly print to the terminal</span>
 <span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">RF_left</span>
 </pre></div>
 </div>

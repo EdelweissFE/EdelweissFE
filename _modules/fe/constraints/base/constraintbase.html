@@ -77,54 +77,67 @@
 
 
 <div class="viewcode-block" id="ConstraintBase"><a class="viewcode-back" href="../../../../documentation/constraints.html#fe.constraints.base.constraintbase.ConstraintBase">[docs]</a><span class="k">class</span> <span class="nc">ConstraintBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The constraint base class.</span>
-
-<span class="sd">    Constraints can act on nodal variables, and scalar variables.</span>
-<span class="sd">    If scalar variables are required, the can be created on demand by</span>
-<span class="sd">    defining</span>
-<span class="sd">    :func:`~ConstraintBase.getNumberOfAdditionalNeededScalarVariables` and</span>
-<span class="sd">    :func:`~ConstraintBase.assignAdditionalScalarVariables`, which are called at the beginning of an analysis.</span>
-
-<span class="sd">    If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt (and the stiffness)</span>
-<span class="sd">    to be of the form</span>
-
-<span class="sd">    .. code-block:: console</span>
-
-<span class="sd">        [ node 1 - dofs field 1,</span>
-<span class="sd">          node 1 - dofs field 2,</span>
-<span class="sd">          node 1 - ... ,</span>
-<span class="sd">          node 1 - dofs field n,</span>
-<span class="sd">          node 2 - dofs field 1,</span>
-<span class="sd">          ... ,</span>
-<span class="sd">          node N - dofs field n,</span>
-<span class="sd">          scalar variable 1,</span>
-<span class="sd">          scalar variable 2,</span>
-<span class="sd">          ... ,</span>
-<span class="sd">          scalar variable J ].</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        The name of the constraint.</span>
-<span class="sd">    options</span>
-<span class="sd">        A dictionary containing the options for the constraint.</span>
-<span class="sd">    modelInfo</span>
-<span class="sd">        A dictionary containing the model tree.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">modelInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The constraint base class.</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fieldsOnNodes</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[],</span>
-        <span class="p">]</span>
+<span class="sd">        Constraints can act on nodal variables, and scalar variables.</span>
+<span class="sd">        If scalar variables are required, the can be created on demand by</span>
+<span class="sd">        defining</span>
+<span class="sd">        :func:`~ConstraintBase.getNumberOfAdditionalNeededScalarVariables` and</span>
+<span class="sd">        :func:`~ConstraintBase.assignAdditionalScalarVariables`, which are called at the beginning of an analysis.</span>
+
+<span class="sd">        If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt (and the stiffness)</span>
+<span class="sd">        to be of the form</span>
+
+<span class="sd">        .. code-block:: console</span>
+
+<span class="sd">            [ node 1 - dofs field 1,</span>
+<span class="sd">              node 1 - dofs field 2,</span>
+<span class="sd">              node 1 - ... ,</span>
+<span class="sd">              node 1 - dofs field n,</span>
+<span class="sd">              node 2 - dofs field 1,</span>
+<span class="sd">              ... ,</span>
+<span class="sd">              node N - dofs field n,</span>
+<span class="sd">              scalar variable 1,</span>
+<span class="sd">              scalar variable 2,</span>
+<span class="sd">              ... ,</span>
+<span class="sd">              scalar variable J ].</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the constraint.</span>
+<span class="sd">        options</span>
+<span class="sd">            A dictionary containing the options for the constraint.</span>
+<span class="sd">        modelInfo</span>
+<span class="sd">            A dictionary containing the model tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nDof</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><a class="viewcode-back" href="../../../../documentation/constraints.html#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">getNumberOfAdditionalNeededScalarVariables</span><span class="p">(</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The nodes this constraint is acting on.&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">fieldsOnNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The fields on the nodes this constraint is acting on.&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The total number of degrees of freedom this constraint is associated with.&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><a class="viewcode-back" href="../../../../documentation/constraints.html#fe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables">[docs]</a>    <span class="k">def</span> <span class="nf">getNumberOfAdditionalNeededScalarVariables</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;This method is called to determine the additional number of scalar variables</span>
@@ -137,7 +150,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">pass</span></div>
+        <span class="k">return</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="ConstraintBase.assignAdditionalScalarVariables"><a class="viewcode-back" href="../../../../documentation/constraints.html#fe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables">[docs]</a>    <span class="k">def</span> <span class="nf">assignAdditionalScalarVariables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalarVariables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScalarVariable</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Assign a list of scalar variables associated with this constraint.</span>
@@ -163,8 +176,8 @@
 <span class="sd">            The current increment since the last time the constraint was applied.</span>
 <span class="sd">        PExt</span>
 <span class="sd">            The external load vector.</span>
-<span class="sd">        V</span>
-<span class="sd">            The system matrix in vector form.</span>
+<span class="sd">        K</span>
+<span class="sd">            The system (stiffness) matrix.</span>
 <span class="sd">        increment</span>
 <span class="sd">            The time increment information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
