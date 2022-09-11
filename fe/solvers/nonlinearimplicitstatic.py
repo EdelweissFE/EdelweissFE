@@ -82,9 +82,14 @@ class NIST:
         self.fluxResidualTolerancesAlt = jobInfo["fluxResidualToleranceAlternative"]
 
         # create headers for formatted output of solver
-        nFields = len(self.theDofManager.indicesOfFieldsInDofVector.keys())
-        self.iterationHeader = ("{:^25}" * nFields).format(*self.theDofManager.indicesOfFieldsInDofVector.keys())
-        self.iterationHeader2 = (" {:<10}  {:<10}  ").format("||R||∞", "||ddU||∞") * nFields
+        presentVariableNames = (
+            list(self.theDofManager.indicesOfFieldsInDofVector.keys()) + ["scalar variables"]
+            if self.theDofManager.indicesOfScalarVariablesInDofVector
+            else []
+        )
+        nVariables = len(presentVariableNames)
+        self.iterationHeader = ("{:^25}" * nVariables).format(*presentVariableNames)
+        self.iterationHeader2 = (" {:<10}  {:<10}  ").format("||R||∞", "||ddU||∞") * nVariables
         self.iterationMessageTemplate = "{:11.2e}{:1}{:11.2e}{:1} "
 
         self.journal = journal
@@ -92,8 +97,6 @@ class NIST:
         self.systemMatrix = self.theDofManager.constructVIJSystemMatrix()
 
         self.csrGenerator = CSRGenerator(self.systemMatrix)
-
-        self.residualHistories = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector)
 
         self.extrapolation = "linear"
 
@@ -637,8 +640,27 @@ class NIST:
                 fieldCorrection,
                 "✓" if convergedCorrection else " ",
             )
+            convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
 
-            # converged if residual and field correction are smaller than tolerance
+        if self.theDofManager.indicesOfScalarVariablesInDofVector:
+
+            residualScalarVariables = max(np.abs(R[self.theDofManager.indicesOfScalarVariablesInDofVector]))
+            correction = (
+                np.linalg.norm(ddU[self.theDofManager.indicesOfScalarVariablesInDofVector], np.inf)
+                if ddU is not None
+                else 0.0
+            )
+
+            convergedCorrection = correction < self.fieldCorrectionTolerances["scalar variables"]
+            convergedFlux = residualScalarVariables <= fluxResidualTolerances["scalar variables"]
+
+            iterationMessage += self.iterationMessageTemplate.format(
+                residualScalarVariables,
+                "✓" if convergedFlux else " ",
+                correction,
+                "✓" if convergedCorrection else " ",
+            )
+
             convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
 
         self.journal.message(iterationMessage, self.identification)
