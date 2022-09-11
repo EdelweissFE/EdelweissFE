@@ -47,7 +47,6 @@ class Constraint(ConstraintBase):
     A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D."""
 
     def __init__(self, name, options, modelInfo):
-        super().__init__(name, options, modelInfo)
 
         if modelInfo["domainSize"] != 2:
             raise WrongDomain("Linearized rigid body constraint is currently only available for 2d domain size")
@@ -65,12 +64,12 @@ class Constraint(ConstraintBase):
             self.slaveNodes = [s for s in self.slaveNodes if s is not self.rp]
 
         # all nodes
-        self.nodes = self.slaveNodes + [self.rp]
+        self._nodes = self.slaveNodes + [self.rp]
 
         nSlaves = len(self.slaveNodes)
         self.slaveNodesFields = [["displacement"]] * nSlaves
         self.referencePointFields = [["displacement", "rotation"]]
-        self.fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
+        self._fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
 
         nDim = modelInfo["domainSize"]
 
@@ -80,8 +79,8 @@ class Constraint(ConstraintBase):
         distances = [s.coordinates - self.rp.coordinates for s in self.slaveNodes]
         dMagnitudeSquares = [d @ d for d in distances]
 
-        self.nDof = nAffectedDofs + nConstraints
-        self.sizeStiffness = self.nDof * self.nDof
+        self._nDof = nAffectedDofs + nConstraints
+        self.sizeStiffness = self._nDof * self._nDof
 
         dG_dU = np.zeros((nConstraints, nAffectedDofs))
 
@@ -108,7 +107,7 @@ class Constraint(ConstraintBase):
             dG_dU[nSlaves + i, -(nDim + 1) : -1] = -x[::-1].T
         dG_dU[nSlaves:, -1] = -1
 
-        K = np.zeros((self.nDof, self.nDof))
+        K = np.zeros((self._nDof, self._nDof))
 
         """
         K =     |   0       dG_dU.T |
@@ -123,14 +122,26 @@ class Constraint(ConstraintBase):
 
         self.nConstraints = nConstraints
 
+    @property
+    def nodes(self) -> list:
+        return self._nodes
+
+    @property
+    def fieldsOnNodes(self) -> list:
+        return self._fieldsOnNodes
+
+    @property
+    def nDof(self) -> int:
+        return self._nDof
+
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints
 
-    def applyConstraint(self, U_np, dU, PExt, V, increment):
+    def applyConstraint(self, U_np, dU, PExt, K, increment):
 
         LambdaN1 = U_np[-self.nConstraints :]
 
         PExt[: -self.nConstraints] -= LambdaN1.dot(self.dG_dU)
         #        PExt[- self.nConstraints  : ] -= 0.0
 
-        V += self.K.ravel()
+        K += self.K

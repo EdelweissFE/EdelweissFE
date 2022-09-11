@@ -49,24 +49,24 @@ from fe.constraints.base.constraintbase import ConstraintBase
 
 class Constraint(ConstraintBase):
     def __init__(self, name, definitionLines, modelInfo):
-        super().__init__(name, definitionLines, modelInfo)
 
         definition = convertLinesToStringDictionary(definitionLines)
 
         theField = definition["field"]
         self.sizeField = getFieldSize(theField, modelInfo["domainSize"])
         self.component = int(definition["component"])
-        self.nodes = modelInfo["nodeSets"][definition["nSet"]]
-        self.nNodes = len(self.nodes)
-        self.nMultipliers = len(self.nodes) - 1
+        self._name = name
+        self._nodes = modelInfo["nodeSets"][definition["nSet"]]
+        self.nNodes = len(self._nodes)
+        self.nMultipliers = len(self._nodes) - 1
 
-        self.nDof = self.sizeField * self.nNodes + self.nMultipliers
+        self._nDof = self.sizeField * self.nNodes + self.nMultipliers
 
         self.index_master = self.component
         self.indices_slaves = slice(self.sizeField + self.component, self.sizeField * self.nNodes, self.sizeField)
-        self.indices_multipliers = slice(self.sizeField * self.nNodes, self.nDof)
+        self.indices_multipliers = slice(self.sizeField * self.nNodes, self._nDof)
 
-        self.fieldsOnNodes = [
+        self._fieldsOnNodes = [
             [
                 theField,
             ]
@@ -74,15 +74,25 @@ class Constraint(ConstraintBase):
 
         self.active = True
 
+    @property
+    def nodes(self) -> list:
+        return self._nodes
+
+    @property
+    def fieldsOnNodes(self) -> list:
+        return self._fieldsOnNodes
+
+    @property
+    def nDof(self) -> int:
+        return self._nDof
+
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nNodes - 1
 
-    def applyConstraint(self, U_np, dU, PExt, V, increment):
+    def applyConstraint(self, U_np, dU, PExt, K, increment):
 
         if self.active == False:
             return
-
-        K = V.reshape(self.nDof, self.nDof, order="F")
 
         val_master = U_np[self.index_master]
         vals_slaves = U_np[self.indices_slaves]

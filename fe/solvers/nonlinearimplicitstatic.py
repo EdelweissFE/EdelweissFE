@@ -810,13 +810,13 @@ class NIST:
 
         for constraint in constraints.values():
 
-            Ke = K[constraint]
-            Pe = np.zeros(constraint.nDof)
+            Kc = K[constraint].reshape(constraint.nDof, constraint.nDof, order="F")
+            Pc = np.zeros(constraint.nDof)
 
-            constraint.applyConstraint(U_np[constraint], dU[constraint], Pe, Ke, increment)
+            constraint.applyConstraint(U_np[constraint], dU[constraint], Pc, Kc, increment)
 
             # instead of PExt[constraint] += Pe, np.add.at allows for repeated indices
-            np.add.at(PExt, PExt.entitiesInDofVector[constraint], Pe)
+            np.add.at(PExt, PExt.entitiesInDofVector[constraint], Pc)
 
         toc = getCurrentTime()
         self.computationTimes["constraints"] += toc - tic

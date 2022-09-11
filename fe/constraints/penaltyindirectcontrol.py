@@ -82,13 +82,13 @@ class Constraint(ConstraintBase):
 
         self.offset = float(definition.get("offset", 0.0))
 
-        self.nodes = self.loadNSet + self.constrainedNSet
+        self._nodes = self.loadNSet + self.constrainedNSet
 
-        self.fieldsOnNodes = [
+        self._fieldsOnNodes = [
             [
                 self.theField,
             ]
-        ] * len(self.nodes)
+        ] * len(self._nodes)
 
         nDim = modelInfo["domainSize"]
 
@@ -100,7 +100,7 @@ class Constraint(ConstraintBase):
         self.startBlock_constrainedNodes = self.endBlock_loadNodes
         self.endBlock_constrainedNodes = self.startBlock_constrainedNodes + sizeBlock_constrainedNodes
 
-        self.nDof = self.endBlock_constrainedNodes
+        self._nDof = self.endBlock_constrainedNodes
 
         self.active = True
 
@@ -108,10 +108,19 @@ class Constraint(ConstraintBase):
 
         self.unitResidual = np.tile(self.loadVector, len(self.loadNSet))
 
-    def getNumberOfAdditionalNeededScalarVariables(self):
-        return 0
+    @property
+    def nodes(self) -> list:
+        return self._nodes
 
-    def applyConstraint(self, U_np, dU, PExt, V, increment):
+    @property
+    def fieldsOnNodes(self) -> list:
+        return self._fieldsOnNodes
+
+    @property
+    def nDof(self) -> int:
+        return self._nDof
+
+    def applyConstraint(self, U_np, dU, PExt, K, increment):
 
         if self.active == False:
             return
@@ -133,8 +142,6 @@ class Constraint(ConstraintBase):
 
         loadFactor = self.penaltyStiffness * (self.constrainedValue - self.offset - L)
         dLoadFactor_ddU = self.penaltyStiffness * cVector
-
-        K = V.reshape(self.nDof, self.nDof, order="F")
 
         t = self.unitResidual
 
