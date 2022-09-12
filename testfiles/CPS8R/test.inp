@@ -26,7 +26,7 @@ create=perElement, fieldOutput=alphaD,
 create=perElement, fieldOutput=omega,
 configuration, overwrite=yes
 
-*step, jobName=cps8rnljob, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 1=-1

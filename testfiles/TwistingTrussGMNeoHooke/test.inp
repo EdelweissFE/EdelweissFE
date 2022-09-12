@@ -17,14 +17,14 @@ referencePoint=center_front
 name=displacement, elSet=all, field=displacement, result=U, 
 name=reaction force, nSet=back, field=displacement, result=P, f(x)=' sum  ( x, axis=0 )'
 
-*output, type=ensight, jobName=gmneohookejob, name=ensightExport
+*output, type=ensight, name=ensightExport
 configuration, overwrite=True
 create=perNode, fieldOutput=displacement, 
 
-*output, type=monitor, jobName=gmneohookejob, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=reaction force
 
-*step, jobName=gmneohookejob, maxInc=5e-2, minInc=1e-6, maxNumInc=1000, maxIter=20
+*step, maxInc=5e-2, minInc=1e-6, maxNumInc=1000, maxIter=20
 initializematerial, name=init, elSet=all 
 dirichlet, name=rt,   nSet=back,         field=micro rotation, 1=0.0, 2=0, 3=0
 dirichlet, name=back,   nSet=back,         field=displacement, 1=0.0, 2=0, 3=0

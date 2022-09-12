@@ -15,12 +15,12 @@ name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=1) ', quadraturePoint
 nSet=right
 referencePoint=rBottom
 
-*output, type=ensight, jobName=c3d8job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 configuration, overwrite=yes
 
-*step, jobName=c3d8job, maxInc=2e-1, minInc=1e-4, maxNumInc=1000, maxIter=10
+*step, maxInc=2e-1, minInc=1e-4, maxNumInc=1000, maxIter=10
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
 dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=3.141,  

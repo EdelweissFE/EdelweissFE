@@ -46,14 +46,14 @@ name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHi
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, jobName=cps4nljob,
+*output, type=ensight, 
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
-*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=24
+*step, maxInc=1e-1, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=24
 dirichlet, name=bottom, nset=gen_bottom, 2=0, field=displacement
 dirichlet, name=left, nset=gen_left, 1=0, field=displacement
-*step, jobName=cps4nljob, maxInc=2e-2, minInc=1e-2, maxNumInc=1000, maxIter=25, stepLength=0.01
+*step, maxInc=2e-2, minInc=1e-2, maxNumInc=1000, maxIter=25, stepLength=0.01
 distributedload, name=dload, surface=gen_top, magnitude=3.9, type=pressure, f(t)=t
 
-*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
+*step, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344

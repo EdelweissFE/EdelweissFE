@@ -20,7 +20,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*step, jobName=c3d20nljob, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=setLeft,   field=displacement, 1=0.0, 2=0.0, 3=0.0
 dirichlet, name=right, nSet=setRight,  field=displacement, 2=-5, 1=0, 3=0

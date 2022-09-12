@@ -20,11 +20,11 @@ weakAll
 *fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, 
 
-*output, type=ensight, jobName=cps4nljob, name=esExport
+*output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement,
 configuration, overwrite=yes
 
-*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=Ensight, managerName=esExport, intermediateSaveInterval=10, 
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=1,      nSet=1,         field=displacement, 1=0.0,  2=0.0

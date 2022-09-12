@@ -25,7 +25,7 @@ fieldOutput=dispTop
 *output, type=monitor, jobName=cpe4job
 fieldOutput=RFBottom
 
-*output, type=ensight, jobName=cpe4job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=S11
 create=perElement, fieldOutput=S22
@@ -33,12 +33,12 @@ create=perElement, fieldOutput=S33
 configuration, overwrite=yes
 
 
-*step, jobName=cpe4job, maxInc=0.5
+*step, maxInc=0.5
 dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, 
 dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=0.0,
 dirichlet, name=bottom, nSet=gen_bottom,   field=displacement, 2=0.0, 
 geostatic, name=geo, elSet=all, p1=-10, h1=150, p2=-5, h2=0, xLateral=1.0, zLateral=1.0
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure
 
-*step, jobName=cpe4job, maxInc=1e-1, 
+*step, maxInc=1e-1, 
 distributedload, name=dlTop, delta=-10.0, f(t)=t

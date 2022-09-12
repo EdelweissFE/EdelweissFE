@@ -31,15 +31,15 @@ name=E,                 elSet=all,          result=EStatic, quadraturePoint=0, s
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, jobName=cps4nljob,
+*output, type=ensight, 
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
-*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=10
+*step, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=10
 dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0
 dirichlet, name=corner,  nSet=gen_leftBottom, field=displacement, 2=0.0, 1=0
 
-*step, jobName=cps4nljob, maxInc=2e-2, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=0.01
+*step, maxInc=2e-2, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=0.01
 distributedload, name=dload, surface=gen_top, magnitude=3.79, type=pressure, f(t)=t
 
-*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
+*step, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344

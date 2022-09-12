@@ -20,7 +20,7 @@ elType=CPE4UL
 nX=1
 nY=1
 
-***output, type=ensight, jobName=cpe4job, name=esExport
+***output, type=ensight, name=esExport
 **create=perNode,    fieldOutput=displacement
 **create=perElement, fieldOutput=stress
 **create=perElement, fieldOutput=strain
@@ -28,12 +28,12 @@ nY=1
 **name=UMag, nSet=all, field=displacement, result=U, f(x)='linalg.norm(x, axis=1)'
 ****fieldOutputs for xy plot
 
-*output, type=meshPlot, jobName=cpe4job, 
+*output, type=meshPlot, 
 figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=time, y=RF,
 **figure=1, axSpec=211, create=perNode, fieldOutput=
 **figure=1, axSpec=212, create=perElement, fieldOutput=stress, f(x)='mean(x, axis=1)'
 
-*step, jobName=cpe4job, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, numThreads=1
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=0, 1=1000

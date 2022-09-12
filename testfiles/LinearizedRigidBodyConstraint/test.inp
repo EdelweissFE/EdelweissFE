@@ -24,11 +24,11 @@ fieldOutput=load
 nSet=gen_right,
 referencePoint=gen_rightTop
 
-*output, type=ensight, jobName=cps4job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode, fieldOutput=displacement
 configuration, overwrite=yes
 
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
+*step, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=leftCorner,  nSet=gen_leftBottom, field=displacement, 1=0.0, 2=0.0
 dirichlet, name=rotRP,  nSet=gen_rightTop,   field=rotation, 1=0.05

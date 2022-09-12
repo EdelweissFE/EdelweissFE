@@ -54,9 +54,9 @@ elSet=all, result=sdv, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:,0], a
 elSet=all, result=sdv, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:,2], axis=1) '
 elSet=all, result=sdv, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:,4], axis=1) '
 
-*output, type=meshplot, jobName=cpe4job, name=RFPlot
+*output, type=meshplot, name=RFPlot
 create=xyData, x=time, y=RF, legend=RF
-*output, type=ensight, jobName=cpe4job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=alpha_d_nl
 create=perElement, fieldOutput=stress
@@ -66,7 +66,7 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*step, jobName=cpe4job, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom,  nSet=bottom,   field=displacement, 3=0.0
 dirichlet, name=origin,  nSet=origin,   field=displacement, 1=0.0, 
@@ -77,13 +77,13 @@ distributedload, name=dload, surface=sleeveTop, type=pressure, magnitude=12.5, f
 options, category=NISTArcLength, arcLengthController=off
 
 ** ---- STEP WITHOUT SNAPBACK
-***step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+***step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
 **options, category=NISTSolver, extrapolation=linear, 
 **options, category=Ensight, intermediateSaveInterval=1
 **dirichlet, name=top,  nSet=top,   field=displacement, 3=-.525
 
 ** ---- STEP WITH SNAPBACK
-*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear, 
 options, category=Ensight, intermediateSaveInterval=1
 dirichlet, name=top,  nSet=top,   field=displacement, 3=-0.525

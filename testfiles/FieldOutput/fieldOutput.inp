@@ -23,25 +23,25 @@ name=stress,                    elSet=all,          result=stress,      quadratu
 name=stress_top,                elSet=gen_top,      result=stress,      quadraturePoint=1
 name=alphaP,                    elSet=all,          result=alphaP,      quadraturePoint=1
 
-*output, type=meshPlot, jobName=cps4job, 
+*output, type=meshPlot, 
 figure=1, axSpec=221, create=perNode,       fieldOutput=displacement,       f(x)='x[:,1]', label=U2
 figure=1, axSpec=222, create=perElement,    fieldOutput=stress,             f(x)='x[:,1]', label=S2
 figure=1, axSpec=212, c=red, ls=dashed, create=xyData, x=time, y=RF_bottom, f(y)='sum ( y[:,:,1], axis=1)', label=Sum(RF)
 
-*output, type=ensight, jobName=cps4job, name=myEnsightExport
+*output, type=ensight, name=myEnsightExport
 create=perNode,    fieldOutput=displacement, 
 create=perElement, fieldOutput=stress,
 create=perElement, fieldOutput=alphaP,
 configuration, overwrite=yes
 
 
-*output, type=monitor, jobName=cps4job, name=myNodeMonitor
+*output, type=monitor, name=myNodeMonitor
 fieldOutput=RF_bottom, f(x)='sum ( x[:,1] )'
 
-*output, type=plotAlongPath, jobName=cps4job, name=myNodeSetPlotter
+*output, type=plotAlongPath, name=myNodeSetPlotter
 figure=2, nSet=gen_top, fieldOutput=RF_bottom, f(x)='x[:,1]', label=P along bottom, normalize=True
 
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=Ensight, intermediateSaveInterval=2,
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0

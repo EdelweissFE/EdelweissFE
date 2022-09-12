@@ -38,6 +38,8 @@ import textwrap
 import shlex
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
+import warnings
+
 typeMappings = {
     "integer": int,
     "float": float,
@@ -111,7 +113,7 @@ inputLanguage = {
     "*fieldOutput": (
         "define fieldoutput, which is used by outputmanagers",
         {
-            "jobName": ("string", "(optional), name of job, standard=defaultJob"),
+            "jobName": ("string", "(deprecated)"),
             "data": ("string", "definition lines for the output module"),
         },
     ),
@@ -127,7 +129,7 @@ inputLanguage = {
         "define an output module",
         {
             "name": ("string", "(optional), name of manager, standard=None"),
-            "jobName": ("string", "(optional), name of job, standard=defaultJob"),
+            "jobName": ("string", "(deprecated)"),
             "type": ("string", "output module "),
             "data": ("string", "definition lines for the output module"),
         },
@@ -146,7 +148,7 @@ inputLanguage = {
         "definition of job steps",
         {
             "stepLength": ("float", "time period of step"),
-            "jobName": ("string", "(optional), name of job, standard=defaultJob"),
+            "jobName": ("string", "(optional)"),
             "maxInc": ("float", "maximum size of increment"),
             "minInc": ("float", "minimum size of increment"),
             "maxNumInc": ("integer", "maximum number of increments"),
@@ -197,18 +199,6 @@ inputLanguage = {
     "*include": (
         "(optional) load extra .inp file (fragment), use relative path to current .inp",
         {"input": ("string", "filename")},
-    ),
-    "*parameterIdentification": (
-        "identify material parameter for given x and y data",
-        {
-            "xData": ("string", "filename where xData is given"),
-            "yData": ("string", "filename where yData is given"),
-            "plot": ("string", "True|False plot result with final parameters"),
-            "id": ("string", "name of the property"),
-            "jobName": ("string", "name of job"),
-            "file": ("string", "filename where identified parameters are written"),
-            "data": ("string", "key=value pairs"),
-        },
     ),
 }
 
@@ -304,6 +294,29 @@ def parseInputFile(
                     raise KeyError("{:} expects no data lines".format(keyword))
 
                 fileDict[keyword][-1]["data"].append(l)
+
+    for entry in fileDict["*step"]:
+        if "jobName" in entry:
+            warnings.warn(
+                'Option "jobName" in *step is deprecated and will be removed in future',
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+    for entry in fileDict["*fieldOutput"]:
+        if "jobName" in entry:
+            warnings.warn(
+                'Option "jobName" in *fieldOutput is deprecated and will be removed in future',
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+    for entry in fileDict["*output"]:
+        if "jobName" in entry:
+            warnings.warn(
+                'Option "jobName" is *output deprecated and will be removed in future', DeprecationWarning, stacklevel=2
+            )
+
     return fileDict
 
 

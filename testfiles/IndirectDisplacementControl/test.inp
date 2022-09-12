@@ -28,7 +28,7 @@ elType=GCPE4EAS2
 nX=10
 nY=40
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=eas0
@@ -39,11 +39,11 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*output, type=meshplot, jobName=cpe4job, name=RFPlot
+*output, type=meshplot, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
 create=xyData, x=time, y=UTop, legend=U, figure=2
 
-*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, numThreads=2
 options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition = ' fieldOutputs["UTop"] < -1.0 '
 indirectcontrol, dof1=' nodes[18].fields["displacement"][1] ', dof2=' nodes[24].fields["displacement"][1] ' , L=-0.1, 

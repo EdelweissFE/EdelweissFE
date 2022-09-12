@@ -13,12 +13,12 @@ elSet=all, field=displacement, result=U, name=displacement
 **             plotting the higher-order elements of the displacement field are considered
 **elSet=all, field=nonlocal damage, result=U, name=nonlocal
 
-*output, type=ensight, jobName=c3d8nljob, name=esExport
+*output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement
 **create=perNode, fieldOutput=nonlocal
 configuration, overwrite=yes
 
-*step, jobName=c3d8nljob, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=left, nSet=nSetLeft,  field=displacement, 2=0, 1=0, 3=0.0
 dirichlet, name=right, nSet=nSetRight, field=displacement, 1=0.008

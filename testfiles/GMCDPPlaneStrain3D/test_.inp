@@ -48,13 +48,13 @@ elSet=all, result=omega, quadraturePoint=0:4, name=omega, f(x)='max( x[:,:], axi
 name=RF, nSet=top, field=displacement, result=P, f(x)='sum(x[:,1])/2.5', saveHistory=True
 name=U, nSet=top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True 
 
-*output, type=monitor, jobName=cpe4job, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=omega, f(x)='max(x)'
 fieldOutput=nonlocal damage, f(x)='max(x)'
 fieldOutput=alphaD, f(x)='max(x)'
 fieldOutput=RF
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement
 configuration, overwrite=yes
 **create=perNode,    fieldOutput=micro rotation
@@ -63,10 +63,10 @@ create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 
-*output, type=meshplot, jobName=cpe4job, name=RFPlot
+*output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
-*step, jobName=cpe4job, maxInc=1e-2, minInc=5e-4, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-2, minInc=5e-4, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 options, category=Ensight, intermediateSaveInterval=1
 dirichlet, name=bottom, nSet=bottom,  field=displacement, 2=0, 

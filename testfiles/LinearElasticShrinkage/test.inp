@@ -24,7 +24,7 @@ name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHi
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, jobName=cps4nljob,
+*output, type=ensight, 
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
@@ -36,8 +36,8 @@ figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', 
 figure=1, axSpec=121, flipY=True, yLabel=$\\varepsilon\\thinspace$(-), xLabel=$t\\thinspace$(h)
 figure=1, axSpec=122, aspect=equal
 
-*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
+*step, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
 dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0
 dirichlet, name=corner,  nSet=gen_leftBottom, field=displacement, 2=0.0, 1=0
 
-*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
+*step, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344

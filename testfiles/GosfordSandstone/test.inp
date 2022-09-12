@@ -27,11 +27,11 @@ elType=GMCPE8RUL
 nX=4
 nY=8
 
-*output, type=monitor, jobName=gmdruckerpragerjob, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=RF
 fieldOutput=omega, f(x)='max(x)'
 
-*output, type=ensight, jobName=gmdruckerpragerjob, name=esExport
+*output, type=ensight, name=esExport
 configuration, overwrite=True
 create=perNode, fieldOutput=displacement, 
 create=perNode, fieldOutput=micro rotation,
@@ -40,7 +40,7 @@ create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 
-*output, type=meshplot, jobName=gmdruckerpragerjob, name=RFPlot
+*output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 ** figure=1, axSpec=122, create=perNode, fieldOutput=umag
 
@@ -51,7 +51,7 @@ figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 nSet=gen_top,
 referencePoint=gen_rightTop
 
-*step, jobName=gmdruckerpragerjob, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
+*step, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
 initializematerial, name=init, elSet=all 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_rightTop, field=displacement, 2=0, 
@@ -61,6 +61,6 @@ distributedload, name=dloadl, surface=gen_left, type=pressure, magnitude=20, f(t
 distributedload, name=dloadr, surface=gen_right, type=pressure, magnitude=20, f(t)=t
 
 nodeforces, name=cloadTop, nSet=gen_rightTop, field=displacement, 1=-1, f(t)=t
-*step, jobName=gmdruckerpragerjob, maxInc=5e-2, minInc=1e-7, maxNumInc=500, maxIter=12, stepLength=1
+*step, maxInc=5e-2, minInc=1e-7, maxNumInc=500, maxIter=12, stepLength=1
 ** dirichlet, name=top, nSet=gen_top, field=displacement, 2=-4, 
 dirichlet, name=top, field=displacement, 2=-1

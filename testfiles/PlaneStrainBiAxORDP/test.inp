@@ -38,7 +38,7 @@ fieldOutput=dispRight
 fieldOutput=RFBottom
 fieldOutput=RFLeft
 
-*output, type=ensight, jobName=cpe4job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
@@ -48,13 +48,13 @@ configuration, overwrite=yes
 figure=1, axSpec=111, c=red, create=xyData, x=dispRight, y=RFLeft
 figure=2, axSpec=111, c=red, create=xyData, x=dispTop, y=RFBottom
 
-*step, jobName=cpe4job, maxInc=0.5
+*step, maxInc=0.5
 dirichlet, name=left,   nSet=gen_left,   field=displacement,	1=0.0 
 dirichlet, name=bottom, nSet=gen_bottom, field=displacement, 	2=0.0 
 geostatic, name=geo, elSet=all, p1=-10, h1=0, p2=-10, h2=30, xLateral=1.0, zLateral=1.0
 distributedload, name=dlRight, surface=gen_right, magnitude=10, f(t)=1, type=pressure
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure
 
-*step, jobName=cpe4job, maxInc=1e-2, 
+*step, maxInc=1e-2, 
 dirichlet, name=top,  nSet=gen_top,   field=displacement, 2=-1,
 **dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=-1,

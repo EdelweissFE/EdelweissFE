@@ -20,14 +20,14 @@ elSet=all, field=displacement, result=U, name=displacement
 *output, type=monitor, jobName=cps4job
 fieldOutput=RF, f(x)='mean(x[:,1])'
 
-*output, type=ensight, jobName=cps4job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement
 configuration, overwrite=yes
 
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=50, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=50, maxIter=25, stepLength=100
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 nodeforces, name=cloadTop, nSet=gen_top, field=displacement, 2=-50
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 nodeforces, name=cloadTop, nSet=gen_top, 2=-10, f(t)=sin(t*2*pi)
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 nodeforces, name=cloadTop, nSet=gen_top, 2=+50, f(t)=t

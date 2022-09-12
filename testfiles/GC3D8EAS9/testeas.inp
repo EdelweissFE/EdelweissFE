@@ -30,7 +30,7 @@ elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas7, f(x)
 elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas8, f(x)='mean( x[:,:,8], axis=1) '
 nSet=top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
 
-*output, type=ensight, jobName=easjob, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=alpha_d_nonlocal
 create=perElement, fieldOutput=stress
@@ -49,10 +49,10 @@ create=perElement, fieldOutput=eas7
 create=perElement, fieldOutput=eas8
 configuration, overwrite=yes
 
-*output, type=meshplot, jobName=easjob, name=RFPlot
+*output, type=meshplot, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
 
-*step, jobName=easjob, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bcCorner,     nSet=origin,      field=displacement,     1=0, 2=0, 3=0
 dirichlet, name=bottom2, nSet=bottom,  field=displacement,               2=0, 
@@ -60,6 +60,6 @@ dirichlet, name=zrot,   nSet=zrotlock, field=displacement,             3=0,
 dirichlet, name=back,   nSet=back, field=displacement,             3=0,
 dirichlet, name=front,   nSet=front, field=displacement,             3=0,
 
-*step, jobName=easjob, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=top, nSet=top, field=displacement, 2=-2, 

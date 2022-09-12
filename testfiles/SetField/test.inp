@@ -494,17 +494,17 @@ elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=alphaP, name=alphaP, quadraturePoint=0:8
 elSet=all, result=alphaP, name=alphaPMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
 
-*output, type=ensight, jobName=c3d8job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 
 create=perElement, fieldOutput=alphaPMax
 configuration, overwrite=yes
 
-*output, type=monitor, jobName=c3d8job, name=myNodeMonitor
+*output, type=monitor, name=myNodeMonitor
 fieldOutput=alphaP, f(x)='np.max(x )'
 
-*step, jobName=c3d8job, maxInc=1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 dirichlet, name=left, nSet=nSetLeft,  field=displacement, 2=0, 1=0, 3=0.0
 
-*step, jobName=c3d8job, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 setfield, fieldOutput=alphaP, type=uniform, value=1.0
 dirichlet, name=right, nSet=nSetRight, field=displacement, 2=-0.015

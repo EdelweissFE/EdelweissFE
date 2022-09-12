@@ -25,12 +25,12 @@ elType=GMCPE8RUL
 nX=3
 nY=4
 
-*output, type=monitor, jobName=redwildmoorjob, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=RF
 fieldOutput=omega, f(x)='max(x)'
 fieldOutput=alphaP, f(x)='max(x)'
 **
-***output, type=ensight, jobName=redwildmoorjob, name=esExport
+***output, type=ensight, name=esExport
 **configuration, overwrite=True
 **create=perNode, fieldOutput=displacement, 
 **create=perNode, fieldOutput=micro rotation,
@@ -39,7 +39,7 @@ fieldOutput=alphaP, f(x)='max(x)'
 **create=perElement, fieldOutput=alphaD
 **create=perElement, fieldOutput=omega
 **
-***output, type=meshplot, jobName=redwildmoorjob, name=RFPlot
+***output, type=meshplot, name=RFPlot
 **figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
 *constraint, type=linearizedRigidBody, name=rb1
@@ -47,7 +47,7 @@ nSet=gen_top,
 referencePoint=gen_rightTop
 
 *job, name=redwildmoorjob, domain=2d, solver=NISTParallel
-*step, jobName=redwildmoorjob, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
+*step, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
 initializematerial, name=init, elSet=all 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=topR, nSet=gen_rightTop, field=rotation, 1=0, 
@@ -58,5 +58,5 @@ distributedload, name=dloadt, surface=gen_top, type=pressure,   magnitude=3.5, f
 
 nodeforces, name=cloadTop, nSet=gen_rightTop, field=displacement, 1=-1, f(t)=t
 
-*step, jobName=redwildmoorjob, maxInc=5e-2, minInc=1e-5, maxNumInc=200, maxIter=12, stepLength=1
+*step, maxInc=5e-2, minInc=1e-5, maxNumInc=200, maxIter=12, stepLength=1
 dirichlet, name=the_load, nSet=gen_rightTop, field=displacement, 2=-3
