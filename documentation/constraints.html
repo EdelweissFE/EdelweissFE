@@ -165,22 +165,22 @@ all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
 
-<span class="k">*fieldOutput</span>,
+<span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
 <span class="nv">name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
 <span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theMonitor</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theMonitor</span>
 <span class="nv">fieldOutput </span><span class="ow">=</span><span class="m"> RF</span>,<span class="nv"> f(x) </span><span class="ow">=</span><span class="s"> &#39;sum ( x, axis=0)&#39;</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
@@ -242,22 +242,22 @@ all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
 
-<span class="k">*fieldOutput</span>,
+<span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
 <span class="nv">name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
 <span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theMonitor</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theMonitor</span>
 <span class="nv">fieldOutput </span><span class="ow">=</span><span class="m"> RF</span>,<span class="nv"> f(x) </span><span class="ow">=</span><span class="s"> &#39;sum ( x, axis=0)&#39;</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
@@ -304,23 +304,23 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
-<span class="k">*fieldOutput</span>,
+<span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
 
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>
 <span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">load</span>
 
 <span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">linearizedRigidBody</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">rb1</span>
-<span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_right</span>,
+<span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_right</span>
 <span class="nv">referencePoint</span><span class="ow">=</span><span class="m">gen_rightTop</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">4</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">4</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">leftCorner</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_leftBottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.05</span>
@@ -363,7 +363,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
-<span class="k">*fieldOutput</span>,
+<span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39; mean(x, axis=1) &#39;</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>
 
@@ -371,12 +371,12 @@ all
 <span class="nv">nSet</span><span class="ow">=</span><span class="m">right</span>
 <span class="nv">referencePoint</span><span class="ow">=</span><span class="m">rBottom</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">ensightExport</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">10</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">10</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">         field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">rBottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">3.141</span>,  
@@ -448,20 +448,20 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">myMaterial</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1</span>
 all
 
-<span class="k">*fieldOutput</span>,
+<span class="k">*fieldOutput</span>
 <span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">disp_top</span>
 <span class="nv">nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>
 <span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 <span class="nv">elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>, 
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>, 
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">dispMon</span>
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">dispMon</span>
 <span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">disp_top</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x[:,1])&#39;</span>
 <span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
 
@@ -470,7 +470,7 @@ gen_leftBottom
 gen_leftTop
 
 <span class="k">*constraint</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">penaltyindirectcontrol</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">pc1</span>
-<span class="nv">field</span><span class="ow">=</span><span class="m">displacement</span>,
+<span class="nv">field</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">cVector</span><span class="ow">=</span><span class="s">&#39;0, 0, 0, -1&#39;</span>
 <span class="nv">constrainedNSet</span><span class="ow">=</span><span class="m">measurement_nodes</span>
 <span class="nv">loadNSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>
@@ -479,11 +479,11 @@ gen_leftTop
 <span class="nv">penaltyStiffness</span><span class="ow">=</span><span class="m">1e6</span>
 <span class="nv">offset</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;constraints[&quot;pc1&quot;].active=False&#39;</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">fix_bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="k">*step</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-2</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-6</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-2</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-6</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;constraints[&quot;pc1&quot;].active=True&#39;</span>
 </pre></div>
 </div>
