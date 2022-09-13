@@ -28,14 +28,14 @@ nX=40
 fieldOutput=maxDisp
 
 *output, type=ensight, name=esExport
-create=perNode, fieldOutput=displacement,
-create=perElement, fieldOutput=stress,
-create=perElement, fieldOutput=eas0,
-create=perElement, fieldOutput=eas1,
-create=perElement, fieldOutput=eas1,
-create=perElement, fieldOutput=eas2,
-create=perElement, fieldOutput=eas3,
-create=perElement, fieldOutput=eas4,
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=eas0
+create=perElement, fieldOutput=eas1
+create=perElement, fieldOutput=eas1
+create=perElement, fieldOutput=eas2
+create=perElement, fieldOutput=eas3
+create=perElement, fieldOutput=eas4
 configuration, overwrite=yes
 
 *step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100

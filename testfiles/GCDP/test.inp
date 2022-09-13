@@ -492,7 +492,7 @@ all
 *nSet, nSet=nSetRight, 
   5,  10, 15
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, field=nonlocal damage, result=U, name=nonlocal_damage
 

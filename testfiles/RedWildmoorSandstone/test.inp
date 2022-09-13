@@ -33,8 +33,8 @@ fieldOutput=alphaP, f(x)='max(x)'
 ***output, type=ensight, name=esExport
 **configuration, overwrite=True
 **create=perNode, fieldOutput=displacement, 
-**create=perNode, fieldOutput=micro rotation,
-**create=perNode, fieldOutput=nonlocal damage,
+**create=perNode, fieldOutput=micro rotation
+**create=perNode, fieldOutput=nonlocal damage
 **create=perElement, fieldOutput=alphaP
 **create=perElement, fieldOutput=alphaD
 **create=perElement, fieldOutput=omega
@@ -43,7 +43,7 @@ fieldOutput=alphaP, f(x)='max(x)'
 **figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
 *constraint, type=linearizedRigidBody, name=rb1
-nSet=gen_top,
+nSet=gen_top
 referencePoint=gen_rightTop
 
 *job, name=redwildmoorjob, domain=2d, solver=NISTParallel

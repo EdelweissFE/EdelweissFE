@@ -2,7 +2,7 @@
 elType=CPE4
 nX=20
 nY=5
-l=100,
+l=100
 h=25
 
 *elSet, elSet=loadEls
@@ -20,7 +20,7 @@ all
 
 *job, name=cpe4job, domain=2d
 
-*fieldOutput,
+*fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=displacement, nSet=gen_left, field=displacement, result=P, name=RF
 name=stress, elSet=all, result=stress, quadraturePoint=1

@@ -2,26 +2,26 @@
 ** #################################################################################    
 ** elastic parameters
 **  nu
-    0.2,
+    0.2
 ** #################################################################################    
 **  creep parameters
-**  q1,     q2,     q3,     q4,     n,      m,      nKelvin,    tauMin,
-    20,   118,      19,     9,      0.1,    0.5,    12,         1e-5,
+**  q1,     q2,     q3,     q4,     n,      m,      nKelvin,    tauMin
+    20,   118,      19,     9,      0.1,    0.5,    12,         1e-5
 ** #################################################################################    
 **  autogenous shrinkage parameters
 **  ultimateShrinkageStrain,    shrinkageHalfTime,      alpha,    rt
-    -0.0001,                    3,                   1.45,     -4.5,
+    -0.0001,                    3,                   1.45,     -4.5
 ** #################################################################################    
 **  drying shrinkage parameters
 **  ultimateShrinkageStrain,    shrinkageHalfTime,   dryingStart,   hEnv   
-    -0.0015,                    90,                  7,             0.65,
+    -0.0015,                    90,                  7,             0.65
 ** #################################################################################    
 **  drying creep parameters
-**  q5,     nKelvinDrying, minTauDrying,
-    400,  11,            2e-4,
+**  q5,     nKelvinDrying, minTauDrying
+    400,  11,            2e-4
 ** #################################################################################    
 **  time parameters
-**  castTime,   timeToDays,
+**  castTime,   timeToDays
     -672,          0.04166666
 
 *section, name=mat, material=mat, type=solidrandommaterialproperties
@@ -529,7 +529,7 @@ seed=1
 *nSet, nSet=nSetRight, 
   5,  10, 15
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, name=esExport

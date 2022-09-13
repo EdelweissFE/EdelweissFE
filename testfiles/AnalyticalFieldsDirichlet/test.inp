@@ -8,7 +8,7 @@ all
 
 *include, input=torsion_bar.inc
  
-*fieldOutput,
+*fieldOutput
 name=displacement,  elSet=all, field=displacement, result=U
 name=stress,        elSet=all, result=stress,      quadraturePoint=0:8,  f(x)='np.mean(x,axis=1)'
 

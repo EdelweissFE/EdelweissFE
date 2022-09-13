@@ -3811,7 +3811,7 @@
   651,  736,  756,  841,  861,  946,  966, 1051, 1071, 1156, 1176, 1261, 1281, 1366, 1386, 1471
  1491, 1576, 1596, 1681, 1701, 1786, 1806, 1891, 1911, 1996, 2016, 2101, 2102, 2103, 2104, 2105
  2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121
-*Elset, elset=Set-1,
+*Elset, elset=Set-1
     1,    2,    3,    4,    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,   16
    17,   18,   19,   20,   81,  100,  161,  180,  241,  260,  321,  340,  401,  420,  481,  500
   561,  580,  641,  660,  721,  740,  801,  820,  881,  900,  961,  980, 1041, 1060, 1121, 1140
@@ -3853,7 +3853,7 @@ all
 
 *job, name=c3d8job, domain=3d
 
-*fieldOutput,
+*fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=stress, elSet=all, result=stress, quadraturePoint=1
 name=strain, elSet=all, result=strain, quadraturePoint=1

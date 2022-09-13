@@ -37,8 +37,8 @@ create=perElement, fieldOutput=strain
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
-create=perElement, fieldOutput=eas0,
-create=perElement, fieldOutput=eas1,
+create=perElement, fieldOutput=eas0
+create=perElement, fieldOutput=eas1
 configuration, overwrite=yes
 
 *output, type=meshplot, name=RFPlot

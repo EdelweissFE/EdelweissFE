@@ -33,7 +33,7 @@ all
 
 *job, name=myJob, domain=3d, solver=NISTParallel
 
-*fieldOutput, jobName=myJob
+*fieldOutput
 name=initialSpecificVolume, elSet=all, result=v,  quadraturePoint=0:4
 name=v,                     elSet=all, result=v,  quadraturePoint=0:4, f(x)='mean(x, axis=1)', saveHistory=True
 name=lnp,                   elSet=all, result=lnP, quadraturePoint=0:4, f(x)='mean(x, axis=1)', saveHistory=True
@@ -60,7 +60,7 @@ dirichlet, name=right, nSet=right,      field=displacement, 1=-2.0
 dirichlet, name=front, nSet=front,      field=displacement, 2=-2.0
 
 *output, type=meshPlot, 
-figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=lnp, y=v,
-figure=2, axSpec=111, c=red, ls=dashed, create=xyData, x=p, y=epsv,
+figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=lnp, y=v
+figure=2, axSpec=111, c=red, ls=dashed, create=xyData, x=p, y=epsv
 
 

@@ -23,7 +23,7 @@ block2
 
 *job, name=set_def, domain=3d, solver=NISTParallel
 
-*fieldOutput,
+*fieldOutput
 elSet=all,  name=displacement,  field=displacement, result=U
 elSet=all,  name=stress,        result=stress,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'

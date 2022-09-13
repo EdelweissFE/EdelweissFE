@@ -17,7 +17,7 @@ nY=10
 nSet=gen_bottom, result=P, field=displacement, name=RF
 elSet=all, field=displacement, result=U, name=displacement
 
-*output, type=monitor, jobName=cps4job
+*output, type=monitor
 fieldOutput=RF, f(x)='mean(x[:,1])'
 
 *output, type=ensight, name=esExport

@@ -865,7 +865,7 @@ all
   1,  21,   5
 *Elset, elset=nSetLoad, generate=True
   1,  13,   4
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 nSet=nSetLoad, field=displacement, result=P, name=RF, f(x)=' sum ( x[:,1]) ', saveHistory=True
 elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=' max (x, axis=1) '

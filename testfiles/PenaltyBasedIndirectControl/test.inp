@@ -15,7 +15,7 @@ elType  = CPE4
 *section, name=section1, material=myMaterial, type=plane, thickness=1
 all
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 nSet=gen_top, field=displacement, result=U, name=disp_top
 nSet=gen_bottom, field=displacement, result=P, name=RF
@@ -37,7 +37,7 @@ gen_leftBottom
 gen_leftTop
 
 *constraint, type=penaltyindirectcontrol, name=pc1
-field=displacement,
+field=displacement
 cVector='0, 0, 0, -1'
 constrainedNSet=measurement_nodes
 loadNSet=gen_rightTop

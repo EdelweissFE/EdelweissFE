@@ -12,16 +12,16 @@ elType=CPS4
 all
 
 *job, name=cps4job, domain=2d, solver=NIST
-*fieldOutput,
+*fieldOutput
 name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 
 
-*output, type=monitor, jobName=cps4job
+*output, type=monitor
 fieldOutput=load
 
 *constraint, type=linearizedRigidBody, name=rb1
-nSet=gen_right,
+nSet=gen_right
 referencePoint=gen_rightTop
 
 *output, type=ensight, name=ensightExport

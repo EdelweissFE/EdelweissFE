@@ -2,31 +2,31 @@
 ** #################################################################################    
 ** elastic parameters
 **  nu
-    0.2,
+    0.2
 ** #################################################################################    
 **  creep parameters
-**  q1,     q2,     q3,     q4,     n,      m,      nKelvin,    tauMin,     dTStatic,
-    26,    109,     5.8,    6.8,   0.1,    0.5,    12,         1e-5,       1e-3,
+**  q1,     q2,     q3,     q4,     n,      m,      nKelvin,    tauMin,     dTStatic
+    26,    109,     5.8,    6.8,   0.1,    0.5,    12,         1e-5,       1e-3
 ** #################################################################################    
 **  nonlinear creep parameters
 **  enableNonlinearCreep,   n0,     nInf,    
-    1,                      1,      7.5,
+    1,                      1,      7.5
 ** #################################################################################    
 **  multiaxial creep parameters
 **  nuViscoelastic,  nuFlow,      nHyd,    
-    0.2,             0.2,         0,
+    0.2,             0.2,         0
 ** #################################################################################    
 **  drying creep parameters
 **  enableDryingCreep,  q5,  hEnv,  nKelvin, minTau,  dryingstart
-    1,                  718,  0.65,  18,      2e-7,    28,
+    1,                  718,  0.65,  18,      2e-7,    28
 ** #################################################################################    
 **  autogenous shrinkage parameters
 **  ultimateShrinkageStrain,    shrinkageHalfTime,      alpha,    rt
-    -0.0000,                 3.03,                   1.45,      -4.5,
+    -0.0000,                 3.03,                   1.45,      -4.5
 ** #################################################################################    
 **  drying shrinkage parameters
 **  ultimateShrinkageStrain,    shrinkageHalfTime,      kHum
-    -0.000,                     61.6,                 0.725,
+    -0.000,                     61.6,                 0.725
 ** #################################################################################    
 **  damage parameters
 **  enableDamage,   As,  epsF8h,     epsF7d,     epsF28d,  
@@ -45,11 +45,11 @@
     0.25,     31.5,     0.1,        0.1,      1.16, 
 ** #################################################################################    
 **  time parameters
-**  castTime,   timeToDays,
+**  castTime,   timeToDays
     -672,          0.04166666
 ** #################################################################################    
 **  nonlocal parameters
-**  radius,   weight,
+**  radius,   weight
     20,        1.00
 
 
@@ -541,7 +541,7 @@ all
 *nSet, nSet=nSetRight, 
   5,  10, 15
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, name=esExport

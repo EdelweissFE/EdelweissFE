@@ -20,7 +20,7 @@ elType  =C3D8
 *section, name=section1, material=myMaterial, type=solid
 all
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 nSet=gen_top, field=displacement, result=U, name=disp_top
 elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'

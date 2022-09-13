@@ -49,7 +49,7 @@ create=perElement, fieldOutput=omega
 *output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 figure=2, axpSec=111, create=meshOnly, configuration=deformed
-*exportPlots,
+*exportPlots
 figure=2, fileName=mesh
 
 *step, maxInc=5e-2, minInc=1e-5, maxNumInc=10000, maxIter=25, stepLength=100

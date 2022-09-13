@@ -489,7 +489,7 @@ all
 *nSet, nSet=nSetRight, 
   5,  10, 15
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=alphaP, name=alphaP, quadraturePoint=0:8
 elSet=all, result=alphaP, name=alphaPMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'

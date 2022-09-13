@@ -13,7 +13,7 @@ elType=CPS4
 nX=25
 nY=50
 
-*fieldOutput,
+*fieldOutput
 name=Displacement, elSet=all, field=displacement, result=U, 
 name=Stress, elSet=all, result=stress, quadraturePoint=1
 name=Strain, elSet=all, result=strain, quadraturePoint=1
@@ -43,5 +43,5 @@ fieldOutput=Displacement_Top, label=Ualongtopsurface, f(x)='x[:,1]', nStages=5, 
 options, category=Ensight, intermediateSaveInterval=2, minDTForOutput=20
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0
-dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,
+dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0
 nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2

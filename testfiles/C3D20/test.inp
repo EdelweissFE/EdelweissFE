@@ -11,10 +11,10 @@ elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, quadraturePoint=1, name=stress
 elSet=all, result=strain, quadraturePoint=1, name=strain
 
-*output, type=monitor, jobName=c3d20nljob
+*output, type=monitor
 fieldOutput=RFRight, f(x)='sum(x[:,1])'
 
-*output, type=ensight, jobName=c3d20nljob
+*output, type=ensight
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
@@ -168,9 +168,9 @@ dirichlet, name=right, nSet=setRight,  field=displacement, 2=-5, 1=0, 3=0
 *nSet, nSet=setRight
   1,  2,  3,  4, 49, 50, 51, 52
 *elSet, elSet=setRight
- 1,
+ 1
 *nSet, nSet=setLeft
   41,  42,  43,  44, 121, 122, 123, 124
 *elSet, elSet=setLeft
- 10,
+ 10
 

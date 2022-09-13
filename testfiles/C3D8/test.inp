@@ -489,7 +489,7 @@ all
 *nSet, nSet=nSetRight, 
   5,  10, 15
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, name=esExport

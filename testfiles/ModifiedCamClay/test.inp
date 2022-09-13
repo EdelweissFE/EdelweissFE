@@ -47,7 +47,7 @@ all
 
 *job, name=myJob, domain=3d, solver=NISTParallel
 
-*fieldOutput, jobName=myJob
+*fieldOutput
 name=v,       elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,0])', saveHistory=True
 name=lnp,     elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
 name=p0,      elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,2])', saveHistory=True

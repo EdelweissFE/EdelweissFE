@@ -57,7 +57,7 @@ all, 5
 *surface, type=element, name=surfaceLeft
 all, 6
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
@@ -70,10 +70,10 @@ name=sig22, elSet=all, result=stress, quadraturePoint=0:8, f(x)='-np.mean(x[:,:,
 **create=perElement, fieldOutput=strain
 **configuration, overwrite=yes
 
-**output, type=meshPlot, jobName=c3d8job
+**output, type=meshPlot
 **figure=1, axSpec=111, c=red, create=xyData, x=eps22, y=sig22
 
-*output, type=monitor, jobName=c3d8job
+*output, type=monitor
 fieldOutput=sig22
 
 

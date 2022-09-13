@@ -34,8 +34,8 @@ fieldOutput=omega, f(x)='max(x)'
 *output, type=ensight, name=esExport
 configuration, overwrite=True
 create=perNode, fieldOutput=displacement, 
-create=perNode, fieldOutput=micro rotation,
-create=perNode, fieldOutput=nonlocal damage,
+create=perNode, fieldOutput=micro rotation
+create=perNode, fieldOutput=nonlocal damage
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
@@ -44,11 +44,11 @@ create=perElement, fieldOutput=omega
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 ** figure=1, axSpec=122, create=perNode, fieldOutput=umag
 
-** *exportPlots,
+** *exportPlots
 ** figure=1, fileName=plot, width=298, heightRatio=1.415 
 
 *constraint, type=linearizedRigidBody, name=rb1
-nSet=gen_top,
+nSet=gen_top
 referencePoint=gen_rightTop
 
 *step, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1

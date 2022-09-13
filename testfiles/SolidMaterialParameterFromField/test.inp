@@ -22,7 +22,7 @@ materialParameterFromField, index=0, field=AnalyticalField-01, type=settovalue
 ** materialParameterFromField, index=0, field=AnalyticalField-02, type=scale, "f(p,f)=3*f"
 all
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
@@ -36,7 +36,7 @@ create=perElement, elSet=all, modeldata="[el._materialProperties[0] for el in el
 
 configuration, overwrite=yes
 
-***output, type=monitor, jobName=job
+***output, type=monitor
 
 *AnalyticalField, name=AnalyticalField-01, type=randomScalar
 model       = Gaussian

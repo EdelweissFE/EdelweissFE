@@ -18,7 +18,7 @@ elType  =C3D8
 *section, name=section1, material=cdp, type=solid
 all
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
@@ -33,7 +33,7 @@ create=perElement, fieldOutput=strain
 create=perElement, fieldOutput=omegaMax
 configuration, overwrite=yes
 
-***output, type=monitor, jobName=job
+***output, type=monitor
 
 *AnalyticalField, name=AnalyticalField-01, type=randomScalar
 model       = Gaussian

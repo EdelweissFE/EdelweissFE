@@ -13,7 +13,7 @@ nX=2
 nY=2
 elType=CPE4
 
-***fieldOutput,
+***fieldOutput
 **elSet=all, field=displacement, result=U, name=displacement
 **elSet=all, result=strain, name=strain, quadraturePoint=3, f(x)='x'
 **elSet=all, result=stress, name=stress, quadraturePoint=3, f(x)='x'
@@ -28,11 +28,11 @@ elType=CPE4
 **name=kappa, elSet=all, result=kappa, quadraturePoint=0:3, f(x)='np.mean(x[:,0],axis=0)', saveHistory=True
 
 
-***output, type=meshPlot, jobName=c3d8job
+***output, type=meshPlot
 **figure=1, axSpec=111, c=red, create=xyData, x=eps11, y=sig11
 **figure=2, axSpec=111, c=red, create=xyData, x=eps12, y=sig12
 
-***output, type=monitor, jobName=c3d8job
+***output, type=monitor
 **fieldOutput=sig11
 **fieldOutput=sig22
 **fieldOutput=sig33

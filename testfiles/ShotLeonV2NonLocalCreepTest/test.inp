@@ -8,13 +8,13 @@ nY=10
 elType=GCPS4
 
 *material, name=ShotLeonV2NonLocal, id=scdp
-**E28,          E1,         flowMag,        flowExponent,       flowDelay,      nu,         tTransition,        tDelay,
-21537,          13943,      34,             1.2207,               0.0,            0.2,        0.5,                0.3,
-**vResidual,    nKelvin,    kelvinMin,      strainShrInf,       TauShr,         fcu28,      fcu1,               ratioFcy,
-1e-2,           12,         1e-5,           -0.0020,            360,            40.85,      18.56,              0.1,
-**ratioFbu,     ratioFtu,   eCPP1,          eCPP8,              eCPP24,         nlRadius,   nonLocalWeight,     epsilonF,
+**E28,          E1,         flowMag,        flowExponent,       flowDelay,      nu,         tTransition,        tDelay
+21537,          13943,      34,             1.2207,               0.0,            0.2,        0.5,                0.3
+**vResidual,    nKelvin,    kelvinMin,      strainShrInf,       TauShr,         fcu28,      fcu1,               ratioFcy
+1e-2,           12,         1e-5,           -0.0020,            360,            40.85,      18.56,              0.1
+**ratioFbu,     ratioFtu,   eCPP1,          eCPP8,              eCPP24,         nlRadius,   nonLocalWeight,     epsilonF
 1.16,           0.1,        -0.03,          -0.0007,            -0.0007,        5,          1.05,               0.0017
-**enableDamage, dTStatic,   castTime,       timeToDays,         enableNonlinearCreep,
+**enableDamage, dTStatic,   castTime,       timeToDays,         enableNonlinearCreep
 1,              1e-3,       0.0,            0.041666,         1.0
 
 *section, name=section1, thickness=1.0, material=scdp, type=plane
@@ -22,7 +22,7 @@ all
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel
 
-*fieldOutput,
+*fieldOutput
 name=Displacement,      elSet=all,           field=displacement, result=U, 
 name=DisplacementN,      nSet=all,           field=displacement, result=U, 
 **name=Nonlocal Damage,   elSet=all,           field=nonlocal damage, result=U, 
@@ -31,7 +31,7 @@ name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveH
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 name=E,                 elSet=all,          result=EStatic,  quadraturePoint=1, f(x)= 'x[0]', saveHistory=True
 
-*output, type=monitor, jobName=cps4nljob
+*output, type=monitor
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
@@ -40,7 +40,7 @@ create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 **create=perNode, fieldOutput=Nonlocal Damage
 
-*output, type=meshPlot, jobName=cps4nljob
+*output, type=meshPlot
 figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', label=Neuner et al. (24h), 
 figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', label=U
 figure=2, axSpec=111, create=xyData,  y=E, x=time,  label=E, 

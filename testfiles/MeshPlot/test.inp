@@ -17,23 +17,23 @@ name=UMag, nSet=all, field=displacement, result=U, f(x)='linalg.norm(x, axis=1)'
 name=meanDispLoad, nSet=topNodes, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
 name=sumRFNodes, nSet=topNodes, field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True
 
-*output, type=monitor, jobName=cps4nljob
+*output, type=monitor
 fieldOutput=ForceTop, f(x)='sum(x[:,1])'
 
 *output, type=meshPlot, 
 figure=1, axSpec=211, create=perNode, fieldOutput=alphaDNonlocal
 figure=1, axSpec=212, create=perElement, fieldOutput=omega, f(x)='mean(x, axis=1)'
 figure=2, axSpec=111, create=perNode, fieldOutput=UMag
-figure=3, axSpec=111, c=red, ls=dashed, create=xyData, x=meanDispLoad, y=sumRFNodes,
+figure=3, axSpec=111, c=red, ls=dashed, create=xyData, x=meanDispLoad, y=sumRFNodes
 figure=4, axpSec=111, create=meshOnly, 
 
-*configurePlots,
+*configurePlots
 figure=1, axSpec=211, 
 figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
 figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
 figure=4, axSpec=111, aspect=equal
 
-*exportPlots,
+*exportPlots
 figure=1, fileName=fig1
 figure=2, fileName=fig2
 

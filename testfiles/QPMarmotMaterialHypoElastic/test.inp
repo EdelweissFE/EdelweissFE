@@ -27,12 +27,12 @@ nodeforces, name=prescribed_stress, nSet=all, field=strain symmetric, components
 dirichlet, name=prescribed_strain,                                    components='[ -0.2,  x,    x, 0,   0, 0 ]' 
 nodeforces, name=prescribed_stress,                                   components='[ x,    .1,   .2, x,   x, x ]' 
 
-*fieldOutput,
+*fieldOutput
 name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True
 name=strain, elSet=all, result=strain, quadraturePoint=0,  saveHistory=True
 name=dStress_dStrain, elSet=all, result=dStress_dStrain, quadraturePoint=0,  saveHistory=True, f(x)="np.reshape(x, (6,-1), order='F')"
 
-*output, type=monitor, jobName=mySingleElementJob
+*output, type=monitor
 fieldOutput=stress, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"
 fieldOutput=strain, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"
 fieldOutput=dStress_dStrain, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"

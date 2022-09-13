@@ -10,11 +10,11 @@ elType=CPE4
 **E1  |   E2  |   E3  |  nu12 | nu23 |  nu13 |  G12  |  G23  |  G13            ** G23 = 2*(1+nu23)/E2 ---> transverse isotropy
 8e3, 1.7e4, 1.7e4, 0.3, 0.25, 0.3, 4.56e3, 6.8e3, 4.56e3 
 **Normal Vector Plane1
-**nx | ny | nz,
-1,0,0,
+**nx | ny | nz
+1,0,0
 **RDP fictive
 **fcu | m0 |  e  |  mg1  |  fcy |  GFI |   Ah  |  Bh   |  Ch  |   Dh  | Gh  | As | Bs | GSI  |  D | omegaMax
-41.22,  1.767, 0.51,  1,   22.5,  0.5, 2e-2, 2.2e-2,   8.8,   1e-6,   0,   10,  2,   100,    0,    0.0,
+41.22,  1.767, 0.51,  1,   22.5,  0.5, 2e-2, 2.2e-2,   8.8,   1e-6,   0,   10,  2,   100,    0,    0.0
 **Anisotropic Parameter
 **c1 | c2 | c3 
 0.5453, -0.4015, 0.479
@@ -23,7 +23,7 @@ elType=CPE4
 all
 
 *job, name=cpe4job, domain=2d, solver=NIST
-*fieldOutput,
+*fieldOutput
 name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
 name=dispRight, nSet=gen_right,       field=displacement, result=U, f(x)='mean(x[:,0])', saveHistory=True
 name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True
@@ -32,7 +32,7 @@ elSet=all,  field=displacement, result=U, name=displacement
 elSet=all,  result=stress,  quadraturePoint=0:3, f(x)='np.mean(x,axis=1)', name=stress
 elSet=all,  result=strain,  quadraturePoint=0:3, f(x)='np.mean(x,axis=1)', name=strain
 
-*output, type=monitor, jobName=cpe4job
+*output, type=monitor
 fieldOutput=dispTop
 fieldOutput=dispRight
 fieldOutput=RFBottom
@@ -44,7 +44,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*output, type=meshplot, jobName=cpe4job
+*output, type=meshplot
 figure=1, axSpec=111, c=red, create=xyData, x=dispRight, y=RFLeft
 figure=2, axSpec=111, c=red, create=xyData, x=dispTop, y=RFBottom
 
@@ -56,5 +56,6 @@ distributedload, name=dlRight, surface=gen_right, magnitude=10, f(t)=1, type=pre
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure
 
 *step, maxInc=1e-2, 
-dirichlet, name=top,  nSet=gen_top,   field=displacement, 2=-1,
-**dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=-1,
+dirichlet, name=top,  nSet=gen_top,   field=displacement, 2=-1
+**dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=-1
+

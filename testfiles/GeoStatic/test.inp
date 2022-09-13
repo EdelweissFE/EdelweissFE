@@ -12,7 +12,7 @@ elType=CPE4
 all
 
 *job, name=cpe4job, domain=2d, solver=NIST
-*fieldOutput,
+*fieldOutput
 name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)='mean(x[:,1])'
 name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)='sum(x[:,1])'
 elSet=all,  field=displacement, result=U, name=displacement
@@ -20,9 +20,9 @@ elSet=all,  result=stress,  name=S11,  quadraturePoint=1, f(x)='x[:,0]'
 elSet=all,  result=stress,  name=S22,  quadraturePoint=1, f(x)='x[:,1]'
 elSet=all,  result=stress,  name=S33,  quadraturePoint=1, f(x)='x[:,2]'
 
-*output, type=monitor, jobName=cpe4job
+*output, type=monitor
 fieldOutput=dispTop
-*output, type=monitor, jobName=cpe4job
+*output, type=monitor
 fieldOutput=RFBottom
 
 *output, type=ensight, name=ensightExport
@@ -35,7 +35,7 @@ configuration, overwrite=yes
 
 *step, maxInc=0.5
 dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, 
-dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=0.0,
+dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=0.0
 dirichlet, name=bottom, nSet=gen_bottom,   field=displacement, 2=0.0, 
 geostatic, name=geo, elSet=all, p1=-10, h1=150, p2=-5, h2=0, xLateral=1.0, zLateral=1.0
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure

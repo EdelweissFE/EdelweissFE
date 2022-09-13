@@ -4,7 +4,7 @@
 *section, name=section1, thickness=1.0, material=modleon, type=plane
 all
 *elSet, elSet=weak
-20,61,
+20,61
 *section, name=sectionweak, thickness=.8, material=modleon, type=plane
 weak
 

@@ -18,7 +18,7 @@ all
 
 *job, name=myJob, domain=2d
 
-*fieldOutput,
+*fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, 
 name=RF, nSet=gen_bottom, field=displacement, result=P, 
 name=stress, elSet=all, result=stress, quadraturePoint=0:4, f(x)='mean(x, axis=1)'

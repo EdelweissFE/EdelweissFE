@@ -51,7 +51,7 @@ dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
 ** The second step: apply the load
 distributedload, name=dload, surface=surfaceRight, type=pressure, magnitude=0.15, f(t)='t**2'
 
-*fieldOutput,
+*fieldOutput
 ** The results we are interested in
 name=strain,       elSet=all, result=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 name=stress,       elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
