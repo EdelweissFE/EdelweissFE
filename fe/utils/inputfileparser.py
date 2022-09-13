@@ -295,27 +295,16 @@ def parseInputFile(
 
                 fileDict[keyword][-1]["data"].append(l)
 
-    for entry in fileDict["*step"]:
-        if "jobName" in entry:
-            warnings.warn(
-                'Option "jobName" in *step is deprecated and will be removed in future',
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-    for entry in fileDict["*fieldOutput"]:
-        if "jobName" in entry:
-            warnings.warn(
-                'Option "jobName" in *fieldOutput is deprecated and will be removed in future',
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-    for entry in fileDict["*output"]:
-        if "jobName" in entry:
-            warnings.warn(
-                'Option "jobName" is *output deprecated and will be removed in future', DeprecationWarning, stacklevel=2
-            )
+    # raise deprecation warning if deprecated jobName option is set in keywords
+    keywords = ["*step", "*fieldOutput", "*output"]
+    for keyword in keywords:
+        for entry in fileDict[keyword]:
+            if "jobName" in entry:
+                warnings.warn(
+                    f'Option "jobName" in {keyword} is deprecated and will be removed in future',
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
 
     return fileDict
 
