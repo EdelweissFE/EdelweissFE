@@ -2,7 +2,7 @@
 elType=CPE4
 nX=20
 nY=5
-l=100,
+l=100
 h=25
 
 *elSet, elSet=loadEls
@@ -20,21 +20,21 @@ all
 
 *job, name=cpe4job, domain=2d
 
-*fieldOutput,
+*fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=displacement, nSet=gen_left, field=displacement, result=P, name=RF
 name=stress, elSet=all, result=stress, quadraturePoint=1
 name=strain, elSet=all, result=strain, quadraturePoint=1
 
-*output, type=monitor, jobName=cpe4job, name=ensightExport
+*output, type=monitor, name=ensightExport
 fieldOutput = RF, f(x) = 'sum ( x[:, 1])'
 
-*output, type=ensight, jobName=cpe4job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
-*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=gen_left,   field=displacement, 1=0.0, 2=0.0
 distributedload, name=dload, surface=gen_top, type=pressure, magnitude=0.15, f(t)=t

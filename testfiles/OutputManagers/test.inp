@@ -13,7 +13,7 @@ elType=CPS4
 nX=25
 nY=50
 
-*fieldOutput,
+*fieldOutput
 name=Displacement, elSet=all, field=displacement, result=U, 
 name=Stress, elSet=all, result=stress, quadraturePoint=1
 name=Strain, elSet=all, result=strain, quadraturePoint=1
@@ -23,7 +23,7 @@ name=Omega,  elSet=all, result=omega, quadraturePoint=1
 name=Displacement_Top, nSet=gen_top, field=displacement, result=U
 name=Force_Bottom, nSet=gen_bottom, field=displacement, result=P, saveHistory=True, export=ReactionForce, f_export(x)='x[:,:,1]'
 
-*output, type=ensight, jobName=cps4job, name=myEnsightExport
+*output, type=ensight, name=myEnsightExport
 create=perNode,    elSet=all, fieldOutput=Displacement
 create=perElement, elSet=all, fieldOutput=Stress
 create=perElement, elSet=all, fieldOutput=Strain
@@ -32,16 +32,16 @@ create=perElement, elSet=all, fieldOutput=AlphaD
 create=perElement, elSet=all, fieldOutput=Omega
 configuration, overwrite=yes
 
-*output, type=monitor, jobName=cps4job, name=myNodeSetMonitor
+*output, type=monitor, name=myNodeSetMonitor
 fieldOutput=Displacement_Top, f(x)='mean(x[:,1])'
 fieldOutput=Force_Bottom, f(x)='sum(x[:,1])'
 
-*output, type=plotAlongPath, jobName=cps4job, name=myNodeSetPlotter
+*output, type=plotAlongPath, name=myNodeSetPlotter
 fieldOutput=Displacement_Top, label=Ualongtopsurface, f(x)='x[:,1]', nStages=5, export=True
 
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=Ensight, intermediateSaveInterval=2, minDTForOutput=20
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0
-dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0,
+dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0
 nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2

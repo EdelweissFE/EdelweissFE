@@ -1015,9 +1015,9 @@
 *Nset, nset=left, generate=True
  577,  612,  1
 *Nset, nset=rBottom, 
- 6,
+ 6
 *Nset, nset=rTop, 
- 1,
+ 1
 *Nset, nset=right, generate=True
   1,  36,   1
 
@@ -1029,7 +1029,7 @@
 all
 
 *job, name=c3d8job, domain=3d, solver=NISTParallel
-*fieldOutput,
+*fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=stress, elSet=all, result=stress, f(x)='mean(x, axis=1) ', quadraturePoint=0:3
 
@@ -1037,12 +1037,12 @@ name=stress, elSet=all, result=stress, f(x)='mean(x, axis=1) ', quadraturePoint=
 nSet=right
 referencePoint=rBottom
 
-*output, type=ensight, jobName=c3d8job, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 configuration, overwrite=yes
 
-*step, jobName=c3d8job, maxInc=5e-2, minInc=1e-4, maxNumInc=1000, maxIter=20
+*step, maxInc=5e-2, minInc=1e-4, maxNumInc=1000, maxIter=20
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
 dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=1.5707,  

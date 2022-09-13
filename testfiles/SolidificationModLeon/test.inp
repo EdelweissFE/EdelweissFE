@@ -1,10 +1,10 @@
 *material, name=solidificationmodleon, id=mat 
 ** nu
-0.15,
+0.15
 ** q1   q2   q3   q4     n    m   nKelvin   tauMin 
    20,  120, 9,    9,  0.1, 0.5,    12,     1e-5, 
 **  s    fcu28
-   0.2,   40,
+   0.2,   40
 ** fcy/fcu  fbu/fcu  ftu/fcu    Df
      0.1,    1.16,     0.1,     0.85 
 ** Ah     Bh    Ch     Dh
@@ -503,15 +503,15 @@ all
 *nSet, nSet=nSetRight, 
   5,  10, 15
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 
-*output, type=ensight, jobName=c3d8job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 
 configuration, overwrite=yes
 
-*step, jobName=c3d8job, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=0.1
+*step, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=0.1
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left, nSet=nSetLeft,  field=displacement, 2=0, 1=0, 3=0.0
 dirichlet, name=right, nSet=nSetRight, field=displacement, 2=-0.1
-*step, jobName=c3d8job, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=24
+*step, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=24

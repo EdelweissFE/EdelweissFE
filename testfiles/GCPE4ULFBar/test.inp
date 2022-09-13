@@ -27,7 +27,7 @@ elType=GCPE4ULFBar
 nX=10
 nY=40
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=alpha_d_nl
 create=perElement, fieldOutput=stress
@@ -37,10 +37,10 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*output, type=meshplot, jobName=cpe4job, name=RFPlot
+*output, type=meshplot, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
 
-*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0

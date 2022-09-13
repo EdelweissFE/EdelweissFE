@@ -9,26 +9,26 @@ elType=CPS4
 ** #################################################################################    
 ** elastic parameters
 **  nu
-    0.2,
+    0.2
 ** #################################################################################    
 **  creep parameters
-**  q1,     q2,     q3,     q4,     n,      m,      nKelvin,    tauMin,
-    20,   118,      19,     9,      0.1,    0.5,    12,         1e-5,
+**  q1,     q2,     q3,     q4,     n,      m,      nKelvin,    tauMin
+    20,   118,      19,     9,      0.1,    0.5,    12,         1e-5
 ** #################################################################################    
 **  autogenous shrinkage parameters
 **  ultimateShrinkageStrain,    shrinkageHalfTime,      alpha,    rt
-    -0.0001,                    3,                   1.45,     -4.5,
+    -0.0001,                    3,                   1.45,     -4.5
 ** #################################################################################    
 **  drying shrinkage parameters
 **  ultimateShrinkageStrain,    shrinkageHalfTime,   dryingStart,   hEnv   
-    -0.0015,                    90,                  7,             0.65,
+    -0.0015,                    90,                  7,             0.65
 ** #################################################################################    
 **  drying creep parameters
-**  q5,     nKelvinDrying, minTauDrying,
-    400,  11,            2e-4,
+**  q5,     nKelvinDrying, minTauDrying
+    400,  11,            2e-4
 ** #################################################################################    
 **  time parameters
-**  castTime,   timeToDays,
+**  castTime,   timeToDays
     0,          0.04166666
 ** #################################################################################    
 *section, name=section1, thickness=1.0, material=mat, type=plane
@@ -36,24 +36,24 @@ all
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel
 
-*fieldOutput,
+*fieldOutput
 name=Displacement,      elSet=all,           field=displacement, result=U, 
 name=DisplacementN,      nSet=all,           field=displacement, result=U, 
 name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 
-*output, type=monitor, jobName=cps4nljob
+*output, type=monitor
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, jobName=cps4nljob,
+*output, type=ensight, 
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
-*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=24
+*step, maxInc=1e-1, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=24
 dirichlet, name=bottom, nset=gen_bottom, 2=0, field=displacement
 dirichlet, name=left, nset=gen_left, 1=0, field=displacement
-*step, jobName=cps4nljob, maxInc=2e-2, minInc=1e-2, maxNumInc=1000, maxIter=25, stepLength=0.01
+*step, maxInc=2e-2, minInc=1e-2, maxNumInc=1000, maxIter=25, stepLength=0.01
 distributedload, name=dload, surface=gen_top, magnitude=3.9, type=pressure, f(t)=t
 
-*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
+*step, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344

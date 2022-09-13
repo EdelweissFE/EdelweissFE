@@ -1,10 +1,10 @@
 *material, name=cosseratDruckerPrager, id=cosseratDruckerPrager
 **E, nu, GcToG, lb,  lBending, lJ2, polarRatio, cohesion, phi(deg), psi(deg) 
-10000, 0.20, 1., 4,  8,        4.0,     1.4999,      1,         25,      5,
+10000, 0.20, 1., 4,  8,        4.0,     1.4999,      1,         25,      5
 ** A, hExpDelta, hExp, hDilatation
-1.,    1.,         1400, 1.,
+1.,    1.,         1400, 1.
 **a1,   a2,     a3,     a4,     
-0.50,   0.00,   .5,     .0,
+0.50,   0.00,   .5,     .0
 
 
 *section, name=section1, thickness=1.0, material=cosseratDruckerPrager, type=plane
@@ -26,15 +26,15 @@ elType=CCPE8R
 nX=10
 nY=20
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=micro rotation
 configuration, overwrite=yes
 
-*output, type=meshplot, jobName=cpe4job, name=RFPlot
+*output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
-*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-5, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-5, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0

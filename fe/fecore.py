@@ -42,7 +42,7 @@ from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerClass
 from fe.config.solvers import getSolverByName
 from fe.utils.fieldoutput import FieldOutputController
-from fe.utils.misc import filterByJobName, convertAssignmentsToStringDictionary, splitLineAtCommas
+from fe.utils.misc import convertAssignmentsToStringDictionary, splitLineAtCommas
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.utils.dofmanager import DofManager, DofVector
@@ -238,9 +238,6 @@ def finiteElementSimulation(
     for updateConfig in inputfile["*updateConfiguration"]:
         updateConfiguration(updateConfig, jobInfo, journal)
 
-    # collect all job steps in a list of stepDictionaries
-    jobSteps = filterByJobName(inputfile["*step"], jobName)
-
     plotter = Plotter(journal, inputfile)
 
     # generate an instance of the desired solver
@@ -253,7 +250,7 @@ def finiteElementSimulation(
 
     # collect all output managers in a list of objects
     outputmanagers = []
-    for outputDef in filterByJobName(inputfile["*output"], jobName):
+    for outputDef in inputfile["*output"]:
         OutputManager = getOutputManagerClass(outputDef["type"].lower())
         managerName = outputDef.get("name", jobName + outputDef["type"])
         definitionLines = outputDef["data"]
@@ -266,7 +263,7 @@ def finiteElementSimulation(
     fieldOutputController.initializeJob(time, U, P)
 
     try:
-        for stepNumber, step in enumerate(jobSteps):
+        for stepNumber, step in enumerate(inputfile["*step"]):
             try:
                 stepActions = gatherStepActions(
                     step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal

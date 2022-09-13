@@ -8,16 +8,16 @@ all
 
 *include, input=torsion_bar.inc
  
-*fieldOutput,
+*fieldOutput
 name=displacement,  elSet=all, field=displacement, result=U
 name=stress,        elSet=all, result=stress,      quadraturePoint=0:8,  f(x)='np.mean(x,axis=1)'
 
 name=RF,            nSet=x_min,  field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True, export=RF 
 
-***output, type=meshplot, jobName=test, name=RFPlot
+***output, type=meshplot, name=RFPlot
 **figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
-*output, type=ensight, jobName=test, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,     fieldOutput=displacement 
 create=perElement,  fieldOutput=stress
 configuration, overwrite=yes
@@ -29,10 +29,10 @@ cbv=3
 *analyticalField, name=f02, type=scalarExpression
 "f(x,y,z)"="(y-.5)"
 
-*step, jobName=test, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1
 dirichlet,  name=fix,     nSet=x_min,   field=displacement, 1=0., 2=0., 3=0.
 
-*step, jobName=test, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1
 dirichlet,  name=rot_0,   nSet=x_max,   field=displacement, 1=.0
 dirichlet,  name=rot_1,   nSet=x_max,   field=displacement, 2=.01, analyticalField=f01
 dirichlet,  name=rot_2,   nSet=x_max,   field=displacement, 3=.01, analyticalField=f02

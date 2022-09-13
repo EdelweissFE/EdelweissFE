@@ -23,18 +23,18 @@ block2
 
 *job, name=set_def, domain=3d, solver=NISTParallel
 
-*fieldOutput,
+*fieldOutput
 elSet=all,  name=displacement,  field=displacement, result=U
 elSet=all,  name=stress,        result=stress,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 
-*output, type=ensight, jobName=set_def, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,     fieldOutput=displacement 
 create=perElement,  fieldOutput=stress
 create=perElement,  fieldOutput=strain
 configuration, overwrite=yes
 
-*step, jobName=set_def, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
 dirichlet, name=bot, nSet=n_bot, field=displacement, 1=0., 2=0., 3=0.
 dirichlet, name=top, nSet=n_top, field=displacement, 1=0., 2=-1., 3=0.
 

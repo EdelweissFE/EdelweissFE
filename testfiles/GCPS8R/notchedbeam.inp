@@ -20,7 +20,7 @@ name=omega, elSet=all, result=omega, quadraturePoint=0:4, f(x)='mean(x[:,:], axi
 *output, type=monitor, jobName=cps8rnljob
 fieldOutput=load, f(x)='sum(x[:,1])'
 
-*output, type=ensight, jobName=cps8rnljob, name=ensightExport
+*output, type=ensight, name=ensightExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=nonlocalDamage
 create=perElement, fieldOutput=stress
@@ -30,7 +30,7 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*step, jobName=cps8rnljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, 
+*step, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0
