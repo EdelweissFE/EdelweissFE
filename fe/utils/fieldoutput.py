@@ -224,7 +224,7 @@ class FieldOutput:
             incrementResult = self.f(incrementResult)
 
         if self.appendResults:
-            self.result.append(incrementResult)
+            self.result.append(incrementResult.copy())
         else:
             self.result = incrementResult
 
