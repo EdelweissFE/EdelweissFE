@@ -132,7 +132,7 @@ cdef class MarmotMaterialHypoElasticWrapper:
 
         cdef string result_ =  result.encode('UTF-8')
 
-        cdef StateView res = self.marmotMaterialHypoElastic.getStateView(result)
+        cdef StateView res = self.marmotMaterialHypoElastic.getStateView(result_)
 
         cdef double[::1] theView = <double[:res.stateSize]> ( res.stateLocation )
 
