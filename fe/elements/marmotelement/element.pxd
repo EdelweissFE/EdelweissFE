@@ -143,6 +143,7 @@ cdef class MarmotElementWrapper:
     cdef MarmotElement* marmotElement
     cdef list _nodes, 
     cdef int _elNumber, 
+    cdef str _elType, 
     cdef int _nNodes, _nDof
     cdef list _fields
     cdef str _ensightType

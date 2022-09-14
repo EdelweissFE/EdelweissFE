@@ -48,6 +48,9 @@ class OutputManager(OutputManagerBase):
         self.exportFile = defDict["export"]
         self.timeVals = []
 
+    def initializeSimulation(self, modelInfo):
+        pass
+
     def initializeStep(self, step, stepActions):
         pass
 

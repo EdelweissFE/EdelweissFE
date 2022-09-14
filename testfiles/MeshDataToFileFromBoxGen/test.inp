@@ -5,25 +5,7 @@
 
 *job, name=job, domain=3d, solver=NISTParallel
 
-*modelGenerator, generator=boxGen, name=gen
-nX      =4
-nY      =8
-nZ      =2
-lX      =20
-lY      =40
-lZ      =1
-elType  =C3D20R
-
-*output, type=meshdatatofile, name=meshdata
-filename=myExportedMesh.inc
-
-*modelGenerator, generator=findClosestNode, name=gen2
-location='0, 0, 0'
-storeIn=origin
-
-*modelGenerator, generator=findClosestNode, name=gen3
-location='10, 10, 20'
-storeIn=origin
+*include, input=../BoxGen/myExportedMesh.inc
 
 *section, name=section1, material=myMaterial, type=solid
 all

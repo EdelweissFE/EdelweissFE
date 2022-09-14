@@ -64,6 +64,7 @@ documentation = {
 }
 
 from fe.variables.node import Node
+from fe.variables.elementset import ElementSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import convertLinesToStringDictionary
 
@@ -165,36 +166,47 @@ def generateModelData(generatorDefinition, modelInfo, journal):
 
     # element sets
     elGrid = np.asarray(elements).reshape(nX, nY)
-    modelInfo["elementSets"]["{:}_bottom".format(name)] = [e for e in elGrid[:, 0]]
-    modelInfo["elementSets"]["{:}_top".format(name)] = [e for e in elGrid[:, -1]]
-    modelInfo["elementSets"]["{:}_central".format(name)] = [elGrid[int(nX / 2), int(nY / 2)]]
-    modelInfo["elementSets"]["{:}_right".format(name)] = [e for e in elGrid[-1, :]]
-    modelInfo["elementSets"]["{:}_left".format(name)] = [e for e in elGrid[0, :]]
+    modelInfo["elementSets"]["{:}_bottom".format(name)] = ElementSet(
+        "{:}_bottom".format(name), [e for e in elGrid[:, 0]]
+    )
+    modelInfo["elementSets"]["{:}_top".format(name)] = ElementSet("{:}_top".format(name), [e for e in elGrid[:, -1]])
+    modelInfo["elementSets"]["{:}_central".format(name)] = ElementSet(
+        "{:}_central".format(name), [elGrid[int(nX / 2), int(nY / 2)]]
+    )
+    modelInfo["elementSets"]["{:}_right".format(name)] = ElementSet(
+        "{:}_right".format(name), [e for e in elGrid[-1, :]]
+    )
+    modelInfo["elementSets"]["{:}_left".format(name)] = ElementSet("{:}_left".format(name), [e for e in elGrid[0, :]])
 
     nShearBand = min(nX, nY)
     if nShearBand > 3:
         shearBand = [
             elGrid[int(nX / 2 + i - nShearBand / 2), int(nY / 2 + i - nShearBand / 2)] for i in range(nShearBand)
         ]
-        modelInfo["elementSets"]["{:}_shearBand".format(name)] = [e for e in shearBand]
-        modelInfo["elementSets"]["{:}_shearBandCenter".format(name)] = [
-            e for e in shearBand[int(nShearBand / 2) - 1 : int(nShearBand / 2) + 2]
-        ]
+        modelInfo["elementSets"]["{:}_shearBand".format(name)] = ElementSet(
+            "{:}_shearBand".format(name), [e for e in shearBand]
+        )
+        modelInfo["elementSets"]["{:}_shearBandCenter".format(name)] = ElementSet(
+            "{:}_shearBandCenter".format(name),
+            [e for e in shearBand[int(nShearBand / 2) - 1 : int(nShearBand / 2) + 2]],
+        )
 
-    modelInfo["elementSets"]["{:}_sandwichHorizontal".format(name)] = []
+    modelInfo["elementSets"]["{:}_sandwichHorizontal".format(name)] = ElementSet(
+        "{:}_sandwichHorizontal".format(name), []
+    )
     for elList in elGrid[1:-1, :]:
         for e in elList:
-            modelInfo["elementSets"]["{:}_sandwichHorizontal".format(name)].append(e)
+            modelInfo["elementSets"]["{:}_sandwichHorizontal".format(name)].add(e)
 
-    modelInfo["elementSets"]["{:}_sandwichVertical".format(name)] = []
+    modelInfo["elementSets"]["{:}_sandwichVertical".format(name)] = ElementSet("{:}_sandwichVertical".format(name), [])
     for elList in elGrid[:, 1:-1]:
         for e in elList:
-            modelInfo["elementSets"]["{:}_sandwichVertical".format(name)].append(e)
+            modelInfo["elementSets"]["{:}_sandwichVertical".format(name)].add(e)
 
-    modelInfo["elementSets"]["{:}_core".format(name)] = []
+    modelInfo["elementSets"]["{:}_core".format(name)] = ElementSet("{:}_core".format(name), [])
     for elList in elGrid[1:-1, 1:-1]:
         for e in elList:
-            modelInfo["elementSets"]["{:}_core".format(name)].append(e)
+            modelInfo["elementSets"]["{:}_core".format(name)].add(e)
 
     # surfaces
     modelInfo["surfaces"]["{:}_bottom".format(name)] = {1: [e for e in elGrid[:, 0]]}

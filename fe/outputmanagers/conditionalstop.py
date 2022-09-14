@@ -64,6 +64,9 @@ class OutputManager(OutputManagerBase):
             )
             self.monitorJobs.append(entry)
 
+    def initializeSimulation(self, modelInfo):
+        pass
+
     def initializeStep(self, step, stepActions):
         pass
 

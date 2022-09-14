@@ -123,7 +123,9 @@ class FieldOutput:
 
                 self.quadraturePoints = quadraturePoints
 
-                self.elementResultCollector = ElementResultCollector(self.elSet, quadraturePoints, self.resultName)
+                self.elementResultCollector = ElementResultCollector(
+                    self.elSet.elements, quadraturePoints, self.resultName
+                )
 
         elif "modelData" in definition:
             self.domainType = "model"

@@ -70,6 +70,7 @@ cdef class MarmotElementWrapper:
             The number of the element."""
             
         self._elNumber = elNumber
+        self._elType = elementType
         
         self._nNodes                         = self.marmotElement.getNNodes()
         
@@ -101,6 +102,10 @@ cdef class MarmotElementWrapper:
     @property
     def elNumber(self):
         return self._elNumber
+    
+    @property
+    def elType(self):
+        return self._elType
 
     @property
     def nodes(self):

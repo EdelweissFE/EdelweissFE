@@ -42,6 +42,7 @@ employing an Abaqus-like syntax.
 """
 
 from fe.variables.node import Node
+from fe.variables.elementset import ElementSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import isInteger, splitLineAtCommas, convertLinesToFlatArray
 from fe.config.constraints import getConstraintClass
@@ -117,7 +118,7 @@ class AbqModelConstructor:
 
             if "elset" in elDefs.keys():
                 setName = elDefs["elset"]
-                modelInfo["elementSets"][setName] = list(currElDefs.values())
+                modelInfo["elementSets"][setName] = ElementSet(setName, currElDefs.values())
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
@@ -158,7 +159,7 @@ class AbqModelConstructor:
                         del elementSets[name]
                 else:
                     els = [elements[elNum] for elNum in elNumbers]
-                elementSets[name] = els
+                elementSets[name] = ElementSet(name, set(els))
             else:
                 elementSets[name] = []
                 for line in data:
@@ -190,7 +191,7 @@ class AbqModelConstructor:
                         nodeSets[name] += nodeSets[nSet]
 
         modelInfo["nodeSets"]["all"] = list(modelInfo["nodes"].values())
-        modelInfo["elementSets"]["all"] = list(modelInfo["elements"].values())
+        modelInfo["elementSets"]["all"] = ElementSet("all", modelInfo["elements"].values())
 
         # generate surfaces sets
         for surfaceDef in inputFile["*surface"]:
@@ -202,9 +203,7 @@ class AbqModelConstructor:
                 for l in data:
                     elSet, faceNumber = l
                     faceNumber = int(faceNumber.replace("S", ""))
-                    elements = modelInfo["elementSets"][elSet]
-                    elements += surface.setdefault(faceNumber, [])
-                    surface[faceNumber] = elements
+                    surface[faceNumber] = modelInfo["elementSets"][elSet]
 
             modelInfo["surfaces"][name] = surface
 

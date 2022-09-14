@@ -265,6 +265,8 @@ def finiteElementSimulation(
 
     fieldOutputController.initializeJob(time, U, P)
 
+    for man in outputmanagers:
+        man.initializeSimulation(modelInfo)
     try:
         for stepNumber, step in enumerate(jobSteps):
             try:

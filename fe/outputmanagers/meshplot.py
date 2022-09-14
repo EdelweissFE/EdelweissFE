@@ -283,6 +283,9 @@ class OutputManager(OutputManagerBase):
 
             self.meshPlot = MeshPlot(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
 
+    def initializeSimulation(self, modelInfo):
+        pass
+
     def initializeStep(self, step, stepActions):
         pass
 

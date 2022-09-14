@@ -77,6 +77,7 @@ documentation = {
 }
 
 from fe.variables.node import Node
+from fe.variables.elementset import ElementSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import convertLinesToStringDictionary
 
@@ -84,7 +85,7 @@ import numpy as np
 import os
 
 
-def generateModelData(generatorDefinition, modelInfo, journal):
+def generateModelData(generatorDefinition: dict, modelInfo: dict, journal) -> dict:
 
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
@@ -128,12 +129,12 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     for ix in range(nNodesX):
         for iy in range(nNodesY):
             for iz in range(nNodesZ):
-                node = Node(currentNodeLabel, [xLayers[ix], yLayers[iy], zLayers[iz]])
+                node = Node(currentNodeLabel, np.array([xLayers[ix], yLayers[iy], zLayers[iz]]))
                 nodes.append(node)
-                currentNodeLabel += 1
                 # only add node to modelInfo if it will be part of an element
                 if testEl.nNodes == 8 or testEl.nNodes == 20 and sum(np.mod([ix, iy, iz], 2)) < 2:
                     modelInfo["nodes"][currentNodeLabel] = node
+                    currentNodeLabel += 1
 
     # # 3d plot of nodes; for debugging
     # def plotNodeList( nodeList ):
@@ -338,16 +339,26 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     # modelInfo["nodeSets"]["{:}_rightBottom".format(name)] = [nG[-1, 0]]
     # modelInfo["nodeSets"]["{:}_rightTop".format(name)]    = [nG[-1, -1]]
 
+    modelInfo["nodeSets"]["{:}_leftTopBack".format(name)] = [nG[-1, -1, 0]]
+
     # element sets
     elGrid = np.asarray(elements).reshape(nX, nY, nZ)
-    modelInfo["elementSets"]["{:}_bottom".format(name)] = np.ravel(elGrid[:, 0, :])
-    modelInfo["elementSets"]["{:}_top".format(name)] = np.ravel(elGrid[:, -1, :])
-    modelInfo["elementSets"]["{:}_right".format(name)] = np.ravel(elGrid[-1, :, :])
-    modelInfo["elementSets"]["{:}_left".format(name)] = np.ravel(elGrid[0, :, :])
-    modelInfo["elementSets"]["{:}_front".format(name)] = np.ravel(elGrid[:, :, -1])
-    modelInfo["elementSets"]["{:}_back".format(name)] = np.ravel(elGrid[:, :, 0])
+    modelInfo["elementSets"]["{:}_bottom".format(name)] = ElementSet(
+        "{:}_bottom".format(name), np.ravel(elGrid[:, 0, :])
+    )
+    modelInfo["elementSets"]["{:}_top".format(name)] = ElementSet("{:}_top".format(name), np.ravel(elGrid[:, -1, :]))
+    modelInfo["elementSets"]["{:}_right".format(name)] = ElementSet(
+        "{:}_right".format(name), np.ravel(elGrid[-1, :, :])
+    )
+    modelInfo["elementSets"]["{:}_left".format(name)] = ElementSet("{:}_left".format(name), np.ravel(elGrid[0, :, :]))
+    modelInfo["elementSets"]["{:}_front".format(name)] = ElementSet(
+        "{:}_front".format(name), np.ravel(elGrid[:, :, -1])
+    )
+    modelInfo["elementSets"]["{:}_back".format(name)] = ElementSet("{:}_back".format(name), np.ravel(elGrid[:, :, 0]))
 
-    modelInfo["elementSets"]["{:}_centralFrontToBack".format(name)] = np.ravel(elGrid[int(nX / 2), int(nY / 2), 0:nZ])
+    modelInfo["elementSets"]["{:}_centralFrontToBack".format(name)] = ElementSet(
+        "{:}_centralFrontToBack".format(name), np.ravel(elGrid[int(nX / 2), int(nY / 2), 0:nZ])
+    )
 
     nShearBand = min(nX, nY)
     if nShearBand > 3:
@@ -362,10 +373,13 @@ def generateModelData(generatorDefinition, modelInfo, journal):
                     ]
                 )
             )
-        modelInfo["elementSets"]["{:}_shearBandFrontToBack".format(name)] = [e for e in shearBand]
-        modelInfo["elementSets"]["{:}_shearBandCenterFrontToBack".format(name)] = [
-            e for e in shearBand[(int(nShearBand / 2) - 1) * nZ : (int(nShearBand / 2) + 2) * nZ]
-        ]
+        modelInfo["elementSets"]["{:}_shearBandFrontToBack".format(name)] = ElementSet(
+            "{:}_shearBandFrontToBack".format(name), [e for e in shearBand]
+        )
+        modelInfo["elementSets"]["{:}_shearBandCenterFrontToBack".format(name)] = ElementSet(
+            "{:}_shearBandCenterFrontToBack".format(name),
+            [e for e in shearBand[(int(nShearBand / 2) - 1) * nZ : (int(nShearBand / 2) + 2) * nZ]],
+        )
 
     # modelInfo["elementSets"]["{:}_sandwichHorizontal".format(name)] = []
     # for elList in elGrid[1:-1, :]:
@@ -383,13 +397,13 @@ def generateModelData(generatorDefinition, modelInfo, journal):
     #         modelInfo["elementSets"]["{:}_core".format(name)].append(e)
 
     # surfaces
-    modelInfo["surfaces"]["{:}_bottom".format(name)] = {1: [e for e in np.ravel(elGrid[:, 0, :])]}
-    modelInfo["surfaces"]["{:}_top".format(name)] = {2: [e for e in np.ravel(elGrid[:, -1, :])]}
+    modelInfo["surfaces"]["{:}_bottom".format(name)] = {1: modelInfo["elementSets"]["{:}_bottom".format(name)]}
+    modelInfo["surfaces"]["{:}_top".format(name)] = {2: modelInfo["elementSets"]["{:}_top".format(name)]}
 
-    modelInfo["surfaces"]["{:}_right".format(name)] = {5: [e for e in np.ravel(elGrid[-1, :, :])]}
-    modelInfo["surfaces"]["{:}_left".format(name)] = {3: [e for e in np.ravel(elGrid[0, :, :])]}
+    modelInfo["surfaces"]["{:}_right".format(name)] = {5: modelInfo["elementSets"]["{:}_right".format(name)]}
+    modelInfo["surfaces"]["{:}_left".format(name)] = {3: modelInfo["elementSets"]["{:}_left".format(name)]}
 
-    modelInfo["surfaces"]["{:}_front".format(name)] = {4: [e for e in np.ravel(elGrid[:, :, -1])]}  #
-    modelInfo["surfaces"]["{:}_back".format(name)] = {6: [e for e in np.ravel(elGrid[:, :, 0])]}
+    modelInfo["surfaces"]["{:}_front".format(name)] = {4: modelInfo["elementSets"]["{:}_front".format(name)]}
+    modelInfo["surfaces"]["{:}_back".format(name)] = {6: modelInfo["elementSets"]["{:}_back".format(name)]}
 
     return modelInfo
