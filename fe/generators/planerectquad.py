@@ -65,6 +65,7 @@ documentation = {
 
 from fe.variables.node import Node
 from fe.variables.elementset import ElementSet
+from fe.variables.nodeset import NodeSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import convertLinesToStringDictionary
 
@@ -149,20 +150,20 @@ def generateModelData(generatorDefinition, modelInfo, journal):
             currentElementLabel += 1
 
     # nodesets:
-    modelInfo["nodeSets"]["{:}_all".format(name)] = []
+    modelInfo["nodeSets"]["{:}_all".format(name)] = NodeSet("{:}_all".format(name), set())
     for n in np.ravel(nG):
         if len(n.fields) > 0:
-            modelInfo["nodeSets"]["{:}_all".format(name)].append(n)
+            modelInfo["nodeSets"]["{:}_all".format(name)].add(n)
 
-    modelInfo["nodeSets"]["{:}_left".format(name)] = [n for n in nG[0, :]]
-    modelInfo["nodeSets"]["{:}_right".format(name)] = [n for n in nG[-1, :]]
-    modelInfo["nodeSets"]["{:}_top".format(name)] = [n for n in nG[:, -1]]
-    modelInfo["nodeSets"]["{:}_bottom".format(name)] = [n for n in nG[:, 0]]
+    modelInfo["nodeSets"]["{:}_left".format(name)] = NodeSet("{:}_left".format(name), [n for n in nG[0, :]])
+    modelInfo["nodeSets"]["{:}_right".format(name)] = NodeSet("{:}_right".format(name), [n for n in nG[-1, :]])
+    modelInfo["nodeSets"]["{:}_top".format(name)] = NodeSet("{:}_top".format(name), [n for n in nG[:, -1]])
+    modelInfo["nodeSets"]["{:}_bottom".format(name)] = NodeSet("{:}_bottom".format(name), [n for n in nG[:, 0]])
 
-    modelInfo["nodeSets"]["{:}_leftBottom".format(name)] = [nG[0, 0]]
-    modelInfo["nodeSets"]["{:}_leftTop".format(name)] = [nG[0, -1]]
-    modelInfo["nodeSets"]["{:}_rightBottom".format(name)] = [nG[-1, 0]]
-    modelInfo["nodeSets"]["{:}_rightTop".format(name)] = [nG[-1, -1]]
+    modelInfo["nodeSets"]["{:}_leftBottom".format(name)] = NodeSet("{:}_leftBottom".format(name), [nG[0, 0]])
+    modelInfo["nodeSets"]["{:}_leftTop".format(name)] = NodeSet("{:}_leftTop".format(name), [nG[0, -1]])
+    modelInfo["nodeSets"]["{:}_rightBottom".format(name)] = NodeSet("{:}_rightBottom".format(name), [nG[-1, 0]])
+    modelInfo["nodeSets"]["{:}_rightTop".format(name)] = NodeSet("{:}_rightTop".format(name), [nG[-1, -1]])
 
     # element sets
     elGrid = np.asarray(elements).reshape(nX, nY)

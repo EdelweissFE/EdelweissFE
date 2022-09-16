@@ -43,6 +43,7 @@ employing an Abaqus-like syntax.
 
 from fe.variables.node import Node
 from fe.variables.elementset import ElementSet
+from fe.variables.nodeset import NodeSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import isInteger, splitLineAtCommas, convertLinesToFlatArray
 from fe.config.constraints import getConstraintClass
@@ -93,7 +94,7 @@ class AbqModelConstructor:
 
             if "nset" in nodeDefs.keys():
                 setName = nodeDefs["nset"]
-                modelInfo["nodeSets"][setName] = list(currNodeDefs.keys())
+                modelInfo["nodeSets"][setName] = NodeSet(setName, currNodeDefs.keys())
 
         # returns an dict of {element Label: element}
         elements = modelInfo["elements"]
@@ -183,14 +184,14 @@ class AbqModelConstructor:
                     ]
                 else:
                     nodes = [nodeDefinitions[n] for n in nodes]
-                nodeSets[name] = nodes
+                nodeSets[name] = NodeSet(name, nodes)
             else:
-                nodeSets[name] = []
+                nodeSets[name] = NodeSet(name, {})
                 for line in data:
                     for nSet in line:
-                        nodeSets[name] += nodeSets[nSet]
+                        [nodeSets[name].add(n) for n in nodeSets[nSet]]
 
-        modelInfo["nodeSets"]["all"] = list(modelInfo["nodes"].values())
+        modelInfo["nodeSets"]["all"] = NodeSet("all", modelInfo["nodes"].values())
         modelInfo["elementSets"]["all"] = ElementSet("all", modelInfo["elements"].values())
 
         # generate surfaces sets

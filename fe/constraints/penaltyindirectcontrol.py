@@ -61,9 +61,9 @@ class Constraint(ConstraintBase):
         self.theField = definition.get("field", "displacement")
 
         self.cVector = np.fromstring(definition["cVector"], dtype=np.float, sep=",")
-        self.constrainedNSet = modelInfo["nodeSets"][definition["constrainedNSet"]]
+        self.constrainedNSet = list(modelInfo["nodeSets"][definition["constrainedNSet"]])
 
-        self.loadNSet = modelInfo["nodeSets"][definition["loadNSet"]]
+        self.loadNSet = list(modelInfo["nodeSets"][definition["loadNSet"]])
         self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
 
         # we may normalize in order to end up with an identical load irrespective of the number of nodes

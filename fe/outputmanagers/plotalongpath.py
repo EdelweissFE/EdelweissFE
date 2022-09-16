@@ -68,7 +68,7 @@ class OutputManager(OutputManagerBase):
             entry["export"] = bool(defDict.get("export", False))
 
             try:  # nSet?
-                nodes = entry["fieldOutput"].nSet
+                nodes = list(entry["fieldOutput"].nSet)
                 # 1) distances between nodes:
                 distances = [
                     np.linalg.norm(nodes[i + 1].coordinates - nodes[i].coordinates) for i in range(len(nodes) - 1)

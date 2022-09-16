@@ -61,8 +61,8 @@ class Constraint(ConstraintBase):
         rbNset = definition["nSet"]
         nodeSets = modelInfo["nodeSets"]
 
-        self.referencePoint = nodeSets[definition["referencePoint"]][0]
-        self.slaveNodes = nodeSets[rbNset]  # may also contain the RP, doesn't really matter as we remove it
+        self.referencePoint = list(nodeSets[definition["referencePoint"]])[0]
+        self.slaveNodes = list(nodeSets[rbNset])  # may also contain the RP, doesn't really matter as we remove it
 
         if self.referencePoint in self.slaveNodes:  # remove the rp from the slave node set
             self.slaveNodes = [s for s in self.slaveNodes if s is not self.referencePoint]
