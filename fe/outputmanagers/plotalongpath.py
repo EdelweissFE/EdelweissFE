@@ -52,7 +52,7 @@ import numpy as np
 class OutputManager(OutputManagerBase):
     identification = "PathPlotter"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.plotter = plotter

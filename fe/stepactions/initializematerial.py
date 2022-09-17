@@ -42,11 +42,11 @@ documentation = {}
 class StepAction(StepActionBase):
     """Initializes materials"""
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
 
-        self.theElements = modelInfo["elementSets"][action.get("elSet", "all")]
+        self.theElements = model["elementSets"][action.get("elSet", "all")]
         self.active = True
         self.emptyDef = np.array([0.0])
 

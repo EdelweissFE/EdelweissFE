@@ -5,7 +5,7 @@ from numpy import ndarray
 
 class ConstraintBase(ABC):
     @abstractmethod
-    def __init__(self, name: str, options: dict, modelInfo: dict):
+    def __init__(self, name: str, options: dict, model: dict):
         """The constraint base class.
 
         Constraints can act on nodal variables, and scalar variables.
@@ -37,7 +37,7 @@ class ConstraintBase(ABC):
             The name of the constraint.
         options
             A dictionary containing the options for the constraint.
-        modelInfo
+        model
             A dictionary containing the model tree.
         """
 

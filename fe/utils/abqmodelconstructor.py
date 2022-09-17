@@ -54,13 +54,13 @@ class AbqModelConstructor:
     def __init__(self, journal):
         pass
 
-    def createGeometryFromInputFile(self, modelInfo: dict, inputFile: dict) -> dict:
+    def createGeometryFromInputFile(self, model: dict, inputFile: dict) -> dict:
         """Collects nodes, elements, node sets and element sets from
         the input file.
 
         Parameters
         ----------
-        modelInfo
+        model
             A dictionary containing the model tree.
         inputFile
             A dictionary contaning the input file tree.
@@ -71,10 +71,10 @@ class AbqModelConstructor:
             The updated model tree.
         """
 
-        domainSize = modelInfo["domainSize"]
+        domainSize = model["domainSize"]
 
         # returns an dict of {node label: node}
-        nodeDefinitions = modelInfo["nodes"]
+        nodeDefinitions = model["nodes"]
         for nodeDefs in inputFile["*node"]:
             currNodeDefs = {}
             for l in nodeDefs["data"]:
@@ -92,10 +92,10 @@ class AbqModelConstructor:
 
             if "nset" in nodeDefs.keys():
                 setName = nodeDefs["nset"]
-                modelInfo["nodeSets"][setName] = list(currNodeDefs.keys())
+                model["nodeSets"][setName] = list(currNodeDefs.keys())
 
         # returns an dict of {element Label: element}
-        elements = modelInfo["elements"]
+        elements = model["elements"]
 
         for elDefs in inputFile["*element"]:
             elementType = elDefs["type"]
@@ -117,11 +117,11 @@ class AbqModelConstructor:
 
             if "elset" in elDefs.keys():
                 setName = elDefs["elset"]
-                modelInfo["elementSets"][setName] = list(currElDefs.values())
+                model["elementSets"][setName] = list(currElDefs.values())
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
-        elementSets = modelInfo["elementSets"]
+        elementSets = model["elementSets"]
 
         for elSetDefinition in inputFile["*elSet"]:
             name = elSetDefinition["elSet"]
@@ -167,7 +167,7 @@ class AbqModelConstructor:
 
         # generate dictionary of nodeObjects belonging to a specified nodeset
         # or generate nodeset by generate definition in inputfile
-        nodeSets = modelInfo["nodeSets"]
+        nodeSets = model["nodeSets"]
         for nSetDefinition in inputFile["*nSet"]:
             name = nSetDefinition["nSet"]
 
@@ -189,8 +189,8 @@ class AbqModelConstructor:
                     for nSet in line:
                         nodeSets[name] += nodeSets[nSet]
 
-        modelInfo["nodeSets"]["all"] = list(modelInfo["nodes"].values())
-        modelInfo["elementSets"]["all"] = list(modelInfo["elements"].values())
+        model["nodeSets"]["all"] = list(model["nodes"].values())
+        model["elementSets"]["all"] = list(model["elements"].values())
 
         # generate surfaces sets
         for surfaceDef in inputFile["*surface"]:
@@ -202,21 +202,21 @@ class AbqModelConstructor:
                 for l in data:
                     elSet, faceNumber = l
                     faceNumber = int(faceNumber.replace("S", ""))
-                    elements = modelInfo["elementSets"][elSet]
+                    elements = model["elementSets"][elSet]
                     elements += surface.setdefault(faceNumber, [])
                     surface[faceNumber] = elements
 
-            modelInfo["surfaces"][name] = surface
+            model["surfaces"][name] = surface
 
-        return modelInfo
+        return model
 
-    def createMaterialsFromInputFile(self, modelInfo, inputFile):
+    def createMaterialsFromInputFile(self, model, inputFile):
         """Collects material defintions from the input file.
         Creates instances of materials.
 
         Parameters
         ----------
-        modelInfo
+        model
             A dictionary containing the model tree.
         inputFile
             A dictionary contaning the input file tree.
@@ -234,16 +234,16 @@ class AbqModelConstructor:
 
             materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=np.float)
 
-            modelInfo["materials"][materialID] = {"name": materialName, "properties": materialProperties}
+            model["materials"][materialID] = {"name": materialName, "properties": materialProperties}
 
-        return modelInfo
+        return model
 
-    def createConstraintsFromInputFile(self, modelInfo, inputFile):
+    def createConstraintsFromInputFile(self, model, inputFile):
         """Collects constraint defintions from the input file.
 
         Parameters
         ----------
-        modelInfo
+        model
             A dictionary containing the model tree.
         inputFile
             A dictionary contaning the input file tree.
@@ -259,19 +259,19 @@ class AbqModelConstructor:
             constraint = constraintDef["type"]
             data = constraintDef["data"]
 
-            constraint = getConstraintClass(constraint)(name, data, modelInfo)
-            modelInfo["constraints"][name] = constraint
+            constraint = getConstraintClass(constraint)(name, data, model)
+            model["constraints"][name] = constraint
 
-        return modelInfo
+        return model
 
-    def createSectionsFromInputFile(self, modelInfo, inputFile):
+    def createSectionsFromInputFile(self, model, inputFile):
         """Collects section defintions from the input file.
         Assigns properties and section properties to all elements by
         the given section definitions.
 
         Parameters
         ----------
-        modelInfo
+        model
             A dictionary containing the model tree.
         inputFile
             A dictionary contaning the input file tree.
@@ -293,18 +293,18 @@ class AbqModelConstructor:
             # this was a bad design decision, and will be deprecated sooner or later:
             thickness = float(secDef.get("thickness", 0.0))
 
-            theSection = Section(name, data, materialID, thickness, modelInfo)
+            theSection = Section(name, data, materialID, thickness, model)
 
-            modelInfo = theSection.assignSectionPropertiesToModel(modelInfo)
+            model = theSection.assignSectionPropertiesToModel(model)
 
-        return modelInfo
+        return model
 
-    def createAnalyticalFieldsFromInputFile(self, modelInfo, inputFile):
+    def createAnalyticalFieldsFromInputFile(self, model, inputFile):
         """Collects field defintions from the input file.
 
         Parameters
         ----------
-        modelInfo
+        model
             A dictionary containing the model tree.
         inputFile
             A dictionary contaning the input file tree.
@@ -321,8 +321,8 @@ class AbqModelConstructor:
             analyticalFieldData = fieldDef["data"]
 
             analyticalFieldClass = getAnalyticalFieldByName(analyticalFieldType)
-            analyticalField = analyticalFieldClass(analyticalFieldName, analyticalFieldData, modelInfo)
+            analyticalField = analyticalFieldClass(analyticalFieldName, analyticalFieldData, model)
 
-            modelInfo["analyticalFields"][analyticalFieldName] = analyticalField
+            model["analyticalFields"][analyticalFieldName] = analyticalField
 
-        return modelInfo
+        return model

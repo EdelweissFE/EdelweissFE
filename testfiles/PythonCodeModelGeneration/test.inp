@@ -7,7 +7,7 @@ h=100
 
 *modelGenerator, generator=executePythonCode, name=gen-2, executeAfterManualGeneration=True
 ** we find all nodes at 50% of the height
-modelInfo['nodeSets']['center_horizontal'] = [n for n in modelInfo['nodes'].values() 
+model['nodeSets']['center_horizontal'] = [n for n in model['nodes'].values() 
                                                 if abs( n.coordinates[1] - 50.0 ) <= 1e-12 ]
 
 *material, name=linearelastic, id=linearelastic

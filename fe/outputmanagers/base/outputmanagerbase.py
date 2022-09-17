@@ -46,7 +46,7 @@ class OutputManagerBase(ABC):
         The dictionary containing the definition of the output manager.
     jobInfo
         A dictionary containing the definition of the job.
-    modelInfo
+    model
         A dictionary containing the model tree.
     fieldOutputController
         The field output contoller instance.
@@ -64,7 +64,7 @@ class OutputManagerBase(ABC):
         name: str,
         definitionLines: dict,
         jobInfo: dict,
-        modelInfo: dict,
+        model: dict,
         fieldOutputController: FieldOutputController,
         journal: Journal,
         plotter: Plotter,

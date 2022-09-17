@@ -45,14 +45,14 @@ import sympy as sp
 
 
 class StepAction(StepActionBase):
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
         self.forceAtStepStart = 0.0
-        self.elements = modelInfo["elementSets"][action["elSet"]]
+        self.elements = model["elementSets"][action["elSet"]]
         magnitude = np.fromstring(action["forceVector"], sep=",", dtype=np.double)
 
-        if len(magnitude) < modelInfo["domainSize"]:
+        if len(magnitude) < model["domainSize"]:
             raise Exception("BodyForce {:}: force vector has wrong dimension!".format(self.name))
 
         self.delta = magnitude
@@ -77,7 +77,7 @@ class StepAction(StepActionBase):
             self.delta = 0
             self.idle = True
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         if "forceVector" in action:
             self.delta = np.fromstring(action["forceVector"], sep=",", dtype=np.double) - self.forceAtStepStart

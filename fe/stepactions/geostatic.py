@@ -52,11 +52,11 @@ class StepAction(StepActionBase):
     """Initializes elements of set with an Abaqus-like geostatic stress state.
     Is automatically deactivated at the end of the step."""
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
 
-        self.geostaticElements = modelInfo["elementSets"][action.get("elSet", "all")]
+        self.geostaticElements = model["elementSets"][action.get("elSet", "all")]
         self.p1 = float(action["p1"])
         self.p2 = float(action.get("p2", self.p1))
         self.level1 = float(action.get("h1", 1.0))

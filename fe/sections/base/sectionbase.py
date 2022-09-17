@@ -38,7 +38,7 @@ from abc import ABC, abstractmethod
 
 
 class Section(ABC):
-    def __init__(self, name, datalines, materialName, thickness, modelInfo):
+    def __init__(self, name, datalines, materialName, thickness, model):
         self.elSetNames = []
         self.materialParameterFromFieldDefs = []
 
@@ -64,9 +64,9 @@ class Section(ABC):
                     )
 
                 if "f(p,f)" in definition.keys():
-                    definition["expression"] = createFunction(definition["f(p,f)"], "p", "f", modelInfo=modelInfo)
+                    definition["expression"] = createFunction(definition["f(p,f)"], "p", "f", model=model)
                 else:
-                    definition["expression"] = createFunction("f", "p", "f", modelInfo=modelInfo)
+                    definition["expression"] = createFunction("f", "p", "f", model=model)
 
                 self.materialParameterFromFieldDefs.append(definition)
             else:
@@ -75,16 +75,16 @@ class Section(ABC):
         self.materialName = materialName
 
     @abstractmethod
-    def assignSectionPropertiesToModel(self, modelInfo):
+    def assignSectionPropertiesToModel(self, model):
         pass
 
-    def propertiesFromField(self, el, material, modelInfo):
+    def propertiesFromField(self, el, material, model):
         coordinatesAtCenter = el.getCoordinatesAtCenter()
         materialProperties = np.copy(material["properties"])
 
         for definition in self.materialParameterFromFieldDefs:
             index = int(definition["index"])
-            fieldValue = modelInfo["analyticalFields"][definition["field"]].evaluateAtCoordinates(coordinatesAtCenter)
+            fieldValue = model["analyticalFields"][definition["field"]].evaluateAtCoordinates(coordinatesAtCenter)
             parameterValue = materialProperties[index]
 
             if strCaseCmp(definition["type"], "setToValue"):

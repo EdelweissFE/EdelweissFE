@@ -51,23 +51,23 @@ import sympy as sp
 class StepAction(StepActionBase):
     """Dirichlet boundary condition, based on a node set"""
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
 
         dirichletIndices = []
         dirichletDelta = []
 
-        nodeSets = modelInfo["nodeSets"]
+        nodeSets = model["nodeSets"]
         self.field = action["field"]
 
         if "analyticalField" in action:
-            self.analyticalField = modelInfo["analyticalFields"][action["analyticalField"]]
+            self.analyticalField = model["analyticalFields"][action["analyticalField"]]
 
         self.action = action
         self.nSet = nodeSets[action["nSet"]]
 
-        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, modelInfo["domainSize"]))]
+        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, model["domainSize"]))]
 
         if "components" in action:
             action = self._getDirectionsFromComponents(action)
@@ -104,7 +104,7 @@ class StepAction(StepActionBase):
 
         self.active = False
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.active = True
         dirichletIndices = []

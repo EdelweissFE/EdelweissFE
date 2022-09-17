@@ -51,7 +51,7 @@ class OutputManager(OutputManagerBase):
     identification = "ConditionalStop"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
@@ -60,7 +60,7 @@ class OutputManager(OutputManagerBase):
             entry = {}
             defDict = convertLineToStringDictionary
             entry["stop"] = createModelAccessibleFunction(
-                defDict["stop"], modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
+                defDict["stop"], model, fieldOutputs=fieldOutputController.fieldOutputs
             )
             self.monitorJobs.append(entry)
 

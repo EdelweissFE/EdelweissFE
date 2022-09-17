@@ -29,7 +29,7 @@
 """
 
 documentation = {
-    "f(x,y,z)": "Python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed",
+    "f(x,y,z)": "Python expression using variables x, y, z (coordinates); dictionaries contained in model can be accessed",
 }
 
 from fe.utils.misc import convertLinesToStringDictionary
@@ -40,16 +40,16 @@ from fe.utils.math import createModelAccessibleFunction
 
 
 class AnalyticalField(AnalyticalFieldBase):
-    def __init__(self, name, data, modelInfo):
+    def __init__(self, name, data, model):
         self.name = name
         self.type = "scalarExpression"
 
-        self.domainSize = modelInfo["domainSize"]
+        self.domainSize = model["domainSize"]
         self.options = convertLinesToStringDictionary(data)
 
         expressionString = self.options["f(x,y,z)"]
 
-        self.expression = createModelAccessibleFunction(expressionString, modelInfo, *"xyz"[: self.domainSize])
+        self.expression = createModelAccessibleFunction(expressionString, model, *"xyz"[: self.domainSize])
 
         return
 

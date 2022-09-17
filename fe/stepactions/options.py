@@ -39,10 +39,10 @@ from collections import defaultdict
 
 
 class StepAction(StepActionBase):
-    def __init__(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, options, jobInfo, model, fieldOutputController, journal):
         self.name = name
         self.options = dict()
-        self.updateStepAction(name, options, jobInfo, modelInfo, fieldOutputController, journal)
+        self.updateStepAction(name, options, jobInfo, model, fieldOutputController, journal)
 
     def __contains__(self, key):
         """We may work with this action like a dictionary."""
@@ -64,5 +64,5 @@ class StepAction(StepActionBase):
 
         return self.options.get(key.lower(), default)
 
-    def updateStepAction(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, options, jobInfo, model, fieldOutputController, journal):
         self.options.update(options)

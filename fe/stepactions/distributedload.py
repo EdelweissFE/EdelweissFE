@@ -49,11 +49,11 @@ import sympy as sp
 class StepAction(StepActionBase):
     """Distributed load, defined on an element-based surface"""
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
         self.magnitudeAtStepStart = 0.0
-        self.surface = modelInfo["surfaces"][action["surface"]]
+        self.surface = model["surfaces"][action["surface"]]
         self.loadType = action["type"]
         magnitude = np.fromstring(action["magnitude"], sep=",")
 
@@ -79,7 +79,7 @@ class StepAction(StepActionBase):
             self.delta = 0
             self.idle = True
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         if "magnitude" in action:
             self.delta = np.fromstring(action["magnitude"], sep=",") - self.magnitudeAtStepStart

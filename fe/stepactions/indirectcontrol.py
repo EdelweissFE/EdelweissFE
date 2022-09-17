@@ -47,17 +47,17 @@ from fe.utils.math import evalModelAccessibleExpression
 class StepAction(StepActionBase):
     identification = "IndirectControl"
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
         self.journal = journal
-        self.modelInfo = modelInfo
+        self.model = model
         self.c = np.array([-1, 1])
         self.currentL0 = 0.0
 
         self.L = float(action["L"])
-        self.dof1 = evalModelAccessibleExpression(action["dof1"], modelInfo)
-        self.dof2 = evalModelAccessibleExpression(action["dof2"], modelInfo)
+        self.dof1 = evalModelAccessibleExpression(action["dof1"], model)
+        self.dof2 = evalModelAccessibleExpression(action["dof2"], model)
 
         self.definition = str(action.get("definition", "absolute"))
         self.idcs = np.array([self.dof1, self.dof2])
@@ -79,13 +79,13 @@ class StepAction(StepActionBase):
     def applyAtStepEnd(self, U, P):
         self.currentL0 = self.c.dot(U[self.idcs])
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
         if self.definition == "absolute":
             self.L = float(action["L"]) - self.currentL0
         else:
             self.L = float(action["L"])
-        self.dof1 = evalModelAccessibleExpression(action["dof1"], modelInfo)
-        self.dof2 = evalModelAccessibleExpression(action["dof2"], modelInfo)
+        self.dof1 = evalModelAccessibleExpression(action["dof1"], model)
+        self.dof2 = evalModelAccessibleExpression(action["dof2"], model)
 
         self.idcs = np.array([self.dof1, self.dof2])
         self.c = np.array([-1, 1])

@@ -51,7 +51,7 @@ from fe.utils.math import evalModelAccessibleExpression
 class StepAction(StepActionBase):
     identification = "IndirectControl"
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
         self.journal = journal
 
@@ -59,7 +59,7 @@ class StepAction(StepActionBase):
 
         self.L = float(action["L"])
 
-        self.generateCVectorAndIndices(name, action, jobInfo, modelInfo, fieldOutputController, journal)
+        self.generateCVectorAndIndices(name, action, jobInfo, model, fieldOutputController, journal)
 
         if "exportCVector" in action:
             np.savetxt(action["exportCVector"] + ".csv", self.cVector)
@@ -80,16 +80,16 @@ class StepAction(StepActionBase):
     def applyAtStepEnd(self, U, P):
         self.currentL0 = self.cVector.dot(U[self.idcs])
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
         if self.definition == "absolute":
             self.L = float(action["L"]) - self.currentL0
         else:
             self.L = float(action["L"])
 
-        self.generateCVectorAndIndices(name, action, jobInfo, modelInfo, fieldOutputController, journal)
+        self.generateCVectorAndIndices(name, action, jobInfo, model, fieldOutputController, journal)
 
-    def generateCVectorAndIndices(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
-        contractionNSet = modelInfo["nodeSets"][action["contractionNSet"]]
+    def generateCVectorAndIndices(self, name, action, jobInfo, model, fieldOutputController, journal):
+        contractionNSet = model["nodeSets"][action["contractionNSet"]]
 
         nNodes = len(contractionNSet)
 
