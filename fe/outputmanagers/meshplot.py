@@ -166,15 +166,15 @@ class MeshPlot:
 class OutputManager(OutputManagerBase):
     identification = "meshPlot"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
-        self.domainSize = modelInfo["domainSize"]
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+        self.domainSize = model["domainSize"]
         self.plotter = plotter
         self.journal = journal
 
-        self.nodes = modelInfo["nodes"]
-        self.elements = modelInfo["elements"]
-        self.elSets = modelInfo["elementSets"]
-        self.nSets = modelInfo["nodeSets"]
+        self.nodes = model["nodes"]
+        self.elements = model["elements"]
+        self.elSets = model["elementSets"]
+        self.nSets = model["nodeSets"]
 
         # write List of nodeLabels
         self.labelList = np.asarray([nodeNumber for nodeNumber in self.nodes.keys()])
@@ -195,7 +195,7 @@ class OutputManager(OutputManagerBase):
 
         # needed for meshOnly plot
         fpDef = {"result": "U", "field": "displacement", "name": "meshDisplacements", "elSet": "all"}
-        fieldOutputController.fieldOutputs[fpDef["name"]] = FieldOutput(modelInfo, fpDef, journal)
+        fieldOutputController.fieldOutputs[fpDef["name"]] = FieldOutput(model, fpDef, journal)
 
         for defLine in definitionLines:
             definition = convertLineToStringDictionary(defLine)

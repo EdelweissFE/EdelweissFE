@@ -53,17 +53,17 @@ from fe.constraints.base.constraintbase import ConstraintBase
 
 
 class Constraint(ConstraintBase):
-    def __init__(self, name, definitionLines, modelInfo):
-        super().__init__(name, definitionLines, modelInfo)
+    def __init__(self, name, definitionLines, model):
+        super().__init__(name, definitionLines, model)
 
         definition = convertLinesToStringDictionary(definitionLines)
 
         self.theField = definition.get("field", "displacement")
 
         self.cVector = np.fromstring(definition["cVector"], dtype=np.float, sep=",")
-        self.constrainedNSet = modelInfo["nodeSets"][definition["constrainedNSet"]]
+        self.constrainedNSet = model["nodeSets"][definition["constrainedNSet"]]
 
-        self.loadNSet = modelInfo["nodeSets"][definition["loadNSet"]]
+        self.loadNSet = model["nodeSets"][definition["loadNSet"]]
         self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
 
         # we may normalize in order to end up with an identical load irrespective of the number of nodes
@@ -90,7 +90,7 @@ class Constraint(ConstraintBase):
             ]
         ] * len(self._nodes)
 
-        nDim = modelInfo["domainSize"]
+        nDim = model["domainSize"]
 
         sizeBlock_loadNodes = nDim * len(self.loadNSet)
         self.startBlock_loadNodes = 0

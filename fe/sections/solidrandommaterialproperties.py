@@ -3,16 +3,16 @@ from fe.sections.base.randomfieldbase import Section as RandomBase
 
 
 class Section(RandomBase):
-    def __init__(self, name, options, materialName, t, modelInfo):
+    def __init__(self, name, options, materialName, t, model):
 
-        super().__init__(name, options, materialName, t, modelInfo)
+        super().__init__(name, options, materialName, t, model)
 
         self.indexRandom = int(self.options["indexRandom"])
 
-    def assignSectionPropertiesToModel(self, modelInfo):
+    def assignSectionPropertiesToModel(self, model):
 
-        elSets = [modelInfo["elementSets"][setName] for setName in self.elSetNames]
-        material = modelInfo["materials"][self.materialName]
+        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
+        material = model["materials"][self.materialName]
 
         indexRandom = self.indexRandom
 
@@ -30,4 +30,4 @@ class Section(RandomBase):
 
                 el.setMaterial(material["name"], materialProperties)
 
-        return modelInfo
+        return model

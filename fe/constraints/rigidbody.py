@@ -46,20 +46,20 @@ class Constraint(ConstraintBase):
     Currently only available for spatialdomain = 3D.
     """
 
-    def __init__(self, name, definitionLines, modelInfo):
-        super().__init__(name, definitionLines, modelInfo)
+    def __init__(self, name, definitionLines, model):
+        super().__init__(name, definitionLines, model)
 
         # self.name = name
         definition = convertLinesToStringDictionary(definitionLines)
 
-        self.nDim = modelInfo["domainSize"]
+        self.nDim = model["domainSize"]
         nDim = self.nDim
 
         if nDim == 2:
             raise Exception("rigid body constraint not yet implemented for 2D")
 
         rbNset = definition["nSet"]
-        nodeSets = modelInfo["nodeSets"]
+        nodeSets = model["nodeSets"]
 
         self.referencePoint = nodeSets[definition["referencePoint"]][0]
         self.slaveNodes = nodeSets[rbNset]  # may also contain the RP, doesn't really matter as we remove it

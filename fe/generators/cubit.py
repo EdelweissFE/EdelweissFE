@@ -53,7 +53,7 @@ import os
 import shlex
 
 
-def generateModelData(generatorDefinition, modelInfo, journal):
+def generateModelData(generatorDefinition, model, journal):
 
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
@@ -128,8 +128,8 @@ def generateModelData(generatorDefinition, modelInfo, journal):
             elDef["type"] = elDict[elSet]
 
     abqModelConstructor = AbqModelConstructor(journal)
-    modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, fileDict)
-    modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, fileDict)
-    modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, fileDict)
+    model = abqModelConstructor.createGeometryFromInputFile(model, fileDict)
+    model = abqModelConstructor.createSectionsFromInputFile(model, fileDict)
+    model = abqModelConstructor.createConstraintsFromInputFile(model, fileDict)
 
-    return modelInfo
+    return model

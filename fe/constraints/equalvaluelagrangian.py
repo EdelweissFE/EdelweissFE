@@ -48,15 +48,15 @@ from fe.constraints.base.constraintbase import ConstraintBase
 
 
 class Constraint(ConstraintBase):
-    def __init__(self, name, definitionLines, modelInfo):
+    def __init__(self, name, definitionLines, model):
 
         definition = convertLinesToStringDictionary(definitionLines)
 
         theField = definition["field"]
-        self.sizeField = getFieldSize(theField, modelInfo["domainSize"])
+        self.sizeField = getFieldSize(theField, model["domainSize"])
         self.component = int(definition["component"])
         self._name = name
-        self._nodes = modelInfo["nodeSets"][definition["nSet"]]
+        self._nodes = model["nodeSets"][definition["nSet"]]
         self.nNodes = len(self._nodes)
         self.nMultipliers = len(self._nodes) - 1
 

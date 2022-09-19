@@ -121,13 +121,13 @@ class DofManager:
 
     Parameters
     ----------
-    modelInfo
+    model
         A dictionary containing the model tree.
     """
 
-    def __init__(self, modelInfo: dict):
+    def __init__(self, model: dict):
 
-        self.modelInfo = modelInfo
+        self.model = model
 
         self.activateFieldsOnNodes()
 
@@ -155,14 +155,14 @@ class DofManager:
     ):
         """Activate all fields on nodes, which are required in the analysis."""
 
-        modelInfo = self.modelInfo
+        model = self.model
 
-        for element in modelInfo["elements"].values():
+        for element in model["elements"].values():
             for node, nodeFields in zip(element.nodes, element.fields):
                 for field in nodeFields:
                     node.fields[field] = True
 
-        for constraint in modelInfo["constraints"].values():
+        for constraint in model["constraints"].values():
             for node, nodeFields in zip(constraint.nodes, constraint.fieldsOnNodes):
                 for field in nodeFields:
                     node.fields[field] = True
@@ -180,9 +180,9 @@ class DofManager:
                 * indices
         """
 
-        nodes = self.modelInfo["nodes"]
-        domainSize = self.modelInfo["domainSize"]
-        # constraints = self.modelInfo["constraints"]
+        nodes = self.model["nodes"]
+        domainSize = self.model["domainSize"]
+        # constraints = self.model["constraints"]
 
         indicesOfFieldsInDofVector = OrderedDict()
         currentIndexInDofVector = 0
@@ -207,7 +207,7 @@ class DofManager:
         }
 
         indicesOfScalarVariablesInDofVector = []
-        for scalarVariable in self.modelInfo["scalarVariables"]:
+        for scalarVariable in self.model["scalarVariables"]:
             indicesOfScalarVariablesInDofVector.append(currentIndexInDofVector)
             scalarVariable.index = currentIndexInDofVector
             currentIndexInDofVector += 1
@@ -232,8 +232,8 @@ class DofManager:
 
         indicesOfFieldsInDofVector = self.indicesOfFieldsInDofVector
 
-        elements = self.modelInfo["elements"]
-        constraints = self.modelInfo["constraints"]
+        elements = self.model["elements"]
+        constraints = self.model["constraints"]
 
         accumulatedNumberOfFieldFluxes = {}
         accumulatedNodalFluxesTotal = 0
@@ -270,8 +270,8 @@ class DofManager:
                 - largest number of dofs on a element
         """
 
-        elements = self.modelInfo["elements"]
-        constraints = self.modelInfo["constraints"]
+        elements = self.model["elements"]
+        constraints = self.model["constraints"]
 
         sizeVIJ = 0
         accumulatedElementNDof = 0
@@ -303,8 +303,8 @@ class DofManager:
             A dictionary containing the location mapping.
         """
 
-        elements = self.modelInfo["elements"]
-        constraints = self.modelInfo["constraints"]
+        elements = self.model["elements"]
+        constraints = self.model["constraints"]
         entitiesInDofVector = {}
 
         for el in elements.values():
@@ -347,8 +347,8 @@ class DofManager:
              - the entities to system matrix entry mapping.
         """
 
-        elements = self.modelInfo["elements"]
-        constraints = self.modelInfo["constraints"]
+        elements = self.model["elements"]
+        constraints = self.model["constraints"]
 
         entitiesInVIJ = {}
         entitiesInDofVector = self.entitiesInDofVector

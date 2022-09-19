@@ -46,15 +46,15 @@ from fe.sections.base.sectionbase import Section as SectionBase
 
 
 class Section(SectionBase):
-    def __init__(self, name, options, materialName, thickness, modelInfo):
-        super().__init__(name, options, materialName, thickness, modelInfo)
+    def __init__(self, name, options, materialName, thickness, model):
+        super().__init__(name, options, materialName, thickness, model)
         self.thickness = thickness
         if not thickness > 0:
             raise ValueError("{}: Thickness must be greater than zero".format(name))
 
-    def assignSectionPropertiesToModel(self, modelInfo):
-        elSets = [modelInfo["elementSets"][setName] for setName in self.elSetNames]
-        material = modelInfo["materials"][self.materialName]
+    def assignSectionPropertiesToModel(self, model):
+        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
+        material = model["materials"][self.materialName]
 
         elProperties = np.array(
             [
@@ -66,7 +66,7 @@ class Section(SectionBase):
         if any(self.materialParameterFromFieldDefs):
             for elSet in elSets:
                 for el in elSet:
-                    materialProperties = super().propertiesFromField(el, material, modelInfo)
+                    materialProperties = super().propertiesFromField(el, material, model)
 
                     el.setProperties(elProperties)
                     el.initializeElement()
@@ -79,4 +79,4 @@ class Section(SectionBase):
                     el.initializeElement()
                     el.setMaterial(material["name"], material["properties"])
 
-        return modelInfo
+        return model

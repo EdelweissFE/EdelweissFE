@@ -50,7 +50,7 @@ class OutputManager(OutputManagerBase):
     identification = "Statusfile"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.filename = "{:}.sta".format(jobInfo["name"])
         for defline in definitionLines:

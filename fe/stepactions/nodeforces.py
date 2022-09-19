@@ -50,18 +50,18 @@ import sympy as sp
 class StepAction(StepActionBase):
     """Defines node based load, defined on a nodeset."""
 
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
         nodeForceIndices = []
         nodeForceDelta = []
-        nodeSets = modelInfo["nodeSets"]
+        nodeSets = model["nodeSets"]
 
         self.field = action["field"]
         self.idle = False
         self.nSet = nodeSets[action["nSet"]]
 
-        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, modelInfo["domainSize"]))]
+        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, model["domainSize"]))]
 
         if "components" in action:
             action = self._getDirectionsFromComponents(action)
@@ -114,7 +114,7 @@ class StepAction(StepActionBase):
             self.nodeForcesDelta = 0
             self.idle = True
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
         """Update the step action.
 
         It is a reasonable requirement that the updated direction components cannot change.

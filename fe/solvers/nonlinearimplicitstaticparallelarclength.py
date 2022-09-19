@@ -59,7 +59,7 @@ class NISTPArcLength(NISTParallel):
         step: dict,
         time: float,
         stepActions: dict[str, StepActionBase],
-        modelInfo: dict,
+        model: dict,
         U: DofVector,
         P: DofVector,
         fieldOutputController: FieldOutputController,
@@ -81,7 +81,7 @@ class NISTPArcLength(NISTParallel):
         try:
             stopCondition = stepActions["options"]["NISTArcLength"]["stopCondition"]
             self.checkConditionalStop = createModelAccessibleFunction(
-                stopCondition, modelInfo=modelInfo, fieldOutputs=fieldOutputController.fieldOutputs
+                stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
             )
         except KeyError:
             pass
@@ -89,7 +89,7 @@ class NISTPArcLength(NISTParallel):
         self.dLambda = 0.0
 
         return super().solveStep(
-            stepNumber, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
+            stepNumber, step, time, stepActions, model, U, P, fieldOutputController, outputmanagers
         )
 
     def solveIncrement(

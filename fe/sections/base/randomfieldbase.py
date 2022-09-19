@@ -8,7 +8,7 @@ import warnings
 
 
 class Section(SectionBase):
-    def __init__(self, name, options, materialName, t, modelInfo):
+    def __init__(self, name, options, materialName, t, model):
         warnings.warn(
             "'solidrandommaterialproperties' section type is deprecated and will be removed in the future; use 'solid' or 'plane' section section with 'materialParametersFromField' option instead"
         )
@@ -20,7 +20,7 @@ class Section(SectionBase):
 
         self.elSetNames = [s.strip() for s in options["elSets"].split(",")]
 
-        dimension = modelInfo["domainSize"]
+        dimension = model["domainSize"]
         variance = float(options["variance"])
         lengthScale = float(options["lengthScale"])
         seed = int(options["seed"])
@@ -32,4 +32,4 @@ class Section(SectionBase):
         )
         self.srf = gstools.SRF(model, seed=seed)
 
-        self.randomFunction = createFunction(options["f(x,ref,rand)"], "x", "ref", "rand", modelInfo=modelInfo)
+        self.randomFunction = createFunction(options["f(x,ref,rand)"], "x", "ref", "rand", model=model)

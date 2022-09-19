@@ -606,7 +606,7 @@ def createUnstructuredPartFromElementSet(setName, elementSet: list, partID: int)
 class OutputManager(OutputManagerBase):
     identification = "Ensight Export"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.name = name
 
         self.timeAtLastOutput = -1e16
@@ -614,7 +614,7 @@ class OutputManager(OutputManagerBase):
         self.finishedSteps = 0
         self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
-        self.domainSize = modelInfo["domainSize"]
+        self.domainSize = model["domainSize"]
         self.fieldOutputController = fieldOutputController
         self.journal = journal
 
@@ -637,7 +637,7 @@ class OutputManager(OutputManagerBase):
         self.transientPerNodeJobs = []
         self.transientPerElementJobs = []
 
-        elementSets = modelInfo["elementSets"]
+        elementSets = model["elementSets"]
 
         elSetParts = []
         partCounter = 1
@@ -691,13 +691,13 @@ class OutputManager(OutputManagerBase):
                 if varType == "perElement":
                     perElementJob = {}
                     name = definition["name"]
-                    elSet = modelInfo["elementSets"][definition["elSet"]]
+                    elSet = model["elementSets"][definition["elSet"]]
                     part = self.elSetToEnsightPartMappings[definition["elSet"]]
 
                     # TODO: don't do this for each output job, but only once!
                     elementsOfShape = disassembleElsetToEnsightShapes(elSet)
 
-                    thedata = evalModelAccessibleExpression(definition["modeldata"], modelInfo)
+                    thedata = evalModelAccessibleExpression(definition["modeldata"], model)
                     result = np.asarray(thedata, dtype=float)
 
                     varDict = {shape: result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items()}

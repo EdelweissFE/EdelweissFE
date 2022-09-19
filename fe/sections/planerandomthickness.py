@@ -5,7 +5,7 @@ from fe.utils.math import createFunction
 
 
 class Section:
-    def __init__(self, name, options, materialName, t, modelInfo):
+    def __init__(self, name, options, materialName, t, model):
 
         self.options = convertLinesToStringDictionary(options)
         options = self.options
@@ -15,7 +15,7 @@ class Section:
         self.elSetNames = [options["elSet"]]
         self.referenceThickness = np.array([float(options["thickness"])], dtype=float)
 
-        dimension = modelInfo["domainSize"]
+        dimension = model["domainSize"]
         variance = float(options["variance"])
         lengthScale = float(options["lengthScale"])
         seed = int(options["seed"])
@@ -27,12 +27,12 @@ class Section:
         )
         self.srf = gstools.SRF(model, seed=seed)
 
-        self.randomFunction = createFunction(options["f(x,ref,rand)"], "x", "ref", "rand", modelInfo=modelInfo)
+        self.randomFunction = createFunction(options["f(x,ref,rand)"], "x", "ref", "rand", model=model)
 
-    def assignSectionPropertiesToModel(self, modelInfo):
+    def assignSectionPropertiesToModel(self, model):
 
-        elSets = [modelInfo["elementSets"][setName] for setName in self.elSetNames]
-        material = modelInfo["materials"][self.materialName]
+        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
+        material = model["materials"][self.materialName]
 
         for elSet in elSets:
             for el in elSet:
@@ -47,4 +47,4 @@ class Section:
                 el.initializeElement()
                 el.setMaterial(material["name"], material["properties"])
 
-        return modelInfo
+        return model

@@ -48,14 +48,14 @@ from inspect import signature
 
 
 class AnalyticalField(AnalyticalFieldBase):
-    def __init__(self, name, data, modelInfo):
+    def __init__(self, name, data, model):
 
         self.name = name
         self.type = "randomScalar"
 
         options = convertLinesToStringDictionary(data)
 
-        self.domainSize = modelInfo["domainSize"]
+        self.domainSize = model["domainSize"]
 
         modelType = options.get("model", "Gaussian")
         mean = float(options.get("mean", 0.0))
