@@ -21,7 +21,7 @@ elType=CPS4
 nX=10
 nY=10
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 configuration, overwrite=yes
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
@@ -30,7 +30,7 @@ create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 
-*step, jobName=cpe4job, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=2
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.5, 1=0.001

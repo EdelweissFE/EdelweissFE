@@ -52,7 +52,7 @@ import numpy as np
 class OutputManager(OutputManagerBase):
     identification = "PathPlotter"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.plotter = plotter
@@ -102,7 +102,7 @@ class OutputManager(OutputManagerBase):
                     np.asarray(entry["pathDistances"]),
                 )
 
-    def initializeSimulation(self, modelInfo):
+    def initializeSimulation(self, model):
         pass
 
     def initializeStep(self, step, stepActions):

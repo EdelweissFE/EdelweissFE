@@ -1,31 +1,28 @@
 *material, name=LinearElastic, id=mat
 30000.0, 0.15
 
-*job, name=job, domain=3d, solver=NISTParallel
+*job, name=job, domain=2d, solver=NISTParallel
 
-*modelGenerator, generator=boxGen, name=gen
+*modelGenerator, generator=planeRectQuad, name=gen
 x0      =0
 y0      =0
-z0      =0
 nX      =10
 nY      =10
-nZ      =1
-lX      =50
-lY      =50
-lZ      =10
-elType  =C3D8
+l       =50
+h       =50
+elType  =CPE4
 
-*section, name=section1, material=mat, type=solid
-materialParameterFromField, index=0, field=AnalyticalField-01, type=settovalue
+*section, name=section1, material=mat, type=plane, thickness=1.
+** materialParameterFromField, index=0, field=AnalyticalField-01, type=settovalue
 ** materialParameterFromField, index=0, field=AnalyticalField-01, type=settovalue, "f(p,f)=3*f"
 ** materialParameterFromField, index=0, field=AnalyticalField-02, type=scale
-** materialParameterFromField, index=0, field=AnalyticalField-02, type=scale, "f(p,f)=3*f"
+materialParameterFromField, index=1, field=AnalyticalField-02, type=settovalue, "f(p,f)=max(0.15, min(f, .35))"
 all
 
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
-elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+elSet=all, result=strain, name=strain, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
+elSet=all, result=stress, name=stress, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
 
 *output, type=ensight, name=test
 create=perNode, fieldOutput=displacement
@@ -33,6 +30,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 
 create=perElement, elSet=all, modeldata="[el._materialProperties[0] for el in elementSets['all']]", name=E
+create=perElement, elSet=all, modeldata="[el._materialProperties[1] for el in elementSets['all']]", name=nu
 
 configuration, overwrite=yes
 
@@ -47,16 +45,15 @@ seed        = 3
 
 *AnalyticalField, name=AnalyticalField-02, type=randomScalar
 model       = Gaussian
-mean        = .5
-variance    = .5e-2
-lengthscale = 10
+mean        = .25
+variance    = .5e-1
+lengthscale = 5
 seed        = 4
 
-*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+*step, stepLength=1
 dirichlet,  name=x0u, nSet=gen_left,      field=displacement, 1=0.
 dirichlet,  name=y0u, nSet=gen_bottom,    field=displacement, 2=0.
-dirichlet,  name=z0u, nSet=gen_back,      field=displacement, 3=0.
 
-*step, maxInc=1e-0, minInc=1e-2, maxNumInc=100, maxIter=25, stepLength=1
+*step, stepLength=1
 distributedload, name=y1u, surface=gen_top,  field=displacement, magnitude=100, type=pressure
 

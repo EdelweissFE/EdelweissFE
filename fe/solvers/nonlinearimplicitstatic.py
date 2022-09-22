@@ -114,7 +114,7 @@ class NIST:
         step: dict,
         time: float,
         stepActions: dict[str, StepActionBase],
-        modelInfo: dict,
+        model: dict,
         U: DofVector,
         P: DofVector,
         fieldOutputController: FieldOutputController,
@@ -132,7 +132,7 @@ class NIST:
             The time at beginning of the step.
         stepActions
             The dictionary containing all step actions.
-        modelInfo
+        model
             A dictionary containing the model tree.
         U
             The current solution vector.
@@ -178,9 +178,9 @@ class NIST:
 
         dU = self.theDofManager.constructDofVector()
 
-        elements = modelInfo["elements"]
+        elements = model["elements"]
 
-        constraints = modelInfo["constraints"]
+        constraints = model["constraints"]
 
         lastIncrementSize = False
         success = False

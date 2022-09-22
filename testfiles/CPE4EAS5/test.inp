@@ -27,18 +27,18 @@ nX=40
 *output, type=monitor
 fieldOutput=maxDisp
 
-*output, type=ensight, jobName=cps4job, name=esExport
-create=perNode, fieldOutput=displacement,
-create=perElement, fieldOutput=stress,
-create=perElement, fieldOutput=eas0,
-create=perElement, fieldOutput=eas1,
-create=perElement, fieldOutput=eas1,
-create=perElement, fieldOutput=eas2,
-create=perElement, fieldOutput=eas3,
-create=perElement, fieldOutput=eas4,
+*output, type=ensight, name=esExport
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=eas0
+create=perElement, fieldOutput=eas1
+create=perElement, fieldOutput=eas1
+create=perElement, fieldOutput=eas2
+create=perElement, fieldOutput=eas3
+create=perElement, fieldOutput=eas4
 configuration, overwrite=yes
 
-*step, jobName=cps4job, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, 
 dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0
 distributedload, name=dload, surface=gen_top, magnitude=10, f(t)=t, type=pressure

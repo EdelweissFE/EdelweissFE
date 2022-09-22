@@ -15,20 +15,20 @@ elType  = CPE4
 *section, name=section1, material=myMaterial, type=plane, thickness=1
 all
 
-*fieldOutput,
+*fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 nSet=gen_top, field=displacement, result=U, name=disp_top
 nSet=gen_bottom, field=displacement, result=P, name=RF
 elSet=all, result=strain, name=strain, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
 elSet=all, result=stress, name=stress, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
 
-*output, type=ensight, jobName=job, 
+*output, type=ensight, 
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*output, type=monitor, jobName=job, name=dispMon
+*output, type=monitor, name=dispMon
 fieldOutput=disp_top, f(x)='mean(x[:,1])'
 fieldOutput=RF, f(x)='sum(x[:,1])'
 
@@ -37,7 +37,7 @@ gen_leftBottom
 gen_leftTop
 
 *constraint, type=penaltyindirectcontrol, name=pc1
-field=displacement,
+field=displacement
 cVector='0, 0, 0, -1'
 constrainedNSet=measurement_nodes
 loadNSet=gen_rightTop
@@ -46,9 +46,9 @@ length=-1
 penaltyStiffness=1e6
 offset=0
 
-*step, jobName=job, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
 modelupdate, update='constraints["pc1"].active=False'
 dirichlet,  name=fix_bottom, nSet=gen_bottom, field=displacement, 1=0, 2=0
 
-*step, jobName=job, maxInc=2e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=2e-2, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1
 modelupdate, update='constraints["pc1"].active=True'

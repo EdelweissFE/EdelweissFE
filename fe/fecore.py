@@ -42,7 +42,7 @@ from fe.config.stepactions import stepActionFactory
 from fe.config.outputmanagers import getOutputManagerClass
 from fe.config.solvers import getSolverByName
 from fe.utils.fieldoutput import FieldOutputController
-from fe.utils.misc import filterByJobName, convertAssignmentsToStringDictionary, splitLineAtCommas
+from fe.utils.misc import convertAssignmentsToStringDictionary, splitLineAtCommas
 from fe.utils.plotter import Plotter
 from fe.utils.exceptions import StepFailed
 from fe.utils.dofmanager import DofManager, DofVector
@@ -59,7 +59,7 @@ from fe.stepactions.base.stepactionbase import StepActionBase
 def gatherStepActions(
     step: dict,
     jobInfo: dict,
-    modelInfo: dict,
+    model: dict,
     time: float,
     U: DofVector,
     P: DofVector,
@@ -82,7 +82,7 @@ def gatherStepActions(
         The step active for which the actions are gathered.
     jobInfo
         A dictionary containing information on the job.
-    modelInfo
+    model
         A dictionary containing the model tree.
     time
         The current time of the simulation.
@@ -113,12 +113,12 @@ def gatherStepActions(
 
         if moduleName in stepActions[module]:
             stepActions[module][moduleName].updateStepAction(
-                moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+                moduleName, options, jobInfo, model, fieldOutputController, journal
             )
             journal.message('Stepaction "{:}" will be updated'.format(moduleName), "stepActionManager", 1)
         else:
             stepActions[module][moduleName] = stepActionFactory(module)(
-                moduleName, options, jobInfo, modelInfo, fieldOutputController, journal
+                moduleName, options, jobInfo, model, fieldOutputController, journal
             )
 
     return stepActions
@@ -171,7 +171,7 @@ def finiteElementSimulation(
     modelDomain = job["domain"]
     domainSize = domainMapping[modelDomain]
 
-    modelInfo = {
+    model = {
         "nodes": {},
         "elements": {},
         "nodeSets": {},
@@ -189,25 +189,25 @@ def finiteElementSimulation(
         if generatorDefinition.get("executeAfterManualGeneration", False):
             continue
         gen = generatorDefinition["generator"]
-        modelInfo = getGeneratorFunction(gen)(generatorDefinition, modelInfo, journal)
+        model = getGeneratorFunction(gen)(generatorDefinition, model, journal)
 
     # the standard 'Abaqus like' model generator is invoked unconditionally, and it has direct access to the inputfile
     abqModelConstructor = AbqModelConstructor(journal)
-    modelInfo = abqModelConstructor.createGeometryFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.createMaterialsFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.createConstraintsFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.createAnalyticalFieldsFromInputFile(modelInfo, inputfile)
-    modelInfo = abqModelConstructor.createSectionsFromInputFile(modelInfo, inputfile)
+    model = abqModelConstructor.createGeometryFromInputFile(model, inputfile)
+    model = abqModelConstructor.createMaterialsFromInputFile(model, inputfile)
+    model = abqModelConstructor.createConstraintsFromInputFile(model, inputfile)
+    model = abqModelConstructor.createAnalyticalFieldsFromInputFile(model, inputfile)
+    model = abqModelConstructor.createSectionsFromInputFile(model, inputfile)
 
     # call individual optional model generators,
     for generatorDefinition in inputfile["*modelGenerator"]:
         if not generatorDefinition.get("executeAfterManualGeneration", False):
             continue
         gen = generatorDefinition["generator"]
-        modelInfo = getGeneratorFunction(gen)(generatorDefinition, modelInfo, journal)
+        model = getGeneratorFunction(gen)(generatorDefinition, model, journal)
 
     # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
-    for constraintName, constraint in modelInfo["constraints"].items():
+    for constraintName, constraint in model["constraints"].items():
 
         nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables()
         journal.message(
@@ -217,12 +217,12 @@ def finiteElementSimulation(
         )
 
         scalarVariables = [ScalarVariable() for i in range(nAdditionalScalarVariables)]
-        modelInfo["scalarVariables"] += scalarVariables
+        model["scalarVariables"] += scalarVariables
 
         constraint.assignAdditionalScalarVariables(scalarVariables)
 
     # create total number of dofs and orderedDict of fieldType and associated numbered dofs
-    dofManager = DofManager(modelInfo)
+    dofManager = DofManager(model)
 
     journal.message("total size of eq. system: {:}".format(dofManager.nDof), identification, 0)
     journal.printSeperationLine()
@@ -238,27 +238,24 @@ def finiteElementSimulation(
     for updateConfig in inputfile["*updateConfiguration"]:
         updateConfiguration(updateConfig, jobInfo, journal)
 
-    # collect all job steps in a list of stepDictionaries
-    jobSteps = filterByJobName(inputfile["*step"], jobName)
-
     plotter = Plotter(journal, inputfile)
 
     # generate an instance of the desired solver
     Solver = getSolverByName(job.get("solver", "NIST"))
     solver = Solver(jobInfo, journal)
     U, P = solver.initialize()
-    modelInfo["solver"] = solver
+    model["solver"] = solver
 
-    fieldOutputController = FieldOutputController(modelInfo, inputfile, journal)
+    fieldOutputController = FieldOutputController(model, inputfile, journal)
 
     # collect all output managers in a list of objects
     outputmanagers = []
-    for outputDef in filterByJobName(inputfile["*output"], jobName):
+    for outputDef in inputfile["*output"]:
         OutputManager = getOutputManagerClass(outputDef["type"].lower())
         managerName = outputDef.get("name", jobName + outputDef["type"])
         definitionLines = outputDef["data"]
         outputmanagers.append(
-            OutputManager(managerName, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter)
+            OutputManager(managerName, definitionLines, jobInfo, model, fieldOutputController, journal, plotter)
         )
 
     stepActions = defaultdict(CaseInsensitiveDict)
@@ -266,16 +263,16 @@ def finiteElementSimulation(
     fieldOutputController.initializeJob(time, U, P)
 
     for man in outputmanagers:
-        man.initializeSimulation(modelInfo)
+        man.initializeSimulation(model)
     try:
-        for stepNumber, step in enumerate(jobSteps):
+        for stepNumber, step in enumerate(inputfile["*step"]):
             try:
                 stepActions = gatherStepActions(
-                    step, jobInfo, modelInfo, time, U, P, stepActions, fieldOutputController, journal
+                    step, jobInfo, model, time, U, P, stepActions, fieldOutputController, journal
                 )
 
                 for modelUpdate in stepActions["modelupdate"].values():
-                    modelInfo = modelUpdate.updateModel(modelInfo, fieldOutputController, journal)
+                    model = modelUpdate.updateModel(model, fieldOutputController, journal)
 
                 fieldOutputController.initializeStep(step, stepActions)
                 for manager in outputmanagers:
@@ -284,7 +281,7 @@ def finiteElementSimulation(
                 # solve the step
                 tic = getCurrentTime()
                 success, U, P, time = solver.solveStep(
-                    stepNumber, step, time, stepActions, modelInfo, U, P, fieldOutputController, outputmanagers
+                    stepNumber, step, time, stepActions, model, U, P, fieldOutputController, outputmanagers
                 )
                 toc = getCurrentTime()
 

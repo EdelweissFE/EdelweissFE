@@ -38,10 +38,10 @@ documentation = {}
 import os
 
 
-def generateModelData(generatorDefinition, modelInfo, journal):
+def generateModelData(generatorDefinition, model, journal):
 
     codeLines = "\n".join(generatorDefinition["data"])
 
-    exec(codeLines, {"modelInfo": modelInfo})
+    exec(codeLines, {"model": model})
 
-    return modelInfo
+    return model

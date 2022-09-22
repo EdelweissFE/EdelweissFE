@@ -43,7 +43,7 @@ class StepActionBase:
         A dictionary containing the options for this step action.
     jobInfo
         A dictionary containing the information about the job.
-    modelInfo
+    model
         A dictionary containing the model tree.
     fieldOutputController
         The fieldput controlling object.
@@ -56,7 +56,7 @@ class StepActionBase:
         name: str,
         definition: dict,
         jobInfo: dict,
-        modelInfo: dict,
+        model: dict,
         fieldOutputController: FieldOutputController,
         journal: Journal,
     ):
@@ -67,7 +67,7 @@ class StepActionBase:
         name: str,
         definition: dict,
         jobInfo: dict,
-        modelInfo: dict,
+        model: dict,
         fieldOutputController: FieldOutputController,
         journal: Journal,
     ):
@@ -81,7 +81,7 @@ class StepActionBase:
             A dictionary containing the options for this step action.
         jobInfo
             A dictionary containing the information about the job.
-        modelInfo
+        model
             A dictionary containing the model tree.
         fieldOutputController
             The fieldput controlling object.

@@ -4,7 +4,7 @@
 **fcu,      fcy,    ftu,    fbu,        Df,             GfI,        omegaMax,     
 47.4,       13,     4.74,   55,         0.85,           0.005,       .0
 **Ah,       Bh,     Ch,     Dh,         As,     
-0.12,       0.003,  2.0,    0.000001,   15.0,
+0.12,       0.003,  2.0,    0.000001,   15.0
 **a1,       a2,     a3,     a4,       lJ2
 0.50,       0.00,   0.50,  .00,   4.0
 
@@ -32,10 +32,10 @@ elType=CCPE8R
 nX=5
 nY=20
 
-*output, type=monitor, jobName=cpe4job, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=omega, f(x)='max(x)'
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=micro rotation
 create=perElement, fieldOutput=alphaP
@@ -43,11 +43,12 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*output, type=meshplot, jobName=cpe4job, name=RFPlot
+*output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
-*step, jobName=cpe4job, maxInc=1e-1, minInc=5e-5, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=1e-1, minInc=5e-5, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-2,
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-2
+

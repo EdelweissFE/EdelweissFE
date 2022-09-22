@@ -39,27 +39,27 @@ from fe.utils.math import execModelAccessibleExpression
 
 
 class StepAction(StepActionBase):
-    def __init__(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, options, jobInfo, model, fieldOutputController, journal):
         self.name = name
-        self.updateStepAction(name, options, jobInfo, modelInfo, fieldOutputController, journal)
+        self.updateStepAction(name, options, jobInfo, model, fieldOutputController, journal)
 
     def applyAtStepEnd(self, U, P):
         """By default, this action is only executed once."""
 
         self.active = False
 
-    def updateStepAction(self, name, options, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, options, jobInfo, model, fieldOutputController, journal):
         """Update the expression, and set the action active again."""
 
         self.updateExpression = options["update"]
         self.active = True
 
-    def updateModel(self, modelInfo, fieldOutputController, journal):
+    def updateModel(self, model, fieldOutputController, journal):
         """Update the model based on an executable provided Python expression."""
 
         if not self.active:
             return
 
         journal.message("Updating model: {:}".format(self.updateExpression), self.name)
-        execModelAccessibleExpression(self.updateExpression, modelInfo, fieldOutputs=fieldOutputController.fieldOutputs)
-        return modelInfo
+        execModelAccessibleExpression(self.updateExpression, model, fieldOutputs=fieldOutputController.fieldOutputs)
+        return model

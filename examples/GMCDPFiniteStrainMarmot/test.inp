@@ -20,7 +20,7 @@ elSet=all, result=alphaP, quadraturePoint=0:8, name=alphaP, f(x)='max( x[:,:], a
 elSet=all, result=alphaD, quadraturePoint=0:8, name=alphaD, f(x)='max( x[:,:], axis=1) '
 elSet=all, result=omega, quadraturePoint=0:8, name=omega, f(x)='max( x[:,:], axis=1) '
 
-*output, type=ensight, jobName=cpe4job, name=esExport
+*output, type=ensight, name=esExport
 configuration,     overwrite=True
 create=perNode,    fieldOutput=displacement
 create=perNode,    fieldOutput=micro rotation
@@ -29,7 +29,7 @@ create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 
-*step, jobName=cpe4job, maxInc=2e-2, minInc=1e-5, maxNumInc=10000, maxIter=25, stepLength=100
+*step, maxInc=2e-2, minInc=1e-5, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear, numThreads=8
 initializematerial, name=init, elSet=all 
 dirichlet, name=front, nSet=front_face,    field=displacement, 3=0

@@ -69,7 +69,7 @@ class FieldOutput:
 
     Parameters
     ----------
-    modelInfo
+    model
         A dictionary containing the model tree.
     definition
         A dictionary containing the definition of the field output.
@@ -77,7 +77,7 @@ class FieldOutput:
         The journal object for logging.
     """
 
-    def __init__(self, modelInfo: dict, definition: dict, journal: Journal):
+    def __init__(self, model: dict, definition: dict, journal: Journal):
         self.name = definition["name"]
         self.journal = journal
         self.timeTotal = 0.0
@@ -86,7 +86,7 @@ class FieldOutput:
             self.domainType = "nSet"
 
             self.type = "nodalResult"
-            self.nSet = modelInfo["nodeSets"][definition["nSet"]]
+            self.nSet = model["nodeSets"][definition["nSet"]]
             self.nSetName = definition["nSet"]
             self.resultVector = definition["result"]
             self.field = definition["field"]
@@ -104,7 +104,7 @@ class FieldOutput:
                 )
                 # an elset was given, but in fact a nodeset was 'meant': we extract the nodes of the elementset!
                 self.type = "nodalResult"
-                self.nSet = extractNodesFromElementSet(modelInfo["elementSets"][definition["elSet"]])
+                self.nSet = extractNodesFromElementSet(model["elementSets"][definition["elSet"]])
                 self.nSetName = definition["elSet"]
                 self.resultVector = definition["result"]
                 self.field = definition["field"]
@@ -114,7 +114,7 @@ class FieldOutput:
             else:
                 # it's really an elSet job
                 self.type = "elementResult"
-                self.elSet = modelInfo["elementSets"][definition["elSet"]]
+                self.elSet = model["elementSets"][definition["elSet"]]
                 self.elSetName = definition["elSet"]
                 self.resultName = definition["result"]
 
@@ -130,7 +130,7 @@ class FieldOutput:
         elif "modelData" in definition:
             self.domainType = "model"
             self.type = "modelData"
-            self.getCurrentModelDataResult = createModelAccessibleFunction(definition["modelData"], modelInfo=modelInfo)
+            self.getCurrentModelDataResult = createModelAccessibleFunction(definition["modelData"], model=model)
 
         else:
             raise Exception("invalid field output requested: " + definition["name"])
@@ -226,7 +226,7 @@ class FieldOutput:
             incrementResult = self.f(incrementResult)
 
         if self.appendResults:
-            self.result.append(incrementResult)
+            self.result.append(incrementResult.copy())
         else:
             self.result = incrementResult
 
@@ -367,7 +367,7 @@ class FieldOutputController:
 
     Parameters
     ----------
-    modelInfo
+    model
         A dictionary containing the model tree.
     inputFile
         A dictonary containing the field output definitios.
@@ -375,7 +375,7 @@ class FieldOutputController:
         The journal instance for logging.
     """
 
-    def __init__(self, modelInfo: dict, inputFile: dict, journal: Journal):
+    def __init__(self, model: dict, inputFile: dict, journal: Journal):
 
         self.fieldOutputs = {}
 
@@ -385,7 +385,7 @@ class FieldOutputController:
 
         for defLine in definition["data"]:
             fpDef = convertLineToStringDictionary(defLine)
-            self.fieldOutputs[fpDef["name"]] = FieldOutput(modelInfo, fpDef, journal)
+            self.fieldOutputs[fpDef["name"]] = FieldOutput(model, fpDef, journal)
 
     def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):
         """Finalize all field outputs at the end of an increment.

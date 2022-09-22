@@ -43,29 +43,29 @@ from fe.utils.exceptions import WrongDomain
 import numpy as np
 
 
-def generateModelData(generatorDefinition: dict, modelInfo: dict, journal: Journal):
+def generateModelData(generatorDefinition: dict, model: dict, journal: Journal):
 
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 
     loc = np.fromstring(options["location"], sep=",", dtype=np.float)
 
-    if len(loc) != modelInfo["domainSize"]:
+    if len(loc) != model["domainSize"]:
         raise WrongDomain("Spatial dimension of specified location does not match model dimension")
 
-    allNodes = np.asarray([n.coordinates for n in modelInfo["nodes"].values()])
+    allNodes = np.asarray([n.coordinates for n in model["nodes"].values()])
 
     differenceNorm = np.linalg.norm(allNodes - loc, axis=1)
 
     indexClosest = differenceNorm.argmin()
 
-    closestNode = list(modelInfo["nodes"].values())[indexClosest]
+    closestNode = list(model["nodes"].values())[indexClosest]
 
-    if options["storeIn"] in modelInfo["nodeSets"]:
-        modelInfo["nodeSets"][options["storeIn"]].append(closestNode)
+    if options["storeIn"] in model["nodeSets"]:
+        model["nodeSets"][options["storeIn"]].append(closestNode)
     else:
-        modelInfo["nodeSets"][options["storeIn"]] = [
+        model["nodeSets"][options["storeIn"]] = [
             closestNode,
         ]
 
-    return modelInfo
+    return model

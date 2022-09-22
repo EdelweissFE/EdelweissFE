@@ -6,7 +6,7 @@ nY=10
 elType=CPS4
 
 *material, name=LinearElasticShrinkage, id=mat
-**E,      nu,   timeToDays,  shrinkageType,   ultimateShrinkageStrain,   shrinkageHalfTime,  kHum,
+**E,      nu,   timeToDays,  shrinkageType,   ultimateShrinkageStrain,   shrinkageHalfTime,  kHum
   30000,  0.2,  0.04166666,  1,               -0.0002,                    360,                1
 
 *section, name=section1, thickness=1.0, material=mat, type=plane
@@ -14,21 +14,21 @@ all
 
 *job, name=cps4nljob, domain=2d, solver=NISTParallel
 
-*fieldOutput,
+*fieldOutput
 name=Displacement,      elSet=all,           field=displacement, result=U, 
 name=DisplacementN,      nSet=all,           field=displacement, result=U, 
 name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 
-*output, type=monitor, jobName=cps4nljob
+*output, type=monitor
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, jobName=cps4nljob,
+*output, type=ensight, 
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
-*output, type=meshPlot, jobName=cps4nljob
+*output, type=meshPlot
 figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', 
 figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', label=U
 
@@ -36,8 +36,8 @@ figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', 
 figure=1, axSpec=121, flipY=True, yLabel=$\\varepsilon\\thinspace$(-), xLabel=$t\\thinspace$(h)
 figure=1, axSpec=122, aspect=equal
 
-*step, jobName=cps4nljob, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
+*step, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=24
 dirichlet, name=bottom,  nSet=gen_bottom, field=displacement, 2=0.0
 dirichlet, name=corner,  nSet=gen_leftBottom, field=displacement, 2=0.0, 1=0
 
-*step, jobName=cps4nljob, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344
+*step, maxInc=5e-3, minInc=1e-6, maxNumInc=1000, maxIter=25, stepLength=1344

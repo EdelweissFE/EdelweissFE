@@ -12,18 +12,18 @@ nSet=front
 referencePoint=center_front
 
 *job, name=c3d8job, domain=3d, solver=NISTParallelForMarmotElements
-*fieldOutput,
+*fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, 
 name=reaction force, nSet=back, field=displacement, result=P, f(x)=' sum  ( x, axis=0 )'
 
-*output, type=ensight, jobName=c3d8job, name=ensightExport
+*output, type=ensight, name=ensightExport
 configuration, overwrite=True
 create=perNode, fieldOutput=displacement, 
 
-*output, type=monitor, jobName=c3d8job, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=reaction force
 
-*step, jobName=c3d8job, maxInc=2e-1, minInc=1e-6, maxNumInc=1000, maxIter=20
+*step, maxInc=2e-1, minInc=1e-6, maxNumInc=1000, maxIter=20
 initializematerial, name=init, elSet=all 
 dirichlet, name=rt,   nSet=back,         field=micro rotation, 1=0.0, 2=0, 3=0
 dirichlet, name=back,   nSet=back,         field=displacement, 1=0.0, 2=0, 3=0

@@ -24,25 +24,25 @@ elType=GMCPE8RUL
 nX=10
 nY=20
 
-*output, type=monitor, jobName=gmdruckerpragerjob, name=omegaMon
+*output, type=monitor, name=omegaMon
 fieldOutput=RF
 
-*output, type=ensight, jobName=gmdruckerpragerjob, name=esExport
+*output, type=ensight, name=esExport
 configuration, overwrite=True
 create=perNode, fieldOutput=displacement, 
-create=perNode, fieldOutput=nonlocal damage,
+create=perNode, fieldOutput=nonlocal damage
 create=perElement, fieldOutput=alphaP
 
-*output, type=meshplot, jobName=gmdruckerpragerjob, name=RFPlot
+*output, type=meshplot, name=RFPlot
 figure=1, axSpec=121, c=k, ls=solid, create=xyData, x=time, y=RF
 figure=1, axSpec=122, create=perNode, fieldOutput=umag
 
-*exportPlots,
+*exportPlots
 figure=1, fileName=plot
 
-*step, jobName=gmdruckerpragerjob, maxInc=5e-2, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=100
+*step, maxInc=5e-2, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=100
 initializematerial, name=init, elSet=all 
 dirichlet, name=rbottom, nSet=gen_bottom,  field=micro rotation, 1=0, 
-dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0,
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-10, 

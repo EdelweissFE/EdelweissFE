@@ -25,7 +25,7 @@ name=Strain,       elSet=all, result=strain, quadraturePoint=1
 name=uTop,         nSet=gen_top,          field=displacement, result=U,    f(x)='mean(x[:, 1])', saveHistory=True
 name=sumRFNodes,   nSet=gen_top,          field=displacement, result=P,    f(x)='sum(x[:,  1])', saveHistory=True
 
-*output, type=ensight, jobName=cpe4job, name=barodesy
+*output, type=ensight, name=barodesy
 create=perNode,    elSet=all, fieldOutput=Displacement
 create=perElement, elSet=all, fieldOutput=Stress
 create=perElement, elSet=all, fieldOutput=Strain
@@ -33,7 +33,7 @@ create=perElement, elSet=all, fieldOutput=voidRatio
 create=perElement, elSet=all, fieldOutput=dNorm
 configuration, overwrite=yes
 
-*step, jobName=cpe4job, maxInc=1e0, minInc=1e-5, maxNumInc=100000, maxIter=25, stepLength=1
+*step, maxInc=1e0, minInc=1e-5, maxNumInc=100000, maxIter=25, stepLength=1
 options,         category=NISTSolver, extrapolation=on, numThreads=10
 dirichlet,       name=bottom, nSet=gen_bottom,      field=displacement, 2=0.0
 dirichlet,       name=leftbottom, nSet=gen_leftBottom,      field=displacement, 1=0.0
@@ -45,18 +45,18 @@ options,         category=NISTArcLength, arcLengthController=off
 
 
 
-*step, jobName=cpe4job, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
+*step, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
 dirichlet, name=top, nSet=gen_top,  field=displacement, 2=-0.01
 sdvini,    name=ini, elSet=all, sdv=0, val=0.40
 sdvini,    name=ini2, elSet=gen_shearBandCenter, sdv=0, val=0.43
 
-***step, jobName=cpe4job, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
+***step, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
 **dirichlet, name=top, nSet=gen_top,  field=displacement, 2=0.002
 
-***step, jobName=cpe4job, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
+***step, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
 **dirichlet, name=top, nSet=gen_top,  field=displacement, 2=-0.003
 
-*output, type=meshPlot, jobName=cpe4job, 
+*output, type=meshPlot, 
 figure=1, axSpec=111, create=perElement, fieldOutput=voidRatio
 figure=2, axSpec=111, c=red, ls=dashed, create=xyData, x=uTop, y=sumRFNodes,
 

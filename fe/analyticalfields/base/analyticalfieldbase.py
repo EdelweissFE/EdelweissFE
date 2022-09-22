@@ -33,7 +33,7 @@ from abc import ABC, abstractmethod
 
 class AnalyticalField(ABC):
     @abstractmethod
-    def __init__(self, name: str, data: list[str], modelInfo: dict):
+    def __init__(self, name: str, data: list[str], model: dict):
         """The field base class.
 
         Parameters
@@ -42,7 +42,7 @@ class AnalyticalField(ABC):
             The name of the field.
         data
             The input file data lines.
-        modelInfo
+        model
             The dictionary containing the model tree.
         """
         pass

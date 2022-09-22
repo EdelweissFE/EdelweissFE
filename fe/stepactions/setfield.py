@@ -43,7 +43,7 @@ import numpy as np
 
 
 class StepAction(StepActionBase):
-    def __init__(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
 
         self.name = name
         self.active = True
@@ -57,12 +57,12 @@ class StepAction(StepActionBase):
             raise Exception("Invalid type: {}".format(self.type))
 
         if self.type == "analyticalField":
-            self.analyticalField = modelInfo["analyticalFields"][self.value]
+            self.analyticalField = model["analyticalFields"][self.value]
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):
         self.active = False
 
-    def updateStepAction(self, name, action, jobInfo, modelInfo, fieldOutputController, journal):
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.active = True
 
     def applyAtStepStart(

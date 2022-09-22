@@ -54,7 +54,7 @@ class OutputManager(OutputManagerBase):
     identification = "Monitor"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
@@ -66,7 +66,7 @@ class OutputManager(OutputManagerBase):
             entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
             self.monitorJobs.append(entry)
 
-    def initializeSimulation(self, modelInfo):
+    def initializeSimulation(self, model):
         pass
 
     def initializeStep(self, step, stepActions):

@@ -41,14 +41,14 @@ import numpy as np
 class OutputManager(OutputManagerBase):
     identification = "TimeMonitor"
 
-    def __init__(self, name, definitionLines, jobInfo, modelInfo, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         defDict = convertLinesToStringDictionary(definitionLines)
         self.exportFile = defDict["export"]
         self.timeVals = []
 
-    def initializeSimulation(self, modelInfo):
+    def initializeSimulation(self, model):
         pass
 
     def initializeStep(self, step, stepActions):
