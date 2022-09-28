@@ -69,7 +69,7 @@ class Constraint(ConstraintBase):
         self.referencePoint = list(nodeSets[definition["referencePoint"]])[0]
         self.slaveNodes = nodeSets[
             rbNset
-        ].sortedByLabel()  # may also contain the RP, doesn't really matter as we remove it
+        ].orderedByInput()  # may also contain the RP, doesn't really matter as we remove it
 
         if self.referencePoint in self.slaveNodes:  # remove the rp from the slave node set
             self.slaveNodes = [s for s in self.slaveNodes if s is not self.referencePoint]

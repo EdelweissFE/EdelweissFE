@@ -150,7 +150,7 @@ def generateModelData(generatorDefinition, model, journal):
             currentElementLabel += 1
 
     # nodesets:
-    model["nodeSets"]["{:}_all".format(name)] = NodeSet("{:}_all".format(name), set())
+    model["nodeSets"]["{:}_all".format(name)] = NodeSet("{:}_all".format(name), list())
     for n in np.ravel(nG):
         if len(n.fields) > 0:
             model["nodeSets"]["{:}_all".format(name)].add(n)

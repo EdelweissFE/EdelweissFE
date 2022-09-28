@@ -94,7 +94,7 @@ class AbqModelConstructor:
 
             if "nset" in nodeDefs.keys():
                 setName = nodeDefs["nset"]
-                model["nodeSets"][setName] = NodeSet(setName, currNodeDefs.keys())
+                model["nodeSets"][setName] = NodeSet(setName, [x for x in currNodeDefs.keys()])
 
         # returns an dict of {element Label: element}
         elements = model["elements"]
@@ -186,7 +186,7 @@ class AbqModelConstructor:
                     nodes = [nodeDefinitions[n] for n in nodes]
                 nodeSets[name] = NodeSet(name, nodes)
             else:
-                nodeSets[name] = NodeSet(name, {})
+                nodeSets[name] = NodeSet(name, [])
                 for line in data:
                     for nSet in line:
                         [nodeSets[name].add(n) for n in nodeSets[nSet]]
