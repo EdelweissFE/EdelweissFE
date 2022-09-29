@@ -58,7 +58,7 @@ class Constraint(ConstraintBase):
         self.sizeField = getFieldSize(theField, model["domainSize"])
         self.component = int(definition["component"])
         self.penalty = float(definition["penalty"])
-        self._nodes = model["nodeSets"][definition["nSet"]].sortedByLabel()
+        self._nodes = model["nodeSets"][definition["nSet"]]
         self._nNodes = len(self._nodes)
         self._nDof = self.sizeField * self._nNodes
 

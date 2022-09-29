@@ -28,25 +28,33 @@
 
 # @author: Alexander Dummer
 
-from fe.variables.orderedset import OrderedSet
 
-
-class ElementSet(OrderedSet):
-    """A basic element set.
-    It has a label, and a list containing unique elements.
+class OrderedSet(list):
+    """An ordered set.
+    It has a label, and a list containing unique items.
 
     Parameters
     ----------
     label
         The unique label for this element set.
-    elements
-        A list of elements.
+    items
+        A list of items.
     """
 
     def __init__(
         self,
         label: str,
-        elements: list,
+        items: list,
     ):
 
-        super().__init__(label, elements)
+        self.label = label
+        self.add(items)
+
+    def add(self, items: list):
+        super().extend([i for i in items if i not in self])
+
+    def append(self, item):
+        self.add([item])
+
+    def extend(self, items: list):
+        self.add(items)

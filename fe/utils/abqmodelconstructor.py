@@ -189,7 +189,7 @@ class AbqModelConstructor:
                 nodeSets[name] = NodeSet(name, [])
                 for line in data:
                     for nSet in line:
-                        [nodeSets[name].add(n) for n in nodeSets[nSet]]
+                        [nodeSets[name].add([n]) for n in nodeSets[nSet]]
 
         model["nodeSets"]["all"] = NodeSet("all", model["nodes"].values())
         model["elementSets"]["all"] = ElementSet("all", model["elements"].values())

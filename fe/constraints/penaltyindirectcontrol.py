@@ -61,8 +61,8 @@ class Constraint(ConstraintBase):
         self.theField = definition.get("field", "displacement")
 
         self.cVector = np.fromstring(definition["cVector"], dtype=np.float, sep=",")
-        self.constrainedNSet = model["nodeSets"][definition["constrainedNSet"]].orderedByInput()
-        self.loadNSet = model["nodeSets"][definition["loadNSet"]].orderedByInput()
+        self.constrainedNSet = model["nodeSets"][definition["constrainedNSet"]]
+        self.loadNSet = model["nodeSets"][definition["loadNSet"]]
 
         self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
 
