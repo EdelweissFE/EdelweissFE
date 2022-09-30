@@ -36,10 +36,12 @@ class OrderedSet(list):
     Parameters
     ----------
     label
-        The unique label for this element set.
+        A label for the object.
     items
         A list of items.
     """
+
+    allowedObjectTypes = []
 
     def __init__(
         self,
@@ -50,8 +52,27 @@ class OrderedSet(list):
         self.label = label
         self.add(items)
 
+    def checkObjectType(self, obj):
+        """Checks if the object type is allowed for the respective OrderedSet
+
+        Parameters
+        ----------
+        obj
+            An arbitrary object to be checked
+        """
+        if type(obj) not in self.allowedObjectTypes:
+            raise Exception("type {:} not allowed in {:}".format(type(obj), type(self)))
+        return True
+
     def add(self, items: list):
-        super().extend([i for i in items if i not in self])
+        """Add a list of items to the OrderedSet.
+
+        Parameters
+        ----------
+        items
+            A list of items to be added.
+        """
+        super().extend([i for i in items if i not in self and self.checkObjectType(i)])
 
     def append(self, item):
         self.add([item])

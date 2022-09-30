@@ -29,6 +29,7 @@
 # @author: Alexander Dummer
 
 from fe.variables.orderedset import OrderedSet
+from fe.variables.node import Node
 
 
 class NodeSet(OrderedSet):
@@ -42,6 +43,8 @@ class NodeSet(OrderedSet):
     nodes
         A list of nodes.
     """
+
+    allowedObjectTypes = [Node]
 
     def __init__(
         self,

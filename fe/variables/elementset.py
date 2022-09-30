@@ -29,6 +29,8 @@
 # @author: Alexander Dummer
 
 from fe.variables.orderedset import OrderedSet
+from fe.elements.marmotelement.element import MarmotElementWrapper
+from fe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
 
 
 class ElementSet(OrderedSet):
@@ -42,6 +44,8 @@ class ElementSet(OrderedSet):
     elements
         A list of elements.
     """
+
+    allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
 
     def __init__(
         self,
