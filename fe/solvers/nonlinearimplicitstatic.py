@@ -455,8 +455,8 @@ class NIST:
         time = np.array([stepTime, totalTime])
         for dLoad in distributedLoads:
             magnitude = dLoad.getCurrentMagnitude(increment)
-            for faceID, elements in dLoad.surface.items():
-                for el in elements:
+            for faceID, elementSet in dLoad.surface.items():
+                for el in elementSet:
 
                     Ke = K[el]
                     Pe = np.zeros(el.nDof)

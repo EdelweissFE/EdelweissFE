@@ -72,6 +72,10 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
+    def initializeSimulation(self, model):
+        pass
+
+    @abstractmethod
     def initializeStep(self, step: dict, stepActions: dict):
         """Initalize the output manager at the beginning of a step.
 

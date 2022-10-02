@@ -42,6 +42,8 @@ employing an Abaqus-like syntax.
 """
 
 from fe.variables.node import Node
+from fe.variables.elementset import ElementSet
+from fe.variables.nodeset import NodeSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import isInteger, splitLineAtCommas, convertLinesToFlatArray
 from fe.config.constraints import getConstraintClass
@@ -92,7 +94,7 @@ class AbqModelConstructor:
 
             if "nset" in nodeDefs.keys():
                 setName = nodeDefs["nset"]
-                model["nodeSets"][setName] = list(currNodeDefs.keys())
+                model["nodeSets"][setName] = NodeSet(setName, [nodeDefinitions[x] for x in nodeDefinitions.keys()])
 
         # returns an dict of {element Label: element}
         elements = model["elements"]
@@ -117,7 +119,7 @@ class AbqModelConstructor:
 
             if "elset" in elDefs.keys():
                 setName = elDefs["elset"]
-                model["elementSets"][setName] = list(currElDefs.values())
+                model["elementSets"][setName] = ElementSet(setName, currElDefs.values())
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
@@ -158,7 +160,7 @@ class AbqModelConstructor:
                         del elementSets[name]
                 else:
                     els = [elements[elNum] for elNum in elNumbers]
-                elementSets[name] = els
+                elementSets[name] = ElementSet(name, set(els))
             else:
                 elementSets[name] = []
                 for line in data:
@@ -182,15 +184,15 @@ class AbqModelConstructor:
                     ]
                 else:
                     nodes = [nodeDefinitions[n] for n in nodes]
-                nodeSets[name] = nodes
+                nodeSets[name] = NodeSet(name, nodes)
             else:
-                nodeSets[name] = []
+                nodeSets[name] = NodeSet(name, [])
                 for line in data:
                     for nSet in line:
-                        nodeSets[name] += nodeSets[nSet]
+                        [nodeSets[name].add([n]) for n in nodeSets[nSet]]
 
-        model["nodeSets"]["all"] = list(model["nodes"].values())
-        model["elementSets"]["all"] = list(model["elements"].values())
+        model["nodeSets"]["all"] = NodeSet("all", model["nodes"].values())
+        model["elementSets"]["all"] = ElementSet("all", model["elements"].values())
 
         # generate surfaces sets
         for surfaceDef in inputFile["*surface"]:
@@ -202,9 +204,7 @@ class AbqModelConstructor:
                 for l in data:
                     elSet, faceNumber = l
                     faceNumber = int(faceNumber.replace("S", ""))
-                    elements = model["elementSets"][elSet]
-                    elements += surface.setdefault(faceNumber, [])
-                    surface[faceNumber] = elements
+                    surface[faceNumber] = model["elementSets"][elSet]
 
             model["surfaces"][name] = surface
 

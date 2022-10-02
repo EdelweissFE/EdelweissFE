@@ -712,6 +712,9 @@ class OutputManager(OutputManagerBase):
                     self.ensightCase.writeVariableTrendChunk(enSightVar, self.staticTAndFSetNumber)
                     del enSightVar
 
+    def initializeSimulation(self, model):
+        pass
+
     def initializeStep(self, step, stepActions):
         if self.name in stepActions["options"] or "Ensight" in stepActions["options"]:
             options = stepActions["options"].get(self.name, False) or stepActions["options"]["Ensight"]

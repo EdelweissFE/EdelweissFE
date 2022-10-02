@@ -68,10 +68,19 @@ Outputmanagers
     :caption: Options:
 
 ``statusfile`` - Write the status of the simulation to a file
------------------------------------------------------------------
+-------------------------------------------------------------
 
 .. automodule:: fe.outputmanagers.statusfile
    :members: __doc__
 
 .. pprint:: fe.outputmanagers.statusfile.documentation
+    :caption: Options:
+
+``meshdatatofile`` - Write the (generated) mesh data to a file
+--------------------------------------------------------------
+
+.. automodule:: fe.outputmanagers.meshdatatofile
+   :members: __doc__
+
+.. pprint:: fe.outputmanagers.meshdatatofile.documentation
     :caption: Options:

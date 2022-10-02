@@ -62,8 +62,8 @@ class Constraint(ConstraintBase):
 
         self.cVector = np.fromstring(definition["cVector"], dtype=np.float, sep=",")
         self.constrainedNSet = model["nodeSets"][definition["constrainedNSet"]]
-
         self.loadNSet = model["nodeSets"][definition["loadNSet"]]
+
         self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
 
         # we may normalize in order to end up with an identical load irrespective of the number of nodes

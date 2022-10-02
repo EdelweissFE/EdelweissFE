@@ -64,6 +64,8 @@ documentation = {
 }
 
 from fe.variables.node import Node
+from fe.variables.elementset import ElementSet
+from fe.variables.nodeset import NodeSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import convertLinesToStringDictionary
 
@@ -148,53 +150,58 @@ def generateModelData(generatorDefinition, model, journal):
             currentElementLabel += 1
 
     # nodesets:
-    model["nodeSets"]["{:}_all".format(name)] = []
+    model["nodeSets"]["{:}_all".format(name)] = NodeSet("{:}_all".format(name), list())
     for n in np.ravel(nG):
         if len(n.fields) > 0:
-            model["nodeSets"]["{:}_all".format(name)].append(n)
+            model["nodeSets"]["{:}_all".format(name)].add([n])
 
-    model["nodeSets"]["{:}_left".format(name)] = [n for n in nG[0, :]]
-    model["nodeSets"]["{:}_right".format(name)] = [n for n in nG[-1, :]]
-    model["nodeSets"]["{:}_top".format(name)] = [n for n in nG[:, -1]]
-    model["nodeSets"]["{:}_bottom".format(name)] = [n for n in nG[:, 0]]
+    model["nodeSets"]["{:}_left".format(name)] = NodeSet("{:}_left".format(name), [n for n in nG[0, :]])
+    model["nodeSets"]["{:}_right".format(name)] = NodeSet("{:}_right".format(name), [n for n in nG[-1, :]])
+    model["nodeSets"]["{:}_top".format(name)] = NodeSet("{:}_top".format(name), [n for n in nG[:, -1]])
+    model["nodeSets"]["{:}_bottom".format(name)] = NodeSet("{:}_bottom".format(name), [n for n in nG[:, 0]])
 
-    model["nodeSets"]["{:}_leftBottom".format(name)] = [nG[0, 0]]
-    model["nodeSets"]["{:}_leftTop".format(name)] = [nG[0, -1]]
-    model["nodeSets"]["{:}_rightBottom".format(name)] = [nG[-1, 0]]
-    model["nodeSets"]["{:}_rightTop".format(name)] = [nG[-1, -1]]
+    model["nodeSets"]["{:}_leftBottom".format(name)] = NodeSet("{:}_leftBottom".format(name), [nG[0, 0]])
+    model["nodeSets"]["{:}_leftTop".format(name)] = NodeSet("{:}_leftTop".format(name), [nG[0, -1]])
+    model["nodeSets"]["{:}_rightBottom".format(name)] = NodeSet("{:}_rightBottom".format(name), [nG[-1, 0]])
+    model["nodeSets"]["{:}_rightTop".format(name)] = NodeSet("{:}_rightTop".format(name), [nG[-1, -1]])
 
     # element sets
     elGrid = np.asarray(elements).reshape(nX, nY)
-    model["elementSets"]["{:}_bottom".format(name)] = [e for e in elGrid[:, 0]]
-    model["elementSets"]["{:}_top".format(name)] = [e for e in elGrid[:, -1]]
-    model["elementSets"]["{:}_central".format(name)] = [elGrid[int(nX / 2), int(nY / 2)]]
-    model["elementSets"]["{:}_right".format(name)] = [e for e in elGrid[-1, :]]
-    model["elementSets"]["{:}_left".format(name)] = [e for e in elGrid[0, :]]
+    model["elementSets"]["{:}_bottom".format(name)] = ElementSet("{:}_bottom".format(name), [e for e in elGrid[:, 0]])
+    model["elementSets"]["{:}_top".format(name)] = ElementSet("{:}_top".format(name), [e for e in elGrid[:, -1]])
+    model["elementSets"]["{:}_central".format(name)] = ElementSet(
+        "{:}_central".format(name), [elGrid[int(nX / 2), int(nY / 2)]]
+    )
+    model["elementSets"]["{:}_right".format(name)] = ElementSet("{:}_right".format(name), [e for e in elGrid[-1, :]])
+    model["elementSets"]["{:}_left".format(name)] = ElementSet("{:}_left".format(name), [e for e in elGrid[0, :]])
 
     nShearBand = min(nX, nY)
     if nShearBand > 3:
         shearBand = [
             elGrid[int(nX / 2 + i - nShearBand / 2), int(nY / 2 + i - nShearBand / 2)] for i in range(nShearBand)
         ]
-        model["elementSets"]["{:}_shearBand".format(name)] = [e for e in shearBand]
-        model["elementSets"]["{:}_shearBandCenter".format(name)] = [
-            e for e in shearBand[int(nShearBand / 2) - 1 : int(nShearBand / 2) + 2]
-        ]
+        model["elementSets"]["{:}_shearBand".format(name)] = ElementSet(
+            "{:}_shearBand".format(name), [e for e in shearBand]
+        )
+        model["elementSets"]["{:}_shearBandCenter".format(name)] = ElementSet(
+            "{:}_shearBandCenter".format(name),
+            [e for e in shearBand[int(nShearBand / 2) - 1 : int(nShearBand / 2) + 2]],
+        )
 
-    model["elementSets"]["{:}_sandwichHorizontal".format(name)] = []
+    model["elementSets"]["{:}_sandwichHorizontal".format(name)] = ElementSet("{:}_sandwichHorizontal".format(name), [])
     for elList in elGrid[1:-1, :]:
         for e in elList:
-            model["elementSets"]["{:}_sandwichHorizontal".format(name)].append(e)
+            model["elementSets"]["{:}_sandwichHorizontal".format(name)].add([e])
 
-    model["elementSets"]["{:}_sandwichVertical".format(name)] = []
+    model["elementSets"]["{:}_sandwichVertical".format(name)] = ElementSet("{:}_sandwichVertical".format(name), [])
     for elList in elGrid[:, 1:-1]:
         for e in elList:
-            model["elementSets"]["{:}_sandwichVertical".format(name)].append(e)
+            model["elementSets"]["{:}_sandwichVertical".format(name)].add([e])
 
-    model["elementSets"]["{:}_core".format(name)] = []
+    model["elementSets"]["{:}_core".format(name)] = ElementSet("{:}_core".format(name), [])
     for elList in elGrid[1:-1, 1:-1]:
         for e in elList:
-            model["elementSets"]["{:}_core".format(name)].append(e)
+            model["elementSets"]["{:}_core".format(name)].add([e])
 
     # surfaces
     model["surfaces"]["{:}_bottom".format(name)] = {1: [e for e in elGrid[:, 0]]}

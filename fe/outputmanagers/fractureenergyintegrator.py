@@ -68,6 +68,9 @@ class OutputManager(OutputManagerBase):
         self.A = createMathExpression(defDict["fractureArea"])(0.0)
         self.fractureEnergy = 0.0
 
+    def initializeSimulation(self, model):
+        pass
+
     def initializeStep(self, step, stepActions):
         pass
 

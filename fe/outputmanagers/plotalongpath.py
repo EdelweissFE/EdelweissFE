@@ -102,6 +102,9 @@ class OutputManager(OutputManagerBase):
                     np.asarray(entry["pathDistances"]),
                 )
 
+    def initializeSimulation(self, model):
+        pass
+
     def initializeStep(self, step, stepActions):
         for nJob in self.monitorJobs:
             self.plotStages = np.linspace(0, step["steplength"], nJob["nStages"])

@@ -66,6 +66,9 @@ class OutputManager(OutputManagerBase):
             entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
             self.monitorJobs.append(entry)
 
+    def initializeSimulation(self, model):
+        pass
+
     def initializeStep(self, step, stepActions):
         pass
 

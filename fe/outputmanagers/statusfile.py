@@ -60,6 +60,9 @@ class OutputManager(OutputManagerBase):
 
         self.statusFileExists = False
 
+    def initializeSimulation(self, model):
+        pass
+
     def initializeStep(self, step, stepActions):
         pass
 
