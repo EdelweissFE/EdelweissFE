@@ -65,6 +65,7 @@ class NIST:
 
     identification = "NISTSolver"
 
+    defaultStartInc = 1.0
     defaultMaxInc = 1.0
     defaultMinInc = 1e-4
     defaultMaxNumInc = 1000
@@ -166,6 +167,7 @@ class NIST:
         incGen = IncrementGenerator(
             time,
             stepLength,
+            step.get("startInc", self.defaultStartInc),
             step.get("maxInc", self.defaultMaxInc),
             step.get("minInc", self.defaultMinInc),
             step.get("maxNumInc", self.defaultMaxNumInc),

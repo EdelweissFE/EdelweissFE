@@ -149,6 +149,7 @@ inputLanguage = {
         {
             "stepLength": ("float", "time period of step"),
             "jobName": ("string", "(optional)"),
+            "startInc": ("float", "size of the start increment"),
             "maxInc": ("float", "maximum size of increment"),
             "minInc": ("float", "minimum size of increment"),
             "maxNumInc": ("integer", "maximum number of increments"),

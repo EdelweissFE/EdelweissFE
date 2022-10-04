@@ -39,6 +39,7 @@ class IncrementGenerator:
         self,
         currentTime: float,
         stepLength: float,
+        startIncrement: float,
         maxIncrement: float,
         minIncrement: float,
         maxNumberIncrements: int,
@@ -55,8 +56,10 @@ class IncrementGenerator:
             The current (start) time.
         stepLength
             The total length of the step.
+        startIncrement
+            The size of the start increment.
         maxIncrement
-            The maximum size of an increment. Also serves as the size of the start increment.
+            The maximum size of an increment.
         minIncrement
             The minimum size of an increment.
         maxNumberIncrements
@@ -67,12 +70,13 @@ class IncrementGenerator:
 
         self.nPassedGoodIncrements = int(0)
         self.totalIncrements = int(0)
+        self.startIncrement = startIncrement
         self.maxIncrement = maxIncrement
         self.minIncrement = minIncrement
         self.maxNumberIncrements = maxNumberIncrements
 
         self.finishedStepProgress = 0.0
-        self.increment = maxIncrement
+        self.increment = min(startIncrement, maxIncrement)
         self.allowedToIncreasedNext = True
 
         self.currentTime = currentTime
