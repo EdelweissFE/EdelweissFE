@@ -74,4 +74,35 @@ cdef extern from "Marmot/MarmotMaterialHypoElastic.h":
                               const double  dT,
                               double&       pNewDT ) except +ValueError
 
+cdef extern from "Marmot/MarmotMaterialGradientEnhancedHypoElastic.h":
+    cdef cppclass MarmotMaterialGradientEnhancedHypoElastic nogil:
+    
+        void assignStateVars( double* stateVars, int nStateVars )
+
+        StateView getStateView( const string& stateName ) except +ValueError
+
+        void initializeYourself()
+
+        void setCharacteristicElementLength(double length)
+        
+        int getNumberOfAssignedStateVars()
+
+        int getNumberOfRequiredStateVars()
+      
+        double* getAssignedStateVars()
+
+        void computeStress(   double*       stress,
+                              double&       K_local,
+                              double&       nonLocalRadius,
+                              double*       dStressDDStrain,
+                              double*       dK_localDDStrain,
+                              double*       dStressDK,
+                              const double* dStrain,
+                              double        KOld,
+                              double        dK,
+                              const double* timeOld,
+                              const double  dT,
+                              double&       pNewDT
+                           ) except +ValueError
+
 cdef MarmotMaterial* createMaterial(materialName, materialProperties)

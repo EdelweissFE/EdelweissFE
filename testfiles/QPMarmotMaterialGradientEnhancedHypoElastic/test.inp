@@ -1,0 +1,42 @@
+*material, name=GCDP, id=myMaterial
+**E         nu      fcy         fcu         fbu         ftu         Df          Ah        
+30000.0,    0.15,   13,         47.4,       55,         4.74,       0.85,       0.12, 
+**Bh        Ch          Dh      As          softmod     l           m           omegaMax 
+0.003,      2.0,        1e-6,   15.0,       0.0040,     1,          0.0,        0.99 
+
+*section, name=section1, material=myMaterial, type=solid
+all
+
+*node
+** this is our single dummy node, which carries the strain 'field'
+1, 0, 0, 0
+
+*element, provider=MarmotSingleQpElement, type=MarmotMaterialGradientEnhancedHypoElastic
+** This is our mateiral wrapping element. It needs a dummy node to be attached 
+** to a spatial position.
+** The type of the element actually specifies the type of requested MarmotMaterial
+1, 1
+
+*job, name=mySingleElementJob, domain=3d, solver=NIST
+
+*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+setinitialconditions, property=characteristic element length, values='100,'
+dirichlet,  name=prescribed_strain, nSet=all, field=strain symmetric, components='[ 0, x, x, 0, 0, 0 ]', 
+nodeforces, name=prescribed_stress, nSet=all, field=strain symmetric, components='[ x, 0, 0, x, x, x ]' 
+
+*step, startInc=1e-2, maxInc=1e-1, minInc=1e-5, maxNumInc=100, maxIter=25, stepLength=1
+dirichlet, name=prescribed_strain,                                    components='[ -0.1,  x,    x, 0,   0, 0 ]' 
+nodeforces, name=prescribed_stress,                                   components='[ x,    -0.0,   -0.0, x,   x, x ]' 
+
+*fieldOutput
+name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True, export=sigma
+name=omega, elSet=all, result=omega, quadraturePoint=0,  saveHistory=True, export=omega
+name=strain, elSet=all, result=strain, quadraturePoint=0,  saveHistory=True
+name=algorithmicTangent, elSet=all, result=algorithmicTangent, quadraturePoint=0,  saveHistory=True, f(x)="np.reshape(x, (7,-1), order='F')"
+
+*output, type=monitor
+fieldOutput=omega
+fieldOutput=stress, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"
+fieldOutput=strain, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"
+fieldOutput=algorithmicTangent, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"
+
