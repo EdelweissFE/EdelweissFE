@@ -33,8 +33,14 @@ import numpy as np
 from fe.utils.exceptions import CutbackRequest
 from fe.elements.base.baseelement import BaseElement
 from fe.elements.marmotsingleqpelement.marmotmaterialhypoelasticwrapper import MarmotMaterialHypoElasticWrapper
+from fe.elements.marmotsingleqpelement.marmotmaterialgradientenhancedhypoelasticwrapper import (
+    MarmotMaterialGradientEnhancedHypoElasticWrapper,
+)
 
-marmotMaterialWrappers = {"MarmotMaterialHypoElastic": MarmotMaterialHypoElasticWrapper}
+marmotMaterialWrappers = {
+    "MarmotMaterialHypoElastic": MarmotMaterialHypoElasticWrapper,
+    "MarmotMaterialGradientEnhancedHypoElastic": MarmotMaterialGradientEnhancedHypoElasticWrapper,
+}
 
 
 class MarmotMaterialWrappingElement(BaseElement):
@@ -58,14 +64,14 @@ class MarmotMaterialWrappingElement(BaseElement):
         self._elNumber = elNumber
         self._materialType = materialType
         self._nNodes = 1
-        self._nDof = 6
         self._ensightType = "point"
-        self._dofIndicesPermutation = np.arange(0, self._nDof, 1, dtype=np.int)
 
         self._marmotMaterialWrapper = marmotMaterialWrappers[self._materialType]()
         self._fields = [
             self._marmotMaterialWrapper.fields,
         ]
+        self._nDof = self._marmotMaterialWrapper.nU
+        self._dofIndicesPermutation = np.arange(0, self._nDof, 1, dtype=np.int)
 
     @property
     def elNumber(self):

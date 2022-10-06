@@ -45,12 +45,14 @@ cdef class MarmotMaterialHypoElasticWrapper:
     cdef MarmotMaterialHypoElastic* marmotMaterialHypoElastic
 
     cdef readonly list fields 
+    cdef readonly int nU 
 
     cdef double[::1] stateVars, stressInStateVars, strainInStateVars, stateVarsMaterial, materialProperties, dStress_dStrainInStateVars
 
     def __init__(self, ):
 
         self.fields = ["strain symmetric"]
+        self.nU = 6
 
     def createMaterial(self, materialName, materialProperties):
 
