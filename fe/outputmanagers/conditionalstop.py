@@ -58,7 +58,7 @@ class OutputManager(OutputManagerBase):
 
         for defline in definitionLines:
             entry = {}
-            defDict = convertLineToStringDictionary
+            defDict = convertLineToStringDictionary(defline)
             entry["stop"] = createModelAccessibleFunction(
                 defDict["stop"], model, fieldOutputs=fieldOutputController.fieldOutputs
             )
