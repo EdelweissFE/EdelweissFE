@@ -159,7 +159,7 @@ class NIST:
 
         extrapolation = self.extrapolation
         try:
-            extrapolation = stepActions["options"]["NISTSolver"]["extapolation"]
+            extrapolation = stepActions["options"]["NISTSolver"]["extrapolation"]
         except KeyError:
             pass
 
