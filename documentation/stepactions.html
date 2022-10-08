@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -66,7 +67,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#nodeforces-concentrated-node-forces"><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setfield-set-a-field-to-a-prescribed-value"><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set a field to a prescribed value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setinitialconditions-set-initial-conditions-to-elements"><code class="docutils literal notranslate"><span class="pre">setinitialconditions</span></code> - Set initial conditions to elements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-step-actions">Implementing your own step actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-step-actions">Implementing your own step actions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase"><code class="docutils literal notranslate"><span class="pre">StepActionBase</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -669,7 +673,7 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <p>Subclass from the step action base class in module <code class="docutils literal notranslate"><span class="pre">fe.stepactions.base.stepactionbase</span></code></p>
 <span class="target" id="module-fe.stepactions.base.stepactionbase"></span><dl class="py class">
 <dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.stepactions.base.stepactionbase.</span></span><span class="sig-name descname"><span class="pre">StepActionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.stepactions.base.stepactionbase.</span></span><span class="sig-name descname"><span class="pre">StepActionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase" title="Permalink to this definition"></a></dt>
 <dd><p>This is the abase class for all step actions.
 User defined step actions can override the methods.</p>
 <dl class="field-list simple">
@@ -678,7 +682,7 @@ User defined step actions can override the methods.</p>
 <li><p><strong>name</strong> (<em>str</em>) – The name of this step action.</p></li>
 <li><p><strong>definition</strong> (<em>dict</em>) – A dictionary containing the options for this step action.</p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing the information about the job.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The fieldput controlling object.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
 </ul>
@@ -750,7 +754,7 @@ User defined step actions can override the methods.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction">
-<span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
 <dd><p>Is called when an updated definition is present for a new step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -758,7 +762,7 @@ User defined step actions can override the methods.</p>
 <li><p><strong>name</strong> (<em>str</em>) – The name of this step action.</p></li>
 <li><p><strong>definition</strong> (<em>dict</em>) – A dictionary containing the options for this step action.</p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing the information about the job.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The fieldput controlling object.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
 </ul>

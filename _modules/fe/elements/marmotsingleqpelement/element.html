@@ -16,6 +16,7 @@
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -106,8 +107,14 @@
 <span class="kn">from</span> <span class="nn">fe.utils.exceptions</span> <span class="kn">import</span> <span class="n">CutbackRequest</span>
 <span class="kn">from</span> <span class="nn">fe.elements.base.baseelement</span> <span class="kn">import</span> <span class="n">BaseElement</span>
 <span class="kn">from</span> <span class="nn">fe.elements.marmotsingleqpelement.marmotmaterialhypoelasticwrapper</span> <span class="kn">import</span> <span class="n">MarmotMaterialHypoElasticWrapper</span>
+<span class="kn">from</span> <span class="nn">fe.elements.marmotsingleqpelement.marmotmaterialgradientenhancedhypoelasticwrapper</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MarmotMaterialGradientEnhancedHypoElasticWrapper</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="n">marmotMaterialWrappers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;MarmotMaterialHypoElastic&quot;</span><span class="p">:</span> <span class="n">MarmotMaterialHypoElasticWrapper</span><span class="p">}</span>
+<span class="n">marmotMaterialWrappers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;MarmotMaterialHypoElastic&quot;</span><span class="p">:</span> <span class="n">MarmotMaterialHypoElasticWrapper</span><span class="p">,</span>
+    <span class="s2">&quot;MarmotMaterialGradientEnhancedHypoElastic&quot;</span><span class="p">:</span> <span class="n">MarmotMaterialGradientEnhancedHypoElasticWrapper</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement">[docs]</a><span class="k">class</span> <span class="nc">MarmotMaterialWrappingElement</span><span class="p">(</span><span class="n">BaseElement</span><span class="p">):</span>
@@ -131,14 +138,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_elNumber</span> <span class="o">=</span> <span class="n">elNumber</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_materialType</span> <span class="o">=</span> <span class="n">materialType</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span> <span class="o">=</span> <span class="mi">6</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span> <span class="o">=</span> <span class="s2">&quot;point&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndicesPermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span> <span class="o">=</span> <span class="n">marmotMaterialWrappers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_materialType</span><span class="p">]()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span>
         <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">nU</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndicesPermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -56,7 +57,28 @@
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Managing field outputs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Managing field outputs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.finalizeIncrement"><code class="docutils literal notranslate"><span class="pre">FieldOutput.finalizeIncrement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.finalizeJob"><code class="docutils literal notranslate"><span class="pre">FieldOutput.finalizeJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.getLastResult"><code class="docutils literal notranslate"><span class="pre">FieldOutput.getLastResult()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.getResultHistory"><code class="docutils literal notranslate"><span class="pre">FieldOutput.getResultHistory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.getTimeHistory"><code class="docutils literal notranslate"><span class="pre">FieldOutput.getTimeHistory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.initializeJob"><code class="docutils literal notranslate"><span class="pre">FieldOutput.initializeJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.setResults"><code class="docutils literal notranslate"><span class="pre">FieldOutput.setResults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutput.updateResults"><code class="docutils literal notranslate"><span class="pre">FieldOutput.updateResults()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController"><code class="docutils literal notranslate"><span class="pre">FieldOutputController</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeIncrement"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.finalizeIncrement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeJob"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.finalizeJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeStep"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.finalizeStep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.initializeJob"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.initializeJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.initializeStep"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.initializeStep()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
@@ -204,13 +226,13 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <p>Module documentation:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutput" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Entity of a fieldOutput request.</p>
 <p>Carries the history or the latest result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>definition</strong> (<em>dict</em>) – A dictionary containing the definition of the field output.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
 </ul>
@@ -384,12 +406,12 @@ Will use the current solution and reaction vector if result is a nodal result.</
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutputController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">FieldOutputController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController" title="Permalink to this definition"></a></dt>
 <dd><p>The central module for managing field outputs, which can be used by output managers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>inputFile</strong> (<em>dict</em>) – A dictonary containing the field output definitios.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging.</p></li>
 </ul>

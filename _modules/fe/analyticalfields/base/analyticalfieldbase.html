@@ -16,6 +16,7 @@
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -106,7 +107,7 @@
 
 <div class="viewcode-block" id="AnalyticalField"><a class="viewcode-back" href="../../../../documentation/analyticalfields.html#fe.analyticalfields.base.analyticalfieldbase.AnalyticalField">[docs]</a><span class="k">class</span> <span class="nc">AnalyticalField</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">modelInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The field base class.</span>
 
 <span class="sd">        Parameters</span>
@@ -115,7 +116,7 @@
 <span class="sd">            The name of the field.</span>
 <span class="sd">        data</span>
 <span class="sd">            The input file data lines.</span>
-<span class="sd">        modelInfo</span>
+<span class="sd">        model</span>
 <span class="sd">            The dictionary containing the model tree.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>

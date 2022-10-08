@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -61,9 +62,19 @@
 <li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Nonlinear solvers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelarclength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.config.solvers.getSolverByName"><code class="docutils literal notranslate"><span class="pre">getSolverByName()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.solvers.nonlinearimplicitstatic.NIST"><code class="docutils literal notranslate"><span class="pre">NIST</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel"><code class="docutils literal notranslate"><span class="pre">NISTParallel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstaticparallelarclength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
@@ -661,7 +672,7 @@ Is usually called by checkConvergence().</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.solveStep">
-<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.solveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.solveStep" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.solveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.solveStep" title="Permalink to this definition"></a></dt>
 <dd><p>Public interface to solve for a step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -670,7 +681,7 @@ Is usually called by checkConvergence().</p>
 <li><p><strong>step</strong> (<em>dict</em>) – The dictionary containing the step definition.</p></li>
 <li><p><strong>time</strong> (<em>float</em>) – The time at beginning of the step.</p></li>
 <li><p><strong>stepActions</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase"><em>fe.stepactions.base.stepactionbase.StepActionBase</em></a><em>]</em>) – The dictionary containing all step actions.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>U</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
 <li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction vector.</p></li>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The field output controller.</p></li>
@@ -834,7 +845,7 @@ Is is called by solveStep() in each iteration.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.solveStep">
-<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.solveStep" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.solveStep" title="Permalink to this definition"></a></dt>
 <dd><p>Public interface to solve for a step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -843,7 +854,7 @@ Is is called by solveStep() in each iteration.</p>
 <li><p><strong>step</strong> – The dictionary containing the step definition.</p></li>
 <li><p><strong>time</strong> – The time at beginning of the step.</p></li>
 <li><p><strong>stepActions</strong> – The dictionary containing all step actions.</p></li>
-<li><p><strong>modelInfo</strong> – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> – A dictionary containing the model tree.</p></li>
 <li><p><strong>U</strong> – The current solution vector.</p></li>
 <li><p><strong>P</strong> – The current reaction vector.</p></li>
 <li><p><strong>fieldOutputController</strong> – The field output controller.</p></li>
@@ -1043,7 +1054,7 @@ Also accounts for the arc length loading parameter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep">
-<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstaticparallelarclength.html#NISTPArcLength.solveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stepNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputmanagers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstaticparallelarclength.html#NISTPArcLength.solveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep" title="Permalink to this definition"></a></dt>
 <dd><p>Public interface to solve for a step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1052,7 +1063,7 @@ Also accounts for the arc length loading parameter.</p>
 <li><p><strong>step</strong> (<em>dict</em>) – The dictionary containing the step definition.</p></li>
 <li><p><strong>time</strong> (<em>float</em>) – The time at beginning of the step.</p></li>
 <li><p><strong>stepActions</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase"><em>fe.stepactions.base.stepactionbase.StepActionBase</em></a><em>]</em>) – The dictionary containing all step actions.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>U</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
 <li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction vector.</p></li>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The field output controller.</p></li>

@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -45,7 +46,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Jobs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Jobs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fe.fecore.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.fecore.gatherStepActions"><code class="docutils literal notranslate"><span class="pre">gatherStepActions()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
@@ -148,7 +153,7 @@ external modules.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fe.fecore.gatherStepActions">
-<span class="sig-prename descclassname"><span class="pre">fe.fecore.</span></span><span class="sig-name descname"><span class="pre">gatherStepActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fecore.html#gatherStepActions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fecore.gatherStepActions" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">fe.fecore.</span></span><span class="sig-name descname"><span class="pre">gatherStepActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fecore.html#gatherStepActions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fecore.gatherStepActions" title="Permalink to this definition"></a></dt>
 <dd><p>Parses all the defined actions for the current step,
 and calls the respective modules, which generate step-actions based on
 computed results, model info and job information.
@@ -162,7 +167,7 @@ stepactions.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>step</strong> (<em>dict</em>) – The step active for which the actions are gathered.</p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing information on the job.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>time</strong> (<em>float</em>) – The current time of the simulation.</p></li>
 <li><p><strong>U</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
 <li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction vector.</p></li>

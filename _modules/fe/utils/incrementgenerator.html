@@ -16,6 +16,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -112,6 +113,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">currentTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">stepLength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">startIncrement</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">maxIncrement</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">minIncrement</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">maxNumberIncrements</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -128,8 +130,10 @@
 <span class="sd">            The current (start) time.</span>
 <span class="sd">        stepLength</span>
 <span class="sd">            The total length of the step.</span>
+<span class="sd">        startIncrement</span>
+<span class="sd">            The size of the start increment.</span>
 <span class="sd">        maxIncrement</span>
-<span class="sd">            The maximum size of an increment. Also serves as the size of the start increment.</span>
+<span class="sd">            The maximum size of an increment.</span>
 <span class="sd">        minIncrement</span>
 <span class="sd">            The minimum size of an increment.</span>
 <span class="sd">        maxNumberIncrements</span>
@@ -140,12 +144,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nPassedGoodIncrements</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">totalIncrements</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startIncrement</span> <span class="o">=</span> <span class="n">startIncrement</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxIncrement</span> <span class="o">=</span> <span class="n">maxIncrement</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minIncrement</span> <span class="o">=</span> <span class="n">minIncrement</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxNumberIncrements</span> <span class="o">=</span> <span class="n">maxNumberIncrements</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">finishedStepProgress</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">increment</span> <span class="o">=</span> <span class="n">maxIncrement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increment</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">startIncrement</span><span class="p">,</span> <span class="n">maxIncrement</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allowedToIncreasedNext</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">=</span> <span class="n">currentTime</span>

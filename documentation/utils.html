@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -65,9 +66,18 @@
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#matrix-conversion-from-coo-sparse-format-to-csr-format">Matrix conversion from COO sparse format to CSR format</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gathering-efficiently-of-element-results">Gathering efficiently of element results</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#adaptive-time-stepping">Adaptive time stepping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix-conversion-from-coo-sparse-format-to-csr-format">Matrix conversion from COO sparse format to CSR format</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.csrgenerator.CSRGenerator"><code class="docutils literal notranslate"><span class="pre">CSRGenerator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gathering-efficiently-of-element-results">Gathering efficiently of element results</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.elementresultcollector.ElementResultCollector"><code class="docutils literal notranslate"><span class="pre">ElementResultCollector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#adaptive-time-stepping">Adaptive time stepping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator"><code class="docutils literal notranslate"><span class="pre">IncrementGenerator</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -221,7 +231,7 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 <p>Module <code class="docutils literal notranslate"><span class="pre">fe.utils.incrementgenerator</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.incrementgenerator.</span></span><span class="sig-name descname"><span class="pre">IncrementGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.incrementgenerator.</span></span><span class="sig-name descname"><span class="pre">IncrementGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator" title="Permalink to this definition"></a></dt>
 <dd><p>An increment generator for incremental-iterative simulations.</p>
 <p>Implementation as generator class.</p>
 <dl class="field-list simple">
@@ -229,7 +239,8 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>currentTime</strong> (<em>float</em>) – The current (start) time.</p></li>
 <li><p><strong>stepLength</strong> (<em>float</em>) – The total length of the step.</p></li>
-<li><p><strong>maxIncrement</strong> (<em>float</em>) – The maximum size of an increment. Also serves as the size of the start increment.</p></li>
+<li><p><strong>startIncrement</strong> (<em>float</em>) – The size of the start increment.</p></li>
+<li><p><strong>maxIncrement</strong> (<em>float</em>) – The maximum size of an increment.</p></li>
 <li><p><strong>minIncrement</strong> (<em>float</em>) – The minimum size of an increment.</p></li>
 <li><p><strong>maxNumberIncrements</strong> (<em>int</em>) – The maximum number of allowed increments.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging purposes.</p></li>

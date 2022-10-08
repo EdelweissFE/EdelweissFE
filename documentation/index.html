@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -100,13 +101,25 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="syntax.html">Input file syntax</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html#fe.utils.inputfileparser.parseInputFile"><code class="docutils literal notranslate"><span class="pre">parseInputFile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html#fe.utils.inputfileparser.printKeywords"><code class="docutils literal notranslate"><span class="pre">printKeywords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html#fe.utils.inputfileparser.printKeywordsRST"><code class="docutils literal notranslate"><span class="pre">printKeywordsRST()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax.html#keywords">Keywords</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jobs.html">Jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html#fe.fecore.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html#fe.fecore.gatherStepActions"><code class="docutils literal notranslate"><span class="pre">gatherStepActions()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
-<li class="toctree-l1"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="variables.html">Variables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variables.html#fe.variables.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html#fe.variables.scalarvariable.ScalarVariable"><code class="docutils literal notranslate"><span class="pre">ScalarVariable</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="elements.html">Finite elements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="elements.html#fe.config.elementlibrary.getElementClass"><code class="docutils literal notranslate"><span class="pre">getElementClass()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html#provider-marmotsingleqpelement">Provider <code class="docutils literal notranslate"><span class="pre">marmotsingleqpelement</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html#implementing-your-own-elements">Implementing your own elements</a></li>
@@ -153,8 +166,17 @@
 <li class="toctree-l2"><a class="reference internal" href="constraints.html#implementing-your-own-constraints">Implementing your own constraints</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutput</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController"><code class="docutils literal notranslate"><span class="pre">FieldOutputController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dofmanager.html">The DOF manager</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofManager"><code class="docutils literal notranslate"><span class="pre">DofManager</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.VIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">VIJSystemMatrix</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="output.html">Outputmanagers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.ensight"><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.monitor"><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal</a></li>
@@ -163,18 +185,37 @@
 <li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.plotalongpath"><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.statusfile"><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html#module-fe.outputmanagers.meshdatatofile"><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotter.html">Plotting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html#fe.utils.plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="solvers.html">Nonlinear solvers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html#fe.config.solvers.getSolverByName"><code class="docutils literal notranslate"><span class="pre">getSolverByName()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstaticparallelarclength"><code class="docutils literal notranslate"><span class="pre">NISTPArcLength</span></code> - Nonlinear Implicit Static - Arc length</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="journal.html">Journal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="journal.html">Journal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="journal.html#fe.journal.journal.Journal"><code class="docutils literal notranslate"><span class="pre">Journal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.ConditionalStop"><code class="docutils literal notranslate"><span class="pre">ConditionalStop</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.CutbackRequest"><code class="docutils literal notranslate"><span class="pre">CutbackRequest</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.DivergingSolution"><code class="docutils literal notranslate"><span class="pre">DivergingSolution</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.InputExecption"><code class="docutils literal notranslate"><span class="pre">InputExecption</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.ReachedMaxIncrements"><code class="docutils literal notranslate"><span class="pre">ReachedMaxIncrements</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.ReachedMaxIterations"><code class="docutils literal notranslate"><span class="pre">ReachedMaxIterations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.ReachedMinIncrementSize"><code class="docutils literal notranslate"><span class="pre">ReachedMinIncrementSize</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.StepFailed"><code class="docutils literal notranslate"><span class="pre">StepFailed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.WrongDomain"><code class="docutils literal notranslate"><span class="pre">WrongDomain</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#matrix-conversion-from-coo-sparse-format-to-csr-format">Matrix conversion from COO sparse format to CSR format</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#gathering-efficiently-of-element-results">Gathering efficiently of element results</a></li>

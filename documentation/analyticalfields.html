@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -54,7 +55,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Analytical fields</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#scalarexpression-field-defined-by-expression"><code class="docutils literal notranslate"><span class="pre">scalarexpression</span></code> - Field defined by expression</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#randomscalar-a-random-field"><code class="docutils literal notranslate"><span class="pre">randomscalar</span></code> - A random field</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-fields">Implementing your own fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-fields">Implementing your own fields</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.analyticalfields.base.analyticalfieldbase.AnalyticalField"><code class="docutils literal notranslate"><span class="pre">AnalyticalField</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
@@ -121,7 +125,7 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">f(x,y,z)</span></code></td>
-<td><p>Python expression using variables x, y, z (coordinates); dictionaries contained in modelInfo can be accessed</p></td>
+<td><p>Python expression using variables x, y, z (coordinates); dictionaries contained in model can be accessed</p></td>
 </tr>
 </tbody>
 </table>
@@ -273,14 +277,14 @@ dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m"
 <p>Subclass from the field base class in module <code class="docutils literal notranslate"><span class="pre">fe.analyticalfields.base.analyticalfieldbase</span></code></p>
 <span class="target" id="module-fe.analyticalfields.base.analyticalfieldbase"></span><dl class="py class">
 <dt class="sig sig-object py" id="fe.analyticalfields.base.analyticalfieldbase.AnalyticalField">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.analyticalfields.base.analyticalfieldbase.</span></span><span class="sig-name descname"><span class="pre">AnalyticalField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/analyticalfields/base/analyticalfieldbase.html#AnalyticalField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.analyticalfields.base.analyticalfieldbase.AnalyticalField" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.analyticalfields.base.analyticalfieldbase.</span></span><span class="sig-name descname"><span class="pre">AnalyticalField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/analyticalfields/base/analyticalfieldbase.html#AnalyticalField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.analyticalfields.base.analyticalfieldbase.AnalyticalField" title="Permalink to this definition"></a></dt>
 <dd><p>The field base class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of the field.</p></li>
 <li><p><strong>data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – The input file data lines.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – The dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – The dictionary containing the model tree.</p></li>
 </ul>
 </dd>
 </dl>

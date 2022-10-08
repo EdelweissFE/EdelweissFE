@@ -16,6 +16,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -194,13 +195,13 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    modelInfo</span>
+<span class="sd">    model</span>
 <span class="sd">        A dictionary containing the model tree.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modelInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span> <span class="o">=</span> <span class="n">modelInfo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">activateFieldsOnNodes</span><span class="p">()</span>
 
@@ -228,14 +229,14 @@
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Activate all fields on nodes, which are required in the analysis.&quot;&quot;&quot;</span>
 
-        <span class="n">modelInfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
 
-        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">model</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">nodeFields</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">element</span><span class="o">.</span><span class="n">fields</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">nodeFields</span><span class="p">:</span>
                     <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">model</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">nodeFields</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">constraint</span><span class="o">.</span><span class="n">fieldsOnNodes</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">nodeFields</span><span class="p">:</span>
                     <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -253,9 +254,9 @@
 <span class="sd">                * indices</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span>
-        <span class="n">domainSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;domainSize&quot;</span><span class="p">]</span>
-        <span class="c1"># constraints = self.modelInfo[&quot;constraints&quot;]</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span>
+        <span class="n">domainSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;domainSize&quot;</span><span class="p">]</span>
+        <span class="c1"># constraints = self.model[&quot;constraints&quot;]</span>
 
         <span class="n">indicesOfFieldsInDofVector</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="n">currentIndexInDofVector</span> <span class="o">=</span> <span class="mi">0</span>
@@ -280,7 +281,7 @@
         <span class="p">}</span>
 
         <span class="n">indicesOfScalarVariablesInDofVector</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">scalarVariable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;scalarVariables&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">scalarVariable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;scalarVariables&quot;</span><span class="p">]:</span>
             <span class="n">indicesOfScalarVariablesInDofVector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">currentIndexInDofVector</span><span class="p">)</span>
             <span class="n">scalarVariable</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">currentIndexInDofVector</span>
             <span class="n">currentIndexInDofVector</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -305,8 +306,8 @@
 
         <span class="n">indicesOfFieldsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
 
         <span class="n">accumulatedNumberOfFieldFluxes</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">accumulatedNodalFluxesTotal</span> <span class="o">=</span> <span class="mi">0</span>
@@ -343,8 +344,8 @@
 <span class="sd">                - largest number of dofs on a element</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
 
         <span class="n">sizeVIJ</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">accumulatedElementNDof</span> <span class="o">=</span> <span class="mi">0</span>
@@ -376,8 +377,8 @@
 <span class="sd">            A dictionary containing the location mapping.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
         <span class="n">entitiesInDofVector</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -420,8 +421,8 @@
 <span class="sd">             - the entities to system matrix entry mapping.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelInfo</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span>
 
         <span class="n">entitiesInVIJ</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">entitiesInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entitiesInDofVector</span>

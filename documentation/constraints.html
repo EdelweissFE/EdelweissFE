@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -61,7 +62,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#linearizedrigidbody-linearized-rigid-body-constraints-in-2d"><code class="docutils literal notranslate"><span class="pre">linearizedrigidbody</span></code> - Linearized rigid body constraints in 2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rigidbody-geometrically-exact-rigid-body-constraints-in-3d"><code class="docutils literal notranslate"><span class="pre">rigidbody</span></code> - Geometrically exact rigid body constraints in 3D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#penaltyindirectcontrol-penalty-based-indirect-control"><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based indirect control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-constraints">Implementing your own constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-constraints">Implementing your own constraints</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.constraints.base.constraintbase.ConstraintBase"><code class="docutils literal notranslate"><span class="pre">ConstraintBase</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
@@ -494,7 +498,7 @@ modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class=
 <p>Subclass from the constraint base class in module <code class="docutils literal notranslate"><span class="pre">fe.constraints.base.constraintbase</span></code></p>
 <span class="target" id="module-fe.constraints.base.constraintbase"></span><dl class="py class">
 <dt class="sig sig-object py" id="fe.constraints.base.constraintbase.ConstraintBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.constraints.base.constraintbase.</span></span><span class="sig-name descname"><span class="pre">ConstraintBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelInfo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.constraints.base.constraintbase.</span></span><span class="sig-name descname"><span class="pre">ConstraintBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/constraints/base/constraintbase.html#ConstraintBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.constraints.base.constraintbase.ConstraintBase" title="Permalink to this definition"></a></dt>
 <dd><p>The constraint base class.</p>
 <p>Constraints can act on nodal variables, and scalar variables.
 If scalar variables are required, the can be created on demand by
@@ -521,7 +525,7 @@ to be of the form</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of the constraint.</p></li>
 <li><p><strong>options</strong> (<em>dict</em>) – A dictionary containing the options for the constraint.</p></li>
-<li><p><strong>modelInfo</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Attributes</dt>

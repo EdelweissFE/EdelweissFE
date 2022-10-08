@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -49,9 +50,19 @@
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Finite elements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#provider-marmotsingleqpelement">Provider <code class="docutils literal notranslate"><span class="pre">marmotsingleqpelement</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-elements">Implementing your own elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.config.elementlibrary.getElementClass"><code class="docutils literal notranslate"><span class="pre">getElementClass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper"><code class="docutils literal notranslate"><span class="pre">MarmotElementWrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#provider-marmotsingleqpelement">Provider <code class="docutils literal notranslate"><span class="pre">marmotsingleqpelement</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement"><code class="docutils literal notranslate"><span class="pre">MarmotMaterialWrappingElement</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-elements">Implementing your own elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement"><code class="docutils literal notranslate"><span class="pre">BaseElement</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -150,6 +161,7 @@ In future, elements by other providers or elements directly implemented in Edelw
 <dd class="field-even"><dl class="simple">
 <dt><strong>dofIndicesPermutation</strong></dt><dd></dd>
 <dt><strong>elNumber</strong></dt><dd></dd>
+<dt><strong>elType</strong></dt><dd></dd>
 <dt><strong>ensightType</strong></dt><dd></dd>
 <dt><strong>fields</strong></dt><dd></dd>
 <dt><strong>nDof</strong></dt><dd></dd>

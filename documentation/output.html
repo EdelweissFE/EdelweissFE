@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -66,6 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.plotalongpath"><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.statusfile"><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.meshdatatofile"><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
@@ -419,6 +421,34 @@ Useful, e.g., for indirect displacement control.</p>
 <tbody>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">filename</span></code></td>
 <td><p>(optional), custom filename for the status file; default: ‘jobname’.sta</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="module-fe.outputmanagers.meshdatatofile">
+<span id="meshdatatofile-write-the-generated-mesh-data-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file<a class="headerlink" href="#module-fe.outputmanagers.meshdatatofile" title="Permalink to this heading"></a></h2>
+<p>Writes the (generated) mesh data to a file.</p>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=meshdatatofile, name=meshdata</span>
+<span class="go">    filename=myMesh.inc</span>
+</pre></div>
+</div>
+</div>
+<table class="docutils align-default" id="id14">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id14" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">filename</span></code></td>
+<td><p>(optional), name of the file to write to; default: ‘jobname’_mesh.inc</p></td>
 </tr>
 </tbody>
 </table>

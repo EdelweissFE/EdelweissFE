@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -216,6 +217,9 @@ are automatically generated</p>
 <span class="nv">lY      </span><span class="ow">=</span><span class="m">40</span>
 <span class="nv">lZ      </span><span class="ow">=</span><span class="m">1</span>
 <span class="nv">elType  </span><span class="ow">=</span><span class="m">C3D20R</span>
+
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">meshdatatofile</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">meshdata</span>
+<span class="nv">filename</span><span class="ow">=</span><span class="m">myExportedMesh.inc</span>
 
 <span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">findClosestNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen2</span>
 <span class="nv">location</span><span class="ow">=</span><span class="s">&#39;0, 0, 0&#39;</span>
@@ -489,7 +493,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 
 <span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">executePythonCode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen-2</span>,<span class="nv"> executeAfterManualGeneration</span><span class="ow">=</span><span class="m">True</span><span class="c c-Singleline"></span>
 <span class="c c-Singleline">** we find all nodes at 50% of the height</span>
-modelInfo[&#39;nodeSets&#39;][&#39;center_horizontal&#39;] <span class="ow">=</span><span class="m"> [n for n in modelInfo[</span>&#39;nodes&#39;].values() 
+model[&#39;nodeSets&#39;][&#39;center_horizontal&#39;] <span class="ow">=</span><span class="m"> [n for n in model[</span>&#39;nodes&#39;].values() 
 <span class="nv">                                                if abs( n.coordinates[1] - 50.0 ) &lt;</span><span class="ow">=</span><span class="m"> 1e-12 ]</span>
 
 <span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">linearelastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">linearelastic</span>

@@ -25,3 +25,4 @@ Documentation
    journal
    exceptions
    utils
+   sets
