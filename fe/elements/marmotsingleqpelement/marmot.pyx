@@ -36,7 +36,7 @@ from libc.stdlib cimport malloc, free
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cdef MarmotMaterial* createMaterial(materialName, materialProperties):
+cdef MarmotMaterial* createMaterial(materialName, materialProperties) except NULL:
 
     cdef double[::1] matPropsView = materialProperties
 
