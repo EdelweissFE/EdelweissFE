@@ -105,4 +105,4 @@ cdef extern from "Marmot/MarmotMaterialGradientEnhancedHypoElastic.h":
                               double&       pNewDT
                            ) except +ValueError
 
-cdef MarmotMaterial* createMaterial(materialName, materialProperties)
+cdef MarmotMaterial* createMaterial(materialName, materialProperties) except NULL
