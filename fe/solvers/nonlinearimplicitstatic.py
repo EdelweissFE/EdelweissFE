@@ -42,6 +42,7 @@ from fe.utils.exceptions import (
 from time import time as getCurrentTime
 from collections import defaultdict
 from fe.config.linsolve import getLinSolverByName, getDefaultLinSolver
+from fe.config.timing import createTimingDict
 from fe.utils.csrgenerator import CSRGenerator
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
@@ -152,7 +153,7 @@ class NIST:
 
         """
 
-        self.computationTimes = defaultdict(lambda: 0.0)
+        self.computationTimes = createTimingDict()
 
         K = self.systemMatrix
 
@@ -239,7 +240,9 @@ class NIST:
                     statusInfoDict["notes"] = str(e)
 
                     for man in outputmanagers:
-                        man.finalizeFailedIncrement(statusInfoDict=statusInfoDict)
+                        man.finalizeFailedIncrement(
+                            statusInfoDict=statusInfoDict, currentComputingTimes=self.computationTimes
+                        )
 
                 except (ReachedMaxIterations, DivergingSolution) as e:
                     self.journal.message(str(e), self.identification, 1)
@@ -250,7 +253,9 @@ class NIST:
                     statusInfoDict["notes"] = str(e)
 
                     for man in outputmanagers:
-                        man.finalizeFailedIncrement(statusInfoDict=statusInfoDict)
+                        man.finalizeFailedIncrement(
+                            statusInfoDict=statusInfoDict, currentComputingTimes=self.computationTimes
+                        )
 
                 else:
                     lastIncrementSize = incrementSize
@@ -269,7 +274,9 @@ class NIST:
 
                     fieldOutputController.finalizeIncrement(U, P, increment)
                     for man in outputmanagers:
-                        man.finalizeIncrement(U, P, increment, statusInfoDict=statusInfoDict)
+                        man.finalizeIncrement(
+                            U, P, increment, currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
+                        )
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
             success = False
