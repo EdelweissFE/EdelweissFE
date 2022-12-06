@@ -66,10 +66,10 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step, stepActions):
         pass
 
-    def finalizeIncrement(self, U, P, increment, statusInfoDict: dict = {}):
+    def finalizeIncrement(self, U, P, increment, statusInfoDict: dict = {}, **kwargs):
         self.writeStatusFile(statusInfoDict)
 
-    def finalizeFailedIncrement(self, statusInfoDict: dict = {}):
+    def finalizeFailedIncrement(self, statusInfoDict: dict = {}, **kwargs):
         self.writeStatusFile(statusInfoDict)
 
     def finalizeStep(self, U, P, time):

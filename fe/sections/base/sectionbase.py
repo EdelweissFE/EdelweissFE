@@ -41,6 +41,7 @@ class Section(ABC):
     def __init__(self, name, datalines, materialName, thickness, model):
         self.elSetNames = []
         self.materialParameterFromFieldDefs = []
+        self.writeMaterialPropertiesToFile = False
 
         for line in datalines:
 
@@ -69,6 +70,10 @@ class Section(ABC):
                     definition["expression"] = createFunction("f", "p", "f", model=model)
 
                 self.materialParameterFromFieldDefs.append(definition)
+            elif strCaseCmp(line[0], "writeMaterialPropertiesToFile"):
+                self.writeMaterialPropertiesToFile = True
+                definition = convertAssignmentsToStringDictionary(line[1:])
+                self.materialPropertiesFileName = definition.get("filename")
             else:
                 self.elSetNames.extend(line)
 
@@ -93,3 +98,12 @@ class Section(ABC):
                 materialProperties[index] *= definition["expression"](parameterValue, fieldValue)
 
         return materialProperties
+
+    def exportMaterialPropertiesToFile(self, elSets):
+
+        with open("{:}.csv".format(self.materialPropertiesFileName), "w+") as f:
+            for elSet in elSets:
+                for el in elSet:
+                    f.write("{:}".format(el.elNumber))
+                    [f.write("{:} ".format(matprop)) for matprop in el._materialProperties]
+                    f.write("\n")

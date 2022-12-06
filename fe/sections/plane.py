@@ -79,4 +79,7 @@ class Section(SectionBase):
                     el.initializeElement()
                     el.setMaterial(material["name"], material["properties"])
 
+        if self.writeMaterialPropertiesToFile:
+            self.exportMaterialPropertiesToFile(elSets)
+
         return model
