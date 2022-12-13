@@ -54,6 +54,7 @@ cdef class MarmotMaterialHypoElasticWrapper:
         self.fields = ["strain symmetric"]
         self.nU = 6
 
+
     def createMaterial(self, materialName, materialProperties):
 
         cdef MarmotMaterial* marmotMaterial = createMaterial(materialName, materialProperties)
@@ -102,7 +103,7 @@ cdef class MarmotMaterialHypoElasticWrapper:
         self.dStress_dStrainInStateVars[:] = dStress_dStrain
 
         if pNewDT < 1.0:
-            raise CutbackRequest("Material {:} requests for a cutback!".format(self.elNumber), pNewDT)
+            raise CutbackRequest("Material requests for a cutback!", pNewDT)
 
     def getNumberOfRequiredStateVars(self,):
 

@@ -133,7 +133,7 @@ cdef class MarmotMaterialGradientEnhancedHypoElasticWrapper:
         
 
         if pNewDT < 1.0:
-            raise CutbackRequest("Material {:} requests for a cutback!".format(1), pNewDT)
+            raise CutbackRequest("Material requests for a cutback!", pNewDT)
 
     def getNumberOfRequiredStateVars(self,):
 
