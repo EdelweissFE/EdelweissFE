@@ -84,3 +84,14 @@ Outputmanagers
 
 .. pprint:: fe.outputmanagers.meshdatatofile.documentation
     :caption: Options:
+
+
+``computetimemonitor`` - Print and write compute times per increment
+--------------------------------------------------------------------
+
+.. automodule:: fe.outputmanagers.computetimemonitor
+   :members: __doc__
+
+.. pprint:: fe.outputmanagers.computetimemonitor.documentation
+    :caption: Options:
+

@@ -60,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>fe.solvers.nonlinearimplicitstatic</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">fe.solvers.nonlinearimplicitstatic</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -116,6 +116,7 @@
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">fe.config.linsolve</span> <span class="kn">import</span> <span class="n">getLinSolverByName</span><span class="p">,</span> <span class="n">getDefaultLinSolver</span>
+<span class="kn">from</span> <span class="nn">fe.config.timing</span> <span class="kn">import</span> <span class="n">createTimingDict</span>
 <span class="kn">from</span> <span class="nn">fe.utils.csrgenerator</span> <span class="kn">import</span> <span class="n">CSRGenerator</span>
 <span class="kn">from</span> <span class="nn">fe.stepactions.base.stepactionbase</span> <span class="kn">import</span> <span class="n">StepActionBase</span>
 <span class="kn">from</span> <span class="nn">fe.outputmanagers.base.outputmanagerbase</span> <span class="kn">import</span> <span class="n">OutputManagerBase</span>
@@ -226,7 +227,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span> <span class="o">=</span> <span class="n">createTimingDict</span><span class="p">()</span>
 
         <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">systemMatrix</span>
 
@@ -313,7 +314,9 @@
                     <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
                     <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeFailedIncrement</span><span class="p">(</span><span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">)</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeFailedIncrement</span><span class="p">(</span>
+                            <span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">,</span> <span class="n">currentComputingTimes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span>
+                        <span class="p">)</span>
 
                 <span class="k">except</span> <span class="p">(</span><span class="n">ReachedMaxIterations</span><span class="p">,</span> <span class="n">DivergingSolution</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -324,7 +327,9 @@
                     <span class="n">statusInfoDict</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
                     <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeFailedIncrement</span><span class="p">(</span><span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">)</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeFailedIncrement</span><span class="p">(</span>
+                            <span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">,</span> <span class="n">currentComputingTimes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span>
+                        <span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">lastIncrementSize</span> <span class="o">=</span> <span class="n">incrementSize</span>
@@ -343,7 +348,9 @@
 
                     <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span><span class="p">)</span>
+                        <span class="n">man</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">(</span>
+                            <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">currentComputingTimes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">,</span> <span class="n">statusInfoDict</span><span class="o">=</span><span class="n">statusInfoDict</span>
+                        <span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="n">ReachedMaxIncrements</span><span class="p">,</span> <span class="n">ReachedMinIncrementSize</span><span class="p">):</span>
             <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
