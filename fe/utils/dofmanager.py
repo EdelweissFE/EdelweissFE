@@ -355,8 +355,8 @@ class DofManager:
 
         sizeVIJ = self.sizeVIJ
 
-        I = np.zeros(sizeVIJ, dtype=np.int)
-        J = np.zeros(sizeVIJ, dtype=np.int)
+        I = np.zeros(sizeVIJ, dtype=int)
+        J = np.zeros(sizeVIJ, dtype=int)
         idxInVIJ = 0
 
         for el in elements.values():

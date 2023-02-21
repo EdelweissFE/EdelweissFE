@@ -72,7 +72,7 @@ class StepAction(StepActionBase):
                 nodeForceIndices += directionIndices
                 nodeForceDelta += [float(action[direction])] * len(directionIndices)
 
-        self.indices = np.asarray(nodeForceIndices, dtype=np.int)
+        self.indices = np.asarray(nodeForceIndices, dtype=int)
         self.nodeForcesStepStart = np.zeros_like(self.indices, dtype=np.double)
         self.nodeForcesDelta = np.asarray(nodeForceDelta)
         self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
@@ -165,7 +165,7 @@ class StepAction(StepActionBase):
             The updated dictionary defining this step action containing the directional definitions.
         """
 
-        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=np.float)
+        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=float)
 
         for i, t in enumerate(components):
             if not np.isnan(t):

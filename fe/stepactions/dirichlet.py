@@ -119,7 +119,7 @@ class StepAction(StepActionBase):
                 dirichletIndices += directionIndices
                 dirichletDelta += [float(action[direction])] * len(directionIndices)
 
-        self.indices = np.array(dirichletIndices, dtype=np.int)
+        self.indices = np.array(dirichletIndices, dtype=int)
 
         self.delta = np.array(dirichletDelta)
 
@@ -147,7 +147,7 @@ class StepAction(StepActionBase):
             The updated dictionary defining this step action containing the directional definitions.
         """
 
-        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=np.float)
+        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=float)
 
         for i, t in enumerate(components):
             if not np.isnan(t):
