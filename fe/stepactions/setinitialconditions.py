@@ -51,7 +51,7 @@ class StepAction(StepActionBase):
 
         self.theElements = model["elementSets"][action.get("elSet", "all")]
         self.theProperty = action["property"]
-        self.values = np.fromstring(action["values"], dtype=np.float, sep=",")
+        self.values = np.fromstring(action["values"], dtype=float, sep=",")
         self.active = True
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):

@@ -252,7 +252,7 @@ class Constraint(ConstraintBase):
                     # only the rot. block is nonzero
                     H[:, 2 * nDim + i, 2 * nDim + j] = RDerivativeProductsII[i][j] @ d0
 
-            indcsU = np.array(indcsUNode + self.indicesOfRPUinP + self.indicesOfRPPhiInP, dtype=np.int)
+            indcsU = np.array(indcsUNode + self.indicesOfRPUinP + self.indicesOfRPPhiInP, dtype=int)
 
             PExt[indcsU] -= Lambda.T @ G
             PExt[L0:LF] -= g

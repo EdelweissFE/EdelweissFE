@@ -723,7 +723,7 @@ class NIST:
         self.computationTimes["CSR generation"] += toc - tic
         return KCsr
 
-    def computeSpatialAveragedFluxes(self, F: DofVector) -> np.float:
+    def computeSpatialAveragedFluxes(self, F: DofVector) -> float:
         """Compute the spatial averaged flux for every field
         Is usually called by checkConvergence().
 
@@ -734,7 +734,7 @@ class NIST:
 
         Returns
         -------
-        dict[str,np.float]
+        dict[str,float]
             A dictioary containg the spatial average fluxes for every field.
         """
         spatialAveragedFluxes = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, 0.0)

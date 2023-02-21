@@ -60,11 +60,11 @@ class Constraint(ConstraintBase):
 
         self.theField = definition.get("field", "displacement")
 
-        self.cVector = np.fromstring(definition["cVector"], dtype=np.float, sep=",")
+        self.cVector = np.fromstring(definition["cVector"], dtype=float, sep=",")
         self.constrainedNSet = model["nodeSets"][definition["constrainedNSet"]]
         self.loadNSet = model["nodeSets"][definition["loadNSet"]]
 
-        self.loadVector = np.fromstring(definition["loadVector"], dtype=np.float, sep=",")
+        self.loadVector = np.fromstring(definition["loadVector"], dtype=float, sep=",")
 
         # we may normalize in order to end up with an identical load irrespective of the number of nodes
         # in the load node set
@@ -72,7 +72,7 @@ class Constraint(ConstraintBase):
             self.loadVector *= 1.0 / len(self.loadNSet)
 
         self.penaltyStiffness = float(definition["penaltyStiffness"])
-        self.l = np.float(definition["length"])
+        self.l = float(definition["length"])
 
         if "f(t)" in definition:
             t = sp.symbols("t")

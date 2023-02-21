@@ -129,7 +129,7 @@ def convertLinesToStringDictionary(lines: list) -> dict:
     return convertLineToStringDictionary(",".join(lines))
 
 
-def convertLinesToFlatArray(lines: list, dtype: type = np.float) -> np.ndarray:
+def convertLinesToFlatArray(lines: list, dtype: type = float) -> np.ndarray:
     """Create a 1D numpy array from a list of lines with elements separated by commas.
 
     Parameters
@@ -184,7 +184,7 @@ def filterByJobName(canditates, jobName):
 def mergeNumpyDataLines(multiLineData: np.ndarray) -> np.ndarray:
     """Flatten a numpy array."""
     flattenedMatProps = [p for row in multiLineData for p in row]
-    return np.array(flattenedMatProps, dtype=np.float)
+    return np.array(flattenedMatProps, dtype=float)
 
 
 def strtobool(val: str) -> bool:

@@ -232,7 +232,7 @@ class AbqModelConstructor:
             materialName = materialDef["name"]
             materialID = materialDef.get("id", materialName)
 
-            materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=np.float)
+            materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=float)
 
             model["materials"][materialID] = {"name": materialName, "properties": materialProperties}
 
