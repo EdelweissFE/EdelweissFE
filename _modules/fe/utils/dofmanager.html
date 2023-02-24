@@ -137,7 +137,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">nDof</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">J</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">entitiesInVIJ</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-
         <span class="n">obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
         <span class="n">obj</span><span class="o">.</span><span class="n">nDof</span> <span class="o">=</span> <span class="n">nDof</span>
@@ -204,7 +203,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">activateFieldsOnNodes</span><span class="p">()</span>

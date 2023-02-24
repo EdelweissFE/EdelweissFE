@@ -153,7 +153,6 @@
     <span class="n">defaultMaxGrowingIter</span> <span class="o">=</span> <span class="mi">10</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">linSolver</span> <span class="o">=</span> <span class="n">getLinSolverByName</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;linsolver&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;linsolver&quot;</span> <span class="ow">in</span> <span class="n">jobInfo</span> <span class="k">else</span> <span class="n">getDefaultLinSolver</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span> <span class="o">=</span> <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;dofManager&quot;</span><span class="p">]</span>
@@ -544,7 +543,6 @@
             <span class="n">magnitude</span> <span class="o">=</span> <span class="n">dLoad</span><span class="o">.</span><span class="n">getCurrentMagnitude</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">elementSet</span> <span class="ow">in</span> <span class="n">dLoad</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elementSet</span><span class="p">:</span>
-
                     <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
                     <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
 
@@ -587,7 +585,6 @@
         <span class="k">for</span> <span class="n">bForce</span> <span class="ow">in</span> <span class="n">bodyForces</span><span class="p">:</span>
             <span class="n">force</span> <span class="o">=</span> <span class="n">bForce</span><span class="o">.</span><span class="n">getCurrentBodyForce</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">bForce</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
-
                 <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
                 <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
 
@@ -730,7 +727,6 @@
             <span class="n">convergedAtAll</span> <span class="o">=</span> <span class="n">convergedAtAll</span> <span class="ow">and</span> <span class="n">convergedCorrection</span> <span class="ow">and</span> <span class="n">convergedFlux</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfScalarVariablesInDofVector</span><span class="p">:</span>
-
             <span class="n">residualScalarVariables</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfScalarVariablesInDofVector</span><span class="p">]))</span>
             <span class="n">correction</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ddU</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfScalarVariablesInDofVector</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
@@ -867,7 +863,6 @@
         <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-
             <span class="n">Ke</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
             <span class="n">Pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
 
@@ -918,7 +913,6 @@
         <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-
             <span class="n">Kc</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">constraint</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
             <span class="n">Pc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span><span class="p">)</span>
 

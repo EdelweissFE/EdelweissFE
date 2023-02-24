@@ -234,11 +234,9 @@
     <span class="k">def</span> <span class="nf">_initializeStateVarsTemp</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateVars</span>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.setInitialCondition"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition">[docs]</a>    <span class="k">def</span> <span class="nf">setInitialCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateType</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_initializeStateVarsTemp</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">stateType</span> <span class="o">==</span> <span class="s2">&quot;initialize material&quot;</span><span class="p">:</span>
@@ -284,11 +282,9 @@
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.resetToLastValidState"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState">[docs]</a>    <span class="k">def</span> <span class="nf">resetToLastValidState</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.getResultArray"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray">[docs]</a>    <span class="k">def</span> <span class="nf">getResultArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quadraturePoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">getResultArray</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.getCoordinatesAtCenter"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
