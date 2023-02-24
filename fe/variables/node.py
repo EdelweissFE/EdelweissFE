@@ -49,7 +49,6 @@ class Node:
         label: int,
         coordinates: np.ndarray,
     ):
-
         self.label = label
         self.coordinates = coordinates
         self.fields = {}

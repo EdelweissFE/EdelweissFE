@@ -6,7 +6,6 @@ from fe.utils.math import createFunction
 
 class Section:
     def __init__(self, name, options, materialName, t, model):
-
         self.options = convertLinesToStringDictionary(options)
         options = self.options
 
@@ -30,7 +29,6 @@ class Section:
         self.randomFunction = createFunction(options["f(x,ref,rand)"], "x", "ref", "rand", model=model)
 
     def assignSectionPropertiesToModel(self, model):
-
         elSets = [model["elementSets"][setName] for setName in self.elSetNames]
         material = model["materials"][self.materialName]
 

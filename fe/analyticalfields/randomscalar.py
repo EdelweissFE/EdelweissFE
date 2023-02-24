@@ -49,7 +49,6 @@ from inspect import signature
 
 class AnalyticalField(AnalyticalFieldBase):
     def __init__(self, name, data, model):
-
         self.name = name
         self.type = "randomScalar"
 

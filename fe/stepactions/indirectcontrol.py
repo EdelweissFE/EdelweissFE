@@ -48,7 +48,6 @@ class StepAction(StepActionBase):
     identification = "IndirectControl"
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
         self.journal = journal
         self.model = model
@@ -63,7 +62,6 @@ class StepAction(StepActionBase):
         self.idcs = np.array([self.dof1, self.dof2])
 
     def computeDDLambda(self, dU, ddU_0, ddU_f, increment):
-
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         dL = incrementSize * self.L
 

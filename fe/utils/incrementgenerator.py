@@ -32,7 +32,6 @@ from fe.journal.journal import Journal
 
 
 class IncrementGenerator:
-
     identification = "IncGen"
 
     def __init__(
@@ -91,13 +90,13 @@ class IncrementGenerator:
         Returns
         -------
         tuple
-            The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total)."""
+            The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total).
+        """
 
         # zero increment; return value for first function call
         yield (0, 0.0, 0.0, 0.0, 0.0, self.currentTime)
 
         while self.finishedStepProgress < (1.0 - 1e-15):
-
             if self.totalIncrements >= self.maxNumberIncrements:
                 self.journal.errorMessage("Reached maximum number of increments", self.identification)
                 raise ReachedMaxIncrements()

@@ -121,7 +121,6 @@ class Constraint(ConstraintBase):
         return self._nDof
 
     def applyConstraint(self, U_np, dU, PExt, K, increment):
-
         if self.active == False:
             return
 

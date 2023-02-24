@@ -245,7 +245,6 @@ class Plotter:
         """Set global options of the plotter."""
 
         for configEntry in self.configurationLines:
-
             ax = self.figsWithAxes[(configEntry["figure"])][1][configEntry["axSpec"]]
 
             if "xLimits" in configEntry:

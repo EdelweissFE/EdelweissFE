@@ -51,5 +51,4 @@ class NodeSet(OrderedSet):
         label: str,
         nodes: list,
     ):
-
         super().__init__(label, nodes)

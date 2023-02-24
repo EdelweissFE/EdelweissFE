@@ -43,7 +43,6 @@ class StepAction(StepActionBase):
     """Initializes materials"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
 
         self.theElements = model["elementSets"][action.get("elSet", "all")]

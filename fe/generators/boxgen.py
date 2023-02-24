@@ -87,7 +87,6 @@ import os
 
 
 def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
-
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 

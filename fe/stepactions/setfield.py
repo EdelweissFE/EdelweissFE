@@ -44,7 +44,6 @@ import numpy as np
 
 class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
         self.active = True
         self.journal = journal
@@ -82,7 +81,6 @@ class StepAction(StepActionBase):
             self.fieldOutput.setResults(currentResults)
 
         if self.type == "analyticalField":
-
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
 
             if self.analyticalField.type == "scalarExpression" and not currentResults.shape[2] == 1:

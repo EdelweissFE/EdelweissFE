@@ -45,7 +45,6 @@ class StepAction(StepActionBase):
     """Action class for changing a material property"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
         self.theIndex = int(action["index"])
         self.theMaterial = model["materials"][action["material"]]

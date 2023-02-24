@@ -82,7 +82,6 @@ def convertAssignmentsToStringDictionary(assignments: list) -> dict:
 
     resultDict = CaseInsensitiveDict()
     for entry in assignments:
-
         parts = [x.strip() for x in entry.split("=")]
         opt = parts[0]
         val = "=".join(parts[1:]) if len(parts) > 1 else "True"

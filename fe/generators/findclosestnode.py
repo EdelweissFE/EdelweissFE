@@ -44,7 +44,6 @@ import numpy as np
 
 
 def generateModelData(generatorDefinition: dict, model: dict, journal: Journal):
-
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 

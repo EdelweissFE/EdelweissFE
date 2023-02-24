@@ -75,7 +75,6 @@ class NIST:
     defaultMaxGrowingIter = 10
 
     def __init__(self, jobInfo, journal):
-
         self.linSolver = getLinSolverByName(jobInfo["linsolver"]) if "linsolver" in jobInfo else getDefaultLinSolver()
 
         self.theDofManager = jobInfo["dofManager"]
@@ -466,7 +465,6 @@ class NIST:
             magnitude = dLoad.getCurrentMagnitude(increment)
             for faceID, elementSet in dLoad.surface.items():
                 for el in elementSet:
-
                     Ke = K[el]
                     Pe = np.zeros(el.nDof)
 
@@ -509,7 +507,6 @@ class NIST:
         for bForce in bodyForces:
             force = bForce.getCurrentBodyForce(increment)
             for el in bForce.elements:
-
                 Pe = np.zeros(el.nDof)
                 Ke = K[el]
 
@@ -652,7 +649,6 @@ class NIST:
             convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
 
         if self.theDofManager.indicesOfScalarVariablesInDofVector:
-
             residualScalarVariables = max(np.abs(R[self.theDofManager.indicesOfScalarVariablesInDofVector]))
             correction = (
                 np.linalg.norm(ddU[self.theDofManager.indicesOfScalarVariablesInDofVector], np.inf)
@@ -789,7 +785,6 @@ class NIST:
         time = np.array([stepTime, totalTime])
 
         for el in elements.values():
-
             Ke = K[el]
             Pe = np.zeros(el.nDof)
 
@@ -840,7 +835,6 @@ class NIST:
         tic = getCurrentTime()
 
         for constraint in constraints.values():
-
             Kc = K[constraint].reshape(constraint.nDof, constraint.nDof, order="F")
             Pc = np.zeros(constraint.nDof)
 

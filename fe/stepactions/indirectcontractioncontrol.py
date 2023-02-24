@@ -67,7 +67,6 @@ class StepAction(StepActionBase):
         self.definition = str(action.get("definition", "absolute"))
 
     def computeDDLambda(self, dU, ddU_0, ddU_f, increment):
-
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         dL = incrementSize * self.L
 

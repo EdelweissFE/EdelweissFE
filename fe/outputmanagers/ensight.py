@@ -112,7 +112,6 @@ class EnsightUnstructuredPart:
         nodes: list[Node],
         elementTree: dict[str, list[tuple[int, list[Node]]]],
     ):
-
         self.structureType = "coordinates"
         self.elementTree = elementTree
 
@@ -388,7 +387,6 @@ class EnsightPerElementVariable:
         variableDimension: int,
         ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray] = None,
     ):
-
         self.name = name
         self.description = name
         self.partsDict = ensightPartsDict or {}
@@ -499,7 +497,6 @@ class EnsightChunkWiseCase:
         """
 
         if ensightVariable.name not in self.fileHandles:
-
             fileName = os.path.join(self.caseFileNamePrefix, ensightVariable.name + ".var")
 
             self.fileHandles[ensightVariable.name] = open(fileName, mode="wb")
@@ -743,7 +740,6 @@ class OutputManager(OutputManagerBase):
         pass
 
     def writeOutput(self, U, P, time):
-
         self.timeAtLastOutput = time
         self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, time)
 

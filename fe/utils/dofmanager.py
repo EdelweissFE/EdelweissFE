@@ -59,7 +59,6 @@ class VIJSystemMatrix(np.ndarray):
     """
 
     def __new__(cls, nDof: int, I: np.ndarray, J: np.ndarray, entitiesInVIJ: dict):
-
         obj = np.zeros_like(I, dtype=float).view(cls)
 
         obj.nDof = nDof
@@ -126,7 +125,6 @@ class DofManager:
     """
 
     def __init__(self, model: dict):
-
         self.model = model
 
         self.activateFieldsOnNodes()
