@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.elements.marmotsingleqpelement.element</li>
       <li class="wy-breadcrumbs-aside">
@@ -119,7 +123,7 @@
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement">[docs]</a><span class="k">class</span> <span class="nc">MarmotMaterialWrappingElement</span><span class="p">(</span><span class="n">BaseElement</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This element serves as a wrapper for MarmotMaterials, cf. `Marmot &lt;https://github.com/MAteRialMOdelingToolbox/Marmot/&gt;`_.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This element serves as a wrapper for MarmotMaterials, cf. `Marmot &lt;https://github.com/MAteRialMOdelingToolbox/Marmot/&gt;`_.</span>
 
 <span class="sd">        It has a single quadrature point, and one (dummy) node.</span>
 <span class="sd">        For interfacing with specific Marmot materials,</span>
@@ -145,7 +149,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">nU</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndicesPermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndicesPermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -176,7 +180,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.setNodes"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes">[docs]</a>    <span class="k">def</span> <span class="nf">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign the nodes.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign the nodes.</span>
 
 <span class="sd">        Only the first node is considered.</span>
 
@@ -190,7 +194,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.setProperties"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties">[docs]</a>    <span class="k">def</span> <span class="nf">setProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementProperties</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Not used by this wrapper&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not be called for this material wrapper!&quot;</span><span class="p">)</span></div>
@@ -198,13 +202,13 @@
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.initializeElement"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement">[docs]</a>    <span class="k">def</span> <span class="nf">initializeElement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Not used by this wrapper&quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.setMaterial"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">setMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign a material and material properties to the underlying Wrapper.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a material and material properties to the underlying Wrapper.</span>
 <span class="sd">        Furthermore, create two sets of state vars:</span>
 
 <span class="sd">            * the actual set,</span>
@@ -241,7 +245,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">initializeYourself</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">stateType</span> <span class="o">==</span> <span class="s2">&quot;characteristic element length&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;setting element length&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">setCharacteristicElementLength</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">acceptLastState</span><span class="p">()</span></div>
@@ -262,19 +265,19 @@
         <span class="n">Pe</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.computeDistributedLoad"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad">[docs]</a>    <span class="k">def</span> <span class="nf">computeDistributedLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loadType</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dTime</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Not implemented for this wrapper.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not implemented for this wrapper.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not be called for this wrapper.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.computeBodyForce"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dTime</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Not implemented for this wrapper.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not implemented for this wrapper.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not be called for this wrapper.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.acceptLastState"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState">[docs]</a>    <span class="k">def</span> <span class="nf">acceptLastState</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Accept the computed state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accept the computed state.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_stateVars</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span></div>
 
@@ -289,7 +292,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">getResultArray</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.getCoordinatesAtCenter"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the only node&#39;s coordinates.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the only node&#39;s coordinates.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

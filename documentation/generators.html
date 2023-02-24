@@ -29,12 +29,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -93,7 +97,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Documentation</a></li>
       <li class="breadcrumb-item active">Meshgenerators</li>
       <li class="wy-breadcrumbs-aside">
@@ -203,7 +207,7 @@ are automatically generated</p>
 </table>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/BoxGen/test.inp</span></code></span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span><span class="c c-Singleline"></span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span>
 <span class="c c-Singleline">**Isotropic</span>
 <span class="c c-Singleline">**E    nu</span>
 1.8e4, 0.22
@@ -403,13 +407,13 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LINEARELASTIC</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">mat2</span>
  3000, 0.49
 
-<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">cubit</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span><span class="c c-Singleline"></span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">cubit</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
 <span class="c c-Singleline">**cubitCmd        = singularity exec &lt;pathToImage&gt;.smg coreform_cubit</span>
 <span class="nv">cubitCmd        </span><span class="ow">=</span><span class="m"> cubit</span>
 <span class="nv">jouFile         </span><span class="ow">=</span><span class="m"> journal.jou</span>
 <span class="nv">APREPROVars     </span><span class="ow">=</span><span class="s"> &#39;Lx=4, Ly=2, Lz=5&#39;</span>
 <span class="nv">elTypePerBlock  </span><span class="ow">=</span><span class="s"> &#39;block1=C3D8, block2=C3D8&#39;</span>
-silent<span class="c c-Singleline"></span>
+silent
 <span class="c c-Singleline">** runCubit    = True</span>
 <span class="c c-Singleline">** overwrite   = False</span>
 
@@ -492,7 +496,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="nv">l</span><span class="ow">=</span><span class="m">100</span>
 <span class="nv">h</span><span class="ow">=</span><span class="m">100</span>
 
-<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">executePythonCode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen-2</span>,<span class="nv"> executeAfterManualGeneration</span><span class="ow">=</span><span class="m">True</span><span class="c c-Singleline"></span>
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">executePythonCode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen-2</span>,<span class="nv"> executeAfterManualGeneration</span><span class="ow">=</span><span class="m">True</span>
 <span class="c c-Singleline">** we find all nodes at 50% of the height</span>
 model[&#39;nodeSets&#39;][&#39;center_horizontal&#39;] <span class="ow">=</span><span class="m"> [n for n in model[</span>&#39;nodes&#39;].values() 
 <span class="nv">                                                if abs( n.coordinates[1] - 50.0 ) &lt;</span><span class="ow">=</span><span class="m"> 1e-12 ]</span>

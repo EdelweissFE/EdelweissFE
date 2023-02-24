@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.utils.plotter</li>
       <li class="wy-breadcrumbs-aside">
@@ -170,7 +174,7 @@
 
 
 <div class="viewcode-block" id="Plotter"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter">[docs]</a><span class="k">class</span> <span class="nc">Plotter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The unified plotter, which can be accessed and used by all outputmanagers.</span>
 
 <span class="sd">    Parameters</span>
@@ -230,7 +234,7 @@
         <span class="p">]</span>
 
 <div class="viewcode-block" id="Plotter.getAx"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.getAx">[docs]</a>    <span class="k">def</span> <span class="nf">getAx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axSpec</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">111</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get or create a figure with axes if it doesn&#39;t exist yet.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or create a figure with axes if it doesn&#39;t exist yet.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -257,7 +261,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figsWithAxes</span><span class="p">[</span><span class="n">figureID</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">axSpec</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Plotter.getFig"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.getFig">[docs]</a>    <span class="k">def</span> <span class="nf">getFig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get or create a figure doesn&#39;t exist yet.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or create a figure doesn&#39;t exist yet.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -275,7 +279,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figsWithAxes</span><span class="p">[</span><span class="n">figureID</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Plotter.plotXYData"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.plotXYData">[docs]</a>    <span class="k">def</span> <span class="nf">plotXYData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axSpec</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">111</span><span class="p">,</span> <span class="n">plotOptions</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Plots a single curve.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots a single curve.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -316,7 +320,7 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">plotDefinition</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Plotter.configurePlotter"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.configurePlotter">[docs]</a>    <span class="k">def</span> <span class="nf">configurePlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set global options of the plotter.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set global options of the plotter.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">configEntry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configurationLines</span><span class="p">:</span>
 
@@ -344,7 +348,7 @@
                 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Plotter.exportPlots"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.exportPlots">[docs]</a>    <span class="k">def</span> <span class="nf">exportPlots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Export all plots according to the export job definitions.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Export all plots according to the export job definitions.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">exportJob</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exportJobs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exportFigure</span><span class="p">(</span>
@@ -357,7 +361,7 @@
             <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_fancyFigSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">heightRatio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Create a fancy figure size compatible with matplotlib specs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a fancy figure size compatible with matplotlib specs.&quot;&quot;&quot;</span>
 
         <span class="n">fig_width_pt</span> <span class="o">=</span> <span class="n">width</span>
         <span class="n">inches_per_pt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">72.27</span>  <span class="c1"># Convert pt to inch</span>
@@ -376,7 +380,7 @@
         <span class="n">heightRatio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">png</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Export a figure.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Export a figure.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -405,7 +409,7 @@
 <div class="viewcode-block" id="Plotter.finalize"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.finalize">[docs]</a>    <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Finalize and export plots.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize and export plots.&quot;&quot;&quot;</span>
 
         <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -428,7 +432,7 @@
 <div class="viewcode-block" id="Plotter.show"><a class="viewcode-back" href="../../../documentation/plotter.html#fe.utils.plotter.Plotter.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show the plots!&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the plots!&quot;&quot;&quot;</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
 </pre></div>

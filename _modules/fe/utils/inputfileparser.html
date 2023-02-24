@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.utils.inputfileparser</li>
       <li class="wy-breadcrumbs-aside">
@@ -286,7 +290,7 @@
 <div class="viewcode-block" id="parseInputFile"><a class="viewcode-back" href="../../../documentation/syntax.html#fe.utils.inputfileparser.parseInputFile">[docs]</a><span class="k">def</span> <span class="nf">parseInputFile</span><span class="p">(</span>
     <span class="n">fileName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">currentKeyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">existingFileDict</span><span class="p">:</span> <span class="n">CaseInsensitiveDict</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CaseInsensitiveDict</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Parse an Abaqus-like input file to generate a dictionary with its content.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse an Abaqus-like input file to generate a dictionary with its content.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -385,7 +389,7 @@
 
 
 <div class="viewcode-block" id="printKeywords"><a class="viewcode-back" href="../../../documentation/syntax.html#fe.utils.inputfileparser.printKeywords">[docs]</a><span class="k">def</span> <span class="nf">printKeywords</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Print the input file language set.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the input file language set.&quot;&quot;&quot;</span>
 
     <span class="n">kwString</span> <span class="o">=</span> <span class="s2">&quot;    </span><span class="si">{:}</span><span class="s2">    &quot;</span>
     <span class="n">kwDataString</span> <span class="o">=</span> <span class="s2">&quot;        </span><span class="si">{:22}{:20}</span><span class="s2">&quot;</span>
@@ -406,7 +410,7 @@
 
 
 <div class="viewcode-block" id="printKeywordsRST"><a class="viewcode-back" href="../../../documentation/syntax.html#fe.utils.inputfileparser.printKeywordsRST">[docs]</a><span class="k">def</span> <span class="nf">printKeywordsRST</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Print the input file language set in an RST conform format.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the input file language set in an RST conform format.&quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="p">(</span><span class="n">kwDoc</span><span class="p">,</span> <span class="n">optiondict</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">inputLanguage</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;.. list-table:: &quot;</span> <span class="o">+</span> <span class="s2">&quot;``</span><span class="si">{:}</span><span class="s2">`` : </span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kw</span><span class="p">,</span> <span class="n">kwDoc</span><span class="p">))</span>

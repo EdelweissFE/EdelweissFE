@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.journal.journal</li>
       <li class="wy-breadcrumbs-aside">
@@ -111,7 +115,7 @@
 
 
 <div class="viewcode-block" id="Journal"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal">[docs]</a><span class="k">class</span> <span class="nc">Journal</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This class provides an interface to present messages to the user via console</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class provides an interface to present messages to the user via console</span>
 <span class="sd">    output and/or file output.</span>
 <span class="sd">    Information messages can be sorted by the importance level.</span>
 <span class="sd">    Suppressing certain levels of output is possible.</span>
@@ -137,7 +141,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setNewLineWidth</span><span class="p">(</span><span class="n">newWidth</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">leftColumn</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Journal.setNewLineWidth"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.setNewLineWidth">[docs]</a>    <span class="k">def</span> <span class="nf">setNewLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newWidth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">leftColumn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the line width of the log file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the line width of the log file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -164,7 +168,7 @@
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="Journal.message"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.message">[docs]</a>    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Write message to log.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write message to log.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -187,7 +191,7 @@
                     <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leveledOutput</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Journal.errorMessage"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.errorMessage">[docs]</a>    <span class="k">def</span> <span class="nf">errorMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errorMessage</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print an error message.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print an error message.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -202,7 +206,7 @@
 <div class="viewcode-block" id="Journal.printSeperationLine"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.printSeperationLine">[docs]</a>    <span class="k">def</span> <span class="nf">printSeperationLine</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Write a seperation file to log.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a seperation file to log.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;+&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linewidth</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="p">)</span></div>
@@ -210,7 +214,7 @@
 <div class="viewcode-block" id="Journal.printTable"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.printTable">[docs]</a>    <span class="k">def</span> <span class="nf">printTable</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">printHeaderRow</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print a pretty table.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print a pretty table.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -240,12 +244,12 @@
 <div class="viewcode-block" id="Journal.setVerbose"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.setVerbose">[docs]</a>    <span class="k">def</span> <span class="nf">setVerbose</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set highest verbosity.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set highest verbosity.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">suppressLvl</span> <span class="o">=</span> <span class="mi">3</span></div>
 
 <div class="viewcode-block" id="Journal.squelch"><a class="viewcode-back" href="../../../documentation/journal.html#fe.journal.journal.Journal.squelch">[docs]</a>    <span class="k">def</span> <span class="nf">squelch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Suppress all messages.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Suppress all messages.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

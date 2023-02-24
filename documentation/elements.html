@@ -29,12 +29,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -101,7 +105,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Documentation</a></li>
       <li class="breadcrumb-item active">Finite elements</li>
       <li class="wy-breadcrumbs-aside">
@@ -120,7 +124,7 @@
 In future, elements by other providers or elements directly implemented in EdelweissFE may be added here.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*element</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">C3D8</span>,<span class="nv"> provider</span><span class="ow">=</span><span class="m">marmot</span><span class="c c-Singleline"></span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*element</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">C3D8</span>,<span class="nv"> provider</span><span class="ow">=</span><span class="m">marmot</span>
 <span class="c c-Singleline">    ** el_label, node1, node2, node3, node4, ...</span>
     1000,        1,     2,     3,     4,     ...
 </pre></div>
@@ -567,7 +571,7 @@ aggregate all entries in order to resemble the defined fields nodewise.</p>
 
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/QPMarmotMaterialHypoElastic/test.inp</span></code></span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span><span class="c c-Singleline"></span>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">myMaterial</span>
 <span class="c c-Singleline">**Isotropic</span>
 <span class="c c-Singleline">**E   | nu |</span>
 1.8e4, 0.22
@@ -575,11 +579,11 @@ aggregate all entries in order to resemble the defined fields nodewise.</p>
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">myMaterial</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
 all
 
-<span class="k">*node</span><span class="c c-Singleline"></span>
+<span class="k">*node</span>
 <span class="c c-Singleline">** this is our single dummy node, which carries the strain &#39;field&#39;</span>
 1, 0, 0, 0
 
-<span class="k">*element</span>,<span class="nv"> provider</span><span class="ow">=</span><span class="m">MarmotSingleQpElement</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">MarmotMaterialHypoElastic</span><span class="c c-Singleline"></span>
+<span class="k">*element</span>,<span class="nv"> provider</span><span class="ow">=</span><span class="m">MarmotSingleQpElement</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">MarmotMaterialHypoElastic</span>
 <span class="c c-Singleline">** This is our mateiral wrapping element. It needs a dummy node to be attached </span>
 <span class="c c-Singleline">** to a spatial position.</span>
 <span class="c c-Singleline">** The type of the element actually specifies the type of requested MarmotMaterial</span>

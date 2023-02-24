@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.elements.base.baseelement</li>
       <li class="wy-breadcrumbs-aside">
@@ -117,42 +121,42 @@
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The unique number of this element&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The unique number of this element&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The number of nodes this element requires&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of nodes this element requires&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The list of nodes this element holds&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of nodes this element holds&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The total number of degrees of freedom this element has&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total number of degrees of freedom this element has&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;The list of fields per nodes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of fields per nodes.&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">dofIndicesPermutation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The permutation pattern for the residual vector and the stiffness matrix to</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The permutation pattern for the residual vector and the stiffness matrix to</span>
 <span class="sd">        aggregate all entries in order to resemble the defined fields nodewise.&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
@@ -160,12 +164,12 @@
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">ensightType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The shape of the element in Ensight Gold notation.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The shape of the element in Ensight Gold notation.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Finite elements in EdelweissFE should be derived from this</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finite elements in EdelweissFE should be derived from this</span>
 <span class="sd">        base class in order to follow the general interface.</span>
 
 <span class="sd">        EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)</span>
@@ -193,7 +197,7 @@
 
 <div class="viewcode-block" id="BaseElement.setNodes"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.setNodes">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Node</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Assign the nodes to the element.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign the nodes to the element.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -205,7 +209,7 @@
 
 <div class="viewcode-block" id="BaseElement.setProperties"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.setProperties">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">setProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign a set of properties to the element.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a set of properties to the element.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -219,13 +223,13 @@
     <span class="k">def</span> <span class="nf">initializeElement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initalize the element to be ready for computing.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initalize the element to be ready for computing.&quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="BaseElement.setMaterial"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.setMaterial">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">setMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign a material and material properties.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a material and material properties.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -237,7 +241,7 @@
 
 <div class="viewcode-block" id="BaseElement.setInitialCondition"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.setInitialCondition">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">setInitialCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign initial conditions.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign initial conditions.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -261,7 +265,7 @@
         <span class="n">time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -295,7 +299,7 @@
         <span class="n">time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -319,7 +323,7 @@
     <span class="k">def</span> <span class="nf">computeBodyForce</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -343,7 +347,7 @@
     <span class="k">def</span> <span class="nf">acceptLastState</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Accept the computed state (in nonlinear iteration schemes).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accept the computed state (in nonlinear iteration schemes).&quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div>
 
@@ -351,13 +355,13 @@
     <span class="k">def</span> <span class="nf">resetToLastValidState</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Rest to the last valid state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rest to the last valid state.&quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="BaseElement.getResultArray"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.getResultArray">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getResultArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quadraturePoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the array of a result, possibly as a persistent view which is continiously</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the array of a result, possibly as a persistent view which is continiously</span>
 <span class="sd">        updated by the element.</span>
 
 <span class="sd">        Parameters</span>
@@ -379,7 +383,7 @@
 
 <div class="viewcode-block" id="BaseElement.getCoordinatesAtCenter"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getCoordinatesAtCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compute the underlying MarmotElement centroid coordinates.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the underlying MarmotElement centroid coordinates.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.solvers.nonlinearimplicitstaticparallelarclength</li>
       <li class="wy-breadcrumbs-aside">
@@ -181,7 +185,7 @@
         <span class="n">maxIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Arc length method scheme to solve for an increment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Arc length method scheme to solve for an increment.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -380,7 +384,7 @@
         <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dLambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Depending on the current setting, extrapolate the solution of the last increment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Depending on the current setting, extrapolate the solution of the last increment.</span>
 <span class="sd">        Also accounts for the arc length loading parameter.</span>
 
 <span class="sd">        Parameters</span>
@@ -422,7 +426,7 @@
         <span class="k">return</span> <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span><span class="p">,</span> <span class="n">dLambda</span></div>
 
 <div class="viewcode-block" id="NISTPArcLength.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
 
 <span class="sd">        For the arc length controlled simulation,</span>
 <span class="sd">        external loads at the end of a step depend on the arc length parameter.</span>

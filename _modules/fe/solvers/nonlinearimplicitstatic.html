@@ -27,12 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> EdelweissFE
-            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +64,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">fe.solvers.nonlinearimplicitstatic</li>
       <li class="wy-breadcrumbs-aside">
@@ -128,7 +132,7 @@
 
 
 <div class="viewcode-block" id="NIST"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST">[docs]</a><span class="k">class</span> <span class="nc">NIST</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This is the Nonlinear Implicit STatic -- solver.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the Nonlinear Implicit STatic -- solver.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -177,7 +181,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extrapolation</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
 
 <div class="viewcode-block" id="NIST.initialize"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize the solver and return the 2 vectors for field (U) and flux (P).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the solver and return the 2 vectors for field (U) and flux (P).&quot;&quot;&quot;</span>
 
         <span class="n">U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
         <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">()</span>
@@ -196,7 +200,7 @@
         <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
         <span class="n">outputmanagers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OutputManagerBase</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Public interface to solve for a step.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Public interface to solve for a step.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -394,7 +398,7 @@
         <span class="n">maxIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Standard Newton-Raphson scheme to solve for an increment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard Newton-Raphson scheme to solve for an increment.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -511,7 +515,7 @@
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all distributed loads acting on elements, and evaluate them.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over all distributed loads acting on elements, and evaluate them.</span>
 <span class="sd">        Assembles into the global external load vector and the system matrix.</span>
 
 <span class="sd">        Parameters</span>
@@ -555,7 +559,7 @@
 <div class="viewcode-block" id="NIST.computeBodyForces"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForces</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span> <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">PExt</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all body forces loads acting on elements, and evaluate them.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over all body forces loads acting on elements, and evaluate them.</span>
 <span class="sd">        Assembles into the global external load vector and the system matrix.</span>
 
 <span class="sd">        Parameters</span>
@@ -596,7 +600,7 @@
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
 <div class="viewcode-block" id="NIST.applyDirichletK"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichletK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VIJSystemMatrix</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the global stiffness matrix</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the global stiffness matrix</span>
 <span class="sd">        Is called by solveStep() before solving the global system.</span>
 <span class="sd">        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros</span>
 
@@ -631,7 +635,7 @@
         <span class="k">return</span> <span class="n">K</span></div>
 
 <div class="viewcode-block" id="NIST.applyDirichlet"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichlet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the residual vector</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the residual vector</span>
 <span class="sd">        Is called by solveStep() before solving the global equatuon system.</span>
 
 <span class="sd">        Parameters</span>
@@ -661,7 +665,7 @@
 <div class="viewcode-block" id="NIST.checkConvergence"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.checkConvergence">[docs]</a>    <span class="k">def</span> <span class="nf">checkConvergence</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">ddU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">residualHistory</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Check the convergence, individually for each field,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the convergence, individually for each field,</span>
 <span class="sd">        similar to Abaqus based on the current total flux residual and the field correction</span>
 <span class="sd">        Is called by solveStep() to decide whether to continue iterating or stop.</span>
 
@@ -754,7 +758,7 @@
         <span class="k">return</span> <span class="n">convergedAtAll</span><span class="p">,</span> <span class="n">nodesWithLargestResidual</span></div>
 
 <div class="viewcode-block" id="NIST.linearSolve"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.linearSolve">[docs]</a>    <span class="k">def</span> <span class="nf">linearSolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Solve the linear equation system.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve the linear equation system.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -780,7 +784,7 @@
         <span class="k">return</span> <span class="n">ddU</span></div>
 
 <div class="viewcode-block" id="NIST.assembleStiffnessCSR"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.assembleStiffnessCSR">[docs]</a>    <span class="k">def</span> <span class="nf">assembleStiffnessCSR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Construct a CSR matrix from VIJ format.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a CSR matrix from VIJ format.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -797,8 +801,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;CSR generation&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
         <span class="k">return</span> <span class="n">KCsr</span></div>
 
-<div class="viewcode-block" id="NIST.computeSpatialAveragedFluxes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">[docs]</a>    <span class="k">def</span> <span class="nf">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compute the spatial averaged flux for every field</span>
+<div class="viewcode-block" id="NIST.computeSpatialAveragedFluxes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">[docs]</a>    <span class="k">def</span> <span class="nf">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the spatial averaged flux for every field</span>
 <span class="sd">        Is usually called by checkConvergence().</span>
 
 <span class="sd">        Parameters</span>
@@ -808,7 +812,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        dict[str,np.float]</span>
+<span class="sd">        dict[str,float]</span>
 <span class="sd">            A dictioary containg the spatial average fluxes for every field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">spatialAveragedFluxes</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -829,7 +833,7 @@
         <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all elements, and evalute them.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over all elements, and evalute them.</span>
 <span class="sd">        Is is called by solveStep() in each iteration.</span>
 
 <span class="sd">        Parameters</span>
@@ -886,7 +890,7 @@
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Loop over all elements, and evaluate them.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over all elements, and evaluate them.</span>
 <span class="sd">        Is is called by solveStep() in each iteration.</span>
 
 <span class="sd">        Parameters</span>
@@ -938,7 +942,7 @@
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Assemble all loads into a right hand side vector.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assemble all loads into a right hand side vector.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -975,7 +979,7 @@
 <div class="viewcode-block" id="NIST.extrapolateLastIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">extrapolateLastIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Depending on the current setting, extrapolate the solution of the last increment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Depending on the current setting, extrapolate the solution of the last increment.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1010,7 +1014,7 @@
         <span class="k">return</span> <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span></div>
 
 <div class="viewcode-block" id="NIST.checkDivergingSolution"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.checkDivergingSolution">[docs]</a>    <span class="k">def</span> <span class="nf">checkDivergingSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incrementResidualHistory</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check if the iterative solution scheme is diverging.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the iterative solution scheme is diverging.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1030,7 +1034,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="NIST.printResidualOutlierNodes"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes">[docs]</a>    <span class="k">def</span> <span class="nf">printResidualOutlierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residualOutliers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print which nodes have the largest residuals.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print which nodes have the largest residuals.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1050,7 +1054,7 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="NIST.applyStepActionsAtStepStart"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Called when all step actions should be appliet at the start a step.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should be appliet at the start a step.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1067,7 +1071,7 @@
                 <span class="n">action</span><span class="o">.</span><span class="n">applyAtStepStart</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NIST.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1086,7 +1090,7 @@
 <div class="viewcode-block" id="NIST.applyStepActionsAtIncrementStart"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtIncrementStart</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">U_n</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Called when all step actions should be applied at the start of a step.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should be applied at the start of a step.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
