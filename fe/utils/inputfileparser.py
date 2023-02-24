@@ -242,9 +242,7 @@ def parseInputFile(
         lines = (l for l in lines if l and not l.startswith("**"))
 
         for l in lines:
-
             if l.startswith("*"):
-
                 lexer = shlex.shlex(l, posix=True)
                 lexer.whitespace_split = True
                 lexer.whitespace = ","

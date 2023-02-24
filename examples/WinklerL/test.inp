@@ -1,0 +1,71 @@
+*include, input=mesh.inp
+
+*material, name=GCDP, id=GCDP, 
+** E
+25850,
+** nu
+0.18,
+** fcy
+10.33,
+** fcu
+31.0,
+** fbu
+35.96,
+** ftu
+2.70,
+** Ah
+0.85,
+** Bh
+0.08,
+** Ch
+0.003,
+** Dh
+2.0,
+** Df
+0.000001,
+** As
+15,
+** epsF
+0.0017,
+** l
+2,
+** m
+1.0,
+** maxDMG
+.99,
+** derivativeMethod (0 ..  AD, 1 ..  CD)
+0
+
+*material, name=linearElastic, id=steelLoad
+37000.0, 0.3
+*material, name=linearElastic, id=steelBottom
+44400.0, 0.3
+
+*section, name=sectConc, material=GCDP, type=solid
+secConc
+*section, name=secSteel, material=steelLoad, type=solid
+secSteelLoad
+*section, name=secSteel, material=steelBottom, type=solid
+secSteelBottom
+
+*job, domain=3d, solver=NISTParallel
+
+*fieldOutput,
+elSet=secConc, name=displacement, field=displacement, result=U
+elSet=secConc, name=nonlocal damage, field=nonlocal damage, result=U
+name=RF, nSet=setLoad, field=displacement, result=P, f(x)='np.sum(x[:,1], axis=0)', saveHistory=True, export=RF
+elSet=secConc, name=damage, result=omega, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+
+*output, type=monitor, name=monitor
+fieldOutput=RF
+
+*output, type=ensight, name=esExport
+create=perNode, fieldOutput=displacement 
+create=perNode, fieldOutput=nonlocal damage
+create=perElement, fieldOutput=damage
+configuration, overwrite=yes
+
+*step, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear 
+dirichlet, name=bottom, nSet=setBottom, field=displacement, 2=0, 1=0, 3=0
+dirichlet, name=load, nSet=setLoad, field=displacement, 2=+1

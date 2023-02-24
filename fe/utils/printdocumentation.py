@@ -35,7 +35,6 @@ import textwrap
 
 
 def printDocumentation(module):
-
     try:
         mod = importlib.import_module("fe." + module)
         print(mod.__doc__)

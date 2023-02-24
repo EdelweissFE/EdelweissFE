@@ -46,12 +46,11 @@ class StepAction(StepActionBase):
     """Set initial conditions to elements."""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
 
         self.theElements = model["elementSets"][action.get("elSet", "all")]
         self.theProperty = action["property"]
-        self.values = np.fromstring(action["values"], dtype=np.float, sep=",")
+        self.values = np.fromstring(action["values"], dtype=float, sep=",")
         self.active = True
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):

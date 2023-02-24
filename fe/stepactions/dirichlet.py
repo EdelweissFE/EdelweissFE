@@ -52,7 +52,6 @@ class StepAction(StepActionBase):
     """Dirichlet boundary condition, based on a node set"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
 
         dirichletIndices = []
@@ -101,11 +100,9 @@ class StepAction(StepActionBase):
         self.active = True
 
     def applyAtStepEnd(self, U, P):
-
         self.active = False
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.active = True
         dirichletIndices = []
         dirichletDelta = []
@@ -119,14 +116,13 @@ class StepAction(StepActionBase):
                 dirichletIndices += directionIndices
                 dirichletDelta += [float(action[direction])] * len(directionIndices)
 
-        self.indices = np.array(dirichletIndices, dtype=np.int)
+        self.indices = np.array(dirichletIndices, dtype=int)
 
         self.delta = np.array(dirichletDelta)
 
         self.amplitude = self._getAmplitude(action)
 
     def getDelta(self, increment):
-
         if self.active:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             return self.delta * (self.amplitude(stepProgress) - (self.amplitude(stepProgress - incrementSize)))
@@ -147,7 +143,7 @@ class StepAction(StepActionBase):
             The updated dictionary defining this step action containing the directional definitions.
         """
 
-        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=np.float)
+        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=float)
 
         for i, t in enumerate(components):
             if not np.isnan(t):

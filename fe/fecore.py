@@ -104,7 +104,6 @@ def gatherStepActions(
     """
 
     for dataline in step["data"]:
-
         actionType, *definition = splitLineAtCommas(dataline)
         options = convertAssignmentsToStringDictionary(definition)
 
@@ -208,7 +207,6 @@ def finiteElementSimulation(
 
     # we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)
     for constraintName, constraint in model["constraints"].items():
-
         nAdditionalScalarVariables = constraint.getNumberOfAdditionalNeededScalarVariables()
         journal.message(
             "Constraint {:} requests {:} additional scalar dofs".format(constraintName, nAdditionalScalarVariables),

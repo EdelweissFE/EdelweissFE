@@ -44,7 +44,6 @@ def getDefaultLinSolver():
 
 
 def getLinSolverByName(linsolverName):
-
     if linsolverName.lower() == "superlu":
         from scipy.sparse.linalg import spsolve
 

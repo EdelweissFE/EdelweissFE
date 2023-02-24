@@ -309,7 +309,6 @@ class OutputManager(OutputManagerBase):
         P,
     ):
         for xyJob in self.xyJobs:
-
             y = xyJob["y"].getResultHistory()
 
             if xyJob["x"] == "time":
@@ -348,7 +347,6 @@ class OutputManager(OutputManagerBase):
             )
 
         for perElementJob in self.perElementJobs:
-
             fig = self.plotter.getFig(perElementJob["figure"])
             ax = self.plotter.getAx(perElementJob["figure"], perElementJob["axSpec"])
             ax.set_axis_off()
@@ -381,7 +379,6 @@ class OutputManager(OutputManagerBase):
 
             self.meshPlot.contourPlotFieldVariable(resultArray, fig, ax, perElementJob["label"])
         for meshOnlyJob in self.meshOnlyJobs:
-
             fig = self.plotter.getFig(meshOnlyJob["figure"])
             ax = self.plotter.getAx(meshOnlyJob["figure"], meshOnlyJob["axSpec"])
             ax.set_axis_off()

@@ -151,7 +151,6 @@ class OutputManager(OutputManagerBase):
         P,
     ):
         for nJob in self.monitorJobs:
-
             result = nJob["fieldOutput"].getLastResult()
             result = nJob["f(x)"](result)
 

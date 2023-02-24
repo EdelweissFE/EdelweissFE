@@ -80,7 +80,6 @@ class AbqModelConstructor:
         for nodeDefs in inputFile["*node"]:
             currNodeDefs = {}
             for l in nodeDefs["data"]:
-
                 defLine = splitLineAtCommas(l)
 
                 label = int(defLine[0])
@@ -106,7 +105,6 @@ class AbqModelConstructor:
 
             currElDefs = {}
             for l in elDefs["data"]:
-
                 defLine = [int(i) for i in splitLineAtCommas(l)]
 
                 label = defLine[0]
@@ -228,11 +226,10 @@ class AbqModelConstructor:
         """
 
         for materialDef in inputFile["*material"]:
-
             materialName = materialDef["name"]
             materialID = materialDef.get("id", materialName)
 
-            materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=np.float)
+            materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=float)
 
             model["materials"][materialID] = {"name": materialName, "properties": materialProperties}
 

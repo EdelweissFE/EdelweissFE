@@ -48,7 +48,6 @@ class OrderedSet(list):
         label: str,
         items: list,
     ):
-
         self.label = label
         self.add(items)
 

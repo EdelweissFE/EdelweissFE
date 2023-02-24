@@ -50,7 +50,6 @@ class StepAction(StepActionBase):
     """Distributed load, defined on an element-based surface"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
         self.magnitudeAtStepStart = 0.0
         self.surface = model["surfaces"][action["surface"]]
@@ -67,7 +66,6 @@ class StepAction(StepActionBase):
         self.idle = False
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):
-
         if not self.idle:
             if stepMagnitude == None:
                 # standard case
@@ -80,7 +78,6 @@ class StepAction(StepActionBase):
             self.idle = True
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         if "magnitude" in action:
             self.delta = np.fromstring(action["magnitude"], sep=",") - self.magnitudeAtStepStart
         elif "delta" in action:
@@ -95,7 +92,6 @@ class StepAction(StepActionBase):
         self.idle = False
 
     def getCurrentMagnitude(self, increment):
-
         if self.idle == True:
             t = 1.0
         else:

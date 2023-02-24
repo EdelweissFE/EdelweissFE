@@ -53,7 +53,6 @@ class StepAction(StepActionBase):
     Is automatically deactivated at the end of the step."""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
 
         self.geostaticElements = model["elementSets"][action.get("elSet", "all")]
@@ -81,7 +80,6 @@ class StepAction(StepActionBase):
         self.active = True
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):
-
         if not self.active:
             return
 
@@ -95,7 +93,6 @@ class StepAction(StepActionBase):
     def applyAtIterationStart(
         self,
     ):
-
         if not self.active:
             return
 

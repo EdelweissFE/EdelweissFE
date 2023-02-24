@@ -60,7 +60,7 @@ class Section(SectionBase):
             [
                 self.thickness,
             ],
-            dtype=np.float,
+            dtype=float,
         )
 
         if any(self.materialParameterFromFieldDefs):

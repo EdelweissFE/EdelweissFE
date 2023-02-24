@@ -175,7 +175,6 @@ class Constraint(ConstraintBase):
         )
 
     def applyConstraint(self, U_np, dU, PExt, K, increment):
-
         nConstraints = self.nConstraints
         nDim = self.nDim
         nRot = self.nRot
@@ -195,7 +194,6 @@ class Constraint(ConstraintBase):
         G[:, nDim : 2 * nDim] = +np.identity(nDim)
 
         if nDim == 3:
-
             Rx, Ry, Rz = self.Rx_3D, self.Ry_3D, self.Rz_3D
 
             RotationMatricesAndDerivatives = [
@@ -238,7 +236,6 @@ class Constraint(ConstraintBase):
         L0, LF = nU, nU + nDim
 
         for i in range(nSlaves):
-
             d0 = self.distancesSlaveNodeRP[i]
             indcsUNode = self.indicesOfSlaveNodesInP[i]
             U_n = U_np[indcsUNode]
@@ -252,7 +249,7 @@ class Constraint(ConstraintBase):
                     # only the rot. block is nonzero
                     H[:, 2 * nDim + i, 2 * nDim + j] = RDerivativeProductsII[i][j] @ d0
 
-            indcsU = np.array(indcsUNode + self.indicesOfRPUinP + self.indicesOfRPPhiInP, dtype=np.int)
+            indcsU = np.array(indcsUNode + self.indicesOfRPUinP + self.indicesOfRPPhiInP, dtype=int)
 
             PExt[indcsU] -= Lambda.T @ G
             PExt[L0:LF] -= g

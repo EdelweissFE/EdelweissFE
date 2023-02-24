@@ -91,7 +91,7 @@ class FieldOutput:
             self.resultVector = definition["result"]
             self.field = definition["field"]
             self.resultIndices = np.array(
-                [[n.fields[self.field]] for n in self.nSet if self.field in n.fields], dtype=np.int
+                [[n.fields[self.field]] for n in self.nSet if self.field in n.fields], dtype=int
             ).ravel()
 
         elif "elSet" in definition:
@@ -109,7 +109,7 @@ class FieldOutput:
                 self.resultVector = definition["result"]
                 self.field = definition["field"]
                 self.resultIndices = np.array(
-                    [[n.fields[self.field]] for n in self.nSet if self.field in n.fields], dtype=np.int
+                    [[n.fields[self.field]] for n in self.nSet if self.field in n.fields], dtype=int
                 ).ravel()
             else:
                 # it's really an elSet job
@@ -376,7 +376,6 @@ class FieldOutputController:
     """
 
     def __init__(self, model: dict, inputFile: dict, journal: Journal):
-
         self.fieldOutputs = {}
 
         if not inputFile["*fieldOutput"]:

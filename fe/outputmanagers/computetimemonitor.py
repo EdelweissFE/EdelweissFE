@@ -85,7 +85,6 @@ class OutputManager(OutputManagerBase):
         currentComputingTimes=createTimingDict(),
         **kwargs
     ):
-
         compTimeTotal, compTimeIndividual = self.computeIncrementComputingTimes(currentComputingTimes)
 
         self.printIncrementComputingTimes(compTimeTotal, compTimeIndividual)
@@ -114,7 +113,6 @@ class OutputManager(OutputManagerBase):
         pass
 
     def computeIncrementComputingTimes(self, currentComputingTimes: dict) -> Union[float, dict]:
-
         incrementComputingTimes = createTimingDict()
         incrementComputingTimeTotal = 0.0
         for key, val in currentComputingTimes.items():
@@ -124,7 +122,6 @@ class OutputManager(OutputManagerBase):
         return incrementComputingTimeTotal, incrementComputingTimes
 
     def printIncrementComputingTimes(self, incCompTimeTotal, incCompTimesIndividual):
-
         self.journal.printTable(
             [
                 ("Time in {:}".format(k), " {:.5e}s ({:>4.1f}%)".format(v, v / incCompTimeTotal * 100))
@@ -134,7 +131,6 @@ class OutputManager(OutputManagerBase):
         )
 
     def writeIncrementComputingTimesToFile(self, incCompTimeTotal, incCompTimesIndividual, statusInfoDict):
-
         with open(self.exportFile, "a") as f:
             f.write("  {:<20}".format(int(statusInfoDict["inc"])))
             f.write(" {:<20.5e}".format(statusInfoDict["time"]))

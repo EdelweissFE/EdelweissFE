@@ -44,11 +44,10 @@ import numpy as np
 
 
 def generateModelData(generatorDefinition: dict, model: dict, journal: Journal):
-
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 
-    loc = np.fromstring(options["location"], sep=",", dtype=np.float)
+    loc = np.fromstring(options["location"], sep=",", dtype=float)
 
     if len(loc) != model["domainSize"]:
         raise WrongDomain("Spatial dimension of specified location does not match model dimension")
