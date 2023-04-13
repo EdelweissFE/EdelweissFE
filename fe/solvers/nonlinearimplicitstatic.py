@@ -83,11 +83,13 @@ class NIST:
         self.fluxResidualTolerancesAlt = jobInfo["fluxResidualToleranceAlternative"]
 
         # create headers for formatted output of solver
-        presentVariableNames = (
-            list(self.theDofManager.indicesOfFieldsInDofVector.keys()) + ["scalar variables"]
-            if self.theDofManager.indicesOfScalarVariablesInDofVector
-            else []
-        )
+        presentVariableNames = list(self.theDofManager.indicesOfFieldsInDofVector.keys())
+
+        if self.theDofManager.indicesOfScalarVariablesInDofVector:
+            presentVariableNames += [
+                "scalar variables",
+            ]
+
         nVariables = len(presentVariableNames)
         self.iterationHeader = ("{:^25}" * nVariables).format(*presentVariableNames)
         self.iterationHeader2 = (" {:<10}  {:<10}  ").format("||R||∞", "||ddU||∞") * nVariables
