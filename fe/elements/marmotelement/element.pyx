@@ -71,6 +71,7 @@ cdef class MarmotElementWrapper:
             
         self._elNumber = elNumber
         self._elType = elementType
+
         
         self._nNodes                         = self.marmotElement.getNNodes()
         
@@ -83,6 +84,8 @@ cdef class MarmotElementWrapper:
         self._dofIndicesPermutation          = np.asarray(permutationPattern)
         
         self._ensightType                    = self.marmotElement.getElementShape().decode('utf-8')
+
+        self._hasMaterial = False
 
     def __cinit__(self, elementType, elNumber):
         """This C-level method is responsible for actually creating the MarmotElement.
@@ -177,6 +180,8 @@ cdef class MarmotElementWrapper:
         self._stateVarsTemp =        np.zeros(self.nStateVars)
         
         self.marmotElement.assignStateVars(&self._stateVarsTemp[0], self.nStateVars)
+
+        self._hasMaterial = True
         
     cpdef void _initializeStateVarsTemp(self, ) nogil:
         self._stateVarsTemp[:] = self._stateVars
@@ -185,6 +190,9 @@ cdef class MarmotElementWrapper:
                             stateType,
                             const double[::1] values):
         """Assign initial conditions to the underlying Marmot element"""
+
+        if not self._hasMaterial:
+            raise Exception("Element {:} has no material assigned!".format(self._elNumber))
         
         self._initializeStateVarsTemp()
         self.marmotElement.setInitialConditions(mapStateTypes[stateType], &values[0])
@@ -198,6 +206,9 @@ cdef class MarmotElementWrapper:
                          const double[::1] time, 
                          double dTime, ) nogil except *:
         """Evaluate residual and stiffness for given time, field, and field increment."""
+
+        if not self._hasMaterial:
+            raise Exception("Element {:} has no material assigned!".format(self._elNumber))
 
         cdef double pNewDT 
         with nogil:
@@ -264,11 +275,17 @@ cdef class MarmotElementWrapper:
         """Get the array of a result, possibly as a persistent view which is continiously
         updated by the underlying MarmotElement."""
 
+        if not self._hasMaterial:
+            raise Exception("Element {:} has no material assigned!".format(self._elNumber))
+
         cdef string result_ =  result.encode('UTF-8')
         return np.array(  self.getStateView(result_, quadraturePoint), copy= not getPersistentView)
             
     cdef double[::1] getStateView(self, string result, int quadraturePoint, ):
         """Directly access the state vars of the underlying MarmotElement"""
+
+        if not self._hasMaterial:
+            raise Exception("Element {:} has no material assigned!".format(self._elNumber))
 
         cdef StateView res = self.marmotElement.getStateView(result, quadraturePoint )
 

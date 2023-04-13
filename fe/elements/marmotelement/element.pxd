@@ -147,11 +147,13 @@ cdef class MarmotElementWrapper:
     cdef int _nNodes, _nDof
     cdef list _fields
     cdef str _ensightType
+    cdef int _hasMaterial 
     cdef np.ndarray _dofIndicesPermutation
     
     cdef public double[::1] _stateVars, nodeCoordinates
     cdef public double[::1] _elementProperties, _stateVarsTemp , _materialProperties
     cdef int nStateVars
+
     cdef double[::1] getStateView(self, string stateName, int gaussPt)
 
     # nogil methods are already declared here:
