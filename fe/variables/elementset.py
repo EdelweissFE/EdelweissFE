@@ -52,5 +52,4 @@ class ElementSet(OrderedSet):
         label: str,
         elements: list,
     ):
-
         super().__init__(label, elements)

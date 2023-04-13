@@ -104,7 +104,6 @@ class Journal:
 
         lines = message.splitlines()
         for line in lines:
-
             while len(line) >= self.leftColumn and self.leftColumn < self.leftColumnMaxSize:
                 self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
 

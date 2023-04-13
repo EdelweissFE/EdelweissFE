@@ -48,7 +48,6 @@ class NISTPArcLength(NISTParallel):
     identification = "NISTPArcLength"
 
     def __init__(self, jobInfo, journal):
-
         self.Lambda = 0.0
 
         return super().__init__(jobInfo, journal)
@@ -65,7 +64,6 @@ class NISTPArcLength(NISTParallel):
         fieldOutputController: FieldOutputController,
         outputmanagers: dict[str, OutputManagerBase],
     ) -> tuple[bool, DofVector, DofVector, float]:
-
         self.arcLengthController = None
         self.checkConditionalStop = lambda: False
 

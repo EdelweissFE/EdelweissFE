@@ -46,7 +46,6 @@ class StepAction(StepActionBase):
     """Set initial conditions to elements."""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
 
         self.theElements = model["elementSets"][action.get("elSet", "all")]

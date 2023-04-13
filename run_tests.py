@@ -72,7 +72,6 @@ if __name__ == "__main__":
     failedTests = 0
 
     for directory in testsDirs:
-
         os.chdir(os.path.join(testfilesDir, directory))
 
         # no test.inp file is found

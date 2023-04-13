@@ -73,7 +73,6 @@ import numpy as np
 
 
 def generateModelData(generatorDefinition, model, journal):
-
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 

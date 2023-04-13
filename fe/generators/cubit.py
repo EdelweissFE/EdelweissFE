@@ -54,7 +54,6 @@ import shlex
 
 
 def generateModelData(generatorDefinition, model, journal):
-
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 

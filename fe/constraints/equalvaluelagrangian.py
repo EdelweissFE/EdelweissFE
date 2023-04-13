@@ -49,7 +49,6 @@ from fe.constraints.base.constraintbase import ConstraintBase
 
 class Constraint(ConstraintBase):
     def __init__(self, name, definitionLines, model):
-
         definition = convertLinesToStringDictionary(definitionLines)
 
         theField = definition["field"]
@@ -90,7 +89,6 @@ class Constraint(ConstraintBase):
         return self.nNodes - 1
 
     def applyConstraint(self, U_np, dU, PExt, K, increment):
-
         if self.active == False:
             return
 

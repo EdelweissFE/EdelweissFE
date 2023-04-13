@@ -156,11 +156,9 @@ class MarmotMaterialWrappingElement(BaseElement):
     def _initializeStateVarsTemp(
         self,
     ):
-
         self._stateVarsTemp[:] = self._stateVars
 
     def setInitialCondition(self, stateType, values):
-
         self._initializeStateVarsTemp()
 
         if stateType == "initialize material":
@@ -206,11 +204,9 @@ class MarmotMaterialWrappingElement(BaseElement):
     def resetToLastValidState(
         self,
     ):
-
         pass
 
     def getResultArray(self, result: str, quadraturePoint: int, getPersistentView: bool = True) -> np.ndarray:
-
         return self._marmotMaterialWrapper.getResultArray(result, getPersistentView)
 
     def getCoordinatesAtCenter(self) -> np.ndarray:

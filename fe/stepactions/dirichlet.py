@@ -52,7 +52,6 @@ class StepAction(StepActionBase):
     """Dirichlet boundary condition, based on a node set"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
 
         dirichletIndices = []
@@ -101,11 +100,9 @@ class StepAction(StepActionBase):
         self.active = True
 
     def applyAtStepEnd(self, U, P):
-
         self.active = False
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.active = True
         dirichletIndices = []
         dirichletDelta = []
@@ -126,7 +123,6 @@ class StepAction(StepActionBase):
         self.amplitude = self._getAmplitude(action)
 
     def getDelta(self, increment):
-
         if self.active:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             return self.delta * (self.amplitude(stepProgress) - (self.amplitude(stepProgress - incrementSize)))

@@ -44,7 +44,6 @@ class Section(ABC):
         self.writeMaterialPropertiesToFile = False
 
         for line in datalines:
-
             line = splitLineAtCommas(line)
 
             if strCaseCmp(line[0], "materialParameterFromField"):
@@ -100,7 +99,6 @@ class Section(ABC):
         return materialProperties
 
     def exportMaterialPropertiesToFile(self, elSets):
-
         with open("{:}.csv".format(self.materialPropertiesFileName), "w+") as f:
             for elSet in elSets:
                 for el in elSet:

@@ -47,7 +47,6 @@ class Constraint(ConstraintBase):
     A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D."""
 
     def __init__(self, name, options, model):
-
         if model["domainSize"] != 2:
             raise WrongDomain("Linearized rigid body constraint is currently only available for 2d domain size")
 
@@ -143,7 +142,6 @@ class Constraint(ConstraintBase):
         return self.nConstraints
 
     def applyConstraint(self, U_np, dU, PExt, K, increment):
-
         LambdaN1 = U_np[-self.nConstraints :]
 
         PExt[: -self.nConstraints] -= LambdaN1.dot(self.dG_dU)

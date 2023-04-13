@@ -51,7 +51,6 @@ class StepAction(StepActionBase):
     """Defines node based load, defined on a nodeset."""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
         nodeForceIndices = []
         nodeForceDelta = []
@@ -102,7 +101,6 @@ class StepAction(StepActionBase):
         return amplitude
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):
-
         if not self.idle:
             if stepMagnitude == None:
                 # standard case
@@ -140,7 +138,6 @@ class StepAction(StepActionBase):
         self.amplitude = self._getAmplitude(action)
 
     def applyOnP(self, P, increment):
-
         if self.idle:
             P[self.indices] += self.nodeForcesStepStart
         else:

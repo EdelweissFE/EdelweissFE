@@ -376,7 +376,6 @@ class FieldOutputController:
     """
 
     def __init__(self, model: dict, inputFile: dict, journal: Journal):
-
         self.fieldOutputs = {}
 
         if not inputFile["*fieldOutput"]:

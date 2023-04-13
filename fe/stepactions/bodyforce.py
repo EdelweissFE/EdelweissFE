@@ -46,7 +46,6 @@ import sympy as sp
 
 class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         self.name = name
         self.forceAtStepStart = 0.0
         self.elements = model["elementSets"][action["elSet"]]
@@ -65,7 +64,6 @@ class StepAction(StepActionBase):
         self.idle = False
 
     def applyAtStepEnd(self, U, P, stepMagnitude=None):
-
         if not self.idle:
             if stepMagnitude == None:
                 # standard case
@@ -78,7 +76,6 @@ class StepAction(StepActionBase):
             self.idle = True
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
-
         if "forceVector" in action:
             self.delta = np.fromstring(action["forceVector"], sep=",", dtype=np.double) - self.forceAtStepStart
         elif "delta" in action:

@@ -39,7 +39,6 @@ import os
 
 
 def generateModelData(generatorDefinition, model, journal):
-
     codeLines = "\n".join(generatorDefinition["data"])
 
     exec(codeLines, {"model": model})
