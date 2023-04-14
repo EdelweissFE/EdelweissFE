@@ -278,7 +278,7 @@ def parseInputFile(
                         raise
 
                 # special treatment for *include:
-                if keyword == "*include":
+                if keyword.lower() == "*include":
                     includeFile = objectentry["input"]
                     parseInputFile(
                         join(dirname(fileName), includeFile), currentKeyword=lastkeyword, existingFileDict=fileDict
