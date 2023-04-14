@@ -356,7 +356,7 @@
                         <span class="k">raise</span>
 
                 <span class="c1"># special treatment for *include:</span>
-                <span class="k">if</span> <span class="n">keyword</span> <span class="o">==</span> <span class="s2">&quot;*include&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;*include&quot;</span><span class="p">:</span>
                     <span class="n">includeFile</span> <span class="o">=</span> <span class="n">objectentry</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
                     <span class="n">parseInputFile</span><span class="p">(</span>
                         <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileName</span><span class="p">),</span> <span class="n">includeFile</span><span class="p">),</span> <span class="n">currentKeyword</span><span class="o">=</span><span class="n">lastkeyword</span><span class="p">,</span> <span class="n">existingFileDict</span><span class="o">=</span><span class="n">fileDict</span>
