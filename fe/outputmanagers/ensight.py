@@ -33,8 +33,6 @@ Output manager for Ensight exports.
 If loaded, it automatically exports all elSets as Ensight parts.
 For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.
 
-ATTENTION: 
-    fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.
 """
 
 documentation = {
@@ -82,6 +80,19 @@ ensightPerElementVariableTypes = {
     6: "tensor per element",
     9: "tensor asym per element",
 }
+
+
+class DummyElement:
+    """Dummy element used for exporting node sets.
+
+    Parameters
+    ----------
+    label
+        Element number
+    """
+
+    def __init__(self, label) -> None:
+        self.elNumber = label
 
 
 class EnsightUnstructuredPart:
@@ -600,6 +611,24 @@ def createUnstructuredPartFromElementSet(setName, elementSet: list, partID: int)
     return EnsightUnstructuredPart(setName, partID, partNodes.keys(), elementDict)
 
 
+def createUnstructuredPartFromNodeSet(setName, nodeSet: list, partID: int):
+    """Construtcts an EnSight part for a node set. Since EnSight parts comprise nodes and elements, each node is assigned to a dummy point element.
+
+    Parameters
+    ----------
+    nodeSet
+        The list of nodes defining this part.
+    partID
+        The id of this part.
+    """
+
+    elementDict = defaultdict(OrderedDict)
+
+    elementDict["point"] = {DummyElement(i): [i] for i in range(len(nodeSet))}
+
+    return EnsightUnstructuredPart("NSET_" + setName, partID, list(nodeSet), elementDict)
+
+
 class OutputManager(OutputManagerBase):
     identification = "Ensight Export"
 
@@ -627,6 +656,7 @@ class OutputManager(OutputManagerBase):
                     exportName = "{:}".format(name)
 
         self.elSetToEnsightPartMappings = {}
+        self.nSetToEnsightPartMappings = {}
         self.ensightCase = EnsightChunkWiseCase(exportName)
 
         self.ensightCase.setCurrentTime(self.staticTAndFSetNumber, 0.0)
@@ -644,7 +674,16 @@ class OutputManager(OutputManagerBase):
             elSetParts.append(elSetPart)
             partCounter += 1
 
-        geometry = EnsightGeometry("geometry", "Edelweiss_FE", "*export*", ensightPartList=elSetParts)
+        nodeSets = model["nodeSets"]
+
+        nodeSetParts = []
+        for setName, nodeSet in nodeSets.items():
+            nodeSetPart = createUnstructuredPartFromNodeSet(setName, nodeSet, partCounter)
+            self.nSetToEnsightPartMappings[setName] = nodeSetPart
+            nodeSetParts.append(nodeSetPart)
+            partCounter += 1
+
+        geometry = EnsightGeometry("geometry", "Edelweiss_FE", "*export*", ensightPartList=elSetParts + nodeSetParts)
 
         geometryTimesetNumber = None
         self.ensightCase.writeGeometryTrendChunk(geometry, geometryTimesetNumber)
@@ -657,20 +696,27 @@ class OutputManager(OutputManagerBase):
                 varType = definition["create"]
 
                 fieldOutput = fieldOutputController.fieldOutputs[definition["fieldOutput"]]
-                if fieldOutput.domainType != "elSet":
-                    raise Exception("Ensight output can only operate on fieldOutputs defined on elSets!")
+                # if fieldOutput.domainType != "elSet":
+                #    raise Exception("Ensight output can only operate on fieldOutputs defined on elSets!")
 
                 if varType == "perNode":
                     perNodeJob = {}
                     perNodeJob["fieldOutput"] = fieldOutput
                     perNodeJob["name"] = definition.get("name", perNodeJob["fieldOutput"].name).replace(" ", "_")
-                    perNodeJob["part"] = self.elSetToEnsightPartMappings[perNodeJob["fieldOutput"].nSetName]
+                    if fieldOutput.domainType == "elSet":
+                        perNodeJob["part"] = self.elSetToEnsightPartMappings[perNodeJob["fieldOutput"].nSetName]
+                    elif fieldOutput.domainType == "nSet":
+                        perNodeJob["part"] = self.nSetToEnsightPartMappings[perNodeJob["fieldOutput"].nSetName]
+                    else:
+                        raise Exception("Ensight output can only operate on fieldOutputs defined on elSets or nSets!")
                     field = perNodeJob["fieldOutput"].field
                     perNodeJob["varSize"] = variableTypes[fe.config.phenomena.phenomena[field]]
                     perNodeJob["dimensions"] = fe.config.phenomena.getFieldSize(field, self.domainSize)
                     self.transientPerNodeJobs.append(perNodeJob)
 
                 if varType == "perElement":
+                    if fieldOutput.domainType != "elSet":
+                        raise Exception("Ensight perElement output can only operate on fieldOutputs defined on elSets!")
                     perElementJob = {}
                     perElementJob["fieldOutput"] = fieldOutput
                     perElementJob["part"] = self.elSetToEnsightPartMappings[perElementJob["fieldOutput"].elSetName]
