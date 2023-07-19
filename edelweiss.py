@@ -34,6 +34,7 @@ Created on Tue Jan  17 19:10:42 2017
 import argparse
 import matplotlib
 import numpy as np
+import sys
 from fe.fecore import finiteElementSimulation
 from fe.utils.inputfileparser import parseInputFile, printKeywords, printKeywordsRST
 from fe.utils.printdocumentation import printDocumentation
@@ -56,6 +57,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     fileList = args.file
+
+    if not len(sys.argv) > 1:
+        parser.print_help()
+        exit(0)
 
     if args.kw:
         printKeywords()
