@@ -52,8 +52,8 @@ class OutputManager(OutputManagerBase):
 
     def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
         self.journal = journal
-        self.filename = "{:}.sta".format(jobInfo["name"])
-        for defline in definitionLines:
+        self.filename = "{:}.sta".format(jobInfo.get("name", jobInfo["inputfile"].rstrip(".inp")))
+        for defLine in definitionLines:
             defDict = convertLineToStringDictionary(defLine)
             if "filename" in defDict.keys():
                 self.filename = defDict.get("filename")
