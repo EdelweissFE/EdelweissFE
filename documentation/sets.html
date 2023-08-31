@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributors" href="../contributors.html" />
-    <link rel="prev" title="Utilities" href="utils.html" /> 
+    <link rel="next" title="Step actions" href="stepactions.html" />
+    <link rel="prev" title="Sections" href="sections.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,37 +51,40 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Sets</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.orderedset.OrderedSet"><code class="docutils literal notranslate"><span class="pre">OrderedSet</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.add"><code class="docutils literal notranslate"><span class="pre">OrderedSet.add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.append"><code class="docutils literal notranslate"><span class="pre">OrderedSet.append()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.checkObjectType"><code class="docutils literal notranslate"><span class="pre">OrderedSet.checkObjectType()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.extend"><code class="docutils literal notranslate"><span class="pre">OrderedSet.extend()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet"><code class="docutils literal notranslate"><span class="pre">OrderedSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.add"><code class="docutils literal notranslate"><span class="pre">OrderedSet.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.append"><code class="docutils literal notranslate"><span class="pre">OrderedSet.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.checkObjectType"><code class="docutils literal notranslate"><span class="pre">OrderedSet.checkObjectType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.extend"><code class="docutils literal notranslate"><span class="pre">OrderedSet.extend()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.nodeset.NodeSet"><code class="docutils literal notranslate"><span class="pre">NodeSet</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.elementset.ElementSet"><code class="docutils literal notranslate"><span class="pre">ElementSet</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.sets.nodeset.NodeSet"><code class="docutils literal notranslate"><span class="pre">NodeSet</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.sets.elementset.ElementSet"><code class="docutils literal notranslate"><span class="pre">ElementSet</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -123,14 +126,14 @@ they are based on a custom ordered set object.</p>
 <p>Relevant modules:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.orderedset</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.nodeset</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.elementset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fe.sets.orderedset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fe.sets.nodeset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fe.sets.elementset</span></code></p></li>
 </ul>
 </div></blockquote>
-<span class="target" id="module-fe.variables.orderedset"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.orderedset.OrderedSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.orderedset.</span></span><span class="sig-name descname"><span class="pre">OrderedSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/orderedset.html#OrderedSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.orderedset.OrderedSet" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-fe.sets.orderedset"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.sets.orderedset.</span></span><span class="sig-name descname"><span class="pre">OrderedSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet" title="Permalink to this definition"></a></dt>
 <dd><p>An ordered set.
 It has a label, and a list containing unique items.</p>
 <dl class="field-list simple">
@@ -148,13 +151,13 @@ It has a label, and a list containing unique items.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.add" title="fe.variables.orderedset.OrderedSet.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(items)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.add" title="fe.sets.orderedset.OrderedSet.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(items)</p></td>
 <td><p>Add a list of items to the OrderedSet.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.append" title="fe.variables.orderedset.OrderedSet.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a>(item)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.append" title="fe.sets.orderedset.OrderedSet.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a>(item)</p></td>
 <td><p>Append object to the end of the list.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.checkObjectType" title="fe.variables.orderedset.OrderedSet.checkObjectType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code></a>(obj)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.checkObjectType" title="fe.sets.orderedset.OrderedSet.checkObjectType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code></a>(obj)</p></td>
 <td><p>Checks if the object type is allowed for the respective OrderedSet</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>(/)</p></td>
@@ -166,7 +169,7 @@ It has a label, and a list containing unique items.</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>(value, /)</p></td>
 <td><p>Return number of occurrences of value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.variables.orderedset.OrderedSet.extend" title="fe.variables.orderedset.OrderedSet.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a>(items)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.extend" title="fe.sets.orderedset.OrderedSet.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a>(items)</p></td>
 <td><p>Extend list by appending elements from the iterable.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code>(value[, start, stop])</p></td>
@@ -190,8 +193,8 @@ It has a label, and a list containing unique items.</p>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.variables.orderedset.OrderedSet.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/orderedset.html#OrderedSet.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.orderedset.OrderedSet.add" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.add" title="Permalink to this definition"></a></dt>
 <dd><p>Add a list of items to the OrderedSet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -201,14 +204,14 @@ It has a label, and a list containing unique items.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.variables.orderedset.OrderedSet.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/orderedset.html#OrderedSet.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.orderedset.OrderedSet.append" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.append" title="Permalink to this definition"></a></dt>
 <dd><p>Append object to the end of the list.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.variables.orderedset.OrderedSet.checkObjectType">
-<span class="sig-name descname"><span class="pre">checkObjectType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/orderedset.html#OrderedSet.checkObjectType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.orderedset.OrderedSet.checkObjectType" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.checkObjectType">
+<span class="sig-name descname"><span class="pre">checkObjectType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.checkObjectType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.checkObjectType" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if the object type is allowed for the respective OrderedSet</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -218,8 +221,8 @@ It has a label, and a list containing unique items.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.variables.orderedset.OrderedSet.extend">
-<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/orderedset.html#OrderedSet.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.orderedset.OrderedSet.extend" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.extend" title="Permalink to this definition"></a></dt>
 <dd><p>Extend list by appending elements from the iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -230,9 +233,9 @@ It has a label, and a list containing unique items.</p>
 
 </dd></dl>
 
-<span class="target" id="module-fe.variables.nodeset"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.nodeset.NodeSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.nodeset.</span></span><span class="sig-name descname"><span class="pre">NodeSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/nodeset.html#NodeSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.nodeset.NodeSet" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-fe.sets.nodeset"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.sets.nodeset.NodeSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.sets.nodeset.</span></span><span class="sig-name descname"><span class="pre">NodeSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/nodeset.html#NodeSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.nodeset.NodeSet" title="Permalink to this definition"></a></dt>
 <dd><p>A basic node set.
 It has a label, and a list containing the unique nodes.</p>
 <dl class="field-list simple">
@@ -293,9 +296,9 @@ It has a label, and a list containing the unique nodes.</p>
 </table>
 </dd></dl>
 
-<span class="target" id="module-fe.variables.elementset"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.elementset.ElementSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.elementset.</span></span><span class="sig-name descname"><span class="pre">ElementSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/elementset.html#ElementSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.elementset.ElementSet" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-fe.sets.elementset"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.sets.elementset.ElementSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.sets.elementset.</span></span><span class="sig-name descname"><span class="pre">ElementSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/elementset.html#ElementSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.elementset.ElementSet" title="Permalink to this definition"></a></dt>
 <dd><p>A basic element set.
 It has a label, and a list containing unique elements.</p>
 <dl class="field-list simple">
@@ -362,8 +365,8 @@ It has a label, and a list containing unique elements.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="utils.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../contributors.html" class="btn btn-neutral float-right" title="Contributors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sections.html" class="btn btn-neutral float-left" title="Sections" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stepactions.html" class="btn btn-neutral float-right" title="Step actions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

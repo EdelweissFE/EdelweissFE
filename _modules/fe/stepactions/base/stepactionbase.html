@@ -106,7 +106,8 @@
 
 <span class="kn">from</span> <span class="nn">fe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
 <span class="kn">from</span> <span class="nn">fe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">fe.utils.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span>
+<span class="kn">from</span> <span class="nn">fe.numerics.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span>
+<span class="kn">from</span> <span class="nn">fe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
 
 
 <div class="viewcode-block" id="StepActionBase"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase">[docs]</a><span class="k">class</span> <span class="nc">StepActionBase</span><span class="p">:</span>
@@ -134,8 +135,9 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">definition</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">jobInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
         <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
+        <span class="n">dofmanager</span><span class="p">,</span>
         <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">pass</span>
@@ -145,8 +147,9 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">definition</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">jobInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
         <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
+        <span class="n">dofmanager</span><span class="p">,</span>
         <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is called when an updated definition is present for a new step.</span>
@@ -169,7 +172,7 @@
 
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="StepActionBase.applyAtStepStart"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyAtStepStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">):</span>
+<div class="viewcode-block" id="StepActionBase.applyAtStepStart"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyAtStepStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is called when a step starts.</span>
 
 <span class="sd">        Parameters</span>
@@ -181,7 +184,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="StepActionBase.applyAtStepEnd"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">):</span>
+<div class="viewcode-block" id="StepActionBase.applyAtStepEnd"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is called when a step successfully finished.</span>
 
 <span class="sd">        Parameters</span>
@@ -193,7 +196,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="StepActionBase.applyAtIncrementStart"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyAtIncrementStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U_n</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+<div class="viewcode-block" id="StepActionBase.applyAtIncrementStart"><a class="viewcode-back" href="../../../../documentation/stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyAtIncrementStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is called when a step increment starts.</span>
 
 <span class="sd">        Parameters</span>

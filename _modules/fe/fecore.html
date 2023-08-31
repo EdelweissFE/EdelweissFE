@@ -112,98 +112,33 @@
 <span class="sd">A ``*job`` definition consists of multiple ``*steps``, associated with that job.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">fe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">printPrettyModelSummary</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">fe.config</span> <span class="kn">import</span> <span class="n">analyticalfields</span>
 <span class="kn">from</span> <span class="nn">fe.config.phenomena</span> <span class="kn">import</span> <span class="n">domainMapping</span>
-<span class="kn">from</span> <span class="nn">fe.config.generators</span> <span class="kn">import</span> <span class="n">getGeneratorFunction</span>
 <span class="kn">from</span> <span class="nn">fe.config.stepactions</span> <span class="kn">import</span> <span class="n">stepActionFactory</span>
 <span class="kn">from</span> <span class="nn">fe.config.outputmanagers</span> <span class="kn">import</span> <span class="n">getOutputManagerClass</span>
-<span class="kn">from</span> <span class="nn">fe.config.solvers</span> <span class="kn">import</span> <span class="n">getSolverByName</span>
 <span class="kn">from</span> <span class="nn">fe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
-<span class="kn">from</span> <span class="nn">fe.utils.misc</span> <span class="kn">import</span> <span class="n">convertAssignmentsToStringDictionary</span><span class="p">,</span> <span class="n">splitLineAtCommas</span>
+<span class="kn">from</span> <span class="nn">fe.utils.misc</span> <span class="kn">import</span> <span class="n">convertAssignmentsToStringDictionary</span><span class="p">,</span> <span class="n">splitLineAtCommas</span><span class="p">,</span> <span class="n">convertLinesToStringDictionary</span>
 <span class="kn">from</span> <span class="nn">fe.utils.plotter</span> <span class="kn">import</span> <span class="n">Plotter</span>
 <span class="kn">from</span> <span class="nn">fe.utils.exceptions</span> <span class="kn">import</span> <span class="n">StepFailed</span>
-<span class="kn">from</span> <span class="nn">fe.utils.dofmanager</span> <span class="kn">import</span> <span class="n">DofManager</span><span class="p">,</span> <span class="n">DofVector</span>
-<span class="kn">from</span> <span class="nn">fe.variables.scalarvariable</span> <span class="kn">import</span> <span class="n">ScalarVariable</span>
+<span class="kn">from</span> <span class="nn">fe.numerics.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span>
 <span class="kn">from</span> <span class="nn">fe.config.configurator</span> <span class="kn">import</span> <span class="n">loadConfiguration</span><span class="p">,</span> <span class="n">updateConfiguration</span>
 <span class="kn">from</span> <span class="nn">fe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
 <span class="kn">from</span> <span class="nn">fe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
-<span class="kn">from</span> <span class="nn">fe.utils.abqmodelconstructor</span> <span class="kn">import</span> <span class="n">AbqModelConstructor</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
+<span class="kn">from</span> <span class="nn">fe.helpers.outputmanagers</span> <span class="kn">import</span> <span class="n">createOutputManagersFromInput</span>
+<span class="kn">from</span> <span class="nn">fe.steps.stepmanager</span> <span class="kn">import</span> <span class="n">StepManager</span>
+<span class="kn">from</span> <span class="nn">fe.helpers.createmodelfrominputfile</span> <span class="kn">import</span> <span class="n">fillFEModelFromInputFile</span>
+<span class="kn">from</span> <span class="nn">fe.helpers.createsolversfrominputfile</span> <span class="kn">import</span> <span class="n">createSolversFromInputFile</span>
 
 <span class="kn">from</span> <span class="nn">fe.stepactions.base.stepactionbase</span> <span class="kn">import</span> <span class="n">StepActionBase</span>
-
-
-<div class="viewcode-block" id="gatherStepActions"><a class="viewcode-back" href="../../documentation/jobs.html#fe.fecore.gatherStepActions">[docs]</a><span class="k">def</span> <span class="nf">gatherStepActions</span><span class="p">(</span>
-    <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">jobInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
-    <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
-    <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">],</span>
-    <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
-    <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses all the defined actions for the current step,</span>
-<span class="sd">    and calls the respective modules, which generate step-actions based on</span>
-<span class="sd">    computed results, model info and job information.</span>
-<span class="sd">    The stepi actions are stored in a dictionary, which is handed to</span>
-<span class="sd">    solveStep() in the feCore main routine afterwards.</span>
-<span class="sd">    The step action modules decide if old stepaction definitions are</span>
-<span class="sd">    overwritten or extended. Returns a dictionary with keys as defined in</span>
-<span class="sd">    stepactions.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step</span>
-<span class="sd">        The step active for which the actions are gathered.</span>
-<span class="sd">    jobInfo</span>
-<span class="sd">        A dictionary containing information on the job.</span>
-<span class="sd">    model</span>
-<span class="sd">        A dictionary containing the model tree.</span>
-<span class="sd">    time</span>
-<span class="sd">        The current time of the simulation.</span>
-<span class="sd">    U</span>
-<span class="sd">        The current solution vector.</span>
-<span class="sd">    P</span>
-<span class="sd">        The current reaction vector.</span>
-<span class="sd">    stepActions</span>
-<span class="sd">        A dictionary containing already existing step actions.</span>
-<span class="sd">    fieldOutputController</span>
-<span class="sd">        The field output controller.</span>
-<span class="sd">    journal</span>
-<span class="sd">        The journal instance for logging.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    dict[str,StepActionBase]</span>
-<span class="sd">        The updated dictionary of step actions.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">for</span> <span class="n">dataline</span> <span class="ow">in</span> <span class="n">step</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
-        <span class="n">actionType</span><span class="p">,</span> <span class="o">*</span><span class="n">definition</span> <span class="o">=</span> <span class="n">splitLineAtCommas</span><span class="p">(</span><span class="n">dataline</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">convertAssignmentsToStringDictionary</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
-
-        <span class="n">module</span> <span class="o">=</span> <span class="n">actionType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">moduleName</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">module</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">moduleName</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="n">module</span><span class="p">]:</span>
-            <span class="n">stepActions</span><span class="p">[</span><span class="n">module</span><span class="p">][</span><span class="n">moduleName</span><span class="p">]</span><span class="o">.</span><span class="n">updateStepAction</span><span class="p">(</span>
-                <span class="n">moduleName</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span>
-            <span class="p">)</span>
-            <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s1">&#39;Stepaction &quot;</span><span class="si">{:}</span><span class="s1">&quot; will be updated&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="s2">&quot;stepActionManager&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">stepActions</span><span class="p">[</span><span class="n">module</span><span class="p">][</span><span class="n">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="n">stepActionFactory</span><span class="p">(</span><span class="n">module</span><span class="p">)(</span>
-                <span class="n">moduleName</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span>
-            <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">stepActions</span></div>
+<span class="kn">from</span> <span class="nn">fe.config.solvers</span> <span class="kn">import</span> <span class="n">getSolverByName</span>
 
 
 <div class="viewcode-block" id="finiteElementSimulation"><a class="viewcode-back" href="../../documentation/jobs.html#fe.fecore.finiteElementSimulation">[docs]</a><span class="k">def</span> <span class="nf">finiteElementSimulation</span><span class="p">(</span>
     <span class="n">inputfile</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">suppressPlots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">FieldOutputController</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">FieldOutputController</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is core function of the finite element analysis.</span>
 <span class="sd">    Based on the keyword ``*job``, the finite element model is defined.</span>
 
@@ -232,83 +167,50 @@
 <span class="sd">    tuple</span>
 <span class="sd">        A tuple containing</span>
 <span class="sd">            - Truth value of success</span>
-<span class="sd">            - The solution vector.</span>
-<span class="sd">            - The reaction vector.</span>
-<span class="sd">            - The fieldoutput controller containing all results.</span>
-
+<span class="sd">            - The final model tree</span>
+<span class="sd">            - The fieldoutput controller containing all processed results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;feCore&quot;</span>
 
     <span class="n">journal</span> <span class="o">=</span> <span class="n">Journal</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
-    <span class="c1"># create job dictionary from input file like e.g.</span>
     <span class="n">job</span> <span class="o">=</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*job&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">jobName</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
-    <span class="n">modelDomain</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s2">&quot;domain&quot;</span><span class="p">]</span>
-    <span class="n">domainSize</span> <span class="o">=</span> <span class="n">domainMapping</span><span class="p">[</span><span class="n">modelDomain</span><span class="p">]</span>
+    <span class="n">domainSize</span> <span class="o">=</span> <span class="n">domainMapping</span><span class="p">[</span><span class="n">job</span><span class="p">[</span><span class="s2">&quot;domain&quot;</span><span class="p">]]</span>
 
-    <span class="n">model</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;nodeSets&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;elementSets&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;surfaces&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;constraints&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;materials&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;analyticalFields&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;scalarVariables&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;domainSize&quot;</span><span class="p">:</span> <span class="n">domainSize</span><span class="p">,</span>
-    <span class="p">}</span>
-
-    <span class="c1"># call individual optional model generators</span>
-    <span class="k">for</span> <span class="n">generatorDefinition</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*modelGenerator&quot;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="n">generatorDefinition</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;executeAfterManualGeneration&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="k">continue</span>
-        <span class="n">gen</span> <span class="o">=</span> <span class="n">generatorDefinition</span><span class="p">[</span><span class="s2">&quot;generator&quot;</span><span class="p">]</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">getGeneratorFunction</span><span class="p">(</span><span class="n">gen</span><span class="p">)(</span><span class="n">generatorDefinition</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
-
-    <span class="c1"># the standard &#39;Abaqus like&#39; model generator is invoked unconditionally, and it has direct access to the inputfile</span>
-    <span class="n">abqModelConstructor</span> <span class="o">=</span> <span class="n">AbqModelConstructor</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">abqModelConstructor</span><span class="o">.</span><span class="n">createGeometryFromInputFile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">abqModelConstructor</span><span class="o">.</span><span class="n">createMaterialsFromInputFile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">abqModelConstructor</span><span class="o">.</span><span class="n">createConstraintsFromInputFile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">abqModelConstructor</span><span class="o">.</span><span class="n">createAnalyticalFieldsFromInputFile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">abqModelConstructor</span><span class="o">.</span><span class="n">createSectionsFromInputFile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">)</span>
-
-    <span class="c1"># call individual optional model generators,</span>
-    <span class="k">for</span> <span class="n">generatorDefinition</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*modelGenerator&quot;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">generatorDefinition</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;executeAfterManualGeneration&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="k">continue</span>
-        <span class="n">gen</span> <span class="o">=</span> <span class="n">generatorDefinition</span><span class="p">[</span><span class="s2">&quot;generator&quot;</span><span class="p">]</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">getGeneratorFunction</span><span class="p">(</span><span class="n">gen</span><span class="p">)(</span><span class="n">generatorDefinition</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
-
-    <span class="c1"># we may have additional scalar degrees of freedom, not associated with any node (e.g, lagrangian multipliers of constraints)</span>
-    <span class="k">for</span> <span class="n">constraintName</span><span class="p">,</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">model</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">nAdditionalScalarVariables</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">getNumberOfAdditionalNeededScalarVariables</span><span class="p">()</span>
-        <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
-            <span class="s2">&quot;Constraint </span><span class="si">{:}</span><span class="s2"> requests </span><span class="si">{:}</span><span class="s2"> additional scalar dofs&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constraintName</span><span class="p">,</span> <span class="n">nAdditionalScalarVariables</span><span class="p">),</span>
-            <span class="n">identification</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">scalarVariables</span> <span class="o">=</span> <span class="p">[</span><span class="n">ScalarVariable</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nAdditionalScalarVariables</span><span class="p">)]</span>
-        <span class="n">model</span><span class="p">[</span><span class="s2">&quot;scalarVariables&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">scalarVariables</span>
-
-        <span class="n">constraint</span><span class="o">.</span><span class="n">assignAdditionalScalarVariables</span><span class="p">(</span><span class="n">scalarVariables</span><span class="p">)</span>
-
-    <span class="c1"># create total number of dofs and orderedDict of fieldType and associated numbered dofs</span>
-    <span class="n">dofManager</span> <span class="o">=</span> <span class="n">DofManager</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-    <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;total size of eq. system: </span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dofManager</span><span class="o">.</span><span class="n">nDof</span><span class="p">),</span> <span class="n">identification</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
 
-    <span class="n">jobName</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;startTime&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="c1"># store job info</span>
-    <span class="n">jobInfo</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dofManager&quot;</span><span class="p">:</span> <span class="n">dofManager</span><span class="p">,</span> <span class="s2">&quot;computationTime&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+    <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+        <span class="s2">&quot;Setting up finite element model&quot;</span><span class="p">,</span>
+        <span class="n">identification</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
 
-    <span class="c1"># add or update additional job info such as inputfile, domain, name, tolerances</span>
+    <span class="n">jobInfo</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">FEModel</span><span class="p">(</span><span class="n">domainSize</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">fillFEModelFromInputFile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">prepareYourself</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">advanceToTime</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;startTime&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+    <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;model setup time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+
+    <span class="n">journal</span><span class="o">.</span><span class="n">printTable</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Model setup time &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:10.4f}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;model setup time&quot;</span><span class="p">])),</span>
+        <span class="p">],</span>
+        <span class="n">identification</span><span class="p">,</span>
+        <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">printPrettyModelSummary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
+    <span class="n">journal</span><span class="o">.</span><span class="n">printSeperationLine</span><span class="p">()</span>
+
+    <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;computationTime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
     <span class="n">jobInfo</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
     <span class="n">jobInfo</span> <span class="o">=</span> <span class="n">loadConfiguration</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">updateConfig</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*updateConfiguration&quot;</span><span class="p">]:</span>
@@ -316,78 +218,51 @@
 
     <span class="n">plotter</span> <span class="o">=</span> <span class="n">Plotter</span><span class="p">(</span><span class="n">journal</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">)</span>
 
-    <span class="c1"># generate an instance of the desired solver</span>
-    <span class="n">Solver</span> <span class="o">=</span> <span class="n">getSolverByName</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;solver&quot;</span><span class="p">,</span> <span class="s2">&quot;NIST&quot;</span><span class="p">))</span>
-    <span class="n">solver</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
-    <span class="n">U</span><span class="p">,</span> <span class="n">P</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-    <span class="n">model</span><span class="p">[</span><span class="s2">&quot;solver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">solver</span>
+    <span class="n">stepManager</span> <span class="o">=</span> <span class="n">StepManager</span><span class="p">(</span><span class="n">inputfile</span><span class="p">)</span>
 
     <span class="n">fieldOutputController</span> <span class="o">=</span> <span class="n">FieldOutputController</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
 
-    <span class="c1"># collect all output managers in a list of objects</span>
-    <span class="n">outputmanagers</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">outputDef</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*output&quot;</span><span class="p">]:</span>
-        <span class="n">OutputManager</span> <span class="o">=</span> <span class="n">getOutputManagerClass</span><span class="p">(</span><span class="n">outputDef</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="n">managerName</span> <span class="o">=</span> <span class="n">outputDef</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">jobName</span> <span class="o">+</span> <span class="n">outputDef</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
-        <span class="n">definitionLines</span> <span class="o">=</span> <span class="n">outputDef</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
-        <span class="n">outputmanagers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">OutputManager</span><span class="p">(</span><span class="n">managerName</span><span class="p">,</span> <span class="n">definitionLines</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="n">plotter</span><span class="p">)</span>
+    <span class="n">outputManagers</span> <span class="o">=</span> <span class="n">createOutputManagersFromInput</span><span class="p">(</span><span class="n">inputfile</span><span class="p">,</span> <span class="n">jobName</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="n">plotter</span><span class="p">)</span>
+
+    <span class="n">solvers</span> <span class="o">=</span> <span class="n">createSolversFromInputFile</span><span class="p">(</span><span class="n">inputfile</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">solvers</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Warning, not defining a Solver is deprecated; Define solver using *solver keyword&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">stepActions</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">CaseInsensitiveDict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;solver&quot;</span> <span class="ow">in</span> <span class="n">job</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">solvers</span><span class="p">:</span>
+        <span class="n">Solver</span> <span class="o">=</span> <span class="n">getSolverByName</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;solver&quot;</span><span class="p">,</span> <span class="s2">&quot;NIST&quot;</span><span class="p">))</span>
+        <span class="n">solvers</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
 
-    <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">initializeJob</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-        <span class="n">man</span><span class="o">.</span><span class="n">initializeSimulation</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">stepNumber</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputfile</span><span class="p">[</span><span class="s2">&quot;*step&quot;</span><span class="p">]):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">stepActions</span> <span class="o">=</span> <span class="n">gatherStepActions</span><span class="p">(</span>
-                    <span class="n">step</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span>
-                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">stepManager</span><span class="o">.</span><span class="n">getStep</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
+            <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solvers</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputManagers</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
+            <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
+            <span class="n">stepTime</span> <span class="o">=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
+            <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;computationTime&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">stepTime</span>
 
-                <span class="k">for</span> <span class="n">modelUpdate</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;modelupdate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                    <span class="n">model</span> <span class="o">=</span> <span class="n">modelUpdate</span><span class="o">.</span><span class="n">updateModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
-
-                <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">initializeStep</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-                    <span class="n">manager</span><span class="o">.</span><span class="n">initializeStep</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span>
-
-                <span class="c1"># solve the step</span>
-                <span class="n">tic</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
-                <span class="n">success</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span>
-                    <span class="n">stepNumber</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputmanagers</span>
-                <span class="p">)</span>
-                <span class="n">toc</span> <span class="o">=</span> <span class="n">getCurrentTime</span><span class="p">()</span>
-
-                <span class="n">stepTime</span> <span class="o">=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
-                <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;computationTime&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">stepTime</span>
-
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">StepFailed</span><span class="p">()</span>
-
-                <span class="n">journal</span><span class="o">.</span><span class="n">printTable</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="p">(</span><span class="s2">&quot;Step computation time&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:10.4f}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stepTime</span><span class="p">)),</span>
-                    <span class="p">],</span>
-                    <span class="n">identification</span><span class="p">,</span>
-                    <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                <span class="p">)</span>
-
-            <span class="k">finally</span><span class="p">:</span>
-                <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeStep</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-                    <span class="n">manager</span><span class="o">.</span><span class="n">finalizeStep</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+            <span class="n">journal</span><span class="o">.</span><span class="n">printTable</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="p">(</span><span class="s2">&quot;Step computation time&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:10.4f}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stepTime</span><span class="p">)),</span>
+                <span class="p">],</span>
+                <span class="n">identification</span><span class="p">,</span>
+                <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">journal</span><span class="o">.</span><span class="n">errorMessage</span><span class="p">(</span><span class="s2">&quot;Interrupted by user&quot;</span><span class="p">,</span> <span class="n">identification</span><span class="p">)</span>
         <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">except</span> <span class="n">StepFailed</span><span class="p">:</span>
-        <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">journal</span><span class="o">.</span><span class="n">errorMessage</span><span class="p">(</span><span class="s2">&quot;Step not finished&quot;</span><span class="p">,</span> <span class="n">identification</span><span class="p">)</span>
+    <span class="c1"># except StepFailed:</span>
+    <span class="c1"># success = False</span>
+    <span class="c1"># journal.errorMessage(&quot;Step not finished&quot;, identification)</span>
 
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">journal</span><span class="o">.</span><span class="n">printTable</span><span class="p">(</span>
@@ -398,19 +273,16 @@
             <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">printHeaderRow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># let all output managers finalize the job</span>
-        <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeJob</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputmanagers</span><span class="p">:</span>
-            <span class="n">manager</span><span class="o">.</span><span class="n">finalizeJob</span><span class="p">(</span>
-                <span class="n">U</span><span class="p">,</span>
-                <span class="n">P</span><span class="p">,</span>
-            <span class="p">)</span>
+
+        <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeJob</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputManagers</span><span class="p">:</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">finalizeJob</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="n">plotter</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">suppressPlots</span><span class="p">:</span>
             <span class="n">plotter</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">fieldOutputController</span></div>
+    <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span></div>
 </pre></div>
 
            </div>

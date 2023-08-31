@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fe.variables.nodeset &mdash; EdelweissFE v22.07 documentation</title>
+  <title>fe.sets.elementset &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
@@ -66,7 +66,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">fe.variables.nodeset</li>
+      <li class="breadcrumb-item active">fe.sets.elementset</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,7 +75,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for fe.variables.nodeset</h1><div class="highlight"><pre>
+  <h1>Source code for fe.sets.elementset</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
@@ -106,30 +106,31 @@
 
 <span class="c1"># @author: Alexander Dummer</span>
 
-<span class="kn">from</span> <span class="nn">fe.variables.orderedset</span> <span class="kn">import</span> <span class="n">OrderedSet</span>
-<span class="kn">from</span> <span class="nn">fe.variables.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">fe.sets.orderedset</span> <span class="kn">import</span> <span class="n">OrderedSet</span>
+<span class="kn">from</span> <span class="nn">fe.elements.marmotelement.element</span> <span class="kn">import</span> <span class="n">MarmotElementWrapper</span>
+<span class="kn">from</span> <span class="nn">fe.elements.marmotsingleqpelement.element</span> <span class="kn">import</span> <span class="n">MarmotMaterialWrappingElement</span>
 
 
-<div class="viewcode-block" id="NodeSet"><a class="viewcode-back" href="../../../documentation/sets.html#fe.variables.nodeset.NodeSet">[docs]</a><span class="k">class</span> <span class="nc">NodeSet</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A basic node set.</span>
-<span class="sd">    It has a label, and a list containing the unique nodes.</span>
+<div class="viewcode-block" id="ElementSet"><a class="viewcode-back" href="../../../documentation/sets.html#fe.sets.elementset.ElementSet">[docs]</a><span class="k">class</span> <span class="nc">ElementSet</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A basic element set.</span>
+<span class="sd">    It has a label, and a list containing unique elements.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    label</span>
 <span class="sd">        The unique label for this element set.</span>
-<span class="sd">    nodes</span>
-<span class="sd">        A list of nodes.</span>
+<span class="sd">    elements</span>
+<span class="sd">        A list of elements.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">allowedObjectTypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">]</span>
+    <span class="n">allowedObjectTypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">MarmotElementWrapper</span><span class="p">,</span> <span class="n">MarmotMaterialWrappingElement</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

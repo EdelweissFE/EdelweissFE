@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Creating finite element meshes" href="mesh.html" />
-    <link rel="prev" title="Variables" href="variables.html" /> 
+    <link rel="next" title="Exceptions" href="exceptions.html" />
+    <link rel="prev" title="Fields" href="fields.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,8 +51,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Finite elements</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#fe.config.elementlibrary.getElementClass"><code class="docutils literal notranslate"><span class="pre">getElementClass()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a><ul>
@@ -69,23 +75,20 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -183,40 +186,40 @@ In future, elements by other providers or elements directly implemented in Edelw
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState" title="fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState" title="fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
 <td><p>Accept the computed state (in nonlinear iteration schemes).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment due to a volume load.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(Ke, Pe, U, dU, time, dTime)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter" title="fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter" title="fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement centroid coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
 <td><p>Get the array of a result, possibly as a persistent view which is continiously updated by the underlying MarmotElement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement" title="fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement" title="fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
 <td><p>Let the underlying MarmotElement initialize itself</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState" title="fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState" title="fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
 <td><p>Reset to the last valid state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
 <td><p>Assign initial conditions to the underlying Marmot element</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
 <td><p>Assign a material and material properties to the underlying MarmotElement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="fe.elements.marmotelement.element.MarmotElementWrapper.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="fe.elements.marmotelement.element.MarmotElementWrapper.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
 <td><p>Assign the nodes coordinates to the underyling MarmotElement</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="fe.elements.marmotelement.element.MarmotElementWrapper.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="fe.elements.marmotelement.element.MarmotElementWrapper.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
 <td><p>Assign a set of properties to the underyling MarmotElement</p></td>
 </tr>
 </tbody>
@@ -229,19 +232,19 @@ In future, elements by other providers or elements directly implemented in Edelw
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce">
-<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a volume load.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad">
-<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself">
-<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ke</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment.</p>
 </dd></dl>
 
@@ -253,7 +256,7 @@ In future, elements by other providers or elements directly implemented in Edelw
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray">
-<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="Permalink to this definition"></a></dt>
 <dd><p>Get the array of a result, possibly as a persistent view which is continiously
 updated by the underlying MarmotElement.</p>
 </dd></dl>
@@ -272,13 +275,13 @@ updated by the underlying MarmotElement.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition">
-<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="Permalink to this definition"></a></dt>
 <dd><p>Assign initial conditions to the underlying Marmot element</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial">
-<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a material and material properties to the underlying MarmotElement.
 Furthermore, create two sets of state vars:</p>
 <blockquote>
@@ -291,13 +294,13 @@ Furthermore, create two sets of state vars:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setNodes">
-<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="Permalink to this definition"></a></dt>
 <dd><p>Assign the nodes coordinates to the underyling MarmotElement</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setProperties">
-<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a set of properties to the underyling MarmotElement</p>
 </dd></dl>
 
@@ -589,14 +592,15 @@ all
 <span class="c c-Singleline">** The type of the element actually specifies the type of requested MarmotMaterial</span>
 1, 1
 
-<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">mySingleElementJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 setinitialconditions,<span class="nv"> property</span><span class="ow">=</span><span class="m">characteristic element length</span>,<span class="nv"> values</span><span class="ow">=</span><span class="s">&#39;100,&#39;</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">prescribed_strain</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">strain symmetric</span>,<span class="nv"> components</span><span class="ow">=</span><span class="s">&#39;[ 0, x, x, 0, 0, 0 ]&#39;</span>, 
 nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">prescribed_stress</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">strain symmetric</span>,<span class="nv"> components</span><span class="ow">=</span><span class="s">&#39;[ x, 0, 0, x, x, x ]&#39;</span> 
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">10</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">10</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">prescribed_strain</span>,<span class="nv">                                    components</span><span class="ow">=</span><span class="s">&#39;[ -0.2,  x,    x, 0,   0, 0 ]&#39;</span> 
 nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">prescribed_stress</span>,<span class="nv">                                   components</span><span class="ow">=</span><span class="s">&#39;[ x,    .1,   .2, x,   x, x ]&#39;</span> 
 
@@ -849,7 +853,7 @@ updated by the element.</p>
 <dd><p>Assign the nodes to the element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>nodes</strong> (<em>list</em><em>[</em><a class="reference internal" href="variables.html#fe.variables.node.Node" title="fe.variables.node.Node"><em>fe.variables.node.Node</em></a><em>]</em>) – A list of nodes.</p>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>list</em><em>[</em><a class="reference internal" href="variables.html#fe.points.node.Node" title="fe.points.node.Node"><em>fe.points.node.Node</em></a><em>]</em>) – A list of nodes.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -917,8 +921,8 @@ aggregate all entries in order to resemble the defined fields nodewise.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="variables.html" class="btn btn-neutral float-left" title="Variables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mesh.html" class="btn btn-neutral float-right" title="Creating finite element meshes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fields.html" class="btn btn-neutral float-left" title="Fields" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

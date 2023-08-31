@@ -191,7 +191,6 @@
     <span class="s2">&quot;*fieldOutput&quot;</span><span class="p">:</span> <span class="p">(</span>
         <span class="s2">&quot;define fieldoutput, which is used by outputmanagers&quot;</span><span class="p">,</span>
         <span class="p">{</span>
-            <span class="s2">&quot;jobName&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(deprecated)&quot;</span><span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition lines for the output module&quot;</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
@@ -207,7 +206,6 @@
         <span class="s2">&quot;define an output module&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional), name of manager, standard=None&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;jobName&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(deprecated)&quot;</span><span class="p">),</span>
             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;output module &quot;</span><span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition lines for the output module&quot;</span><span class="p">),</span>
         <span class="p">},</span>
@@ -216,22 +214,30 @@
         <span class="s2">&quot;definition of an analysis job&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) name of job, standard = defaultJob&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) define solver, standard = NIST&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;linSolver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) define linear solver, standard = superlu&quot;</span><span class="p">),</span>
             <span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define spatial domain: 1d, 2d, 3d&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(deprecated) define the solver to be used&quot;</span><span class="p">),</span>
             <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) start time of job, standard = 0.0&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*solver&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of solver&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Name of this solver&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Solvertype&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define options which are passed to the respective solver instance.&quot;</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
     <span class="s2">&quot;*step&quot;</span><span class="p">:</span> <span class="p">(</span>
         <span class="s2">&quot;definition of job steps&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;stepLength&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;time period of step&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;jobName&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional)&quot;</span><span class="p">),</span>
             <span class="s2">&quot;startInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;size of the start increment&quot;</span><span class="p">),</span>
             <span class="s2">&quot;maxInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum size of increment&quot;</span><span class="p">),</span>
             <span class="s2">&quot;minInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;minimum size of increment&quot;</span><span class="p">),</span>
             <span class="s2">&quot;maxNumInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of increments&quot;</span><span class="p">),</span>
             <span class="s2">&quot;maxIter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of iterations&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) define step type, default = AdaptiveStep&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) solver to be used&quot;</span><span class="p">),</span>
             <span class="s2">&quot;criticalIter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of iterations to prevent from increasing the increment&quot;</span><span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define step actions, which are handled by the corresponding stepaction modules&quot;</span><span class="p">),</span>
         <span class="p">},</span>
@@ -382,6 +388,14 @@
                     <span class="ne">DeprecationWarning</span><span class="p">,</span>
                     <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                 <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">fileDict</span><span class="p">[</span><span class="s2">&quot;*job&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s2">&quot;solver&quot;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Warning, defining a Solver in *job is deprecated; Define solver using *solver keyword&quot;</span><span class="p">,</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">fileDict</span></div>
 

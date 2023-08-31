@@ -116,57 +116,56 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">fe.utils.exceptions</span> <span class="kn">import</span> <span class="n">ReachedMaxIterations</span><span class="p">,</span> <span class="n">DivergingSolution</span><span class="p">,</span> <span class="n">ConditionalStop</span>
 <span class="kn">from</span> <span class="nn">fe.utils.math</span> <span class="kn">import</span> <span class="n">createModelAccessibleFunction</span>
-<span class="kn">from</span> <span class="nn">fe.utils.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span>
+<span class="kn">from</span> <span class="nn">fe.numerics.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span>
 <span class="kn">from</span> <span class="nn">fe.stepactions.base.stepactionbase</span> <span class="kn">import</span> <span class="n">StepActionBase</span>
 <span class="kn">from</span> <span class="nn">fe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
 <span class="kn">from</span> <span class="nn">fe.outputmanagers.base.outputmanagerbase</span> <span class="kn">import</span> <span class="n">OutputManagerBase</span>
+<span class="kn">from</span> <span class="nn">fe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
 
 
 <div class="viewcode-block" id="NISTPArcLength"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength">[docs]</a><span class="k">class</span> <span class="nc">NISTPArcLength</span><span class="p">(</span><span class="n">NISTParallel</span><span class="p">):</span>
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;NISTPArcLength&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NISTPArcLength.solveStep"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveStep">[docs]</a>    <span class="k">def</span> <span class="nf">solveStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">stepNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">],</span>
-        <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
-        <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
         <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
         <span class="n">outputmanagers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OutputManagerBase</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">FEModel</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">checkConditionalStop</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span>
 
+        <span class="k">if</span> <span class="s2">&quot;arc length parameter&quot;</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">additionalParameters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">additionalParameters</span><span class="p">[</span><span class="s2">&quot;arc length parameter&quot;</span><span class="p">]</span>
+
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">arcLengthControllerType</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">][</span><span class="s2">&quot;arcLengthController&quot;</span><span class="p">]</span>
+            <span class="n">arcLengthControllerType</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">][</span><span class="s2">&quot;arcLengthController&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">arcLengthControllerType</span> <span class="o">==</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="n">arcLengthControllerType</span><span class="p">][</span><span class="n">arcLengthControllerType</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">arcLengthControllerType</span><span class="p">][</span><span class="n">arcLengthControllerType</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">stopCondition</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">][</span><span class="s2">&quot;stopCondition&quot;</span><span class="p">]</span>
+            <span class="n">stopCondition</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">][</span><span class="s2">&quot;stopCondition&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checkConditionalStop</span> <span class="o">=</span> <span class="n">createModelAccessibleFunction</span><span class="p">(</span>
                 <span class="n">stopCondition</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputs</span><span class="o">=</span><span class="n">fieldOutputController</span><span class="o">.</span><span class="n">fieldOutputs</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
-
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span>
-            <span class="n">stepNumber</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputmanagers</span>
-        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputmanagers</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NISTPArcLength.solveIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">solveIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -174,9 +173,8 @@
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
-        <span class="n">elements</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">stepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
         <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
         <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -229,9 +227,8 @@
                 <span class="n">dU</span><span class="p">,</span>
                 <span class="n">P</span><span class="p">,</span>
                 <span class="n">K</span><span class="p">,</span>
-                <span class="n">elements</span><span class="p">,</span>
                 <span class="n">stepActions</span><span class="p">,</span>
-                <span class="n">constraints</span><span class="p">,</span>
+                <span class="n">model</span><span class="p">,</span>
                 <span class="n">increment</span><span class="p">,</span>
                 <span class="n">lastIncrementSize</span><span class="p">,</span>
                 <span class="n">extrapolation</span><span class="p">,</span>
@@ -245,7 +242,7 @@
             <span class="k">raise</span> <span class="n">ConditionalStop</span>
 
         <span class="n">iterationCounter</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">incrementResidualHistory</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">incrementResidualHistory</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
         <span class="n">dirichlets</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;dirichlet&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
         <span class="n">nodeForces</span> <span class="o">=</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
@@ -254,7 +251,7 @@
 
         <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
         <span class="n">R_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">(),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># 2 RHSs</span>
         <span class="n">R_0</span> <span class="o">=</span> <span class="n">R_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
@@ -273,7 +270,7 @@
         <span class="n">ddLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span><span class="p">,</span> <span class="n">dLambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span>
-            <span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">,</span> <span class="n">dLambda</span>
+            <span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dLambda</span>
         <span class="p">)</span>
 
         <span class="n">referenceIncrement</span> <span class="o">=</span> <span class="n">incNumber</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
@@ -288,8 +285,8 @@
 
             <span class="n">P</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P_0</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P_f</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K_f</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K_0</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
-            <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
             <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span>
                 <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span><span class="p">,</span> <span class="n">zeroIncrement</span>
@@ -347,7 +344,7 @@
             <span class="n">ddU_0</span><span class="p">,</span> <span class="n">ddU_f</span> <span class="o">=</span> <span class="n">ddU_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ddU_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># compute the increment of the load parameter. Method depends on the employed arc length controller</span>
-            <span class="n">ddLambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">computeDDLambda</span><span class="p">(</span><span class="n">dU</span><span class="p">,</span> <span class="n">ddU_0</span><span class="p">,</span> <span class="n">ddU_f</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">ddLambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">computeDDLambda</span><span class="p">(</span><span class="n">dU</span><span class="p">,</span> <span class="n">ddU_0</span><span class="p">,</span> <span class="n">ddU_f</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="p">)</span>
 
             <span class="c1"># assemble total solution</span>
             <span class="n">ddU</span> <span class="o">=</span> <span class="n">ddU_0</span> <span class="o">+</span> <span class="n">ddLambda</span> <span class="o">*</span> <span class="n">ddU_f</span>
@@ -359,11 +356,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span> <span class="o">+=</span> <span class="n">dLambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="n">dLambda</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">finishIncrement</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">finishIncrement</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">additionalParameters</span><span class="p">[</span><span class="s2">&quot;additionalParameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span>
 
         <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
             <span class="s2">&quot;Current load parameter: lambda=</span><span class="si">{:6.2e}</span><span class="s2">, last increment: dLambda=</span><span class="si">{:6.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span><span class="p">),</span>
@@ -380,6 +379,7 @@
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
         <span class="n">dLambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Depending on the current setting, extrapolate the solution of the last increment.</span>
@@ -409,7 +409,7 @@
 
         <span class="k">if</span> <span class="n">dLambda</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># arclength control is inactive</span>
-            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span><span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span><span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">extrapolation</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span> <span class="ow">and</span> <span class="n">lastIncrementSize</span><span class="p">:</span>
             <span class="n">dLambda</span> <span class="o">=</span> <span class="n">dLambda</span> <span class="o">*</span> <span class="p">(</span><span class="n">incrementSize</span> <span class="o">/</span> <span class="n">lastIncrementSize</span><span class="p">)</span>
@@ -423,7 +423,7 @@
 
         <span class="k">return</span> <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span><span class="p">,</span> <span class="n">dLambda</span></div>
 
-<div class="viewcode-block" id="NISTPArcLength.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+<div class="viewcode-block" id="NISTPArcLength.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
 
 <span class="sd">        For the arc length controlled simulation,</span>
@@ -444,13 +444,13 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">stepAction</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;nodeforces&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
+                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">stepAction</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;distributedload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
+                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">stepAction</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;bodeforce&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
+                <span class="n">stepAction</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">stepMagnitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Finite elements" href="elements.html" />
-    <link rel="prev" title="Physical phenomena" href="phenomena.html" /> 
+    <link rel="next" title="Contributors" href="../contributors.html" />
+    <link rel="prev" title="Utilities" href="utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,33 +51,33 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Variables</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.variables.node.Node.setFields"><code class="docutils literal notranslate"><span class="pre">Node.setFields()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.points.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#fe.variables.scalarvariable.ScalarVariable"><code class="docutils literal notranslate"><span class="pre">ScalarVariable</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -118,13 +118,13 @@ The latter may be used for, e.g., Lagrangian multipliers.</p>
 <p>Relevant modules:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.node</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fe.points.node</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.scalarvariable</span></code></p></li>
 </ul>
 </div></blockquote>
-<span class="target" id="module-fe.variables.node"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.node.Node">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.node.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/node.html#Node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.node.Node" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-fe.points.node"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.points.node.Node">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.points.node.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/points/node.html#Node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.points.node.Node" title="Permalink to this definition"></a></dt>
 <dd><p>A basic node.
 It has a label, a spatial position, and may be associated with an arbitrary number of fields.</p>
 <dl class="field-list simple">
@@ -135,29 +135,6 @@ It has a label, a spatial position, and may be associated with an arbitrary numb
 </ul>
 </dd>
 </dl>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.variables.node.Node.setFields" title="fe.variables.node.Node.setFields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setFields</span></code></a>(*fields)</p></td>
-<td><p>Activate fields on this node.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="fe.variables.node.Node.setFields">
-<span class="sig-name descname"><span class="pre">setFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fields</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/node.html#Node.setFields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.node.Node.setFields" title="Permalink to this definition"></a></dt>
-<dd><p>Activate fields on this node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fields</strong> – The fields to activate</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <span class="target" id="module-fe.variables.scalarvariable"></span><dl class="py class">
@@ -172,8 +149,8 @@ It has a label, a spatial position, and may be associated with an arbitrary numb
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="phenomena.html" class="btn btn-neutral float-left" title="Physical phenomena" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="elements.html" class="btn btn-neutral float-right" title="Finite elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="utils.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contributors.html" class="btn btn-neutral float-right" title="Contributors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

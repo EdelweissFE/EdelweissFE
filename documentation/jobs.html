@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Physical phenomena" href="phenomena.html" />
+    <link rel="next" title="Models" href="models.html" />
     <link rel="prev" title="Input file syntax" href="syntax.html" /> 
 </head>
 
@@ -52,29 +52,31 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Jobs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#fe.fecore.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.fecore.gatherStepActions"><code class="docutils literal notranslate"><span class="pre">gatherStepActions()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -142,9 +144,8 @@ external modules.</p>
 <dd class="field-even"><p><dl class="simple">
 <dt>A tuple containing</dt><dd><ul class="simple">
 <li><p>Truth value of success</p></li>
-<li><p>The solution vector.</p></li>
-<li><p>The reaction vector.</p></li>
-<li><p>The fieldoutput controller containing all results.</p></li>
+<li><p>The final model tree</p></li>
+<li><p>The fieldoutput controller containing all processed results.</p></li>
 </ul>
 </dd>
 </dl>
@@ -156,40 +157,6 @@ external modules.</p>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="fe.fecore.gatherStepActions">
-<span class="sig-prename descclassname"><span class="pre">fe.fecore.</span></span><span class="sig-name descname"><span class="pre">gatherStepActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fecore.html#gatherStepActions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fecore.gatherStepActions" title="Permalink to this definition"></a></dt>
-<dd><p>Parses all the defined actions for the current step,
-and calls the respective modules, which generate step-actions based on
-computed results, model info and job information.
-The stepi actions are stored in a dictionary, which is handed to
-solveStep() in the feCore main routine afterwards.
-The step action modules decide if old stepaction definitions are
-overwritten or extended. Returns a dictionary with keys as defined in
-stepactions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>step</strong> (<em>dict</em>) – The step active for which the actions are gathered.</p></li>
-<li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing information on the job.</p></li>
-<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
-<li><p><strong>time</strong> (<em>float</em>) – The current time of the simulation.</p></li>
-<li><p><strong>U</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
-<li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.utils.dofmanager.DofVector" title="fe.utils.dofmanager.DofVector"><em>DofVector</em></a>) – The current reaction vector.</p></li>
-<li><p><strong>stepActions</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase"><em>fe.stepactions.base.stepactionbase.StepActionBase</em></a><em>]</em>) – A dictionary containing already existing step actions.</p></li>
-<li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The field output controller.</p></li>
-<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The updated dictionary of step actions.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict[str,<a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase">StepActionBase</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 
 
@@ -197,7 +164,7 @@ stepactions.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="syntax.html" class="btn btn-neutral float-left" title="Input file syntax" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="phenomena.html" class="btn btn-neutral float-right" title="Physical phenomena" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="models.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

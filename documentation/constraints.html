@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Managing field outputs" href="fieldoutputmanager.html" />
-    <link rel="prev" title="Step actions" href="stepactions.html" /> 
+    <link rel="next" title="The DOF manager" href="dofmanager.html" />
+    <link rel="prev" title="Analytical fields" href="analyticalfields.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,15 +51,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Constraints</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#equalvaluelagrangian-constrain-nodal-values-to-equal-values"><code class="docutils literal notranslate"><span class="pre">equalvaluelagrangian</span></code> - Constrain nodal values to equal values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#equalvaluepenalty-constrain-nodal-values-to-equal-values"><code class="docutils literal notranslate"><span class="pre">equalvaluepenalty</span></code> - Constrain nodal values to equal values</a></li>
@@ -72,16 +67,24 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Outputmanagers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -173,6 +176,7 @@ of a node set to be equal.</p>
 all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
 <span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
@@ -189,7 +193,7 @@ all
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
@@ -250,6 +254,7 @@ of a node set to be equal.</p>
 all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
 <span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
@@ -266,7 +271,7 @@ all
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-5</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">5.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">5.0</span>
@@ -312,7 +317,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">le</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
 
-<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 <span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">load</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
@@ -329,7 +335,7 @@ all
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">4</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">4</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">leftCorner</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_leftBottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_rightTop</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.05</span>
@@ -371,7 +377,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">le</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
 all
 
-<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 <span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39; mean(x, axis=1) &#39;</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>
@@ -385,7 +392,7 @@ all
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">10</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">10</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">         field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">rBottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">3.141</span>,  
@@ -445,7 +452,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="c c-Singleline">**E    nu</span>
 1000, 0.2
 
-<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
 <span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planerectquad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
 <span class="nv">nX      </span><span class="ow">=</span><span class="m">5</span>
@@ -488,12 +496,12 @@ gen_leftTop
 <span class="nv">penaltyStiffness</span><span class="ow">=</span><span class="m">1e6</span>
 <span class="nv">offset</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
-modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;constraints[&quot;pc1&quot;].active=False&#39;</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e0</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;model.constraints[&quot;pc1&quot;].active=False&#39;</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">fix_bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-2</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-6</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
-modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;constraints[&quot;pc1&quot;].active=True&#39;</span>
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-2</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-6</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+modelupdate,<span class="nv"> update</span><span class="ow">=</span><span class="s">&#39;model.constraints[&quot;pc1&quot;].active=True&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -530,7 +538,7 @@ to be of the form</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of the constraint.</p></li>
 <li><p><strong>options</strong> (<em>dict</em>) – A dictionary containing the options for the constraint.</p></li>
-<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – A dictionary containing the model tree.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Attributes</dt>
@@ -636,8 +644,8 @@ this Constraint needs.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="stepactions.html" class="btn btn-neutral float-left" title="Step actions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fieldoutputmanager.html" class="btn btn-neutral float-right" title="Managing field outputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="analyticalfields.html" class="btn btn-neutral float-left" title="Analytical fields" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dofmanager.html" class="btn btn-neutral float-right" title="The DOF manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

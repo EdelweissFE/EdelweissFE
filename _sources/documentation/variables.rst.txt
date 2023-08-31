@@ -8,10 +8,10 @@ The latter may be used for, e.g., Lagrangian multipliers.
 
 Relevant modules: 
 
- * ``fe.variables.node``
+ * ``fe.points.node``
  * ``fe.variables.scalarvariable``
 
-.. automodule:: fe.variables.node
+.. automodule:: fe.points.node
    :members: 
 
 .. automodule:: fe.variables.scalarvariable

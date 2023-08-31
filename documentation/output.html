@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Plotting" href="plotter.html" />
-    <link rel="prev" title="The DOF manager" href="dofmanager.html" /> 
+    <link rel="next" title="Parallelization" href="parallelization.html" />
+    <link rel="prev" title="Creating finite element meshes" href="mesh.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,18 +51,20 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Outputmanagers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.ensight"><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.monitor"><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal</a></li>
@@ -75,13 +77,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.computetimemonitor"><code class="docutils literal notranslate"><span class="pre">computetimemonitor</span></code> - Print and write compute times per increment</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -131,7 +134,8 @@ They are defined globally:</p>
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
 
-<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
 <span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planeRectQuad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
 <span class="nv">x0</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> l</span><span class="ow">=</span><span class="m">50</span>
@@ -168,7 +172,7 @@ configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span c
 
 <span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">Ensight</span>,<span class="nv"> intermediateSaveInterval</span><span class="ow">=</span><span class="m">2</span>,<span class="nv"> minDTForOutput</span><span class="ow">=</span><span class="m">20</span>
-options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>,<span class="nv"> numThreads</span><span class="ow">=</span><span class="m">2</span>
+options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">1</span>,<span class="nv">          nSet</span><span class="ow">=</span><span class="m">gen_leftBottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv">     nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">        field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>
 nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">top</span>,<span class="nv">       nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">           field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-1</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="m">t**2</span>
@@ -180,10 +184,6 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <p>Output manager for Ensight exports.
 If loaded, it automatically exports all elSets as Ensight parts.
 For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>fieldOutputs for perNode results must be defined on elSets instead of a nodeSet.</p>
-</div>
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
@@ -493,8 +493,8 @@ Useful, e.g., for indirect displacement control.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="dofmanager.html" class="btn btn-neutral float-left" title="The DOF manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="plotter.html" class="btn btn-neutral float-right" title="Plotting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mesh.html" class="btn btn-neutral float-left" title="Creating finite element meshes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parallelization.html" class="btn btn-neutral float-right" title="Parallelization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
