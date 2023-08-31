@@ -84,9 +84,13 @@ if __name__ == "__main__":
         inputFiles.append(parseInputFile(file))
 
     for inputFile in inputFiles:
-        success, U, P, fieldOutputController = finiteElementSimulation(
+        success, model, fieldOutputController = finiteElementSimulation(
             inputFile, verbose=args.verbose, suppressPlots=args.noplot
         )
 
         if args.output:
+            U = np.hstack(
+                [f.values["U"].flatten() for f in model.nodeFields.values()]
+                + [v.value for v in model.scalarVariables.values()]
+            ).flatten()
             np.savetxt(args.output, U)

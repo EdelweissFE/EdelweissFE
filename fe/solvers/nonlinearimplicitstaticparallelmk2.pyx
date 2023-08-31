@@ -48,18 +48,18 @@ import os
 class NISTParallel(NIST):
     identification = "NISTPSolver"
     
-    def solveStep(self, stepNumber, step, time, stepActions, model, U, P, fieldOutputController, outputmanagers):
+    def solveStep(self, step, model, fieldOutputController, outputmanagers):
         #determine number of threads
         self.numThreads = cpu_count()
 
         if 'OMP_NUM_THREADS' in os.environ:
             self.numThreads = int( os.environ ['OMP_NUM_THREADS'] ) # higher priority than .inp settings
-        else:
-            if "NISTSolver" in stepActions["options"]:
-                self.numThreads = int(stepActions["options"]['NISTSolver'].get('numThreads', self.numThreads))
+        # else:
+        #     if "NISTSolver" in step.actions["options"]:
+        #         self.numThreads = int(step.actions["options"][self.identification].get('numThreads', self.numThreads))
 
         self.journal.message('Using {:} threads'.format(self.numThreads), self.identification)
-        return super().solveStep(stepNumber,step, time, stepActions, model, U, P, fieldOutputController, outputmanagers)
+        return super().solveStep(step, model, fieldOutputController, outputmanagers)
     
     def applyDirichletK(self, K, dirichlets):
         """Apply the dirichlet bcs on the global stiffnes matrix
@@ -92,7 +92,7 @@ class NISTParallel(NIST):
         
         tic = getCurrentTime()
         for dirichlet in dirichlets: # for each bc
-            dirichletIndices = dirichlet.indices
+            dirichletIndices = self.findDirichletIndices(dirichlet)
             for i in dirichletIndices: # for each node dof in the BC
                 for j in range ( indptr_[i] , indptr_ [i+1] ): # iterate along row
                     if i == indices_ [j]:

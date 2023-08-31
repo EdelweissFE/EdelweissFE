@@ -15,8 +15,8 @@ class Section(RandomBase):
         self.indexRandom = int(self.options["indexRandom"])
 
     def assignSectionPropertiesToModel(self, model):
-        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
-        material = model["materials"][self.materialName]
+        elSets = [model.elementSets[setName] for setName in self.elSetNames]
+        material = model.materials[self.materialName]
 
         elementThickness = self.thickness
 

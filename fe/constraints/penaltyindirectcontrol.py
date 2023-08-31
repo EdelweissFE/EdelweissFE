@@ -61,8 +61,8 @@ class Constraint(ConstraintBase):
         self.theField = definition.get("field", "displacement")
 
         self.cVector = np.fromstring(definition["cVector"], dtype=float, sep=",")
-        self.constrainedNSet = model["nodeSets"][definition["constrainedNSet"]]
-        self.loadNSet = model["nodeSets"][definition["loadNSet"]]
+        self.constrainedNSet = model.nodeSets[definition["constrainedNSet"]]
+        self.loadNSet = model.nodeSets[definition["loadNSet"]]
 
         self.loadVector = np.fromstring(definition["loadVector"], dtype=float, sep=",")
 
@@ -90,7 +90,7 @@ class Constraint(ConstraintBase):
             ]
         ] * len(self._nodes)
 
-        nDim = model["domainSize"]
+        nDim = model.domainSize
 
         sizeBlock_loadNodes = nDim * len(self.loadNSet)
         self.startBlock_loadNodes = 0

@@ -8,7 +8,8 @@ all
 *section, name=sectionweak, thickness=.9, material=modleon, type=plane
 weak
 
-*job, name=cpe4job, domain=2d, solver=NISTParallel
+*job, name=cpe4job, domain=2d
+*solver, solver=NISTParallel, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
@@ -42,8 +43,8 @@ configuration, overwrite=yes
 *output, type=meshplot, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=8
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-1

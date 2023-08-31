@@ -46,19 +46,20 @@ import numpy as np
 from fe.config.phenomena import getFieldSize
 from fe.utils.misc import convertLinesToStringDictionary
 from fe.constraints.base.constraintbase import ConstraintBase
+from fe.models.femodel import FEModel
 
 
 class Constraint(ConstraintBase):
-    def __init__(self, name, definitionLines, model):
+    def __init__(self, name: str, definitionLines: list, model: FEModel):
         super().__init__(name, definitionLines, model)
 
         definition = convertLinesToStringDictionary(definitionLines)
 
         theField = definition["field"]
-        self.sizeField = getFieldSize(theField, model["domainSize"])
+        self.sizeField = getFieldSize(theField, model.domainSize)
         self.component = int(definition["component"])
         self.penalty = float(definition["penalty"])
-        self._nodes = model["nodeSets"][definition["nSet"]]
+        self._nodes = model.nodeSets[definition["nSet"]]
         self._nNodes = len(self._nodes)
         self._nDof = self.sizeField * self._nNodes
 
@@ -84,7 +85,7 @@ class Constraint(ConstraintBase):
     def nDof(self) -> int:
         return self._nDof
 
-    def applyConstraint(self, U_np, dU, PExt, K, increment):
+    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, K: np.ndarray, increment: set):
         if self.active == False:
             return
 

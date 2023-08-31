@@ -5,6 +5,7 @@
 all
 
 *job, name=cps8rnljob, domain=2d, 
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 name=RFRight, nSet=right, field=displacement, result=P, 
 name=displacement, elSet=all, field=displacement, result=U, 
@@ -26,7 +27,7 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, solver=theSolver, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 1=-1

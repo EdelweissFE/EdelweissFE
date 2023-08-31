@@ -30,7 +30,6 @@
 # @author: Matthias Neuner
 
 import numpy as np
-from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import (
     ReachedMaxIncrements,
     ReachedMaxIterations,
@@ -43,12 +42,15 @@ from time import time as getCurrentTime
 from collections import defaultdict
 from fe.config.linsolve import getLinSolverByName, getDefaultLinSolver
 from fe.config.timing import createTimingDict
-from fe.utils.csrgenerator import CSRGenerator
+from fe.config.phenomena import getFieldSize
+from fe.numerics.csrgenerator import CSRGenerator
+from fe.models.femodel import FEModel
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from fe.utils.dofmanager import DofVector, VIJSystemMatrix
+from fe.numerics.dofmanager import DofManager, DofVector, VIJSystemMatrix
 from fe.utils.fieldoutput import FieldOutputController
 from fe.constraints.base.constraintbase import ConstraintBase
+from fe.config.phenomena import fieldCorrectionTolerance, fluxResidualTolerance, fluxResidualToleranceAlternative
 from scipy.sparse import csr_matrix
 from numpy import ndarray
 
@@ -66,26 +68,79 @@ class NIST:
 
     identification = "NISTSolver"
 
-    defaultStartInc = 1.0
-    defaultMaxInc = 1.0
-    defaultMinInc = 1e-4
-    defaultMaxNumInc = 1000
-    defaultMaxIter = 10
-    defaultCriticalIter = 5
-    defaultMaxGrowingIter = 10
+    NISTOptions = {
+        "defaultMaxIter": 10,
+        "defaultCriticalIter": 5,
+        "defaultMaxGrowingIter": 10,
+        "extrapolation": "linear",
+    }
 
-    def __init__(self, jobInfo, journal):
-        self.linSolver = getLinSolverByName(jobInfo["linsolver"]) if "linsolver" in jobInfo else getDefaultLinSolver()
+    def __init__(self, jobInfo, journal, **kwargs):
+        self.journal = journal
 
-        self.theDofManager = jobInfo["dofManager"]
         self.fieldCorrectionTolerances = jobInfo["fieldCorrectionTolerance"]
         self.fluxResidualTolerances = jobInfo["fluxResidualTolerance"]
         self.fluxResidualTolerancesAlt = jobInfo["fluxResidualToleranceAlternative"]
 
-        # create headers for formatted output of solver
-        presentVariableNames = list(self.theDofManager.indicesOfFieldsInDofVector.keys())
+        self.options = self.NISTOptions.copy()
+        self._updateOptions(kwargs, journal)
 
-        if self.theDofManager.indicesOfScalarVariablesInDofVector:
+    def _updateOptions(self, updatedOptions: dict, journal):
+        """Update options of the solver using a string dict
+
+        Parameters
+        ----------
+        updatedOptions
+            The options dictionary.
+        journal
+            The journal module.
+        """
+
+        for k, v in updatedOptions.items():
+            if k in self.NISTOptions:
+                journal.message("Updating option {:}={:}".format(k, v), self.identification)
+                self.options[k] = type(self.NISTOptions[k])(updatedOptions[k])
+            else:
+                raise AttributeError("Invalid option {:} for {:}".format(k, self.identification))
+
+    def solveStep(
+        self,
+        step,
+        model: FEModel,
+        fieldOutputController: FieldOutputController,
+        outputmanagers: dict[str, OutputManagerBase],
+    ) -> tuple[bool, FEModel]:
+        """Public interface to solve for a step.
+
+        Parameters
+        ----------
+        stepNumber
+            The step number.
+        step
+            The dictionary containing the step definition.
+        stepActions
+            The dictionary containing all step actions.
+        model
+            The  model tree.
+        fieldOutputController
+            The field output controller.
+
+        Returns
+        -------
+        tuple[bool,FEModel]
+            - Truth value of success.
+            - The updated model
+        """
+
+        self.journal.message("Creating monolithic equation system", self.identification, 0)
+        self.theDofManager = DofManager(model)
+        self.journal.message("total size of eq. system: {:}".format(self.theDofManager.nDof), self.identification, 0)
+
+        self.journal.printSeperationLine()
+
+        presentVariableNames = list(self.theDofManager.idcsOfFieldsInDofVector.keys())
+
+        if self.theDofManager.idcsOfScalarVariablesInDofVector:
             presentVariableNames += [
                 "scalar variables",
             ]
@@ -95,120 +150,66 @@ class NIST:
         self.iterationHeader2 = (" {:<10}  {:<10}  ").format("||R||∞", "||ddU||∞") * nVariables
         self.iterationMessageTemplate = "{:11.2e}{:1}{:11.2e}{:1} "
 
-        self.journal = journal
-
-        self.systemMatrix = self.theDofManager.constructVIJSystemMatrix()
-
-        self.csrGenerator = CSRGenerator(self.systemMatrix)
-
-        self.extrapolation = "linear"
-
-    def initialize(self):
-        """Initialize the solver and return the 2 vectors for field (U) and flux (P)."""
-
         U = self.theDofManager.constructDofVector()
-        P = self.theDofManager.constructDofVector()
+        K = self.theDofManager.constructVIJSystemMatrix()
 
-        return U, P
-
-    def solveStep(
-        self,
-        stepNumber: int,
-        step: dict,
-        time: float,
-        stepActions: dict[str, StepActionBase],
-        model: dict,
-        U: DofVector,
-        P: DofVector,
-        fieldOutputController: FieldOutputController,
-        outputmanagers: dict[str, OutputManagerBase],
-    ) -> tuple[bool, DofVector, DofVector, float]:
-        """Public interface to solve for a step.
-
-        Parameters
-        ----------
-        stepNumber
-            The step number.
-        step
-            The dictionary containing the step definition.
-        time
-            The time at beginning of the step.
-        stepActions
-            The dictionary containing all step actions.
-        model
-            A dictionary containing the model tree.
-        U
-            The current solution vector.
-        P
-            The current reaction vector.
-        fieldOutputController
-            The field output controller.
-
-        Returns
-        -------
-        tuple[bool,DofVector,DofVector,float]
-            - Truth value of success.
-            - The new solution vector.
-            - The new reaction vector.
-            - The new current time.
-
-        """
+        self.csrGenerator = CSRGenerator(K)
 
         self.computationTimes = createTimingDict()
 
-        K = self.systemMatrix
-
-        stepLength = step.get("stepLength", 1.0)
-
-        extrapolation = self.extrapolation
         try:
-            extrapolation = stepActions["options"]["NISTSolver"]["extrapolation"]
+            self._updateOptions(step.actions["options"]["NISTSolver"].options, self.journal)
         except KeyError:
             pass
 
-        incGen = IncrementGenerator(
-            time,
-            stepLength,
-            step.get("startInc", self.defaultStartInc),
-            step.get("maxInc", self.defaultMaxInc),
-            step.get("minInc", self.defaultMinInc),
-            step.get("maxNumInc", self.defaultMaxNumInc),
-            self.journal,
+        extrapolation = self.options["extrapolation"]
+        self.linSolver = (
+            getLinSolverByName(self.options["linsolver"]) if "linsolver" in self.options else getDefaultLinSolver()
         )
 
-        maxIter = step.get("maxIter", self.defaultMaxIter)
-        criticalIter = step.get("criticalIter", self.defaultCriticalIter)
-        maxGrowingIter = step.get("maxGrowIter", self.defaultMaxGrowingIter)
+        maxIter = step.maxIter
+        criticalIter = step.criticalIter
+        maxGrowingIter = step.maxGrowIter
 
+        nodes = model.nodes
+        elements = model.elements
+        constraints = model.constraints
+
+        U = self.theDofManager.constructDofVector()
+        P = self.theDofManager.constructDofVector()
         dU = self.theDofManager.constructDofVector()
 
-        elements = model["elements"]
+        for fieldName, field in model.nodeFields.items():
+            U = self.theDofManager.writeNodeFieldToDofVector(U, field, "U")
 
-        constraints = model["constraints"]
+        for variable in model.scalarVariables.values():
+            U[self.theDofManager.idcsOfScalarVariablesInDofVector[variable]] = variable.value
 
         lastIncrementSize = False
         success = False
 
-        self.applyStepActionsAtStepStart(U, P, stepActions)
+        self.applyStepActionsAtStepStart(model, step.actions)
 
         try:
-            for increment in incGen.generateIncrement():
-                incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+            for increment in step.getTimeIncrement():
+                incNumber, incrementSize, stepProgress, dT, stepTime, tStart = increment
+
+                tEnd = tStart + dT
 
                 statusInfoDict = {
-                    "step": stepNumber,
+                    "step": step.number,
                     "inc": incNumber,
                     "iters": None,
                     "converged": False,
                     "time inc": dT,
-                    "time": totalTime + dT,
+                    "time end": tEnd,
                     "notes": "",
                 }
 
                 self.journal.printSeperationLine()
                 self.journal.message(
                     "increment {:}: {:8f}, {:8f}; time {:10f} to {:10f}".format(
-                        incNumber, incrementSize, stepProgress, totalTime, totalTime + dT
+                        incNumber, incrementSize, stepProgress, tStart, tEnd
                     ),
                     self.identification,
                     level=1,
@@ -222,9 +223,8 @@ class NIST:
                         dU,
                         P,
                         K,
-                        elements,
-                        stepActions,
-                        constraints,
+                        step.actions,
+                        model,
                         increment,
                         lastIncrementSize,
                         extrapolation,
@@ -234,7 +234,7 @@ class NIST:
 
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
-                    incGen.discardAndChangeIncrement(max(e.cutbackSize, 0.25))
+                    step.discardAndChangeIncrement(max(e.cutbackSize, 0.25))
                     lastIncrementSize = False
 
                     statusInfoDict["iters"] = np.inf
@@ -247,7 +247,7 @@ class NIST:
 
                 except (ReachedMaxIterations, DivergingSolution) as e:
                     self.journal.message(str(e), self.identification, 1)
-                    incGen.discardAndChangeIncrement(0.25)
+                    step.discardAndChangeIncrement(0.25)
                     lastIncrementSize = False
 
                     statusInfoDict["iters"] = np.inf
@@ -261,10 +261,18 @@ class NIST:
                 else:
                     lastIncrementSize = incrementSize
                     if iterationCounter >= criticalIter:
-                        incGen.preventIncrementIncrease()
+                        step.preventIncrementIncrease()
 
-                    for el in elements.values():
-                        el.acceptLastState()
+                    # write results to nodes:
+                    for fieldName, field in model.nodeFields.items():
+                        field = self.theDofManager.writeDofVectorToNodeField(U, field, "U")
+                        field = self.theDofManager.writeDofVectorToNodeField(P, field, "P")
+                        field = self.theDofManager.writeDofVectorToNodeField(dU, field, "dU")
+
+                    for variable in model.scalarVariables.values():
+                        variable.value = U[self.theDofManager.idcsOfScalarVariablesInDofVector[variable]]
+
+                    model.advanceToTime(tEnd)
 
                     self.journal.message(
                         "Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1
@@ -273,10 +281,10 @@ class NIST:
                     statusInfoDict["iters"] = iterationCounter
                     statusInfoDict["converged"] = True
 
-                    fieldOutputController.finalizeIncrement(U, P, increment)
+                    fieldOutputController.finalizeIncrement(model, increment)
                     for man in outputmanagers:
                         man.finalizeIncrement(
-                            U, P, increment, currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
+                            model, increment, currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
                         )
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
@@ -291,20 +299,19 @@ class NIST:
         except ConditionalStop:
             success = True
             self.journal.message("Conditional Stop", self.identification)
-            self.applyStepActionsAtStepEnd(U, P, stepActions)
+            self.applyStepActionsAtStepEnd(model, step.actions)
 
         else:
             success = True
-            self.applyStepActionsAtStepEnd(U, P, stepActions)
+            self.applyStepActionsAtStepEnd(model, step.actions)
 
         finally:
-            finishedTime = time + stepProgress * stepLength
             self.journal.printTable(
                 [("Time in {:}".format(k), " {:10.4f}s".format(v)) for k, v in self.computationTimes.items()],
                 self.identification,
             )
 
-        return success, U, P, finishedTime
+        return success, model
 
     def solveIncrement(
         self,
@@ -312,9 +319,8 @@ class NIST:
         dU: DofVector,
         P: DofVector,
         K: VIJSystemMatrix,
-        elements: dict,
         stepActions: list,
-        constraints: dict,
+        model: FEModel,
         increment: tuple,
         lastIncrementSize: float,
         extrapolation: str,
@@ -337,8 +343,8 @@ class NIST:
             The dictionary containing all elements.
         stepActions
             The list of active step actions.
-        constraints
-            The dictionary containing all elements.
+        model
+            The model tree.
         increment
             The increment.
         lastIncrementSize
@@ -363,7 +369,10 @@ class NIST:
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         iterationCounter = 0
-        incrementResidualHistory = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, (0.0, 0))
+        incrementResidualHistory = dict.fromkeys(self.theDofManager.idcsOfFieldsInDofVector, (0.0, 0))
+
+        elements = model.elements
+        constraints = model.constraints
 
         R = self.theDofManager.constructDofVector()
         F = self.theDofManager.constructDofVector()
@@ -376,10 +385,10 @@ class NIST:
         distributedLoads = stepActions["distributedload"].values()
         bodyForces = stepActions["bodyforce"].values()
 
-        self.applyStepActionsAtIncrementStart(U_n, P, increment, stepActions)
+        self.applyStepActionsAtIncrementStart(model, increment, stepActions)
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
-            extrapolation, increment, dU, dirichlets, lastIncrementSize
+            extrapolation, increment, dU, dirichlets, lastIncrementSize, model
         )
 
         while True:
@@ -404,7 +413,7 @@ class NIST:
             else:
                 # iteration cycle 1 or higher, time to check the convergence
                 for dirichlet in dirichlets:
-                    R[dirichlet.indices] = 0.0
+                    R[self.findDirichletIndices(dirichlet)] = 0.0
 
                 converged, nodesWithLargestResidual = self.checkConvergence(
                     R, ddU, F, iterationCounter, incrementResidualHistory
@@ -540,12 +549,12 @@ class NIST:
 
         tic = getCurrentTime()
         for dirichlet in dirichlets:
-            for row in dirichlet.indices:
+            for row in self.findDirichletIndices(dirichlet):  # dirichlet.indices:
                 K.data[K.indptr[row] : K.indptr[row + 1]] = 0.0
 
         # K[row, row] = 1.0 @ once, faster than within the loop above:
         diag = K.diagonal()
-        diag[np.concatenate([d.indices for d in dirichlets])] = 1.0
+        diag[np.concatenate([self.findDirichletIndices(d) for d in dirichlets])] = 1.0
         K.setdiag(diag)
 
         K.eliminate_zeros()
@@ -575,8 +584,10 @@ class NIST:
         """
 
         tic = getCurrentTime()
+
         for dirichlet in dirichlets:
-            R[dirichlet.indices] = dirichlet.getDelta(increment)
+            delta = dirichlet.getDelta(increment)
+            R[self.findDirichletIndices(dirichlet)] = delta.flatten()
 
         toc = getCurrentTime()
         self.computationTimes["dirichlet R"] += toc - tic
@@ -624,7 +635,7 @@ class NIST:
         else:  # alternative tolerance set
             fluxResidualTolerances = self.fluxResidualTolerancesAlt
 
-        for field, fieldIndices in self.theDofManager.indicesOfFieldsInDofVector.items():
+        for field, fieldIndices in self.theDofManager.idcsOfFieldsInDofVector.items():
             fieldResidualAbs = np.abs(R[fieldIndices])
 
             indexOfMax = np.argmax(fieldResidualAbs)
@@ -650,10 +661,10 @@ class NIST:
             )
             convergedAtAll = convergedAtAll and convergedCorrection and convergedFlux
 
-        if self.theDofManager.indicesOfScalarVariablesInDofVector:
-            residualScalarVariables = max(np.abs(R[self.theDofManager.indicesOfScalarVariablesInDofVector]))
+        if self.theDofManager.idcsOfScalarVariablesInDofVector:
+            residualScalarVariables = max(np.abs(R[list(self.theDofManager.idcsOfScalarVariablesInDofVector.values())]))
             correction = (
-                np.linalg.norm(ddU[self.theDofManager.indicesOfScalarVariablesInDofVector], np.inf)
+                np.linalg.norm(ddU[list(self.theDofManager.idcsOfScalarVariablesInDofVector.values())], np.inf)
                 if ddU is not None
                 else 0.0
             )
@@ -735,10 +746,10 @@ class NIST:
         dict[str,float]
             A dictioary containg the spatial average fluxes for every field.
         """
-        spatialAveragedFluxes = dict.fromkeys(self.theDofManager.indicesOfFieldsInDofVector, 0.0)
+        spatialAveragedFluxes = dict.fromkeys(self.theDofManager.idcsOfFieldsInDofVector, 0.0)
         for field, nDof in self.theDofManager.nAccumulatedNodalFluxesFieldwise.items():
             spatialAveragedFluxes[field] = max(
-                1e-10, np.linalg.norm(F[self.theDofManager.indicesOfFieldsInDofVector[field]], 1) / nDof
+                1e-10, np.linalg.norm(F[self.theDofManager.idcsOfFieldsInDofVector[field]], 1) / nDof
             )
 
         return spatialAveragedFluxes
@@ -887,7 +898,10 @@ class NIST:
         """
         # cloads
         for cLoad in nodeForces:
-            PExt = cLoad.applyOnP(PExt, increment)
+            # PExt = cLoad.applyOnP(PExt, increment)
+            PExt[self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nSet.label]] = cLoad.getLoad(
+                increment
+            ).flatten()
         # dloads
         PExt, K = self.computeDistributedLoads(distributedLoads, U_np, PExt, K, increment)
         PExt, K = self.computeBodyForces(bodyForces, U_np, PExt, K, increment)
@@ -895,7 +909,7 @@ class NIST:
         return PExt, K
 
     def extrapolateLastIncrement(
-        self, extrapolation: str, increment: tuple, dU: DofVector, dirichlets: list, lastIncrementSize: float
+        self, extrapolation: str, increment: tuple, dU: DofVector, dirichlets: list, lastIncrementSize: float, model
     ) -> tuple[DofVector, bool]:
         """Depending on the current setting, extrapolate the solution of the last increment.
 
@@ -971,51 +985,45 @@ class NIST:
                 level=2,
             )
 
-    def applyStepActionsAtStepStart(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+    def applyStepActionsAtStepStart(self, model: FEModel, stepActions: dict[str, StepActionBase]):
         """Called when all step actions should be appliet at the start a step.
 
         Parameters
         ----------
-        U
-            The solution vector.
-        P
-            The reaction vector.
+        model
+            The model tree.
         stepActions
             The dictionary of active step actions.
         """
 
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
-                action.applyAtStepStart(U, P)
+                action.applyAtStepStart(model)
 
-    def applyStepActionsAtStepEnd(self, U: DofVector, P: DofVector, stepActions: dict[str, StepActionBase]):
+    def applyStepActionsAtStepEnd(self, model: FEModel, stepActions: dict[str, StepActionBase]):
         """Called when all step actions should finish a step.
 
         Parameters
         ----------
-        U
-            The solution vector.
-        P
-            The reaction vector.
+        model
+            The model tree.
         stepActions
             The dictionary of active step actions.
         """
 
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
-                action.applyAtStepEnd(U, P)
+                action.applyAtStepEnd(model)
 
     def applyStepActionsAtIncrementStart(
-        self, U_n: DofVector, P: DofVector, increment: tuple, stepActions: dict[str, StepActionBase]
+        self, model: FEModel, increment: tuple, stepActions: dict[str, StepActionBase]
     ):
         """Called when all step actions should be applied at the start of a step.
 
         Parameters
         ----------
-        U_n
-            The converged solution vector at the strt of an increment.
-        P
-            The reaction vector.
+        model
+            The model tree.
         increment
             The time increment.
         stepActions
@@ -1024,4 +1032,13 @@ class NIST:
 
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
-                action.applyAtIncrementStart(U_n, P, increment)
+                action.applyAtIncrementStart(model, increment)
+
+    def findDirichletIndices(self, dirichlet):
+        nSet = dirichlet.nSet
+        field = dirichlet.field
+        components = dirichlet.components
+
+        fieldIndices = self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[field][nSet.label]
+
+        return fieldIndices.reshape((len(nSet), -1))[:, components].flatten()

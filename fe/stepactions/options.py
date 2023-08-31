@@ -42,6 +42,8 @@ class StepAction(StepActionBase):
     def __init__(self, name, options, jobInfo, model, fieldOutputController, journal):
         self.name = name
         self.options = dict()
+        options = options.copy()
+        del options["category"]
         self.updateStepAction(name, options, jobInfo, model, fieldOutputController, journal)
 
     def __contains__(self, key):
@@ -51,7 +53,6 @@ class StepAction(StepActionBase):
 
     def __getitem__(self, key):
         """We may work with this action like a dictionary."""
-
         return self.options[key.lower()]
 
     def __setitem__(self, key, val):

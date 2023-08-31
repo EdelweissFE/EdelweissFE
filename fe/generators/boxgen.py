@@ -76,17 +76,18 @@ documentation = {
     "elType": "type of element",
 }
 
-from fe.variables.node import Node
-from fe.variables.nodeset import NodeSet
-from fe.variables.elementset import ElementSet
+from fe.points.node import Node
+from fe.sets.nodeset import NodeSet
+from fe.sets.elementset import ElementSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import convertLinesToStringDictionary
+from fe.models.femodel import FEModel
 
 import numpy as np
 import os
 
 
-def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
+def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dict:
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 
@@ -133,7 +134,7 @@ def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
                 nodes.append(node)
                 # only add node to model if it will be part of an element
                 if testEl.nNodes == 8 or testEl.nNodes == 20 and sum(np.mod([ix, iy, iz], 2)) < 2:
-                    model["nodes"][currentNodeLabel] = node
+                    model.nodes[currentNodeLabel] = node
                     currentNodeLabel += 1
 
     # # 3d plot of nodes; for debugging
@@ -153,7 +154,7 @@ def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
     #     os.system( " ".join( cmd ) )
 
     # plotNodeList( nodes )
-    # plotNodeList( [model["nodes"][n] for n in model["nodes"]] )
+    # plotNodeList( [model.nodes[n] for n in model.nodes] )
 
     # fmt: off
 
@@ -301,14 +302,16 @@ def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
                 newEl.setNodes(nodeList)
 
                 elements.append(newEl)
-                model["elements"][currentElementLabel] = newEl
+                model.elements[currentElementLabel] = newEl
 
-                for i, node in enumerate(newEl.nodes):
-                    node.fields.update([(f, True) for f in newEl.fields[i]])
+                # for i, node in enumerate(newEl.nodes):
+                #     node.fields.update([(f, True) for f in newEl.fields[i]])
 
                 currentElementLabel += 1
 
     # fmt: on
+    # model.initializeNodeFields()
+    model._createNodeFieldVariablesFromElements()
 
     nG = np.asarray(nodes).reshape(nNodesX, nNodesY, nNodesZ)
 
@@ -352,7 +355,7 @@ def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
     nodeSets.append(NodeSet("{:}_topLeftBack".format(name), [nG[0, -1, 0]]))
 
     for nodeSet in nodeSets:
-        model["nodeSets"][nodeSet.label] = nodeSet
+        model.nodeSets[nodeSet.label] = nodeSet
 
     # element sets
     elementSets = []
@@ -390,32 +393,32 @@ def generateModelData(generatorDefinition: dict, model: dict, journal) -> dict:
             )
         )
 
-    # model["elementSets"]["{:}_sandwichHorizontal".format(name)] = []
+    # model.elementSets["{:}_sandwichHorizontal".format(name)] = []
     # for elList in elGrid[1:-1, :]:
     #     for e in elList:
-    #         model["elementSets"]["{:}_sandwichHorizontal".format(name)].append(e)
+    #         model.elementSets["{:}_sandwichHorizontal".format(name)].append(e)
 
-    # model["elementSets"]["{:}_sandwichVertical".format(name)] = []
+    # model.elementSets["{:}_sandwichVertical".format(name)] = []
     # for elList in elGrid[:, 1:-1]:
     #     for e in elList:
-    #         model["elementSets"]["{:}_sandwichVertical".format(name)].append(e)
+    #         model.elementSets["{:}_sandwichVertical".format(name)].append(e)
 
-    # model["elementSets"]["{:}_core".format(name)] = []
+    # model.elementSets["{:}_core".format(name)] = []
     # for elList in elGrid[1:-1, 1:-1]:
     #     for e in elList:
-    #         model["elementSets"]["{:}_core".format(name)].append(e)
+    #         model.elementSets["{:}_core".format(name)].append(e)
 
     for elementSet in elementSets:
-        model["elementSets"][elementSet.label] = elementSet
+        model.elementSets[elementSet.label] = elementSet
 
     # surfaces
-    model["surfaces"]["{:}_bottom".format(name)] = {1: model["elementSets"]["{:}_bottom".format(name)]}
-    model["surfaces"]["{:}_top".format(name)] = {2: model["elementSets"]["{:}_top".format(name)]}
+    model.surfaces["{:}_bottom".format(name)] = {1: model.elementSets["{:}_bottom".format(name)]}
+    model.surfaces["{:}_top".format(name)] = {2: model.elementSets["{:}_top".format(name)]}
 
-    model["surfaces"]["{:}_right".format(name)] = {5: model["elementSets"]["{:}_right".format(name)]}
-    model["surfaces"]["{:}_left".format(name)] = {3: model["elementSets"]["{:}_left".format(name)]}
+    model.surfaces["{:}_right".format(name)] = {5: model.elementSets["{:}_right".format(name)]}
+    model.surfaces["{:}_left".format(name)] = {3: model.elementSets["{:}_left".format(name)]}
 
-    model["surfaces"]["{:}_front".format(name)] = {4: model["elementSets"]["{:}_front".format(name)]}
-    model["surfaces"]["{:}_back".format(name)] = {6: model["elementSets"]["{:}_back".format(name)]}
+    model.surfaces["{:}_front".format(name)] = {4: model.elementSets["{:}_front".format(name)]}
+    model.surfaces["{:}_back".format(name)] = {6: model.elementSets["{:}_back".format(name)]}
 
     return model

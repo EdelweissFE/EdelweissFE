@@ -36,4 +36,4 @@ class ScalarVariable:
     def __init__(
         self,
     ):
-        self.index = None
+        self.value = 0.0

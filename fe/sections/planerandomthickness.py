@@ -14,7 +14,7 @@ class Section:
         self.elSetNames = [options["elSet"]]
         self.referenceThickness = np.array([float(options["thickness"])], dtype=float)
 
-        dimension = model["domainSize"]
+        dimension = model.domainSize
         variance = float(options["variance"])
         lengthScale = float(options["lengthScale"])
         seed = int(options["seed"])
@@ -29,8 +29,8 @@ class Section:
         self.randomFunction = createFunction(options["f(x,ref,rand)"], "x", "ref", "rand", model=model)
 
     def assignSectionPropertiesToModel(self, model):
-        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
-        material = model["materials"][self.materialName]
+        elSets = [model.elementSets[setName] for setName in self.elSetNames]
+        material = model.materials[self.materialName]
 
         for elSet in elSets:
             for el in elSet:

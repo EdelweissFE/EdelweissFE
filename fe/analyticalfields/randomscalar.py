@@ -54,7 +54,7 @@ class AnalyticalField(AnalyticalFieldBase):
 
         options = convertLinesToStringDictionary(data)
 
-        self.domainSize = model["domainSize"]
+        self.domainSize = model.domainSize
 
         modelType = options.get("model", "Gaussian")
         mean = float(options.get("mean", 0.0))

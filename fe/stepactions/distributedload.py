@@ -52,7 +52,7 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
         self.magnitudeAtStepStart = 0.0
-        self.surface = model["surfaces"][action["surface"]]
+        self.surface = model.surfaces[action["surface"]]
         self.loadType = action["type"]
         magnitude = np.fromstring(action["magnitude"], sep=",")
 
@@ -65,7 +65,7 @@ class StepAction(StepActionBase):
 
         self.idle = False
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self.idle:
             if stepMagnitude == None:
                 # standard case

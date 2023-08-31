@@ -28,8 +28,8 @@
 
 # @author: Alexander Dummer
 
-from fe.variables.orderedset import OrderedSet
-from fe.variables.node import Node
+from fe.sets.orderedset import OrderedSet
+from fe.points.node import Node
 
 
 class NodeSet(OrderedSet):

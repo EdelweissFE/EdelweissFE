@@ -48,15 +48,15 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
 
-        self.theElements = model["elementSets"][action.get("elSet", "all")]
+        self.theElements = model.elementSets[action.get("elSet", "all")]
         self.theProperty = action["property"]
         self.values = np.fromstring(action["values"], dtype=float, sep=",")
         self.active = True
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         self.active = False
 
-    def applyAtStepStart(self, U, P):
+    def applyAtStepStart(self, model):
         if not self.active:
             return
 

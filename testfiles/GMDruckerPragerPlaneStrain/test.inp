@@ -8,7 +8,8 @@
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=gmdruckerpragerjob, domain=2d, solver=NISTParallelForMarmotElements
+*job, name=gmdruckerpragerjob, domain=2d
+*solver, solver=NISTParallelForMarmotElements, name=theSolver
 *fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, 
 name=nonlocal damage, elSet=all, field=nonlocal damage, result=U, 
@@ -40,7 +41,7 @@ figure=1, axSpec=122, create=perNode, fieldOutput=umag
 *exportPlots
 figure=1, fileName=plot
 
-*step, maxInc=5e-2, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=100
+*step, solver=theSolver, maxInc=5e-2, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=100
 initializematerial, name=init, elSet=all 
 dirichlet, name=rbottom, nSet=gen_bottom,  field=micro rotation, 1=0, 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0

@@ -43,7 +43,7 @@ class StepAction(StepActionBase):
         self.name = name
         self.updateStepAction(name, options, jobInfo, model, fieldOutputController, journal)
 
-    def applyAtStepEnd(self, U, P):
+    def applyAtStepEnd(self, model):
         """By default, this action is only executed once."""
 
         self.active = False

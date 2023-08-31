@@ -1,7 +1,8 @@
 *material, name=LinearElastic, id=mat
 30000.0, 0.15
 
-*job, name=job, domain=2d, solver=NISTParallel
+*job, name=job, domain=2d
+*solver, solver=NISTParallel, name=theSolver
 
 *modelGenerator, generator=planeRectQuad, name=gen
 x0      =0
@@ -29,8 +30,8 @@ create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 
-create=perElement, elSet=all, modeldata="[el._materialProperties[0] for el in elementSets['all']]", name=E
-create=perElement, elSet=all, modeldata="[el._materialProperties[1] for el in elementSets['all']]", name=nu
+create=perElement, elSet=all, modeldata="[el._materialProperties[0] for el in model.elementSets['all']]", name=E
+create=perElement, elSet=all, modeldata="[el._materialProperties[1] for el in model.elementSets['all']]", name=nu
 
 configuration, overwrite=yes
 
@@ -50,10 +51,10 @@ variance    = .5e-1
 lengthscale = 5
 seed        = 4
 
-*step, stepLength=1
+*step, solver=theSolver, stepLength=1
 dirichlet,  name=x0u, nSet=gen_left,      field=displacement, 1=0.
 dirichlet,  name=y0u, nSet=gen_bottom,    field=displacement, 2=0.
 
-*step, stepLength=1
+*step, solver=theSolver, stepLength=1
 distributedload, name=y1u, surface=gen_top,  field=displacement, magnitude=100, type=pressure
 

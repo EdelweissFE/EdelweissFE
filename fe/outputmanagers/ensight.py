@@ -51,7 +51,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from distutils.util import strtobool
 from fe.utils.misc import convertLineToStringDictionary
-from fe.variables.node import Node
+from fe.points.node import Node
 from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
 from fe.utils.math import evalModelAccessibleExpression
@@ -632,7 +632,7 @@ def createUnstructuredPartFromNodeSet(setName, nodeSet: list, partID: int):
 class OutputManager(OutputManagerBase):
     identification = "Ensight Export"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.name = name
 
         self.timeAtLastOutput = -1e16
@@ -640,7 +640,7 @@ class OutputManager(OutputManagerBase):
         self.finishedSteps = 0
         self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
-        self.domainSize = model["domainSize"]
+        self.domainSize = model.domainSize
         self.fieldOutputController = fieldOutputController
         self.journal = journal
 
@@ -664,7 +664,7 @@ class OutputManager(OutputManagerBase):
         self.transientPerNodeJobs = []
         self.transientPerElementJobs = []
 
-        elementSets = model["elementSets"]
+        elementSets = model.elementSets
 
         elSetParts = []
         partCounter = 1
@@ -674,7 +674,7 @@ class OutputManager(OutputManagerBase):
             elSetParts.append(elSetPart)
             partCounter += 1
 
-        nodeSets = model["nodeSets"]
+        nodeSets = model.nodeSets
 
         nodeSetParts = []
         for setName, nodeSet in nodeSets.items():
@@ -734,7 +734,7 @@ class OutputManager(OutputManagerBase):
                 if varType == "perElement":
                     perElementJob = {}
                     name = definition["name"]
-                    elSet = model["elementSets"][definition["elSet"]]
+                    elSet = model.elementSets[definition["elSet"]]
                     part = self.elSetToEnsightPartMappings[definition["elSet"]]
 
                     # TODO: don't do this for each output job, but only once!
@@ -755,16 +755,13 @@ class OutputManager(OutputManagerBase):
                     self.ensightCase.writeVariableTrendChunk(enSightVar, self.staticTAndFSetNumber)
                     del enSightVar
 
-    def initializeSimulation(self, model):
-        pass
-
-    def initializeStep(self, step, stepActions):
-        if self.name in stepActions["options"] or "Ensight" in stepActions["options"]:
-            options = stepActions["options"].get(self.name, False) or stepActions["options"]["Ensight"]
+    def initializeStep(self, step):
+        if self.name in step.actions["options"] or "Ensight" in step.actions["options"]:
+            options = step.actions["options"].get(self.name, False) or step.actions["options"]["Ensight"]
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
             self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 
-    def finalizeIncrement(self, U, P, increment, **kwargs):
+    def finalizeIncrement(self, model, increment, **kwargs):
         incNumber, incrementSize, stepProgress, dT, stepTimeAtIncrementStart, totalTimeAtIncrementStart = increment
         time = totalTimeAtIncrementStart + dT
 
@@ -780,14 +777,14 @@ class OutputManager(OutputManagerBase):
             )
             return
 
-        self.writeOutput(U, P, time)
+        self.writeOutput(model)
 
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def writeOutput(self, U, P, time):
-        self.timeAtLastOutput = time
-        self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, time)
+    def writeOutput(self, model):
+        self.timeAtLastOutput = model.time
+        self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, model.time)
 
         for perNodeJob in self.transientPerNodeJobs:
             resultTypeLength = perNodeJob["varSize"]
@@ -824,18 +821,17 @@ class OutputManager(OutputManagerBase):
 
     def finalizeStep(
         self,
-        U,
-        P,
-        time,
+        model,
     ):
-        if time - self.timeAtLastOutput > 1e-12:
-            self.writeOutput(U, P, time)
+        if model.time - self.timeAtLastOutput > 1e-12:
+            self.writeOutput(model)
 
         self.finishedSteps += 1
 
     def finalizeJob(
         self,
-        U,
-        P,
+        model
+        # U,
+        # P,
     ):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)

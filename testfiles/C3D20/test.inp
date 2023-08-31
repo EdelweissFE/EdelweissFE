@@ -4,7 +4,8 @@
 *section, name=section1, material=linearElastic, type=solid
 all
 
-*job, name=c3d20nljob, domain=3d, 
+*job, name=c3d20nljob, domain=3d
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 nSet=setRight,     field=displacement, result=P, name=RFRight
 elSet=all, field=displacement, result=U, name=displacement
@@ -20,7 +21,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, 
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=setLeft,   field=displacement, 1=0.0, 2=0.0, 3=0.0
 dirichlet, name=right, nSet=setRight,  field=displacement, 2=-5, 1=0, 3=0

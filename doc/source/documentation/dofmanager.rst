@@ -1,7 +1,7 @@
 The DOF manager
 ===============
 
-Module ``fe.utils.dofmanager``
+Module ``fe.numerics.dofmanager``
 
-.. automodule:: fe.utils.dofmanager
+.. automodule:: fe.numerics.dofmanager
    :members: 

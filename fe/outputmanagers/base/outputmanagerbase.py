@@ -29,9 +29,10 @@
 from abc import ABC, abstractmethod
 
 from fe.utils.fieldoutput import FieldOutputController
-from fe.utils.dofmanager import DofVector
+from fe.numerics.dofmanager import DofVector
 from fe.journal.journal import Journal
 from fe.utils.plotter import Plotter
+from fe.models.femodel import FEModel
 
 
 class OutputManagerBase(ABC):
@@ -44,8 +45,6 @@ class OutputManagerBase(ABC):
         The name of this output manager.
     definitionLines
         The dictionary containing the definition of the output manager.
-    jobInfo
-        A dictionary containing the definition of the job.
     model
         A dictionary containing the model tree.
     fieldOutputController
@@ -63,8 +62,7 @@ class OutputManagerBase(ABC):
         self,
         name: str,
         definitionLines: dict,
-        jobInfo: dict,
-        model: dict,
+        model: FEModel,
         fieldOutputController: FieldOutputController,
         journal: Journal,
         plotter: Plotter,
@@ -72,25 +70,19 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def initializeSimulation(self, model):
-        pass
-
-    @abstractmethod
-    def initializeStep(self, step: dict, stepActions: dict):
+    def initializeStep(self, model, step: dict):
         """Initalize the output manager at the beginning of a step.
 
         Parameters
         ----------
         step
             A dictionary containing the step definition.
-        stepActions
-            A dictionary containing the step actions.
         """
 
         pass
 
     @abstractmethod
-    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple, **kwargs):
+    def finalizeIncrement(self, model, increment: tuple, **kwargs):
         """Finalize the output at the end of an increment.
 
         Parameters
@@ -120,7 +112,7 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeStep(self, U: DofVector, P: DofVector, time: float):
+    def finalizeStep(self, model, time: float):
         """Finalize the output the end of a step.
 
         Parameters
@@ -136,7 +128,9 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeJob(self, U, P):
+    def finalizeJob(
+        self,
+    ):
         """Finalize the output at the end of a job.
 
         Parameters

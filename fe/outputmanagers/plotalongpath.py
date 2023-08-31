@@ -52,7 +52,7 @@ import numpy as np
 class OutputManager(OutputManagerBase):
     identification = "PathPlotter"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.plotter = plotter
@@ -102,14 +102,14 @@ class OutputManager(OutputManagerBase):
                     np.asarray(entry["pathDistances"]),
                 )
 
-    def initializeSimulation(self, model):
-        pass
+    # def initializeSimulation(self, model):
+    #     pass
 
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         for nJob in self.monitorJobs:
-            self.plotStages = np.linspace(0, step["steplength"], nJob["nStages"])
+            self.plotStages = np.linspace(0, step.length, nJob["nStages"])
 
-    def finalizeIncrement(self, U, P, increment, **kwargs):
+    def finalizeIncrement(self, model, increment, **kwargs):
         totalTime = increment[3] + increment[4]
         if totalTime > self.plotStages[0]:
             for nJob in self.monitorJobs:
@@ -139,16 +139,13 @@ class OutputManager(OutputManagerBase):
 
     def finalizeStep(
         self,
-        U,
-        P,
-        time,
+        model,
     ):
         pass
 
     def finalizeJob(
         self,
-        U,
-        P,
+        model,
     ):
         for nJob in self.monitorJobs:
             result = nJob["fieldOutput"].getLastResult()

@@ -4,8 +4,7 @@
 *include, input=fine.inp
 *material, name=GMCDP, id=GMCDP
 **E,        nu,     GcToG,  lb, lt          polarRatio,     
-30000.0,    0.15 ,  1,     2, 4,          1.499999999
-**fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
+30000.0,    0.15 ,  1,     2, 4,          1.499999999 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4,       13,     4.74,   55,         0.85,           0.0003,       .99,             2,       1
 **Ah,       Bh,     Ch,     Dh,         Hp,             As,     
 0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
@@ -37,7 +36,8 @@ weak
 top
 bottom
 ** *job, name=cpe4job, domain=3d, solver=NISTParallelForMarmotElements
-*job, name=cpe4job, domain=3d, solver=NISTParallelForMarmotElements, solver=amgcl
+*job, name=cpe4job, domain=3d, 
+*solver, solver=NISTParallelForMarmotElements, name=theSolver
 ***job, name=cpe4job, domain=3d, solver=NISTPArcLength
 
 *fieldOutput,
@@ -68,7 +68,7 @@ fieldOutput=alphaP, f(x)='max(x)'
 fieldOutput=alphaD, f(x)='max(x)'
 fieldOutput=RF
 
-*step, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
+*step, solver=theSolver, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom,  nSet=bottom,   field=displacement, 3=0.0
 ** dirichlet, name=topD,  nSet=top,   field=nonlocal damage, 1=0.0
@@ -79,13 +79,13 @@ distributedload, name=dload, surface=sleeveTop, type=pressure, magnitude=10, f(t
 options, category=NISTArcLength, arcLengthController=off
 
 **---- STEP WITHOUT SNAPBACK
-*step, maxInc=4e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+*step, solver=theSolver, maxInc=4e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear, 
 options, category=Ensight, intermediateSaveInterval=1
 dirichlet, name=top,  nSet=top,   field=displacement, 3=-10
 
 **---- STEP WITH SNAPBACK
-***step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=10, stepLength=1
+***step, solver=theSolver, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=10, stepLength=1
 **options, category=NISTSolver, extrapolation=linear, 
 **options, category=Ensight, intermediateSaveInterval=1
 **dirichlet, name=top,  nSet=top,   field=displacement, 3=-0.2

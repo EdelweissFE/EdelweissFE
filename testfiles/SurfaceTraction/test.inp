@@ -13,6 +13,8 @@ all
 
 *job, name=myJob, domain=2d
 
+*solver, solver=NIST, name=theSolver
+
 *fieldOutput
 name=displacement,  elSet=all,        field=displacement, result=U, 
 name=RF,            nSet=gen_bottom, field=displacement, result=P, 
@@ -28,7 +30,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*step, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom,  nSet=gen_bottom,   field=displacement, 1=0.0, 2=0.0
 distributedload, name=traction, surface=gen_top, type=surface traction, magnitude='1, 1, 0', f(t)=t

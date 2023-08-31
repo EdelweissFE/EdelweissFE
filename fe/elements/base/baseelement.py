@@ -36,7 +36,7 @@ the abstract base class :class:`~BaseElement`.
 
 from abc import ABC, abstractmethod
 import numpy as np
-from fe.variables.node import Node
+from fe.points.node import Node
 
 
 class BaseElement(ABC):

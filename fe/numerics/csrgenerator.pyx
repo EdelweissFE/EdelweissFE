@@ -30,7 +30,7 @@
 # @author: matthias
 
 from scipy.sparse import csr_matrix
-from fe.utils.dofmanager import VIJSystemMatrix
+from fe.numerics.dofmanager import VIJSystemMatrix
 import numpy as np
 cimport numpy as np
 

@@ -83,12 +83,18 @@ if __name__ == "__main__":
 
         try:
             tic = timer()
-            success, U, P, fieldOutputController = finiteElementSimulation(inputFile, verbose=False, suppressPlots=True)
+            success, model, fieldOutputController = finiteElementSimulation(
+                inputFile, verbose=False, suppressPlots=True
+            )
             toc = timer()
 
             if not args.create:
                 if success:
                     UReference = np.loadtxt(referenceSolutionFile)
+                    U = np.hstack(
+                        [f.values["U"].flatten() for f in model.nodeFields.values()]
+                        + [v.value for v in model.scalarVariables.values()]
+                    ).flatten()
                     residual = U - UReference
 
                     if (np.max(np.abs(residual))) < 1e-6:

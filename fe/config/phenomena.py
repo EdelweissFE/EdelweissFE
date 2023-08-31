@@ -41,21 +41,17 @@ If a new physical field should be added to EdelweissFE,
 then this should happen (only) here.
 """
 
-from collections import OrderedDict
-
 # field                  field type
-phenomena = OrderedDict(
-    [
-        ("displacement", "vector"),
-        ("rotation", "rotation vector"),
-        ("micro rotation", "rotation vector"),
-        ("thermal", "scalar"),
-        ("nonlocal damage", "scalar"),
-        ("concentration", "scalar"),
-        ("chemical potential", "scalar"),
-        ("strain symmetric", "symmetric tensor second order"),
-    ]
-)
+phenomena = {
+    "displacement": "vector",
+    "rotation": "rotation vector",
+    "micro rotation": "rotation vector",
+    "thermal": "scalar",
+    "nonlocal damage": "scalar",
+    "concentration": "scalar",
+    "chemical potential": "scalar",
+    "strain symmetric": "symmetric tensor second order",
+}
 
 
 # field                  tolerance

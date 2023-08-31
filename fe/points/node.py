@@ -51,14 +51,4 @@ class Node:
     ):
         self.label = label
         self.coordinates = coordinates
-        self.fields = {}
-
-    def setFields(self, *fields):
-        """Activate fields on this node.
-
-        Parameters
-        ----------
-        fields
-           The fields to activate
-        """
-        self.fields.update(fields)
+        self.fields = dict()

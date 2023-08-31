@@ -47,7 +47,7 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
         self.theIndex = int(action["index"])
-        self.theMaterial = model["materials"][action["material"]]
+        self.theMaterial = model.materials[action["material"]]
 
         self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
 
@@ -61,10 +61,10 @@ class StepAction(StepActionBase):
             t = sp.symbols("t")
             self.f_t = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         self.active = False
 
-    def applyAtIncrementStart(self, U, P, increment):
+    def applyAtIncrementStart(self, model, increment):
         """Change the actual properties depending on the current step time"""
 
         if not self.active:

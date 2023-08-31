@@ -47,8 +47,8 @@ class Section(SectionBase):
         super().__init__(name, options, materialName, thickness, model)
 
     def assignSectionPropertiesToModel(self, model):
-        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
-        material = model["materials"][self.materialName]
+        elSets = [model.elementSets[setName] for setName in self.elSetNames]
+        material = model.materials[self.materialName]
 
         if any(self.materialParameterFromFieldDefs):
             for elSet in elSets:

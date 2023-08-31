@@ -113,7 +113,6 @@ inputLanguage = {
     "*fieldOutput": (
         "define fieldoutput, which is used by outputmanagers",
         {
-            "jobName": ("string", "(deprecated)"),
             "data": ("string", "definition lines for the output module"),
         },
     ),
@@ -129,7 +128,6 @@ inputLanguage = {
         "define an output module",
         {
             "name": ("string", "(optional), name of manager, standard=None"),
-            "jobName": ("string", "(deprecated)"),
             "type": ("string", "output module "),
             "data": ("string", "definition lines for the output module"),
         },
@@ -138,22 +136,30 @@ inputLanguage = {
         "definition of an analysis job",
         {
             "name": ("string", "(optional) name of job, standard = defaultJob"),
-            "solver": ("string", "(optional) define solver, standard = NIST"),
-            "linSolver": ("string", "(optional) define linear solver, standard = superlu"),
             "domain": ("string", "define spatial domain: 1d, 2d, 3d"),
+            "solver": ("string", "(deprecated) define the solver to be used"),
             "startTime": ("float", "(optional) start time of job, standard = 0.0"),
+        },
+    ),
+    "*solver": (
+        "definition of solver",
+        {
+            "name": ("string", "Name of this solver"),
+            "solver": ("string", "Solvertype"),
+            "data": ("string", "define options which are passed to the respective solver instance."),
         },
     ),
     "*step": (
         "definition of job steps",
         {
             "stepLength": ("float", "time period of step"),
-            "jobName": ("string", "(optional)"),
             "startInc": ("float", "size of the start increment"),
             "maxInc": ("float", "maximum size of increment"),
             "minInc": ("float", "minimum size of increment"),
             "maxNumInc": ("integer", "maximum number of increments"),
             "maxIter": ("integer", "maximum number of iterations"),
+            "type": ("string", "(optional) define step type, default = AdaptiveStep"),
+            "solver": ("string", "(optional) solver to be used"),
             "criticalIter": ("integer", "maximum number of iterations to prevent from increasing the increment"),
             "data": ("string", "define step actions, which are handled by the corresponding stepaction modules"),
         },
@@ -304,6 +310,14 @@ def parseInputFile(
                     DeprecationWarning,
                     stacklevel=2,
                 )
+
+    for entry in fileDict["*job"]:
+        if "solver" in entry:
+            warnings.warn(
+                "Warning, defining a Solver in *job is deprecated; Define solver using *solver keyword",
+                DeprecationWarning,
+                stacklevel=2,
+            )
 
     return fileDict
 

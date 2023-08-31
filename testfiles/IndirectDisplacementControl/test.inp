@@ -8,7 +8,8 @@ all
 *section, name=sectionweak, thickness=.8, material=modleon, type=plane
 weak
 
-*job, name=cpe4job, domain=2d, solver=NISTPArcLength
+*job, name=cpe4job, domain=2d
+*solver, solver=NISTPArcLength, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
@@ -39,14 +40,14 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*output, type=meshplot, name=RFPlot
-create=xyData, x=time, y=RFTop, legend=RF
-create=xyData, x=time, y=UTop, legend=U, figure=2
+** *output, type=meshplot, name=RFPlot
+** create=xyData, x=time, y=RFTop, legend=RF
+** create=xyData, x=time, y=UTop, legend=U, figure=2
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=off, numThreads=2
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=off
 options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition = ' fieldOutputs["UTop"] < -1.0 '
-indirectcontrol, dof1=' nodes[18].fields["displacement"][1] ', dof2=' nodes[24].fields["displacement"][1] ' , L=-0.1, 
+indirectcontrol, dof1=' model.nodes[18].fields["displacement"]', cVector1='[0,-1]', dof2=' model.nodes[24].fields["displacement"]', cVector2='[0,1]', L=-0.1, 
 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0

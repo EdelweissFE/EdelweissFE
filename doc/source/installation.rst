@@ -54,8 +54,8 @@ Assuming that you are in an empty directory,
 you can quickly get a working version of EdelweissFE in a Linux based 
 environment:
 
-Steps
-_____
+Installation steps
+__________________
 
 If necessary, get `mamba <https://github.com/mamba-org/mamba>`_:
 

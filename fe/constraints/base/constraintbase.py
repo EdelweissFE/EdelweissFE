@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from fe.variables.scalarvariable import ScalarVariable
+from fe.models.femodel import FEModel
 from numpy import ndarray
 
 
 class ConstraintBase(ABC):
     @abstractmethod
-    def __init__(self, name: str, options: dict, model: dict):
+    def __init__(self, name: str, options: dict, model: FEModel):
         """The constraint base class.
 
         Constraints can act on nodal variables, and scalar variables.

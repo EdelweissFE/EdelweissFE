@@ -29,11 +29,12 @@
 import numpy as np
 
 from abc import ABC, abstractmethod
+from fe.models.femodel import FEModel
 
 
 class AnalyticalField(ABC):
     @abstractmethod
-    def __init__(self, name: str, data: list[str], model: dict):
+    def __init__(self, name: str, data: list[str], model: FEModel):
         """The field base class.
 
         Parameters

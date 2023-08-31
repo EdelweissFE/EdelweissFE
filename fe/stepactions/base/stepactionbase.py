@@ -28,7 +28,8 @@
 
 from fe.utils.fieldoutput import FieldOutputController
 from fe.journal.journal import Journal
-from fe.utils.dofmanager import DofVector
+from fe.numerics.dofmanager import DofVector
+from fe.models.femodel import FEModel
 
 
 class StepActionBase:
@@ -56,8 +57,9 @@ class StepActionBase:
         name: str,
         definition: dict,
         jobInfo: dict,
-        model: dict,
+        model: FEModel,
         fieldOutputController: FieldOutputController,
+        dofmanager,
         journal: Journal,
     ):
         pass
@@ -67,8 +69,9 @@ class StepActionBase:
         name: str,
         definition: dict,
         jobInfo: dict,
-        model: dict,
+        model: FEModel,
         fieldOutputController: FieldOutputController,
+        dofmanager,
         journal: Journal,
     ):
         """Is called when an updated definition is present for a new step.
@@ -91,7 +94,7 @@ class StepActionBase:
 
         pass
 
-    def applyAtStepStart(self, U: DofVector, P: DofVector):
+    def applyAtStepStart(self, model):
         """Is called when a step starts.
 
         Parameters
@@ -103,7 +106,7 @@ class StepActionBase:
         """
         pass
 
-    def applyAtStepEnd(self, U: DofVector, P: DofVector):
+    def applyAtStepEnd(self, model):
         """Is called when a step successfully finished.
 
         Parameters
@@ -115,7 +118,7 @@ class StepActionBase:
         """
         pass
 
-    def applyAtIncrementStart(self, U_n: DofVector, P: DofVector, increment: tuple):
+    def applyAtIncrementStart(self, model, increment: tuple):
         """Is called when a step increment starts.
 
         Parameters

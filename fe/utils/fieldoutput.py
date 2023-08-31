@@ -52,11 +52,13 @@ documentation = {
 }
 
 import numpy as np
+from fe.models.femodel import FEModel
 from fe.utils.misc import convertLineToStringDictionary, strToRange, isInteger
 from fe.utils.meshtools import extractNodesFromElementSet
 from fe.utils.math import createMathExpression, createModelAccessibleFunction
 from fe.utils.elementresultcollector import ElementResultCollector
-from fe.utils.dofmanager import DofVector
+from fe.numerics.dofmanager import DofVector
+from fe.models.femodel import FEModel
 from fe.journal.journal import Journal
 from numpy import ndarray
 
@@ -77,7 +79,7 @@ class FieldOutput:
         The journal object for logging.
     """
 
-    def __init__(self, model: dict, definition: dict, journal: Journal):
+    def __init__(self, model: FEModel, definition: dict, journal: Journal):
         self.name = definition["name"]
         self.journal = journal
         self.timeTotal = 0.0
@@ -86,13 +88,10 @@ class FieldOutput:
             self.domainType = "nSet"
 
             self.type = "nodalResult"
-            self.nSet = model["nodeSets"][definition["nSet"]]
+            self.nSet = model.nodeSets[definition["nSet"]]
             self.nSetName = definition["nSet"]
             self.resultVector = definition["result"]
             self.field = definition["field"]
-            self.resultIndices = np.array(
-                [[n.fields[self.field]] for n in self.nSet if self.field in n.fields], dtype=int
-            ).ravel()
 
         elif "elSet" in definition:
             self.domainType = "elSet"
@@ -104,17 +103,14 @@ class FieldOutput:
                 )
                 # an elset was given, but in fact a nodeset was 'meant': we extract the nodes of the elementset!
                 self.type = "nodalResult"
-                self.nSet = extractNodesFromElementSet(model["elementSets"][definition["elSet"]])
+                self.nSet = extractNodesFromElementSet(model.elementSets[definition["elSet"]])
                 self.nSetName = definition["elSet"]
                 self.resultVector = definition["result"]
                 self.field = definition["field"]
-                self.resultIndices = np.array(
-                    [[n.fields[self.field]] for n in self.nSet if self.field in n.fields], dtype=int
-                ).ravel()
             else:
                 # it's really an elSet job
                 self.type = "elementResult"
-                self.elSet = model["elementSets"][definition["elSet"]]
+                self.elSet = model.elementSets[definition["elSet"]]
                 self.elSetName = definition["elSet"]
                 self.resultName = definition["result"]
 
@@ -153,12 +149,12 @@ class FieldOutput:
 
     def getLastResult(
         self,
-    ) -> ndarray:
+    ) -> np.ndarray:
         """Get the last result, no matter if the history is stored or not.
 
         Returns
         -------
-        ndarray
+        np.ndarray
             The result array.
         """
 
@@ -166,13 +162,13 @@ class FieldOutput:
 
     def getResultHistory(
         self,
-    ) -> ndarray:
+    ) -> np.ndarray:
         """Get the history.
         Throws an exception if the history is not stored.
 
         Returns
         -------
-        ndarray
+        np.ndarray
             The result history.
         """
 
@@ -184,37 +180,35 @@ class FieldOutput:
 
     def getTimeHistory(
         self,
-    ) -> ndarray:
+    ) -> np.ndarray:
         """Get the time history.
 
         Returns
         -------
-        ndarray
+        np.ndarray
             The time history.
         """
 
         return np.asarray(self.timeHistory)
 
-    def updateResults(self, currentTime: float, U: DofVector, P: DofVector):
+    def updateResults(self, model: FEModel):
         """Update the field output.
         Will use the current solution and reaction vector if result is a nodal result.
 
         Parameters
         ----------
-        currentTime
-            The current solution time.
-        U
-            The current solution vector.
-        P
-            The current reaction force vector.
+        model
+            The model tree.
         """
 
-        self.timeHistory.append(currentTime)
+        self.timeHistory.append(model.time)
         incrementResult = None
 
         if self.type == "nodalResult":
-            resVec = U if self.resultVector == "U" else P
-            incrementResult = resVec[self.resultIndices].reshape(len(self.nSet), -1)
+            incrementResult = model.nodeFields[self.field].values[self.resultVector]
+
+            if self.nSet and self.nSet != "all":
+                incrementResult = np.asarray([incrementResult[n] for n in self.nSet])
 
         elif self.type == "elementResult":
             incrementResult = self.elementResultCollector.getCurrentResults()
@@ -230,63 +224,52 @@ class FieldOutput:
         else:
             self.result = incrementResult
 
-    def initializeJob(self, startTime, U, P):
+    def initializeJob(self, model: FEModel):
         """Initalize everything. Will also update the results
         based on the proved start time and solution.
 
         Parameters
         ----------
-        startTime
-            The initial solution time.
-        U
-            The initial solution vector.
-        P
-            The initial reaction force vector.
+        model
+            The model tree.
         """
 
-        self.updateResults(startTime, U, P)
+        self.updateResults(model)
 
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):
+    def finalizeIncrement(self, model: FEModel, increment: tuple):
         """Finalize an increment, i.e. store the current results.
 
         Parameters
         ----------
-        U
-            The current solution vector.
-        P
-            The current reaction force vector.
+        model
+            The model tree.
         increment
             The finished time increment.
         """
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        newTime = totalTime + dT
-        self.updateResults(newTime, U, P)
+        self.updateResults(model)
 
     def finalizeStep(
         self,
-        U,
-        P,
+        model: FEModel,
     ):
         pass
 
     def finalizeJob(
         self,
-        U,
-        P,
+        model: FEModel,
     ):
         """Finalize everything.
         If results are to be exported, it is done now.
 
         Parameters
         ----------
-            U
-                The final solution vector.
-            P
-                The final reaction force vector.
+        model
+            The model tree.
         """
 
         if self.export:
@@ -309,7 +292,7 @@ class FieldOutput:
                 resultTable,
             )
 
-    def setResults(self, values: ndarray):
+    def setResults(self, values: np.ndarray):
         """Modifies a result at it's origin, if possible.
         Throws an exception if not possible.
 
@@ -375,7 +358,7 @@ class FieldOutputController:
         The journal instance for logging.
     """
 
-    def __init__(self, model: dict, inputFile: dict, journal: Journal):
+    def __init__(self, model: FEModel, inputFile: dict, journal: Journal):
         self.fieldOutputs = {}
 
         if not inputFile["*fieldOutput"]:
@@ -386,87 +369,58 @@ class FieldOutputController:
             fpDef = convertLineToStringDictionary(defLine)
             self.fieldOutputs[fpDef["name"]] = FieldOutput(model, fpDef, journal)
 
-    def finalizeIncrement(self, U: DofVector, P: DofVector, increment: tuple):
+        for fieldOutput in self.fieldOutputs.values():
+            fieldOutput.initializeJob(model)
+
+    def finalizeIncrement(self, model: FEModel, increment: tuple):
         """Finalize all field outputs at the end of an increment.
 
         Parameters
         ----------
-        U
-            The current solution vector.
-        P
-            The current raction vector.
+        model
+            The model tree.
         increment
             The time increment.
         """
 
         for output in self.fieldOutputs.values():
-            output.finalizeIncrement(U, P, increment)
+            output.finalizeIncrement(model, increment)
 
-    def finalizeStep(
-        self,
-        U: DofVector,
-        P: DofVector,
-    ):
+    def finalizeStep(self, model: FEModel):
         """Finalize all field outputs at the end of a step.
 
         Parameters
         ----------
-        U
-            The current solution vector.
-        P
-            The current reaction vector.
+        model
+            The model tree.
         """
 
         for output in self.fieldOutputs.values():
-            output.finalizeStep(U, P)
+            output.finalizeStep(model)
 
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         """Initalize an step.
 
         Parameters
         ----------
         step
             The step information.
-        stepActions
-            The list of stepActions.
         """
 
         for output in self.fieldOutputs.values():
-            output.initializeStep(step, stepActions)
-
-    def initializeJob(
-        self,
-        startTime: float,
-        U: DofVector,
-        P: DofVector,
-    ):
-        """Initialize all field outputs at the beginning of a job.
-
-        Parameters
-        ----------
-        startTime
-            The initial time.
-        U
-            The initial solution vector.
-        P
-            The initial reaction vector.
-        """
-        for output in self.fieldOutputs.values():
-            output.initializeJob(startTime, U, P)
+            output.initializeStep(step)
 
     def finalizeJob(
         self,
-        U: DofVector,
-        P: DofVector,
+        model: FEModel,
     ):
         """Finalize all field outputs at the end of a job.
 
         Parameters
         ----------
-        U
-            The final solution vector.
-        P
-            The final reaction vector.
+        model
+            The model tree.
         """
         for output in self.fieldOutputs.values():
-            output.finalizeJob(U, P)
+            # output.finalizeJob(U, P)
+            output.finalizeJob(model)

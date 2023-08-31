@@ -151,7 +151,7 @@ class Journal:
 
         nCols = len(table[0])
 
-        cellWidth = int(math.floor(self.outputWidths[level] / nCols - 1))
+        cellWidth = int(math.floor(self.outputWidths[level] / nCols)) - 3
         rowBar = "+" + (("-" * cellWidth) + "+") * nCols
         rowString = ("|{:}".format("{:" + str(cellWidth) + "}")) * nCols + "|"
 

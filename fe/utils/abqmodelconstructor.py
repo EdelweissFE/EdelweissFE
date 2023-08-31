@@ -41,14 +41,15 @@ is using the keywords
 employing an Abaqus-like syntax.
 """
 
-from fe.variables.node import Node
-from fe.variables.elementset import ElementSet
-from fe.variables.nodeset import NodeSet
+from fe.points.node import Node
+from fe.sets.elementset import ElementSet
+from fe.sets.nodeset import NodeSet
 from fe.config.elementlibrary import getElementClass
 from fe.utils.misc import isInteger, splitLineAtCommas, convertLinesToFlatArray
 from fe.config.constraints import getConstraintClass
 from fe.config.sections import getSectionClass
 from fe.config.analyticalfields import getAnalyticalFieldByName
+from fe.models.femodel import FEModel
 import numpy as np
 
 
@@ -56,7 +57,7 @@ class AbqModelConstructor:
     def __init__(self, journal):
         pass
 
-    def createGeometryFromInputFile(self, model: dict, inputFile: dict) -> dict:
+    def createGeometryFromInputFile(self, model: FEModel, inputFile: dict) -> dict:
         """Collects nodes, elements, node sets and element sets from
         the input file.
 
@@ -73,10 +74,10 @@ class AbqModelConstructor:
             The updated model tree.
         """
 
-        domainSize = model["domainSize"]
+        domainSize = model.domainSize
 
         # returns an dict of {node label: node}
-        nodeDefinitions = model["nodes"]
+        nodeDefinitions = model.nodes
         for nodeDefs in inputFile["*node"]:
             currNodeDefs = {}
             for l in nodeDefs["data"]:
@@ -93,10 +94,10 @@ class AbqModelConstructor:
 
             if "nset" in nodeDefs.keys():
                 setName = nodeDefs["nset"]
-                model["nodeSets"][setName] = NodeSet(setName, [nodeDefinitions[x] for x in nodeDefinitions.keys()])
+                model.nodeSets[setName] = NodeSet(setName, [nodeDefinitions[x] for x in nodeDefinitions.keys()])
 
         # returns an dict of {element Label: element}
-        elements = model["elements"]
+        elements = model.elements
 
         for elDefs in inputFile["*element"]:
             elementType = elDefs["type"]
@@ -117,11 +118,11 @@ class AbqModelConstructor:
 
             if "elset" in elDefs.keys():
                 setName = elDefs["elset"]
-                model["elementSets"][setName] = ElementSet(setName, currElDefs.values())
+                model.elementSets[setName] = ElementSet(setName, currElDefs.values())
 
         # generate dictionary of elementObjects belonging to a specified elementset
         # or generate elementset by generate definition in inputfile
-        elementSets = model["elementSets"]
+        elementSets = model.elementSets
 
         for elSetDefinition in inputFile["*elSet"]:
             name = elSetDefinition["elSet"]
@@ -167,7 +168,7 @@ class AbqModelConstructor:
 
         # generate dictionary of nodeObjects belonging to a specified nodeset
         # or generate nodeset by generate definition in inputfile
-        nodeSets = model["nodeSets"]
+        nodeSets = model.nodeSets
         for nSetDefinition in inputFile["*nSet"]:
             name = nSetDefinition["nSet"]
 
@@ -189,8 +190,8 @@ class AbqModelConstructor:
                     for nSet in line:
                         [nodeSets[name].add([n]) for n in nodeSets[nSet]]
 
-        model["nodeSets"]["all"] = NodeSet("all", model["nodes"].values())
-        model["elementSets"]["all"] = ElementSet("all", model["elements"].values())
+        model.nodeSets["all"] = NodeSet("all", model.nodes.values())
+        model.elementSets["all"] = ElementSet("all", model.elements.values())
 
         # generate surfaces sets
         for surfaceDef in inputFile["*surface"]:
@@ -202,9 +203,9 @@ class AbqModelConstructor:
                 for l in data:
                     elSet, faceNumber = l
                     faceNumber = int(faceNumber.replace("S", ""))
-                    surface[faceNumber] = model["elementSets"][elSet]
+                    surface[faceNumber] = model.elementSets[elSet]
 
-            model["surfaces"][name] = surface
+            model.surfaces[name] = surface
 
         return model
 
@@ -231,7 +232,7 @@ class AbqModelConstructor:
 
             materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=float)
 
-            model["materials"][materialID] = {"name": materialName, "properties": materialProperties}
+            model.materials[materialID] = {"name": materialName, "properties": materialProperties}
 
         return model
 
@@ -257,7 +258,7 @@ class AbqModelConstructor:
             data = constraintDef["data"]
 
             constraint = getConstraintClass(constraint)(name, data, model)
-            model["constraints"][name] = constraint
+            model.constraints[name] = constraint
 
         return model
 
@@ -285,6 +286,9 @@ class AbqModelConstructor:
             data = secDef["data"]
             materialID = secDef["material"]
 
+            if name in model.sections:
+                raise Exception("Redundant section definition {:}".format(name))
+
             Section = getSectionClass(sec)
 
             # this was a bad design decision, and will be deprecated sooner or later:
@@ -292,7 +296,7 @@ class AbqModelConstructor:
 
             theSection = Section(name, data, materialID, thickness, model)
 
-            model = theSection.assignSectionPropertiesToModel(model)
+            model.sections[name] = theSection
 
         return model
 
@@ -320,6 +324,6 @@ class AbqModelConstructor:
             analyticalFieldClass = getAnalyticalFieldByName(analyticalFieldType)
             analyticalField = analyticalFieldClass(analyticalFieldName, analyticalFieldData, model)
 
-            model["analyticalFields"][analyticalFieldName] = analyticalField
+            model.analyticalFields[analyticalFieldName] = analyticalField
 
         return model

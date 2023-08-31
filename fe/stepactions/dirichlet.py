@@ -54,71 +54,44 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
 
-        dirichletIndices = []
-        dirichletDelta = []
-
-        nodeSets = model["nodeSets"]
+        # nodeSets = model.nodeSets
         self.field = action["field"]
 
-        if "analyticalField" in action:
-            self.analyticalField = model["analyticalFields"][action["analyticalField"]]
-
         self.action = action
-        self.nSet = nodeSets[action["nSet"]]
+        self.nSet = model.nodeSets[action["nSet"]]
+        self.fieldSize = getFieldSize(self.field, model.domainSize)
+        self.possibleComponents = [str(i + 1) for i in range(self.fieldSize)]
 
-        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, model["domainSize"]))]
+        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
 
-        if "components" in action:
-            action = self._getDirectionsFromComponents(action)
-
-        for x, direction in enumerate(self.possibleComponents):
-            if direction in action:
-                directionIndices = [node.fields[self.field][x] for node in self.nSet]
-                dirichletIndices += directionIndices
-
-                if "analyticalField" in action:
-                    scaleFactors = [self.analyticalField.evaluateAtCoordinates(node.coordinates) for node in self.nSet]
-
-                    unScaledDelta = [float(action[direction])] * len(directionIndices)
-                    scaledDelta = []
-                    for val1, val2 in zip(scaleFactors, unScaledDelta):
-                        scaledDelta.append(val1 * val2)
-
-                    dirichletDelta += scaledDelta
-
-                else:
-                    dirichletDelta += [float(action[direction])] * len(directionIndices)
-
-        if not dirichletIndices:
-            raise ValueError("Invalid dirichlet components specified")
-
-        self.indices = np.array(dirichletIndices)
-        self.delta = np.array(dirichletDelta)
-
-        self.amplitude = self._getAmplitude(action)
-
-        self.active = True
-
-    def applyAtStepEnd(self, U, P):
+    def applyAtStepEnd(self, model):
         self.active = False
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.active = True
-        dirichletIndices = []
-        dirichletDelta = []
+
+        nodeSets = model.nodeSets
+
+        self.action = action
 
         if "components" in action:
             action = self._getDirectionsFromComponents(action)
 
-        for x, direction in enumerate(self.possibleComponents):
-            if direction in action:
-                directionIndices = [node.fields[self.field][x] for node in self.nSet]
-                dirichletIndices += directionIndices
-                dirichletDelta += [float(action[direction])] * len(directionIndices)
+        components = [i for i, direction in enumerate(self.possibleComponents) if direction in action]
 
-        self.indices = np.array(dirichletIndices, dtype=int)
+        values = {
+            i: float(action[direction]) for i, direction in enumerate(self.possibleComponents) if direction in action
+        }
 
-        self.delta = np.array(dirichletDelta)
+        self.delta = np.tile(list(values.values()), (len(self.nSet), 1))
+
+        # for i, node in enumerate(self.nSet):
+        if "analyticalField" in action:
+            self.analyticalField = model.analyticalFields[action["analyticalField"]]
+            for i, node in enumerate(self.nSet):
+                self.delta[i, :] *= self.analyticalField.evaluateAtCoordinates(node.coordinates)
+
+        self.components = components
 
         self.amplitude = self._getAmplitude(action)
 
@@ -127,7 +100,7 @@ class StepAction(StepActionBase):
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             return self.delta * (self.amplitude(stepProgress) - (self.amplitude(stepProgress - incrementSize)))
         else:
-            return 0.0
+            return self.delta * 0.0
 
     def _getDirectionsFromComponents(self, action: dict) -> dict:
         """Determine the direction components from a numpy array representation.
