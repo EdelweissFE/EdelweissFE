@@ -47,14 +47,14 @@ class Constraint(ConstraintBase):
     A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D."""
 
     def __init__(self, name, options, model):
-        if model["domainSize"] != 2:
+        if model.domainSize != 2:
             raise WrongDomain("Linearized rigid body constraint is currently only available for 2d domain size")
 
         # self.name = name
         definition = convertLinesToStringDictionary(options)
 
         rbNset = definition["nSet"]
-        nodeSets = model["nodeSets"]
+        nodeSets = model.nodeSets
 
         if len(nodeSets[definition["referencePoint"]]) > 1:
             raise Exception(
@@ -75,7 +75,7 @@ class Constraint(ConstraintBase):
         self.referencePointFields = [["displacement", "rotation"]]
         self._fieldsOnNodes = self.slaveNodesFields + self.referencePointFields
 
-        nDim = model["domainSize"]
+        nDim = model.domainSize
 
         nConstraints = nSlaves * 2  # one for distance, one for angle
         nAffectedDofs = nDim * (nSlaves + 1) + 1

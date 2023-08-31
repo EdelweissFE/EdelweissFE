@@ -51,39 +51,42 @@ class StepAction(StepActionBase):
         self.name = name
         self.journal = journal
         self.model = model
-        self.c = np.array([-1, 1])
         self.currentL0 = 0.0
 
-        self.L = float(action["L"])
-        self.dof1 = evalModelAccessibleExpression(action["dof1"], model)
-        self.dof2 = evalModelAccessibleExpression(action["dof2"], model)
+        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
 
-        self.definition = str(action.get("definition", "absolute"))
-        self.idcs = np.array([self.dof1, self.dof2])
+    def computeDDLambda(self, dU, ddU_0, ddU_f, increment, dofManager):
+        idcs = np.hstack([dofManager.idcsInDofVector[self.dof1], dofManager.idcsInDofVector[self.dof2]])
 
-    def computeDDLambda(self, dU, ddU_0, ddU_f, increment):
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         dL = incrementSize * self.L
 
-        ddLambda = (dL - self.c.dot(dU[self.idcs] + ddU_0[self.idcs])) / self.c.dot(ddU_f[self.idcs])
+        denom = self.c.dot(ddU_f[idcs])
+
+        ddLambda = (dL - self.c.dot(dU[idcs] + ddU_0[idcs])) / self.c.dot(ddU_f[idcs])
         return ddLambda
 
-    def finishIncrement(self, U, dU, dLambda):
+    def finishIncrement(self, U, dU, dLambda, increment, dofManager):
         self.journal.message(
-            "Dof 1: {:5.5f}, Dof 2: {:5.5f}".format(U[self.dof1] + dU[self.dof1], U[self.dof2] + dU[self.dof2]),
+            "Dof 1: {:}, Dof 2: {:}".format(self.dof1.values, self.dof2.values),
             self.identification,
         )
 
-    def applyAtStepEnd(self, U, P):
-        self.currentL0 = self.c.dot(U[self.idcs])
+    def applyAtStepEnd(self, model):
+        self.currentL0 = self.c1.dot(self.dof1.values) + self.c2.dot(self.dof2.values)
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+        self.definition = str(action.get("definition", "absolute"))
+
         if self.definition == "absolute":
             self.L = float(action["L"]) - self.currentL0
         else:
             self.L = float(action["L"])
+
         self.dof1 = evalModelAccessibleExpression(action["dof1"], model)
         self.dof2 = evalModelAccessibleExpression(action["dof2"], model)
 
-        self.idcs = np.array([self.dof1, self.dof2])
-        self.c = np.array([-1, 1])
+        self.c1 = np.asarray(eval(action["cVector1"].replace("x", "0")), dtype=float)
+        self.c2 = np.asarray(eval(action["cVector2"].replace("x", "0")), dtype=float)
+
+        self.c = np.hstack([self.c1, self.c2])

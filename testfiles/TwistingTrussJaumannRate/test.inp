@@ -1028,7 +1028,8 @@
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=c3d8job, domain=3d, solver=NISTParallel
+*job, name=c3d8job, domain=3d, 
+*solver, solver=NISTParallel, name=theSolver
 *fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=stress, elSet=all, result=stress, f(x)='mean(x, axis=1) ', quadraturePoint=0:3
@@ -1042,7 +1043,7 @@ create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 configuration, overwrite=yes
 
-*step, maxInc=5e-2, minInc=1e-4, maxNumInc=1000, maxIter=20
+*step, solver=theSolver, maxInc=5e-2, minInc=1e-4, maxNumInc=1000, maxIter=20
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
 dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=1.5707,  

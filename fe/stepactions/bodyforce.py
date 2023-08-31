@@ -48,10 +48,10 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
         self.forceAtStepStart = 0.0
-        self.elements = model["elementSets"][action["elSet"]]
+        self.elements = model.elementSets[action["elSet"]]
         magnitude = np.fromstring(action["forceVector"], sep=",", dtype=np.double)
 
-        if len(magnitude) < model["domainSize"]:
+        if len(magnitude) < model.domainSize:
             raise Exception("BodyForce {:}: force vector has wrong dimension!".format(self.name))
 
         self.delta = magnitude
@@ -63,7 +63,7 @@ class StepAction(StepActionBase):
 
         self.idle = False
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self.idle:
             if stepMagnitude == None:
                 # standard case

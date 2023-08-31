@@ -4,7 +4,8 @@
 *section, name=section1, thickness=1.0, material=linearelastic, type=plane
 all
 
-*job, name=cpe4job, domain=2d, solver=NIST
+*job, name=cpe4job, domain=2d
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
@@ -33,7 +34,7 @@ figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=time, y=RF
 **figure=1, axSpec=211, create=perNode, fieldOutput=
 **figure=1, axSpec=212, create=perElement, fieldOutput=stress, f(x)='mean(x, axis=1)'
 
-*step, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=off, numThreads=1
+*step, solver=theSolver, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=off
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=0, 1=1000

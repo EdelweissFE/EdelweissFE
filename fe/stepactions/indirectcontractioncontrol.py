@@ -88,7 +88,7 @@ class StepAction(StepActionBase):
         self.generateCVectorAndIndices(name, action, jobInfo, model, fieldOutputController, journal)
 
     def generateCVectorAndIndices(self, name, action, jobInfo, model, fieldOutputController, journal):
-        contractionNSet = model["nodeSets"][action["contractionNSet"]]
+        contractionNSet = model.nodeSets[action["contractionNSet"]]
 
         nNodes = len(contractionNSet)
 

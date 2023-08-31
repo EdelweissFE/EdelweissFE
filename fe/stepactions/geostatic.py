@@ -55,7 +55,7 @@ class StepAction(StepActionBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
 
-        self.geostaticElements = model["elementSets"][action.get("elSet", "all")]
+        self.geostaticElements = model.elementSets[action.get("elSet", "all")]
         self.p1 = float(action["p1"])
         self.p2 = float(action.get("p2", self.p1))
         self.level1 = float(action.get("h1", 1.0))
@@ -74,19 +74,20 @@ class StepAction(StepActionBase):
             ]
         )
 
-        self.theDofManager = jobInfo["dofManager"]
         self.journal = journal
 
         self.active = True
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self.active:
             return
 
         self.journal.printSeperationLine()
         self.journal.message("End of geostatic step -- displacements are reset", self.name)
         self.journal.printSeperationLine()
-        U[self.theDofManager.indicesOfFieldsInDofVector["displacement"]] = 0.0
+
+        model.nodeFields["displacement"].values["U"][:] = 0
+        # U[self.theDofManager.indicesOfFieldsInDofVector["displacement"]] = 0.0
 
         self.active = False
 

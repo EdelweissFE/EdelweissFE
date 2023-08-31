@@ -9,7 +9,9 @@
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=cosserathoekbrownjob, domain=2d, solver=NISTParallelForMarmotElements
+*job, name=cosserathoekbrownjob, domain=2d
+*solver, solver=NISTParallelForMarmotElements, name=theSolver
+
 *fieldOutput
 name=displacement, elSet=all, field=displacement, result=U, 
 name=micro rotation, elSet=all, field=micro rotation, result=U, 
@@ -46,7 +48,7 @@ figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 nSet=gen_top
 referencePoint=gen_rightTop
 
-*step, maxInc=1e-1, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
 **initializematerial, name=init, elSet=all 
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_rightTop, field=displacement, 2=0, 
@@ -57,6 +59,6 @@ distributedload, name=dloadl, surface=gen_left, type=pressure, magnitude=10, f(t
 distributedload, name=dloadr, surface=gen_right, type=pressure, magnitude=10, f(t)=t
 
 **nodeforces, name=cloadTop, nSet=gen_rightTop, field=displacement, 1=-5, f(t)=t
-*step, maxInc=5e-2, minInc=1e-7, maxNumInc=500, maxIter=12, stepLength=1
+*step, solver=theSolver, maxInc=5e-2, minInc=1e-7, maxNumInc=500, maxIter=12, stepLength=1
 ** dirichlet, name=top, nSet=gen_top, field=displacement, 2=-4, 
 dirichlet, name=top, field=displacement, 2=-2

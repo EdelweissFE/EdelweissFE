@@ -7,10 +7,11 @@
 *section, name=section1, material=mat1, type=solid
 block1
 
-*section, name=section1, material=mat2, type=solid
+*section, name=section2, material=mat2, type=solid
 block2
 
-*job, name=set_def, domain=3d, solver=NISTParallel
+*job, name=set_def, domain=3d
+*solver, solver=NISTParallel, name=theSolver
 
 *include, input=set_def.inc
 
@@ -25,7 +26,7 @@ create=perElement,  fieldOutput=stress
 create=perElement,  fieldOutput=strain
 configuration, overwrite=yes
 
-*step, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+*step, solver=theSolver, maxInc=5e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
 dirichlet, name=bot, nSet=n_bot, field=displacement, 1=0., 2=0., 3=0.
 dirichlet, name=top, nSet=n_top, field=displacement, 1=0., 2=-1., 3=0.
 

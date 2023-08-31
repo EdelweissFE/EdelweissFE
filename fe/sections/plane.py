@@ -53,8 +53,8 @@ class Section(SectionBase):
             raise ValueError("{}: Thickness must be greater than zero".format(name))
 
     def assignSectionPropertiesToModel(self, model):
-        elSets = [model["elementSets"][setName] for setName in self.elSetNames]
-        material = model["materials"][self.materialName]
+        elSets = [model.elementSets[setName] for setName in self.elSetNames]
+        material = model.materials[self.materialName]
 
         elProperties = np.array(
             [

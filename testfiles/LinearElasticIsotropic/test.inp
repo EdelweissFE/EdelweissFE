@@ -39,15 +39,16 @@ all
 ** Elset,   faceID
 all,        4
 
-*job, name=mySingleElementJob, domain=3d, solver=NIST
+*job, name=mySingleElementJob, domain=3d
+*solver, solver=NIST, name=theSolver
 
-*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+*step, solver=theSolver, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
 ** The first step: set the BCs
 dirichlet, name=1, nSet=left,       field=displacement, 2=0
 dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0
 dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
 
-*step, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
+*step, solver=theSolver, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
 ** The second step: apply the load
 distributedload, name=dload, surface=surfaceRight, type=pressure, magnitude=0.15, f(t)='t**2'
 

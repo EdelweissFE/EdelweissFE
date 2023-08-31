@@ -166,15 +166,15 @@ class MeshPlot:
 class OutputManager(OutputManagerBase):
     identification = "meshPlot"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
-        self.domainSize = model["domainSize"]
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+        self.domainSize = model.domainSize
         self.plotter = plotter
         self.journal = journal
 
-        self.nodes = model["nodes"]
-        self.elements = model["elements"]
-        self.elSets = model["elementSets"]
-        self.nSets = model["nodeSets"]
+        self.nodes = model.nodes
+        self.elements = model.elements
+        self.elSets = model.elementSets
+        self.nSets = model.nodeSets
 
         # write List of nodeLabels
         self.labelList = np.asarray([nodeNumber for nodeNumber in self.nodes.keys()])
@@ -283,31 +283,22 @@ class OutputManager(OutputManagerBase):
 
             self.meshPlot = MeshPlot(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
 
-    def initializeSimulation(self, model):
+    # def initializeSimulation(self, model):
+    #     pass
+
+    def initializeStep(self, step):
         pass
 
-    def initializeStep(self, step, stepActions):
-        pass
-
-    def finalizeIncrement(self, U, P, increment, **kwargs):
+    def finalizeIncrement(self, model, increment, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(
-        self,
-        U,
-        P,
-        time,
-    ):
+    def finalizeStep(self, model):
         pass
 
-    def finalizeJob(
-        self,
-        U,
-        P,
-    ):
+    def finalizeJob(self, model):
         for xyJob in self.xyJobs:
             y = xyJob["y"].getResultHistory()
 

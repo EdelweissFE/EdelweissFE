@@ -19,6 +19,6 @@ create=perNode, fieldOutput=displacement
 configuration, overwrite=yes
 
 *step, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=8
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left, nSet=nSetLeft,  field=displacement, 2=0, 1=0, 3=0.0
 dirichlet, name=right, nSet=nSetRight, field=displacement, 1=0.008

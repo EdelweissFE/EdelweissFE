@@ -28,7 +28,7 @@
 
 # @author: Alexander Dummer
 
-from fe.variables.orderedset import OrderedSet
+from fe.sets.orderedset import OrderedSet
 from fe.elements.marmotelement.element import MarmotElementWrapper
 from fe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
 

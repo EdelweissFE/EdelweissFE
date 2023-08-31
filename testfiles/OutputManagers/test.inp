@@ -4,7 +4,8 @@
 *section, name=section1, thickness=1.0, material=modleon, type=plane
 all
 
-*job, name=cps4job, domain=2d, solver=NIST
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
 
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=50
@@ -41,7 +42,7 @@ fieldOutput=Displacement_Top, label=Ualongtopsurface, f(x)='x[:,1]', nStages=5, 
 
 *step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=Ensight, intermediateSaveInterval=2, minDTForOutput=20
-options, category=NISTSolver, extrapolation=linear, numThreads=2
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=1,          nSet=gen_leftBottom,    field=displacement, 2=0.0, 1=0.0
 dirichlet, name=bottom,     nSet=gen_bottom,        field=displacement, 2=0
 nodeforces, name=top,       nSet=gen_top,           field=displacement, 2=-1, f(t)=t**2

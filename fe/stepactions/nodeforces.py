@@ -52,31 +52,69 @@ class StepAction(StepActionBase):
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
-        nodeForceIndices = []
-        nodeForceDelta = []
-        nodeSets = model["nodeSets"]
+        # nodeForceIndices = []
+        # nodeForceDelta = []
+        nodeSets = model.nodeSets
 
         self.field = action["field"]
-        self.idle = False
+        # self.idle = False
         self.nSet = nodeSets[action["nSet"]]
 
-        self.possibleComponents = [str(i + 1) for i in range(getFieldSize(self.field, model["domainSize"]))]
+        self.fieldSize = getFieldSize(self.field, model.domainSize)
+
+        shape = (len(self.nSet), self.fieldSize)
+
+        self.nodeForcesStepStart = np.zeros(shape)
+        self.nodeForcesDelta = np.zeros(shape)
+
+        self.possibleComponents = [str(i + 1) for i in range(self.fieldSize)]
+
+        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
+
+        # if "components" in action:
+        #     action = self._getDirectionsFromComponents(action)
+
+        # for x, direction in enumerate(self.possibleComponents):
+        #     directionIndices = [node.fields[self.field][x] for node in self.nSet]
+        #     if direction in action:
+        #         nodeForceIndices += directionIndices
+        #         nodeForceDelta += [float(action[direction])] * len(directionIndices)
+
+        # self.indices = np.asarray(nodeForceIndices, dtype=int)
+        # self.nodeForcesStepStart = np.zeros_like(self.indices, dtype=np.double)
+        # self.nodeForcesDelta = np.asarray(nodeForceDelta)
+        # self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
+
+    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+        """Update the step action.
+
+        It is a reasonable requirement that the updated direction components cannot change.
+        """
+
+        self.idle = False
+        # nodeForceDelta = []
+        # nodeForceIndices = []
 
         if "components" in action:
-            action = self._getDirectionsFromComponents(action)
+            nodeLoad = np.asarray(eval(action["components"].replace("x", "0")), dtype=float)
+        else:
+            nodeLoad = self._getComponentsFromDirection(action)
 
-        for x, direction in enumerate(self.possibleComponents):
-            directionIndices = [node.fields[self.field][x] for node in self.nSet]
-            if direction in action:
-                nodeForceIndices += directionIndices
-                nodeForceDelta += [float(action[direction])] * len(directionIndices)
+        # for x, direction in enumerate(self.possibleComponents):
+        #     # directionIndices = [node.fields[self.field][x] for node in self.nSet]
+        #     if direction in action:
+        #         # nodeForceIndices += directionIndices
+        #         nodeForceDelta += [float(action[direction])] * len(directionIndices)
 
-        self.indices = np.asarray(nodeForceIndices, dtype=int)
-        self.nodeForcesStepStart = np.zeros_like(self.indices, dtype=np.double)
-        self.nodeForcesDelta = np.asarray(nodeForceDelta)
-        self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
+        # if not (nodeForceIndices == self.indices).all():
+        #     raise ValueError("Components for node forces action can not change!")
 
+        nodeForcesDelta = np.tile(nodeLoad, (len(self.nSet), 1))
+
+        self.nodeForcesDelta = nodeForcesDelta
         self.amplitude = self._getAmplitude(action)
+
+        # self.amplitude = self._getAmplitude(action)
 
     def _getAmplitude(self, action: dict) -> callable:
         """Determine the amplitude for the step, depending on a potentially specified function.
@@ -100,7 +138,7 @@ class StepAction(StepActionBase):
 
         return amplitude
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self.idle:
             if stepMagnitude == None:
                 # standard case
@@ -109,63 +147,25 @@ class StepAction(StepActionBase):
                 # set the 'actual' increment manually, e.g. for arc length method
                 self.nodeForcesStepStart += self.nodeForcesDelta * stepMagnitude
 
-            self.nodeForcesDelta = 0
+            self.nodeForcesDelta[:] = 0
             self.idle = True
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
-        """Update the step action.
-
-        It is a reasonable requirement that the updated direction components cannot change.
-        """
-
-        self.idle = False
-        nodeForceDelta = []
-        nodeForceIndices = []
-
-        if "components" in action:
-            action = self._getDirectionsFromComponents(action)
-
-        for x, direction in enumerate(self.possibleComponents):
-            directionIndices = [node.fields[self.field][x] for node in self.nSet]
-            if direction in action:
-                nodeForceIndices += directionIndices
-                nodeForceDelta += [float(action[direction])] * len(directionIndices)
-
-        if not (nodeForceIndices == self.indices).all():
-            raise ValueError("Components for node forces action can not change!")
-
-        self.nodeForcesDelta = np.asarray(nodeForceDelta)
-        self.amplitude = self._getAmplitude(action)
-
-    def applyOnP(self, P, increment):
+    def getLoad(self, increment):
         if self.idle:
-            P[self.indices] += self.nodeForcesStepStart
+            return self.nodeForcesStepStart
+            # P[self.indices] += self.nodeForcesStepStart
         else:
             incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
             t = stepProgress
             amp = self.amplitude(t)
-            P[self.indices] += self.nodeForcesStepStart + self.nodeForcesDelta * amp
 
-        return P
+            return self.nodeForcesStepStart + self.nodeForcesDelta * amp
 
-    def _getDirectionsFromComponents(self, action: dict) -> dict:
-        """Determine the direction components from a numpy array representation.
+    def _getComponentsFromDirection(self, action: dict) -> np.ndarray:
+        nodeLoad = np.zeros(self.fieldSize)
 
-        Parameters
-        ----------
-        action
-            The dictionary defining this step action.
+        for i, comp in enumerate(self.possibleComponents):
+            if comp in action:
+                nodeLoad[i] = float(action[comp])
 
-        Returns
-        -------
-        dict
-            The updated dictionary defining this step action containing the directional definitions.
-        """
-
-        components = np.array(eval(action["components"].replace("x", "np.nan")), dtype=float)
-
-        for i, t in enumerate(components):
-            if not np.isnan(t):
-                action[str(i + 1)] = t
-
-        return action
+        return nodeLoad

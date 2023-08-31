@@ -67,7 +67,7 @@ create=perElement, fieldOutput=omega
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
 *step, maxInc=1e-2, minInc=5e-4, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=8
+options, category=NISTSolver, extrapolation=linear
 options, category=Ensight, intermediateSaveInterval=1
 dirichlet, name=bottom, nSet=bottom,  field=displacement, 2=0, 
 **dirichlet, name=bottomR, nSet=bottom,  field=micro rotation, 1=0,2=0,3=0

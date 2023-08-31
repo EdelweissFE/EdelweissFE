@@ -35,23 +35,21 @@ Created on Thu Apr 13 14:08:32 2017
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 from fe.utils.misc import convertLinesToStringDictionary
+from fe.models.femodel import FEModel
 import numpy as np
 
 
 class OutputManager(OutputManagerBase):
     identification = "TimeMonitor"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         defDict = convertLinesToStringDictionary(definitionLines)
         self.exportFile = defDict["export"]
         self.timeVals = []
 
-    def initializeSimulation(self, model):
-        pass
-
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         pass
 
     def finalizeIncrement(self, U, P, increment, **kwargs):
@@ -61,7 +59,7 @@ class OutputManager(OutputManagerBase):
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(self, U, P, time):
+    def finalizeStep(self, U, P):
         pass
 
     def finalizeJob(

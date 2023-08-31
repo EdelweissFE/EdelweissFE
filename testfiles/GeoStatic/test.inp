@@ -11,7 +11,8 @@ elType=CPE4
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=cpe4job, domain=2d, solver=NIST
+*job, name=cpe4job, domain=2d
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)='mean(x[:,1])'
 name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)='sum(x[:,1])'
@@ -33,12 +34,12 @@ create=perElement, fieldOutput=S33
 configuration, overwrite=yes
 
 
-*step, maxInc=0.5
+*step, solver=theSolver, maxInc=0.5
 dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, 
 dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=0.0
 dirichlet, name=bottom, nSet=gen_bottom,   field=displacement, 2=0.0, 
 geostatic, name=geo, elSet=all, p1=-10, h1=150, p2=-5, h2=0, xLateral=1.0, zLateral=1.0
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure
 
-*step, maxInc=1e-1, 
+*step, solver=theSolver, maxInc=1e-1, 
 distributedload, name=dlTop, delta=-10.0, f(t)=t

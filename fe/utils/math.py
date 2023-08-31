@@ -57,7 +57,7 @@ def createFunction(expression, *argnames, **kwargs):
 
 def createModelAccessibleFunction(expression, model, *argnames, **kwargs):
     """Create a function from a string expression, which can access the complete model any given objects"""
-    kwargs = {**kwargs, **model}
+    kwargs = {**kwargs, "model": model}
     return createFunction(expression, *argnames, **kwargs)
 
 
@@ -68,7 +68,8 @@ def evalExpression(expression, **kwargs):
 
 def evalModelAccessibleExpression(expression, model, *args, **kwargs):
     """Evalualate a string expression, which can access the complete model"""
-    return evalExpression(expression, **model, **kwargs)
+    kwargs = {**kwargs, "model": model}
+    return evalExpression(expression, **kwargs)
 
 
 def execExpression(expression, **kwargs):
@@ -78,7 +79,8 @@ def execExpression(expression, **kwargs):
 
 def execModelAccessibleExpression(expression, model, *args, **kwargs):
     """Evalualate a string expression, which can access the complete model"""
-    return execExpression(expression, **model, **kwargs)
+    kwargs = {**kwargs, "model": model}
+    return execExpression(expression, **kwargs)
 
 
 def createMathExpression(expression, symbol="x"):

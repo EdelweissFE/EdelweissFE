@@ -15,7 +15,8 @@ all
 **gen_sandwichHorizontal
 gen_shearBand
 
-*job, name=cpe4job, domain=2d, solver=NISTParallelForMarmotElements
+*job, name=cpe4job, domain=2d
+*solver, solver=NISTParallelForMarmotElements, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, field=micro rotation, result=U, name=micro rotation
@@ -46,8 +47,8 @@ configuration, overwrite=yes
 *output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 
-*step, maxInc=1e-1, minInc=5e-5, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=8
+*step, solver=theSolver, maxInc=1e-1, minInc=5e-5, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-2

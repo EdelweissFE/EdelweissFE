@@ -3,7 +3,8 @@
 **E    nu
 1.8e4, 0.22
 
-*job, name=job, domain=3d, solver=NISTParallel
+*job, name=job, domain=3d
+*solver, solver=NISTParallel, name=theSolver
 
 *modelGenerator, generator=boxGen, name=gen
 x0      =0
@@ -39,8 +40,8 @@ lengthscale = .4
 seed        = 1
 
 *AnalyticalField, name=exprF, type=scalarExpression
-"f(x,y,z)"  = "np.cos(x) * np.sin(y) * z * analyticalFields['rdmF'].evaluateAtCoordinates([x,y,z])"
+"f(x,y,z)"  = "np.cos(x) * np.sin(y) * z * model.analyticalFields['rdmF'].evaluateAtCoordinates([x,y,z])"
 
-*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1, solver=theSolver
 dirichlet,  name=all12, nSet=all,   field=displacement, 1=0, 2=0
 dirichlet,  name=all3,  nSet=all,   field=displacement, 3=1., analyticalField=exprF

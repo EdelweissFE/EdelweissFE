@@ -11,7 +11,8 @@ elType=CPS4
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=cps4job, domain=2d, solver=NIST
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
@@ -28,7 +29,7 @@ referencePoint=gen_rightTop
 create=perNode, fieldOutput=displacement
 configuration, overwrite=yes
 
-*step, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=leftCorner,  nSet=gen_leftBottom, field=displacement, 1=0.0, 2=0.0
 dirichlet, name=rotRP,  nSet=gen_rightTop,   field=rotation, 1=0.05

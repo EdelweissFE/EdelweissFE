@@ -43,6 +43,7 @@ documentation = {
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import convertLinesToStringDictionary
 from fe.config.timing import timingTypes, createTimingDict
+from fe.models.femodel import FEModel
 import numpy as np
 from collections import defaultdict
 from typing import Union
@@ -51,19 +52,18 @@ from typing import Union
 class OutputManager(OutputManagerBase):
     identification = "ComputeTimeMonitor"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.journal = journal
         defDict = convertLinesToStringDictionary(definitionLines)
         self.exportFile = defDict.get("export")
         self.computingTimesOld = defaultdict(lambda: 0.0)
         self.stepcounter = 0
 
-    def initializeSimulation(self, model):
         if self.exportFile is not None:
             with open(self.exportFile, "w+") as f:
                 f.write("# \n# EdelweissFE: computing times per increment\n#\n")
 
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         self.computingTimesOld = createTimingDict()
         self.stepcounter += 1
 
@@ -78,8 +78,7 @@ class OutputManager(OutputManagerBase):
 
     def finalizeIncrement(
         self,
-        U,
-        P,
+        model,
         increment,
         statusInfoDict=defaultdict(lambda: 0.0),
         currentComputingTimes=createTimingDict(),
@@ -102,14 +101,10 @@ class OutputManager(OutputManagerBase):
             self.writeIncrementComputingTimesToFile(compTimeTotal, compTimeIndividual, statusInfoDict)
         self.computingTimesOld = currentComputingTimes.copy()
 
-    def finalizeStep(self, U, P, time):
+    def finalizeStep(self, model: FEModel):
         pass
 
-    def finalizeJob(
-        self,
-        U,
-        P,
-    ):
+    def finalizeJob(self, model: FEModel):
         pass
 
     def computeIncrementComputingTimes(self, currentComputingTimes: dict) -> Union[float, dict]:

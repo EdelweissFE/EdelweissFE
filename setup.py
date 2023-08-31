@@ -132,7 +132,7 @@ print("Gather the extension for the fast CSR matrix generator")
 extensions += [
     Extension(
         "*",
-        ["fe/utils/csrgenerator.pyx"],
+        ["fe/numerics/csrgenerator.pyx"],
         include_dirs=[numpy.get_include()],
         language="c++",
     )

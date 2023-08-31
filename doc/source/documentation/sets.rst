@@ -9,15 +9,15 @@ they are based on a custom ordered set object.
 
 Relevant modules: 
 
- * ``fe.variables.orderedset``
- * ``fe.variables.nodeset``
- * ``fe.variables.elementset``
+ * ``fe.sets.orderedset``
+ * ``fe.sets.nodeset``
+ * ``fe.sets.elementset``
 
-.. automodule:: fe.variables.orderedset
+.. automodule:: fe.sets.orderedset
    :members: 
 
-.. automodule:: fe.variables.nodeset
+.. automodule:: fe.sets.nodeset
    :members: 
 
-.. automodule:: fe.variables.elementset
+.. automodule:: fe.sets.elementset
    :members: 

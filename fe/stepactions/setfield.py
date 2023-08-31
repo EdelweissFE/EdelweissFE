@@ -56,9 +56,9 @@ class StepAction(StepActionBase):
             raise Exception("Invalid type: {}".format(self.type))
 
         if self.type == "analyticalField":
-            self.analyticalField = model["analyticalFields"][self.value]
+            self.analyticalField = model.analyticalFields[self.value]
 
-    def applyAtStepEnd(self, U, P, stepMagnitude=None):
+    def applyAtStepEnd(self, model, stepMagnitude=None):
         self.active = False
 
     def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
@@ -66,8 +66,7 @@ class StepAction(StepActionBase):
 
     def applyAtStepStart(
         self,
-        U,
-        P,
+        model,
     ):
         if not self.active:
             return

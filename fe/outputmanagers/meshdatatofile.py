@@ -42,6 +42,7 @@ documentation = {
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.math import createMathExpression
+from fe.models.femodel import FEModel
 
 
 class OutputManager(OutputManagerBase):
@@ -50,33 +51,32 @@ class OutputManager(OutputManagerBase):
     identification = "Meshdatatofile"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.journal = journal
-        self.filename = "{:}_mesh.inc".format(jobInfo["name"])
+        self.filename = "{:}_mesh.inc".format(name)
         for defline in definitionLines:
             defDict = convertLineToStringDictionary(defline)
             if "filename" in defDict.keys():
                 self.filename = defDict.get("filename")
 
-    def initializeSimulation(self, model):
         self.writeMeshDataToFile(model)
 
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, U, P, increment, statusInfoDict: dict = {}, **kwargs):
+    def finalizeIncrement(self, model, increment, statusInfoDict: dict = {}, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, statusInfoDict: dict = {}):
         pass
 
-    def finalizeStep(self, U, P, time):
+    def finalizeStep(self, model):
         pass
 
-    def finalizeJob(self, U, P):
+    def finalizeJob(self, model):
         pass
 
-    def writeMeshDataToFile(self, model: dict):
+    def writeMeshDataToFile(self, model: FEModel):
         """Write the mesh data to a file.
 
         Parameters
@@ -88,29 +88,29 @@ class OutputManager(OutputManagerBase):
         with open(self.filename, "w+") as f:
             # write nodes
             f.write("*NODE\n")
-            for nodeID in model["nodes"]:
+            for nodeID in model.nodes:
                 f.write("{:},".format(nodeID))
-                [f.write(" {:},".format(coord)) for coord in model["nodes"][nodeID].coordinates]
+                [f.write(" {:},".format(coord)) for coord in model.nodes[nodeID].coordinates]
                 f.write("\n")
 
             # write elements
             # first, get all element types
             elementTypes = set()
-            [elementTypes.add(element.elType) for element in model["elements"].values()]
+            [elementTypes.add(element.elType) for element in model.elements.values()]
 
             for elementType in elementTypes:
                 f.write("*ELEMENT, TYPE={:}\n".format(elementType))
-                for elementID in model["elements"]:
-                    if model["elements"][elementID].elType == elementType:
+                for elementID in model.elements:
+                    if model.elements[elementID].elType == elementType:
                         f.write("{:>5},".format(elementID))
-                        [f.write(" {:>5},".format(node.label)) for node in model["elements"][elementID].nodes]
+                        [f.write(" {:>5},".format(node.label)) for node in model.elements[elementID].nodes]
                         f.write("\n")
 
             # write node sets
-            for nodeSetName in model["nodeSets"]:
+            for nodeSetName in model.nodeSets:
                 f.write("*NSET, NSET={:}\n".format(nodeSetName))
                 counter = 0
-                for node in model["nodeSets"][nodeSetName]:
+                for node in model.nodeSets[nodeSetName]:
                     counter += 1
                     f.write(" {:>5},".format(node.label))
                     if counter % 16 == 0:
@@ -118,10 +118,10 @@ class OutputManager(OutputManagerBase):
                 f.write("\n")
 
             # write element sets
-            for elementSetName in model["elementSets"]:
+            for elementSetName in model.elementSets:
                 f.write("*ELSET, ELSET={:}\n".format(elementSetName))
                 counter = 0
-                for element in model["elementSets"][elementSetName]:
+                for element in model.elementSets[elementSetName]:
                     counter += 1
                     f.write(" {:>5},".format(element.elNumber))
                     if counter % 16 == 0:
@@ -129,8 +129,8 @@ class OutputManager(OutputManagerBase):
                 f.write("\n")
 
             # write surfaces
-            for surfaceName in model["surfaces"]:
+            for surfaceName in model.surfaces:
                 f.write("*SURFACE, TYPE=ELEMENT, NAME={:}\n".format(surfaceName))
-                for faceID in model["surfaces"][surfaceName].keys():
-                    elset = model["surfaces"][surfaceName][faceID]
+                for faceID in model.surfaces[surfaceName].keys():
+                    elset = model.surfaces[surfaceName][faceID]
                     f.write("{elset}, {faceID}\n".format(elset=elset.label, faceID=faceID))

@@ -4,7 +4,8 @@
 *section, name=section1, thickness=1.0, material=modleon, type=plane
 all
 
-*job, name=cpe4job, domain=2d, solver=NIST
+*job, name=cpe4job, domain=2d
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
@@ -30,7 +31,7 @@ create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=2
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-0.5, 1=0.001

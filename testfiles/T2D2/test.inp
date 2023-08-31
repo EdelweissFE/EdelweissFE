@@ -37,7 +37,9 @@ all
 *elset, elset=all, generate=True
 1, 13, 1
 
-*job, name=trussjob, domain=2d, solver=NIST
+*job, name=trussjob, domain=2d
+*solver, solver=NIST, name=theSolver
+
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 
@@ -45,7 +47,7 @@ elSet=all, field=displacement, result=U, name=displacement
 create=perNode,    fieldOutput=displacement
 configuration, overwrite=yes
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off
 dirichlet, name=1, nSet=l,  field=displacement, 2=0, 1=0
 dirichlet, name=3, nSet=r, field=displacement, 2=-0.1, 

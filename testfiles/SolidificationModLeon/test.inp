@@ -18,7 +18,8 @@
 *section, name=section1, material=mat, type=solid
 all
 
-*job, name=c3d8job, domain=3d, solver=NISTParallel
+*job, name=c3d8job, domain=3d
+*solver, solver=NISTParallel, name=theSolver
 
 *Node
       1,         100.,          10.,          10.
@@ -510,8 +511,8 @@ elSet=all, field=displacement, result=U, name=displacement
 create=perNode, fieldOutput=displacement 
 configuration, overwrite=yes
 
-*step, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=0.1
-options, category=NISTSolver, extrapolation=linear, numThreads=2
+*step, solver=theSolver, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=0.1
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left, nSet=nSetLeft,  field=displacement, 2=0, 1=0, 3=0.0
 dirichlet, name=right, nSet=nSetRight, field=displacement, 2=-0.1
-*step, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=24
+*step, solver=theSolver, maxInc=5e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=24

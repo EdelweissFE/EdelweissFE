@@ -52,14 +52,14 @@ class Constraint(ConstraintBase):
         # self.name = name
         definition = convertLinesToStringDictionary(definitionLines)
 
-        self.nDim = model["domainSize"]
+        self.nDim = model.domainSize
         nDim = self.nDim
 
         if nDim == 2:
             raise Exception("rigid body constraint not yet implemented for 2D")
 
         rbNset = definition["nSet"]
-        nodeSets = model["nodeSets"]
+        nodeSets = model.nodeSets
 
         if len(nodeSets[definition["referencePoint"]]) > 1:
             raise Exception(

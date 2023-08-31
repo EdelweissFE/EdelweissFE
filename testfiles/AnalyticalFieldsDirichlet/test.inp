@@ -4,7 +4,8 @@
 *section, name=section1, material=mat, type=solid
 all
 
-*job, name=test, domain=3d, solver=NISTParallel
+*job, name=test, domain=3d
+*solver, solver=NISTParallel, name=theSolver
 
 *include, input=torsion_bar.inc
  
@@ -29,10 +30,10 @@ cbv=3
 *analyticalField, name=f02, type=scalarExpression
 "f(x,y,z)"="(y-.5)"
 
-*step, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1, solver=theSolver
 dirichlet,  name=fix,     nSet=x_min,   field=displacement, 1=0., 2=0., 3=0.
 
-*step, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1
+*step, maxInc=1e-0, minInc=1e-3, maxNumInc=1000, maxIter=25, stepLength=1, solver=theSolver
 dirichlet,  name=rot_0,   nSet=x_max,   field=displacement, 1=.0
 dirichlet,  name=rot_1,   nSet=x_max,   field=displacement, 2=.01, analyticalField=f01
 dirichlet,  name=rot_2,   nSet=x_max,   field=displacement, 3=.01, analyticalField=f02

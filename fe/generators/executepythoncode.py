@@ -34,8 +34,8 @@ Directly execute Python code to create the model tree.
 
 documentation = {}
 
-
 import os
+from fe.models.femodel import FEModel
 
 
 def generateModelData(generatorDefinition, model, journal):

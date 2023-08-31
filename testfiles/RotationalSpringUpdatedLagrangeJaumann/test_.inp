@@ -6,7 +6,8 @@
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
 
-*job, name=c3d8tljob, domain=3d, solver=NISTParallelForMarmotElements
+*job, name=c3d8tljob, domain=3d
+*solver, solver=NISTParallelForMarmotElements, name=theSolver
 *fieldOutput,
 name=displacement, elSet=all, field=displacement, result=U, name=displacement
 name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=1) ', quadraturePoint=0:3
@@ -22,7 +23,7 @@ create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-*step, maxInc=1e-2, minInc=1e-4, maxNumInc=1000, maxIter=10
+*step, solver=theSolver, maxInc=1e-2, minInc=1e-4, maxNumInc=1000, maxIter=10
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=enc, nSet=Set-1, field=displacement, 1=0, 2=0, 3=0
 dirichlet, name=enc2, nSet=Set-5, field=displacement, 1=0, 2=0, 3=0

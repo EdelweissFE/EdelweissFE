@@ -4,7 +4,8 @@
 *section, name=section1, thickness=1.0, material=linearelastic, type=plane
 all
 
-*job, name=cps4job, domain=2d, solver=NIST
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
@@ -38,7 +39,7 @@ create=perElement, fieldOutput=eas3
 create=perElement, fieldOutput=eas4
 configuration, overwrite=yes
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=off, 
 dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0
 distributedload, name=dload, surface=gen_top, magnitude=10, f(t)=t, type=pressure

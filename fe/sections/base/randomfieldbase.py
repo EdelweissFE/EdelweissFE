@@ -20,7 +20,7 @@ class Section(SectionBase):
 
         self.elSetNames = [s.strip() for s in options["elSets"].split(",")]
 
-        dimension = model["domainSize"]
+        dimension = model.domainSize
         variance = float(options["variance"])
         lengthScale = float(options["lengthScale"])
         seed = int(options["seed"])

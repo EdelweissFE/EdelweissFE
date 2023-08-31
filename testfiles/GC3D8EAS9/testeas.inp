@@ -10,7 +10,8 @@ all
 *section, name=sectionweak, material=modleonweak, type=solid
 weak
 
-*job, name=easjob, domain=3d, solver=NISTParallel
+*job, name=easjob, domain=3d
+*solver, solver=NISTParallel, name=theSolver
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
 elSet=all, field=nonlocal damage, result=U, name=alpha_d_nonlocal
@@ -52,14 +53,14 @@ configuration, overwrite=yes
 *output, type=meshplot, name=RFPlot
 create=xyData, x=time, y=RFTop, legend=RF
 
-*step, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=8
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bcCorner,     nSet=origin,      field=displacement,     1=0, 2=0, 3=0
 dirichlet, name=bottom2, nSet=bottom,  field=displacement,               2=0, 
 dirichlet, name=zrot,   nSet=zrotlock, field=displacement,             3=0,
 dirichlet, name=back,   nSet=back, field=displacement,             3=0,
 dirichlet, name=front,   nSet=front, field=displacement,             3=0,
 
-*step, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear, numThreads=8
+*step, solver=theSolver, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=top, nSet=top, field=displacement, 2=-2, 

@@ -44,7 +44,7 @@ class AnalyticalField(AnalyticalFieldBase):
         self.name = name
         self.type = "scalarExpression"
 
-        self.domainSize = model["domainSize"]
+        self.domainSize = model.domainSize
         self.options = convertLinesToStringDictionary(data)
 
         expressionString = self.options["f(x,y,z)"]

@@ -8,9 +8,9 @@ but very handy if fundamental new functionalities should be added.
 Matrix conversion from COO sparse format to CSR format
 ------------------------------------------------------
 
-Module ``fe.utils.csrgenerator``
+Module ``fe.numerics.csrgenerator``
 
-.. autoclass:: fe.utils.csrgenerator.CSRGenerator
+.. autoclass:: fe.numerics.csrgenerator.CSRGenerator
    :members: 
 
 Gathering efficiently of element results

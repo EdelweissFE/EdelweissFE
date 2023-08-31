@@ -50,7 +50,7 @@ class OutputManager(OutputManagerBase):
     identification = "Statusfile"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, jobInfo, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.filename = "{:}.sta".format(jobInfo.get("name", jobInfo["inputfile"].rstrip(".inp")))
         for defLine in definitionLines:
@@ -60,10 +60,10 @@ class OutputManager(OutputManagerBase):
 
         self.statusFileExists = False
 
-    def initializeSimulation(self, model):
-        pass
+    # def initializeSimulation(self, model):
+    #     pass
 
-    def initializeStep(self, step, stepActions):
+    def initializeStep(self, step):
         pass
 
     def finalizeIncrement(self, U, P, increment, statusInfoDict: dict = {}, **kwargs):
@@ -72,7 +72,7 @@ class OutputManager(OutputManagerBase):
     def finalizeFailedIncrement(self, statusInfoDict: dict = {}, **kwargs):
         self.writeStatusFile(statusInfoDict)
 
-    def finalizeStep(self, U, P, time):
+    def finalizeStep(self, U, P):
         pass
 
     def finalizeJob(self, U, P):
