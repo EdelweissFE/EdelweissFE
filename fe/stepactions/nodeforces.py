@@ -69,7 +69,7 @@ class StepAction(StepActionBase):
 
         self.possibleComponents = [str(i + 1) for i in range(self.fieldSize)]
 
-        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
+        self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
         # if "components" in action:
         #     action = self._getDirectionsFromComponents(action)
@@ -85,7 +85,7 @@ class StepAction(StepActionBase):
         # self.nodeForcesDelta = np.asarray(nodeForceDelta)
         # self.currentNodeForces = np.zeros_like(self.nodeForcesDelta)
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         """Update the step action.
 
         It is a reasonable requirement that the updated direction components cannot change.

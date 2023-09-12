@@ -83,30 +83,23 @@ if __name__ == "__main__":
 
         try:
             tic = timer()
-            success, model, fieldOutputController = finiteElementSimulation(
-                inputFile, verbose=False, suppressPlots=True
-            )
+            model, fieldOutputController = finiteElementSimulation(inputFile, verbose=False, suppressPlots=True)
             toc = timer()
 
             if not args.create:
-                if success:
-                    UReference = np.loadtxt(referenceSolutionFile)
-                    U = np.hstack(
-                        [f.values["U"].flatten() for f in model.nodeFields.values()]
-                        + [v.value for v in model.scalarVariables.values()]
-                    ).flatten()
-                    residual = U - UReference
+                UReference = np.loadtxt(referenceSolutionFile)
+                U = np.hstack(
+                    [f.values["U"].flatten() for f in model.nodeFields.values()]
+                    + [v.value for v in model.scalarVariables.values()]
+                ).flatten()
+                residual = U - UReference
 
-                    if (np.max(np.abs(residual))) < 1e-6:
-                        print("Test {:50} [green]PASSED[/] [{:2.1f}]".format(directory, toc - tic))
-                    else:
-                        print("Test {:50} [red]FAILED[/]".format(directory))
-                        failedTests += 1
-                    os.chdir("..")
+                if (np.max(np.abs(residual))) < 1e-6:
+                    print("Test {:50} [green]PASSED[/] [{:2.1f}]".format(directory, toc - tic))
                 else:
-                    print("Test {:50} [red]FAILED[/]: ".format(directory) + "Test not completed!")
+                    print("Test {:50} [red]FAILED[/]".format(directory))
                     failedTests += 1
-
+                os.chdir("..")
             else:
                 print("")
                 np.savetxt(referenceSolutionFile, U)
@@ -114,6 +107,7 @@ if __name__ == "__main__":
         except NotImplementedError as e:
             print("Test {:50} [grey]SKIPPED[/]: ".format(directory) + str(e))
             continue
+
         except Exception as e:
             print("Test {:50} [red]FAILED[/]: ".format(directory) + str(e))
             failedTests += 1

@@ -1,5 +1,5 @@
-The DOF manager
-===============
+DOF manager
+===========
 
 Module ``fe.numerics.dofmanager``
 

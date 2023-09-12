@@ -83,11 +83,8 @@ import os
 import sys
 import itertools
 from fe.utils.misc import convertLineToStringDictionary
-
 from distutils.spawn import find_executable
-
 from fe.journal.journal import Journal
-
 
 defaultMarkerCycle = itertools.cycle(("o", "v", "D", "s", "^"))
 defaultLinePlotColorCycle = itertools.cycle(("k"))
@@ -103,12 +100,17 @@ class Plotter:
     ----------
     journal
         The journal instance for logging.
-    inputfile
-        The inputfile dictionary.
+    plotConfigurations
+        The list of dictionaries configuring individual plots.
+    exportJobs
+        The list of jobs to export plots at the end of a simulations.
     """
 
-    def __init__(self, journal: Journal, inputfile: dict):
+    def __init__(self, journal: Journal, plotConfigurations: list[dict], exportJobs: list[dict]):
         self.journal = journal
+
+        self.plotConfigurations = plotConfigurations
+        self.exportJobs = exportJobs
 
         latexAvailable = False
         if find_executable("latex"):
@@ -145,15 +147,6 @@ class Plotter:
 
         self.figsWithAxes = {}  # {figID : (figure, {axesDict})}
         matplotlib.rcParams.update(self.rcParams)
-
-        self.configurationLines = [
-            convertLineToStringDictionary(c)
-            for configEntry in inputfile["*configurePlots"]
-            for c in configEntry["data"]
-        ]
-        self.exportJobs = [
-            convertLineToStringDictionary(c) for configEntry in inputfile["*exportPlots"] for c in configEntry["data"]
-        ]
 
     def getAx(self, figureID: int = 0, axSpec: int = 111) -> matplotlib.axes.Axes:
         """Get or create a figure with axes if it doesn't exist yet.
@@ -244,7 +237,7 @@ class Plotter:
     def configurePlotter(self):
         """Set global options of the plotter."""
 
-        for configEntry in self.configurationLines:
+        for configEntry in self.plotConfigurations:
             ax = self.figsWithAxes[(configEntry["figure"])][1][configEntry["axSpec"]]
 
             if "xLimits" in configEntry:

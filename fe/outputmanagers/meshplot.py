@@ -43,7 +43,7 @@ import numpy as np
 from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
 import fe.config.phenomena
-from fe.utils.fieldoutput import FieldOutput
+from fe.utils.fieldoutput import _FieldOutput
 from fe.utils.math import createMathExpression
 import matplotlib.tri as mtri
 from matplotlib import colors
@@ -194,8 +194,9 @@ class OutputManager(OutputManagerBase):
         self.meshOnlyJobs = []
 
         # needed for meshOnly plot
-        fpDef = {"result": "U", "field": "displacement", "name": "meshDisplacements", "elSet": "all"}
-        fieldOutputController.fieldOutputs[fpDef["name"]] = FieldOutput(model, fpDef, journal)
+        fieldOutputController.addFieldOutput(
+            "meshDisplacements", model, journal, result="U", field="displacement", elset="all"
+        )
 
         for defLine in definitionLines:
             definition = convertLineToStringDictionary(defLine)

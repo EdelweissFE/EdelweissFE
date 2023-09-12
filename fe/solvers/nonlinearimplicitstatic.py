@@ -124,12 +124,6 @@ class NIST:
             The  model tree.
         fieldOutputController
             The field output controller.
-
-        Returns
-        -------
-        tuple[bool,FEModel]
-            - Truth value of success.
-            - The updated model
         """
 
         self.journal.message("Creating monolithic equation system", self.identification, 0)
@@ -186,7 +180,6 @@ class NIST:
             U[self.theDofManager.idcsOfScalarVariablesInDofVector[variable]] = variable.value
 
         lastIncrementSize = False
-        success = False
 
         self.applyStepActionsAtStepStart(model, step.actions)
 
@@ -288,21 +281,14 @@ class NIST:
                         )
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
-            success = False
             self.journal.errorMessage("Incrementation failed", self.identification)
-
-        except KeyboardInterrupt:
-            success = False
-            print("")
-            self.journal.message("Interrupted by user", self.identification)
+            raise StepFailed()
 
         except ConditionalStop:
-            success = True
             self.journal.message("Conditional Stop", self.identification)
             self.applyStepActionsAtStepEnd(model, step.actions)
 
         else:
-            success = True
             self.applyStepActionsAtStepEnd(model, step.actions)
 
         finally:
@@ -310,8 +296,6 @@ class NIST:
                 [("Time in {:}".format(k), " {:10.4f}s".format(v)) for k, v in self.computationTimes.items()],
                 self.identification,
             )
-
-        return success, model
 
     def solveIncrement(
         self,

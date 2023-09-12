@@ -79,7 +79,7 @@ class StepAction(StepActionBase):
     def applyAtStepEnd(self, U, P):
         self.currentL0 = self.cVector.dot(U[self.idcs])
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         if self.definition == "absolute":
             self.L = float(action["L"]) - self.currentL0
         else:

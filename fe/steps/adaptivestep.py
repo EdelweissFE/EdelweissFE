@@ -61,15 +61,27 @@ class AdaptiveStep(StepBase):
     def __init__(
         self, number: int, startTime: float, definition: defaultdict, stepActions: dict, jobInfo: dict, journal: Journal
     ):
-        self.number = number
-        self.length = definition.get("stepLength", 1.0)
-        self.startIncrementSize = definition.get("startInc", self.defaultStartInc)
-        self.maxIncrementSize = definition.get("maxInc", self.defaultMaxInc)
-        self.minIncrementSize = definition.get("minInc", self.defaultMinInc)
-        self.maxNumberIncrements = definition.get("maxNumInc", self.defaultMaxNumInc)
-        self.maxIter = definition.get("maxIter", self.defaultMaxIter)
-        self.criticalIter = definition.get("criticalIter", self.defaultCriticalIter)
-        self.maxGrowIter = definition.get("maxGrowIter", self.defaultMaxGrowingIter)
+        self.number = number  #: The (unique) number of the step.
+        self.length = definition.get("stepLength", 1.0)  #: The durcation of the step.
+        self.startIncrementSize = definition.get(
+            "startInc", self.defaultStartInc
+        )  #: The initial fraction of the step to be computed.
+        self.maxIncrementSize = definition.get(
+            "maxInc", self.defaultMaxInc
+        )  #: The maximal fraction of the step to be computed.
+        self.minIncrementSize = definition.get(
+            "minInc", self.defaultMinInc
+        )  #: The minimal fraction of the step to be computed.
+        self.maxNumberIncrements = definition.get(
+            "maxNumInc", self.defaultMaxNumInc
+        )  #: The maximal number of increments allowed.
+        self.maxIter = definition.get("maxIter", self.defaultMaxIter)  #: The maximal number of iterations allowed.
+        self.criticalIter = definition.get(
+            "criticalIter", self.defaultCriticalIter
+        )  #: The number of critical iterations after which the next increment is reduced.
+        self.maxGrowIter = definition.get(
+            "maxGrowIter", self.defaultMaxGrowingIter
+        )  #: The number of residual growths before the increment is discarded.
 
         self.incrementGenerator = IncrementGenerator(
             startTime,
@@ -98,8 +110,6 @@ class AdaptiveStep(StepBase):
             )
             solver = solvers["default"]
 
-        success = False
-
         try:
             for modelUpdate in self.actions["modelupdate"].values():
                 model = modelUpdate.updateModel(model, fieldOutputController, journal)
@@ -108,14 +118,12 @@ class AdaptiveStep(StepBase):
             for manager in outputManagers:
                 manager.initializeStep(self)
 
-            success, model = solver.solveStep(self, model, fieldOutputController, outputManagers)
+            solver.solveStep(self, model, fieldOutputController, outputManagers)
 
         finally:
             fieldOutputController.finalizeStep(model)
             for manager in outputManagers:
                 manager.finalizeStep(model)
-
-        return success, model
 
     def getTimeIncrement(
         self,

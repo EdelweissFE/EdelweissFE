@@ -53,7 +53,7 @@ class StepAction(StepActionBase):
         self.model = model
         self.currentL0 = 0.0
 
-        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
+        self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
     def computeDDLambda(self, dU, ddU_0, ddU_f, increment, dofManager):
         idcs = np.hstack([dofManager.idcsInDofVector[self.dof1], dofManager.idcsInDofVector[self.dof2]])
@@ -75,7 +75,7 @@ class StepAction(StepActionBase):
     def applyAtStepEnd(self, model):
         self.currentL0 = self.c1.dot(self.dof1.values) + self.c2.dot(self.dof2.values)
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         self.definition = str(action.get("definition", "absolute"))
 
         if self.definition == "absolute":

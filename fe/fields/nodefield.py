@@ -40,7 +40,7 @@ class _NodeFieldValues(np.ndarray):
     """
     This class represents a result entry of NodeField,
     carrying values for each node within the field.
-    It is basically a np.ndarray, but provides addional easy access by Node or NodeSets.
+    It is basically a np.ndarray, but provides additional easy access by Node or NodeSets.
     The [] operator allows to access (non-contigouos read, write) at each entities location:
 
     Parameters
@@ -87,20 +87,28 @@ class NodeField:
 
     """
     This class represents a node field.
-    A node field associates every node with multiple entries (flux, effort) of field variables.
+    A node field associates every node with multiple entries (e.g., flux and effort) of a field variable.
     Furthermore, for convencience, it allows to get fast access to values for individual nodes or node sets.
+
+    The purpose is to store field data in an efficient, contiguos manner rather than distributing it across
+    all individual nodes.
 
     .. code-block:: console
 
+        Example:
+
         NodeField 'Displacement'
-           values: {'U' : [[0,0,0],  # node (1)
-                           [1,0,0],  # node (2)
-                           [0,1,0]]} # node (3)
+           values: {'U' : [[0,0,0],  # Node (1)
+                           [1,0,0],  # Node (2)
+                           [0,1,0]]} # Node (3)
+
+        Spatial representation:
+
         (1) --------- (2)
-         | *             .
-         |  *+---------+   ...
-         |   | [0,0,0] |
-        (3)  +---------+
+         | *             *
+         |  *+---------+   *+---------+
+         |   | [0,0,0] |    | [1,0,0] |
+        (3)  +---------+    +---------+
           *
            * +---------+
              | [0,1,0] |

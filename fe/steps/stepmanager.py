@@ -39,6 +39,20 @@ from fe.steps.base.stepbase import StepBase
 import textwrap
 
 
+class StepActionDefinition:
+    def __init__(self, name: str, module: str, kwargs: dict):
+        self.name = name
+        self.module = module
+        self.kwargs = kwargs
+
+
+class StepDefinition:
+    def __init__(self, stepType: str, stepOptions: dict, stepActionDefinitions: list[StepActionDefinition]):
+        self.type = stepType
+        self.stepOptions = stepOptions
+        self.stepActionDefinitions = stepActionDefinitions
+
+
 class StepManager:
     """This manager for convenience parses all step defintions for the simulation
     and calls the respective modules, which generate (or update) StepActions based on
@@ -52,19 +66,30 @@ class StepManager:
 
     identification = "StepManager"
 
-    def __init__(self, inputfile):
-        self.stepActions = defaultdict(CaseInsensitiveDict)
-        self.inputfile = inputfile
-        self.steps = 0
+    def __init__(
+        self,
+    ):
+        self.stepActions = defaultdict(dict)
+        self.stepDefinitions = []
 
-    def getStep(
+    def enqueueStepDefinition(self, stepDefinition: StepDefinition):
+        """Enqueue a step definition.
+
+        Parameters
+        ----------
+        stepDefinition
+            The StepDefinition containing the step type, step options and list of StepActionDefinition.
+        """
+        self.stepDefinitions.append(stepDefinition)
+
+    def dequeueStep(
         self,
         jobInfo: dict,
         model: FEModel,
         fieldOutputController: FieldOutputController,
         journal: Journal,
     ) -> StepBase:
-        """Get the next step.
+        """Dequeue the next step.
 
         Parameters
         ----------
@@ -96,7 +121,7 @@ class StepManager:
                     2,
                 )
 
-        for stepNumber, stepDefinition in enumerate(self.inputfile["*step"]):
+        for stepNumber, stepDefinition in enumerate(self.stepDefinitions):
             actionDefinitionsInThisStep = []
 
             journal.message(
@@ -105,33 +130,24 @@ class StepManager:
                 1,
             )
 
-            for dataline in stepDefinition["data"]:
-                actionType, *definition = splitLineAtCommas(dataline)
-                options = convertAssignmentsToStringDictionary(definition)
-
-                module = actionType.lower()
-                moduleName = options.get("name", options.get("category", module))
-
-                if moduleName in actionDefinitionsInThisStep:
+            for action in stepDefinition.stepActionDefinitions:
+                if action.name in actionDefinitionsInThisStep:
                     raise Exception(
-                        "Warning: StepAction {:} has multiple definitions in step {:}".format(moduleName, stepNumber)
+                        "Warning: StepAction {:} has multiple definitions in step {:}".format(action.name, stepNumber)
                     )
+                actionDefinitionsInThisStep.append(action.name)
 
-                actionDefinitionsInThisStep.append(moduleName)
-
-                stepActions = self.stepActions
-
-                if moduleName in stepActions[module]:
-                    stepActions[module][moduleName].updateStepAction(
-                        moduleName, options, jobInfo, model, fieldOutputController, journal
+                if action.name in self.stepActions[action.module]:
+                    self.stepActions[action.module][action.name].updateStepAction(
+                        action.kwargs, jobInfo, model, fieldOutputController, journal
                     )
-                    printActionDefinition('Updating "{:}"'.format(moduleName), options)
+                    printActionDefinition('Updating "{:}"'.format(action.name), action.kwargs)
 
                 else:
-                    printActionDefinition('Creating "{:}"'.format(moduleName), options)
+                    printActionDefinition('Creating "{:}"'.format(action.name), action.kwargs)
 
-                    stepActions[module][moduleName] = stepActionFactory(module)(
-                        moduleName, options, jobInfo, model, fieldOutputController, journal
+                    self.stepActions[action.module][action.name] = stepActionFactory(action.module)(
+                        action.name, action.kwargs, jobInfo, model, fieldOutputController, journal
                     )
 
-            yield AdaptiveStep(stepNumber, model.time, stepDefinition, stepActions, jobInfo, journal)
+            yield AdaptiveStep(stepNumber, model.time, stepDefinition.stepOptions, self.stepActions, jobInfo, journal)
