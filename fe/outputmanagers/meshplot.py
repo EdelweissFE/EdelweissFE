@@ -266,7 +266,7 @@ class OutputManager(OutputManagerBase):
                 elif varType == "meshOnly":
                     meshOnlyJob = {}
 
-                    meshOnlyJob["fieldOutput"] = fieldOutputController.fieldOutputs[fpDef["name"]]
+                    meshOnlyJob["fieldOutput"] = fieldOutputController.fieldOutputs["meshDisplacements"]
                     meshOnlyJob["configuration"] = definition.get("configuration", "undeformed")
                     meshOnlyJob["scaleFactor"] = float(definition.get("scaleFactor", 1.0))
                     meshOnlyJob["axSpec"] = definition.get("axSpec", "111")
