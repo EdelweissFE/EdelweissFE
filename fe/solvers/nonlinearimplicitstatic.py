@@ -274,10 +274,10 @@ class NIST:
                     statusInfoDict["iters"] = iterationCounter
                     statusInfoDict["converged"] = True
 
-                    fieldOutputController.finalizeIncrement(model, increment)
+                    fieldOutputController.finalizeIncrement(increment)
                     for man in outputmanagers:
                         man.finalizeIncrement(
-                            model, increment, currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
+                            increment, currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
                         )
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):

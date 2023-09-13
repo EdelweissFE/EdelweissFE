@@ -107,8 +107,6 @@ class Plotter:
     """
 
     def __init__(self, journal: Journal, plotConfigurations: list[dict], exportJobs: list[dict]):
-        self.journal = journal
-
         self.plotConfigurations = plotConfigurations
         self.exportJobs = exportJobs
 

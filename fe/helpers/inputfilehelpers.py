@@ -43,19 +43,36 @@ from fe.utils.fieldoutput import FieldOutputController
 from fe.utils.plotter import Plotter
 
 
-def createFieldOutputFromInputFile(inputfile: dict, model, journal):
-    fieldOutputController = FieldOutputController()
+def createFieldOutputFromInputFile(inputfile: dict, model: FEModel, journal: Journal) -> FieldOutputController:
+    """Convenience helper function
+    to create the FieldOutputController instance using the *fieldOutput keyword.
+
+    Parameters
+    ----------
+    inputfile
+        The processed inputfile in dictionary form.
+    model
+        The FEModel tree instance.
+    journal
+        The Journal for logging purposes.
+
+    Returns
+    -------
+    FieldOutputController
+        The configured FieldOutputController instance.
+    """
+    fieldOutputController = FieldOutputController(model, journal)
     if inputfile["*fieldOutput"]:
         definition = inputfile["*fieldOutput"][0]
         for defLine in definition["data"]:
             fpDef = convertLineToStringDictionary(defLine)
             name = fpDef.pop("name")
-            fieldOutputController.addFieldOutput(name, model, journal, **fpDef)
+            fieldOutputController.addFieldOutput(name, **fpDef)
 
     return fieldOutputController
 
 
-def fillFEModelFromInputFile(model: FEModel, inputfile: dict, journal: Journal):
+def fillFEModelFromInputFile(model: FEModel, inputfile: dict, journal: Journal) -> FEModel:
     """Convenience helper function
     to fill an existing (possibly empty) FEModel using the input file and generators.
 
@@ -99,7 +116,20 @@ def fillFEModelFromInputFile(model: FEModel, inputfile: dict, journal: Journal):
     return model
 
 
-def createStepManagerFromInputFile(inputfile):
+def createStepManagerFromInputFile(inputfile: dict):
+    """Convenience helper function
+    to create and fill a StepManager using *step definitions from the input file.
+
+    Parameters
+    ----------
+    inputfile
+        The processed inputfile in dictionary form.
+
+    Returns
+    -------
+    StepManager
+        The StepManager with enqueued StepDefinitions.
+    """
     stepManager = StepManager()
 
     for stepLine in inputfile["*step"]:
@@ -123,7 +153,24 @@ def createStepManagerFromInputFile(inputfile):
     return stepManager
 
 
-def createSolversFromInputFile(inputfile: dict, jobInfo: dict, journal: Journal):
+def createSolversFromInputFile(inputfile: dict, jobInfo: dict, journal: Journal) -> dict:
+    """Convenience helper function
+    to create instances of nonlinear solvers using the *solver keyword.
+
+    Parameters
+    ----------
+    inputfile
+        The processed inputfile in dictionary form.
+    jobInfo
+        Additional informations about the job
+    journal
+        The Journal instance for logging purposes.
+
+    Returns
+    -------
+    dict
+        The dictionary containing the solver instances.
+    """
     solvers = {}
     for solverDefinition in inputfile["*solver"]:
         solverType = solverDefinition["solver"]
@@ -147,6 +194,27 @@ def createOutputManagersFromInputFile(
     journal: Journal,
     plotter: Plotter,
 ) -> list:
+    """Convenience helper function
+    to create output managers using the *output keyword.
+
+    Parameters
+    ----------
+    inputfile
+        The processed inputfile in dictionary form.
+    defaultName
+        The default name prefix for output managers without specified name.
+    fieldOutputController
+        The FieldOutputController instance.
+    journal
+        The Journal instance for logging purposes.
+    plotter
+        The plotter instance.
+
+    Returns
+    -------
+    list
+        The list containing the OutputManager instances.
+    """
     jobName = defaultName
     outputmanagers = []
 
@@ -161,7 +229,22 @@ def createOutputManagersFromInputFile(
     return outputmanagers
 
 
-def createPlotterFromInputFile(inputfile: dict, journal: Journal):
+def createPlotterFromInputFile(inputfile: dict, journal: Journal) -> Plotter:
+    """Convenience helper function
+    to create and configure the Plotter instance using the *configurePlots and *exportPlots keywords
+
+    Parameters
+    ----------
+    inputfile
+        The processed inputfile in dictionary form.
+    journal
+        The Journal instance for logging purposes.
+
+    Returns
+    -------
+    Plotter
+        The resulting plotter instance
+    """
     plotConfigurations = [
         convertLineToStringDictionary(c) for configEntry in inputfile["*configurePlots"] for c in configEntry["data"]
     ]

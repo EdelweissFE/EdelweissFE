@@ -70,7 +70,7 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def initializeStep(self, model, step: dict):
+    def initializeStep(self, step: dict):
         """Initalize the output manager at the beginning of a step.
 
         Parameters
@@ -82,7 +82,7 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeIncrement(self, model, increment: tuple, **kwargs):
+    def finalizeIncrement(self, increment: tuple, **kwargs):
         """Finalize the output at the end of an increment.
 
         Parameters
@@ -112,7 +112,9 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeStep(self, model, time: float):
+    def finalizeStep(
+        self,
+    ):
         """Finalize the output the end of a step.
 
         Parameters

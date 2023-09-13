@@ -194,9 +194,7 @@ class OutputManager(OutputManagerBase):
         self.meshOnlyJobs = []
 
         # needed for meshOnly plot
-        fieldOutputController.addFieldOutput(
-            "meshDisplacements", model, journal, result="U", field="displacement", elset="all"
-        )
+        fieldOutputController.addFieldOutput("meshDisplacements", result="U", field="displacement", elset="all")
 
         for defLine in definitionLines:
             definition = convertLineToStringDictionary(defLine)
@@ -290,16 +288,20 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(self, model):
+    def finalizeStep(
+        self,
+    ):
         pass
 
-    def finalizeJob(self, model):
+    def finalizeJob(
+        self,
+    ):
         for xyJob in self.xyJobs:
             y = xyJob["y"].getResultHistory()
 

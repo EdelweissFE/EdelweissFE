@@ -41,47 +41,55 @@ class StepBase:
 
     It has a specific runtime, and it holds StepActions to executed.
 
-
     Parameters
     ----------
     number
         The number of this step. For information purposes only.
-    startTime
-        The start time of the step.
-    definition
-        A dictionary holding key/value pairs for defintion
+    model
+        The current state of the model.
+    fieldOutputController
+        The FieldOutputController instance for processing results.
+    journal
+        The Journal instance for logging purposes.
+    jobInfo
+        Additional information about the job
+    solvers
+        The instances of solvers available to this step.
+    outputManagers
+        The OutputManagers used.
     stepActions
         The collection of actions for this step.
-    journal
-        The journal object for logging.
+    **kwargs
+        Additional options for the step.
     """
 
-    def __init__(self, number: int, startTime: float, definition: defaultdict, stepActions: dict, journal):
+    def __init__(
+        self,
+        number: int,
+        model: FEModel,
+        fieldOutputController: FieldOutputController,
+        journal: Journal,
+        jobInfo: dict,
+        solvers: dict,
+        outputManagers: list,
+        stepActions: dict,
+        **kwargs
+    ):
         pass
 
     def solve(
-        self, solvers: dict, model: FEModel, fieldOutputController: FieldOutputController, outputManagers: dict
-    ) -> tuple[bool, FEModel]:
+        self,
+    ) -> FEModel:
         """
         Let a step be solved.
 
         Parameters
         ----------
-        solvers
-            The instances of solvers available to this step.
-        model
-            The model to be solved.
-        fieldOutputController
-            The FieldOutputController instance for post processing of results.
-        outputManagers
-            The OutputManagers used.
-        journal
-            The journal instance for logging.
 
         Returns
         -------
-        tuple[bool, FEModel]
-            The tuple containing the truth value of successs and the updated model.
+        FEModel
+            The updated model.
         """
 
         pass

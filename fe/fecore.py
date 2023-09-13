@@ -56,7 +56,7 @@ from fe.helpers.inputfilehelpers import (
     createSolversFromInputFile,
     createStepManagerFromInputFile,
     createFieldOutputFromInputFile,
-    createPlotterFromInputFile
+    createPlotterFromInputFile,
 )
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.config.solvers import getSolverByName
@@ -163,12 +163,12 @@ def finiteElementSimulation(
         Solver = getSolverByName(job.get("solver", "NIST"))
         solvers["default"] = Solver(jobInfo, journal)
 
-    fieldOutputController.initializeJob(model)
+    fieldOutputController.initializeJob()
 
     try:
-        for step in stepManager.dequeueStep(jobInfo, model, fieldOutputController, journal):
+        for step in stepManager.dequeueStep(jobInfo, model, fieldOutputController, journal, solvers, outputManagers):
             tic = getCurrentTime()
-            step.solve(solvers, model, fieldOutputController, outputManagers, journal)
+            step.solve()
             toc = getCurrentTime()
             stepTime = toc - tic
             jobInfo["computationTime"] += stepTime
@@ -195,9 +195,9 @@ def finiteElementSimulation(
             printHeaderRow=False,
         )
 
-        fieldOutputController.finalizeJob(model)
+        fieldOutputController.finalizeJob()
         for manager in outputManagers:
-            manager.finalizeJob(model)
+            manager.finalizeJob()
 
         plotter.finalize()
         if not suppressPlots:

@@ -28,8 +28,11 @@
 
 from collections import defaultdict
 from fe.steps.base.stepbase import StepBase
+from fe.models.femodel import FEModel
 from fe.utils.incrementgenerator import IncrementGenerator
+from fe.utils.fieldoutput import FieldOutputController
 from fe.journal.journal import Journal
+from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 
 class AdaptiveStep(StepBase):
@@ -59,32 +62,49 @@ class AdaptiveStep(StepBase):
     defaultMaxGrowingIter = 10
 
     def __init__(
-        self, number: int, startTime: float, definition: defaultdict, stepActions: dict, jobInfo: dict, journal: Journal
+        self,
+        number: int,
+        model: FEModel,
+        fieldOutputController: FieldOutputController,
+        journal: Journal,
+        jobInfo: dict,
+        solvers: dict,
+        outputManagers: list,
+        stepActions: dict,
+        **kwargs
     ):
+        kwargs = CaseInsensitiveDict(kwargs)
         self.number = number  #: The (unique) number of the step.
-        self.length = definition.get("stepLength", 1.0)  #: The durcation of the step.
-        self.startIncrementSize = definition.get(
+
+        self.model = model
+        self.fieldOutputController = fieldOutputController
+        self.journal = journal
+        self.solvers = solvers
+        self.outputManagers = outputManagers
+
+        self.length = kwargs.get("stepLength", 1.0)  #: The durcation of the step.
+        self.startIncrementSize = kwargs.get(
             "startInc", self.defaultStartInc
         )  #: The initial fraction of the step to be computed.
-        self.maxIncrementSize = definition.get(
+        self.maxIncrementSize = kwargs.get(
             "maxInc", self.defaultMaxInc
         )  #: The maximal fraction of the step to be computed.
-        self.minIncrementSize = definition.get(
+        self.minIncrementSize = kwargs.get(
             "minInc", self.defaultMinInc
         )  #: The minimal fraction of the step to be computed.
-        self.maxNumberIncrements = definition.get(
+        self.maxNumberIncrements = kwargs.get(
             "maxNumInc", self.defaultMaxNumInc
         )  #: The maximal number of increments allowed.
-        self.maxIter = definition.get("maxIter", self.defaultMaxIter)  #: The maximal number of iterations allowed.
-        self.criticalIter = definition.get(
+        self.maxIter = kwargs.get("maxIter", self.defaultMaxIter)  #: The maximal number of iterations allowed.
+        self.criticalIter = kwargs.get(
             "criticalIter", self.defaultCriticalIter
         )  #: The number of critical iterations after which the next increment is reduced.
-        self.maxGrowIter = definition.get(
+        self.maxGrowIter = kwargs.get(
             "maxGrowIter", self.defaultMaxGrowingIter
         )  #: The number of residual growths before the increment is discarded.
 
         self.incrementGenerator = IncrementGenerator(
-            startTime,
+            model.time,
             self.length,
             self.startIncrementSize,
             self.maxIncrementSize,
@@ -95,9 +115,17 @@ class AdaptiveStep(StepBase):
 
         self.actions = stepActions
 
-        self.solverName = definition.get("solver", None)
+        self.solverName = kwargs.get("solver", None)
 
-    def solve(self, solvers, model, fieldOutputController, outputManagers, journal):
+    def solve(
+        self,
+    ):
+        model = self.model
+        fieldOutputController = self.fieldOutputController
+        journal = self.journal
+        solvers = self.solvers
+        outputManagers = self.outputManagers
+
         if self.solverName in solvers:
             solver = solvers[self.solverName]
         else:
@@ -121,9 +149,9 @@ class AdaptiveStep(StepBase):
             solver.solveStep(self, model, fieldOutputController, outputManagers)
 
         finally:
-            fieldOutputController.finalizeStep(model)
+            fieldOutputController.finalizeStep()
             for manager in outputManagers:
-                manager.finalizeStep(model)
+                manager.finalizeStep()
 
     def getTimeIncrement(
         self,

@@ -77,12 +77,7 @@ class OutputManager(OutputManagerBase):
                 f.write("\n#\n")
 
     def finalizeIncrement(
-        self,
-        model,
-        increment,
-        statusInfoDict=defaultdict(lambda: 0.0),
-        currentComputingTimes=createTimingDict(),
-        **kwargs
+        self, increment, statusInfoDict=defaultdict(lambda: 0.0), currentComputingTimes=createTimingDict(), **kwargs
     ):
         compTimeTotal, compTimeIndividual = self.computeIncrementComputingTimes(currentComputingTimes)
 
@@ -101,10 +96,14 @@ class OutputManager(OutputManagerBase):
             self.writeIncrementComputingTimesToFile(compTimeTotal, compTimeIndividual, statusInfoDict)
         self.computingTimesOld = currentComputingTimes.copy()
 
-    def finalizeStep(self, model: FEModel):
+    def finalizeStep(
+        self,
+    ):
         pass
 
-    def finalizeJob(self, model: FEModel):
+    def finalizeJob(
+        self,
+    ):
         pass
 
     def computeIncrementComputingTimes(self, currentComputingTimes: dict) -> Union[float, dict]:

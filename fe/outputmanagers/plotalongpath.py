@@ -109,7 +109,7 @@ class OutputManager(OutputManagerBase):
         for nJob in self.monitorJobs:
             self.plotStages = np.linspace(0, step.length, nJob["nStages"])
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         totalTime = increment[3] + increment[4]
         if totalTime > self.plotStages[0]:
             for nJob in self.monitorJobs:
@@ -139,13 +139,11 @@ class OutputManager(OutputManagerBase):
 
     def finalizeStep(
         self,
-        model,
     ):
         pass
 
     def finalizeJob(
         self,
-        model,
     ):
         for nJob in self.monitorJobs:
             result = nJob["fieldOutput"].getLastResult()

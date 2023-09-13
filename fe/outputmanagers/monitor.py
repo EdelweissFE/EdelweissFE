@@ -72,7 +72,7 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         for nJob in self.monitorJobs:
             result = nJob["f(x)"](nJob["fieldOutput"].getLastResult())
             self.journal.message(
@@ -83,8 +83,12 @@ class OutputManager(OutputManagerBase):
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(self, model):
+    def finalizeStep(
+        self,
+    ):
         pass
 
-    def finalizeJob(self, model):
+    def finalizeJob(
+        self,
+    ):
         pass

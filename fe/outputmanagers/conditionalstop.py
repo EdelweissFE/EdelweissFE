@@ -52,6 +52,7 @@ class OutputManager(OutputManagerBase):
     printTemplate = "{:}, {:}: {:}"
 
     def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+        self.model = model
         self.journal = journal
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
@@ -67,7 +68,7 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         for nJob in self.monitorJobs:
             if nJob["stop"]():
                 raise ConditionalStop()
@@ -75,8 +76,8 @@ class OutputManager(OutputManagerBase):
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(self, model):
+    def finalizeStep(self):
         pass
 
-    def finalizeJob(self, model):
+    def finalizeJob(self):
         pass

@@ -82,9 +82,10 @@ class _FieldOutput:
     """
 
     def __init__(self, name: str, model: FEModel, journal: Journal, **kwargs: dict):
-        self.journal = journal
         self.timeTotal = 0.0
         self.name = name
+        self.model = model
+        self.journal = journal
 
         if "nset" in kwargs:
             self.domainType = "nSet"
@@ -99,7 +100,7 @@ class _FieldOutput:
             self.domainType = "elSet"
 
             if kwargs["result"] == "U" or kwargs["result"] == "P":
-                self.journal.message(
+                journal.message(
                     "Converting elSet {:} to a nSet due to requested nodal results".format(kwargs["elset"]),
                     self.name,
                 )
@@ -226,52 +227,41 @@ class _FieldOutput:
         else:
             self.result = incrementResult
 
-    def initializeJob(self, model: FEModel):
+    def initializeJob(
+        self,
+    ):
         """Initalize everything. Will also update the results
         based on the proved start time and solution.
-
-        Parameters
-        ----------
-        model
-            The model tree.
         """
 
-        self.updateResults(model)
+        self.updateResults(self.model)
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model: FEModel, increment: tuple):
+    def finalizeIncrement(self, increment: tuple):
         """Finalize an increment, i.e. store the current results.
 
         Parameters
         ----------
-        model
-            The model tree.
         increment
             The finished time increment.
         """
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        self.updateResults(model)
+        self.updateResults(self.model)
 
     def finalizeStep(
         self,
-        model: FEModel,
     ):
         pass
 
     def finalizeJob(
         self,
-        model: FEModel,
     ):
         """Finalize everything.
         If results are to be exported, it is done now.
 
-        Parameters
-        ----------
-        model
-            The model tree.
         """
 
         if self.export:
@@ -279,7 +269,7 @@ class _FieldOutput:
             if self.f_export:
                 res = self.f_export(res)
             if res.ndim > 2:
-                self.journal.message("Reshaping fieldOutput result for export in .csv file", self.name)
+                journal.message("Reshaping fieldOutput result for export in .csv file", self.name)
                 res = res.reshape((res.shape[0], -1))
             if self.appendResults and res.shape[0] == len(self.timeHistory):
                 # we also store the time, if result shape and time history are 'compatible'
@@ -351,10 +341,12 @@ class FieldOutputController:
     The central module for managing field outputs, which can be used by output managers.
     """
 
-    def __init__(self):
+    def __init__(self, model: FEModel, journal: Journal):
+        self.model = model
+        self.journal = journal
         self.fieldOutputs = {}
 
-    def addFieldOutput(self, name: str, model: FEModel, journal: Journal, **kwargs: dict):
+    def addFieldOutput(self, name: str, **kwargs: dict):
         """Add a new FieldOutput entry to be computed during the simulation
 
         Parameters
@@ -370,13 +362,13 @@ class FieldOutputController:
         """
         if name in self.fieldOutputs:
             raise Exception("FieldOutput {:} already exists!".format(name))
-        self.fieldOutputs[name] = _FieldOutput(name, model, journal, **kwargs)
+        self.fieldOutputs[name] = _FieldOutput(name, self.model, self.journal, **kwargs)
 
-    def initializeJob(self, model):
+    def initializeJob(self):
         for fieldOutput in self.fieldOutputs.values():
-            fieldOutput.initializeJob(model)
+            fieldOutput.initializeJob()
 
-    def finalizeIncrement(self, model: FEModel, increment: tuple):
+    def finalizeIncrement(self, increment: tuple):
         """Finalize all field outputs at the end of an increment.
 
         Parameters
@@ -388,19 +380,15 @@ class FieldOutputController:
         """
 
         for output in self.fieldOutputs.values():
-            output.finalizeIncrement(model, increment)
+            output.finalizeIncrement(increment)
 
-    def finalizeStep(self, model: FEModel):
-        """Finalize all field outputs at the end of a step.
-
-        Parameters
-        ----------
-        model
-            The model tree.
-        """
+    def finalizeStep(
+        self,
+    ):
+        """Finalize all field outputs at the end of a step."""
 
         for output in self.fieldOutputs.values():
-            output.finalizeStep(model)
+            output.finalizeStep()
 
     def initializeStep(self, step):
         """Initalize an step.
@@ -416,15 +404,7 @@ class FieldOutputController:
 
     def finalizeJob(
         self,
-        model: FEModel,
     ):
-        """Finalize all field outputs at the end of a job.
-
-        Parameters
-        ----------
-        model
-            The model tree.
-        """
+        """Finalize all field outputs at the end of a job."""
         for output in self.fieldOutputs.values():
-            # output.finalizeJob(U, P)
-            output.finalizeJob(model)
+            output.finalizeJob()

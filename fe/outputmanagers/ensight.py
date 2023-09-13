@@ -635,6 +635,7 @@ class OutputManager(OutputManagerBase):
     def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.name = name
 
+        self.model = model
         self.timeAtLastOutput = -1e16
         self.minDTForOutput = -1e16
         self.finishedSteps = 0
@@ -761,7 +762,7 @@ class OutputManager(OutputManagerBase):
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
             self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         incNumber, incrementSize, stepProgress, dT, stepTimeAtIncrementStart, totalTimeAtIncrementStart = increment
         time = totalTimeAtIncrementStart + dT
 
@@ -777,7 +778,7 @@ class OutputManager(OutputManagerBase):
             )
             return
 
-        self.writeOutput(model)
+        self.writeOutput(self.model)
 
     def finalizeFailedIncrement(self, **kwargs):
         pass
@@ -821,16 +822,14 @@ class OutputManager(OutputManagerBase):
 
     def finalizeStep(
         self,
-        model,
     ):
-        if model.time - self.timeAtLastOutput > 1e-12:
-            self.writeOutput(model)
+        if self.model.time - self.timeAtLastOutput > 1e-12:
+            self.writeOutput(self.model)
 
         self.finishedSteps += 1
 
     def finalizeJob(
         self,
-        model
         # U,
         # P,
     ):

@@ -88,6 +88,8 @@ class StepManager:
         model: FEModel,
         fieldOutputController: FieldOutputController,
         journal: Journal,
+        solvers: dict,
+        outputManagers: list,
     ) -> StepBase:
         """Dequeue the next step.
 
@@ -103,6 +105,10 @@ class StepManager:
             The field output controller.
         journal
             The journal instance for logging.
+        outputManagers
+            The OutputManagers used.
+        stepActions
+            The collection of actions for this step.
 
         Returns
         -------
@@ -150,4 +156,14 @@ class StepManager:
                         action.name, action.kwargs, jobInfo, model, fieldOutputController, journal
                     )
 
-            yield AdaptiveStep(stepNumber, model.time, stepDefinition.stepOptions, self.stepActions, jobInfo, journal)
+            yield AdaptiveStep(
+                stepNumber,
+                model,
+                fieldOutputController,
+                journal,
+                jobInfo,
+                solvers,
+                outputManagers,
+                self.stepActions,
+                **stepDefinition.stepOptions
+            )
