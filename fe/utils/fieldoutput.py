@@ -269,7 +269,7 @@ class _FieldOutput:
             if self.f_export:
                 res = self.f_export(res)
             if res.ndim > 2:
-                journal.message("Reshaping fieldOutput result for export in .csv file", self.name)
+                self.journal.message("Reshaping fieldOutput result for export in .csv file", self.name)
                 res = res.reshape((res.shape[0], -1))
             if self.appendResults and res.shape[0] == len(self.timeHistory):
                 # we also store the time, if result shape and time history are 'compatible'
