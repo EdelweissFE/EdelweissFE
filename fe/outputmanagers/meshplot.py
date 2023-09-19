@@ -193,8 +193,7 @@ class OutputManager(OutputManagerBase):
         self.saveJobs = []
         self.meshOnlyJobs = []
 
-        # needed for meshOnly plot
-        fieldOutputController.addFieldOutput("meshDisplacements", result="U", field="displacement", elset="all")
+        # # needed for meshOnly plot
 
         for defLine in definitionLines:
             definition = convertLineToStringDictionary(defLine)
@@ -264,7 +263,7 @@ class OutputManager(OutputManagerBase):
                 elif varType == "meshOnly":
                     meshOnlyJob = {}
 
-                    meshOnlyJob["fieldOutput"] = fieldOutputController.fieldOutputs["meshDisplacements"]
+                    meshOnlyJob["warpBy"] = definition.get("warpBy", False)
                     meshOnlyJob["configuration"] = definition.get("configuration", "undeformed")
                     meshOnlyJob["scaleFactor"] = float(definition.get("scaleFactor", 1.0))
                     meshOnlyJob["axSpec"] = definition.get("axSpec", "111")
@@ -386,7 +385,7 @@ class OutputManager(OutputManagerBase):
 
             if meshOnlyJob["configuration"] == "deformed":
                 elCoordinatesListDeformed = extractNodeCoordinatesFromElset(
-                    self.elSets["all"], meshOnlyJob["fieldOutput"].getLastResult(), meshOnlyJob["scaleFactor"]
+                    self.elSets["all"], meshOnlyJob["warpBy"].getLastResult(), meshOnlyJob["scaleFactor"]
                 )
                 self.meshPlot.plotMeshGrid(ax, elCoordinatesListDeformed)
 
