@@ -62,12 +62,12 @@ class StepAction(StepActionBase):
         self.fieldSize = getFieldSize(self.field, model.domainSize)
         self.possibleComponents = [str(i + 1) for i in range(self.fieldSize)]
 
-        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
+        self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
     def applyAtStepEnd(self, model):
         self.active = False
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         self.active = True
 
         nodeSets = model.nodeSets

@@ -84,7 +84,7 @@ if __name__ == "__main__":
         inputFiles.append(parseInputFile(file))
 
     for inputFile in inputFiles:
-        success, model, fieldOutputController = finiteElementSimulation(
+        model, fieldOutputController = finiteElementSimulation(
             inputFile, verbose=args.verbose, suppressPlots=args.noplot
         )
 

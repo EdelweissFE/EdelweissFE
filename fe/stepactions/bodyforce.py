@@ -75,7 +75,7 @@ class StepAction(StepActionBase):
             self.delta = 0
             self.idle = True
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         if "forceVector" in action:
             self.delta = np.fromstring(action["forceVector"], sep=",", dtype=np.double) - self.forceAtStepStart
         elif "delta" in action:

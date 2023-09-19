@@ -1,5 +1,5 @@
-Finite elements
-===============
+Elements
+========
 
 Relevant module: ``fe.config.elementlibrary``
 

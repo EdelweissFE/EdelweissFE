@@ -63,7 +63,7 @@ from fe.journal.journal import Journal
 from numpy import ndarray
 
 
-class FieldOutput:
+class _FieldOutput:
     """
     Entity of a fieldOutput request.
 
@@ -77,44 +77,47 @@ class FieldOutput:
         A dictionary containing the definition of the field output.
     journal
         The journal object for logging.
+    **kwargs
+        The definition for this output.
     """
 
-    def __init__(self, model: FEModel, definition: dict, journal: Journal):
-        self.name = definition["name"]
-        self.journal = journal
+    def __init__(self, name: str, model: FEModel, journal: Journal, **kwargs: dict):
         self.timeTotal = 0.0
+        self.name = name
+        self.model = model
+        self.journal = journal
 
-        if "nSet" in definition:
+        if "nset" in kwargs:
             self.domainType = "nSet"
 
             self.type = "nodalResult"
-            self.nSet = model.nodeSets[definition["nSet"]]
-            self.nSetName = definition["nSet"]
-            self.resultVector = definition["result"]
-            self.field = definition["field"]
+            self.nSet = model.nodeSets[kwargs["nset"]]
+            self.nSetName = kwargs["nset"]
+            self.resultVector = kwargs["result"]
+            self.field = kwargs["field"]
 
-        elif "elSet" in definition:
+        elif "elset" in kwargs:
             self.domainType = "elSet"
 
-            if definition["result"] == "U" or definition["result"] == "P":
-                self.journal.message(
-                    "Converting elSet {:} to a nSet due to requested nodal results".format(definition["elSet"]),
+            if kwargs["result"] == "U" or kwargs["result"] == "P":
+                journal.message(
+                    "Converting elSet {:} to a nSet due to requested nodal results".format(kwargs["elset"]),
                     self.name,
                 )
                 # an elset was given, but in fact a nodeset was 'meant': we extract the nodes of the elementset!
                 self.type = "nodalResult"
-                self.nSet = extractNodesFromElementSet(model.elementSets[definition["elSet"]])
-                self.nSetName = definition["elSet"]
-                self.resultVector = definition["result"]
-                self.field = definition["field"]
+                self.nSet = extractNodesFromElementSet(model.elementSets[kwargs["elset"]])
+                self.nSetName = kwargs["elset"]
+                self.resultVector = kwargs["result"]
+                self.field = kwargs["field"]
             else:
                 # it's really an elSet job
                 self.type = "elementResult"
-                self.elSet = model.elementSets[definition["elSet"]]
-                self.elSetName = definition["elSet"]
-                self.resultName = definition["result"]
+                self.elSet = model.elementSets[kwargs["elset"]]
+                self.elSetName = kwargs["elset"]
+                self.resultName = kwargs["result"]
 
-                qp = definition["quadraturePoint"]
+                qp = kwargs["quadraturepoint"]
                 quadraturePoints = strToRange(qp) if not isInteger(qp) else [int(qp)]
 
                 self.quadraturePoints = quadraturePoints
@@ -123,27 +126,27 @@ class FieldOutput:
                     list(self.elSet), quadraturePoints, self.resultName
                 )
 
-        elif "modelData" in definition:
+        elif "modeldata" in kwargs:
             self.domainType = "model"
             self.type = "modelData"
-            self.getCurrentModelDataResult = createModelAccessibleFunction(definition["modelData"], model=model)
+            self.getCurrentModelDataResult = createModelAccessibleFunction(kwargs["modeldata"], model=model)
 
         else:
-            raise Exception("invalid field output requested: " + definition["name"])
+            raise Exception("Invalid FieldOutput requested: " + self.name)
 
-        self.appendResults = definition.get("saveHistory", False)
+        self.appendResults = kwargs.get("savehistory", False)
         self.result = [] if self.appendResults else None
 
-        if "f(x)" in definition:
-            self.f = createMathExpression(definition["f(x)"])
+        if "f(x)" in kwargs:
+            self.f = createMathExpression(kwargs["f(x)"])
         else:
             self.f = None
 
         self.timeHistory = []
 
-        self.export = definition.get("export", False)
-        if "f_export(x)" in definition:
-            self.f_export = createMathExpression(definition["f_export(x)"])
+        self.export = kwargs.get("export", False)
+        if "f_export(x)" in kwargs:
+            self.f_export = createMathExpression(kwargs["f_export(x)"])
         else:
             self.f_export = None
 
@@ -224,52 +227,41 @@ class FieldOutput:
         else:
             self.result = incrementResult
 
-    def initializeJob(self, model: FEModel):
+    def initializeJob(
+        self,
+    ):
         """Initalize everything. Will also update the results
         based on the proved start time and solution.
-
-        Parameters
-        ----------
-        model
-            The model tree.
         """
 
-        self.updateResults(model)
+        self.updateResults(self.model)
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model: FEModel, increment: tuple):
+    def finalizeIncrement(self, increment: tuple):
         """Finalize an increment, i.e. store the current results.
 
         Parameters
         ----------
-        model
-            The model tree.
         increment
             The finished time increment.
         """
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        self.updateResults(model)
+        self.updateResults(self.model)
 
     def finalizeStep(
         self,
-        model: FEModel,
     ):
         pass
 
     def finalizeJob(
         self,
-        model: FEModel,
     ):
         """Finalize everything.
         If results are to be exported, it is done now.
 
-        Parameters
-        ----------
-        model
-            The model tree.
         """
 
         if self.export:
@@ -347,32 +339,36 @@ class FieldOutput:
 class FieldOutputController:
     """
     The central module for managing field outputs, which can be used by output managers.
-
-    Parameters
-    ----------
-    model
-        A dictionary containing the model tree.
-    inputFile
-        A dictonary containing the field output definitios.
-    journal
-        The journal instance for logging.
     """
 
-    def __init__(self, model: FEModel, inputFile: dict, journal: Journal):
+    def __init__(self, model: FEModel, journal: Journal):
+        self.model = model
+        self.journal = journal
         self.fieldOutputs = {}
 
-        if not inputFile["*fieldOutput"]:
-            return
-        definition = inputFile["*fieldOutput"][0]
+    def addFieldOutput(self, name: str, **kwargs: dict):
+        """Add a new FieldOutput entry to be computed during the simulation
 
-        for defLine in definition["data"]:
-            fpDef = convertLineToStringDictionary(defLine)
-            self.fieldOutputs[fpDef["name"]] = FieldOutput(model, fpDef, journal)
+        Parameters
+        ----------
+        name
+            The name of this FieldOutput.
+        model
+            The model tree.
+        journal
+            The Journal instance for logging purposes.
+        **kwargs
+            The definition of the FieldOutput
+        """
+        if name in self.fieldOutputs:
+            raise Exception("FieldOutput {:} already exists!".format(name))
+        self.fieldOutputs[name] = _FieldOutput(name, self.model, self.journal, **kwargs)
 
+    def initializeJob(self):
         for fieldOutput in self.fieldOutputs.values():
-            fieldOutput.initializeJob(model)
+            fieldOutput.initializeJob()
 
-    def finalizeIncrement(self, model: FEModel, increment: tuple):
+    def finalizeIncrement(self, increment: tuple):
         """Finalize all field outputs at the end of an increment.
 
         Parameters
@@ -384,19 +380,15 @@ class FieldOutputController:
         """
 
         for output in self.fieldOutputs.values():
-            output.finalizeIncrement(model, increment)
+            output.finalizeIncrement(increment)
 
-    def finalizeStep(self, model: FEModel):
-        """Finalize all field outputs at the end of a step.
-
-        Parameters
-        ----------
-        model
-            The model tree.
-        """
+    def finalizeStep(
+        self,
+    ):
+        """Finalize all field outputs at the end of a step."""
 
         for output in self.fieldOutputs.values():
-            output.finalizeStep(model)
+            output.finalizeStep()
 
     def initializeStep(self, step):
         """Initalize an step.
@@ -412,15 +404,7 @@ class FieldOutputController:
 
     def finalizeJob(
         self,
-        model: FEModel,
     ):
-        """Finalize all field outputs at the end of a job.
-
-        Parameters
-        ----------
-        model
-            The model tree.
-        """
+        """Finalize all field outputs at the end of a job."""
         for output in self.fieldOutputs.values():
-            # output.finalizeJob(U, P)
-            output.finalizeJob(model)
+            output.finalizeJob()

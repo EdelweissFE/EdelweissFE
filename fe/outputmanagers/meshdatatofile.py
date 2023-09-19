@@ -64,16 +64,18 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model, increment, statusInfoDict: dict = {}, **kwargs):
+    def finalizeIncrement(self, increment, statusInfoDict: dict = {}, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, statusInfoDict: dict = {}):
         pass
 
-    def finalizeStep(self, model):
+    def finalizeStep(self):
         pass
 
-    def finalizeJob(self, model):
+    def finalizeJob(
+        self,
+    ):
         pass
 
     def writeMeshDataToFile(self, model: FEModel):

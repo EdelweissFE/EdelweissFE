@@ -1,5 +1,5 @@
-Meshgenerators
-==============
+Generators
+==========
 
 Relevant module: ``fe.config.generators``
 

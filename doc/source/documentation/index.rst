@@ -9,7 +9,6 @@ Documentation
    models
    solvers
    steps
-
    analyticalfields
    constraints
    dofmanager
@@ -25,6 +24,7 @@ Documentation
    parallelization
    phenomena
    plotter
+   points
    sections
    sets
    stepactions

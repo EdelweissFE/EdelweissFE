@@ -36,11 +36,11 @@ Currently, EdelweissFE provides
  * a parallel nonlinear implicit static solver tuned for marmot elements (NISTParallelForMarmotElements), 
  * and a parallel arc length solver (NISTPArcLength).
 
-Choose the solver in the ``*job`` definition:
+Choose the solver in the ``*solver`` definition:
 
 .. code-block:: edelweiss
 
-    *job, name=myJob, domain=2d, solver=NISTParallel
+    *solver, name=mySolver, solver=NISTParallel
 """
 
 import importlib

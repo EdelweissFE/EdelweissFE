@@ -47,27 +47,27 @@ class FEModel:
 
     Parameters
     ----------
-    domainSize
+    dimension
         The dimension of the model.
     """
 
     identification = "FEModel"
 
-    def __init__(self, dimension):
-        self.time = 0.0
-        self.nodes = {}
-        self.elements = {}
-        self.nodeSets = {}
-        self.nodeFields = {}
-        self.elementSets = {}
-        self.sections = {}
-        self.surfaces = {}
-        self.constraints = {}
-        self.materials = {}
-        self.analyticalFields = {}
-        self.scalarVariables = {}
-        self.additionalParameters = {}
-        self.domainSize = dimension
+    def __init__(self, dimension: int):
+        self.time = 0.0  #: Current time of the model.
+        self.nodes = {}  #: Nodes in the model.
+        self.elements = {}  #: Elements in the model.
+        self.nodeSets = {}  #: NodeSets in the model.
+        self.nodeFields = {}  #: NodeFields in the model.
+        self.elementSets = {}  #: ElementSets in the model.
+        self.sections = {}  #: Sections in the model.
+        self.surfaces = {}  #: Surface definitions in the model.
+        self.constraints = {}  #: Constraints in the model.
+        self.materials = {}  #: Materials in the model.
+        self.analyticalFields = {}  #: AnalyticalFields in the model.
+        self.scalarVariables = {}  #: ScalarVariables in the model.
+        self.additionalParameters = {}  #: Additional information.
+        self.domainSize = dimension  #: Spatial dimension of the model
 
     def _createNodeFieldVariablesFromElements(
         self,

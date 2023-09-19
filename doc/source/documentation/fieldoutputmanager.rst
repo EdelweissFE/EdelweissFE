@@ -1,5 +1,5 @@
-Managing field outputs
-======================
+Field outputs 
+=============
 
 Relevant module: ``fe.utils.fieldoutput``
 

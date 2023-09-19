@@ -61,7 +61,7 @@ class NISTPArcLength(NISTParallel):
         model: FEModel,
         fieldOutputController: FieldOutputController,
         outputmanagers: dict[str, OutputManagerBase],
-    ) -> tuple[bool, FEModel]:
+    ):
         self.arcLengthController = None
         self.checkConditionalStop = lambda: False
 

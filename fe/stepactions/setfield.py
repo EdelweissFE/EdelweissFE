@@ -61,7 +61,7 @@ class StepAction(StepActionBase):
     def applyAtStepEnd(self, model, stepMagnitude=None):
         self.active = False
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         self.active = True
 
     def applyAtStepStart(

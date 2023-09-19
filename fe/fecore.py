@@ -48,19 +48,24 @@ from fe.numerics.dofmanager import DofVector
 from fe.config.configurator import loadConfiguration, updateConfiguration
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
-from time import time as getCurrentTime
-from fe.helpers.outputmanagers import createOutputManagersFromInput
 from fe.steps.stepmanager import StepManager
-from fe.helpers.createmodelfrominputfile import fillFEModelFromInputFile
-from fe.helpers.createsolversfrominputfile import createSolversFromInputFile
-
+from fe.helpers.inputfilehelpers import (
+    fillFEModelFromInputFile,
+    createStepManagerFromInputFile,
+    createOutputManagersFromInputFile,
+    createSolversFromInputFile,
+    createStepManagerFromInputFile,
+    createFieldOutputFromInputFile,
+    createPlotterFromInputFile,
+)
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.config.solvers import getSolverByName
+from time import time as getCurrentTime
 
 
 def finiteElementSimulation(
     inputfile: dict, verbose: bool = False, suppressPlots: bool = False
-) -> tuple[bool, FEModel, FieldOutputController]:
+) -> tuple[FEModel, FieldOutputController]:
     """This is core function of the finite element analysis.
     Based on the keyword ``*job``, the finite element model is defined.
 
@@ -88,7 +93,6 @@ def finiteElementSimulation(
     -------
     tuple
         A tuple containing
-            - Truth value of success
             - The final model tree
             - The fieldoutput controller containing all processed results.
     """
@@ -138,14 +142,12 @@ def finiteElementSimulation(
     for updateConfig in inputfile["*updateConfiguration"]:
         updateConfiguration(updateConfig, jobInfo, journal)
 
-    plotter = Plotter(journal, inputfile)
-
-    stepManager = StepManager(inputfile)
-
-    fieldOutputController = FieldOutputController(model, inputfile, journal)
-
-    outputManagers = createOutputManagersFromInput(inputfile, jobName, model, fieldOutputController, journal, plotter)
-
+    plotter = createPlotterFromInputFile(inputfile, journal)
+    stepManager = createStepManagerFromInputFile(inputfile)
+    fieldOutputController = createFieldOutputFromInputFile(inputfile, model, journal)
+    outputManagers = createOutputManagersFromInputFile(
+        inputfile, jobName, model, fieldOutputController, journal, plotter
+    )
     solvers = createSolversFromInputFile(inputfile, jobInfo, journal)
 
     if not solvers:
@@ -161,10 +163,12 @@ def finiteElementSimulation(
         Solver = getSolverByName(job.get("solver", "NIST"))
         solvers["default"] = Solver(jobInfo, journal)
 
+    fieldOutputController.initializeJob()
+
     try:
-        for step in stepManager.getStep(jobInfo, model, fieldOutputController, journal):
+        for step in stepManager.dequeueStep(jobInfo, model, fieldOutputController, journal, solvers, outputManagers):
             tic = getCurrentTime()
-            success, model = step.solve(solvers, model, fieldOutputController, outputManagers, journal)
+            step.solve()
             toc = getCurrentTime()
             stepTime = toc - tic
             jobInfo["computationTime"] += stepTime
@@ -180,11 +184,6 @@ def finiteElementSimulation(
     except KeyboardInterrupt:
         print("")
         journal.errorMessage("Interrupted by user", identification)
-        success = True
-
-    # except StepFailed:
-    # success = False
-    # journal.errorMessage("Step not finished", identification)
 
     finally:
         journal.printTable(
@@ -196,12 +195,12 @@ def finiteElementSimulation(
             printHeaderRow=False,
         )
 
-        fieldOutputController.finalizeJob(model)
+        fieldOutputController.finalizeJob()
         for manager in outputManagers:
-            manager.finalizeJob(model)
+            manager.finalizeJob()
 
         plotter.finalize()
         if not suppressPlots:
             plotter.show()
 
-    return success, model, fieldOutputController
+    return model, fieldOutputController

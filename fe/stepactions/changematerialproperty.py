@@ -49,11 +49,11 @@ class StepAction(StepActionBase):
         self.theIndex = int(action["index"])
         self.theMaterial = model.materials[action["material"]]
 
-        self.updateStepAction(name, action, jobInfo, model, fieldOutputController, journal)
+        self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
         self.journal = journal
 
-    def updateStepAction(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         """Update the function describing the material property"""
         self.active = True
 

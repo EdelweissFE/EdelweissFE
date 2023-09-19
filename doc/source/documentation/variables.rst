@@ -2,16 +2,16 @@ Variables
 =========
 
 Currently, EdelweissFE supports two types of variables:
-Nodal variables, i.e., fields associated with spatial positions,
+FieldVariables, i.e., variables associated with spatial positions,
 and scalar variables, not associated with a spatial position.
 The latter may be used for, e.g., Lagrangian multipliers.
 
 Relevant modules: 
 
- * ``fe.points.node``
+ * ``fe.variables.fieldvariable``
  * ``fe.variables.scalarvariable``
 
-.. automodule:: fe.points.node
+.. automodule:: fe.variables.fieldvariable
    :members: 
 
 .. automodule:: fe.variables.scalarvariable

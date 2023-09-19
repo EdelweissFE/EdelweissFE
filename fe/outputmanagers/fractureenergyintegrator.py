@@ -71,15 +71,19 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(self, model):
+    def finalizeStep(
+        self,
+    ):
         pass
 
-    def finalizeJob(self, model):
+    def finalizeJob(
+        self,
+    ):
         self.fractureEnergy = np.trapz(self.fpF.getResultHistory(), x=self.fpU.getResultHistory()) / self.A
         self.journal.message("integrated fracture energy: {:3.4f}".format(self.fractureEnergy), self.identification)

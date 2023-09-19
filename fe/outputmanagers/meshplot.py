@@ -43,7 +43,7 @@ import numpy as np
 from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
 import fe.config.phenomena
-from fe.utils.fieldoutput import FieldOutput
+from fe.utils.fieldoutput import _FieldOutput
 from fe.utils.math import createMathExpression
 import matplotlib.tri as mtri
 from matplotlib import colors
@@ -193,9 +193,7 @@ class OutputManager(OutputManagerBase):
         self.saveJobs = []
         self.meshOnlyJobs = []
 
-        # needed for meshOnly plot
-        fpDef = {"result": "U", "field": "displacement", "name": "meshDisplacements", "elSet": "all"}
-        fieldOutputController.fieldOutputs[fpDef["name"]] = FieldOutput(model, fpDef, journal)
+        # # needed for meshOnly plot
 
         for defLine in definitionLines:
             definition = convertLineToStringDictionary(defLine)
@@ -265,7 +263,7 @@ class OutputManager(OutputManagerBase):
                 elif varType == "meshOnly":
                     meshOnlyJob = {}
 
-                    meshOnlyJob["fieldOutput"] = fieldOutputController.fieldOutputs[fpDef["name"]]
+                    meshOnlyJob["warpBy"] = definition.get("warpBy", False)
                     meshOnlyJob["configuration"] = definition.get("configuration", "undeformed")
                     meshOnlyJob["scaleFactor"] = float(definition.get("scaleFactor", 1.0))
                     meshOnlyJob["axSpec"] = definition.get("axSpec", "111")
@@ -289,16 +287,20 @@ class OutputManager(OutputManagerBase):
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, model, increment, **kwargs):
+    def finalizeIncrement(self, increment, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def finalizeStep(self, model):
+    def finalizeStep(
+        self,
+    ):
         pass
 
-    def finalizeJob(self, model):
+    def finalizeJob(
+        self,
+    ):
         for xyJob in self.xyJobs:
             y = xyJob["y"].getResultHistory()
 
@@ -383,7 +385,7 @@ class OutputManager(OutputManagerBase):
 
             if meshOnlyJob["configuration"] == "deformed":
                 elCoordinatesListDeformed = extractNodeCoordinatesFromElset(
-                    self.elSets["all"], meshOnlyJob["fieldOutput"].getLastResult(), meshOnlyJob["scaleFactor"]
+                    self.elSets["all"], meshOnlyJob["warpBy"].getLastResult(), meshOnlyJob["scaleFactor"]
                 )
                 self.meshPlot.plotMeshGrid(ax, elCoordinatesListDeformed)
 

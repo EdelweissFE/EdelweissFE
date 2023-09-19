@@ -66,7 +66,6 @@ class StepActionBase:
 
     def updateStepAction(
         self,
-        name: str,
         definition: dict,
         jobInfo: dict,
         model: FEModel,

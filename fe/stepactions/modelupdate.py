@@ -41,14 +41,14 @@ from fe.utils.math import execModelAccessibleExpression
 class StepAction(StepActionBase):
     def __init__(self, name, options, jobInfo, model, fieldOutputController, journal):
         self.name = name
-        self.updateStepAction(name, options, jobInfo, model, fieldOutputController, journal)
+        self.updateStepAction(options, jobInfo, model, fieldOutputController, journal)
 
     def applyAtStepEnd(self, model):
         """By default, this action is only executed once."""
 
         self.active = False
 
-    def updateStepAction(self, name, options, jobInfo, model, fieldOutputController, journal):
+    def updateStepAction(self, options, jobInfo, model, fieldOutputController, journal):
         """Update the expression, and set the action active again."""
 
         self.updateExpression = options["update"]
