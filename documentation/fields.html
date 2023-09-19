@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Finite elements" href="elements.html" />
-    <link rel="prev" title="Managing field outputs" href="fieldoutputmanager.html" /> 
+    <link rel="next" title="Elements" href="elements.html" />
+    <link rel="prev" title="Field outputs" href="fieldoutputmanager.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,12 +52,12 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Fields</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.fields.nodefield"><code class="docutils literal notranslate"><span class="pre">NodeField</span></code> - A physical field on nodes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#fe.fields.nodefield.NodeField"><code class="docutils literal notranslate"><span class="pre">NodeField</span></code></a></li>
@@ -65,9 +65,9 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -75,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
@@ -119,17 +120,24 @@
 <dt class="sig sig-object py" id="fe.fields.nodefield.NodeField">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.fields.nodefield.</span></span><span class="sig-name descname"><span class="pre">NodeField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeField" title="Permalink to this definition"></a></dt>
 <dd><p>This class represents a node field.
-A node field associates every node with multiple entries (flux, effort) of field variables.
+A node field associates every node with multiple entries (e.g., flux and effort) of a field variable.
 Furthermore, for convencience, it allows to get fast access to values for individual nodes or node sets.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">NodeField &#39;Displacement&#39;</span>
-<span class="go">   values: {&#39;U&#39; : [[0,0,0],  # node (1)</span>
-<span class="go">                   [1,0,0],  # node (2)</span>
-<span class="go">                   [0,1,0]]} # node (3)</span>
+<p>The purpose is to store field data in an efficient, contiguos manner rather than distributing it across
+all individual nodes.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Example:</span>
+
+<span class="go">NodeField &#39;Displacement&#39;</span>
+<span class="go">   values: {&#39;U&#39; : [[0,0,0],  # Node (1)</span>
+<span class="go">                   [1,0,0],  # Node (2)</span>
+<span class="go">                   [0,1,0]]} # Node (3)</span>
+
+<span class="go">Spatial representation:</span>
+
 <span class="gp gp-VirtualEnv">(1)</span> <span class="go">--------- (2)</span>
-<span class="go"> | *             .</span>
-<span class="go"> |  *+---------+   ...</span>
-<span class="go"> |   | [0,0,0] |</span>
-<span class="gp gp-VirtualEnv">(3)</span>  <span class="go">+---------+</span>
+<span class="go"> | *             *</span>
+<span class="go"> |  *+---------+   *+---------+</span>
+<span class="go"> |   | [0,0,0] |    | [1,0,0] |</span>
+<span class="gp gp-VirtualEnv">(3)</span>  <span class="go">+---------+    +---------+</span>
 <span class="go">  *</span>
 <span class="go">   * +---------+</span>
 <span class="go">     | [0,1,0] |</span>
@@ -181,8 +189,8 @@ Furthermore, for convencience, it allows to get fast access to values for indivi
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="fieldoutputmanager.html" class="btn btn-neutral float-left" title="Managing field outputs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="elements.html" class="btn btn-neutral float-right" title="Finite elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fieldoutputmanager.html" class="btn btn-neutral float-left" title="Field outputs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="elements.html" class="btn btn-neutral float-right" title="Elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

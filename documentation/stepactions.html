@@ -52,16 +52,16 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -69,6 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Step actions</a><ul>
@@ -717,7 +718,7 @@ User defined step actions can override the methods.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart" title="fe.stepactions.base.stepactionbase.StepActionBase.applyAtStepStart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyAtStepStart</span></code></a>(model)</p></td>
 <td><p>Is called when a step starts.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateStepAction</span></code></a>(name, definition, jobInfo, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateStepAction</span></code></a>(definition, jobInfo, model, ...)</p></td>
 <td><p>Is called when an updated definition is present for a new step.</p></td>
 </tr>
 </tbody>
@@ -767,12 +768,12 @@ User defined step actions can override the methods.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction">
-<span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dofmanager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">updateStepAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dofmanager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/stepactions/base/stepactionbase.html#StepActionBase.updateStepAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.stepactions.base.stepactionbase.StepActionBase.updateStepAction" title="Permalink to this definition"></a></dt>
 <dd><p>Is called when an updated definition is present for a new step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of this step action.</p></li>
+<li><p><strong>name</strong> – The name of this step action.</p></li>
 <li><p><strong>definition</strong> (<em>dict</em>) – A dictionary containing the options for this step action.</p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – A dictionary containing the information about the job.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – A dictionary containing the model tree.</p></li>

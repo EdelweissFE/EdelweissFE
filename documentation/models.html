@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Nonlinear solvers" href="solvers.html" />
+    <link rel="next" title="Solvers" href="solvers.html" />
     <link rel="prev" title="Jobs" href="jobs.html" /> 
 </head>
 
@@ -58,16 +58,16 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -75,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
@@ -123,7 +124,7 @@ It takes care of the correct number of variables,
 for nodes and scalar degrees of freedem, and it manages the fields.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>domainSize</strong> – The dimension of the model.</p>
+<dd class="field-odd"><p><strong>dimension</strong> (<em>int</em>) – The dimension of the model.</p>
 </dd>
 </dl>
 <p class="rubric">Methods</p>
@@ -180,6 +181,90 @@ and initializes elements.</p>
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.additionalParameters">
+<span class="sig-name descname"><span class="pre">additionalParameters</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.additionalParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Additional information.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.analyticalFields">
+<span class="sig-name descname"><span class="pre">analyticalFields</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.analyticalFields" title="Permalink to this definition"></a></dt>
+<dd><p>AnalyticalFields in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.constraints">
+<span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.constraints" title="Permalink to this definition"></a></dt>
+<dd><p>Constraints in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.domainSize">
+<span class="sig-name descname"><span class="pre">domainSize</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.domainSize" title="Permalink to this definition"></a></dt>
+<dd><p>Spatial dimension of the model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.elementSets">
+<span class="sig-name descname"><span class="pre">elementSets</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.elementSets" title="Permalink to this definition"></a></dt>
+<dd><p>ElementSets in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.elements" title="Permalink to this definition"></a></dt>
+<dd><p>Elements in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.materials">
+<span class="sig-name descname"><span class="pre">materials</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.materials" title="Permalink to this definition"></a></dt>
+<dd><p>Materials in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.nodeFields">
+<span class="sig-name descname"><span class="pre">nodeFields</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.nodeFields" title="Permalink to this definition"></a></dt>
+<dd><p>NodeFields in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.nodeSets">
+<span class="sig-name descname"><span class="pre">nodeSets</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.nodeSets" title="Permalink to this definition"></a></dt>
+<dd><p>NodeSets in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.nodes">
+<span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Nodes in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.scalarVariables">
+<span class="sig-name descname"><span class="pre">scalarVariables</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.scalarVariables" title="Permalink to this definition"></a></dt>
+<dd><p>ScalarVariables in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.sections">
+<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.sections" title="Permalink to this definition"></a></dt>
+<dd><p>Sections in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.surfaces">
+<span class="sig-name descname"><span class="pre">surfaces</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.surfaces" title="Permalink to this definition"></a></dt>
+<dd><p>Surface definitions in the model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.models.femodel.FEModel.time">
+<span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.time" title="Permalink to this definition"></a></dt>
+<dd><p>Current time of the model.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -190,7 +275,7 @@ and initializes elements.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="jobs.html" class="btn btn-neutral float-left" title="Jobs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="solvers.html" class="btn btn-neutral float-right" title="Nonlinear solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="solvers.html" class="btn btn-neutral float-right" title="Solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

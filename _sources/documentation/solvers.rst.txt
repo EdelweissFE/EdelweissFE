@@ -1,5 +1,5 @@
-Nonlinear solvers
-=================
+Solvers
+=======
 
 .. automodule:: fe.config.solvers
    :members: 

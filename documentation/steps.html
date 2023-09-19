@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Analytical fields" href="analyticalfields.html" />
-    <link rel="prev" title="Nonlinear solvers" href="solvers.html" /> 
+    <link rel="prev" title="Solvers" href="solvers.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,7 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Steps</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#fe.steps.base.stepbase.StepBase"><code class="docutils literal notranslate"><span class="pre">StepBase</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#fe.steps.base.stepbase.StepBase.solve"><code class="docutils literal notranslate"><span class="pre">StepBase.solve()</span></code></a></li>
@@ -66,12 +66,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -79,6 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
@@ -122,17 +123,21 @@ have a distinct (physical) runtime, and may contain multiple StepActions.
 Subsequent Steps inherit StepActions, and they may be updated.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.steps.base.stepbase.StepBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.base.stepbase.</span></span><span class="sig-name descname"><span class="pre">StepBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/base/stepbase.html#StepBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.base.stepbase.StepBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.base.stepbase.</span></span><span class="sig-name descname"><span class="pre">StepBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/base/stepbase.html#StepBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.base.stepbase.StepBase" title="Permalink to this definition"></a></dt>
 <dd><p>This is a simulation step.</p>
 <p>It has a specific runtime, and it holds StepActions to executed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>number</strong> (<em>int</em>) – The number of this step. For information purposes only.</p></li>
-<li><p><strong>startTime</strong> (<em>float</em>) – The start time of the step.</p></li>
-<li><p><strong>definition</strong> (<em>defaultdict</em>) – A dictionary holding key/value pairs for defintion</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The current state of the model.</p></li>
+<li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The FieldOutputController instance for processing results.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The Journal instance for logging purposes.</p></li>
+<li><p><strong>jobInfo</strong> (<em>dict</em>) – Additional information about the job</p></li>
+<li><p><strong>solvers</strong> (<em>dict</em>) – The instances of solvers available to this step.</p></li>
+<li><p><strong>outputManagers</strong> (<em>list</em>) – The OutputManagers used.</p></li>
 <li><p><strong>stepActions</strong> (<em>dict</em>) – The collection of actions for this step.</p></li>
-<li><p><strong>journal</strong> – The journal object for logging.</p></li>
+<li><p><strong>**kwargs</strong> – Additional options for the step.</p></li>
 </ul>
 </dd>
 </dl>
@@ -143,30 +148,21 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.steps.base.stepbase.StepBase.solve" title="fe.steps.base.stepbase.StepBase.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve</span></code></a>(solvers, model, fieldOutputController, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.steps.base.stepbase.StepBase.solve" title="fe.steps.base.stepbase.StepBase.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve</span></code></a>()</p></td>
 <td><p>Let a step be solved.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.steps.base.stepbase.StepBase.solve">
-<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solvers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/base/stepbase.html#StepBase.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.base.stepbase.StepBase.solve" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/base/stepbase.html#StepBase.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.base.stepbase.StepBase.solve" title="Permalink to this definition"></a></dt>
 <dd><p>Let a step be solved.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>solvers</strong> (<em>dict</em>) – The instances of solvers available to this step.</p></li>
-<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model to be solved.</p></li>
-<li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The FieldOutputController instance for post processing of results.</p></li>
-<li><p><strong>outputManagers</strong> (<em>dict</em>) – The OutputManagers used.</p></li>
-<li><p><strong>journal</strong> – The journal instance for logging.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The updated model.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The tuple containing the truth value of successs and the updated model.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple[bool, <a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a>]</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -177,18 +173,21 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <span id="adaptivestep-a-classical-adpative-step-for-transient-simulations"></span><h2><code class="docutils literal notranslate"><span class="pre">AdaptiveStep</span></code> - A classical adpative step for transient simulations<a class="headerlink" href="#module-fe.steps.adaptivestep" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.adaptivestep.</span></span><span class="sig-name descname"><span class="pre">AdaptiveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/adaptivestep.html#AdaptiveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.adaptivestep.</span></span><span class="sig-name descname"><span class="pre">AdaptiveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/adaptivestep.html#AdaptiveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep" title="Permalink to this definition"></a></dt>
 <dd><p>A standard adaptive incremental step to be used in nonlinear simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>number</strong> (<em>int</em>) – The number of this step. For information purposes only.</p></li>
 <li><p><strong>starTime</strong> – The start time of the step.</p></li>
-<li><p><strong>definition</strong> (<em>defaultdict</em>) – A dictionary holding key/value pairs for defintion</p></li>
+<li><p><strong>definition</strong> – A dictionary holding key/value pairs for defintion</p></li>
 <li><p><strong>stepActions</strong> (<em>dict</em>) – The collection of actions for this step.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
-<li><p><strong>startTime</strong> (<em>float</em>) – </p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – </p></li>
+<li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – </p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>solvers</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>outputManagers</strong> (<em>list</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -199,7 +198,7 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.steps.adaptivestep.AdaptiveStep.solve" title="fe.steps.adaptivestep.AdaptiveStep.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve</span></code></a>(solvers, model, fieldOutputController, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.steps.adaptivestep.AdaptiveStep.solve" title="fe.steps.adaptivestep.AdaptiveStep.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve</span></code></a>()</p></td>
 <td><p>Let a step be solved.</p></td>
 </tr>
 </tbody>
@@ -223,25 +222,70 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.solve">
-<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solvers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/adaptivestep.html#AdaptiveStep.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.solve" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/adaptivestep.html#AdaptiveStep.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.solve" title="Permalink to this definition"></a></dt>
 <dd><p>Let a step be solved.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>solvers</strong> – The instances of solvers available to this step.</p></li>
-<li><p><strong>model</strong> – The model to be solved.</p></li>
-<li><p><strong>fieldOutputController</strong> – The FieldOutputController instance for post processing of results.</p></li>
-<li><p><strong>outputManagers</strong> – The OutputManagers used.</p></li>
-<li><p><strong>journal</strong> – The journal instance for logging.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The updated model.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The tuple containing the truth value of successs and the updated model.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple[bool, <a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a>]</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.criticalIter">
+<span class="sig-name descname"><span class="pre">criticalIter</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.criticalIter" title="Permalink to this definition"></a></dt>
+<dd><p>The number of critical iterations after which the next increment is reduced.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.length">
+<span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.length" title="Permalink to this definition"></a></dt>
+<dd><p>The durcation of the step.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.maxGrowIter">
+<span class="sig-name descname"><span class="pre">maxGrowIter</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.maxGrowIter" title="Permalink to this definition"></a></dt>
+<dd><p>The number of residual growths before the increment is discarded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.maxIncrementSize">
+<span class="sig-name descname"><span class="pre">maxIncrementSize</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.maxIncrementSize" title="Permalink to this definition"></a></dt>
+<dd><p>The maximal fraction of the step to be computed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.maxIter">
+<span class="sig-name descname"><span class="pre">maxIter</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.maxIter" title="Permalink to this definition"></a></dt>
+<dd><p>The maximal number of iterations allowed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.maxNumberIncrements">
+<span class="sig-name descname"><span class="pre">maxNumberIncrements</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.maxNumberIncrements" title="Permalink to this definition"></a></dt>
+<dd><p>The maximal number of increments allowed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.minIncrementSize">
+<span class="sig-name descname"><span class="pre">minIncrementSize</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.minIncrementSize" title="Permalink to this definition"></a></dt>
+<dd><p>The minimal fraction of the step to be computed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.number">
+<span class="sig-name descname"><span class="pre">number</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.number" title="Permalink to this definition"></a></dt>
+<dd><p>The (unique) number of the step.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep.startIncrementSize">
+<span class="sig-name descname"><span class="pre">startIncrementSize</span></span><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep.startIncrementSize" title="Permalink to this definition"></a></dt>
+<dd><p>The initial fraction of the step to be computed.</p>
 </dd></dl>
 
 </dd></dl>
@@ -253,7 +297,7 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="solvers.html" class="btn btn-neutral float-left" title="Nonlinear solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="solvers.html" class="btn btn-neutral float-left" title="Solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="analyticalfields.html" class="btn btn-neutral float-right" title="Analytical fields" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

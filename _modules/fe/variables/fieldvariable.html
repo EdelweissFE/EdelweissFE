@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fe.config.solvers &mdash; EdelweissFE v22.07 documentation</title>
+  <title>fe.variables.fieldvariable &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
@@ -66,7 +66,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">fe.config.solvers</li>
+      <li class="breadcrumb-item active">fe.variables.fieldvariable</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,7 +75,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for fe.config.solvers</h1><div class="highlight"><pre>
+  <h1>Source code for fe.variables.fieldvariable</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
@@ -103,50 +103,24 @@
 <span class="c1">#  The full text of the license can be found in the file LICENSE.md at</span>
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
-<span class="c1"># Created on Fri Feb 10 19:20:25 2017</span>
+<span class="c1"># Created on Fri Jan 27 19:53:45 2017</span>
 
 <span class="c1"># @author: Matthias Neuner</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Currently, EdelweissFE provides</span>
-
-<span class="sd"> * a nonlinear implicit static solver (NIST),</span>
-<span class="sd"> * a parallel nonlinear implicit static solver (NISTParallel), </span>
-<span class="sd"> * a parallel nonlinear implicit static solver tuned for marmot elements (NISTParallelForMarmotElements), </span>
-<span class="sd"> * and a parallel arc length solver (NISTPArcLength).</span>
-
-<span class="sd">Choose the solver in the ``*solver`` definition:</span>
-
-<span class="sd">.. code-block:: edelweiss</span>
-
-<span class="sd">    *solver, name=mySolver, solver=NISTParallel</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">importlib</span>
-
-<span class="n">solverLibrary</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;NIST&quot;</span><span class="p">:</span> <span class="s2">&quot;nonlinearimplicitstatic&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NISTParallel&quot;</span><span class="p">:</span> <span class="s2">&quot;nonlinearimplicitstaticparallelmk2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NISTParallelForMarmotElements&quot;</span><span class="p">:</span> <span class="s2">&quot;nonlinearimplicitstaticparallel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NISTPArcLength&quot;</span><span class="p">:</span> <span class="s2">&quot;nonlinearimplicitstaticparallelarclength&quot;</span><span class="p">,</span>
-<span class="p">}</span>
 
 
-<div class="viewcode-block" id="getSolverByName"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.config.solvers.getSolverByName">[docs]</a><span class="k">def</span> <span class="nf">getSolverByName</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the class type of the requested solver.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        The name of the solver to load.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    type</span>
-<span class="sd">        The solver class type.</span>
+<div class="viewcode-block" id="FieldVariable"><a class="viewcode-back" href="../../../documentation/variables.html#fe.variables.fieldvariable.FieldVariable">[docs]</a><span class="k">class</span> <span class="nc">FieldVariable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a basic field variable, tied to a spatial position.</span>
+<span class="sd">    Currently, it is a placeholder used to indicate the presence field variables at a certain location, and associate them with e.g, nodes.</span>
+<span class="sd">    Furthermore, it allows us to adress them by their unique id (= hash value).</span>
+<span class="sd">    Unlike ScalarVariables, FieldVariable does not directly holds any results/values, but rather, for performance reasons,</span>
+<span class="sd">    we store results in cumulative Fields, such as NodeField.</span>
+<span class="sd">    FieldVariable only holds a reference to the primary NodeField results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">solver</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;fe.solvers.</span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">solverLibrary</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="kc">None</span></div>
 </pre></div>
 
            </div>

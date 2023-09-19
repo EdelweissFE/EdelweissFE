@@ -118,7 +118,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class represents a result entry of NodeField,</span>
 <span class="sd">    carrying values for each node within the field.</span>
-<span class="sd">    It is basically a np.ndarray, but provides addional easy access by Node or NodeSets.</span>
+<span class="sd">    It is basically a np.ndarray, but provides additional easy access by Node or NodeSets.</span>
 <span class="sd">    The [] operator allows to access (non-contigouos read, write) at each entities location:</span>
 
 <span class="sd">    Parameters</span>
@@ -165,20 +165,28 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class represents a node field.</span>
-<span class="sd">    A node field associates every node with multiple entries (flux, effort) of field variables.</span>
+<span class="sd">    A node field associates every node with multiple entries (e.g., flux and effort) of a field variable.</span>
 <span class="sd">    Furthermore, for convencience, it allows to get fast access to values for individual nodes or node sets.</span>
+
+<span class="sd">    The purpose is to store field data in an efficient, contiguos manner rather than distributing it across</span>
+<span class="sd">    all individual nodes.</span>
 
 <span class="sd">    .. code-block:: console</span>
 
+<span class="sd">        Example:</span>
+
 <span class="sd">        NodeField &#39;Displacement&#39;</span>
-<span class="sd">           values: {&#39;U&#39; : [[0,0,0],  # node (1)</span>
-<span class="sd">                           [1,0,0],  # node (2)</span>
-<span class="sd">                           [0,1,0]]} # node (3)</span>
+<span class="sd">           values: {&#39;U&#39; : [[0,0,0],  # Node (1)</span>
+<span class="sd">                           [1,0,0],  # Node (2)</span>
+<span class="sd">                           [0,1,0]]} # Node (3)</span>
+
+<span class="sd">        Spatial representation:</span>
+
 <span class="sd">        (1) --------- (2)</span>
-<span class="sd">         | *             .</span>
-<span class="sd">         |  *+---------+   ...</span>
-<span class="sd">         |   | [0,0,0] |</span>
-<span class="sd">        (3)  +---------+</span>
+<span class="sd">         | *             *</span>
+<span class="sd">         |  *+---------+   *+---------+</span>
+<span class="sd">         |   | [0,0,0] |    | [1,0,0] |</span>
+<span class="sd">        (3)  +---------+    +---------+</span>
 <span class="sd">          *</span>
 <span class="sd">           * +---------+</span>
 <span class="sd">             | [0,1,0] |</span>

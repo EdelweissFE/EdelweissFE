@@ -52,16 +52,16 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solvers.html">Nonlinear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -69,6 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
@@ -123,7 +124,7 @@
 <li class="toctree-l2"><a class="reference internal" href="models.html#module-fe.models.femodel"><code class="docutils literal notranslate"><span class="pre">FEModel</span></code> - A classical finite element model</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="solvers.html">Nonlinear solvers</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="solvers.html">Solvers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#fe.config.solvers.getSolverByName"><code class="docutils literal notranslate"><span class="pre">getSolverByName()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html#module-fe.solvers.nonlinearimplicitstaticparallelmk2"><code class="docutils literal notranslate"><span class="pre">NISTParallelForMarmotElements</span></code> - Nonlinear Implicit Static (parallel)</a></li>
@@ -150,14 +151,13 @@
 <li class="toctree-l2"><a class="reference internal" href="constraints.html#implementing-your-own-constraints">Implementing your own constraints</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="dofmanager.html">The DOF manager</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="dofmanager.html">DOF manager</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofManager"><code class="docutils literal notranslate"><span class="pre">DofManager</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.VIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">VIJSystemMatrix</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutput</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController"><code class="docutils literal notranslate"><span class="pre">FieldOutputController</span></code></a></li>
 </ul>
 </li>
@@ -165,7 +165,7 @@
 <li class="toctree-l2"><a class="reference internal" href="fields.html#module-fe.fields.nodefield"><code class="docutils literal notranslate"><span class="pre">NodeField</span></code> - A physical field on nodes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="elements.html">Finite elements</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="elements.html">Elements</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="elements.html#fe.config.elementlibrary.getElementClass"><code class="docutils literal notranslate"><span class="pre">getElementClass()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="elements.html#provider-marmotsingleqpelement">Provider <code class="docutils literal notranslate"><span class="pre">marmotsingleqpelement</span></code></a></li>
@@ -184,7 +184,7 @@
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html#fe.utils.exceptions.WrongDomain"><code class="docutils literal notranslate"><span class="pre">WrongDomain</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="generators.html">Meshgenerators</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="generators.html">Generators</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="generators.html#boxgen-a-3d-box-mesh-generator"><code class="docutils literal notranslate"><span class="pre">boxgen</span></code> - A 3D box mesh generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html#planerectquad-a-2d-plane-rectangular-mesh-generator"><code class="docutils literal notranslate"><span class="pre">planerectquad</span></code> - A 2D plane rectangular mesh generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generators.html#cubit-a-cubit-mesh-generator"><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator</a></li>
@@ -216,6 +216,10 @@
 <li class="toctree-l2"><a class="reference internal" href="plotter.html#fe.utils.plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="points.html">Points</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="points.html#fe.points.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sets.html">Sets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sets.html#fe.sets.orderedset.OrderedSet"><code class="docutils literal notranslate"><span class="pre">OrderedSet</span></code></a></li>
@@ -245,7 +249,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="variables.html">Variables</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="variables.html#fe.points.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html#fe.variables.fieldvariable.FieldVariable"><code class="docutils literal notranslate"><span class="pre">FieldVariable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html#fe.variables.scalarvariable.ScalarVariable"><code class="docutils literal notranslate"><span class="pre">ScalarVariable</span></code></a></li>
 </ul>
 </li>

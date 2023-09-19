@@ -119,47 +119,55 @@
 
 <span class="sd">    It has a specific runtime, and it holds StepActions to executed.</span>
 
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    number</span>
 <span class="sd">        The number of this step. For information purposes only.</span>
-<span class="sd">    startTime</span>
-<span class="sd">        The start time of the step.</span>
-<span class="sd">    definition</span>
-<span class="sd">        A dictionary holding key/value pairs for defintion</span>
+<span class="sd">    model</span>
+<span class="sd">        The current state of the model.</span>
+<span class="sd">    fieldOutputController</span>
+<span class="sd">        The FieldOutputController instance for processing results.</span>
+<span class="sd">    journal</span>
+<span class="sd">        The Journal instance for logging purposes.</span>
+<span class="sd">    jobInfo</span>
+<span class="sd">        Additional information about the job</span>
+<span class="sd">    solvers</span>
+<span class="sd">        The instances of solvers available to this step.</span>
+<span class="sd">    outputManagers</span>
+<span class="sd">        The OutputManagers used.</span>
 <span class="sd">    stepActions</span>
 <span class="sd">        The collection of actions for this step.</span>
-<span class="sd">    journal</span>
-<span class="sd">        The journal object for logging.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Additional options for the step.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">startTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
+        <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
+        <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span>
+        <span class="n">jobInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">solvers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">outputManagers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="StepBase.solve"><a class="viewcode-back" href="../../../../documentation/steps.html#fe.steps.base.stepbase.StepBase.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">solvers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span> <span class="n">outputManagers</span><span class="p">:</span> <span class="nb">dict</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">FEModel</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FEModel</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Let a step be solved.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        solvers</span>
-<span class="sd">            The instances of solvers available to this step.</span>
-<span class="sd">        model</span>
-<span class="sd">            The model to be solved.</span>
-<span class="sd">        fieldOutputController</span>
-<span class="sd">            The FieldOutputController instance for post processing of results.</span>
-<span class="sd">        outputManagers</span>
-<span class="sd">            The OutputManagers used.</span>
-<span class="sd">        journal</span>
-<span class="sd">            The journal instance for logging.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple[bool, FEModel]</span>
-<span class="sd">            The tuple containing the truth value of successs and the updated model.</span>
+<span class="sd">        FEModel</span>
+<span class="sd">            The updated model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div></div>

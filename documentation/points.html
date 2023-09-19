@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Variables &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Points &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributors" href="../contributors.html" />
-    <link rel="prev" title="Utilities" href="utils.html" /> 
+    <link rel="next" title="Sections" href="sections.html" />
+    <link rel="prev" title="Plotting" href="plotter.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -69,16 +69,15 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Points</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fe.points.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Variables</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.fieldvariable.FieldVariable"><code class="docutils literal notranslate"><span class="pre">FieldVariable</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.scalarvariable.ScalarVariable"><code class="docutils literal notranslate"><span class="pre">ScalarVariable</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
@@ -100,9 +99,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Documentation</a></li>
-      <li class="breadcrumb-item active">Variables</li>
+      <li class="breadcrumb-item active">Points</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/documentation/variables.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/documentation/points.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -110,34 +109,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="variables">
-<h1>Variables<a class="headerlink" href="#variables" title="Permalink to this heading"></a></h1>
-<p>Currently, EdelweissFE supports two types of variables:
-FieldVariables, i.e., variables associated with spatial positions,
-and scalar variables, not associated with a spatial position.
-The latter may be used for, e.g., Lagrangian multipliers.</p>
+  <div class="section" id="points">
+<h1>Points<a class="headerlink" href="#points" title="Permalink to this heading"></a></h1>
+<p>Points represent entities with a spatial position and a unique identity,</p>
 <p>Relevant modules:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.fieldvariable</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.scalarvariable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fe.points.node</span></code></p></li>
 </ul>
 </div></blockquote>
-<span class="target" id="module-fe.variables.fieldvariable"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.fieldvariable.FieldVariable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.fieldvariable.</span></span><span class="sig-name descname"><span class="pre">FieldVariable</span></span><a class="reference internal" href="../_modules/fe/variables/fieldvariable.html#FieldVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.fieldvariable.FieldVariable" title="Permalink to this definition"></a></dt>
-<dd><p>This is a basic field variable, tied to a spatial position.
-Currently, it is a placeholder used to indicate the presence field variables at a certain location, and associate them with e.g, nodes.
-Furthermore, it allows us to adress them by their unique id (= hash value).
-Unlike ScalarVariables, FieldVariable does not directly holds any results/values, but rather, for performance reasons,
-we store results in cumulative Fields, such as NodeField.
-FieldVariable only holds a reference to the primary NodeField results.</p>
-</dd></dl>
-
-<span class="target" id="module-fe.variables.scalarvariable"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.scalarvariable.ScalarVariable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.scalarvariable.</span></span><span class="sig-name descname"><span class="pre">ScalarVariable</span></span><a class="reference internal" href="../_modules/fe/variables/scalarvariable.html#ScalarVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.scalarvariable.ScalarVariable" title="Permalink to this definition"></a></dt>
-<dd><p>A basic scalar variable, not tied to a spatial position.</p>
+<span class="target" id="module-fe.points.node"></span><dl class="py class">
+<dt class="sig sig-object py" id="fe.points.node.Node">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.points.node.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/points/node.html#Node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.points.node.Node" title="Permalink to this definition"></a></dt>
+<dd><p>A basic node.
+It has a label, a spatial position, and may be associated with an arbitrary number of fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>int</em>) – The unique label for this node.</p></li>
+<li><p><strong>coordinates</strong> (<em>ndarray</em>) – The coordinates of this node.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -146,8 +139,8 @@ FieldVariable only holds a reference to the primary NodeField results.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="utils.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../contributors.html" class="btn btn-neutral float-right" title="Contributors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plotter.html" class="btn btn-neutral float-left" title="Plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sections.html" class="btn btn-neutral float-right" title="Sections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

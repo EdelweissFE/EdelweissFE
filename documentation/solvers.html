@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nonlinear solvers &mdash; EdelweissFE v22.07 documentation</title>
+  <title>Solvers &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -52,7 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Nonlinear solvers</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Solvers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#fe.config.solvers.getSolverByName"><code class="docutils literal notranslate"><span class="pre">getSolverByName()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.solvers.nonlinearimplicitstatic"><code class="docutils literal notranslate"><span class="pre">NIST</span></code> - Nonlinear Implicit Static</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#fe.solvers.nonlinearimplicitstatic.NIST"><code class="docutils literal notranslate"><span class="pre">NIST</span></code></a></li>
@@ -71,12 +71,12 @@
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">The DOF manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Managing field outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="elements.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generators.html">Meshgenerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generators.html">Generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="journal.html">Journal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
@@ -84,6 +84,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sets.html">Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
@@ -110,7 +111,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Documentation</a></li>
-      <li class="breadcrumb-item active">Nonlinear solvers</li>
+      <li class="breadcrumb-item active">Solvers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/documentation/solvers.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -121,7 +122,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="module-fe.config.solvers">
-<span id="nonlinear-solvers"></span><h1>Nonlinear solvers<a class="headerlink" href="#module-fe.config.solvers" title="Permalink to this heading"></a></h1>
+<span id="solvers"></span><h1>Solvers<a class="headerlink" href="#module-fe.config.solvers" title="Permalink to this heading"></a></h1>
 <p>Currently, EdelweissFE provides</p>
 <blockquote>
 <div><ul class="simple">
@@ -131,8 +132,8 @@
 <li><p>and a parallel arc length solver (NISTPArcLength).</p></li>
 </ul>
 </div></blockquote>
-<p>Choose the solver in the <code class="docutils literal notranslate"><span class="pre">*job</span></code> definition:</p>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
+<p>Choose the solver in the <code class="docutils literal notranslate"><span class="pre">*solver</span></code> definition:</p>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*solver</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">mySolver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTParallel</span>
 </pre></div>
 </div>
 <dl class="py function">
@@ -692,15 +693,8 @@ Is usually called by checkConvergence().</p>
 <li><p><strong>outputmanagers</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>fe.outputmanagers.base.outputmanagerbase.OutputManagerBase</em><em>]</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>Truth value of success.</p></li>
-<li><p>The updated model</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple[bool,<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a>]</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[bool, <a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">fe.models.femodel.FEModel</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -858,16 +852,6 @@ Is is called by solveStep() in each iteration.</p>
 <li><p><strong>model</strong> – The  model tree.</p></li>
 <li><p><strong>fieldOutputController</strong> – The field output controller.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>Truth value of success.</p></li>
-<li><p>The updated model</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple[bool,<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1064,16 +1048,6 @@ Also accounts for the arc length loading parameter.</p>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The field output controller.</p></li>
 <li><p><strong>outputmanagers</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>fe.outputmanagers.base.outputmanagerbase.OutputManagerBase</em><em>]</em>) – </p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>Truth value of success.</p></li>
-<li><p>The updated model</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple[bool,<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel">FEModel</a>]</p>
 </dd>
 </dl>
 </dd></dl>

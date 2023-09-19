@@ -125,27 +125,27 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    domainSize</span>
+<span class="sd">    dimension</span>
 <span class="sd">        The dimension of the model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;FEModel&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimension</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nodeSets</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nodeFields</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elementSets</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">analyticalFields</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">additionalParameters</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">domainSize</span> <span class="o">=</span> <span class="n">dimension</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1">#: Current time of the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Nodes in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Elements in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodeSets</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: NodeSets in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodeFields</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: NodeFields in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elementSets</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: ElementSets in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Sections in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Surface definitions in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Constraints in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Materials in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analyticalFields</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: AnalyticalFields in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: ScalarVariables in the model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">additionalParameters</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Additional information.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domainSize</span> <span class="o">=</span> <span class="n">dimension</span>  <span class="c1">#: Spatial dimension of the model</span>
 
     <span class="k">def</span> <span class="nf">_createNodeFieldVariablesFromElements</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
