@@ -547,20 +547,21 @@ class NIST:
             The modified system matrix.
         """
 
-        tic = getCurrentTime()
-        for dirichlet in dirichlets:
-            for row in self.findDirichletIndices(dirichlet):  # dirichlet.indices:
-                K.data[K.indptr[row] : K.indptr[row + 1]] = 0.0
+        if dirichlets:
+            tic = getCurrentTime()
+            for dirichlet in dirichlets:
+                for row in self.findDirichletIndices(dirichlet):  # dirichlet.indices:
+                    K.data[K.indptr[row] : K.indptr[row + 1]] = 0.0
 
-        # K[row, row] = 1.0 @ once, faster than within the loop above:
-        diag = K.diagonal()
-        diag[np.concatenate([self.findDirichletIndices(d) for d in dirichlets])] = 1.0
-        K.setdiag(diag)
+            # K[row, row] = 1.0 @ once, faster than within the loop above:
+            diag = K.diagonal()
+            diag[np.concatenate([self.findDirichletIndices(d) for d in dirichlets])] = 1.0
+            K.setdiag(diag)
 
-        K.eliminate_zeros()
+            K.eliminate_zeros()
 
-        toc = getCurrentTime()
-        self.computationTimes["dirichlet K"] += toc - tic
+            toc = getCurrentTime()
+            self.computationTimes["dirichlet K"] += toc - tic
 
         return K
 
