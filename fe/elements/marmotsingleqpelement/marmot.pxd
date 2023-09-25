@@ -32,14 +32,13 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
         
 cdef extern from "Marmot/Marmot.h" namespace "MarmotLibrary" nogil:
-    enum MaterialCode: pass
 
     cdef cppclass MarmotMaterialFactory:
         @staticmethod
-        MaterialCode getMaterialCodeFromName(const string& materialName) except +IndexError
+        int getMaterialCodeFromName(const string& materialName) except +IndexError
 
         @staticmethod
-        MarmotMaterial* createMaterial(MaterialCode materialCode, const double* materialProperties, int nMaterialProperties, int materialNumber) except +IndexError
+        MarmotMaterial* createMaterial(int materialCode, const double* materialProperties, int nMaterialProperties, int materialNumber) except +IndexError
 
 cdef extern from "Marmot/MarmotUtils.h":
     cdef struct StateView:

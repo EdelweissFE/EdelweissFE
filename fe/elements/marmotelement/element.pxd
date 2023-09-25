@@ -51,18 +51,15 @@ cdef extern from "Marmot/MarmotElement.h" namespace "MarmotElement":
         SurfaceTorsion
         
 cdef extern from "Marmot/Marmot.h" namespace "MarmotLibrary" nogil:
-    enum MaterialCode: pass
-    enum ElementCode: pass
-
     cdef cppclass MarmotMaterialFactory:
         @staticmethod
-        MaterialCode getMaterialCodeFromName(const string& materialName) except +IndexError
+        int getMaterialCodeFromName(const string& materialName) except +IndexError
     
     cdef cppclass MarmotElementFactory:
         @staticmethod
-        ElementCode  getElementCodeFromName(const string& elementName) except +IndexError
+        int getElementCodeFromName(const string& elementName) except +IndexError
         @staticmethod
-        MarmotElement* createElement(ElementCode elementCode, int noEl,) except +ValueError
+        MarmotElement* createElement(int elementCode, int noEl,) except +ValueError
                        
 cdef extern from "Marmot/MarmotElementProperty.h":
     cdef cppclass MarmotElementProperty nogil:
