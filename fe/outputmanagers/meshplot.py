@@ -262,9 +262,12 @@ class OutputManager(OutputManagerBase):
 
                 elif varType == "meshOnly":
                     meshOnlyJob = {}
+    
 
-                    meshOnlyJob["warpBy"] = definition.get("warpBy", False)
                     meshOnlyJob["configuration"] = definition.get("configuration", "undeformed")
+
+                    if meshOnlyJob["configuration"] == "deformed":
+                        meshOnlyJob["warpBy"] = fieldOutputController.fieldOutputs[definition["warpBy"]]
                     meshOnlyJob["scaleFactor"] = float(definition.get("scaleFactor", 1.0))
                     meshOnlyJob["axSpec"] = definition.get("axSpec", "111")
                     meshOnlyJob["figure"] = definition.get("figure", "1")

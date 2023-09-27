@@ -49,7 +49,7 @@ create=perElement, fieldOutput=omega
 
 *output, type=meshplot, name=RFPlot
 figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
-figure=2, axpSec=111, create=meshOnly, configuration=deformed
+figure=2, axpSec=111, create=meshOnly, configuration=deformed, warpBy=displacement
 *exportPlots
 figure=2, fileName=mesh
 
