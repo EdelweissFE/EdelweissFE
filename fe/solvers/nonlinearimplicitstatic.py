@@ -37,6 +37,7 @@ from fe.utils.exceptions import (
     CutbackRequest,
     DivergingSolution,
     ConditionalStop,
+    StepFailed,
 )
 from time import time as getCurrentTime
 from collections import defaultdict
