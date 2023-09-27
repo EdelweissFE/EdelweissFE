@@ -262,7 +262,6 @@ class OutputManager(OutputManagerBase):
 
                 elif varType == "meshOnly":
                     meshOnlyJob = {}
-    
 
                     meshOnlyJob["configuration"] = definition.get("configuration", "undeformed")
 
