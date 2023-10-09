@@ -2,6 +2,7 @@ name: Documentation
 
 on:
   push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -32,8 +33,7 @@ jobs:
           cd eigen 
           mkdir build
           cd build 
-          # cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
-          cmake -DBUILD_TESTING=OFF  $CMAKE_ARGS ..
+          cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include $CMAKE_ARGS ..
           make install
           cd ../..
 
