@@ -31,7 +31,7 @@ jobs:
           cd eigen 
           mkdir build
           cd build 
-          cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include $CMAKE_ARGS ..
+           cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
           make install
           cd ../..
 
