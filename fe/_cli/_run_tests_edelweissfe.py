@@ -37,7 +37,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-from fe.fecore import finiteElementSimulation
+from fe.drivers.inputfiledrivensimulation import finiteElementSimulation
 from fe.utils.inputfileparser import parseInputFile
 import numpy as np
 import argparse
@@ -45,9 +45,10 @@ from timeit import default_timer as timer
 from rich import print
 import rich
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser(description="validation script for FE analyses")
-    parser.add_argument("--create", dest="create", action="store_true", help="create refernece solutions")
+    parser.add_argument("--create", dest="create", action="store_true", help="create reference solutions")
     parser.add_argument(
         "--tests",
         help="comma-separated list (without whitespace inbetween) with names of analyzed test files, "
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     referenceSolutionFile = "U.ref"
     tests = [item for item in args.tests.split(",")]
 
-    testfilesDir = os.path.join(os.getcwd(), "testfiles")
+    testfilesDir = os.path.join(os.getcwd())  # , "testfiles")
     os.chdir(testfilesDir)
     testsDirs = next(os.walk("."))[1]
     testsDirs = sorted(testsDirs, key=str.casefold)
@@ -116,3 +117,7 @@ if __name__ == "__main__":
     print("[blue]Tests failed: {:3}[/]".format(failedTests))
     if failedTests > 0:
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

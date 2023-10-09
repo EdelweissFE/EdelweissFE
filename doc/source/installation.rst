@@ -22,7 +22,32 @@ Building EdelweissFE
 
 EdelweissFE depends on several Cython modules, which must be compiled prior to running the EdelweissFE.
 
-To build the modules (inplace), simply run
+To build EdelweissFE and install it using pip, simply run from within the main folder:
+
+.. code-block:: console
+    
+    cd ./EdelweissFE
+    pip install .
+
+Run a simulation with an inputfile using
+
+.. code-block:: console
+
+    edelweissfe your_input_file.inp
+
+Run all the validation examples
+
+.. code-block:: console
+
+    run_tests_edelweissfe ./testfiles
+
+Recreate the validation reference solutions (only if you know what you are doing)
+
+.. code-block:: console
+
+    run_tests_edelweissfe --create
+
+Alternatetively, to build the modules (inplace) and not install them using pip, simply run
 
 .. code-block:: console
 
@@ -33,18 +58,6 @@ Enforce a recompilation with
 .. code-block:: console
 
     python setup.py build_ext -i --force
-
-Run the validation examples
-
-.. code-block:: console
-
-    python run_tests.py
-
-Recreate the validation reference solutions (only if you know what you are doing)
-
-.. code-block:: console
-
-    python run_tests.py --create
 
 
 TLDR
@@ -156,8 +169,8 @@ Build and test EdelweissFE:
 
     cd $EWROOT
     cd EdelweissFE
-    python setup.py build_ext -i
-    python run_tests.py
+    pip install .
+    run_tests_edelweissfe testfiles
 
 Build this documentation:
 

@@ -29,8 +29,10 @@ Created on Thu May 21 14:23:14 2015
 
 @author: c8441141
 """
-from distutils.core import setup, Extension
-from Cython.Build import cythonize
+from setuptools import setup
+from setuptools.extension import Extension
+from setuptools import find_packages
+from Cython.Build import cythonize, build_ext
 from os.path import expanduser, join
 import numpy
 import sys
@@ -192,5 +194,25 @@ extensions += [
 ]
 
 print("Now compile!")
-setup(ext_modules=cythonize(extensions, compiler_directives=directives, annotate=True, language_level=3))
+
+setup(
+    name="EdelweissFE",
+    version="v22.09",
+    description="EdelweissFE: A light-weight, platform-independent, parallel finite element framework.",
+    license="LGPL-2.1",
+    packages=find_packages(),
+    include_package_data=True,
+    author="Matthias Neuner",
+    author_email="matthias.neuner@uibk.ac.at",
+    url="https://github.com/EdelweissFE/EdelweissFE",
+    cmdclass={"build_ext": build_ext},
+    entry_points={
+        "console_scripts": [
+            "edelweissfe=fe._cli._edelweissfe:main",
+            "run_tests_edelweissfe=fe._cli._run_tests_edelweissfe:main",
+        ],
+    },
+    ext_modules=cythonize(extensions, compiler_directives=directives, annotate=True, language_level=3),
+)
+
 print("Finish!")
