@@ -48,6 +48,7 @@ import rich
 
 def main():
     parser = argparse.ArgumentParser(description="validation script for FE analyses")
+    parser.add_argument("testdirectory", help="The directory containing the testfiles")
     parser.add_argument("--create", dest="create", action="store_true", help="create reference solutions")
     parser.add_argument(
         "--tests",
@@ -62,7 +63,7 @@ def main():
     referenceSolutionFile = "U.ref"
     tests = [item for item in args.tests.split(",")]
 
-    testfilesDir = os.path.join(os.getcwd())  # , "testfiles")
+    testfilesDir = os.path.abspath(args.testdirectory)
     os.chdir(testfilesDir)
     testsDirs = next(os.walk("."))[1]
     testsDirs = sorted(testsDirs, key=str.casefold)
