@@ -63,11 +63,11 @@ def createFieldOutputFromInputFile(inputfile: dict, model: FEModel, journal: Jou
     """
     fieldOutputController = FieldOutputController(model, journal)
     if inputfile["*fieldOutput"]:
-        definition = inputfile["*fieldOutput"][0]
-        for defLine in definition["data"]:
-            fpDef = convertLineToStringDictionary(defLine)
-            name = fpDef.pop("name")
-            fieldOutputController.addFieldOutput(name, **fpDef)
+        for definition in inputfile["*fieldOutput"]:
+            for defLine in definition["data"]:
+                fpDef = convertLineToStringDictionary(defLine)
+                name = fpDef.pop("name")
+                fieldOutputController.addFieldOutput(name, **fpDef)
 
     return fieldOutputController
 
