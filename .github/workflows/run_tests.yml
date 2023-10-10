@@ -49,7 +49,7 @@ jobs:
         run: |
           git clone https://github.com/romeric/Fastor.git
           cd Fastor
-          cmake -DBUILD_TESTING=OFF $CMAKE_ARGS .
+          cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") .
           make install
           cd ..
 
@@ -60,7 +60,7 @@ jobs:
           cd Marmot
           mkdir build
           cd build
-          cmake $CMAKE_ARGS  ..
+          cmake -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)")  ..
           make install
           cd ../../
 
