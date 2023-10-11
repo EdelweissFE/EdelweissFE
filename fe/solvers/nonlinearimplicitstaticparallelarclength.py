@@ -336,7 +336,7 @@ class NISTPArcLength(NISTParallel):
         elif extrapolation == "linear" and lastIncrementSize:
             dLambda = dLambda * (incrementSize / lastIncrementSize)
             dU, isExtrapolatedIncrement = super().extrapolateLastIncrement(
-                extrapolation, increment, dU, {}, lastIncrementSize
+                extrapolation, increment, dU, {}, lastIncrementSize, model
             )
         else:
             dLambda = 0.0
