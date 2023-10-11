@@ -144,6 +144,7 @@ class MarmotMaterialWrappingElement(BaseElement):
             The properties for he requested material.
         """
 
+        self._materialProperties = materialProperties
         self._marmotMaterialWrapper.createMaterial(materialName, materialProperties)
 
         self._nStateVars = self._marmotMaterialWrapper.getNumberOfRequiredStateVars()
