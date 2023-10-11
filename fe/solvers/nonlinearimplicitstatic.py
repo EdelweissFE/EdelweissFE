@@ -885,7 +885,7 @@ class NIST:
         # cloads
         for cLoad in nodeForces:
             # PExt = cLoad.applyOnP(PExt, increment)
-            PExt[self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nSet.label]] = cLoad.getLoad(
+            PExt[self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nSet.label]] += cLoad.getLoad(
                 increment
             ).flatten()
         # dloads
