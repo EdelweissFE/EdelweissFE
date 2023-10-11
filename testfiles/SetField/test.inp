@@ -18,17 +18,22 @@ elType  =C3D8
 
 *fieldOutput
 elSet=all, field=displacement, result=U, name=displacement
-name=stress, elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=stress, elSet=all, result=stress, quadraturePoint=0:8
+name=meanStress, elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x, axis=1)'
 elSet=all, result=omega, name=omega, quadraturePoint=0:8
 elSet=all, result=omega, name=omegaMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 
-create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=meanStress
 create=perElement, fieldOutput=omegaMax
 configuration, overwrite=yes
 
 *step, solver=theSolver, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
 setfield, fieldOutput=omega, type=uniform, value=.3
-dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0, 3=0.0
-dirichlet, name=right, nSet=gen_right, field=displacement, 1=0, 2=.1, 3=0
+dirichlet, name=left, nSet=gen_left, field=displacement, 1=0., 2=0., 3=0.
+dirichlet, name=right, nSet=gen_right, field=displacement, 1=0., 2=.1, 3=0.
+
+*step, solver=theSolver, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
+dirichlet, name=right, nSet=gen_right, field=displacement
+setfield, name=stressIni, fieldOutput=stress, type=uniform, value="-10.,0.,0.,0.,0.,0."

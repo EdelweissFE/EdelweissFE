@@ -73,7 +73,19 @@ class StepAction(StepActionBase):
 
         if self.type == "uniform":
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
-            currentResults[:] = float(self.value)
+            newResult = np.fromstring(self.value, float, sep=",")
+
+            if currentResults.ndim == 2:
+                currentResults = np.expand_dims(currentResults, 0)
+
+            if not currentResults.shape[-1] == newResult.shape[-1]:
+                self.journal.errorMessage(
+                    f"Dimension mismatch. Result '{self.fieldOutputName}' has length {currentResults.shape[-1]} but value has length {newResult.shape[-1]}",
+                    self.name,
+                )
+                raise Exception
+
+            currentResults[:] = newResult
             self.journal.message(
                 "Setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.name
             )
@@ -83,7 +95,8 @@ class StepAction(StepActionBase):
             currentResults = np.zeros_like(self.fieldOutput.getLastResult())
 
             if self.analyticalField.type == "scalarExpression" and not currentResults.shape[2] == 1:
-                raise Exception("Cannot map scalar value to {}-dimensional result.".format(currentResults.shape[2]))
+                self.journal.errorMessage(f"Cannot map scalar value to {currentResults.shape[2]}-dimensional result.")
+                raise Exception
 
             elementList = self.fieldOutput.elSet
 
