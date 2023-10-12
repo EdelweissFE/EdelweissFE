@@ -185,9 +185,9 @@ def finiteElementSimulation(
         print("")
         journal.errorMessage("Interrupted by user", identification)
 
-    except:
-        print("")
+    except Exception as e:
         journal.errorMessage("Simulation failed", identification)
+        raise e
 
     finally:
         journal.printTable(
