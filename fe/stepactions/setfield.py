@@ -101,9 +101,8 @@ class StepAction(StepActionBase):
             elementList = self.fieldOutput.elSet
 
             for i1, element in enumerate(elementList):
-                coordinatesAtCenter = element.getCoordinatesAtCenter()
-                # for i2, quadraturePoint in enumerate(self.fieldOutput.quadraturePoints):
-                #    currentResults[i1][i2] = self.analyticalField.evaluateAtCoordinates(coordinatesAtCenter)
-                currentResults[i1] = self.analyticalField.evaluateAtCoordinates(coordinatesAtCenter)
+                coordinatesAtQuadraturePoints = element.getCoordinatesAtQuadraturePoints()
+
+                currentResults[i1] = self.analyticalField.evaluateAtCoordinates(coordinatesAtQuadraturePoints)
 
             self.fieldOutput.setResults(currentResults)

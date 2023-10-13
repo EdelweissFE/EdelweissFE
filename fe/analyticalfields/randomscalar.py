@@ -73,6 +73,10 @@ class AnalyticalField(AnalyticalFieldBase):
         return
 
     def evaluateAtCoordinates(self, coords):
-        for i1 in range(self.domainSize - len(coords)):
-            coords.append(0)
-        return float(self.srf(coords))
+        coords = np.array(coords)
+
+        if coords.ndim == 1:
+            coords = np.expand_dims(coords, 0)
+        coords = np.c_[coords, np.zeros((coords.shape[0], 3 - coords.shape[-1]))]
+
+        return np.expand_dims(self.srf(coords), 1)

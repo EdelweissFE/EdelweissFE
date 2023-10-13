@@ -37,6 +37,7 @@ from fe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
 )
 from fe.utils.math import createModelAccessibleFunction
+import numpy as np
 
 
 class AnalyticalField(AnalyticalFieldBase):
@@ -49,11 +50,15 @@ class AnalyticalField(AnalyticalFieldBase):
 
         expressionString = self.options["f(x,y,z)"]
 
-        self.expression = createModelAccessibleFunction(expressionString, model, *"xyz"[: self.domainSize])
+        self.expression = createModelAccessibleFunction(expressionString, model, *"xyz")  # [: self.domainSize])
 
         return
 
     def evaluateAtCoordinates(self, coords):
-        for i1 in range(self.domainSize - len(coords)):
-            coords.append(0)
-        return self.expression(*coords)
+        coords = np.array(coords)
+
+        if coords.ndim == 1:
+            coords = np.expand_dims(coords, 0)
+        coords = np.c_[coords, np.zeros((coords.shape[0], 3 - coords.shape[-1]))]
+
+        return np.expand_dims(np.array([float(self.expression(*coords_)) for coords_ in coords]), 1)
