@@ -127,6 +127,8 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
 
     nodes = []
     currentNodeLabel = 1
+    if model.nodes:
+        currentNodeLabel += max(model.nodes.keys())
     for ix in range(nNodesX):
         for iy in range(nNodesY):
             for iz in range(nNodesZ):
@@ -160,6 +162,8 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
 
     elements = []
     currentElementLabel = 1
+    if model.elements:
+        currentElementLabel += max(model.elements.keys())
     for ix in range(nX):
         for iy in range(nY):
             for iz in range(nZ):
