@@ -227,17 +227,47 @@ class _FieldOutput:
         else:
             self.result = incrementResult
 
-    def initializeJob(
-        self,
-    ):
+    def writeLastResult(self):
+        """Update file output.
+
+        Parameters
+        ----------
+        model
+            The model tree.
+        """
+        res = np.asarray(self.result)
+        if self.f_export:
+            res = self.f_export(res)
+
+        if res.ndim > 2:
+            self.journal.message("Reshaping fieldOutput result for export in .csv file", self.name)
+            res = res.reshape((res.shape[0], -1))
+
+        with open(f"{self.export}.csv", "a") as f:
+            np.savetxt(
+                f,
+                np.hstack(
+                    (
+                        self.timeHistory[-1],
+                        res[-1,],
+                    )
+                ).reshape((1, -1)),
+            )
+
+    def initializeJob(self):
         """Initalize everything. Will also update the results
         based on the proved start time and solution.
         """
 
         self.updateResults(self.model)
 
+        if self.export:
+            f = open(f"{self.export}.csv", "w")
+            f.close()
+
     def initializeStep(self, step):
-        pass
+        if self.export:
+            self.writeLastResult()
 
     def finalizeIncrement(self, increment: tuple):
         """Finalize an increment, i.e. store the current results.
@@ -251,6 +281,9 @@ class _FieldOutput:
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
         self.updateResults(self.model)
 
+        if self.export:
+            self.writeLastResult()
+
     def finalizeStep(
         self,
     ):
@@ -259,30 +292,7 @@ class _FieldOutput:
     def finalizeJob(
         self,
     ):
-        """Finalize everything.
-        If results are to be exported, it is done now.
-
-        """
-
-        if self.export:
-            res = np.asarray(self.result)
-            if self.f_export:
-                res = self.f_export(res)
-            if res.ndim > 2:
-                self.journal.message("Reshaping fieldOutput result for export in .csv file", self.name)
-                res = res.reshape((res.shape[0], -1))
-            if self.appendResults and res.shape[0] == len(self.timeHistory):
-                # we also store the time, if result shape and time history are 'compatible'
-                self.journal.message("Adding time history for export in .csv file", self.name)
-                time = np.asarray(self.timeHistory).reshape(-1, 1)
-                resultTable = np.column_stack((time, res))
-            else:
-                resultTable = res
-
-            np.savetxt(
-                "{:}.csv".format(self.export),
-                resultTable,
-            )
+        pass
 
     def setResults(self, values: np.ndarray):
         """Modifies a result at it's origin, if possible.
