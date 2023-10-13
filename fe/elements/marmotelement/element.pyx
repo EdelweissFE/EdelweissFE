@@ -295,6 +295,16 @@ cdef class MarmotElementWrapper:
         """Compute the underlying MarmotElement centroid coordinates."""
 
         return np.asarray ( self.marmotElement.getCoordinatesAtCenter() )
+
+    def getCoordinatesAtQuadraturePoints(self):
+        """Compute the underlying MarmotElement qp coordinates."""
+        
+        return np.asarray ( self.marmotElement.getCoordinatesAtQuadraturePoints() )
+
+    def getNumberOfQuadraturePoints(self):
+        """Compute the underlying MarmotElement qp coordinates."""
+        
+        return self.marmotElement.getNumberOfQuadraturePoints()
     
     def __dealloc__(self):
         del self.marmotElement

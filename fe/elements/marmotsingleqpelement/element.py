@@ -114,6 +114,7 @@ class MarmotMaterialWrappingElement(BaseElement):
 
         self._nodes = nodes
         self._nodeCoordinates = nodes[0].coordinates
+        self._qpCoordinates = nodes[0].coordinates
 
     def setProperties(self, elementProperties):
         """
@@ -219,3 +220,23 @@ class MarmotMaterialWrappingElement(BaseElement):
             The node's coordinates."""
 
         return self._nodeCoordinates
+
+    def getCoordinatesAtQuadraturePoints(self) -> np.ndarray:
+        """Return the only qp's coordinates.
+
+        Returns
+        -------
+        np.ndarray
+            The qp's coordinates."""
+
+        return self._qpCoordinates
+
+    def getNumberOfQuadraturePoints(self) -> int:
+        """Return the only qp's coordinates.
+
+        Returns
+        -------
+        np.ndarray
+            The qp's coordinates."""
+
+        return 1

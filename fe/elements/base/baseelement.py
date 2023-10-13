@@ -314,3 +314,27 @@ class BaseElement(ABC):
         """
 
         pass
+
+    @abstractmethod
+    def getCoordinatesAtQuadraturePoints(self) -> np.ndarray:
+        """Compute the underlying MarmotElement qp coordinates.
+
+        Returns
+        -------
+        np.ndarray
+            The element's qp coordinates.
+        """
+
+        pass
+
+    @abstractmethod
+    def getNumberOfQuadraturePoints(self) -> int:
+        """Compute the underlying MarmotElement qp coordinates.
+
+        Returns
+        -------
+        np.ndarray
+            The element's qp coordinates.
+        """
+
+        pass

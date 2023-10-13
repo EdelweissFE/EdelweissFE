@@ -134,6 +134,10 @@ cdef extern from "Marmot/MarmotElement.h":
         int getNDofPerElement()
 
         vector[double] getCoordinatesAtCenter()
+
+        vector[vector[double]] getCoordinatesAtQuadraturePoints()
+
+        int getNumberOfQuadraturePoints()
         
 cdef class MarmotElementWrapper:
     
