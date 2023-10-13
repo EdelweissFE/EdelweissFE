@@ -359,6 +359,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
 
     # element sets
     elementSets = []
+    elementSets.append(ElementSet("{:}_all".format(name), elements))
 
     elGrid = np.asarray(elements).reshape(nX, nY, nZ)
     elementSets.append(ElementSet("{:}_bottom".format(name), np.ravel(elGrid[:, 0, :])))
