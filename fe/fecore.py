@@ -185,8 +185,13 @@ def finiteElementSimulation(
         print("")
         journal.errorMessage("Interrupted by user", identification)
 
-    except Exception as e:
+    except StepFailed:
+        print("")
         journal.errorMessage("Simulation failed", identification)
+
+    except Exception as e:
+        print("")
+        journal.errorMessage("Simulation failed due to unhandled exception", identification)
         raise e
 
     finally:
