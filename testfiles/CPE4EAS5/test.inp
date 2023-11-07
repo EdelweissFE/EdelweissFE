@@ -7,15 +7,15 @@ all
 *job, name=cps4job, domain=2d
 *solver, solver=NIST, name=theSolver
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
-elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas0, f(x)='mean(x[:,:,0], axis=1)'
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas1, f(x)='mean(x[:,:,1], axis=1)'
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas2, f(x)='mean(x[:,:,2], axis=1)'
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas3, f(x)='mean(x[:,:,3], axis=1)'
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas4, f(x)='mean(x[:,:,4], axis=1)'
-nSet=gen_right, field=displacement, result=U,  name=maxDisp, f(x)='  max (abs (x[:,1] )) '
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
+create=perElement, elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas0, f(x)='mean(x[:,:,0], axis=1)'
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas1, f(x)='mean(x[:,:,1], axis=1)'
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas2, f(x)='mean(x[:,:,2], axis=1)'
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas3, f(x)='mean(x[:,:,3], axis=1)'
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas4, f(x)='mean(x[:,:,4], axis=1)'
+create=perNode, nSet=gen_right, field=displacement, result=U,  name=maxDisp, f(x)='  max (abs (x[:,1] )) '
 
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=200

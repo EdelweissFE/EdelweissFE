@@ -69,7 +69,7 @@ class FEModel:
         self.additionalParameters = {}  #: Additional information.
         self.domainSize = dimension  #: Spatial dimension of the model
 
-    def _createNodeFieldVariablesFromElements(
+    def _populateNodeFieldVariablesFromElements(
         self,
     ):
         """Creates FieldVariables on Nodes depending on the all
@@ -79,9 +79,9 @@ class FEModel:
             for node, nodeFields in zip(element.nodes, element.fields):
                 for field in nodeFields:
                     if field not in node.fields:
-                        node.fields[field] = FieldVariable()
+                        node.fields[field] = FieldVariable(node)
 
-    def _createNodeFieldVariablesFromConstraints(
+    def _populateNodeFieldVariablesFromConstraints(
         self,
     ):
         """Creates FieldVariables on Nodes depending on the all
@@ -92,43 +92,35 @@ class FEModel:
             for node, nodeFields in zip(constraint.nodes, constraint.fieldsOnNodes):
                 for field in nodeFields:
                     if field not in node.fields:
-                        node.fields[field] = FieldVariable()
+                        node.fields[field] = FieldVariable(node)
 
-    def _createNodeFieldsFromNodeFieldVariables(
-        self,
-    ):
-        """Bundle nodal FieldVariables together in contiguous NodeFields."""
+    def _createNodeFieldsFromNodes(self, nodes: list, nodeSets: list) -> dict[str, NodeField]:
+        """Bundle nodal FieldVariables together in contiguous NodeFields.
+
+        Parameters
+        ----------
+        nodes
+            The list of Nodes from which the NodeFields should be created.
+        nodeSets
+            The list of NodeSets, which should be considered in the index map of the NodeFields.
+
+        Returns
+        -------
+        dict[str,NodeField]
+            The dictionary containing the NodeField instances for every active field."""
 
         domainSize = self.domainSize
-        nodesInField = dict()
+
+        theNodeFields = dict()
         for field in phenomena.keys():
             fieldSize = getFieldSize(field, domainSize)
-            nodeList = []
 
-            for node in self.nodes.values():
-                if field in node.fields:
-                    nodeList.append(node)
+            theNodeField = NodeField(field, getFieldSize(field, domainSize), nodes)
 
-            if nodeList:
-                nodesInField[field] = nodeList
+            if theNodeField.nodes:
+                theNodeFields[field] = theNodeField
 
-        self.nodeFields = {
-            field: NodeField(field, getFieldSize(field, domainSize), nodes, self)
-            for field, nodes in nodesInField.items()
-        }
-
-    def _createDefaultNodeFieldEntries(
-        self,
-    ):
-        """Create the default entries 'U' (flux) and 'P' (effort)."""
-
-        for nodeField in self.nodeFields.values():
-            # creating primary and conjugate field entries on node
-            nodeField.createFieldValueEntry("U")
-            nodeField.createFieldValueEntry("P")
-
-            for node in nodeField.nodes:
-                node.fields[nodeField.name].values = nodeField.values["U"][node]
+        return theNodeFields
 
     def _requestAdditionalScalarVariable(self, name: str):
         """Create a new scalar variables
@@ -174,9 +166,6 @@ class FEModel:
                 for i in range(nAdditionalScalarVariables)
             ]
 
-            # scalarVariables = [requestAdditional(nameScalarVariable() for i in range(nAdditionalScalarVariables)]
-            # self.scalarVariables += scalarVariables
-
             constraint.assignAdditionalScalarVariables(scalarVariables)
 
     def _prepareVariablesAndFields(self, journal):
@@ -187,14 +176,12 @@ class FEModel:
         journal
             The journal instance.
         """
-        journal.message("Activing fields on nodes from Elements and Constraints", self.identification)
-        self._createNodeFieldVariablesFromElements()
-        self._createNodeFieldVariablesFromConstraints()
+        journal.message("Activating fields on nodes from Elements and Constraints", self.identification)
+        self._populateNodeFieldVariablesFromElements()
+        self._populateNodeFieldVariablesFromConstraints()
 
         journal.message("Bundling fields on nodes to NodeFields", self.identification)
-        self._createNodeFieldsFromNodeFieldVariables()
-        journal.message("Creating default NodeField entries U and P", self.identification)
-        self._createDefaultNodeFieldEntries()
+        self.nodeFields = self._createNodeFieldsFromNodes(self.nodeSets["all"], self.nodeFields.values())
 
         journal.message("Assembling ScalarVariables", self.identification)
         self.scalarVariables = dict()

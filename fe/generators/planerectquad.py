@@ -147,7 +147,7 @@ def generateModelData(generatorDefinition, model, journal):
 
             currentElementLabel += 1
 
-    model._createNodeFieldVariablesFromElements()
+    model._populateNodeFieldVariablesFromElements()
 
     # nodesets:
     model.nodeSets["{:}_all".format(name)] = NodeSet("{:}_all".format(name), list())

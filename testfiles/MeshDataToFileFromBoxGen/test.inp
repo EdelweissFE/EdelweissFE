@@ -12,9 +12,9 @@
 all
 
 *fieldOutput,
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
-elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 
 *output, type=ensight, name=test
 create=perNode, fieldOutput=displacement

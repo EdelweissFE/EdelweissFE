@@ -14,8 +14,8 @@ all
 *job, name=cps4job, domain=2d
 *solver, solver=NIST, name=theSolver
 *fieldOutput
-name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
-name=displacement, elSet=all, field=displacement, result=U, name=displacement
+create=perNode, name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
+create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
 
 
 *output, type=monitor

@@ -142,12 +142,22 @@ def finiteElementSimulation(
     for updateConfig in inputfile["*updateConfiguration"]:
         updateConfiguration(updateConfig, jobInfo, journal)
 
+    # Create the default entries 'U' (flux) and 'P' (effort)
+    for nodeField in model.nodeFields.values():
+        nodeField.createFieldValueEntry("U")
+        nodeField.createFieldValueEntry("P")
+
     plotter = createPlotterFromInputFile(inputfile, journal)
     stepManager = createStepManagerFromInputFile(inputfile)
     fieldOutputController = createFieldOutputFromInputFile(inputfile, model, journal)
+    fieldOutputController.initializeJob()
+
     outputManagers = createOutputManagersFromInputFile(
         inputfile, jobName, model, fieldOutputController, journal, plotter
     )
+    for outputManager in outputManagers:
+        outputManager.initializeJob()
+
     solvers = createSolversFromInputFile(inputfile, jobInfo, journal)
 
     if not solvers:
@@ -162,8 +172,6 @@ def finiteElementSimulation(
     if "solver" in job or not solvers:
         Solver = getSolverByName(job.get("solver", "NIST"))
         solvers["default"] = Solver(jobInfo, journal)
-
-    fieldOutputController.initializeJob()
 
     try:
         for step in stepManager.dequeueStep(jobInfo, model, fieldOutputController, journal, solvers, outputManagers):

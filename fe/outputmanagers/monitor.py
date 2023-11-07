@@ -52,31 +52,30 @@ class OutputManager(OutputManagerBase):
     """Simple monitor for nodes, nodeSets, elements and elementSets"""
 
     identification = "Monitor"
-    printTemplate = "{:}, {:}: {:}"
+    printTemplate = "{:}: {:}"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
 
-        for defline in definitionLines:
-            entry = {}
-            defDict = convertLineToStringDictionary(defline)
-            entry["fieldOutput"] = fieldOutputController.fieldOutputs[defDict["fieldOutput"]]
-            entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
-            self.monitorJobs.append(entry)
+    def updateDefinition(self, **kwargs: dict):
+        entry = dict()
+        entry["fieldOutput"] = kwargs["fieldOutput"]
+        entry["f(x)"] = createMathExpression(kwargs.get("f(x)", "x"))
+        self.monitorJobs.append(entry)
 
-    # def initializeSimulation(self, model):
-    #     pass
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, increment, **kwargs):
+    def finalizeIncrement(self, **kwargs):
         for nJob in self.monitorJobs:
             result = nJob["f(x)"](nJob["fieldOutput"].getLastResult())
             self.journal.message(
-                self.printTemplate.format(nJob["fieldOutput"].name, nJob["fieldOutput"].type, result),
+                self.printTemplate.format(nJob["fieldOutput"].name, result),
                 self.identification,
             )
 

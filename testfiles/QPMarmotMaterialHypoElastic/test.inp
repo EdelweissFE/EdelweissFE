@@ -29,9 +29,9 @@ dirichlet, name=prescribed_strain,                                    components
 nodeforces, name=prescribed_stress,                                   components='[ x,    .1,   .2, x,   x, x ]' 
 
 *fieldOutput
-name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True
-name=strain, elSet=all, result=strain, quadraturePoint=0,  saveHistory=True
-name=dStress_dStrain, elSet=all, result=dStress_dStrain, quadraturePoint=0,  saveHistory=True, f(x)="np.reshape(x, (6,-1), order='F')"
+create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True
+create=perElement, name=strain, elSet=all, result=strain, quadraturePoint=0,  saveHistory=True
+create=perElement, name=dStress_dStrain, elSet=all, result=dStress_dStrain, quadraturePoint=0,  saveHistory=True, f(x)="np.reshape(x, (6,-1), order='F')"
 
 *output, type=monitor
 fieldOutput=stress, f(x)="'\n' + np.array2string(x, formatter={'float_kind':'{:>8.2f}'.format})"

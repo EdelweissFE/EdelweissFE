@@ -16,9 +16,9 @@ block2
 *include, input=set_def.inc
 
 *fieldOutput
-elSet=all,  name=displacement,  field=displacement, result=U
-elSet=all,  name=stress,        result=stress,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
-elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+create=perNode, elSet=all,  name=displacement,  field=displacement, result=U
+create=perElement, elSet=all,  name=stress,        result=stress,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+create=perElement, elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 
 *output, type=ensight, name=esExport
 create=perNode,     fieldOutput=displacement 

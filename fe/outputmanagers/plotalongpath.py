@@ -48,69 +48,79 @@ from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.math import createMathExpression
 import numpy as np
 
+from fe.sets.elementset import ElementSet
+from fe.sets.nodeset import NodeSet
+
 
 class OutputManager(OutputManagerBase):
     identification = "PathPlotter"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.plotter = plotter
+        self.fieldOutputController = fieldOutputController
+        self.model = model
 
-        for defline in definitionLines:
-            entry = {}
-            defDict = convertLineToStringDictionary(defline)
-            entry["fieldOutput"] = fieldOutputController.fieldOutputs[defDict["fieldOutput"]]
+    def updateDefinition(self, **kwargs: dict):
+        fieldOutputController = self.fieldOutputController
 
-            # compute distance(s), entity 0 is the reference entity in the 'origin'
-            entry["pathDistances"] = [0.0]
-            entry["nStages"] = int(defDict.get("nStages", 1))
-            entry["export"] = bool(defDict.get("export", False))
+        entry = dict()
 
-            try:  # nSet?
-                nodes = entry["fieldOutput"].nSet
-                # 1) distances between nodes:
-                distances = [
-                    np.linalg.norm(nodes[i + 1].coordinates - nodes[i].coordinates) for i in range(len(nodes) - 1)
-                ]
-            except AttributeError:  # no, its an elSet!
-                elements = entry["fieldOutput"].elSet
-                # dirty computation of centroid by taking the mean (not correct, but fast)
-                elCentroids = [np.asarray(el.nodeCoordinates).reshape(el.nNodes, -1).mean(axis=0) for el in elements]
-                elCentroids = np.asarray(elCentroids)
-                # 1) distances between elements:
-                distances = [
-                    np.linalg.norm(elCentroids[i + 1, :] - elCentroids[i, :]) for i in range(len(elCentroids) - 1)
-                ]
+        entry["fieldOutput"] = kwargs["fieldOutput"]
 
-            # 2) distances with respect to entity 0
-            for dist in distances:
-                entry["pathDistances"].append(entry["pathDistances"][-1] + dist)
+        # compute distance(s), entity 0 is the reference entity in the 'origin'
+        entry["pathDistances"] = [0.0]
+        entry["nStages"] = int(kwargs.get("nStages", 1))
+        entry["export"] = bool(kwargs.get("export", False))
 
-            entry["f(x)"] = createMathExpression(defDict.get("f(x)", "x"))
-            entry["label"] = defDict.get("label", entry["fieldOutput"].name)
+        theSet = entry["fieldOutput"].associatedSet
 
-            entry["figure"] = defDict.get("figure", 1)
-            entry["axSpec"] = defDict.get("axSpec", 111)
+        if type(theSet) == NodeSet:
+            # try:  # nSet?
+            nodes = theSet
+            # 1) distances between nodes:
+            distances = [np.linalg.norm(nodes[i + 1].coordinates - nodes[i].coordinates) for i in range(len(nodes) - 1)]
+        elif type(theSet) == ElementSet:
+            # except AttributeError:  # no, its an elSet!
+            elements = entry["fieldOutput"].elSet
+            # dirty computation of centroid by taking the mean (not correct, but fast)
+            elCentroids = [np.asarray(el.nodeCoordinates).reshape(el.nNodes, -1).mean(axis=0) for el in elements]
+            elCentroids = np.asarray(elCentroids)
+            # 1) distances between elements:
+            distances = [np.linalg.norm(elCentroids[i + 1, :] - elCentroids[i, :]) for i in range(len(elCentroids) - 1)]
+        else:
+            raise Exception("Invalid fieldoutput specified: Not operation on nSet or elSet!")
 
-            entry["normalize"] = defDict.get("normalize", False)
-            self.monitorJobs.append(entry)
+        # 2) distances with respect to entity 0
+        for dist in distances:
+            entry["pathDistances"].append(entry["pathDistances"][-1] + dist)
 
-            if "exportPath" in defDict:
-                np.savetxt(
-                    defDict["exportPath"],
-                    np.asarray(entry["pathDistances"]),
-                )
+        entry["f(x)"] = createMathExpression(kwargs.get("f(x)", "x"))
+        entry["label"] = kwargs.get("label", entry["fieldOutput"].name)
 
-    # def initializeSimulation(self, model):
-    #     pass
+        entry["figure"] = kwargs.get("figure", 1)
+        entry["axSpec"] = kwargs.get("axSpec", 111)
+
+        entry["normalize"] = kwargs.get("normalize", False)
+        self.monitorJobs.append(entry)
+
+        if "exportPath" in kwargs:
+            np.savetxt(
+                kwargs["exportPath"],
+                np.asarray(entry["pathDistances"]),
+            )
+
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         for nJob in self.monitorJobs:
             self.plotStages = np.linspace(0, step.length, nJob["nStages"])
 
-    def finalizeIncrement(self, increment, **kwargs):
-        totalTime = increment[3] + increment[4]
+    def finalizeIncrement(self, **kwargs):
+        totalTime = self.model.time
+        # totalTime = increment[3] + increment[4]
         if totalTime > self.plotStages[0]:
             for nJob in self.monitorJobs:
                 nJob_ = nJob.copy()

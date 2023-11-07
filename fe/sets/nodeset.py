@@ -48,7 +48,7 @@ class NodeSet(OrderedSet):
 
     def __init__(
         self,
-        label: str,
+        name: str,
         nodes: list,
     ):
-        super().__init__(label, nodes)
+        super().__init__(name, nodes)

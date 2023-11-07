@@ -867,9 +867,9 @@ all
 *Elset, elset=nSetLoad, generate=True
   1,  13,   4
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
-nSet=nSetLoad, field=displacement, result=P, name=RF, f(x)=' sum ( x[:,1]) ', saveHistory=True
-elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=' max (x, axis=1) '
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perNode, nSet=nSetLoad, field=displacement, result=P, name=RF, f(x)=' sum ( x[:,1]) ', saveHistory=True
+create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=' max (x, axis=1) '
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 

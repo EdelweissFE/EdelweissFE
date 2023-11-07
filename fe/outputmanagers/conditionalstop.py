@@ -51,24 +51,27 @@ class OutputManager(OutputManagerBase):
     identification = "ConditionalStop"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.model = model
         self.journal = journal
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
 
-        for defline in definitionLines:
-            entry = {}
-            defDict = convertLineToStringDictionary(defline)
-            entry["stop"] = createModelAccessibleFunction(
-                defDict["stop"], model, fieldOutputs=fieldOutputController.fieldOutputs
-            )
-            self.monitorJobs.append(entry)
+    def updateDefinition(self, **kwargs: dict):
+        # for defline in definitionLines:
+        entry = {}
+        entry["stop"] = createModelAccessibleFunction(
+            kwargs["stop"], model, fieldOutputs=fieldOutputController.fieldOutputs
+        )
+        self.monitorJobs.append(entry)
+
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, increment, **kwargs):
+    def finalizeIncrement(self, **kwargs):
         for nJob in self.monitorJobs:
             if nJob["stop"]():
                 raise ConditionalStop()

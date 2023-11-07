@@ -86,7 +86,7 @@ class StepAction(StepActionBase):
         self.journal.message("End of geostatic step -- displacements are reset", self.name)
         self.journal.printSeperationLine()
 
-        model.nodeFields["displacement"].values["U"][:] = 0
+        model.nodeFields["displacement"]["U"][:] = 0
         # U[self.theDofManager.indicesOfFieldsInDofVector["displacement"]] = 0.0
 
         self.active = False

@@ -36,7 +36,6 @@ from collections import OrderedDict
 from fe.config.phenomena import getFieldSize, phenomena
 from fe.points.node import Node
 from fe.fields.nodefield import NodeField
-from fe.models.femodel import FEModel
 import numpy as np
 
 
@@ -122,14 +121,53 @@ class DofManager:
 
     Parameters
     ----------
-    model
-        A dictionary containing the model tree.
+    nodeFields
+        The list of NodeFields which should be represented in the DofVector structure.
+    scalarVariables
+        The list of ScalarVariables which should be represented in the DofVector structure.
+    elements
+        The list of Elements for which a map to the respective indices should be created.
+    constraints
+        The list of Constraints for which a map to the respective indices should be created.
+    nodeSets
+        The list of NodeSets for which a map to the respective indices should be created.
     """
 
-    def __init__(self, model: FEModel):
-        self.initializeFromModel(model)
+    def __init__(self, nodeFields: list, scalarVariables: list, elements: list, constraints: list, nodeSets: list):
+        (
+            self.nDof,
+            self.idcsOfFieldVariablesInDofVector,
+            self.idcsOfFieldsInDofVector,
+            self.idcsOfScalarVariablesInDofVector,
+        ) = self._initializeDofVectorStructure(nodeFields, scalarVariables)
 
-    def _initializeDofVectorStructure(self, model: FEModel) -> tuple[int, dict[str, np.ndarray]]:
+        self.indexToNodeMapping = self._determineIndexToNodeMapping()
+
+        (self.nAccumulatedNodalFluxes, self.nAccumulatedNodalFluxesFieldwise) = self._countNodalFluxes(
+            elements, constraints
+        )
+
+        (
+            self.accumulatedElementNDof,
+            self.accumulatedConstraintNDof,
+            self.sizeVIJ,
+            self.largestNumberOfElNDof,
+        ) = self._countAccumulatedEntityDofs(elements, constraints)
+
+        self.idcsOfFieldsOnNodeSetsInDofVector = self._locateFieldsOnNodeSetsInDofVector(nodeSets)
+        self.idcsOfElementsInDofVector = self._locateElementsInDofVector(elements)
+        self.idcsOfConstraintsInDofVector = self._locateConstraintsInDofVector(constraints)
+
+        self.idcsOfVariablesInDofVector = self.getIndicesOfAllVariablesInDofVector()
+        self.idcsOfHigherOrderEntitiesInDofVector = self.getIndicesOfAllHigherOrderEntitiesInDofVector()
+
+        self.idcsInDofVector = self.idcsOfVariablesInDofVector | self.idcsOfHigherOrderEntitiesInDofVector
+
+        (self.I, self.J, self.entitiesInVIJ) = self._initializeVIJPattern()
+
+    def _initializeDofVectorStructure(
+        self, nodeFields: list, scalarVariables: list
+    ) -> tuple[int, dict[str, np.ndarray]]:
         """Loop over all nodes to generate the global field-dof indices.
 
         Returns
@@ -146,23 +184,22 @@ class DofManager:
         indicesOfNodeFieldVariablesInDofVector = dict()
         currentIndexInDofVector = 0
 
-        for fieldName, field in model.nodeFields.items():
-            nextIndexInDofVector = currentIndexInDofVector + field.dimension * len(field.nodes)
-            indicesOfFieldsInDofVector[fieldName] = slice(currentIndexInDofVector, nextIndexInDofVector)
+        for nField in nodeFields:
+            nextIndexInDofVector = currentIndexInDofVector + nField.dimension * len(nField.nodes)
+            indicesOfFieldsInDofVector[nField.name] = slice(currentIndexInDofVector, nextIndexInDofVector)
 
             indicesOfNodeFieldVariablesInDofVector |= {
-                n.fields[fieldName]: np.arange(
-                    currentIndexInDofVector + i * field.dimension,
-                    currentIndexInDofVector + i * field.dimension + field.dimension,
+                n.fields[nField.name]: np.arange(
+                    currentIndexInDofVector + i * nField.dimension,
+                    currentIndexInDofVector + i * nField.dimension + nField.dimension,
                     dtype=int,
                 )
-                for i, n in enumerate(field.nodes)
+                for i, n in enumerate(nField.nodes)
             }
             currentIndexInDofVector = nextIndexInDofVector
 
         indicesOfScalarVariablesInDofVector = {
-            scalarVariable: currentIndexInDofVector + i
-            for i, scalarVariable in enumerate(model.scalarVariables.values())
+            scalarVariable: currentIndexInDofVector + i for i, scalarVariable in enumerate(scalarVariables)
         }
 
         currentIndexInDofVector += len(indicesOfScalarVariablesInDofVector)
@@ -175,18 +212,28 @@ class DofManager:
             indicesOfScalarVariablesInDofVector,
         )
 
-    def _determineIndexToNodeMapping(self, model):
-        indexToNodeMapping = {
-            index: node
-            for node in model.nodes.values()
-            for f in node.fields.values()
-            for index in self.idcsOfFieldVariablesInDofVector[f]
-            if f in self.idcsOfFieldVariablesInDofVector
-        }
+    def _determineIndexToNodeMapping(
+        self,
+    ) -> dict[np.int64, Node]:
+        """Determine the map from each index (associated with a FieldVariable)
+        in the DofVector to the corresponding attached Node oject.
+        Useful for determining, e.g., the Node associated with a residual outlier in nonlinear
+        simulations.
+
+        Returns
+        -------
+        dict[np.int64, Node]
+            The dictionary containing the map from index of a FieldVariable (component) in the DofVector to the respective Node instance.
+        """
+        indexToNodeMapping = dict()
+
+        for fieldVariable, fieldVariableIndices in self.idcsOfFieldVariablesInDofVector.items():
+            for index in fieldVariableIndices:
+                indexToNodeMapping[index] = fieldVariable.node
 
         return indexToNodeMapping
 
-    def _countNodalFluxes(self, model) -> tuple[int, dict[str, int]]:
+    def _countNodalFluxes(self, elements: list, constraints: list) -> tuple[int, dict[str, int]]:
         """For the VIJ (COO) system matrix and the Abaqus like convergence test,
         the number of dofs 'entity-wise' is needed:
         = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).
@@ -202,8 +249,8 @@ class DofManager:
 
         indicesOfFieldsInDofVector = self.idcsOfFieldsInDofVector
 
-        elements = model.elements
-        constraints = model.constraints
+        elements = elements
+        constraints = constraints
 
         accumulatedNumberOfFieldFluxes = {}
         accumulatedNodalFluxesTotal = 0
@@ -212,13 +259,13 @@ class DofManager:
             accumulatedNumberOfFieldFluxes[field] = np.sum(
                 [
                     len(self.idcsOfFieldVariablesInDofVector[node.fields[field]])
-                    for el in elements.values()
+                    for el in elements
                     for node in (el.nodes)
                     if field in node.fields
                 ]
                 + [
                     len(self.idcsOfFieldVariablesInDofVector[node.fields[field]])
-                    for constraint in constraints.values()
+                    for constraint in constraints
                     for node in (constraint.nodes)
                     if field in node.fields
                 ]
@@ -231,7 +278,7 @@ class DofManager:
             accumulatedNumberOfFieldFluxes,
         )
 
-    def _countAccumulatedEntityDofs(self, model) -> tuple[int, int, int, int]:
+    def _countAccumulatedEntityDofs(self, elements: list, constraints: list) -> tuple[int, int, int, int]:
         """Generates some auxiliary information,
         which may be required by some modules of EdelweissFE.
 
@@ -245,28 +292,28 @@ class DofManager:
                 - largest number of dofs on a element
         """
 
-        elements = model.elements
-        constraints = model.constraints
+        elements = elements
+        constraints = constraints
 
         sizeVIJ = 0
         accumulatedElementNDof = 0
         largestNumberOfElNDof = 0
 
-        for el in elements.values():
+        for el in elements:
             accumulatedElementNDof += el.nDof
             sizeVIJ += el.nDof**2
 
             largestNumberOfElNDof = max(el.nDof, largestNumberOfElNDof)
 
         nNDofAccumulatedConstraints = 0
-        for constraint in constraints.values():
+        for constraint in constraints:
             nNDofAccumulatedConstraints += constraint.nDof
 
             sizeVIJ += constraint.nDof**2
 
         return accumulatedElementNDof, nNDofAccumulatedConstraints, sizeVIJ, largestNumberOfElNDof
 
-    def _locateElementsInDofVector(self, model) -> dict:
+    def _locateElementsInDofVector(self, elements: list) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
         within the DofVector structure.
 
@@ -276,10 +323,9 @@ class DofManager:
             A dictionary containing the location mapping.
         """
 
-        elements = model.elements
         idcsOfElementsInDofVector = {}
 
-        for el in elements.values():
+        for el in elements:
             destList = np.hstack(
                 [
                     self.idcsOfFieldVariablesInDofVector[node.fields[nodeField]]
@@ -292,7 +338,7 @@ class DofManager:
 
         return idcsOfElementsInDofVector
 
-    def _locateConstraintsInDofVector(self, model) -> dict:
+    def _locateConstraintsInDofVector(self, constraints: list) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
         within the DofVector structure.
 
@@ -302,10 +348,10 @@ class DofManager:
             A dictionary containing the location mapping.
         """
 
-        constraints = model.constraints
+        constraints = constraints
         idcsOfConstraintsInDofVector = {}
 
-        for constraint in constraints.values():
+        for constraint in constraints:
             destList = np.hstack(
                 [
                     self.idcsOfFieldVariablesInDofVector[node.fields[nodeField]]
@@ -318,7 +364,7 @@ class DofManager:
 
         return idcsOfConstraintsInDofVector
 
-    def _locateFieldsOnNodeSetFieldsInDofVector(self, model) -> dict:
+    def _locateFieldsOnNodeSetsInDofVector(self, nodeSets: list) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
         within the DofVector structure.
 
@@ -328,14 +374,14 @@ class DofManager:
             A dictionary containing the location mapping.
         """
 
-        nodeSets = model.nodeSets
+        nodeSets = nodeSets
         nodeSetFieldsInDofVector = {}
 
         for field in self.idcsOfFieldsInDofVector:
             nodeSetFieldsInDofVector[field] = dict()
 
-            for nSetName, nSet in nodeSets.items():
-                nodeSetFieldsInDofVector[field][nSetName] = np.array(
+            for nSet in nodeSets:
+                nodeSetFieldsInDofVector[field][nSet.name] = np.array(
                     [self.idcsOfFieldVariablesInDofVector[node.fields[field]] for node in nSet if field in node.fields]
                 ).flatten()
 
@@ -467,10 +513,10 @@ class DofManager:
             The updated NodeField.
         """
 
-        if not resultName in nodeField.values:
+        if not resultName in nodeField:
             nodeField.createFieldValueEntry(resultName)
 
-        nodeField.values[resultName][:] = dofVector[self.idcsOfFieldsInDofVector[nodeField.name]].reshape(
+        nodeField[resultName][:] = dofVector[self.idcsOfFieldsInDofVector[nodeField.name]].reshape(
             (-1, nodeField.dimension)
         )
 
@@ -495,45 +541,6 @@ class DofManager:
             The DofVector.
         """
 
-        dofVector[self.idcsOfFieldsInDofVector[nodeField.name]] = nodeField.values[resultName].flatten()
+        dofVector[self.idcsOfFieldsInDofVector[nodeField.name]] = nodeField[resultName].flatten()
 
         return dofVector
-
-    def initializeFromModel(self, model: FEModel):
-        """Initialize the manged DofVector and VIJ-format system matrix structures from a given FEModel tree.
-
-
-        Parameters
-        ----------
-        model
-            The model tree.
-        """
-
-        (
-            self.nDof,
-            self.idcsOfFieldVariablesInDofVector,
-            self.idcsOfFieldsInDofVector,
-            self.idcsOfScalarVariablesInDofVector,
-        ) = self._initializeDofVectorStructure(model)
-
-        self.indexToNodeMapping = self._determineIndexToNodeMapping(model)
-
-        (self.nAccumulatedNodalFluxes, self.nAccumulatedNodalFluxesFieldwise) = self._countNodalFluxes(model)
-
-        (
-            self.accumulatedElementNDof,
-            self.accumulatedConstraintNDof,
-            self.sizeVIJ,
-            self.largestNumberOfElNDof,
-        ) = self._countAccumulatedEntityDofs(model)
-
-        self.idcsOfFieldsOnNodeSetsInDofVector = self._locateFieldsOnNodeSetFieldsInDofVector(model)
-        self.idcsOfElementsInDofVector = self._locateElementsInDofVector(model)
-        self.idcsOfConstraintsInDofVector = self._locateConstraintsInDofVector(model)
-
-        self.idcsOfVariablesInDofVector = self.getIndicesOfAllVariablesInDofVector()
-        self.idcsOfHigherOrderEntitiesInDofVector = self.getIndicesOfAllHigherOrderEntitiesInDofVector()
-
-        self.idcsInDofVector = self.idcsOfVariablesInDofVector | self.idcsOfHigherOrderEntitiesInDofVector
-
-        (self.I, self.J, self.entitiesInVIJ) = self._initializeVIJPattern()

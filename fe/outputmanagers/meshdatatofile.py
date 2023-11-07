@@ -51,20 +51,24 @@ class OutputManager(OutputManagerBase):
     identification = "Meshdatatofile"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.filename = "{:}_mesh.inc".format(name)
-        for defline in definitionLines:
-            defDict = convertLineToStringDictionary(defline)
-            if "filename" in defDict.keys():
-                self.filename = defDict.get("filename")
+        self.model = model
 
-        self.writeMeshDataToFile(model)
+    def updateDefinition(self, **kwargs: dict):
+        if "filename" in kwargs:
+            self.filename = kwargs.get("filename")
+
+        self.writeMeshDataToFile(self.model)
+
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, increment, statusInfoDict: dict = {}, **kwargs):
+    def finalizeIncrement(self, statusInfoDict: dict = {}, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, statusInfoDict: dict = {}):
@@ -135,4 +139,4 @@ class OutputManager(OutputManagerBase):
                 f.write("*SURFACE, TYPE=ELEMENT, NAME={:}\n".format(surfaceName))
                 for faceID in model.surfaces[surfaceName].keys():
                     elset = model.surfaces[surfaceName][faceID]
-                    f.write("{elset}, {faceID}\n".format(elset=elset.label, faceID=faceID))
+                    f.write("{elset}, {faceID}\n".format(elset=elset.name, faceID=faceID))

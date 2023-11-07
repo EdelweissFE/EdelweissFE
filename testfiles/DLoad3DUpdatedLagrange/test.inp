@@ -3855,9 +3855,9 @@ all
 *solver, solver=NIST, name=theSolver
 
 *fieldOutput
-name=displacement, elSet=all, field=displacement, result=U, name=displacement
-name=stress, elSet=all, result=stress, quadraturePoint=1
-name=strain, elSet=all, result=strain, quadraturePoint=1
+create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=1
+create=perElement, name=strain, elSet=all, result=strain, quadraturePoint=1
 
 *output, type=ensight, name=ensightExport
 create=perNode,    fieldOutput=displacement

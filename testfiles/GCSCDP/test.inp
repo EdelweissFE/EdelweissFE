@@ -543,7 +543,7 @@ all
   5,  10, 15
 
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 

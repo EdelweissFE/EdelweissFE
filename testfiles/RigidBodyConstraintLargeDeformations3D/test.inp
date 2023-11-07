@@ -9,8 +9,8 @@ all
 *job, name=c3d8job, domain=3d
 *solver, solver=NISTParallel, name=theSolver
 *fieldOutput
-name=displacement, elSet=all, field=displacement, result=U, name=displacement
-name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=1) ', quadraturePoint=0:8
+create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, name=stress, elSet=all, result=stress, f(x)=' mean(x, axis=1) ', quadraturePoint=0:8
 
 *constraint, type=rigidbody, name=rb1
 nSet=right

@@ -35,11 +35,12 @@ import argparse
 import matplotlib
 import numpy as np
 import sys
-from fe.fecore import finiteElementSimulation
+from fe.drivers.inputfiledrivensimulation import finiteElementSimulation
 from fe.utils.inputfileparser import parseInputFile, printKeywords, printKeywordsRST
 from fe.utils.printdocumentation import printDocumentation
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser(description="Batch computation for Edelweiss finite element jobs")
 
     parser.add_argument(
@@ -94,3 +95,7 @@ if __name__ == "__main__":
                 + [v.value for v in model.scalarVariables.values()]
             ).flatten()
             np.savetxt(args.output, U)
+
+
+if __name__ == "__main__":
+    main()

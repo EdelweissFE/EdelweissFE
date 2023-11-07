@@ -70,6 +70,20 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
+    def updateDefinition(self, **kwargs: dict):
+        pass
+
+    @abstractmethod
+    def initializeJob(self):
+        """Initalize the output manager at the beginning of a step.
+
+        Parameters
+        ----------
+        """
+
+        pass
+
+    @abstractmethod
     def initializeStep(self, step: dict):
         """Initalize the output manager at the beginning of a step.
 

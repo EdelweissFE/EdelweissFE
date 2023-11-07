@@ -80,7 +80,8 @@ def convertAssignmentsToStringDictionary(assignments: list) -> dict:
         The resulting dictionary.
     """
 
-    resultDict = CaseInsensitiveDict()
+    # resultDict = CaseInsensitiveDict()
+    resultDict = dict()
     for entry in assignments:
         parts = [x.strip() for x in entry.split("=")]
         opt = parts[0]

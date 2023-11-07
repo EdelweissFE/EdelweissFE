@@ -43,11 +43,11 @@ import numpy as np
 from fe.utils.misc import convertLineToStringDictionary
 from fe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
 import fe.config.phenomena
-from fe.utils.fieldoutput import _FieldOutput
 from fe.utils.math import createMathExpression
 import matplotlib.tri as mtri
 from matplotlib import colors
 from distutils.util import strtobool
+from fe.sets.elementset import ElementSet
 
 documentation = {
     "figure": "figure number, (default=1)",
@@ -166,7 +166,7 @@ class MeshPlot:
 class OutputManager(OutputManagerBase):
     identification = "meshPlot"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.domainSize = model.domainSize
         self.plotter = plotter
         self.journal = journal
@@ -193,88 +193,103 @@ class OutputManager(OutputManagerBase):
         self.saveJobs = []
         self.meshOnlyJobs = []
 
+        self.fieldOutputController = fieldOutputController
+
         # # needed for meshOnly plot
 
-        for defLine in definitionLines:
-            definition = convertLineToStringDictionary(defLine)
+    def updateDefinition(self, **kwargs: dict):
+        fieldOutputController = self.fieldOutputController
+        if "saveFigure" in kwargs:
+            saveJob = {}
+            saveJob["figure"] = kwargs.get("figure", "1")
+            saveJob["fileName"] = kwargs.get("name", "exportFigure")
+            saveJob["width"] = kwargs.get("width", 469.47)
+            saveJob["scale"] = kwargs.get("scale", 1.0)
+            saveJob["heightRatio"] = kwargs.get("heightRatio", False)
+            saveJob["png"] = kwargs.get("png", True)
+            self.saveJobs.append(saveJob)
 
-            if "saveFigure" in definition:
-                saveJob = {}
-                saveJob["figure"] = definition.get("figure", "1")
-                saveJob["fileName"] = definition.get("name", "exportFigure")
-                saveJob["width"] = definition.get("width", 469.47)
-                saveJob["scale"] = definition.get("scale", 1.0)
-                saveJob["heightRatio"] = definition.get("heightRatio", False)
-                saveJob["png"] = definition.get("png", True)
-                self.saveJobs.append(saveJob)
+        if "create" in kwargs:
+            varType = kwargs["create"]
 
-            if "create" in definition:
-                varType = definition["create"]
+            if varType == "perNode":
+                perNodeJob = {}
+                perNodeJob["fieldOutput"] = kwargs["fieldOutput"]
 
-                if varType == "perNode":
-                    perNodeJob = {}
-                    perNodeJob["fieldOutput"] = fieldOutputController.fieldOutputs[definition["fieldOutput"]]
-                    perNodeJob["nSet"] = perNodeJob["fieldOutput"].nSet
-                    perNodeJob["label"] = definition.get("label", definition["fieldOutput"])
-                    perNodeJob["axSpec"] = definition.get("axSpec", "111")
-                    perNodeJob["figure"] = definition.get("figure", "1")
-                    perNodeJob["plotMeshGrid"] = definition.get("plotMeshGrid", "undeformed")
-                    if "f(x)" in definition:
-                        perNodeJob["f(x)"] = createMathExpression(definition["f(x)"])
+                if type(perNodeJob["fieldOutput"].associatedSet) == ElementSet:
+                    nSet = perNodeJob["fieldOutput"].associatedSet.extractNodeSet()
+                else:
+                    raise Exception("perNode job must be defined on a perElement fieldOutput")
 
-                    perNodeJob["dimensions"] = fe.config.phenomena.getFieldSize(
-                        perNodeJob["fieldOutput"].field, self.domainSize
-                    )
-                    self.perNodeJobs.append(perNodeJob)
+                perNodeJob["nSet"] = nSet
+                perNodeJob["label"] = kwargs.get("label", kwargs["fieldOutput"])
+                perNodeJob["axSpec"] = kwargs.get("axSpec", "111")
+                perNodeJob["figure"] = kwargs.get("figure", "1")
+                perNodeJob["plotMeshGrid"] = kwargs.get("plotMeshGrid", "undeformed")
+                if "f(x)" in kwargs:
+                    perNodeJob["f(x)"] = createMathExpression(kwargs["f(x)"])
 
-                elif varType == "perElement":
-                    perElementJob = {}
-                    perElementJob["label"] = definition.get("label", definition["fieldOutput"])
-                    perElementJob["axSpec"] = definition.get("axSpec", "111")
-                    perElementJob["figure"] = definition.get("figure", "1")
-                    perElementJob["fieldOutput"] = fieldOutputController.fieldOutputs[definition["fieldOutput"]]
-                    if "f(x)" in definition:
-                        perElementJob["f(x)"] = createMathExpression(definition["f(x)"])
+                # perNodeJob["dimensions"] = fe.config.phenomena.getFieldSize(
+                #     perNodeJob["fieldOutput"].field, self.domainSize
+                # # )
+                self.perNodeJobs.append(perNodeJob)
 
-                    perElementJob["plotMeshGrid"] = definition.get("plotMeshGrid", "unDeformed")
-                    self.perElementJobs.append(perElementJob)
+            elif varType == "perElement":
+                perElementJob = {}
+                perElementJob["label"] = kwargs.get("label", kwargs["fieldOutput"])
+                perElementJob["axSpec"] = kwargs.get("axSpec", "111")
+                perElementJob["figure"] = kwargs.get("figure", "1")
+                perElementJob["fieldOutput"] = kwargs["fieldOutput"]
+                if "f(x)" in kwargs:
+                    perElementJob["f(x)"] = createMathExpression(kwargs["f(x)"])
 
-                elif varType == "xyData":
-                    xyJob = {}
+                perElementJob["plotMeshGrid"] = kwargs.get("plotMeshGrid", "unDeformed")
+                self.perElementJobs.append(perElementJob)
 
-                    if definition["x"] != "time":
-                        xyJob["x"] = fieldOutputController.fieldOutputs[definition["x"]]
-                    else:
-                        xyJob["x"] = "time"
+            elif varType == "xyData":
+                xyJob = {}
 
-                    xyJob["y"] = fieldOutputController.fieldOutputs[definition["y"]]
+                if kwargs["x"] != "time":
+                    xyJob["x"] = fieldOutputController.fieldOutputs[kwargs["x"]]
+                else:
+                    xyJob["x"] = "time"
 
-                    if "f(x)" in definition:
-                        xyJob["f(x)"] = createMathExpression(definition["f(x)"])
-                    if "f(y)" in definition:
-                        xyJob["f(y)"] = createMathExpression(definition["f(y)"], symbol="y")
+                xyJob["y"] = fieldOutputController.fieldOutputs[kwargs["y"]]
 
-                    xyJob["figure"] = definition.get("figure", "1")
-                    xyJob["label"] = definition.get("label", xyJob["y"].name)
-                    xyJob["axSpec"] = definition.get("axSpec", "111")
-                    xyJob["integral"] = strtobool(definition.get("integral", "False"))
-                    self.xyJobs.append(xyJob)
+                if "f(x)" in kwargs:
+                    xyJob["f(x)"] = createMathExpression(kwargs["f(x)"])
+                if "f(y)" in kwargs:
+                    xyJob["f(y)"] = createMathExpression(kwargs["f(y)"], symbol="y")
 
-                elif varType == "meshOnly":
-                    meshOnlyJob = {}
+                xyJob["figure"] = kwargs.get("figure", "1")
+                xyJob["label"] = kwargs.get("label", xyJob["y"].name)
+                xyJob["axSpec"] = kwargs.get("axSpec", "111")
+                xyJob["integral"] = strtobool(kwargs.get("integral", "False"))
+                self.xyJobs.append(xyJob)
 
-                    meshOnlyJob["configuration"] = definition.get("configuration", "undeformed")
+            elif varType == "meshOnly":
+                meshOnlyJob = {}
 
-                    if meshOnlyJob["configuration"] == "deformed":
-                        meshOnlyJob["warpBy"] = fieldOutputController.fieldOutputs[definition["warpBy"]]
-                    meshOnlyJob["scaleFactor"] = float(definition.get("scaleFactor", 1.0))
-                    meshOnlyJob["axSpec"] = definition.get("axSpec", "111")
-                    meshOnlyJob["figure"] = definition.get("figure", "1")
-                    meshOnlyJob["plotNodeLabels"] = definition.get("plotNodeLabels", False)
-                    meshOnlyJob["plotElementLabels"] = definition.get("plotElementLabels", False)
-                    self.meshOnlyJobs.append(meshOnlyJob)
+                meshOnlyJob["configuration"] = kwargs.get("configuration", "undeformed")
+
+                if meshOnlyJob["configuration"] == "deformed":
+                    meshOnlyJob["warpBy"] = fieldOutputController.fieldOutputs[kwargs["warpBy"]]
+                meshOnlyJob["scaleFactor"] = float(kwargs.get("scaleFactor", 1.0))
+                meshOnlyJob["axSpec"] = kwargs.get("axSpec", "111")
+                meshOnlyJob["figure"] = kwargs.get("figure", "1")
+                meshOnlyJob["plotNodeLabels"] = kwargs.get("plotNodeLabels", False)
+                meshOnlyJob["plotElementLabels"] = kwargs.get("plotElementLabels", False)
+                self.meshOnlyJobs.append(meshOnlyJob)
 
         # Initialize instance of plotterclass
+
+    # def initializeSimulation(self, model):
+    #     pass
+
+    def initializeJob(self):
+        pass
+
+    def initializeStep(self, step):
         if self.perElementJobs or self.perNodeJobs or self.meshOnlyJobs:
             self.elCoordinatesList = extractNodeCoordinatesFromElset(self.elements.values())
             for element in self.elements.values():
@@ -283,13 +298,7 @@ class OutputManager(OutputManagerBase):
 
             self.meshPlot = MeshPlot(self.coordinateList, self.elNodesIdxList, self.elCoordinatesList)
 
-    # def initializeSimulation(self, model):
-    #     pass
-
-    def initializeStep(self, step):
-        pass
-
-    def finalizeIncrement(self, increment, **kwargs):
+    def finalizeIncrement(self, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, **kwargs):
@@ -359,7 +368,7 @@ class OutputManager(OutputManagerBase):
             if "f(x)" in perElementJob:
                 resultArray = perElementJob["f(x)"](resultArray)
 
-            if perElementJob["fieldOutput"].elSetName != "all":
+            if perElementJob["fieldOutput"].associatedSet.name != "all":
                 shape = (
                     (len(self.elSets["all"]), resultArray.shape[-1])
                     if resultArray.ndim >= 2

@@ -52,16 +52,21 @@ from typing import Union
 class OutputManager(OutputManagerBase):
     identification = "ComputeTimeMonitor"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.journal = journal
-        defDict = convertLinesToStringDictionary(definitionLines)
-        self.exportFile = defDict.get("export")
         self.computingTimesOld = defaultdict(lambda: 0.0)
         self.stepcounter = 0
+        self.exportFile = None
+
+    def updateDefinition(self, **kwargs: dict):
+        self.exportFile = kwargs.get("export")
 
         if self.exportFile is not None:
             with open(self.exportFile, "w+") as f:
                 f.write("# \n# EdelweissFE: computing times per increment\n#\n")
+
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         self.computingTimesOld = createTimingDict()
@@ -77,7 +82,7 @@ class OutputManager(OutputManagerBase):
                 f.write("\n#\n")
 
     def finalizeIncrement(
-        self, increment, statusInfoDict=defaultdict(lambda: 0.0), currentComputingTimes=createTimingDict(), **kwargs
+        self, statusInfoDict=defaultdict(lambda: 0.0), currentComputingTimes=createTimingDict(), **kwargs
     ):
         compTimeTotal, compTimeIndividual = self.computeIncrementComputingTimes(currentComputingTimes)
 
@@ -127,7 +132,7 @@ class OutputManager(OutputManagerBase):
     def writeIncrementComputingTimesToFile(self, incCompTimeTotal, incCompTimesIndividual, statusInfoDict):
         with open(self.exportFile, "a") as f:
             f.write("  {:<20}".format(int(statusInfoDict["inc"])))
-            f.write(" {:<20.5e}".format(statusInfoDict["time"]))
+            f.write(" {:<20.5e}".format(statusInfoDict["time end"]))
             f.write(" {:<20.5e}".format(incCompTimeTotal))
             for val in incCompTimesIndividual.values():
                 f.write(" {:<20.5e}".format(val))

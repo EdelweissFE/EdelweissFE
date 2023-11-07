@@ -8,7 +8,7 @@ all
 *include, input=mesh.inp
 
 *fieldOutput, 
-elSet=all, field=displacement, result=U, name=displacement
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
 ** COMMENT MS: the output of the nonlocal field does not work since for 
 **             plotting the higher-order elements of the displacement field are considered
 **elSet=all, field=nonlocal damage, result=U, name=nonlocal

@@ -22,11 +22,11 @@ all
 *solver, solver=NISTParallel, name=theSolver
 
 *fieldOutput
-name=Displacement,      elSet=all,           field=displacement, result=U, 
-name=DisplacementN,      nSet=all,           field=displacement, result=U, 
-name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
-name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
-name=E,                 elSet=all,          result=EStatic, quadraturePoint=0, saveHistory=True
+create=perNode,name=Displacement,      elSet=all,           field=displacement, result=U, 
+create=perNode,name=DisplacementN,      nSet=all,           field=displacement, result=U, 
+create=perNode,name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
+create=perNode,name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
+create=perElement,name=E,                 elSet=all,          result=EStatic, quadraturePoint=0, saveHistory=True
 
 *output, type=monitor
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'

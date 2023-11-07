@@ -56,6 +56,10 @@ from fe.utils.meshtools import disassembleElsetToEnsightShapes
 import fe.config.phenomena
 from fe.utils.math import evalModelAccessibleExpression
 from io import TextIOBase
+from fe.models.femodel import FEModel
+from fe.utils.fieldoutput import ElementFieldOutput, NodeFieldOutput, FieldOutputController, _FieldOutputBase
+from fe.sets.elementset import ElementSet
+from fe.sets.nodeset import NodeSet
 
 
 def writeCFloat(f, ndarray):
@@ -70,9 +74,12 @@ def writeC80(f, string):
     np.asarray(string, dtype="a80").tofile(f)
 
 
-variableTypes = {"scalar": 1, "vector": 3, "rotation vector": 3, "tensor": 9}
-
-ensightPerNodeVariableTypes = {1: "scalar per node", 3: "vector per node", 6: "tensor per node", 9: "tensor9 per node"}
+ensightPerNodeVariableTypes = {
+    1: "scalar per node",
+    3: "vector per node",
+    6: "tensor per node",
+    9: "tensor asym per node",
+}
 
 ensightPerElementVariableTypes = {
     1: "scalar per element",
@@ -80,19 +87,6 @@ ensightPerElementVariableTypes = {
     6: "tensor per element",
     9: "tensor asym per element",
 }
-
-
-class DummyElement:
-    """Dummy element used for exporting node sets.
-
-    Parameters
-    ----------
-    label
-        Element number
-    """
-
-    def __init__(self, label) -> None:
-        self.elNumber = label
 
 
 class EnsightUnstructuredPart:
@@ -121,7 +115,7 @@ class EnsightUnstructuredPart:
         description: str,
         partNumber: int,
         nodes: list[Node],
-        elementTree: dict[str, list[tuple[int, list[Node]]]],
+        elementTree: dict[str, dict[int, list[Node]]],
     ):
         self.structureType = "coordinates"
         self.elementTree = elementTree
@@ -173,16 +167,10 @@ class EnsightUnstructuredPart:
             writeC80(f, elemType)
             writeCInt(f, len(elements))
             if printElementLabels:
-                writeCInt(f, np.asarray([element.elNumber for element in elements.keys()], np.int32))
+                writeCInt(f, np.asarray([elNumber for elNumber in elements.keys()], np.int32))
 
             for nodeIndices in elements.values():
                 writeCInt(f, np.asarray(nodeIndices, np.int32)[:] + 1)
-
-
-# class EnsightPointPart(EnsightUnstructuredPart):
-#    """derived UnstructuredPart to represent a single point"""
-#    def __init__(self, partNumber, coordinates, description="single_point"):
-#        super().__init__(description, partNumber, {"point" : [(1, [0])] }, [ {'label': 1, 'coords':coordinates, } ])
 
 
 class EnsightTimeSet:
@@ -345,14 +333,12 @@ class EnsightPerNodeVariable:
         A dictionary defining the values for given Ensight parts.
     """
 
-    def __init__(
-        self, name: str, variableDimension: int, ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray] = None
-    ):
+    def __init__(self, name: str, ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray], varSize: int):
         self.name = name
         self.description = name
         self.partsDict = ensightPartsDict or {}  # { EnsightPart: np.array(variableValues) }
-        self.variableDimension = variableDimension
-        self.varType = ensightPerNodeVariableTypes[variableDimension]
+
+        self.varType = ensightPerNodeVariableTypes[varSize]
 
     def writeToFile(
         self,
@@ -373,8 +359,8 @@ class EnsightPerNodeVariable:
             writeCInt(f, ensightPartID)
             writeC80(f, structureType)
             writeCFloat(f, values.T)
-            if values.shape[1] < self.variableDimension:
-                writeCFloat(f, np.zeros((values.shape[0], self.variableDimension - values.shape[1])))
+            # if values.shape[1] < self.variableDimension:
+            #     writeCFloat(f, np.zeros((values.shape[0], self.variableDimension - values.shape[1])))
 
 
 class EnsightPerElementVariable:
@@ -395,13 +381,14 @@ class EnsightPerElementVariable:
     def __init__(
         self,
         name: str,
-        variableDimension: int,
-        ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray] = None,
+        # variableDimension: int,
+        ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray],
+        varSize: int,
     ):
         self.name = name
         self.description = name
-        self.partsDict = ensightPartsDict or {}
-        self.varType = ensightPerElementVariableTypes[variableDimension]
+        self.partsDict = ensightPartsDict
+        self.varType = ensightPerElementVariableTypes[varSize]
 
     def writeToFile(self, fileHandle: TextIOBase):
         """Write the variable to a file.
@@ -460,7 +447,7 @@ class EnsightChunkWiseCase:
         """
 
         if not timeAndFileSetNumber in self.timeAndFileSets:
-            self.timeAndFileSets[timeAndFileSetNumber] = EnsightTimeSet(timeAndFileSetNumber, "noDesc", 0, 1)
+            self.timeAndFileSets[timeAndFileSetNumber] = EnsightTimeSet(timeAndFileSetNumber, "no description", 0, 1)
         tfSet = self.timeAndFileSets[timeAndFileSetNumber]
         tfSet.timeValues.append(timeValue)
 
@@ -546,7 +533,7 @@ class EnsightChunkWiseCase:
 
             cf.write("TIME\n")
             for setNum, timeSet in self.timeAndFileSets.items():
-                cf.write("time set: " + str(setNum) + " noDesc\n")
+                cf.write("time set: " + str(setNum) + " no description\n")
                 cf.write("number of steps: " + str(len(timeSet.timeValues)) + "\n")
                 cf.write("filename start number: " + str(timeSet.fileNameStartNumber) + "\n")
                 cf.write("filename increment: " + str(timeSet.fileNameNumberIncrement) + "\n")
@@ -565,7 +552,11 @@ class EnsightChunkWiseCase:
 
             cf.write("GEOMETRY\n")
             for geometryName, tAndFSetNum in self.geometryTrends.items():
-                cf.write("model: {:} \n".format(os.path.join(self.caseFileNamePrefix, geometryName + ".geo")))
+                cf.write(
+                    "model: {:} {:} {:} \n".format(
+                        tAndFSetNum, tAndFSetNum, os.path.join(self.caseFileNamePrefix, geometryName + ".geo")
+                    )
+                )
 
             cf.write("VARIABLE\n")
             for variableName, (tAndFSetNum, variableType) in self.variableTrends.items():
@@ -594,9 +585,12 @@ def createUnstructuredPartFromElementSet(setName, elementSet: list, partID: int)
     """
 
     nodeCounter = 0
-    partNodes = OrderedDict()  # node -> index in nodelist
-    elementDict = defaultdict(OrderedDict)
+    partNodes = dict()
+    elementDict = dict()
     for element in elementSet:
+        elShape = element.ensightType
+        if elShape not in elementDict:
+            elementDict[elShape] = dict()
         elNodeIndices = []
         for node in element.nodes:
             # if the node is already in the dict, get its index,
@@ -606,7 +600,7 @@ def createUnstructuredPartFromElementSet(setName, elementSet: list, partID: int)
             if idx == nodeCounter:
                 # the node was just inserted, so increase the counter of inserted nodes
                 nodeCounter += 1
-        elementDict[element.ensightType][element] = elNodeIndices
+        elementDict[elShape][element.elNumber] = elNodeIndices
 
     return EnsightUnstructuredPart(setName, partID, partNodes.keys(), elementDict)
 
@@ -622,9 +616,9 @@ def createUnstructuredPartFromNodeSet(setName, nodeSet: list, partID: int):
         The id of this part.
     """
 
-    elementDict = defaultdict(OrderedDict)
+    elementDict = dict()
 
-    elementDict["point"] = {DummyElement(i): [i] for i in range(len(nodeSet))}
+    elementDict["point"] = {i: [i] for i in range(len(nodeSet))}
 
     return EnsightUnstructuredPart("NSET_" + setName, partID, list(nodeSet), elementDict)
 
@@ -632,7 +626,7 @@ def createUnstructuredPartFromNodeSet(setName, nodeSet: list, partID: int):
 class OutputManager(OutputManagerBase):
     identification = "Ensight Export"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.name = name
 
         self.model = model
@@ -641,120 +635,85 @@ class OutputManager(OutputManagerBase):
         self.finishedSteps = 0
         self.intermediateSaveInterval = 10
         self.intermediateSaveIntervalCounter = 0
-        self.domainSize = model.domainSize
         self.fieldOutputController = fieldOutputController
         self.journal = journal
 
         self.transientTAndFSetNumber = 1
         self.staticTAndFSetNumber = 2
 
-        exportName = "{:}_{:}".format(name, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-
-        for defLine in definitionLines:
-            definition = convertLineToStringDictionary(defLine)
-            if "configuration" in definition:
-                if strtobool(definition.get("overwrite", "True")):
-                    exportName = "{:}".format(name)
-
         self.elSetToEnsightPartMappings = {}
         self.nSetToEnsightPartMappings = {}
-        self.ensightCase = EnsightChunkWiseCase(exportName)
-
-        self.ensightCase.setCurrentTime(self.staticTAndFSetNumber, 0.0)
 
         self.transientPerNodeJobs = []
         self.transientPerElementJobs = []
 
-        elementSets = model.elementSets
+        self.exportName = name
 
-        elSetParts = []
-        partCounter = 1
-        for setName, elSet in elementSets.items():
-            elSetPart = createUnstructuredPartFromElementSet(setName, elSet, partCounter)
-            self.elSetToEnsightPartMappings[setName] = elSetPart
-            elSetParts.append(elSetPart)
-            partCounter += 1
+        self._createGeometryParts(1)
 
-        nodeSets = model.nodeSets
+    def updateDefinition(self, **kwargs: dict):
+        model = self.model
+        # standard, transient jobs accessing the fieldoutput:
 
-        nodeSetParts = []
-        for setName, nodeSet in nodeSets.items():
-            nodeSetPart = createUnstructuredPartFromNodeSet(setName, nodeSet, partCounter)
-            self.nSetToEnsightPartMappings[setName] = nodeSetPart
-            nodeSetParts.append(nodeSetPart)
-            partCounter += 1
+        # Determine the type
+        if "create" in kwargs:
+            create = kwargs.pop("create")
 
-        geometry = EnsightGeometry("geometry", "Edelweiss_FE", "*export*", ensightPartList=elSetParts + nodeSetParts)
+            variableJob = dict()
+            fieldOutput = kwargs.pop("fieldOutput")
+            variableJob["fieldOutput"] = fieldOutput
 
-        geometryTimesetNumber = None
-        self.ensightCase.writeGeometryTrendChunk(geometry, geometryTimesetNumber)
+            variableJob["part"] = self._getTargetPartForFieldOutput(fieldOutput, **kwargs)
+            variableJob["name"] = kwargs.get("name", fieldOutput.name).replace(" ", "_")
 
-        for defLine in definitionLines:
-            definition = convertLineToStringDictionary(defLine)
+            nEntries, varSize = self._ensureArrayIs2D(fieldOutput.getLastResult()).shape
 
-            # standard, transient jobs accessing the fieldoutput:
-            if "fieldOutput" in definition:
-                varType = definition["create"]
+            if self.model.domainSize == 2 and varSize == 2:
+                varSize = 3
 
-                fieldOutput = fieldOutputController.fieldOutputs[definition["fieldOutput"]]
-                # if fieldOutput.domainType != "elSet":
-                #    raise Exception("Ensight output can only operate on fieldOutputs defined on elSets!")
+            variableJob["varSize"] = varSize
 
-                if varType == "perNode":
-                    perNodeJob = {}
-                    perNodeJob["fieldOutput"] = fieldOutput
-                    perNodeJob["name"] = definition.get("name", perNodeJob["fieldOutput"].name).replace(" ", "_")
-                    if fieldOutput.domainType == "elSet":
-                        perNodeJob["part"] = self.elSetToEnsightPartMappings[perNodeJob["fieldOutput"].nSetName]
-                    elif fieldOutput.domainType == "nSet":
-                        perNodeJob["part"] = self.nSetToEnsightPartMappings[perNodeJob["fieldOutput"].nSetName]
-                    else:
-                        raise Exception("Ensight output can only operate on fieldOutputs defined on elSets or nSets!")
-                    field = perNodeJob["fieldOutput"].field
-                    perNodeJob["varSize"] = variableTypes[fe.config.phenomena.phenomena[field]]
-                    perNodeJob["dimensions"] = fe.config.phenomena.getFieldSize(field, self.domainSize)
-                    self.transientPerNodeJobs.append(perNodeJob)
+            transient = kwargs.get("transient", "True")
+            transient = strtobool(transient)
 
-                if varType == "perElement":
-                    if fieldOutput.domainType != "elSet":
-                        raise Exception("Ensight perElement output can only operate on fieldOutputs defined on elSets!")
-                    perElementJob = {}
-                    perElementJob["fieldOutput"] = fieldOutput
-                    perElementJob["part"] = self.elSetToEnsightPartMappings[perElementJob["fieldOutput"].elSetName]
-
-                    # TODO: don't do this for each output job, but only once!
-                    perElementJob["elementsOfShape"] = disassembleElsetToEnsightShapes(
-                        perElementJob["fieldOutput"].elSet
+            if create == "perElement":
+                if nEntries != len(fieldOutput.associatedSet):
+                    raise Exception(
+                        "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
+                            variableJob["name"], nEntries, len(variableJob["part"].nodes)
+                        )
                     )
-                    perElementJob["name"] = definition.get("name", perElementJob["fieldOutput"].name).replace(" ", "_")
-                    self.transientPerElementJobs.append(perElementJob)
 
-            # one time, static jobs, which may output model data; they are executed immediately
-            elif "modeldata" in definition:
-                varType = definition["create"]
-                if varType == "perElement":
-                    perElementJob = {}
-                    name = definition["name"]
-                    elSet = model.elementSets[definition["elSet"]]
-                    part = self.elSetToEnsightPartMappings[definition["elSet"]]
+                variableJob["elementsOfShape"] = disassembleElsetToEnsightShapes(fieldOutput.associatedSet)
 
-                    # TODO: don't do this for each output job, but only once!
-                    elementsOfShape = disassembleElsetToEnsightShapes(elSet)
+                if transient:
+                    self.transientPerElementJobs.append(variableJob)
 
-                    thedata = evalModelAccessibleExpression(definition["modeldata"], model)
-                    result = np.asarray(thedata, dtype=float)
+            elif create == "perNode":
+                if nEntries != len(variableJob["part"].nodes):
+                    raise Exception(
+                        "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
+                            variableJob["name"], nEntries, len(variableJob["part"].nodes)
+                        )
+                    )
 
-                    varDict = {shape: result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items()}
+                if transient:
+                    self.transientPerNodeJobs.append(variableJob)
 
-                    if len(result.shape) == 1:
-                        dimension = 1
-                    else:
-                        dimension = result.shape[1]
+        if "configuration" in kwargs:
+            # ensight output is overwritten by default
+            self.overwrite = strtobool(kwargs.get("overwrite", "True"))
+            if not self.overwrite:
+                self.exportName = "{:}_{:}".format(self.name, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
 
-                    partsDict = {part.partNumber: varDict}
-                    enSightVar = EnsightPerElementVariable(name, dimension, partsDict)
-                    self.ensightCase.writeVariableTrendChunk(enSightVar, self.staticTAndFSetNumber)
-                    del enSightVar
+    def initializeJob(self):
+        self.ensightCase = EnsightChunkWiseCase(self.exportName)
+        self.ensightCase.setCurrentTime(self.staticTAndFSetNumber, self.model.time)
+
+        geometry = EnsightGeometry("geometry", "EdelweissFE", "*export*", ensightPartList=self.geometryParts)
+        geometryTimesetNumber = self.staticTAndFSetNumber
+
+        self.ensightCase.writeGeometryTrendChunk(geometry, geometryTimesetNumber)
 
     def initializeStep(self, step):
         if self.name in step.actions["options"] or "Ensight" in step.actions["options"]:
@@ -762,20 +721,14 @@ class OutputManager(OutputManagerBase):
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
             self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 
-    def finalizeIncrement(self, increment, **kwargs):
-        incNumber, incrementSize, stepProgress, dT, stepTimeAtIncrementStart, totalTimeAtIncrementStart = increment
-        time = totalTimeAtIncrementStart + dT
+    def finalizeIncrement(self, **kwargs):
+        time = self.model.time
 
         # check if we should write output, i.e., if enough time has passed:
         timeSinceLastOutput = time - self.timeAtLastOutput
-        if self.minDTForOutput - timeSinceLastOutput > 1e-12:
-            self.journal.message("skipping output", self.identification, 1)
-            return
 
-        if dT <= 0.0 and self.finishedSteps > 0:
-            self.journal.message(
-                "skipping output for zero-increment in step {:}".format(self.finishedSteps + 1), self.identification, 1
-            )
+        if self.minDTForOutput - timeSinceLastOutput > 1e-16:
+            self.journal.message("Skipping output".format(), self.identification, 1)
             return
 
         self.writeOutput(self.model)
@@ -783,16 +736,20 @@ class OutputManager(OutputManagerBase):
     def finalizeFailedIncrement(self, **kwargs):
         pass
 
-    def writeOutput(self, model):
+    def writeOutput(self, model: FEModel):
         self.timeAtLastOutput = model.time
         self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, model.time)
 
         for perNodeJob in self.transientPerNodeJobs:
-            resultTypeLength = perNodeJob["varSize"]
+            # resultTypeLength = perNodeJob["varSize"]
             jobName = perNodeJob["name"]
-            nodalVarTable = perNodeJob["fieldOutput"].getLastResult()
-            partsDict = {perNodeJob["part"].partNumber: ("coordinates", nodalVarTable)}
-            enSightVar = EnsightPerNodeVariable(jobName, resultTypeLength, partsDict)
+            result = self._ensureArrayIs2D(perNodeJob["fieldOutput"].getLastResult())
+
+            if self.model.domainSize == 2 and result.shape[1] == 2:
+                result = self._make2DVector3D(result)
+
+            partsDict = {perNodeJob["part"].partNumber: ("coordinates", result)}
+            enSightVar = EnsightPerNodeVariable(jobName, partsDict, perNodeJob["varSize"])
             self.ensightCase.writeVariableTrendChunk(enSightVar, self.transientTAndFSetNumber)
             del enSightVar
 
@@ -800,16 +757,14 @@ class OutputManager(OutputManagerBase):
             name = perElementJob["name"]
             part = perElementJob["part"]
             elementsOfShape = perElementJob["elementsOfShape"]
-            result = perElementJob["fieldOutput"].getLastResult()
+            result = self._ensureArrayIs2D(perElementJob["fieldOutput"].getLastResult())
+
+            if self.model.domainSize == 2 and result.shape[1] == 2:
+                result = self._make2DVector3D(result)
+
             varDict = {shape: result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items()}
-
-            if len(result.shape) == 1:
-                dimension = 1
-            else:
-                dimension = result.shape[1]
-
             partsDict = {part.partNumber: varDict}
-            enSightVar = EnsightPerElementVariable(name, dimension, partsDict)
+            enSightVar = EnsightPerElementVariable(name, partsDict, perElementJob["varSize"])
             self.ensightCase.writeVariableTrendChunk(enSightVar, self.transientTAndFSetNumber)
             del enSightVar
 
@@ -830,7 +785,107 @@ class OutputManager(OutputManagerBase):
 
     def finalizeJob(
         self,
-        # U,
-        # P,
     ):
         self.ensightCase.finalize(replaceTimeValuesByEnumeration=False)
+
+    def _createGeometryParts(self, firstPartID: int):
+        model = self.model
+        elementSets = model.elementSets
+
+        elSetParts = []
+        partCounter = firstPartID
+        for setName, elSet in elementSets.items():
+            elSetPart = createUnstructuredPartFromElementSet(setName, elSet, partCounter)
+            self.elSetToEnsightPartMappings[setName] = elSetPart
+            elSetParts.append(elSetPart)
+            partCounter += 1
+
+        nodeSets = model.nodeSets
+
+        nodeSetParts = []
+        for setName, nodeSet in nodeSets.items():
+            nodeSetPart = createUnstructuredPartFromNodeSet(setName, nodeSet, partCounter)
+            self.nSetToEnsightPartMappings[setName] = nodeSetPart
+            nodeSetParts.append(nodeSetPart)
+            partCounter += 1
+
+        self.geometryParts = elSetParts + nodeSetParts
+
+    def _getTargetPartForFieldOutput(self, fieldOutput: _FieldOutputBase, **kwargs: dict) -> EnsightUnstructuredPart:
+        """
+        Determine depending on the specified input,
+        for which Part the result should be written.
+        If no input is specified, the associated set of the :class:`FieldOutput is taken.
+
+        Parameters
+        ----------
+        fieldOutput
+            The :class:`FieldOutput which contains the result
+        **kwargs
+            The user defined input, which potentially tells us which :class:`EnsightUnstructuredPart instance is the target.
+
+        Returns
+        -------
+        EnsightStructuredPart
+            The identified part.
+        """
+
+        if "nSet" in kwargs:
+            return self.nSetToEnsightPartMappings[kwargs.pop("nSet")]
+        if "elSet" in kwargs:
+            return self.elSetToEnsightPartMappings[kwargs.pop("elSet")]
+
+        try:
+            theSetName = fieldOutput.associatedSet.name
+
+            if isinstance(fieldOutput.associatedSet, NodeSet):
+                return self.nSetToEnsightPartMappings[theSetName]
+
+            if isinstance(fieldOutput.associatedSet, ElementSet):
+                return self.elSetToEnsightPartMappings[theSetName]
+            else:
+                raise Exception(
+                    "Ensight Variables need to be excplicity associated with a part, our implicitly through a FieldOutput defined on ElementSets or NodeSets!"
+                )
+        except:
+            raise Exception(
+                "Ensight Variables need to be excplicity associated with a part, our implicitly through a FieldOutput defined on ElementSets or NodeSets!"
+            )
+
+    def _ensureArrayIs2D(self, result: np.ndarray) -> np.ndarray:
+        """
+        Ensure that a result array is in tabular form.
+
+        Parameters
+        ----------
+        result
+            The result in potential 1D form.
+
+        Returns
+        -------
+        np.ndarray
+            The result in guaranteed 2d form.
+        """
+        return np.reshape(result, (len(result), -1))
+
+    def _make2DVector3D(self, result: np.ndarray) -> np.ndarray:
+        """
+        Vector results in 2D consist of 2 components.
+        However, in Ensight all results must be written for the 3D case.
+        This function appends a zero column.
+
+        Parameters
+        ----------
+        result
+            The vector result in 2D form.
+
+        Returns
+        -------
+        np.ndarray
+            The result in 3D form.
+        """
+
+        return np.pad(
+            result,
+            ((0, 0), (0, 1)),
+        )

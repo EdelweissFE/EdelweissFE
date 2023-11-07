@@ -31,6 +31,7 @@
 from fe.sets.orderedset import OrderedSet
 from fe.elements.marmotelement.element import MarmotElementWrapper
 from fe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
+from fe.utils.meshtools import extractNodesFromElementSet
 
 
 class ElementSet(OrderedSet):
@@ -39,7 +40,7 @@ class ElementSet(OrderedSet):
 
     Parameters
     ----------
-    label
+    name
         The unique label for this element set.
     elements
         A list of elements.
@@ -49,7 +50,15 @@ class ElementSet(OrderedSet):
 
     def __init__(
         self,
-        label: str,
+        name: str,
         elements: list,
     ):
-        super().__init__(label, elements)
+        super().__init__(name, elements)
+        self._nodes = None
+
+    def extractNodeSet(
+        self,
+    ):
+        if not self._nodes:
+            self._nodes = extractNodesFromElementSet(self)
+        return self._nodes

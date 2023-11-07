@@ -50,32 +50,37 @@ class OutputManager(OutputManagerBase):
     identification = "Statusfile"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.journal = journal
-        self.filename = "{:}.sta".format(jobInfo.get("name", jobInfo["inputfile"].rstrip(".inp")))
-        for defLine in definitionLines:
-            defDict = convertLineToStringDictionary(defLine)
-            if "filename" in defDict.keys():
-                self.filename = defDict.get("filename")
+        # self.filename = "{:}.sta".format(jobInfo.get("name", jobInfo["inputfile"].rstrip(".inp")))
+        self.filename = "job.sta"
+        self.statusFileExists = False
+
+    def updateDefinition(self, **kwargs: dict):
+        if "filename" in kwargs.keys():
+            self.filename = kwargs.get("filename")
 
         self.statusFileExists = False
 
     # def initializeSimulation(self, model):
     #     pass
 
+    def initializeJob(self):
+        pass
+
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, U, P, increment, statusInfoDict: dict = {}, **kwargs):
+    def finalizeIncrement(self, statusInfoDict: dict = {}, **kwargs):
         self.writeStatusFile(statusInfoDict)
 
     def finalizeFailedIncrement(self, statusInfoDict: dict = {}, **kwargs):
         self.writeStatusFile(statusInfoDict)
 
-    def finalizeStep(self, U, P):
+    def finalizeStep(self):
         pass
 
-    def finalizeJob(self, U, P):
+    def finalizeJob(self):
         pass
 
     def writeStatusFile(self, statusInfoDict):
@@ -95,7 +100,7 @@ class OutputManager(OutputManagerBase):
                 f.write("#\n")
                 f.write(
                     "#{: >5}{: >6}{: >6}{: >10}{: >12}{: >12}    {:<}\n".format(
-                        "step", "inc", "iters", "converged", "time inc", "time", "notes"
+                        "step", "inc", "iters", "converged", "time inc", "time end", "notes"
                     )
                 )
                 f.write("#\n")
@@ -104,6 +109,6 @@ class OutputManager(OutputManagerBase):
         with open(self.filename, "a") as f:
             f.write(
                 "{: >6}{: >6}{: >6}{: >10}{: >12.3e}{: >12.3e}    # {:<s}\n".format(
-                    d["step"], d["inc"], d["iters"], d["converged"], d["time inc"], d["time"], d["notes"]
+                    d["step"], d["inc"], d["iters"], d["converged"], d["time inc"], d["time end"], d["notes"]
                 )
             )

@@ -6,4 +6,4 @@ linting:
   image: condaforge/mambaforge:22.9.0-2
   script:
     - conda install black
-    - black --check fe edelweiss.py --line-length 120
+    - black --check . --line-length 120

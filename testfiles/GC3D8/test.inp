@@ -1416,8 +1416,8 @@ all
  508, 535, 536, 537, 675, 676, 703, 704, 705
 
 *fieldOutput, 
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, field=nonlocal damage, result=U, name=nonlocal
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perNode, elSet=all, field=nonlocal damage, result=U, name=nonlocal
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement

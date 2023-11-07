@@ -38,10 +38,9 @@ all
 *solver, solver=NISTParallel, name=theSolver
 
 *fieldOutput
-name=Displacement,      elSet=all,           field=displacement, result=U, 
-name=DisplacementN,      nSet=all,           field=displacement, result=U, 
-name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
-name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
+create=perNode, name=Displacement,      elSet=all,       field=displacement, result=U, saveHistory=True 
+create=perNode, name=DisplacementTop,   nSet=gen_top,       field=displacement, result=U, saveHistory=True
+create=perNode, name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 
 *output, type=monitor
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
@@ -52,8 +51,8 @@ create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
 *step, maxInc=1e-1, minInc=1e-1, maxNumInc=1000, maxIter=25, stepLength=24, solver=theSolver
-dirichlet, name=bottom, nset=gen_bottom, 2=0, field=displacement
-dirichlet, name=left, nset=gen_left, 1=0, field=displacement
+dirichlet, name=bottom, nSet=gen_bottom, 2=0, field=displacement
+dirichlet, name=left, nSet=gen_left, 1=0, field=displacement
 *step, maxInc=2e-2, minInc=1e-2, maxNumInc=1000, maxIter=25, stepLength=0.01, solver=theSolver
 distributedload, name=dload, surface=gen_top, magnitude=3.9, type=pressure, f(t)=t
 

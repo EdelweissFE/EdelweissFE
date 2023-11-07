@@ -32,10 +32,10 @@ dirichlet, name=prescribed_strain,                                    components
 nodeforces, name=prescribed_stress,                                   components='[ x,    -0.0,   -0.0, x,   x, x ]' 
 
 *fieldOutput
-name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True, export=sigma
-name=omega, elSet=all, result=omega, quadraturePoint=0,  saveHistory=True, export=omega
-name=strain, elSet=all, result=strain, quadraturePoint=0,  saveHistory=True
-name=algorithmicTangent, elSet=all, result=algorithmicTangent, quadraturePoint=0,  saveHistory=True, f(x)="np.reshape(x, (7,-1), order='F')"
+create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True, export=sigma
+create=perElement, name=omega, elSet=all, result=omega, quadraturePoint=0,  saveHistory=True, export=omega
+create=perElement, name=strain, elSet=all, result=strain, quadraturePoint=0,  saveHistory=True
+create=perElement, name=algorithmicTangent, elSet=all, result=algorithmicTangent, quadraturePoint=0,  saveHistory=True, f(x)="np.reshape(x, (7,-1), order='F')"
 
 *output, type=monitor
 fieldOutput=omega

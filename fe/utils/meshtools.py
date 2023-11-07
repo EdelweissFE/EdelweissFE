@@ -32,6 +32,7 @@ Created on Sun Jul 23 21:03:23 2017
 """
 from collections import OrderedDict, defaultdict
 import numpy as np
+from fe.sets.nodeset import NodeSet
 
 
 def extractNodesFromElementSet(elementSet):
@@ -39,7 +40,7 @@ def extractNodesFromElementSet(elementSet):
     extract all nodes (without duplicates) from an elSet
     """
     nodeCounter = 0
-    partNodes = OrderedDict()  # node -> index in nodelist
+    partNodes = dict()  # node -> index in nodelist
     for element in elementSet:
         for node in element.nodes:
             # if the node is already in the dict, get its index,
@@ -48,7 +49,7 @@ def extractNodesFromElementSet(elementSet):
             if idx == nodeCounter:
                 # the node was just inserted, so increase the counter of inserted nodes
                 nodeCounter += 1
-    return partNodes
+    return NodeSet(elementSet.name, partNodes.keys())
 
 
 def disassembleElsetToEnsightShapes(elementSet):
