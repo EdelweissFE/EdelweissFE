@@ -382,7 +382,8 @@ class DofManager:
 
             for nSet in nodeSets:
                 nodeSetFieldsInDofVector[field][nSet.name] = np.array(
-                    [self.idcsOfFieldVariablesInDofVector[node.fields[field]] for node in nSet if field in node.fields]
+                    [self.idcsOfFieldVariablesInDofVector[node.fields[field]] for node in nSet if field in node.fields],
+                    dtype=int,
                 ).flatten()
 
         return nodeSetFieldsInDofVector
