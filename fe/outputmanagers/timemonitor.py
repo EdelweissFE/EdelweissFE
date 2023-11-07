@@ -45,16 +45,20 @@ class OutputManager(OutputManagerBase):
     def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
-        defDict = convertLinesToStringDictionary(definitionLines)
-        self.exportFile = defDict["export"]
+        self.model = model
+
+    def updateDefinition(self, **kwargs: dict):
+        self.exportFile = kwargs["export"]
         self.timeVals = []
+
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, U, P, increment, **kwargs):
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        self.timeVals.append(totalTime + dT)
+    def finalizeIncrement(self, U, P, **kwargs):
+        self.timeVals.append(self.model.time)
 
     def finalizeFailedIncrement(self, **kwargs):
         pass

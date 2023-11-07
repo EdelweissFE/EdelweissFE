@@ -3,8 +3,6 @@ name: Documentation
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
@@ -33,7 +31,7 @@ jobs:
           cd eigen 
           mkdir build
           cd build 
-          cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
+           cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
           make install
           cd ../..
 
@@ -44,7 +42,7 @@ jobs:
           cd autodiff
           mkdir build
           cd build
-          cmake -DAUTODIFF_BUILD_TESTS=OFF -DAUTODIFF_BUILD_PYTHON=OFF -DAUTODIFF_BUILD_EXAMPLES=OFF -DAUTODIFF_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
+          cmake -DAUTODIFF_BUILD_TESTS=OFF -DAUTODIFF_BUILD_PYTHON=OFF -DAUTODIFF_BUILD_EXAMPLES=OFF -DAUTODIFF_BUILD_DOCS=OFF $CMAKE_ARGS ..
           make install
           cd ../..
 
@@ -53,7 +51,7 @@ jobs:
         run: |
           git clone https://github.com/romeric/Fastor.git
           cd Fastor
-          cmake  -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") -DBUILD_TESTING=OFF .
+          cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") .
           make install
           cd ..
 
@@ -71,7 +69,7 @@ jobs:
       - name: Build EdelweissFE
         shell: bash -l {0}
         run: |
-          python setup.py build_ext -i 
+          pip install .
 
       - name: Building EdelweissFE documentation
         shell: bash -l {0}

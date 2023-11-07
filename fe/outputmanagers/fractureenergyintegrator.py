@@ -57,21 +57,24 @@ class OutputManager(OutputManagerBase):
     identification = "FEI"
     printTemplate = "{:}, {:}: {:}"
 
-    def __init__(self, name, definitionLines, model, fieldOutputController, journal, plotter):
+    def __init__(self, name, model, fieldOutputController, journal, plotter):
         self.journal = journal
         self.monitorJobs = []
         self.fieldOutputController = fieldOutputController
 
-        defDict = convertLinesToStringDictionary(definitionLines)
-        self.fpF = fieldOutputController.fieldOutputs[defDict["forceFieldOutput"]]
-        self.fpU = fieldOutputController.fieldOutputs[defDict["displacementFieldOutput"]]
-        self.A = createMathExpression(defDict["fractureArea"])(0.0)
+    def updateDefinition(self, **kwargs: dict):
+        self.fpF = fieldOutputController.fieldOutputs[kwargs["forceFieldOutput"]]
+        self.fpU = fieldOutputController.fieldOutputs[kwargs["displacementFieldOutput"]]
+        self.A = createMathExpression(kwargs["fractureArea"])(0.0)
         self.fractureEnergy = 0.0
+
+    def initializeJob(self):
+        pass
 
     def initializeStep(self, step):
         pass
 
-    def finalizeIncrement(self, increment, **kwargs):
+    def finalizeIncrement(self, **kwargs):
         pass
 
     def finalizeFailedIncrement(self, **kwargs):

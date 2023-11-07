@@ -36,10 +36,7 @@ class FieldVariable:
     Furthermore, it allows us to adress them by their unique id (= hash value).
     Unlike ScalarVariables, FieldVariable does not directly holds any results/values, but rather, for performance reasons,
     we store results in cumulative Fields, such as NodeField.
-    FieldVariable only holds a reference to the primary NodeField results.
     """
 
-    def __init__(
-        self,
-    ):
-        values = None
+    def __init__(self, node):
+        self.node = node

@@ -17,11 +17,11 @@ lZ      =10
 elType  =C3D8
 
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
-name=stress, elSet=all, result=stress, quadraturePoint=0:8
-name=meanStress, elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x, axis=1)'
-elSet=all, result=omega, name=omega, quadraturePoint=0:8
-elSet=all, result=omega, name=omegaMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=0:8
+create=perElement, name=meanStress, elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x, axis=1)'
+create=perElement, elSet=all, result=omega, name=omega, quadraturePoint=0:8
+create=perElement, elSet=all, result=omega, name=omegaMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 

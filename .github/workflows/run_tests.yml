@@ -1,0 +1,76 @@
+name: Run tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Mambaforge
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          use-mamba: true
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          activate-environment: anaconda-client-env
+              
+      - name: Install conda packages
+        shell: bash -l {0}
+        run: |
+          mamba install --file requirements.txt
+
+      - name: Install Eigen
+        shell: bash -l {0}
+        run: |
+          git clone https://gitlab.com/libeigen/eigen.git
+          cd eigen 
+          mkdir build
+          cd build 
+           cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") ..
+          make install
+          cd ../..
+
+      - name: Install Autodiff
+        shell: bash -l {0}
+        run: |
+          git clone https://github.com/autodiff/autodiff.git
+          cd autodiff
+          mkdir build
+          cd build
+          cmake -DAUTODIFF_BUILD_TESTS=OFF -DAUTODIFF_BUILD_PYTHON=OFF -DAUTODIFF_BUILD_EXAMPLES=OFF -DAUTODIFF_BUILD_DOCS=OFF $CMAKE_ARGS ..
+          make install
+          cd ../..
+
+      - name: Install Fastor
+        shell: bash -l {0}
+        run: |
+          git clone https://github.com/romeric/Fastor.git
+          cd Fastor
+          cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") .
+          make install
+          cd ..
+
+      - name: Install Marmot
+        shell: bash -l {0}
+        run: |
+          git clone --recurse-submodules https://github.com/MAteRialMOdelingToolbox/Marmot/
+          cd Marmot
+          mkdir build
+          cd build
+          cmake -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)")  ..
+          make install
+          cd ../../
+
+      - name: Build EdelweissFE
+        shell: bash -l {0}
+        run: |
+          pip install .
+
+      - name: Run tests
+        shell: bash -l {0}
+        run: |
+          run_tests_edelweissfe ./testfiles
+

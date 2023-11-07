@@ -15,8 +15,8 @@ nX=10
 nY=10
 
 *fieldOutput
-nSet=gen_bottom, result=P, field=displacement, name=RF
-elSet=all, field=displacement, result=U, name=displacement
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=monitor
 fieldOutput=RF, f(x)='mean(x[:,1])'

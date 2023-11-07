@@ -98,7 +98,7 @@ class StepAction(StepActionBase):
                 self.journal.errorMessage(f"Cannot map scalar value to {currentResults.shape[2]}-dimensional result.")
                 raise Exception
 
-            elementList = self.fieldOutput.elSet
+            elementList = self.fieldOutput.associatedSet
 
             for i1, element in enumerate(elementList):
                 coordinatesAtQuadraturePoints = element.getCoordinatesAtQuadraturePoints()

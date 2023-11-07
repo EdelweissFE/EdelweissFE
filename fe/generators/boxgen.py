@@ -315,7 +315,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
 
     # fmt: on
     # model.initializeNodeFields()
-    model._createNodeFieldVariablesFromElements()
+    model._populateNodeFieldVariablesFromElements()
 
     nG = np.asarray(nodes).reshape(nNodesX, nNodesY, nNodesZ)
 
@@ -359,7 +359,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     nodeSets.append(NodeSet("{:}_topLeftBack".format(name), [nG[0, -1, 0]]))
 
     for nodeSet in nodeSets:
-        model.nodeSets[nodeSet.label] = nodeSet
+        model.nodeSets[nodeSet.name] = nodeSet
 
     # element sets
     elementSets = []
@@ -414,7 +414,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     #         model.elementSets["{:}_core".format(name)].append(e)
 
     for elementSet in elementSets:
-        model.elementSets[elementSet.label] = elementSet
+        model.elementSets[elementSet.name] = elementSet
 
     # surfaces
     model.surfaces["{:}_bottom".format(name)] = {1: model.elementSets["{:}_bottom".format(name)]}

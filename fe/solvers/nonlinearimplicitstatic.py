@@ -128,7 +128,13 @@ class NIST:
         """
 
         self.journal.message("Creating monolithic equation system", self.identification, 0)
-        self.theDofManager = DofManager(model)
+        self.theDofManager = DofManager(
+            model.nodeFields.values(),
+            model.scalarVariables.values(),
+            model.elements.values(),
+            model.constraints.values(),
+            model.nodeSets.values(),
+        )
         self.journal.message("total size of eq. system: {:}".format(self.theDofManager.nDof), self.identification, 0)
 
         self.journal.printSeperationLine()
@@ -259,9 +265,9 @@ class NIST:
 
                     # write results to nodes:
                     for fieldName, field in model.nodeFields.items():
-                        field = self.theDofManager.writeDofVectorToNodeField(U, field, "U")
-                        field = self.theDofManager.writeDofVectorToNodeField(P, field, "P")
-                        field = self.theDofManager.writeDofVectorToNodeField(dU, field, "dU")
+                        self.theDofManager.writeDofVectorToNodeField(U, field, "U")
+                        self.theDofManager.writeDofVectorToNodeField(P, field, "P")
+                        self.theDofManager.writeDofVectorToNodeField(dU, field, "dU")
 
                     for variable in model.scalarVariables.values():
                         variable.value = U[self.theDofManager.idcsOfScalarVariablesInDofVector[variable]]
@@ -275,10 +281,10 @@ class NIST:
                     statusInfoDict["iters"] = iterationCounter
                     statusInfoDict["converged"] = True
 
-                    fieldOutputController.finalizeIncrement(increment)
+                    fieldOutputController.finalizeIncrement()
                     for man in outputmanagers:
                         man.finalizeIncrement(
-                            increment, currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
+                            currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
                         )
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
@@ -885,7 +891,7 @@ class NIST:
         # cloads
         for cLoad in nodeForces:
             # PExt = cLoad.applyOnP(PExt, increment)
-            PExt[self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nSet.label]] += cLoad.getLoad(
+            PExt[self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nSet.name]] += cLoad.getLoad(
                 increment
             ).flatten()
         # dloads
@@ -1025,6 +1031,6 @@ class NIST:
         field = dirichlet.field
         components = dirichlet.components
 
-        fieldIndices = self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[field][nSet.label]
+        fieldIndices = self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[field][nSet.name]
 
         return fieldIndices.reshape((len(nSet), -1))[:, components].flatten()

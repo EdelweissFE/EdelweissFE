@@ -27,7 +27,7 @@
 #  ---------------------------------------------------------------------
 # Created on Sat Jul 22 14:57:48 2017
 
-# @author: Matthias Neuner
+## @author: Matthias Neuner
 """
 FieldOutputs store all kind of analysis results, 
 and are defined via the keyword ``*fieldOutput``.
@@ -61,9 +61,11 @@ from fe.numerics.dofmanager import DofVector
 from fe.models.femodel import FEModel
 from fe.journal.journal import Journal
 from numpy import ndarray
+from fe.fields.nodefield import NodeField, NodeFieldSubset
+from fe.sets.elementset import ElementSet
 
 
-class _FieldOutput:
+class _FieldOutputBase:
     """
     Entity of a fieldOutput request.
 
@@ -71,10 +73,10 @@ class _FieldOutput:
 
     Parameters
     ----------
+    name
+        The name of this FieldOutput.
     model
         A dictionary containing the model tree.
-    definition
-        A dictionary containing the definition of the field output.
     journal
         The journal object for logging.
     **kwargs
@@ -86,55 +88,7 @@ class _FieldOutput:
         self.name = name
         self.model = model
         self.journal = journal
-
-        if "nset" in kwargs:
-            self.domainType = "nSet"
-
-            self.type = "nodalResult"
-            self.nSet = model.nodeSets[kwargs["nset"]]
-            self.nSetName = kwargs["nset"]
-            self.resultVector = kwargs["result"]
-            self.field = kwargs["field"]
-
-        elif "elset" in kwargs:
-            self.domainType = "elSet"
-
-            if kwargs["result"] == "U" or kwargs["result"] == "P":
-                journal.message(
-                    "Converting elSet {:} to a nSet due to requested nodal results".format(kwargs["elset"]),
-                    self.name,
-                )
-                # an elset was given, but in fact a nodeset was 'meant': we extract the nodes of the elementset!
-                self.type = "nodalResult"
-                self.nSet = extractNodesFromElementSet(model.elementSets[kwargs["elset"]])
-                self.nSetName = kwargs["elset"]
-                self.resultVector = kwargs["result"]
-                self.field = kwargs["field"]
-            else:
-                # it's really an elSet job
-                self.type = "elementResult"
-                self.elSet = model.elementSets[kwargs["elset"]]
-                self.elSetName = kwargs["elset"]
-                self.resultName = kwargs["result"]
-
-                qp = kwargs["quadraturepoint"]
-                quadraturePoints = strToRange(qp) if not isInteger(qp) else [int(qp)]
-
-                self.quadraturePoints = quadraturePoints
-
-                self.elementResultCollector = ElementResultCollector(
-                    list(self.elSet), quadraturePoints, self.resultName
-                )
-
-        elif "modeldata" in kwargs:
-            self.domainType = "model"
-            self.type = "modelData"
-            self.getCurrentModelDataResult = createModelAccessibleFunction(kwargs["modeldata"], model=model)
-
-        else:
-            raise Exception("Invalid FieldOutput requested: " + self.name)
-
-        self.appendResults = kwargs.get("savehistory", False)
+        self.appendResults = kwargs.get("saveHistory", False)
         self.result = [] if self.appendResults else None
 
         if "f(x)" in kwargs:
@@ -194,9 +148,9 @@ class _FieldOutput:
 
         return np.asarray(self.timeHistory)
 
-    def updateResults(self, model: FEModel):
-        """Update the field output.
-        Will use the current solution and reaction vector if result is a nodal result.
+    def _applyResultsPipleline(self, result):
+        """Apply the pipeline of operations onto the results.
+        Called by inheriting classes.
 
         Parameters
         ----------
@@ -204,28 +158,15 @@ class _FieldOutput:
             The model tree.
         """
 
-        self.timeHistory.append(model.time)
-        incrementResult = None
-
-        if self.type == "nodalResult":
-            incrementResult = model.nodeFields[self.field].values[self.resultVector]
-
-            if self.nSet and self.nSet != "all":
-                incrementResult = np.asarray([incrementResult[n] for n in self.nSet])
-
-        elif self.type == "elementResult":
-            incrementResult = self.elementResultCollector.getCurrentResults()
-
-        elif self.type == "modelData":
-            incrementResult = self.getCurrentModelDataResult()
+        self.timeHistory.append(self.model.time)
 
         if self.f:
-            incrementResult = self.f(incrementResult)
+            result = self.f(result)
 
         if self.appendResults:
-            self.result.append(incrementResult.copy())
+            self.result.append(result.copy())
         else:
-            self.result = incrementResult
+            self.result = result
 
     def writeLastResult(self):
         """Update file output.
@@ -269,16 +210,10 @@ class _FieldOutput:
         if self.export:
             self.writeLastResult()
 
-    def finalizeIncrement(self, increment: tuple):
-        """Finalize an increment, i.e. store the current results.
-
-        Parameters
-        ----------
-        increment
-            The finished time increment.
-        """
-
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+    def finalizeIncrement(
+        self,
+    ):
+        """Finalize an increment, i.e. store the current results."""
         self.updateResults(self.model)
 
         if self.export:
@@ -303,18 +238,7 @@ class _FieldOutput:
         values
             The values.
         """
-        if self.type == "elementResult":
-            if self.f:
-                raise Exception("cannot set field output for modified results (f(x) != None) !")
-
-            for i, el in enumerate(self.elSet):
-                for j, g in enumerate(self.quadraturePoints):
-                    theArray = el.getResultArray(self.resultName, g, True)
-                    theArray[:] = values[i, j, :]
-                    el.acceptLastState()
-
-        else:
-            raise Exception("setting field output currently only implemented for element!")
+        raise Exception("setting field output currently not implemented for this type of output!")
 
     def __eq__(self, other):
         if type(other) == str:
@@ -346,6 +270,167 @@ class _FieldOutput:
         return self.getLastResult() - other
 
 
+class NodeFieldOutput(_FieldOutputBase):
+    """
+    This is a Node based FieldOutput.
+    It operates on NodeFields.
+
+    Parameters
+    ----------
+    name
+        The name of this FieldOutput.
+    nodeField
+        The NodeField, on which this FieldOutput operates.
+    result
+        The name of the result entry in the NodeField.
+    model
+        The model tree instance.
+    journal
+        The journal object for logging.
+    **kwargs
+        The definition for this output.
+    """
+
+    def __init__(self, name: str, nodeField, result: str, model: FEModel, journal: Journal, **kwargs: dict):
+        self.entry = result
+
+        self._nodeField = nodeField
+
+        # if isinstance(nodeField, NodeFieldSubset):
+        self.associatedSet = nodeField.associatedSet
+
+        super().__init__(name, model, journal, **kwargs)
+
+    def updateResults(self, model: FEModel):
+        """Update the field output.
+        Will use the current solution and reaction vector if result is a nodal result.
+
+        Parameters
+        ----------
+        model
+            The model tree.
+        """
+
+        result = self._nodeField[self.entry]
+
+        return super()._applyResultsPipleline(result)
+
+
+class ElementFieldOutput(_FieldOutputBase):
+    """
+    This is a Element based FieldOutput.
+    It operates on ElementSets.
+
+    Parameters
+    ----------
+    name
+        The name of this FieldOutput.
+    elSet
+        The ElementSet on which this FieldOutput operates.
+    resultName
+        The name of the result entry in the :class:`ElementBase.
+    model
+        The model tree instance.
+    journal
+        The journal object for logging.
+    **kwargs
+        The definition for this output.
+    """
+
+    def __init__(self, name: str, elSet, resultName: str, model: FEModel, journal: Journal, **kwargs: dict):
+        self.associatedSet = elSet
+
+        self.resultName = resultName
+        qp = kwargs["quadraturePoint"]
+        self.quadraturePoints = strToRange(qp) if not isInteger(qp) else [int(qp)]
+
+        self.elementResultCollector = ElementResultCollector(
+            list(self.associatedSet), self.quadraturePoints, self.resultName
+        )
+
+        super().__init__(name, model, journal, **kwargs)
+
+    def updateResults(self, model: FEModel):
+        """Update the field output.
+        Will use the current solution and reaction vector if result is a nodal result.
+
+        Parameters
+        ----------
+        model
+            The model tree.
+        """
+
+        result = self.elementResultCollector.getCurrentResults()
+
+        super()._applyResultsPipleline(result)
+
+    def setResults(self, values: np.ndarray):
+        """Modifies a result at it's origin, if possible.
+        Throws an exception if not possible.
+
+        Parameters
+        ----------
+        values
+            The values.
+        """
+        if self.f:
+            raise Exception("cannot set field output for modified results (f(x) != None) !")
+
+        for i, el in enumerate(self.associatedSet):
+            for j, g in enumerate(self.quadraturePoints):
+                theArray = el.getResultArray(self.resultName, g, True)
+                theArray[:] = values[i, j, :]
+                el.acceptLastState()
+
+
+class ExpressionFieldOutput(_FieldOutputBase):
+    """
+    This is a Node based FieldOutput.
+    It operates on NodeFields.
+
+    Parameters
+    ----------
+    name
+        The name of this FieldOutput.
+    nodeField
+        The NodeField, on which this FieldOutput operates.
+    result
+        The name of the result entry in the NodeField.
+    model
+        The model tree instance.
+    journal
+        The journal object for logging.
+    **kwargs
+        The definition for this output.
+    """
+
+    def __init__(self, name: str, model: FEModel, journal: Journal, **kwargs: dict):
+        if "nSet" in kwargs:
+            self.associatedSet = kwargs.pop("nSet")
+        elif "elSet" in kwargs:
+            self.associatedSet = kwargs.pop("elSet")
+        else:
+            raise Exception("All FieldOuputs must be associated with a set!")
+
+        self.theExpression = createModelAccessibleFunction(kwargs["expression"], model)
+
+        super().__init__(name, model, journal, **kwargs)
+
+    def updateResults(self, model: FEModel):
+        """Update the field output.
+        Will use the current solution and reaction vector if result is a nodal result.
+
+        Parameters
+        ----------
+        model
+            The model tree.
+        """
+
+        result = np.reshape(np.asarray(self.theExpression()), (len(self.associatedSet), -1))
+
+        return super()._applyResultsPipleline(result)
+
+
 class FieldOutputController:
     """
     The central module for managing field outputs, which can be used by output managers.
@@ -356,41 +441,79 @@ class FieldOutputController:
         self.journal = journal
         self.fieldOutputs = {}
 
-    def addFieldOutput(self, name: str, **kwargs: dict):
+    def addExpressionFieldOutput(self, name: str, **kwargs: dict):
         """Add a new FieldOutput entry to be computed during the simulation
 
         Parameters
         ----------
         name
             The name of this FieldOutput.
-        model
-            The model tree.
-        journal
-            The Journal instance for logging purposes.
+        nodeField
+            The :class:`NodeField, on which this FieldOutput should operate.
+        resultName
+            The name of the result entry in the :class:`NodeField
         **kwargs
-            The definition of the FieldOutput
+            Further definitions of the FieldOutput
         """
+
         if name in self.fieldOutputs:
             raise Exception("FieldOutput {:} already exists!".format(name))
-        self.fieldOutputs[name] = _FieldOutput(name, self.model, self.journal, **kwargs)
+
+        self.fieldOutputs[name] = ExpressionFieldOutput(name, self.model, self.journal, **kwargs)
+
+    def addPerNodeFieldOutput(self, name: str, nodeField: NodeField, result: str, **kwargs: dict):
+        """Add a new FieldOutput entry to be computed during the simulation
+
+        Parameters
+        ----------
+        name
+            The name of this FieldOutput.
+        nodeField
+            The :class:`NodeField, on which this FieldOutput should operate.
+        resultName
+            The name of the result entry in the :class:`NodeField
+        **kwargs
+            Further definitions of the FieldOutput
+        """
+
+        if name in self.fieldOutputs:
+            raise Exception("FieldOutput {:} already exists!".format(name))
+
+        self.fieldOutputs[name] = NodeFieldOutput(name, nodeField, result, self.model, self.journal, **kwargs)
+
+    def addPerElementFieldOutput(self, name: str, elSet: ElementSet, resultName: str, **kwargs: dict):
+        """Add a new FieldOutput entry to be computed during the simulation
+
+        Parameters
+        ----------
+        name
+            The name of this FieldOutput.
+        elSet
+            The :class:`ElementSet on which this FieldOutput should operate.
+        resultname
+            The name of the result, which is provided by the Elements in the :class:`ElementSet.
+        journal
+            The :class:`Journal instance for logging purposes.
+        **kwargs
+            Further definition of the FieldOutput
+        """
+
+        if name in self.fieldOutputs:
+            raise Exception("FieldOutput {:} already exists!".format(name))
+
+        self.fieldOutputs[name] = ElementFieldOutput(name, elSet, resultName, self.model, self.journal, **kwargs)
 
     def initializeJob(self):
         for fieldOutput in self.fieldOutputs.values():
             fieldOutput.initializeJob()
 
-    def finalizeIncrement(self, increment: tuple):
-        """Finalize all field outputs at the end of an increment.
-
-        Parameters
-        ----------
-        model
-            The model tree.
-        increment
-            The time increment.
-        """
+    def finalizeIncrement(
+        self,
+    ):
+        """Finalize all field outputs at the end of an increment."""
 
         for output in self.fieldOutputs.values():
-            output.finalizeIncrement(increment)
+            output.finalizeIncrement()
 
     def finalizeStep(
         self,

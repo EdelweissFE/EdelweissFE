@@ -65,9 +65,43 @@ def createFieldOutputFromInputFile(inputfile: dict, model: FEModel, journal: Jou
     if inputfile["*fieldOutput"]:
         for definition in inputfile["*fieldOutput"]:
             for defLine in definition["data"]:
-                fpDef = convertLineToStringDictionary(defLine)
-                name = fpDef.pop("name")
-                fieldOutputController.addFieldOutput(name, **fpDef)
+                kwargs = convertLineToStringDictionary(defLine)
+                if "elSet" in kwargs:
+                    kwargs["elSet"] = model.elementSets[kwargs["elSet"]]
+                if "nSet" in kwargs:
+                    kwargs["nSet"] = model.nodeSets[kwargs["nSet"]]
+                name = kwargs.pop("name")
+
+                theType = kwargs.pop("create")
+
+                if theType == "perNode":
+                    field = kwargs.pop("field")
+                    nodeField = model.nodeFields[field]
+                    result = kwargs.pop("result")
+
+                    subset = None
+                    if "nSet" in kwargs:
+                        subset = kwargs.pop("nSet")
+                    elif "elSet" in kwargs:
+                        subset = kwargs.pop("elSet")
+
+                    if subset:
+                        nodeField = nodeField.subset(subset)
+
+                    fieldOutputController.addPerNodeFieldOutput(name, nodeField, result, **kwargs)
+
+                elif theType == "perElement":
+                    elSet = kwargs.pop("elSet")
+                    result = kwargs.pop("result")
+                    fieldOutputController.addPerElementFieldOutput(name, elSet, result, **kwargs)
+
+                elif theType == "fromExpression":
+                    # elSet = kwargs.pop("elSet")
+                    # result = kwargs.pop("result")
+                    fieldOutputController.addExpressionFieldOutput(name, **kwargs)
+
+                else:
+                    raise Exception("Invalid FieldOuput request: {:}".format(theType))
 
     return fieldOutputController
 
@@ -216,17 +250,29 @@ def createOutputManagersFromInputFile(
         The list containing the OutputManager instances.
     """
     jobName = defaultName
-    outputmanagers = []
+    outputManagers = []
 
     for outputDef in inputfile["*output"]:
         OutputManager = getOutputManagerClass(outputDef["type"].lower())
         managerName = outputDef.get("name", defaultName + outputDef["type"])
         definitionLines = outputDef["data"]
-        outputmanagers.append(
-            OutputManager(managerName, definitionLines, model, fieldOutputController, journal, plotter)
-        )
 
-    return outputmanagers
+        outputManager = OutputManager(managerName, model, fieldOutputController, journal, plotter)
+
+        for defLine in definitionLines:
+            kwargs = convertLineToStringDictionary(defLine)
+            if "elSet" in kwargs:
+                kwargs["elSet"] = model.elementSets[kwargs["elSet"]]
+            if "nSet" in kwargs:
+                kwargs["nSet"] = model.nodeSets[kwargs["nSet"]]
+            if "fieldOutput" in kwargs:
+                kwargs["fieldOutput"] = fieldOutputController.fieldOutputs[kwargs["fieldOutput"]]
+
+            outputManager.updateDefinition(**kwargs)
+
+        outputManagers.append(outputManager)
+
+    return outputManagers
 
 
 def createPlotterFromInputFile(inputfile: dict, journal: Journal) -> Plotter:

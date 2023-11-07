@@ -15,13 +15,13 @@ all
 *job, name=cpe4job, domain=2d
 *solver, solver=NIST, name=theSolver
 *fieldOutput
-name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
-name=dispRight, nSet=gen_right,       field=displacement, result=U, f(x)='mean(x[:,0])', saveHistory=True
-name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True
-name=RFLeft, nSet=gen_left,    field=displacement, result=P, f(x)='sum(x[:,0])', saveHistory=True
-elSet=all,  field=displacement, result=U, name=displacement
-elSet=all,  result=stress,  quadraturePoint=0:3, f(x)='np.mean(x,axis=1)', name=stress
-elSet=all,  result=strain,  quadraturePoint=0:3, f(x)='np.mean(x,axis=1)', name=strain
+create=perNode, name=dispTop, nSet=gen_top,       field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
+create=perNode, name=dispRight, nSet=gen_right,       field=displacement, result=U, f(x)='mean(x[:,0])', saveHistory=True
+create=perNode, name=RFBottom, nSet=gen_bottom,    field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True
+create=perNode, name=RFLeft, nSet=gen_left,    field=displacement, result=P, f(x)='sum(x[:,0])', saveHistory=True
+create=perNode, elSet=all,  field=displacement, result=U, name=displacement
+create=perElement, elSet=all,  result=stress,  quadraturePoint=0:3, f(x)='np.mean(x,axis=1)', name=stress
+create=perElement, elSet=all,  result=strain,  quadraturePoint=0:3, f(x)='np.mean(x,axis=1)', name=strain
 
 ***output, type=monitor
 **fieldOutput=dispTop

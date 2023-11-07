@@ -15,15 +15,15 @@ all
 *job, name=cpe4job, domain=2d, solver=NISTParallel
 
 *fieldOutput, jobName=cpe4job
-name=q,            elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
-name=eq,           elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
-name=voidRatio,    elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,0]'
-name=dNorm,        elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,3]'
-name=Displacement, elSet=all, field=displacement, result=U,
-name=Stress,       elSet=all, result=stress, quadraturePoint=1
-name=Strain,       elSet=all, result=strain, quadraturePoint=1
-name=uTop,         nSet=gen_top,          field=displacement, result=U,    f(x)='mean(x[:, 1])', saveHistory=True
-name=sumRFNodes,   nSet=gen_top,          field=displacement, result=P,    f(x)='sum(x[:,  1])', saveHistory=True
+create=perElement, name=q,            elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,1])', saveHistory=True
+create=perElement, name=eq,           elSet=all, result=sdv, quadraturePoint=0:4, f(x)='mean(x[:,:,2])', saveHistory=True
+create=perElement, name=voidRatio,    elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,0]'
+create=perElement, name=dNorm,        elSet=all, result=sdv, quadraturePoint=1, f(x)='x[:,3]'
+create=perNode, name=Displacement, elSet=all, field=displacement, result=U,
+create=perElement, name=Stress,       elSet=all, result=stress, quadraturePoint=1
+create=perElement, name=Strain,       elSet=all, result=strain, quadraturePoint=1
+create=perNode, name=uTop,         nSet=gen_top,          field=displacement, result=U,    f(x)='mean(x[:, 1])', saveHistory=True
+create=perNode, name=sumRFNodes,   nSet=gen_top,          field=displacement, result=P,    f(x)='sum(x[:,  1])', saveHistory=True
 
 *output, type=ensight, name=barodesy
 create=perNode,    elSet=all, fieldOutput=Displacement

@@ -20,7 +20,7 @@ weakAll
 *solver, solver=NISTParallel, name=theSolver
 
 *fieldOutput
-name=displacement, elSet=all, field=displacement, result=U, 
+create=perNode, name=displacement, elSet=all, field=displacement, result=U, 
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement

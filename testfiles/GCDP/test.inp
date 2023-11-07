@@ -496,8 +496,8 @@ all
   5,  10, 15
 
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, field=nonlocal damage, result=U, name=nonlocal_damage
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perNode, elSet=all, field=nonlocal damage, result=U, name=nonlocal_damage
 
 *output, type=ensight, name=esExport
 create=perNode, fieldOutput=displacement 

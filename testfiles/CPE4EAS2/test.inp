@@ -11,15 +11,15 @@ weak
 *job, name=cpe4job, domain=2d
 *solver, solver=NISTParallel, name=theSolver
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
-elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
-elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:], axis=1) '
-elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:], axis=1) '
-elSet=all, result=omega,  quadraturePoint=0:4, name=omega,  f(x)='mean( x[:,:], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas0, f(x)='mean(x[:,:,0], axis=1)'
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas1, f(x)='mean(x[:,:,1], axis=1)'
-nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
+create=perElement, elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
+create=perElement, elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=omega,  quadraturePoint=0:4, name=omega,  f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas0, f(x)='mean(x[:,:,0], axis=1)'
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas1, f(x)='mean(x[:,:,1], axis=1)'
+create=perNode, nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
 
 
 *modelGenerator, generator=planeRectQuad, name=gen

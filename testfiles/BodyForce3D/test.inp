@@ -10,10 +10,10 @@ all
 *solver, solver=NIST, name=theSolver
 
 *fieldOutput
-name=displacement, elSet=all, field=displacement, result=U, name=displacement
-name=stress, elSet=all, result=stress, quadraturePoint=1
-name=strain, elSet=all, result=strain, quadraturePoint=1
-name=RF, nSet=top, result=P, field=displacement
+create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=1
+create=perElement, name=strain, elSet=all, result=strain, quadraturePoint=1
+create=perNode, name=RF, nSet=top, result=P, field=displacement
 
 *output, type=ensight, name=ensightExport
 create=perNode,    fieldOutput=displacement
@@ -29,4 +29,4 @@ fieldOutput=RF, f(x)='sum(x[:,2])', name=ForceZ
 *step, solver=theSolver, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=top,  nSet=top,   field=displacement, 1=0.0, 2=0.0, 3=.0
-bodyforce, name=bforce, elset=all, forceVector='0.0, 10.0, 20.0', f(t)=t
+bodyforce, name=bforce, elSet=all, forceVector='0.0, 10.0, 20.0', f(t)=t

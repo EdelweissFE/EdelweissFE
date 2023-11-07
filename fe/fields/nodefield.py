@@ -34,57 +34,15 @@ from fe.config.phenomena import phenomena, getFieldSize
 
 from fe.points.node import Node
 from fe.sets.nodeset import NodeSet
+from fe.sets.elementset import ElementSet
+from fe.utils.meshtools import extractNodesFromElementSet
 
 
-class _NodeFieldValues(np.ndarray):
-    """
-    This class represents a result entry of NodeField,
-    carrying values for each node within the field.
-    It is basically a np.ndarray, but provides additional easy access by Node or NodeSets.
-    The [] operator allows to access (non-contigouos read, write) at each entities location:
-
-    Parameters
-    ----------
-    numberOfNodes
-        The number of nodes.
-    dim
-        The dimension of the field.
-    indicesOfNodesInArray
-        The row number of each Node in the array.
-    indicesOfNodeSetsInArray
-        The arrays of row numbers for each NodeSet (by name) in the array.
-    """
-
-    def __new__(cls, numberOfNodes: int, dim: int, indicesOfNodesInArray: dict, indicesOfNodeSetsInArray: dict):
-        obj = np.zeros((numberOfNodes, dim), dtype=float).view(cls)
-        obj._indicesOfNodesInArray = indicesOfNodesInArray
-        obj._indicesOfNodeSetsInArray = indicesOfNodeSetsInArray
-
-        return obj
-
-    def __getitem__(self, key):
-        if isinstance(key, Node):
-            return super().__getitem__(self._indicesOfNodesInArray[key])
-
-        if isinstance(key, NodeSet):
-            if NodeSet.label != "all":
-                return super().__getitem__(self._indicesOfNodeSetsInArray[key])
-
-        return super().__getitem__(key)
-
-    def __setitem__(self, key, val):
-        if isinstance(key, Node):
-            return super().__setitem__(self._indicesOfNodesInArray[key], val)
-
-        if isinstance(key, NodeSet):
-            if NodeSet.label != "all":
-                return super().__setitem__(self._indicesOfNodeSetsInArray[key], val)
-
-        return super().__setitem__(key, val)
+class NodeFieldSubset:
+    pass
 
 
 class NodeField:
-
     """
     This class represents a node field.
     A node field associates every node with multiple entries (e.g., flux and effort) of a field variable.
@@ -122,26 +80,29 @@ class NodeField:
         The dimension of the field.
     nodes
         The associated nodes. Only nodes with active fields are considered.
-    model
-        The model tree.
     """
 
-    def __init__(self, fieldName: str, dimension: int, nodes: list, model):
+    def __init__(self, fieldName: str, dimension: int, nodeSet: NodeSet):
         self.name = fieldName
-
-        self.nodes = [n for n in nodes if fieldName in n.fields]
-
+        self.associatedSet = nodeSet
+        self.nodes = [n for n in nodeSet if fieldName in n.fields]
         self.dimension = dimension
-
         self._indicesOfNodesInArray = {n: i for i, n in enumerate(self.nodes)}
-        self._indicesOfNodeSetsInArray = {
-            nSet.label: np.array([self._indicesOfNodesInArray[n] for n in nSet if n in self._indicesOfNodesInArray])
-            for nSet in model.nodeSets.values()
-        }
+        self._subsetCache = dict()
+        self._values = dict()
 
-        self.values = dict()
+    def _getNodeFieldSubsetClass(
+        self,
+    ):
+        return NodeFieldSubset
 
-    def createFieldValueEntry(self, name: str) -> _NodeFieldValues:
+    def __getitem__(self, key):
+        return self._values[key]
+
+    def __contains__(self, key):
+        return key in self._values
+
+    def createFieldValueEntry(self, name: str) -> np.ndarray:
         """
         Add an empty entry with given name for the field, e.g, 'U' or 'P' for flux or effort entries.
 
@@ -152,10 +113,119 @@ class NodeField:
 
         Returns
         -------
+        np.ndarray
             The new entry
         """
-        self.values[name] = _NodeFieldValues(
-            len(self.nodes), self.dimension, self._indicesOfNodesInArray, self._indicesOfNodeSetsInArray
-        )
+        self._values[name] = np.zeros((len(self.nodes), self.dimension), dtype=float)
 
-        return self.values[name]
+        return self[name]
+
+    def subset(self, subset) -> NodeFieldSubset:
+        """
+        Get a view on a subset of the field.
+
+        Parameters
+        ----------
+        subset
+            The subset, e.g., a single :class:`Node, or a :class:`NodeSet or :class:`ElementSet.
+
+        Returns
+        -------
+        NodeFieldSubset
+            The subset of the present NodeField.
+        """
+        return self._getSubsetFromCache(subset)
+
+    def _getSubsetFromCache(self, subset) -> NodeFieldSubset:
+        """
+        Exploit a cache to reuse already constructed NodeFieldSubsets.
+        If the subset does not exist, it will be created here.
+
+        Parameters
+        ----------
+        subset
+            The subset, e.g., a single Node, or a NodeSet or ElementSet.
+
+        Returns
+        -------
+        NodeFieldSubset
+            The subset of the present NodeField.
+        """
+
+        if subset in self._subsetCache:
+            return self._subsetCache[subset]
+        else:
+            self._subsetCache[subset] = self._getNodeFieldSubsetClass()(self, subset)
+            return self._subsetCache[subset]
+
+    def copyEntriesFromOther(self, other, fieldValueEntries: list[str] = None):
+        """
+        Copy values from another NodeField.
+        If the fields differ, the intersection is considered.
+
+        Parameters
+        ----------
+        subset
+            The sub NodeField.
+        fieldValueEntries
+            The list of entries which should be copied. Default: all entries are copied.
+        """
+
+        if not fieldValueEntries:
+            fieldValueEntries = self._values.keys() & other._values.keys()
+
+        commonNodes = self._indicesOfNodesInArray.keys() & other._indicesOfNodesInArray.keys()
+
+        for fieldValueEntry in fieldValueEntries:
+            self[fieldValueEntry][:] = 0.0
+            idcsHere = [self._indicesOfNodesInArray[n] for n in commonNodes]
+            idcsOther = [other._indicesOfNodesInArray[n] for n in commonNodes]
+            self[fieldValueEntry][idcsHere] = other[fieldValueEntry][idcsOther]
+
+
+class NodeFieldSubset(NodeField):
+    def __init__(self, parentNodeField, subset):
+        self.parentNodeField = parentNodeField
+        self.associatedSet = subset
+        self.nodes = self._getSubsetNodes(subset)
+        self._indicesOfNodesInParentArray = np.array([parentNodeField._indicesOfNodesInArray[n] for n in self.nodes])
+
+    def __getitem__(self, key):
+        return self.parentNodeField[key][self._indicesOfNodesInParentArray]
+
+    def __contains__(self, key):
+        return key in self.subsetNodes
+
+    def createFieldValueEntry(self, name):
+        raise Exception("Invalid operation on subset of a NodeField")
+
+    def subset(self, subset):
+        raise Exception("Subsets of subsets are not yet implemented!")
+
+    def _getSubsetNodes(self, subset) -> list[Node]:
+        """
+        Get the nodes associated with a subset.
+        Only nodes with the active field are considered.
+
+        Parameters
+        ----------
+        subset
+            The subset, e.g., a single Node, a NodeSet or ElementSet.
+
+        Returns
+        -------
+        list[Node]
+            The list of subset nodes.
+        """
+        if type(subset) == Node:
+            nodeCandidates = [
+                subset,
+            ]
+        if type(subset) == ElementSet:
+            nodeCandidates = subset.extractNodeSet()
+        elif type(subset) == NodeSet:
+            nodeCandidates = subset
+        else:
+            raise Exception("Invalid subset")
+
+        return [n for n in nodeCandidates if n in self.parentNodeField._indicesOfNodesInArray]

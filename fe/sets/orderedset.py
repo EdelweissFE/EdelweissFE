@@ -45,10 +45,10 @@ class OrderedSet(list):
 
     def __init__(
         self,
-        label: str,
+        name: str,
         items: list,
     ):
-        self.label = label
+        self.name = name
         self.add(items)
 
     def checkObjectType(self, obj):
@@ -78,3 +78,6 @@ class OrderedSet(list):
 
     def extend(self, items: list):
         self.add(items)
+
+    def __hash__(self):
+        return hash(self.name)

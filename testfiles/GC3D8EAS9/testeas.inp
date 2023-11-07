@@ -13,23 +13,23 @@ weak
 *job, name=easjob, domain=3d
 *solver, solver=NISTParallel, name=theSolver
 *fieldOutput
-elSet=all, field=displacement, result=U, name=displacement
-elSet=all, field=nonlocal damage, result=U, name=alpha_d_nonlocal
-elSet=all, result=stress, quadraturePoint=0:8, name=stress, f(x)='mean(x, axis=1)'
-elSet=all, result=strain, quadraturePoint=0:8, name=strain, f(x)='mean(x, axis=1)'
-elSet=all, result=alphaP, quadraturePoint=0:8, name=alphaP, f(x)='mean( x[:,:], axis=1) '
-elSet=all, result=alphaD, quadraturePoint=0:8, name=alphaD, f(x)='mean( x[:,:], axis=1) '
-elSet=all, result=omega, quadraturePoint=0:8, name=omega, f(x)='mean( x[:,:], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas0, f(x)='mean( x[:,:,0], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas1, f(x)='mean( x[:,:,1], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas2, f(x)='mean( x[:,:,2], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas3, f(x)='mean( x[:,:,3], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas4, f(x)='mean( x[:,:,4], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas5, f(x)='mean( x[:,:,5], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas6, f(x)='mean( x[:,:,6], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas7, f(x)='mean( x[:,:,7], axis=1) '
-elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas8, f(x)='mean( x[:,:,8], axis=1) '
-nSet=top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perNode, elSet=all, field=nonlocal damage, result=U, name=alpha_d_nonlocal
+create=perElement, elSet=all, result=stress, quadraturePoint=0:8, name=stress, f(x)='mean(x, axis=1)'
+create=perElement, elSet=all, result=strain, quadraturePoint=0:8, name=strain, f(x)='mean(x, axis=1)'
+create=perElement, elSet=all, result=alphaP, quadraturePoint=0:8, name=alphaP, f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=alphaD, quadraturePoint=0:8, name=alphaD, f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=omega, quadraturePoint=0:8, name=omega, f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas0, f(x)='mean( x[:,:,0], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas1, f(x)='mean( x[:,:,1], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas2, f(x)='mean( x[:,:,2], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas3, f(x)='mean( x[:,:,3], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas4, f(x)='mean( x[:,:,4], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas5, f(x)='mean( x[:,:,5], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas6, f(x)='mean( x[:,:,6], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas7, f(x)='mean( x[:,:,7], axis=1) '
+create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:8, name=eas8, f(x)='mean( x[:,:,8], axis=1) '
+create=perNode, nSet=top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
 
 *output, type=ensight, name=esExport
 create=perNode,    fieldOutput=displacement

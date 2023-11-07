@@ -35,11 +35,11 @@ all
 *solver, solver=NISTParallel, name=theSolver
 
 *fieldOutput
-name=initialSpecificVolume, elSet=all, result=v,  quadraturePoint=0:4
-name=v,                     elSet=all, result=v,  quadraturePoint=0:4, f(x)='mean(x, axis=1)', saveHistory=True
-name=lnp,                   elSet=all, result=lnP, quadraturePoint=0:4, f(x)='mean(x, axis=1)', saveHistory=True
-name=epsv, elSet=all, result=strain, quadraturePoint=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
-name=p,     elSet=all, result=stress, quadraturePoint=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3', saveHistory=True
+create=perElement, name=initialSpecificVolume, elSet=all, result=v,  quadraturePoint=0:4
+create=perElement, name=v,                     elSet=all, result=v,  quadraturePoint=0:4, f(x)='mean(x, axis=1)', saveHistory=True
+create=perElement, name=lnp,                   elSet=all, result=lnP, quadraturePoint=0:4, f(x)='mean(x, axis=1)', saveHistory=True
+create=perElement, name=epsv, elSet=all, result=strain, quadraturePoint=0:4, f(x)='(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))', saveHistory=True
+create=perElement, name=p,     elSet=all, result=stress, quadraturePoint=0:4, f(x)='-(mean(x[:,:,0])+mean(x[:,:,1])+mean(x[:,:,2]))/3', saveHistory=True
 
 
 *step, solver=theSolver, maxInc=1e0, minInc=1e-5, maxNumInc=100000, maxIter=25, stepLength=1
