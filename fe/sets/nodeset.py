@@ -45,11 +45,11 @@ class NodeSet(OrderedSet):
 
     def __init__(
         self,
-        name: str,
+        label: str,
         nodes,
     ):
         self.allowedObjectTypes = [Node]
 
-        super().__init__(name, nodes)
+        super().__init__(label, nodes)
 
         self.nodes = self.items

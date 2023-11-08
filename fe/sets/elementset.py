@@ -48,12 +48,12 @@ class ElementSet(OrderedSet):
 
     def __init__(
         self,
-        name: str,
+        label: str,
         elements,
     ):
         self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
 
-        super().__init__(name, elements)
+        super().__init__(label, elements)
         self._nodes = None
 
         self.elements = self.items

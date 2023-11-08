@@ -52,6 +52,8 @@ class OrderedSet(UserDict):
         self.values = None
 
         self.label = label
+        self.name = label
+
         self.add(item_s)
 
     def checkObjectType(self, obj):
