@@ -46,15 +46,17 @@ class ElementSet(OrderedSet):
         A list of elements.
     """
 
-    allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
-
     def __init__(
         self,
         name: str,
-        elements: list,
+        elements,
     ):
+        self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
+
         super().__init__(name, elements)
         self._nodes = None
+
+        self.elements = self.items
 
     def extractNodeSet(
         self,

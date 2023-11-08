@@ -63,7 +63,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal: Journa
     closestNode = list(model.nodes.values())[indexClosest]
 
     if options["storeIn"] in model.nodeSets:
-        model.nodeSets[options["storeIn"]].append(closestNode)
+        model.nodeSets[options["storeIn"]].add(closestNode)
     else:
         model.nodeSets[options["storeIn"]] = NodeSet(
             options["storeIn"],

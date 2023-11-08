@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Alexander Dummer alexander.dummer@uibk.ac.at
+#  Paul Hofer Paul.Hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -26,12 +27,11 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-# @author: Alexander Dummer
+from collections import UserDict
 
 
-class OrderedSet(list):
+class OrderedSet(UserDict):
     """An ordered set.
-    It has a label, and a list containing unique items.
 
     Parameters
     ----------
@@ -41,43 +41,80 @@ class OrderedSet(list):
         A list of items.
     """
 
-    allowedObjectTypes = []
-
     def __init__(
         self,
-        name: str,
-        items: list,
+        label: str,
+        item_s,
     ):
-        self.name = name
-        self.add(items)
+        self.data = {}
+        self.items = self.data.keys()
+        self.keys = None
+        self.values = None
+
+        self.label = label
+        self.add(item_s)
 
     def checkObjectType(self, obj):
-        """Checks if the object type is allowed for the respective OrderedSet
+        """Checks if the object type is allowed in the OrderedSet"""
 
-        Parameters
-        ----------
-        obj
-            An arbitrary object to be checked
-        """
-        if type(obj) not in self.allowedObjectTypes:
-            raise Exception("type {:} not allowed in {:}".format(type(obj), type(self)))
-        return True
+        return type(obj) in self.allowedObjectTypes
 
-    def add(self, items: list):
-        """Add a list of items to the OrderedSet.
+    def add(self, item_s):
+        """Add an item or an iterable of items to the OrderedSet."""
+        # convert to iterable
+        if not hasattr(item_s, "__iter__"):
+            item_s = [item_s]
 
-        Parameters
-        ----------
-        items
-            A list of items to be added.
-        """
-        super().extend([i for i in items if i not in self and self.checkObjectType(i)])
+        # add items
+        for item in item_s:
+            self.data.setdefault(item)
 
-    def append(self, item):
-        self.add([item])
+    def __setitem__(self, item, value):
+        if self.checkObjectType(item):
+            self.data[item] = None
+        else:
+            raise TypeError(f"You tried to add an item with wrong type: {item} of type {type(item)}")
 
-    def extend(self, items: list):
-        self.add(items)
+    def __getitem__(self, key):
+        return list(self.items)[key]
+
+    # define &
+    def __and__(self, other):
+        if type(self) == type(other):
+            return type(self)("", self.items & other.items)
+        else:
+            raise TypeError("You can only compare OrderedSets with matching types.")
+
+    # define ^
+    def __xor__(self, other):
+        if type(self) == type(other):
+            return type(self)("", self.items ^ other.items)
+        else:
+            raise TypeError("You can only compare OrderedSets with matching types.")
+
+    # define |
+    def __or__(self, other):
+        if type(self) == type(other):
+            return type(self)("", self.items | other.items)
+        else:
+            raise TypeError("You can only compare OrderedSets with matching types.")
 
     def __hash__(self):
-        return hash(self.name)
+        return hash(self.label)
+
+    def __eq__(self, other):
+        if type(self) == type(other):
+            return self.__dict__ == other.__dict__
+        else:
+            return False
+
+    def __repr__(self):
+        type_ = type(self)
+        module = type_.__module__
+        qualname = type_.__qualname__
+        # return list(self.data).__repr__()
+        return (
+            f"<{module}.{qualname} object at {hex(id(self))}>"
+            + f' "{self.label}"'
+            + "\n   ".join([""] + [item.__repr__() for item in self.data])
+        )
