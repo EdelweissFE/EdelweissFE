@@ -81,21 +81,21 @@ class OrderedSet(UserDict):
     # define &
     def __and__(self, other):
         if type(self) == type(other):
-            return type(self)("", self.items & other.items)
+            return self.items & other.items
         else:
             raise TypeError("You can only compare OrderedSets with matching types.")
 
     # define ^
     def __xor__(self, other):
         if type(self) == type(other):
-            return type(self)("", self.items ^ other.items)
+            return self.items ^ other.items
         else:
             raise TypeError("You can only compare OrderedSets with matching types.")
 
     # define |
     def __or__(self, other):
         if type(self) == type(other):
-            return type(self)("", self.items | other.items)
+            return self.items | other.items
         else:
             raise TypeError("You can only compare OrderedSets with matching types.")
 
