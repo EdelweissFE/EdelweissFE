@@ -28,13 +28,13 @@
 
 # @author: Alexander Dummer
 
-from fe.sets.orderedset import OrderedSet
+from fe.sets.orderedset import ImmutableOrderedSet
 from fe.elements.marmotelement.element import MarmotElementWrapper
 from fe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
 from fe.utils.meshtools import extractNodesFromElementSet
 
 
-class ElementSet(OrderedSet):
+class ElementSet(ImmutableOrderedSet):
     """A basic element set.
     It has a label, and a list containing unique elements.
 

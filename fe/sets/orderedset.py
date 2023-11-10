@@ -28,6 +28,7 @@
 #  ---------------------------------------------------------------------
 
 from collections import UserDict
+from types import MappingProxyType
 
 
 class OrderedSet(UserDict):
@@ -61,14 +62,19 @@ class OrderedSet(UserDict):
 
         return type(obj) in self.allowedObjectTypes
 
+    def forceIter(self, item_s):
+        """Return an iterator object for item_s even if item_s itself is not iterable"""
+
+        try:
+            return iter(item_s)
+        except:
+            return iter([item_s])
+
     def add(self, item_s):
-        """Add an item or an iterable of items to the OrderedSet."""
-        # convert to iterable
-        if not hasattr(item_s, "__iter__"):
-            item_s = [item_s]
+        """Add an item or an iterable of items to the OrderedSet"""
 
         # add items
-        for item in item_s:
+        for item in self.forceIter(item_s):
             self.data.setdefault(item)
 
     def __setitem__(self, item, value):
@@ -85,21 +91,21 @@ class OrderedSet(UserDict):
         if type(self) == type(other):
             return self.items & other.items
         else:
-            raise TypeError("You can only compare OrderedSets with matching types.")
+            raise TypeError("You can only compare OrderedSets with matching types")
 
     # define ^
     def __xor__(self, other):
         if type(self) == type(other):
             return self.items ^ other.items
         else:
-            raise TypeError("You can only compare OrderedSets with matching types.")
+            raise TypeError("You can only compare OrderedSets with matching types")
 
     # define |
     def __or__(self, other):
         if type(self) == type(other):
             return self.items | other.items
         else:
-            raise TypeError("You can only compare OrderedSets with matching types.")
+            raise TypeError("You can only compare OrderedSets with matching types")
 
     def __hash__(self):
         return hash(self.label)
@@ -120,3 +126,37 @@ class OrderedSet(UserDict):
             + f' "{self.label}"'
             + "\n   ".join([""] + [item.__repr__() for item in self.data])
         )
+
+
+class ImmutableOrderedSet(OrderedSet):
+    """An immutable ordered set.
+
+    Parameters
+    ----------
+    label
+        A label for the object.
+    items
+        A list of items.
+    """
+
+    def __init__(
+        self,
+        label: str,
+        item_s,
+    ):
+        self.data = MappingProxyType({item: None for item in self.forceIter(item_s) if self.checkObjectType(item)})
+        self.items = self.data.keys()
+        self.keys = None
+        self.values = None
+
+        self.label = label
+        self.name = label
+
+    def add(self, item_s):
+        raise TypeError(f"{type(self).__qualname__} items cannot be changed")
+
+    def __setitem__(self, item, value):
+        raise TypeError(f"{type(self).__qualname__} items cannot be changed")
+
+    def __ior__(self, other):
+        raise TypeError(f"{type(self).__qualname__} items cannot be changed")

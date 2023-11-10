@@ -27,11 +27,11 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from fe.sets.orderedset import OrderedSet
+from fe.sets.orderedset import ImmutableOrderedSet
 from fe.points.node import Node
 
 
-class NodeSet(OrderedSet):
+class NodeSet(ImmutableOrderedSet):
     """A basic node set.
     It has a label, and a list containing the unique nodes.
 
