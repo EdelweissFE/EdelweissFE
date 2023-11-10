@@ -39,7 +39,6 @@ from fe.sets.nodeset import NodeSet
 from fe.utils.misc import convertLinesToStringDictionary
 from fe.journal.journal import Journal
 from fe.models.femodel import FEModel
-import inspect
 
 from fe.utils.exceptions import WrongDomain
 
