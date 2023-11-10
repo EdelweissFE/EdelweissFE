@@ -120,11 +120,10 @@ class OrderedSet(UserDict):
         type_ = type(self)
         module = type_.__module__
         qualname = type_.__qualname__
-        # return list(self.data).__repr__()
         return (
-            f"<{module}.{qualname} object at {hex(id(self))}>"
-            + f' "{self.label}"'
-            + "\n   ".join([""] + [item.__repr__() for item in self.data])
+            f'<{module}.{qualname} object at {hex(id(self))} with label "{self.label}">'
+            # + f' "{self.label}"'
+            # + "\n   ".join([""] + [item.__repr__() for item in self.data])
         )
 
 

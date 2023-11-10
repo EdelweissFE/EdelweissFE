@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Alexander Dummer alexander.dummer@uibk.ac.at
+#  Paul Hofer Paul.Hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -25,8 +26,6 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-
-# @author: Alexander Dummer
 
 from fe.sets.orderedset import ImmutableOrderedSet
 from fe.elements.marmotelement.element import MarmotElementWrapper
