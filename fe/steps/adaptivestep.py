@@ -29,7 +29,7 @@
 from collections import defaultdict
 from fe.steps.base.stepbase import StepBase
 from fe.models.femodel import FEModel
-from fe.utils.incrementgenerator import IncrementGenerator
+from fe.timesteppers.adaptivetimestepper import AdaptiveTimeStepper
 from fe.utils.fieldoutput import FieldOutputController
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
@@ -103,7 +103,7 @@ class AdaptiveStep(StepBase):
             "maxGrowIter", self.defaultMaxGrowingIter
         )  #: The number of residual growths before the increment is discarded.
 
-        self.incrementGenerator = IncrementGenerator(
+        self.incrementGenerator = AdaptiveTimeStepper(
             model.time,
             self.length,
             self.startIncrementSize,

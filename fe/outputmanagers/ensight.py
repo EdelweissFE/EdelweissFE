@@ -649,7 +649,7 @@ class OutputManager(OutputManagerBase):
 
         self.exportName = name
 
-        self._createGeometryParts(1)
+        self.geometryParts = self._createGeometryParts(1)
 
     def updateDefinition(self, **kwargs: dict):
         model = self.model
@@ -809,7 +809,7 @@ class OutputManager(OutputManagerBase):
             nodeSetParts.append(nodeSetPart)
             partCounter += 1
 
-        self.geometryParts = elSetParts + nodeSetParts
+        return elSetParts + nodeSetParts
 
     def _getTargetPartForFieldOutput(self, fieldOutput: _FieldOutputBase, **kwargs: dict) -> EnsightUnstructuredPart:
         """

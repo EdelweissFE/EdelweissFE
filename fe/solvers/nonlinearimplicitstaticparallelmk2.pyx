@@ -36,7 +36,6 @@ from fe.solvers.nonlinearimplicitstatic import NIST
 import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
-from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import CutbackRequest
 from cython.parallel cimport parallel, threadid, prange
 from libc.stdlib cimport malloc, free
@@ -149,7 +148,7 @@ class NISTParallel(NIST):
         for i in range(nElements):
             # prepare all lists for upcoming parallel element computing
             el                      = elList[i]
-            elIndicesInVIJ[i]       = self.theDofManager.entitiesInVIJ[el] 
+            elIndicesInVIJ[i]       = self.theDofManager.idcsOfHigherOrderEntitiesInVIJ[el] 
             elNDofs[i]              = el.nDof 
             # each element gets its place in the Pe buffer
             elIndexInPe[i] = j

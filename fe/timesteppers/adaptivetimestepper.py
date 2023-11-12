@@ -31,8 +31,8 @@ from fe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 from fe.journal.journal import Journal
 
 
-class IncrementGenerator:
-    identification = "IncGen"
+class AdaptiveTimeStepper:
+    identification = "AdaptiveTimeStepper"
 
     def __init__(
         self,

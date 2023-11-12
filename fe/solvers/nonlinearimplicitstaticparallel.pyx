@@ -46,7 +46,6 @@ from fe.solvers.nonlinearimplicitstaticparallelmk2 import NISTParallel
 import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
-from fe.utils.incrementgenerator import IncrementGenerator
 from fe.utils.exceptions import CutbackRequest
 from cython.parallel cimport parallel, threadid, prange
 from fe.elements.marmotelement.element cimport MarmotElement, MarmotElementWrapper
@@ -107,7 +106,7 @@ class NISTParallelForMarmotElements(NISTParallel):
             backendBasedCythonElement   = elList[i]
             backendBasedCythonElement._initializeStateVarsTemp()
             cppElements[i]              = backendBasedCythonElement.marmotElement
-            elIndicesInVIJ[i]           = self.theDofManager.entitiesInVIJ[backendBasedCythonElement] 
+            elIndicesInVIJ[i]           = self.theDofManager.idcsOfHigherOrderEntitiesInVIJ[backendBasedCythonElement] 
             elNDofs[i]                  = backendBasedCythonElement.nDof 
             # each element gets its place in the Pe buffer
             elIndexInPe[i] = j
