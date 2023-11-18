@@ -47,21 +47,21 @@ class StepAction(StepActionBase):
     def __contains__(self, key):
         """We may work with this action like a dictionary."""
 
-        return key.lower() in self.options
+        return key in self.options
 
     def __getitem__(self, key):
         """We may work with this action like a dictionary."""
-        return self.options[key.lower()]
+        return self.options[key]
 
     def __setitem__(self, key, val):
         """We may work with this action like a dictionary."""
 
-        self.options[key.lower()] = val
+        self.options[key] = val
 
     def get(self, key, default):
         """We may work with this action like a  dictionary."""
 
-        return self.options.get(key.lower(), default)
+        return self.options.get(key, default)
 
     def updateStepAction(self, options, jobInfo, model, fieldOutputController, journal):
         self.options.update(options)

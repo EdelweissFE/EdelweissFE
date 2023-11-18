@@ -175,7 +175,6 @@ def createStepManagerFromInputFile(inputfile: dict):
         for line in stepActionLines:
             module, *definition = splitLineAtCommas(line)
             kwargs = convertAssignmentsToStringDictionary(definition)
-
             name = kwargs.pop("name", kwargs.pop("category", module))
 
             stepActionDefinitions.append(StepActionDefinition(name, module, kwargs))

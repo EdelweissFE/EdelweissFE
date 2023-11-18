@@ -68,24 +68,22 @@ class NISTPArcLength(NISTParallel):
         if "arc length parameter" in model.additionalParameters:
             self.Lambda = model.additionalParameters["arc length parameter"]
 
-        try:
-            arcLengthControllerType = step.actions["options"]["NISTArcLength"]["arcLengthController"]
-            if arcLengthControllerType == "off":
-                self.arcLengthController = None
-                self.dLambda = None
-            else:
-                self.arcLengthController = step.actions[arcLengthControllerType][arcLengthControllerType]
-                self.dLambda = 0.0
-        except KeyError:
-            pass
+        if step.actions["options"]:
+            if "NISTArcLength" in step.actions["options"]:
+                if "arcLengthController" in step.actions["options"]["NISTArcLength"]:
+                    arcLengthControllerType = step.actions["options"]["NISTArcLength"]["arcLengthController"]
+                    if arcLengthControllerType == "off":
+                        self.arcLengthController = None
+                        self.dLambda = None
+                    else:
+                        self.arcLengthController = step.actions[arcLengthControllerType][arcLengthControllerType]
+                        self.dLambda = 0.0
 
-        try:
-            stopCondition = step.actions["options"]["NISTArcLength"]["stopCondition"]
-            self.checkConditionalStop = createModelAccessibleFunction(
-                stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
-            )
-        except KeyError:
-            pass
+                if "stopCondition" in step.actions["options"]["NISTArcLength"]:
+                    stopCondition = step.actions["options"]["NISTArcLength"]["stopCondition"]
+                    self.checkConditionalStop = createModelAccessibleFunction(
+                        stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
+                    )
 
         return super().solveStep(step, model, fieldOutputController, outputmanagers)
 

@@ -55,7 +55,7 @@ class StepAction(StepActionBase):
 
         self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
-    def computeDDLambda(self, dU, ddU_0, ddU_f, dofManager):
+    def computeDDLambda(self, dU, ddU_0, ddU_f, increment, dofManager):
         idcs = np.hstack([dofManager.idcsInDofVector[self.dof1], dofManager.idcsInDofVector[self.dof2]])
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
