@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from fe.variables.scalarvariable import ScalarVariable
+from fe.timesteppers.timestep import TimeStep
 from fe.models.femodel import FEModel
-from numpy import ndarray
+import numpy as np
 
 
 class ConstraintBase(ABC):
@@ -93,7 +94,7 @@ class ConstraintBase(ABC):
         self.scalarVariables = scalarVariables
 
     @abstractmethod
-    def applyConstraint(self, U_np: ndarray, dU: ndarray, PExt: ndarray, V: ndarray, increment: tuple):
+    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, V: np.ndarray, timeStep: TimeStep):
         """Apply the constraint.  Add the contributions to the external load vector and the system matrix.
 
         Parameters
@@ -106,8 +107,10 @@ class ConstraintBase(ABC):
             The external load vector.
         K
             The system (stiffness) matrix.
-        increment
-            The time increment information.
+        dT
+            The time increment.
+        time
+            The current step and total time.
         """
 
         pass

@@ -27,12 +27,15 @@
 #  ---------------------------------------------------------------------
 
 from fe.utils.fieldoutput import FieldOutputController
+from fe.timesteppers.timestep import TimeStep
 from fe.journal.journal import Journal
 from fe.numerics.dofmanager import DofVector
 from fe.models.femodel import FEModel
 
+from abc import ABC, abstractmethod
 
-class StepActionBase:
+
+class StepActionBase(ABC):
     """This is the abase class for all step actions.
     User defined step actions can override the methods.
 
@@ -117,7 +120,7 @@ class StepActionBase:
         """
         pass
 
-    def applyAtIncrementStart(self, model, increment: tuple):
+    def applyAtIncrementStart(self, model, timeStep: TimeStep):
         """Is called when a step increment starts.
 
         Parameters

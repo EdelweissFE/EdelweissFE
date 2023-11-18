@@ -44,6 +44,7 @@ documentation = {
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.timesteppers.timestep import TimeStep
 import numpy as np
 from fe.utils.math import evalModelAccessibleExpression
 
@@ -66,9 +67,8 @@ class StepAction(StepActionBase):
 
         self.definition = str(action.get("definition", "absolute"))
 
-    def computeDDLambda(self, dU, ddU_0, ddU_f, increment):
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        dL = incrementSize * self.L
+    def computeDDLambda(self, dU, ddU_0, ddU_f, timeStep: TimeStep):
+        dL = timeStep.stepProgressIncrement * self.L
 
         ddLambda = (dL - self.cVector.dot(dU[self.idcs] + ddU_0[self.idcs])) / self.cVector.dot(ddU_f[self.idcs])
         return ddLambda

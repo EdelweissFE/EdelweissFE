@@ -39,61 +39,65 @@ documentation = {
     "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
 
-from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.stepactions.base.bodyloadbase import BodyLoadBase
+from fe.timesteppers.timestep import TimeStep
 import numpy as np
 import sympy as sp
 
 
-class StepAction(StepActionBase):
+class StepAction(BodyLoadBase):
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-        self.name = name
-        self.forceAtStepStart = 0.0
-        self.elements = model.elementSets[action["elSet"]]
-        magnitude = np.fromstring(action["forceVector"], sep=",", dtype=np.double)
+        self._name = name
+        self._forceAtStepStart = 0.0
+        self._elSet = model.elementSets[action["elSet"]]
+        load = np.fromstring(action["forceVector"], sep=",", dtype=np.double)
 
-        if len(magnitude) < model.domainSize:
-            raise Exception("BodyForce {:}: force vector has wrong dimension!".format(self.name))
+        if len(load) < model.domainSize:
+            raise Exception("BodyForce {:}: force vector has wrong dimension!".format(self._name))
 
-        self.delta = magnitude
+        self._delta = load
         if "f(t)" in action:
             t = sp.symbols("t")
-            self.amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
+            self._amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
         else:
-            self.amplitude = lambda x: x
+            self._amplitude = lambda x: x
 
-        self.idle = False
+        self._idle = False
 
     def applyAtStepEnd(self, model, stepMagnitude=None):
-        if not self.idle:
+        if not self._idle:
             if stepMagnitude == None:
                 # standard case
-                self.forceAtStepStart += self.delta * self.amplitude(1.0)
+                self._forceAtStepStart += self._delta * self._amplitude(1.0)
             else:
                 # set the 'actual' increment manually, e.g. for arc length method
-                self.forceAtStepStart += self.delta * stepMagnitude
+                self._forceAtStepStart += self._delta * stepMagnitude
 
-            self.delta = 0
-            self.idle = True
+            self._delta = 0
+            self._idle = True
 
     def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         if "forceVector" in action:
-            self.delta = np.fromstring(action["forceVector"], sep=",", dtype=np.double) - self.forceAtStepStart
+            self._delta = np.fromstring(action["forceVector"], sep=",", dtype=np.double) - self._forceAtStepStart
         elif "delta" in action:
-            self.delta = np.fromstring(action["delta"], sep=",", dtype=np.double)
+            self._delta = np.fromstring(action["delta"], sep=",", dtype=np.double)
 
         if "f(t)" in action:
             t = sp.symbols("t")
-            self.amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
+            self._amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
         else:
-            self.amplitude = lambda x: x
+            self._amplitude = lambda x: x
 
-        self.idle = False
+        self._idle = False
 
-    def getCurrentBodyForce(self, increment):
-        if self.idle == True:
+    def getCurrentLoad(self, timeStep: TimeStep):
+        if self._idle == True:
             t = 1.0
         else:
-            incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-            t = stepProgress
+            t = timeStep.stepProgress
 
-        return self.forceAtStepStart + self.delta * self.amplitude(t)
+        return self._forceAtStepStart + self._delta * self._amplitude(t)
+
+    @property
+    def elementSet(self) -> list:
+        return self._elSet

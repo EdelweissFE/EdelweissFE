@@ -37,6 +37,7 @@ documentation = {
 }
 
 from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.timesteppers.timestep import TimeStep
 import numpy as np
 import sympy as sp
 
@@ -64,15 +65,13 @@ class StepAction(StepActionBase):
     def applyAtStepEnd(self, model, stepMagnitude=None):
         self.active = False
 
-    def applyAtIncrementStart(self, model, increment):
+    def applyAtIncrementStart(self, model, timeStep: TimeStep):
         """Change the actual properties depending on the current step time"""
 
         if not self.active:
             return
 
-        incNumber, incrementSize, stepProgress, dT, stepTime_n, totalTime_n = increment
-
-        theCurrentProperty = self.f_t(stepTime_n + dT)
+        theCurrentProperty = self.f_t(timeStep.stepTime)
         self.journal.message(
             "Changing property[{:}] of material {:} to {:}".format(
                 self.theIndex, self.theMaterial["name"], theCurrentProperty

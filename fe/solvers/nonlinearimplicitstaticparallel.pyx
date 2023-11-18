@@ -59,14 +59,11 @@ class NISTParallelForMarmotElements(NISTParallel):
    
     identification = "NISTPSolver"
 
-    def computeElements(self, elements, Un1, dU, P, K, F, increment):
+    def computeElements(self, elements, Un1, dU, P, K, F, timeStep):
         tic = getCurrentTime()
         cdef:
-            double[::1] time
-            double dT
-        
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        time = np.array([stepTime, totalTime])
+            double[::1] time = np.array([timeStep.stepTime, timeStep.totalTime])
+            double dT = timeStep.timeIncrement
         
         cdef:
             int elNDofPerEl, elNumber, elIdxInVIJ, elIdxInPe, threadID, currentIdxInU   

@@ -29,6 +29,7 @@
 # @author: Matthias
 from fe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 from fe.journal.journal import Journal
+from fe.timesteppers.timestep import TimeStep
 
 
 class AdaptiveTimeStepper:
@@ -43,7 +44,7 @@ class AdaptiveTimeStepper:
         minIncrement: float,
         maxNumberIncrements: int,
         journal: Journal,
-    ) -> tuple:
+    ):
         """
         An increment generator for incremental-iterative simulations.
 
@@ -83,18 +84,18 @@ class AdaptiveTimeStepper:
         self.dT = 0.0
         self.journal = journal
 
-    def generateIncrement(self):
+    def generateTimeStep(self) -> TimeStep:
         """
         Generate the next increment.
 
         Returns
         -------
-        tuple
-            The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total).
+        TimeStep
+            The current time step.
         """
 
         # zero increment; return value for first function call
-        yield (0, 0.0, 0.0, 0.0, 0.0, self.currentTime)
+        yield TimeStep(0, 0.0, 0.0, 0.0, 0.0, self.currentTime)
 
         while self.finishedStepProgress < (1.0 - 1e-15):
             if self.totalIncrements >= self.maxNumberIncrements:
@@ -112,20 +113,20 @@ class AdaptiveTimeStepper:
                 self.increment = remainder
 
             dT = self.stepLength * self.increment
-            startTimeOfIncrementInStep = self.stepLength * self.finishedStepProgress
-            startTimeOfIncrementInTotal = self.currentTime + startTimeOfIncrementInStep
             self.finishedStepProgress += self.increment
+            endTimeOfIncrementInStep = self.stepLength * self.finishedStepProgress
+            endTimeOfIncrementInTotal = self.currentTime + endTimeOfIncrementInStep
 
             self.totalIncrements += 1
             self.nPassedGoodIncrements += 1
 
-            yield (
+            yield TimeStep(
                 self.totalIncrements,
                 self.increment,
                 self.finishedStepProgress,
                 dT,
-                startTimeOfIncrementInStep,
-                startTimeOfIncrementInTotal,
+                endTimeOfIncrementInStep,
+                endTimeOfIncrementInTotal,
             )
 
     def preventIncrementIncrease(

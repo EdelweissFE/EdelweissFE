@@ -31,7 +31,7 @@ from fe.utils.misc import convertLineToStringDictionary
 from fe.models.femodel import FEModel
 from fe.journal.journal import Journal
 from fe.config.generators import getGeneratorFunction
-from fe.utils.abqmodelconstructor import AbqModelConstructor
+from fe.generators.abqmodelconstructor import AbqModelConstructor
 from fe.variables.scalarvariable import ScalarVariable
 from fe.utils.misc import convertAssignmentsToStringDictionary, splitLineAtCommas, convertLinesToStringDictionary
 from fe.steps.stepmanager import StepManager, StepActionDefinition, StepDefinition

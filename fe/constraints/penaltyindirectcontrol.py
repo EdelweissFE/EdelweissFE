@@ -47,6 +47,7 @@ documentation = {
 import numpy as np
 
 from fe.config.phenomena import getFieldSize
+from fe.timesteppers.timestep import TimeStep
 from fe.utils.misc import convertLinesToStringDictionary, strtobool
 from fe.utils.exceptions import WrongDomain
 from fe.constraints.base.constraintbase import ConstraintBase
@@ -120,7 +121,7 @@ class Constraint(ConstraintBase):
     def nDof(self) -> int:
         return self._nDof
 
-    def applyConstraint(self, U_np, dU, PExt, K, increment):
+    def applyConstraint(self, U_np, dU, PExt, K, timeStep: TimeStep):
         if self.active == False:
             return
 
@@ -131,9 +132,7 @@ class Constraint(ConstraintBase):
 
         U_c = U_np[sBC:eBC]
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-
-        L = self.l * self.amplitude(stepProgress)
+        L = self.l * self.amplitude(timeStep.stepProgress)
 
         cVector = self.cVector
 

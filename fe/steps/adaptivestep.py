@@ -30,6 +30,7 @@ from collections import defaultdict
 from fe.steps.base.stepbase import StepBase
 from fe.models.femodel import FEModel
 from fe.timesteppers.adaptivetimestepper import AdaptiveTimeStepper
+from fe.timesteppers.timestep import TimeStep
 from fe.utils.fieldoutput import FieldOutputController
 from fe.journal.journal import Journal
 from fe.utils.caseinsensitivedict import CaseInsensitiveDict
@@ -153,10 +154,10 @@ class AdaptiveStep(StepBase):
             for manager in outputManagers:
                 manager.finalizeStep()
 
-    def getTimeIncrement(
+    def getTimeStep(
         self,
-    ):
-        return self.incrementGenerator.generateIncrement()
+    ) -> TimeStep:
+        return self.incrementGenerator.generateTimeStep()
 
     def discardAndChangeIncrement(self, cutbackFactor: float):
         return self.incrementGenerator.discardAndChangeIncrement(cutbackFactor)

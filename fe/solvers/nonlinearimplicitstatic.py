@@ -52,6 +52,7 @@ from fe.numerics.dofmanager import DofManager, DofVector, VIJSystemMatrix
 from fe.utils.fieldoutput import FieldOutputController
 from fe.constraints.base.constraintbase import ConstraintBase
 from fe.config.phenomena import fieldCorrectionTolerance, fluxResidualTolerance, fluxResidualToleranceAlternative
+from fe.timesteppers.timestep import TimeStep
 from scipy.sparse import csr_matrix
 from numpy import ndarray
 
@@ -186,30 +187,30 @@ class NIST:
         for variable in model.scalarVariables.values():
             U[self.theDofManager.idcsOfScalarVariablesInDofVector[variable]] = variable.value
 
-        lastIncrementSize = False
+        prevTimeStep = None
 
         self.applyStepActionsAtStepStart(model, step.actions)
 
         try:
-            for increment in step.getTimeIncrement():
-                incNumber, incrementSize, stepProgress, dT, stepTime, tStart = increment
-
-                tEnd = tStart + dT
-
+            for timeStep in step.getTimeStep():
                 statusInfoDict = {
                     "step": step.number,
-                    "inc": incNumber,
+                    "inc": timeStep.number,
                     "iters": None,
                     "converged": False,
-                    "time inc": dT,
-                    "time end": tEnd,
+                    "time inc": timeStep.timeIncrement,
+                    "time end": timeStep.totalTime,
                     "notes": "",
                 }
 
                 self.journal.printSeperationLine()
                 self.journal.message(
                     "increment {:}: {:8f}, {:8f}; time {:10f} to {:10f}".format(
-                        incNumber, incrementSize, stepProgress, tStart, tEnd
+                        timeStep.number,
+                        timeStep.stepProgressIncrement,
+                        timeStep.stepProgress,
+                        timeStep.totalTime - timeStep.timeIncrement,
+                        timeStep.totalTime,
                     ),
                     self.identification,
                     level=1,
@@ -225,8 +226,8 @@ class NIST:
                         K,
                         step.actions,
                         model,
-                        increment,
-                        lastIncrementSize,
+                        timeStep,
+                        prevTimeStep,
                         extrapolation,
                         maxIter,
                         maxGrowingIter,
@@ -235,7 +236,7 @@ class NIST:
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
                     step.discardAndChangeIncrement(max(e.cutbackSize, 0.25))
-                    lastIncrementSize = False
+                    prevTimeStep = None
 
                     statusInfoDict["iters"] = np.inf
                     statusInfoDict["notes"] = str(e)
@@ -248,7 +249,7 @@ class NIST:
                 except (ReachedMaxIterations, DivergingSolution) as e:
                     self.journal.message(str(e), self.identification, 1)
                     step.discardAndChangeIncrement(0.25)
-                    lastIncrementSize = False
+                    prevTimeStep = None
 
                     statusInfoDict["iters"] = np.inf
                     statusInfoDict["notes"] = str(e)
@@ -259,7 +260,7 @@ class NIST:
                         )
 
                 else:
-                    lastIncrementSize = incrementSize
+                    prevTimeStep = timeStep
                     if iterationCounter >= criticalIter:
                         step.preventIncrementIncrease()
 
@@ -272,7 +273,7 @@ class NIST:
                     for variable in model.scalarVariables.values():
                         variable.value = U[self.theDofManager.idcsOfScalarVariablesInDofVector[variable]]
 
-                    model.advanceToTime(tEnd)
+                    model.advanceToTime(timeStep.totalTime)
 
                     self.journal.message(
                         "Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1
@@ -312,8 +313,8 @@ class NIST:
         K: VIJSystemMatrix,
         stepActions: list,
         model: FEModel,
-        increment: tuple,
-        lastIncrementSize: float,
+        timeStep: TimeStep,
+        prevTimeStep: TimeStep,
         extrapolation: str,
         maxIter: int,
         maxGrowingIter: int,
@@ -358,7 +359,7 @@ class NIST:
                 - the history of residuals per field
         """
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        # incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = timeStep
         iterationCounter = 0
         incrementResidualHistory = dict.fromkeys(self.theDofManager.idcsOfFieldsInDofVector, (0.0, 0))
 
@@ -376,10 +377,10 @@ class NIST:
         distributedLoads = stepActions["distributedload"].values()
         bodyForces = stepActions["bodyforce"].values()
 
-        self.applyStepActionsAtIncrementStart(model, increment, stepActions)
+        self.applyStepActionsAtIncrementStart(model, timeStep, stepActions)
 
         dU, isExtrapolatedIncrement = self.extrapolateLastIncrement(
-            extrapolation, increment, dU, dirichlets, lastIncrementSize, model
+            extrapolation, timeStep, dU, dirichlets, prevTimeStep, model
         )
 
         while True:
@@ -391,16 +392,16 @@ class NIST:
 
             P[:] = K[:] = F[:] = PExt[:] = 0.0
 
-            P, K, F = self.computeElements(elements, U_np, dU, P, K, F, increment)
-            PExt, K = self.assembleLoads(nodeforces, distributedLoads, bodyForces, U_np, PExt, K, increment)
-            PExt, K = self.assembleConstraints(constraints, U_np, dU, PExt, K, increment)
+            P, K, F = self.computeElements(elements, U_np, dU, P, K, F, timeStep)
+            PExt, K = self.assembleLoads(nodeforces, distributedLoads, bodyForces, U_np, PExt, K, timeStep)
+            PExt, K = self.assembleConstraints(constraints, U_np, dU, PExt, K, timeStep)
 
             R[:] = P
             R += PExt
 
             if iterationCounter == 0 and not isExtrapolatedIncrement and dirichlets:
                 # first iteration? apply dirichlet bcs and unconditionally solve
-                R = self.applyDirichlet(increment, R, dirichlets)
+                R = self.applyDirichlet(timeStep, R, dirichlets)
             else:
                 # iteration cycle 1 or higher, time to check the convergence
                 for dirichlet in dirichlets:
@@ -436,7 +437,7 @@ class NIST:
         U_np: DofVector,
         PExt: DofVector,
         K: VIJSystemMatrix,
-        increment: tuple,
+        timeStep: TimeStep,
     ) -> tuple[DofVector, VIJSystemMatrix]:
         """Loop over all distributed loads acting on elements, and evaluate them.
         Assembles into the global external load vector and the system matrix.
@@ -451,8 +452,8 @@ class NIST:
             The external load vector to be augmented.
         K
             The system matrix to be augmented.
-        increment
-            The increment.
+        timeStep
+            The current time step.
 
         Returns
         -------
@@ -461,16 +462,18 @@ class NIST:
         """
 
         tic = getCurrentTime()
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        time = np.array([stepTime, totalTime])
+
+        time = np.array([timeStep.stepTime, timeStep.totalTime])
+        dT = timeStep.timeIncrement
+
         for dLoad in distributedLoads:
-            magnitude = dLoad.getCurrentMagnitude(increment)
+            load = dLoad.getCurrentLoad(timeStep)
             for faceID, elementSet in dLoad.surface.items():
                 for el in elementSet:
                     Ke = K[el]
                     Pe = np.zeros(el.nDof)
 
-                    el.computeDistributedLoad(dLoad.loadType, Pe, Ke, faceID, magnitude, U_np[el], time, dT)
+                    el.computeDistributedLoad(dLoad.loadType, Pe, Ke, faceID, load, U_np[el], time, dT)
 
                     PExt[el] += Pe
 
@@ -479,7 +482,7 @@ class NIST:
         return PExt, K
 
     def computeBodyForces(
-        self, bodyForces: list[StepActionBase], U_np: DofVector, PExt: DofVector, K: VIJSystemMatrix, increment: tuple
+        self, bodyForces: list[StepActionBase], U_np: DofVector, PExt: DofVector, K: VIJSystemMatrix, timeStep: TimeStep
     ) -> tuple[DofVector, VIJSystemMatrix]:
         """Loop over all body forces loads acting on elements, and evaluate them.
         Assembles into the global external load vector and the system matrix.
@@ -504,11 +507,13 @@ class NIST:
         """
 
         tic = getCurrentTime()
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        time = np.array([stepTime, totalTime])
+
+        time = np.array([timeStep.stepTime, timeStep.totalTime])
+        dT = timeStep.timeIncrement
+
         for bForce in bodyForces:
-            force = bForce.getCurrentBodyForce(increment)
-            for el in bForce.elements:
+            force = bForce.getCurrentLoad(timeStep)
+            for el in bForce.elementSet:
                 Pe = np.zeros(el.nDof)
                 Ke = K[el]
 
@@ -556,7 +561,7 @@ class NIST:
 
         return K
 
-    def applyDirichlet(self, increment: tuple, R: DofVector, dirichlets: list[StepActionBase]):
+    def applyDirichlet(self, timeStep: TimeStep, R: DofVector, dirichlets: list[StepActionBase]):
         """Apply the dirichlet bcs on the residual vector
         Is called by solveStep() before solving the global equatuon system.
 
@@ -578,7 +583,7 @@ class NIST:
         tic = getCurrentTime()
 
         for dirichlet in dirichlets:
-            delta = dirichlet.getDelta(increment)
+            delta = dirichlet.getDelta(timeStep)
             R[self.findDirichletIndices(dirichlet)] = delta.flatten()
 
         toc = getCurrentTime()
@@ -754,7 +759,7 @@ class NIST:
         P: DofVector,
         K: VIJSystemMatrix,
         F: DofVector,
-        increment: tuple,
+        timeStep: TimeStep,
     ) -> tuple[DofVector, VIJSystemMatrix, DofVector]:
         """Loop over all elements, and evalute them.
         Is is called by solveStep() in each iteration.
@@ -773,8 +778,8 @@ class NIST:
             The system matrix.
         F
             The vector of accumulated fluxes for convergence checks.
-        increment
-            The increment.
+        timeStep
+            The time step.
 
         Returns
         -------
@@ -786,8 +791,8 @@ class NIST:
 
         tic = getCurrentTime()
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-        time = np.array([stepTime, totalTime])
+        time = np.array([timeStep.stepTime, timeStep.totalTime])
+        dT = timeStep.timeIncrement
 
         for el in elements.values():
             Ke = K[el]
@@ -810,7 +815,7 @@ class NIST:
         dU: DofVector,
         PExt: DofVector,
         K: VIJSystemMatrix,
-        increment: tuple,
+        timeStep: TimeStep,
     ) -> tuple[DofVector, VIJSystemMatrix]:
         """Loop over all elements, and evaluate them.
         Is is called by solveStep() in each iteration.
@@ -827,8 +832,10 @@ class NIST:
             The external load vector.
         K
             The system matrix.
-        increment
-            The increment.
+        dT
+            The time increment.
+        time
+            The step and total time.
 
         Returns
         -------
@@ -843,7 +850,7 @@ class NIST:
             Kc = K[constraint].reshape(constraint.nDof, constraint.nDof, order="F")
             Pc = np.zeros(constraint.nDof)
 
-            constraint.applyConstraint(U_np[constraint], dU[constraint], Pc, Kc, increment)
+            constraint.applyConstraint(U_np[constraint], dU[constraint], Pc, Kc, timeStep)
 
             # instead of PExt[constraint] += Pe, np.add.at allows for repeated indices
             np.add.at(PExt, PExt.entitiesInDofVector[constraint], Pc)
@@ -861,7 +868,7 @@ class NIST:
         U_np: DofVector,
         PExt: DofVector,
         K: VIJSystemMatrix,
-        increment: tuple,
+        timeStep: TimeStep,
     ) -> tuple[DofVector, VIJSystemMatrix]:
         """Assemble all loads into a right hand side vector.
 
@@ -879,29 +886,26 @@ class NIST:
             The external load vector.
         K
             The system matrix.
-        increment
-            The increment.
+        timeStep
+            The current time step.
 
         Returns
         -------
         tuple[DofVector,VIJSystemMatrix]
-            - The modified external load vector.
-            - The modified system matrix.
+            - The augmented external load vector.
+            - The augmented system matrix.
         """
-        # cloads
         for cLoad in nodeForces:
-            # PExt = cLoad.applyOnP(PExt, increment)
-            PExt[self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nSet.name]] += cLoad.getLoad(
-                increment
-            ).flatten()
-        # dloads
-        PExt, K = self.computeDistributedLoads(distributedLoads, U_np, PExt, K, increment)
-        PExt, K = self.computeBodyForces(bodyForces, U_np, PExt, K, increment)
+            PExt[
+                self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nodeSet.name]
+            ] += cLoad.getCurrentLoad(timeStep).flatten()
+        PExt, K = self.computeDistributedLoads(distributedLoads, U_np, PExt, K, timeStep)
+        PExt, K = self.computeBodyForces(bodyForces, U_np, PExt, K, timeStep)
 
         return PExt, K
 
     def extrapolateLastIncrement(
-        self, extrapolation: str, increment: tuple, dU: DofVector, dirichlets: list, lastIncrementSize: float, model
+        self, extrapolation: str, timeStep: TimeStep, dU: DofVector, dirichlets: list, prevTimeStep: TimeStep, model
     ) -> tuple[DofVector, bool]:
         """Depending on the current setting, extrapolate the solution of the last increment.
 
@@ -909,8 +913,8 @@ class NIST:
         ----------
         extrapolation
             The type of extrapolation.
-        increment
-            The current time increment.
+        timeStep
+            The current time step.
         dU
             The last solution increment.
         dirichlets
@@ -925,11 +929,9 @@ class NIST:
             - True if an extrapolation was performed.
         """
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-
-        if extrapolation == "linear" and lastIncrementSize:
-            dU *= incrementSize / lastIncrementSize
-            dU = self.applyDirichlet(increment, dU, dirichlets)
+        if extrapolation == "linear" and prevTimeStep and prevTimeStep.timeIncrement:
+            dU *= timeStep.stepProgressIncrement / prevTimeStep.stepProgressIncrement
+            dU = self.applyDirichlet(timeStep, dU, dirichlets)
             isExtrapolatedIncrement = True
         else:
             isExtrapolatedIncrement = False
@@ -1008,7 +1010,7 @@ class NIST:
                 action.applyAtStepEnd(model)
 
     def applyStepActionsAtIncrementStart(
-        self, model: FEModel, increment: tuple, stepActions: dict[str, StepActionBase]
+        self, model: FEModel, timeStep: TimeStep, stepActions: dict[str, StepActionBase]
     ):
         """Called when all step actions should be applied at the start of a step.
 
@@ -1024,7 +1026,7 @@ class NIST:
 
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
-                action.applyAtIncrementStart(model, increment)
+                action.applyAtIncrementStart(model, timeStep)
 
     def findDirichletIndices(self, dirichlet):
         nSet = dirichlet.nSet

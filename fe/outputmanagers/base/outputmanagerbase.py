@@ -33,6 +33,7 @@ from fe.numerics.dofmanager import DofVector
 from fe.journal.journal import Journal
 from fe.utils.plotter import Plotter
 from fe.models.femodel import FEModel
+from fe.timesteppers.timestep import TimeStep
 
 
 class OutputManagerBase(ABC):
@@ -96,8 +97,8 @@ class OutputManagerBase(ABC):
         pass
 
     @abstractmethod
-    def finalizeIncrement(self, increment: tuple, **kwargs):
-        """Finalize the output at the end of an increment.
+    def finalizeIncrement(self, timeStep: TimeStep, **kwargs):
+        """Finalize the output at the end of a time increment.
 
         Parameters
         ----------
@@ -105,8 +106,8 @@ class OutputManagerBase(ABC):
             The initial solution vector.
         P
             The initial reaction vector.
-        increment
-            The time increment.
+        timeStep
+            The time step.
         **kwargs
             Keyword arguments.
         """
@@ -115,7 +116,7 @@ class OutputManagerBase(ABC):
 
     @abstractmethod
     def finalizeFailedIncrement(self, **kwargs):
-        """Finalize the output at the end of an failed increment.
+        """Finalize the output at the end of a time increment.
 
         Parameters
         ----------

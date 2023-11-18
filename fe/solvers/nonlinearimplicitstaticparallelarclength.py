@@ -43,6 +43,7 @@ from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.utils.fieldoutput import FieldOutputController
 from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from fe.models.femodel import FEModel
+from fe.timesteppers.timestep import TimeStep
 
 
 class NISTPArcLength(NISTParallel):
@@ -97,8 +98,8 @@ class NISTPArcLength(NISTParallel):
         K: VIJSystemMatrix,
         stepActions: list,
         model,
-        increment: tuple,
-        lastIncrementSize: float,
+        timeStep: TimeStep,
+        prevTimeStep: TimeStep,
         extrapolation: str,
         maxIter: int,
         maxGrowingIter: int,
@@ -121,10 +122,10 @@ class NISTPArcLength(NISTParallel):
             The list of active step actions.
         constraints
             The dictionary containing all elements.
-        increment
-            The increment.
-        lastIncrementSize
-            The size of the previous increment.
+        timeStep
+            The current time step.
+        prevTimeStep
+            The previous time step.
         extrapolation
             The type of extrapolation to be used.
         maxIter
@@ -151,16 +152,14 @@ class NISTPArcLength(NISTParallel):
                 K,
                 stepActions,
                 model,
-                increment,
-                lastIncrementSize,
+                timeStep,
+                prevTimeStep,
                 extrapolation,
                 maxIter,
                 maxGrowingIter,
             )
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-
-        if incNumber > 1 and self.checkConditionalStop():
+        if timeStep.number > 1 and self.checkConditionalStop():
             raise ConditionalStop
 
         iterationCounter = 0
@@ -192,11 +191,13 @@ class NISTPArcLength(NISTParallel):
         ddLambda = 0.0
 
         dU, isExtrapolatedIncrement, dLambda = self.extrapolateLastIncrement(
-            extrapolation, increment, dU, dirichlets, lastIncrementSize, model, dLambda
+            extrapolation, timeStep, dU, dirichlets, prevTimeStep, model, dLambda
         )
 
-        referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
-        zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0
+        # referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
+        # zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0
+        referenceTimeStep = TimeStep(timeStep.number, 1.0, 1.0, 0.0, 0.0, 0.0)
+        zeroTimeStep = TimeStep(timeStep.number, 0.0, 0.0, 0.0, 0.0)
 
         while True:
             for geostatic in stepActions["geostatics"]:
@@ -207,14 +208,14 @@ class NISTPArcLength(NISTParallel):
 
             P[:] = K[:] = F[:] = P_0[:] = P_f[:] = K_f[:] = K_0[:] = 0.0
 
-            P, K, F = self.computeElements(model.elements, U_np, dU, P, K, F, increment)
-            P, K = self.assembleConstraints(model.constraints, U_np, dU, P, K, increment)
+            P, K, F = self.computeElements(model.elements, U_np, dU, P, K, F, timeStep)
+            P, K = self.assembleConstraints(model.constraints, U_np, dU, P, K, timeStep)
 
             P_0, K_0 = self.assembleLoads(
-                nodeForces, distributedLoads, bodyForces, U_np, P_0, K_0, zeroIncrement
+                nodeForces, distributedLoads, bodyForces, U_np, P_0, K_0, zeroTimeStep
             )  # compute 'dead' deadloads, like gravity
             P_f, K_f = self.assembleLoads(
-                nodeForces, distributedLoads, bodyForces, U_np, P_f, K_f, referenceIncrement
+                nodeForces, distributedLoads, bodyForces, U_np, P_f, K_f, referenceTimeStep
             )  # compute 'dead' deadloads, like gravity
 
             P_f -= P_0  # and subtract the dead part, since we are only interested in the homogeneous linear part
@@ -230,12 +231,12 @@ class NISTPArcLength(NISTParallel):
 
             # Dirichlets ..
             if isExtrapolatedIncrement and iterationCounter == 0:
-                R_0 = self.applyDirichlet(zeroIncrement, R_0, dirichlets)
+                R_0 = self.applyDirichlet(zeroTimeStep, R_0, dirichlets)
             else:
-                modifiedIncrement = incNumber, dLambda, Lambda + dLambda, 0.0, 0.0, 0.0
+                modifiedTimeStep = TimeStep(timeStep.number, dLambda, Lambda + dLambda, 0.0, 0.0, 0.0)
                 R_0 = self.applyDirichlet(modifiedIncrement, R_0, dirichlets)
 
-            R_f = self.applyDirichlet(referenceIncrement, R_f, dirichlets)
+            R_f = self.applyDirichlet(referenceTimeStep, R_f, dirichlets)
 
             if iterationCounter > 0 or isExtrapolatedIncrement:
                 converged, nodesWithLargestResidual = self.checkConvergence(
@@ -253,9 +254,6 @@ class NISTPArcLength(NISTParallel):
                     self.printResidualOutlierNodes(nodesWithLargestResidual)
                     raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
 
-            # if iterationCounter == maxIter:
-            #     raise ReachedMaxIterations("Reached max. iterations in current increment, cutting back")
-
             K_ = self.assembleStiffnessCSR(K)
             K_ = self.applyDirichletK(K_, dirichlets)
 
@@ -266,7 +264,7 @@ class NISTPArcLength(NISTParallel):
             ddU_0, ddU_f = ddU_[:, 0], ddU_[:, 1]
 
             # compute the increment of the load parameter. Method depends on the employed arc length controller
-            ddLambda = self.arcLengthController.computeDDLambda(dU, ddU_0, ddU_f, increment, self.theDofManager)
+            ddLambda = self.arcLengthController.computeDDLambda(dU, ddU_0, ddU_f, timeStep, self.theDofManager)
 
             # assemble total solution
             ddU = ddU_0 + ddLambda * ddU_f
@@ -279,7 +277,7 @@ class NISTPArcLength(NISTParallel):
         self.Lambda += dLambda
         self.dLambda = dLambda
 
-        self.arcLengthController.finishIncrement(U_n, dU, dLambda, increment, self.theDofManager)
+        self.arcLengthController.finishIncrement(U_n, dU, dLambda, timeStep, self.theDofManager)
         model.additionalParameters["additionalParameters"] = self.Lambda
 
         for stepActionType in stepActions.values():
@@ -297,10 +295,10 @@ class NISTPArcLength(NISTParallel):
     def extrapolateLastIncrement(
         self,
         extrapolation: str,
-        increment: tuple,
+        timeStep: TimeStep,
         dU: DofVector,
         dirichlets: list,
-        lastIncrementSize: float,
+        prevTimeStep: TimeStep,
         model: FEModel,
         dLambda: float = None,
     ) -> tuple[DofVector, bool]:
@@ -311,14 +309,14 @@ class NISTPArcLength(NISTParallel):
         ----------
         extrapolation
             The type of extrapolation.
-        increment
+        timeStep
             The current time increment.
         dU
             The last solution increment.
         dirichlets
             The list of active dirichlet boundary conditions.
-        lastIncrementSize
-            The size of the last increment.
+        prevTimeStep
+            The previous TimeStep
 
         Returns
         -------
@@ -327,16 +325,16 @@ class NISTPArcLength(NISTParallel):
             - True if an extrapolation was performed.
         """
 
-        incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+        # incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
         if dLambda == None:
             # arclength control is inactive
-            return super().extrapolateLastIncrement(extrapolation, increment, dU, dirichlets, lastIncrementSize, model)
+            return super().extrapolateLastIncrement(extrapolation, timeStep, dU, dirichlets, prevTimeStep, model)
 
-        elif extrapolation == "linear" and lastIncrementSize:
-            dLambda = dLambda * (incrementSize / lastIncrementSize)
+        elif extrapolation == "linear" and prevTimeStep and prevTimeStep.stepProgressIncrement:
+            dLambda = dLambda * (timeStep.stepProgressIncrement / prevTimeStep.stepProgressIncrement)
             dU, isExtrapolatedIncrement = super().extrapolateLastIncrement(
-                extrapolation, increment, dU, {}, lastIncrementSize, model
+                extrapolation, timeStep, dU, {}, prevTimeStep, model
             )
         else:
             dLambda = 0.0

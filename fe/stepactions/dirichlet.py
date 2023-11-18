@@ -42,19 +42,19 @@ documentation = {
 }
 
 
-from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.stepactions.base.dirichletbase import DirichletBase
+from fe.timesteppers.timestep import TimeStep
 from fe.config.phenomena import getFieldSize
 import numpy as np
 import sympy as sp
 
 
-class StepAction(StepActionBase):
+class StepAction(DirichletBase):
     """Dirichlet boundary condition, based on a node set"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
         self.name = name
 
-        # nodeSets = model.nodeSets
         self.field = action["field"]
 
         self.action = action
@@ -62,7 +62,15 @@ class StepAction(StepActionBase):
         self.fieldSize = getFieldSize(self.field, model.domainSize)
         self.possibleComponents = [str(i + 1) for i in range(self.fieldSize)]
 
+        self._components = None
+
         self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
+
+    @property
+    def components(
+        self,
+    ):
+        return self._components
 
     def applyAtStepEnd(self, model):
         self.active = False
@@ -91,14 +99,16 @@ class StepAction(StepActionBase):
             for i, node in enumerate(self.nSet):
                 self.delta[i, :] *= float(self.analyticalField.evaluateAtCoordinates(node.coordinates))
 
-        self.components = components
+        self._components = components
 
         self.amplitude = self._getAmplitude(action)
 
-    def getDelta(self, increment):
+    def getDelta(self, timeStep: TimeStep):
         if self.active:
-            incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-            return self.delta * (self.amplitude(stepProgress) - (self.amplitude(stepProgress - incrementSize)))
+            return self.delta * (
+                self.amplitude(timeStep.stepProgress)
+                - (self.amplitude(timeStep.stepProgress - timeStep.stepProgressIncrement))
+            )
         else:
             return self.delta * 0.0
 

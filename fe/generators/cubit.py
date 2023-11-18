@@ -47,7 +47,7 @@ documentation = {
 from fe.utils.misc import convertLinesToStringDictionary
 from fe.utils.misc import strtobool
 from fe.utils.inputfileparser import parseInputFile
-from fe.utils.abqmodelconstructor import AbqModelConstructor
+from fe.generators.abqmodelconstructor import AbqModelConstructor
 from fe.models.femodel import FEModel
 
 import os

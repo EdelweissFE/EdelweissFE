@@ -47,6 +47,7 @@ from fe.config.phenomena import getFieldSize
 from fe.utils.misc import convertLinesToStringDictionary
 from fe.constraints.base.constraintbase import ConstraintBase
 from fe.models.femodel import FEModel
+from fe.timesteppers.timestep import TimeStep
 
 
 class Constraint(ConstraintBase):
@@ -85,7 +86,7 @@ class Constraint(ConstraintBase):
     def nDof(self) -> int:
         return self._nDof
 
-    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, K: np.ndarray, increment: set):
+    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, K: np.ndarray, timeStep: TimeStep):
         if self.active == False:
             return
 

@@ -174,7 +174,7 @@ class Constraint(ConstraintBase):
             ]
         )
 
-    def applyConstraint(self, U_np, dU, PExt, K, increment):
+    def applyConstraint(self, U_np, dU, PExt, K, timeStep):
         nConstraints = self.nConstraints
         nDim = self.nDim
         nRot = self.nRot

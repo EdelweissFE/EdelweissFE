@@ -41,19 +41,20 @@ documentation = {
     "type": "The load type, e.g., pressure or surface traction; Must be supported by the element type",
 }
 
-from fe.stepactions.base.stepactionbase import StepActionBase
+from fe.stepactions.base.distributedloadbase import DistributedLoadBase
+from fe.timesteppers.timestep import TimeStep
 import numpy as np
 import sympy as sp
 
 
-class StepAction(StepActionBase):
+class StepAction(DistributedLoadBase):
     """Distributed load, defined on an element-based surface"""
 
     def __init__(self, name, action, jobInfo, model, fieldOutputController, journal):
-        self.name = name
-        self.magnitudeAtStepStart = 0.0
-        self.surface = model.surfaces[action["surface"]]
-        self.loadType = action["type"]
+        self._name = name
+        self._magnitudeAtStepStart = 0.0
+        self._surface = model.surfaces[action["surface"]]
+        self._loadType = action["type"]
         magnitude = np.fromstring(action["magnitude"], sep=",")
 
         self.delta = magnitude
@@ -65,21 +66,37 @@ class StepAction(StepActionBase):
 
         self.idle = False
 
+    @property
+    def surface(self) -> str:
+        return self._surface
+
+    @property
+    def loadType(self) -> str:
+        return self._loadType
+
+    def getCurrentLoad(self, timeStep: TimeStep):
+        if self.idle == True:
+            t = 1.0
+        else:
+            t = timeStep.stepProgress
+
+        return self._magnitudeAtStepStart + self.delta * self.amplitude(t)
+
     def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self.idle:
             if stepMagnitude == None:
                 # standard case
-                self.magnitudeAtStepStart += self.delta * self.amplitude(1.0)
+                self._magnitudeAtStepStart += self.delta * self.amplitude(1.0)
             else:
                 # set the 'actual' increment manually, e.g. for arc length method
-                self.magnitudeAtStepStart += self.delta * stepMagnitude
+                self._magnitudeAtStepStart += self.delta * stepMagnitude
 
             self.delta = 0
             self.idle = True
 
     def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         if "magnitude" in action:
-            self.delta = np.fromstring(action["magnitude"], sep=",") - self.magnitudeAtStepStart
+            self.delta = np.fromstring(action["magnitude"], sep=",") - self._magnitudeAtStepStart
         elif "delta" in action:
             self.delta = np.fromstring(action["delta"], sep=",")
 
@@ -90,12 +107,3 @@ class StepAction(StepActionBase):
             self.amplitude = lambda x: x
 
         self.idle = False
-
-    def getCurrentMagnitude(self, increment):
-        if self.idle == True:
-            t = 1.0
-        else:
-            incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
-            t = stepProgress
-
-        return self.magnitudeAtStepStart + self.delta * self.amplitude(t)
