@@ -69,24 +69,22 @@ class NISTPArcLength(NISTParallel):
         if "arc length parameter" in model.additionalParameters:
             self.Lambda = model.additionalParameters["arc length parameter"]
 
-        try:
-            arcLengthControllerType = step.actions["options"]["NISTArcLength"]["arcLengthController"]
-            if arcLengthControllerType == "off":
-                self.arcLengthController = None
-                self.dLambda = None
-            else:
-                self.arcLengthController = step.actions[arcLengthControllerType][arcLengthControllerType]
-                self.dLambda = 0.0
-        except KeyError:
-            pass
+        if step.actions["options"]:
+            if "NISTArcLength" in step.actions["options"]:
+                if "arcLengthController" in step.actions["options"]["NISTArcLength"]:
+                    arcLengthControllerType = step.actions["options"]["NISTArcLength"]["arcLengthController"]
+                    if arcLengthControllerType == "off":
+                        self.arcLengthController = None
+                        self.dLambda = None
+                    else:
+                        self.arcLengthController = step.actions[arcLengthControllerType][arcLengthControllerType]
+                        self.dLambda = 0.0
 
-        try:
-            stopCondition = step.actions["options"]["NISTArcLength"]["stopCondition"]
-            self.checkConditionalStop = createModelAccessibleFunction(
-                stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
-            )
-        except KeyError:
-            pass
+                if "stopCondition" in step.actions["options"]["NISTArcLength"]:
+                    stopCondition = step.actions["options"]["NISTArcLength"]["stopCondition"]
+                    self.checkConditionalStop = createModelAccessibleFunction(
+                        stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
+                    )
 
         return super().solveStep(step, model, fieldOutputController, outputmanagers)
 
@@ -172,7 +170,7 @@ class NISTPArcLength(NISTParallel):
 
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
-                action.applyAtIncrementStart(model, increment)
+                action.applyAtIncrementStart(model, timeStep)
 
         R_ = np.tile(self.theDofManager.constructDofVector(), (2, 1)).T  # 2 RHSs
         R_0 = R_[:, 0]
@@ -197,7 +195,7 @@ class NISTPArcLength(NISTParallel):
         # referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0
         # zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0
         referenceTimeStep = TimeStep(timeStep.number, 1.0, 1.0, 0.0, 0.0, 0.0)
-        zeroTimeStep = TimeStep(timeStep.number, 0.0, 0.0, 0.0, 0.0)
+        zeroTimeStep = TimeStep(timeStep.number, 0.0, 0.0, 0.0, 0.0, 0.0)
 
         while True:
             for geostatic in stepActions["geostatics"]:
@@ -234,7 +232,7 @@ class NISTPArcLength(NISTParallel):
                 R_0 = self.applyDirichlet(zeroTimeStep, R_0, dirichlets)
             else:
                 modifiedTimeStep = TimeStep(timeStep.number, dLambda, Lambda + dLambda, 0.0, 0.0, 0.0)
-                R_0 = self.applyDirichlet(modifiedIncrement, R_0, dirichlets)
+                R_0 = self.applyDirichlet(modifiedTimeStep, R_0, dirichlets)
 
             R_f = self.applyDirichlet(referenceTimeStep, R_f, dirichlets)
 
@@ -282,7 +280,7 @@ class NISTPArcLength(NISTParallel):
 
         for stepActionType in stepActions.values():
             for action in stepActionType.values():
-                action.applyAtIncrementStart(model, increment)
+                action.applyAtIncrementStart(model, timeStep)
 
         self.journal.message(
             "Current load parameter: lambda={:6.2e}, last increment: dLambda={:6.2e}".format(self.Lambda, self.dLambda),

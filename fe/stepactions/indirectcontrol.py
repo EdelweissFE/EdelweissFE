@@ -41,6 +41,7 @@ documentation = {
 
 from fe.stepactions.base.stepactionbase import StepActionBase
 from fe.timesteppers.timestep import TimeStep
+from fe.numerics.dofmanager import DofManager
 import numpy as np
 from fe.utils.math import evalModelAccessibleExpression
 
@@ -56,8 +57,8 @@ class StepAction(StepActionBase):
 
         self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
-    def computeDDLambda(self, dU, ddU_0, ddU_f, timeStep: TimeStep, dofManager):
-        idcs = np.hstack([dofManager.idcsInDofVector[self.dof1], dofManager.idcsInDofVector[self.dof2]])
+    def computeDDLambda(self, dU, ddU_0, ddU_f, timeStep: TimeStep, dofManager:DofManager):
+        idcs = np.hstack([dofManager.idcsOfFieldVariablesInDofVector[self.dof1], dofManager.idcsOfFieldVariablesInDofVector[self.dof2]])
 
         dL = timeStep.stepProgressIncrement * self.L
 
@@ -68,12 +69,15 @@ class StepAction(StepActionBase):
 
     def finishIncrement(self, U, dU, dLambda, timeStep: TimeStep, dofManager):
         self.journal.message(
-            "Dof 1: {:}, Dof 2: {:}".format(self.dof1.values, self.dof2.values),
+            "Dof 1: {:}, Dof 2: {:}".format(
+                U[dofManager.idcsOfFieldVariablesInDofVector[self.dof1]], 
+                U[dofManager.idcsOfFieldVariablesInDofVector[self.dof2]]),
             self.identification,
         )
 
     def applyAtStepEnd(self, model):
-        self.currentL0 = self.c1.dot(self.dof1.values) + self.c2.dot(self.dof2.values)
+        # self.currentL0 = self.c1.dot(self.dof1.values) + self.c2.dot(self.dof2.values)
+        self.currentL0 = self.L
 
     def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         self.definition = str(action.get("definition", "absolute"))
