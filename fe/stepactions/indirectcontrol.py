@@ -55,10 +55,11 @@ class StepAction(StepActionBase):
 
         self.updateStepAction(action, jobInfo, model, fieldOutputController, journal)
 
-    def computeDDLambda(self, dU, ddU_0, ddU_f, increment, dofManager):
+    def computeDDLambda(self, dU, ddU_0, ddU_f, dofManager):
         idcs = np.hstack([dofManager.idcsInDofVector[self.dof1], dofManager.idcsInDofVector[self.dof2]])
 
         incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
+
         dL = incrementSize * self.L
 
         denom = self.c.dot(ddU_f[idcs])
@@ -66,14 +67,17 @@ class StepAction(StepActionBase):
         ddLambda = (dL - self.c.dot(dU[idcs] + ddU_0[idcs])) / self.c.dot(ddU_f[idcs])
         return ddLambda
 
-    def finishIncrement(self, U, dU, dLambda, increment, dofManager):
+    def finishIncrement(self, U, dU, dLambda, timeStep, dofManager):
         self.journal.message(
-            "Dof 1: {:}, Dof 2: {:}".format(self.dof1.values, self.dof2.values),
+            "Dof 1: {:}, Dof 2: {:}".format(
+                U[dofManager.idcsInDofVector[self.dof1]], 
+                U[dofManager.idcsInDofVector[self.dof2]]),
             self.identification,
         )
 
     def applyAtStepEnd(self, model):
-        self.currentL0 = self.c1.dot(self.dof1.values) + self.c2.dot(self.dof2.values)
+        # self.currentL0 = self.c1.dot(self.dof1.values) + self.c2.dot(self.dof2.values)
+        self.currentL0 = self.L
 
     def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         self.definition = str(action.get("definition", "absolute"))
