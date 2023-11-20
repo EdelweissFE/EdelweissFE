@@ -84,7 +84,7 @@ class Constraint(ConstraintBase):
 
         self.offset = float(definition.get("offset", 0.0))
 
-        self._nodes = NodeSet("", itertools.chain(self.loadNSet, self.constrainedNSet))
+        self._nodes = list(self.loadNSet) + list(self.constrainedNSet)
 
         self._fieldsOnNodes = [
             [
