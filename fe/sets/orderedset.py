@@ -36,15 +36,17 @@ class OrderedSet(UserDict):
 
     Parameters
     ----------
-    label
-        A label for the object.
+    name
+        A name for the object.
     items
         A list of items.
     """
 
+    """ consider removing type checking! """
+
     def __init__(
         self,
-        label: str,
+        name: str,
         item_s,
     ):
         self.data = {}
@@ -52,8 +54,10 @@ class OrderedSet(UserDict):
         self.keys = None
         self.values = None
 
-        self.label = label
-        self.name = label
+        self.name = name
+
+        # label is deprecated; use name instead!!
+        self.label = name
 
         self.add(item_s)
 
@@ -108,7 +112,7 @@ class OrderedSet(UserDict):
             raise TypeError("You can only compare OrderedSets with matching types")
 
     def __hash__(self):
-        return hash(self.label)
+        return hash(self.name)
 
     def __eq__(self, other):
         if type(self) == type(other):
@@ -121,8 +125,8 @@ class OrderedSet(UserDict):
         module = type_.__module__
         qualname = type_.__qualname__
         return (
-            f'<{module}.{qualname} object at {hex(id(self))} with label "{self.label}">'
-            # + f' "{self.label}"'
+            f'<{module}.{qualname} object at {hex(id(self))} with name "{self.name}">'
+            # + f' "{self.name}"'
             # + "\n   ".join([""] + [item.__repr__() for item in self.data])
         )
 
@@ -132,15 +136,15 @@ class ImmutableOrderedSet(OrderedSet):
 
     Parameters
     ----------
-    label
-        A label for the object.
+    name
+        A name for the object.
     items
         A list of items.
     """
 
     def __init__(
         self,
-        label: str,
+        name: str,
         item_s,
     ):
         self.data = MappingProxyType({item: None for item in self.forceIter(item_s) if self.checkObjectType(item)})
@@ -148,8 +152,8 @@ class ImmutableOrderedSet(OrderedSet):
         self.keys = None
         self.values = None
 
-        self.label = label
-        self.name = label
+        self.name = name
+        self.name = name
 
     def add(self, item_s):
         raise TypeError(f"{type(self).__qualname__} items cannot be changed")
