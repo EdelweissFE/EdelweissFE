@@ -27,11 +27,13 @@
 
 from time import time
 from collections import defaultdict
+from prettytable import PrettyTable
 
 
 class _PerformanceTimerBranch(defaultdict):
     def __init__(self):
         self.time = float()  #: the measured time for this branch.
+        self.calls = int()
         self._tic = None
 
         super().__init__(_PerformanceTimerBranch)
@@ -43,6 +45,7 @@ class _PerformanceTimerBranch(defaultdict):
         Start measuring time.
         """
         self._tic = time()
+        self.calls += 1
 
     def toc(
         self,
@@ -57,31 +60,85 @@ times = _PerformanceTimerBranch()
 """The global dictionary of measured computations times."""
 
 
-def timeit(category: str, *subCategories: list[str]):
-    """Decorator function for indicating that a function should be timed.
+class timeit:
+    """Decorator class for performance timing of functions.
+    This decorator has a runtime memory, i.e., it is aware of the stack level
+    of nested timed functions.
 
     Parameters
     ----------
     category
-        The top level category for storing the measured time.
-    *args
-        The optional list of sub categories.
+        The category for storing the measured time.
     """
 
-    def outer(theFunction):
-        from time import time
+    _currentStackLevel = times
 
-        timer = times[category]
-        for sub in subCategories:
-            timer = timer[sub]
+    def __init__(self, category: str):
+        self._category = category
+        self._parentStackLevel = None
 
-        def inner(*args, **kwargs):
+    def __call__(self, theFunction):
+        def wrapper(*args, **kwargs):
+            self._parentStackLevel = timeit._currentStackLevel
+            timer = timeit._currentStackLevel[self._category]
+            timeit._currentStackLevel = timer
+
             timer.tic()
             try:
                 return theFunction(*args, **kwargs)
             finally:
                 timer.toc()
+                timeit._currentStackLevel = self._parentStackLevel
 
-        return inner
+        return wrapper
 
-    return outer
+
+def _makeTable(branch: _PerformanceTimerBranch, level: int, maxLevels: int) -> list[tuple]:
+    """Recursive function for creating a table of the measured times.
+
+    Parameters
+    ----------
+    branch
+        The current active branch.
+    levels
+        The current level.
+    maxLevels
+        The maximum number of stack levels considered in the table.
+
+    Returns
+    -------
+    list[tuple]
+        The table in list format containing columns as tuples."""
+
+    table = []
+    for k, v in branch.items():
+        table.append((level, k, v.time, v.calls))
+        if level < maxLevels and len(v):
+            table += _makeTable(v, level + 1, maxLevels)
+
+    return table
+
+
+def makePrettyTable(maxLevels: int = 4) -> PrettyTable:
+    """Create a pretty formatted table of the measured times.
+
+    Parameters
+    ----------
+    maxLevels
+        The maximum number of stack levels considered in the table.
+
+    Returns
+    -------
+    PrettyTable
+        The table in pretty format."""
+
+    theTable = _makeTable(times, 0, maxLevels)
+
+    prettytable = PrettyTable()
+    prettytable.field_names = ["function", "acc. runtime", "calls"]
+    prettytable.align = "l"
+
+    for level, cat, time, calls in theTable:
+        prettytable.add_row(("{:}{:}".format(" " * level, cat), "{:}{:10.4f}s".format(" " * level, time), calls))
+
+    return prettytable

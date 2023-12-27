@@ -12,6 +12,7 @@ matplotlib
 numpy 
 numpydoc
 python>=3.9
+prettytable
 scipy
 sphinx 
 sphinx_rtd_theme
