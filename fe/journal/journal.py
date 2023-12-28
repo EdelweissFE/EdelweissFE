@@ -34,6 +34,7 @@ which can be used troughout EdelweissFE.
 """
 
 import math
+from prettytable import PrettyTable
 
 
 class Journal:
@@ -58,9 +59,16 @@ class Journal:
         outputFile: str = None,
         suppressFromLevel: int = 3,
     ):
-        self.suppressLvl = suppressFromLevel
-        self.verbose = verbose
+        self._suppressLvl = suppressFromLevel
+        self._verbose = verbose
+        self._fileHandle = None
         self.setNewLineWidth(newWidth=100, leftColumn=80)
+
+    def setFileOutput(self, fileHandle=None):
+        if fileHandle:
+            self._fileHandle = fileHandle
+        else:
+            self._fileHandle = None
 
     def setNewLineWidth(self, newWidth: int = 100, leftColumn: int = 80):
         """Set the line width of the log file.
@@ -104,14 +112,18 @@ class Journal:
 
         lines = message.splitlines()
         for line in lines:
-            while len(line) >= self.leftColumn and self.leftColumn < self.leftColumnMaxSize:
+            while len(line) > self.leftColumn and self.leftColumn < self.leftColumnMaxSize:
                 self.setNewLineWidth(self.linewidth + 5, self.leftColumn + 5)
 
-            if level < self.suppressLvl:
-                if self.verbose:
-                    print(self.leveledOutput[level].format(line, senderIdentification))
+            theLine = self.leveledOutput[level].format(line, senderIdentification)
+            if level < self._suppressLvl:
+                if self._verbose:
+                    print(theLine)
 
-    def errorMessage(self, errorMessage, senderIdentification):
+            if self._fileHandle:
+                self._fileHandle.write(theLine + "\n")
+
+    def errorMessage(self, errorMessage: str, senderIdentification: str):
         """Print an error message.
 
         Parameters
@@ -122,15 +134,23 @@ class Journal:
             The name of the sender.
         """
 
-        print(self.errorMessageTemplate.format(errorMessage, senderIdentification))
+        theLine = self.errorMessageTemplate.format(errorMessage, senderIdentification)
+        print(theLine)
+
+        if self._fileHandle:
+            self._fileHandle.write(theLine + "\n")
 
     def printSeperationLine(
         self,
     ):
         """Write a seperation file to log."""
 
-        if self.verbose:
-            print("+" + "-" * (self.linewidth - 2) + "+")
+        theLine = "+" + "-" * (self.linewidth - 2) + "+"
+        if self._verbose:
+            print(theLine)
+
+        if self._fileHandle:
+            self._fileHandle.write(theLine + "\n")
 
     def printTable(
         self, table: list[list[str]], senderIdentification: str, level: int = 1, printHeaderRow: bool = True
@@ -162,12 +182,17 @@ class Journal:
 
         self.message(rowBar, senderIdentification, level)
 
+    def printPrettyTable(self, prettyTable: PrettyTable, senderIdentification: str):
+        prettyTable.min_table_width = self.leftColumn
+        prettyTable.max_table_width = self.leftColumn
+        self.message(str(prettyTable), senderIdentification, level=0)
+
     def setVerbose(
         self,
     ):
         """Set highest verbosity."""
 
-        self.suppressLvl = 3
+        self._suppressLvl = 3
 
     def squelch(self, level):
         """Suppress all messages.
@@ -178,4 +203,4 @@ class Journal:
             The priority level of the message.
         """
 
-        self.suppressLvl = level
+        self._suppressLvl = level

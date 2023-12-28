@@ -60,7 +60,7 @@ cdef class CSRGenerator:
         
         self.nDof = nDof
         self.x  =  np.zeros_like ( I , dtype=np.intc ) 
-        
+
         # abuse Scipy to create the object
         self.csrMatrix = csr_matrix( (np.zeros_like(I, dtype=np.double), (I,J) ), (nDof, nDof) )   
 
