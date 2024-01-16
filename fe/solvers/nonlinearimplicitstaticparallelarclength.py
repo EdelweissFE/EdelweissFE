@@ -68,24 +68,34 @@ class NISTPArcLength(NISTParallel):
         if "arc length parameter" in model.additionalParameters:
             self.Lambda = model.additionalParameters["arc length parameter"]
 
-        try:
-            arcLengthControllerType = step.actions["options"]["NISTArcLength"]["arcLengthController"]
-            if arcLengthControllerType == "off":
+        arcLengthControllerOptions = step.actions["options"].get("NISTArcLength")
+        if arcLengthControllerOptions:
+            arcLengthController = arcLengthControllerOptions.get("arcLengthController")
+            if arcLengthController:
+                try:
+                    self.arcLengthController = step.actions[arcLengthController][arcLengthController]
+                    self.dLambda = 0.0
+                except KeyError:
+                    self.journal.errorMessage(
+                        f'Arc length controller "{arcLengthController}" not found in current step or not configured correctly',
+                        self.identification,
+                    )
+                    raise KeyError
+            else:
+                self.journal.message("No ArcLengthController specified in current step", self.identification)
                 self.arcLengthController = None
                 self.dLambda = None
-            else:
-                self.arcLengthController = step.actions[arcLengthControllerType][arcLengthControllerType]
-                self.dLambda = 0.0
-        except KeyError:
-            pass
 
-        try:
-            stopCondition = step.actions["options"]["NISTArcLength"]["stopCondition"]
-            self.checkConditionalStop = createModelAccessibleFunction(
-                stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
-            )
-        except KeyError:
-            pass
+            stopCondition = arcLengthControllerOptions.get("stopCondition")
+            if stopCondition:
+                # self.journal.message("St", self.identification)
+                self.checkConditionalStop = createModelAccessibleFunction(
+                    stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
+                )
+        else:
+            self.journal.message("No ArcLengthController specified in current step", self.identification)
+            self.arcLengthController = None
+            self.dLambda = None
 
         return super().solveStep(step, model, fieldOutputController, outputmanagers)
 

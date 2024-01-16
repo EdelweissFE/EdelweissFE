@@ -68,7 +68,7 @@ class StepAction(StepActionBase):
 
     def finishIncrement(self, U, dU, dLambda, increment, dofManager):
         self.journal.message(
-            "Dof 1: {:}, Dof 2: {:}".format(self.dof1.values, self.dof2.values),
+            f"C1·DOF1: {self.c1.dot(self.dof1.values)}, C2·DOF2: {self.c2.dot(self.dof2.values)}",
             self.identification,
         )
 

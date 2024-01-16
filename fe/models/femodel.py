@@ -79,7 +79,7 @@ class FEModel:
             for node, nodeFields in zip(element.nodes, element.fields):
                 for field in nodeFields:
                     if field not in node.fields:
-                        node.fields[field] = FieldVariable(node)
+                        node.fields[field] = FieldVariable(node, field)
 
     def _populateNodeFieldVariablesFromConstraints(
         self,
@@ -92,7 +92,7 @@ class FEModel:
             for node, nodeFields in zip(constraint.nodes, constraint.fieldsOnNodes):
                 for field in nodeFields:
                     if field not in node.fields:
-                        node.fields[field] = FieldVariable(node)
+                        node.fields[field] = FieldVariable(node, field)
 
     def _createNodeFieldsFromNodes(self, nodes: list, nodeSets: list) -> dict[str, NodeField]:
         """Bundle nodal FieldVariables together in contiguous NodeFields.
@@ -121,6 +121,23 @@ class FEModel:
                 theNodeFields[field] = theNodeField
 
         return theNodeFields
+
+    def _linkFieldVariableObjects(self, nodes):
+        """Link NodeFields to individual FieldVariable objects.
+
+        Parameters
+        ----------
+        nodes
+            Nodes to be linked
+        """
+
+        for node in nodes:
+            for field, fieldVariable in node.fields.items():
+                nodeField = self.nodeFields[field]
+                idx = nodeField._indicesOfNodesInArray[node]
+                fieldVariable.values = self.nodeFields[field]["U"][idx, :]
+
+        return
 
     def _requestAdditionalScalarVariable(self, name: str):
         """Create a new scalar variables

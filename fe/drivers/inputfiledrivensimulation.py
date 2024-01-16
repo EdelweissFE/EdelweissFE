@@ -147,6 +147,8 @@ def finiteElementSimulation(
         nodeField.createFieldValueEntry("U")
         nodeField.createFieldValueEntry("P")
 
+    model._linkFieldVariableObjects(model.nodeSets["all"])
+
     plotter = createPlotterFromInputFile(inputfile, journal)
     stepManager = createStepManagerFromInputFile(inputfile)
     fieldOutputController = createFieldOutputFromInputFile(inputfile, model, journal)

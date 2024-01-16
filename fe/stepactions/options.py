@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Matthias Neuner matthias.neuner@uibk.ac.at
+#  Paul Hofer Paul.Hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -25,43 +26,36 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-# Created on Mon Jan 23 13:03:09 2017
 
-# @author: Matthias Neuner
 """This stepaction serves as a simple case insensitive container for
 storing step options for various modules.
 """
 
 from fe.stepactions.base.stepactionbase import StepActionBase
-import numpy as np
-import sympy as sp
-from collections import defaultdict
+from fe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 
 class StepAction(StepActionBase):
     def __init__(self, name, options, jobInfo, model, fieldOutputController, journal):
         self.name = name
-        self.options = options
+        self.options = CaseInsensitiveDict(options)
         self.updateStepAction(options, jobInfo, model, fieldOutputController, journal)
-
-    def __contains__(self, key):
-        """We may work with this action like a dictionary."""
-
-        return key.lower() in self.options
-
-    def __getitem__(self, key):
-        """We may work with this action like a dictionary."""
-        return self.options[key.lower()]
-
-    def __setitem__(self, key, val):
-        """We may work with this action like a dictionary."""
-
-        self.options[key.lower()] = val
-
-    def get(self, key, default):
-        """We may work with this action like a  dictionary."""
-
-        return self.options.get(key.lower(), default)
 
     def updateStepAction(self, options, jobInfo, model, fieldOutputController, journal):
         self.options.update(options)
+
+    def __contains__(self, *args):
+        """wrapper method for CaseInsensitiveDict"""
+        return self.options.__contains__(*args)
+
+    def __getitem__(self, *args):
+        """wrapper method for CaseInsensitiveDict"""
+        self.options.__getitem__(*args)
+
+    def __setitem__(self, *args):
+        """wrapper method for CaseInsensitiveDict"""
+        self.options.__setitem__(*args)
+
+    def get(self, *args):
+        """wrapper method for CaseInsensitiveDict"""
+        return self.options.get(*args)
