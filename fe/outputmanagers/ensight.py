@@ -547,13 +547,13 @@ class EnsightChunkWiseCase:
             if self.writeTransientSingleFiles:
                 cf.write("FILE\n")
                 for timeSet in self.timeAndFileSets.values():
-                    cf.write("file set: {:} \n".format(timeSet.number))
-                    cf.write("number of steps: {:} \n".format(len(timeSet.timeValues)))
+                    cf.write("file set: {:}\n".format(timeSet.number))
+                    cf.write("number of steps: {:}\n".format(len(timeSet.timeValues)))
 
             cf.write("GEOMETRY\n")
             for geometryName, tAndFSetNum in self.geometryTrends.items():
                 cf.write(
-                    "model: {:} {:} {:} \n".format(
+                    "model: {:} {:} {:}\n".format(
                         tAndFSetNum, tAndFSetNum, os.path.join(self.caseFileNamePrefix, geometryName + ".geo")
                     )
                 )
@@ -717,7 +717,7 @@ class OutputManager(OutputManagerBase):
 
     def initializeStep(self, step):
         if self.name in step.actions["options"] or "Ensight" in step.actions["options"]:
-            options = step.actions["options"].get(self.name, False) or step.actions["options"]["Ensight"]
+            options = step.actions["options"].get(self.name, False) or step.actions["options"]["Ensight"].options
             self.intermediateSaveInterval = int(options.get("intermediateSaveInterval", self.intermediateSaveInterval))
             self.minDTForOutput = float(options.get("minDTForOutput", self.minDTForOutput))
 
