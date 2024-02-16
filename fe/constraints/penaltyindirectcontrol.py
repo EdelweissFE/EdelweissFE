@@ -45,12 +45,14 @@ documentation = {
 }
 
 import numpy as np
+import itertools
 
 from fe.config.phenomena import getFieldSize
 from fe.timesteppers.timestep import TimeStep
 from fe.utils.misc import convertLinesToStringDictionary, strtobool
 from fe.utils.exceptions import WrongDomain
 from fe.constraints.base.constraintbase import ConstraintBase
+from fe.sets.nodeset import NodeSet
 
 
 class Constraint(ConstraintBase):
@@ -83,7 +85,7 @@ class Constraint(ConstraintBase):
 
         self.offset = float(definition.get("offset", 0.0))
 
-        self._nodes = self.loadNSet + self.constrainedNSet
+        self._nodes = list(self.loadNSet) + list(self.constrainedNSet)
 
         self._fieldsOnNodes = [
             [

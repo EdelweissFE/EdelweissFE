@@ -147,6 +147,8 @@ def finiteElementSimulation(
         nodeField.createFieldValueEntry("U")
         nodeField.createFieldValueEntry("P")
 
+    model._linkFieldVariableObjects(model.nodeSets["all"])
+
     plotter = createPlotterFromInputFile(inputfile, journal)
     stepManager = createStepManagerFromInputFile(inputfile)
     fieldOutputController = createFieldOutputFromInputFile(inputfile, model, journal)
@@ -169,9 +171,8 @@ def finiteElementSimulation(
             stacklevel=2,
         )
 
-    if "solver" in job or not solvers:
-        Solver = getSolverByName(job.get("solver", "NIST"))
-        solvers["default"] = Solver(jobInfo, journal)
+    defaultSolver = getSolverByName(job.get("solver", "NIST"))
+    solvers["default"] = defaultSolver(jobInfo, journal)
 
     try:
         for step in stepManager.dequeueStep(jobInfo, model, fieldOutputController, journal, solvers, outputManagers):

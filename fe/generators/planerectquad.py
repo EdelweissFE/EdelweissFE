@@ -150,10 +150,7 @@ def generateModelData(generatorDefinition, model, journal):
     model._populateNodeFieldVariablesFromElements()
 
     # nodesets:
-    model.nodeSets["{:}_all".format(name)] = NodeSet("{:}_all".format(name), list())
-    for n in np.ravel(nG):
-        if len(n.fields):
-            model.nodeSets["{:}_all".format(name)].add([n])
+    model.nodeSets["{:}_all".format(name)] = NodeSet("{:}_all".format(name), [n for n in np.ravel(nG) if len(n.fields)])
 
     model.nodeSets["{:}_left".format(name)] = NodeSet("{:}_left".format(name), [n for n in nG[0, :]])
     model.nodeSets["{:}_right".format(name)] = NodeSet("{:}_right".format(name), [n for n in nG[-1, :]])
@@ -188,20 +185,15 @@ def generateModelData(generatorDefinition, model, journal):
             [e for e in shearBand[int(nShearBand / 2) - 1 : int(nShearBand / 2) + 2]],
         )
 
-    model.elementSets["{:}_sandwichHorizontal".format(name)] = ElementSet("{:}_sandwichHorizontal".format(name), [])
-    for elList in elGrid[1:-1, :]:
-        for e in elList:
-            model.elementSets["{:}_sandwichHorizontal".format(name)].add([e])
+    model.elementSets["{:}_sandwichHorizontal".format(name)] = ElementSet(
+        "{:}_sandwichHorizontal".format(name), elGrid[1:-1, :]
+    )
 
-    model.elementSets["{:}_sandwichVertical".format(name)] = ElementSet("{:}_sandwichVertical".format(name), [])
-    for elList in elGrid[:, 1:-1]:
-        for e in elList:
-            model.elementSets["{:}_sandwichVertical".format(name)].add([e])
+    model.elementSets["{:}_sandwichVertical".format(name)] = ElementSet(
+        "{:}_sandwichVertical".format(name), elGrid[:, 1:-1]
+    )
 
-    model.elementSets["{:}_core".format(name)] = ElementSet("{:}_core".format(name), [])
-    for elList in elGrid[1:-1, 1:-1]:
-        for e in elList:
-            model.elementSets["{:}_core".format(name)].add([e])
+    model.elementSets["{:}_core".format(name)] = ElementSet("{:}_core".format(name), elGrid[1:-1, 1:-1])
 
     # surfaces
     model.surfaces["{:}_bottom".format(name)] = {1: [e for e in elGrid[:, 0]]}

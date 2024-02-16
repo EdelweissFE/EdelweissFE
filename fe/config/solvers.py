@@ -67,5 +67,10 @@ def getSolverByName(name: str) -> type:
         The solver class type.
     """
 
-    solver = importlib.import_module("fe.solvers.{:}".format(solverLibrary[name]))
+    try:
+        solverType = solverLibrary[name]
+    except KeyError:
+        raise KeyError(f"Solver {name} not found in library. Available solvers: " + ", ".join(solverLibrary.keys()))
+
+    solver = importlib.import_module("fe.solvers.{:}".format(solverType))
     return getattr(solver, name)

@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Alexander Dummer alexander.dummer@uibk.ac.at
+#  Paul Hofer Paul.Hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -26,13 +27,11 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-# @author: Alexander Dummer
-
-from fe.sets.orderedset import OrderedSet
+from fe.sets.orderedset import ImmutableOrderedSet
 from fe.points.node import Node
 
 
-class NodeSet(OrderedSet):
+class NodeSet(ImmutableOrderedSet):
     """A basic node set.
     It has a label, and a list containing the unique nodes.
 
@@ -44,11 +43,13 @@ class NodeSet(OrderedSet):
         A list of nodes.
     """
 
-    allowedObjectTypes = [Node]
-
     def __init__(
         self,
-        name: str,
-        nodes: list,
+        label: str,
+        nodes,
     ):
-        super().__init__(name, nodes)
+        self.allowedObjectTypes = [Node]
+
+        super().__init__(label, nodes)
+
+        self.nodes = self.items

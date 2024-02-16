@@ -38,5 +38,8 @@ class FieldVariable:
     we store results in cumulative Fields, such as NodeField.
     """
 
-    def __init__(self, node):
+    def __init__(self, node, field):
         self.node = node
+        self.field = field
+
+        self.values = None

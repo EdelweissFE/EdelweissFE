@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Matthias Neuner matthias.neuner@uibk.ac.at
+#  Paul Hofer Paul.Hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -27,7 +28,6 @@
 #  ---------------------------------------------------------------------
 # Created on Tue Aug 9 15:41:51 2022
 
-# @author: Matthias Neuner
 """
 Find the node closest to a given spatial position, and store it in an existing or new node set.
 """
@@ -43,6 +43,8 @@ from fe.models.femodel import FEModel
 from fe.utils.exceptions import WrongDomain
 
 import numpy as np
+
+identification = "findclosestnode"
 
 
 def generateModelData(generatorDefinition: dict, model: FEModel, journal: Journal):
@@ -63,13 +65,8 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal: Journa
     closestNode = list(model.nodes.values())[indexClosest]
 
     if options["storeIn"] in model.nodeSets:
-        model.nodeSets[options["storeIn"]].append(closestNode)
-    else:
-        model.nodeSets[options["storeIn"]] = NodeSet(
-            options["storeIn"],
-            [
-                closestNode,
-            ],
-        )
+        raise Exception("Nodeset {options['storeIn']} already exists")
+
+    model.nodeSets[options["storeIn"]] = NodeSet(options["storeIn"], [closestNode])
 
     return model

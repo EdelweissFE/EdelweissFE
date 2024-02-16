@@ -69,22 +69,34 @@ class NISTPArcLength(NISTParallel):
         if "arc length parameter" in model.additionalParameters:
             self.Lambda = model.additionalParameters["arc length parameter"]
 
-        if step.actions["options"]:
-            if "NISTArcLength" in step.actions["options"]:
-                if "arcLengthController" in step.actions["options"]["NISTArcLength"]:
-                    arcLengthControllerType = step.actions["options"]["NISTArcLength"]["arcLengthController"]
-                    if arcLengthControllerType == "off":
-                        self.arcLengthController = None
-                        self.dLambda = None
-                    else:
-                        self.arcLengthController = step.actions[arcLengthControllerType][arcLengthControllerType]
-                        self.dLambda = 0.0
-
-                if "stopCondition" in step.actions["options"]["NISTArcLength"]:
-                    stopCondition = step.actions["options"]["NISTArcLength"]["stopCondition"]
-                    self.checkConditionalStop = createModelAccessibleFunction(
-                        stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
+        arcLengthControllerOptions = step.actions["options"].get("NISTArcLength")
+        if arcLengthControllerOptions:
+            arcLengthController = arcLengthControllerOptions.get("arcLengthController")
+            if arcLengthController:
+                try:
+                    self.arcLengthController = step.actions[arcLengthController][arcLengthController]
+                    self.dLambda = 0.0
+                except KeyError:
+                    self.journal.errorMessage(
+                        f'Arc length controller "{arcLengthController}" not found in current step or not configured correctly',
+                        self.identification,
                     )
+                    raise KeyError
+            else:
+                self.journal.message("No ArcLengthController specified in current step", self.identification)
+                self.arcLengthController = None
+                self.dLambda = None
+
+            stopCondition = arcLengthControllerOptions.get("stopCondition")
+            if stopCondition:
+                # self.journal.message("St", self.identification)
+                self.checkConditionalStop = createModelAccessibleFunction(
+                    stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
+                )
+        else:
+            self.journal.message("No ArcLengthController specified in current step", self.identification)
+            self.arcLengthController = None
+            self.dLambda = None
 
         return super().solveStep(step, model, fieldOutputController, outputmanagers)
 

@@ -221,7 +221,7 @@ class NodeFieldSubset(NodeField):
             nodeCandidates = [
                 subset,
             ]
-        if type(subset) == ElementSet:
+        elif type(subset) == ElementSet:
             nodeCandidates = subset.extractNodeSet()
         elif type(subset) == NodeSet:
             nodeCandidates = subset

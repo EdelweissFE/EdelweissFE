@@ -14,6 +14,7 @@
 #  2017 - today
 #
 #  Alexander Dummer alexander.dummer@uibk.ac.at
+#  Paul Hofer Paul.Hofer@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -26,15 +27,13 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-# @author: Alexander Dummer
-
-from fe.sets.orderedset import OrderedSet
+from fe.sets.orderedset import ImmutableOrderedSet
 from fe.elements.marmotelement.element import MarmotElementWrapper
 from fe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
 from fe.utils.meshtools import extractNodesFromElementSet
 
 
-class ElementSet(OrderedSet):
+class ElementSet(ImmutableOrderedSet):
     """A basic element set.
     It has a label, and a list containing unique elements.
 
@@ -46,15 +45,17 @@ class ElementSet(OrderedSet):
         A list of elements.
     """
 
-    allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
-
     def __init__(
         self,
-        name: str,
-        elements: list,
+        label: str,
+        elements,
     ):
-        super().__init__(name, elements)
+        self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
+
+        super().__init__(label, elements)
         self._nodes = None
+
+        self.elements = self.items
 
     def extractNodeSet(
         self,

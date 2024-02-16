@@ -347,6 +347,16 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     nodeSets.append(NodeSet("{:}_leftBack".format(name), [n for n in np.ravel(nG[0, :, 0]) if len(n.fields) > 0]))
     nodeSets.append(NodeSet("{:}_leftFront".format(name), [n for n in np.ravel(nG[0, :, -1]) if len(n.fields) > 0]))
 
+    nodeSets.append(
+        NodeSet("{:}_centerX".format(name), [n for n in np.ravel(nG[int(nNodesX / 2), :, :]) if len(n.fields) > 0])
+    )
+    nodeSets.append(
+        NodeSet("{:}_centerY".format(name), [n for n in np.ravel(nG[:, int(nNodesY / 2), :]) if len(n.fields) > 0])
+    )
+    nodeSets.append(
+        NodeSet("{:}_centerZ".format(name), [n for n in np.ravel(nG[:, :, int(nNodesZ / 2)]) if len(n.fields) > 0])
+    )
+
     # 8 vertices
     nodeSets.append(NodeSet("{:}_bottomRightFront".format(name), [nG[-1, 0, -1]]))
     nodeSets.append(NodeSet("{:}_bottomRightBack".format(name), [nG[-1, 0, 0]]))
@@ -376,6 +386,10 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     elementSets.append(
         ElementSet("{:}_centralFrontToBack".format(name), np.ravel(elGrid[int(nX / 2), int(nY / 2), 0:nZ]))
     )
+
+    elementSets.append(ElementSet("{:}_centerSliceX".format(name), np.ravel(elGrid[int(nX / 2), :, :])))
+    elementSets.append(ElementSet("{:}_centerSliceY".format(name), np.ravel(elGrid[:, int(nY / 2), :])))
+    elementSets.append(ElementSet("{:}_centerSliceZ".format(name), np.ravel(elGrid[:, :, int(nZ / 2)])))
 
     nShearBand = min(nX, nY)
     if nShearBand > 3:

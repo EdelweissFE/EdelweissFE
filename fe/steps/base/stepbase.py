@@ -70,7 +70,7 @@ class StepBase:
         fieldOutputController: FieldOutputController,
         journal: Journal,
         jobInfo: dict,
-        solvers: dict,
+        solver,
         outputManagers: list,
         stepActions: dict,
         **kwargs

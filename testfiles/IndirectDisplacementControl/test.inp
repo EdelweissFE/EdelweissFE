@@ -1,54 +1,80 @@
-*material, name=modleonNonLocal, id=modleon
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 5, 1.05, 0.0017, 1
+*job, name=job, domain=3d
 
-*section, name=section1, thickness=1.0, material=modleon, type=plane
+*solver, solver=NISTPArcLength, name=NISTPArcLen 
+
+*modelGenerator, generator=boxGen, name=gen
+lX     = 100
+lY     = 1
+lZ     = 1
+nX     = 9
+nY     = 1
+nZ     = 1
+elType = GC3D8
+
+*material, name=gcdp, id=concrete
+**E         nu      fcy         fcu         fbu         ftu         Df          Ah        
+100.0,      0.00,   10,         30,         35,         3.00,       0.85,       0.12, 
+**Bh        Ch      Dh          As          softmod     l           m           omegaMax 
+0.003,      2.0,    1e-6,       15.0,       .1,         2,          1.05,       1,
+**derivativeMethod, dTThresholdElasticStiffness
+1,                  1e-8
+
+*section, name=concrete, material=concrete, type=solid
 all
-*elSet, elSet=weak
-20,61
-*section, name=sectionweak, thickness=.8, material=modleon, type=plane
-weak
 
-*job, name=cpe4job, domain=2d
-*solver, solver=NISTPArcLength, name=theSolver
+*modelGenerator, generator=findClosestNode, name=closestN1, executeAfterManualGeneration=True
+location='40, 0, 0'
+storeIn=IDC1
+
+*modelGenerator, generator=findClosestNode, name=closestN2, executeAfterManualGeneration=True
+location='60, 0, 0'
+storeIn=IDC2
+
+*step, maxInc=1, minInc=1, maxNumInc=100000, maxIter=25, stepLength=1, solver=NISTPArcLen
+setfield,   name=omegaIni,  fieldOutput=alphaDWeak, value=1e-2, type=uniform
+
+*step, maxInc=1e-2, startInc=1e-2, minInc=1e-6, maxNumInc=100000, maxIter=25, stepLength=1, solver=NISTPArcLen
+options, category=Ensight, intermediateSaveInterval=1, minDTForOutput=0
+options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition='fieldOutputs["I1pMax"] > 0.01'
+
+indirectcontrol, dof1='model.nodeSets["IDC1"][0].fields["displacement"]', cVector1='[-1,0,0]', dof2='model.nodeSets["IDC2"][0].fields["displacement"]', cVector2='[1,0,0]', L=1., 
+
+dirichlet, name=leftX, nSet=gen_left,  field=displacement, 1=0.
+dirichlet, name=leftY, nSet=gen_left,  field=displacement, 2=0.
+dirichlet, name=leftZ, nSet=gen_left,  field=displacement, 3=0.
+dirichlet, name=right, nSet=gen_right, field=displacement, 1=1.
+
 *fieldOutput
-create=perNode, elSet=all, field=displacement, result=U, name=displacement
-create=perElement, elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
-create=perElement, elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
-create=perElement, elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:], axis=1) '
-create=perElement, elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:], axis=1) '
-create=perElement, elSet=all, result=omega, quadraturePoint=0:4, name=omega, f(x)='mean( x[:,:], axis=1) '
-create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas0, f(x)='mean( x[:,:,0], axis=1) '
-create=perElement, elSet=all, result=enhancedstrainparameters, quadraturePoint=0:4, name=eas1, f(x)='mean( x[:,:,1], axis=1) '
-create=perNode, nSet=gen_top, field=displacement, result=P, f(x)='( sum(x[:, 1]) ) ', name=RFTop, saveHistory=true
-create=perNode, nSet=gen_top, field=displacement, result=U, f(x)='( x[0, 1] ) ', name=UTop, saveHistory=true
+name=displacement,    create=perNode, elSet=all, field=displacement, result=U
+name=nonlocal_damage, create=perNode, elSet=all, field=nonlocal damage, result=U 
 
-*modelGenerator, generator=planeRectQuad, name=gen
-x0=0, l=50
-y0=0, h=200
-elType=GCPE4EAS2
-nX=10
-nY=40
+name=strain, create=perElement, elSet=all, result=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=stress, create=perElement, elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=omega,  create=perElement, elSet=all, result=omega,  quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=alphaP, create=perElement, elSet=all, result=alphaP, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=alphaD, create=perElement, elSet=all, result=alphaD, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+name=I1p,    create=perElement, elSet=all, result=I1p,    quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 
-*output, type=ensight, name=esExport
-create=perNode,    fieldOutput=displacement
-create=perElement, fieldOutput=stress
-create=perElement, fieldOutput=eas0
-create=perElement, fieldOutput=eas1
-create=perElement, fieldOutput=strain
+name=I1pMax,    create=perElement, elSet=all, result=I1p,    quadraturePoint=0:8, f(x)='np.max(x)', saveHistory=true
+name=alphaDMax, create=perElement, elSet=all, result=alphaD, quadraturePoint=0:8, f(x)='np.max(x)', saveHistory=true
+name=omegaMax,  create=perElement, elSet=all, result=omega,  quadraturePoint=0:8, f(x)='np.max(x)', saveHistory=true
+
+name=alphaDWeak, create=perElement, elSet=gen_centerSliceX, result=alphaD, quadraturePoint=0:8
+
+name=U1,  create=perNode, nSet=gen_right, field=displacement, result=U, f(x)='mean(x[:,0])', saveHistory=true, export=U
+name=RF1, create=perNode, nSet=gen_right, field=displacement, result=P, f(x)='sum(x[:,0])', saveHistory=true, export=RF
+
+*output, type=ensight, name=test
+create=perNode, fieldOutput=displacement
+create=perNode, fieldOutput=nonlocal_damage
+create=perElement, fieldOutput=omega
+create=perElement, fieldOutput=I1p
 create=perElement, fieldOutput=alphaP
 create=perElement, fieldOutput=alphaD
-create=perElement, fieldOutput=omega
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
-** *output, type=meshplot, name=RFPlot
-** create=xyData, x=time, y=RFTop, legend=RF
-** create=xyData, x=time, y=UTop, legend=U, figure=2
+*output, type=meshPlot
+figure=1, axSpec=111, create=xyData, x=U1, y=RF1
 
-*step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=off
-options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition = ' fieldOutputs["UTop"] < -1.0 '
-indirectcontrol, dof1=' model.nodes[18].fields["displacement"]', cVector1='[0,-1]', dof2=' model.nodes[24].fields["displacement"]', cVector2='[0,1]', L=-0.1, 
-
-dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
-dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-1
