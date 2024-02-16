@@ -131,15 +131,6 @@ class OutputManagerBase(ABC):
         self,
     ):
         """Finalize the output the end of a step.
-
-        Parameters
-        ----------
-        U
-            The final solution vector.
-        P
-            The final reaction vector.
-        time
-            The time at the end of the step.
         """
 
         pass

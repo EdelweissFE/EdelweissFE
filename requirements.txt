@@ -12,6 +12,7 @@ matplotlib
 numpy 
 numpydoc
 python>=3.9
+pytest
 prettytable
 scipy
 sphinx 

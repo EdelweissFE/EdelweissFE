@@ -184,9 +184,10 @@ extensions += [
             eigen_include,
         ],
         libraries=[
-            "mkl_intel_thread",
+            "mkl_gnu_thread",
             "mkl_core",
             "mkl_rt",
+            "mkl_gf_lp64",
             "iomp5",
         ],
         language="c++",
