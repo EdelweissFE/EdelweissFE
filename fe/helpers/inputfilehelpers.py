@@ -207,8 +207,15 @@ def createSolversFromInputFile(inputfile: dict, jobInfo: dict, journal: Journal)
     """
     solvers = {}
     for solverDefinition in inputfile["*solver"]:
-        solverType = solverDefinition["solver"]
-        solverName = solverDefinition["name"]
+        try:
+            solverName = solverDefinition["name"]
+        except KeyError:
+            raise KeyError("Solver definition missing name")
+        try:
+            solverType = solverDefinition["solver"]
+        except KeyError:
+            raise KeyError(f"Missing type definition for solver {solverName}. Specify solver type with solver=...")
+
         solverData = solverDefinition["data"]
 
         Solver = getSolverByName(solverType)

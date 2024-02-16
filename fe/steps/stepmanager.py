@@ -38,6 +38,8 @@ from fe.steps.adaptivestep import AdaptiveStep
 from fe.steps.base.stepbase import StepBase
 import textwrap
 
+from warnings import warn
+
 
 class StepActionDefinition:
     def __init__(self, name: str, module: str, kwargs: dict):
@@ -156,14 +158,36 @@ class StepManager:
                         action.name, action.kwargs, jobInfo, model, fieldOutputController, journal
                     )
 
+            try:
+                solverName = stepDefinition.stepOptions.pop("solver")
+            except KeyError:
+                # raise KeyError("Step definition missing solver option.")
+                warn(
+                    "Step definition missing solver option.",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                solverName = "default"
+
+            try:
+                solver = solvers[solverName]
+            except KeyError:
+                mssg = f"No definition found for solver {solverName}."
+                availableSolvers = [key for key in solvers.keys() if not key == "default"]
+                if availableSolvers:
+                    mssg += " Available solvers: " + ", ".join(availableSolvers)
+                else:
+                    mssg += " Define solver using *solver keyword."
+                raise KeyError(mssg)
+
             yield AdaptiveStep(
                 stepNumber,
                 model,
                 fieldOutputController,
                 journal,
                 jobInfo,
-                solvers,
+                solver,
                 outputManagers,
                 self.stepActions,
-                **stepDefinition.stepOptions
+                **stepDefinition.stepOptions,
             )
