@@ -68,7 +68,7 @@ class AdaptiveStep(StepBase):
         fieldOutputController: FieldOutputController,
         journal: Journal,
         jobInfo: dict,
-        solvers: dict,
+        solver,
         outputManagers: list,
         stepActions: dict,
         **kwargs
@@ -79,7 +79,7 @@ class AdaptiveStep(StepBase):
         self.model = model
         self.fieldOutputController = fieldOutputController
         self.journal = journal
-        self.solvers = solvers
+        self.solver = solver
         self.outputManagers = outputManagers
 
         self.length = kwargs.get("stepLength", 1.0)  #: The durcation of the step.
@@ -115,28 +115,13 @@ class AdaptiveStep(StepBase):
 
         self.actions = stepActions
 
-        self.solverName = kwargs.get("solver", None)
-
     def solve(
         self,
     ):
         model = self.model
         fieldOutputController = self.fieldOutputController
         journal = self.journal
-        solvers = self.solvers
         outputManagers = self.outputManagers
-
-        if self.solverName in solvers:
-            solver = solvers[self.solverName]
-        else:
-            from warnings import warn
-
-            warn(
-                "Warning, not defining a solver for a step is deprecated; assign a solver using the solver= option",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            solver = solvers["default"]
 
         try:
             for modelUpdate in self.actions["modelupdate"].values():
@@ -146,7 +131,7 @@ class AdaptiveStep(StepBase):
             for manager in outputManagers:
                 manager.initializeStep(self)
 
-            solver.solveStep(self, model, fieldOutputController, outputManagers)
+            self.solver.solveStep(self, model, fieldOutputController, outputManagers)
 
         finally:
             fieldOutputController.finalizeStep()

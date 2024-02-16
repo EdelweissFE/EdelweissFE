@@ -39,6 +39,10 @@ from fe.drivers.inputfiledrivensimulation import finiteElementSimulation
 from fe.utils.inputfileparser import parseInputFile, printKeywords, printKeywordsRST
 from fe.utils.printdocumentation import printDocumentation
 
+import warnings
+
+warnings.simplefilter("always", DeprecationWarning)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Batch computation for Edelweiss finite element jobs")
