@@ -74,7 +74,7 @@ cdef class MarmotElementWrapper:
 
         
         self._nNodes                         = self.marmotElement.getNNodes()
-        
+        self._nSpatialDimensions             = self.marmotElement.getNSpatialDimensions()
         self._nDof                           = self.marmotElement.getNDofPerElement()
         
         cdef vector[vector[string]] fields  = self.marmotElement.getNodeFields()
@@ -105,6 +105,10 @@ cdef class MarmotElementWrapper:
     @property
     def elNumber(self):
         return self._elNumber
+
+    @property
+    def nSpatialDimensions(self):
+       return self._nSpatialDimensions
     
     @property
     def elType(self):
@@ -162,7 +166,6 @@ cdef class MarmotElementWrapper:
             - the actual set,
             - and a temporary set for backup in nonlinear iteration schemes.
         """
-
         self._materialProperties =  materialProperties
         try:
             self.marmotElement.assignProperty(

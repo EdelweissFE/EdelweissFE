@@ -43,28 +43,15 @@ from fe.sections.base.sectionbase import Section as SectionBase
 
 
 class Section(SectionBase):
-    def __init__(self, name, options, materialName, thickness, model):
-        super().__init__(name, options, materialName, thickness, model)
+    def __init__(self, name, options, materialName, model, **kwargs):
+        super().__init__(name, options, materialName, model, **kwargs)
 
-    def assignSectionPropertiesToModel(self, model):
-        elSets = [model.elementSets[setName] for setName in self.elSetNames]
-        material = model.materials[self.materialName]
+    def assignSectionPropertiesToElement(self, element, **kwargs):
+        material = kwargs.get("material", self.material)
 
-        if any(self.materialParameterFromFieldDefs):
-            for elSet in elSets:
-                for el in elSet:
-                    materialProperties = super().propertiesFromField(el, material, model)
+        nSpatialDimensions = element.nSpatialDimensions
+        if nSpatialDimensions < 3:
+            raise Exception(f"Solid section is incompatible with {nSpatialDimensions}-dimensional finite elements.")
 
-                    el.initializeElement()
-                    el.setMaterial(material["name"], materialProperties)
-
-        else:
-            for elSet in elSets:
-                for el in elSet:
-                    el.initializeElement()
-                    el.setMaterial(material["name"], material["properties"])
-
-        if self.writeMaterialPropertiesToFile:
-            self.exportMaterialPropertiesToFile(elSets)
-
-        return model
+        element.initializeElement()
+        element.setMaterial(material["name"], material["properties"])
