@@ -64,6 +64,7 @@ class MarmotMaterialWrappingElement(BaseElement):
         self._elNumber = elNumber
         self._materialType = materialType
         self._nNodes = 1
+        self._nSpatialDimensions = 0
         self._ensightType = "point"
 
         self._marmotMaterialWrapper = marmotMaterialWrappers[self._materialType]()
@@ -80,6 +81,10 @@ class MarmotMaterialWrappingElement(BaseElement):
     @property
     def nNodes(self):
         return self._nNodes
+
+    @property
+    def nSpatialDimensions(self):
+        return self._nSpatialDimensions
 
     @property
     def nodes(self):

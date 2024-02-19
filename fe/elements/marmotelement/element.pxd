@@ -130,6 +130,8 @@ cdef extern from "Marmot/MarmotElement.h":
         string getElementShape()
         
         int getNNodes()
+        
+        int getNSpatialDimensions()
     
         int getNDofPerElement()
 
@@ -145,7 +147,7 @@ cdef class MarmotElementWrapper:
     cdef list _nodes, 
     cdef int _elNumber, 
     cdef str _elType, 
-    cdef int _nNodes, _nDof
+    cdef int _nNodes, _nDof, _nSpatialDimensions
     cdef list _fields
     cdef str _ensightType
     cdef int _hasMaterial 

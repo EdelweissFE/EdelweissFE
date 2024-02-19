@@ -46,40 +46,23 @@ from fe.sections.base.sectionbase import Section as SectionBase
 
 
 class Section(SectionBase):
-    def __init__(self, name, options, materialName, thickness, model):
-        super().__init__(name, options, materialName, thickness, model)
-        self.thickness = thickness
-        if not thickness > 0:
-            raise ValueError("{}: Thickness must be greater than zero".format(name))
+    def __init__(self, name, options, materialName, model, **kwargs):
+        super().__init__(name, options, materialName, model, **kwargs)
+        try:
+            self.thickness = kwargs["thickness"]
+        except KeyError:
+            raise KeyError(f"Thickness must be specified for section {name}")
 
-    def assignSectionPropertiesToModel(self, model):
-        elSets = [model.elementSets[setName] for setName in self.elSetNames]
-        material = model.materials[self.materialName]
+    def assignSectionPropertiesToElement(self, element, **kwargs):
+        material = kwargs.get("material", self.material)
 
-        elProperties = np.array(
-            [
-                self.thickness,
-            ],
-            dtype=float,
-        )
+        nSpatialDimensions = element.nSpatialDimensions
+        if nSpatialDimensions != 2:
+            raise Exception(f"Plane section is incompatible with {nSpatialDimensions}-dimensional finite elements.")
 
-        if any(self.materialParameterFromFieldDefs):
-            for elSet in elSets:
-                for el in elSet:
-                    materialProperties = super().propertiesFromField(el, material, model)
+        thickness = self.thickness
+        elProperties = np.array([thickness], dtype=float)
 
-                    el.setProperties(elProperties)
-                    el.initializeElement()
-                    el.setMaterial(material["name"], materialProperties)
-
-        else:
-            for elSet in elSets:
-                for el in elSet:
-                    el.setProperties(elProperties)
-                    el.initializeElement()
-                    el.setMaterial(material["name"], material["properties"])
-
-        if self.writeMaterialPropertiesToFile:
-            self.exportMaterialPropertiesToFile(elSets)
-
-        return model
+        element.setProperties(elProperties)
+        element.initializeElement()
+        element.setMaterial(material["name"], material["properties"])

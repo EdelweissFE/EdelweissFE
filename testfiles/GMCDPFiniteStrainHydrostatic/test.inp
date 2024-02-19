@@ -8,7 +8,7 @@
 **a1,       a2,     a3,     a4,         
 0.5,        0.00,   0.5,     0,           
 
-*section, name=section1, thickness=1.0, material=GMCDPFiniteStrain, type=plane
+*section, name=section1, material=GMCDPFiniteStrain, type=solid
 all
 
 *job, name=cpe4job, domain=3d
