@@ -50,7 +50,7 @@ class Section(SectionBase):
         material = kwargs.get("material", self.material)
 
         nSpatialDimensions = element.nSpatialDimensions
-        if nSpatialDimensions < 3:
+        if nSpatialDimensions < 3 and nSpatialDimensions != 0:
             raise Exception(f"Solid section is incompatible with {nSpatialDimensions}-dimensional finite elements.")
 
         element.initializeElement()
