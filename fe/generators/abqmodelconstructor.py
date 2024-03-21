@@ -281,21 +281,30 @@ class AbqModelConstructor:
             The updated model tree.
         """
 
-        for secDef in inputFile["*section"]:
-            name = secDef["name"]
-            sec = secDef["type"]
-            data = secDef["data"]
-            materialID = secDef["material"]
+        for definition in inputFile["*section"]:
+            try:
+                name = definition.pop("name")
+            except KeyError:
+                raise KeyError(f"No name specified for section.")
+            try:
+                sectionType = definition.pop("type")
+            except KeyError:
+                raise KeyError(f"No type specified for section {name}.")
+            try:  # should data be required?
+                data = definition.pop("data")
+            except KeyError:
+                raise KeyError(f"No data specified for section {name}.")
+            try:
+                materialName = definition.pop("material")
+            except:
+                raise KeyError(f"No material specified for section {name}.")
 
             if name in model.sections:
-                raise Exception("Redundant section definition {:}".format(name))
+                raise KeyError("Redundant definition for section f{name}")
 
-            Section = getSectionClass(sec)
+            Section = getSectionClass(sectionType)
 
-            # this was a bad design decision, and will be deprecated sooner or later:
-            thickness = float(secDef.get("thickness", 0.0))
-
-            theSection = Section(name, data, materialID, thickness, model)
+            theSection = Section(name, data, materialName, model, **definition)
 
             model.sections[name] = theSection
 
