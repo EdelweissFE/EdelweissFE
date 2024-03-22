@@ -30,7 +30,7 @@ create=perElement, fieldOutput=strain
 configuration, overwrite=yes
 
 *output, type=monitor, name=dispMon
-fieldOutput=disp_top, f(x)='mean(x[:,1])'
+fieldOutput=disp_top, f(x)='(x[:,1])'
 fieldOutput=RF, f(x)='sum(x[:,1])'
 
 *nset, nset=measurement_nodes
@@ -39,12 +39,12 @@ gen_leftTop
 
 *constraint, type=penaltyindirectcontrol, name=pc1
 field=displacement
-cVector='0, 0, 0, -1'
+cVector='0, 1, 0, -1'
 constrainedNSet=measurement_nodes
 loadNSet=gen_rightTop
 loadVector='0, -1'
 length=-1
-penaltyStiffness=1e6
+penaltyStiffness=1e8
 offset=0
 
 *step, solver=theSolver, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
