@@ -95,7 +95,7 @@ def main():
 
         if args.output:
             U = np.hstack(
-                [f.values["U"].flatten() for f in model.nodeFields.values()]
+                [f["U"].flatten() for f in model.nodeFields.values()]
                 + [v.value for v in model.scalarVariables.values()]
             ).flatten()
             np.savetxt(args.output, U)
