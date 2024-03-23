@@ -130,8 +130,7 @@ class OutputManagerBase(ABC):
     def finalizeStep(
         self,
     ):
-        """Finalize the output the end of a step.
-        """
+        """Finalize the output the end of a step."""
 
         pass
 
