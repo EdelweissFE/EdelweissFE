@@ -1,7 +1,7 @@
-Jobs
-====
+Inputfile driven simulations
+============================
 
-Relevant module: ``fe.fecore``
+Relevant module: ``fe.drivers.inputfiledrivensimulation``
 
-.. automodule:: fe.fecore
+.. automodule:: fe.drivers.inputfiledrivensimulation
    :members: 
