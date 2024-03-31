@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>fe.numerics.dofmanager &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -114,7 +116,6 @@
 <span class="kn">from</span> <span class="nn">fe.config.phenomena</span> <span class="kn">import</span> <span class="n">getFieldSize</span><span class="p">,</span> <span class="n">phenomena</span>
 <span class="kn">from</span> <span class="nn">fe.points.node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">fe.fields.nodefield</span> <span class="kn">import</span> <span class="n">NodeField</span>
-<span class="kn">from</span> <span class="nn">fe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
@@ -200,14 +201,59 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    model</span>
-<span class="sd">        A dictionary containing the model tree.</span>
+<span class="sd">    nodeFields</span>
+<span class="sd">        The list of NodeFields which should be represented in the DofVector structure.</span>
+<span class="sd">    scalarVariables</span>
+<span class="sd">        The list of ScalarVariables which should be represented in the DofVector structure.</span>
+<span class="sd">    elements</span>
+<span class="sd">        The list of Elements for which a map to the respective indices should be created.</span>
+<span class="sd">    constraints</span>
+<span class="sd">        The list of Constraints for which a map to the respective indices should be created.</span>
+<span class="sd">    nodeSets</span>
+<span class="sd">        The list of NodeSets for which a map to the respective indices should be created.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initializeFromModel</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodeFields</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">scalarVariables</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">nodeSets</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfScalarVariablesInDofVector</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeDofVectorStructure</span><span class="p">(</span><span class="n">nodeFields</span><span class="p">,</span> <span class="n">scalarVariables</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_initializeDofVectorStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">indexToNodeMapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determineIndexToNodeMap</span><span class="p">()</span>
+
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accumulatedElementNDof</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_accumulatedElementVIJSize</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nAccumulatedNodalFluxesFieldwiseFromElements</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">largestNumberOfElNDof</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gatherEntitiesInformation</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accumulatedConstraintNDof</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_accumulatedConstraintVIJSize</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nAccumulatedNodalFluxesFieldwiseFromConstraints</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">largestNumberOfConstraintNDof</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gatherEntitiesInformation</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nAccumulatedNodalFluxesFieldwise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computeAccumulatedNodalFluxesFieldWise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsOnNodeSetsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateFieldsOnNodeSetsInDofVector</span><span class="p">(</span><span class="n">nodeSets</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfElementsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateElementsInDofVector</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfConstraintsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateConstraintsInDofVector</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfBasicVariablesInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getIndicesOfBasicVariablesInDofVector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfHigherOrderEntitiesInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getIndicesOfAllHigherOrderEntitiesInDofVector</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sizeVIJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computeSizeVIJ</span><span class="p">()</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfHigherOrderEntitiesInVIJ</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeVIJPattern</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_initializeDofVectorStructure</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nodeFields</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">scalarVariables</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over all nodes to generate the global field-dof indices.</span>
 
 <span class="sd">        Returns</span>
@@ -220,131 +266,170 @@
 <span class="sd">                * indices</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">indicesOfFieldsInDofVector</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">indicesOfNodeFieldVariablesInDofVector</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">currentIndexInDofVector</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">idcsOfFieldsInDofVector</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">idcsOfNodeFieldVariablesInDofVector</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">currentIdxInDofVector</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="k">for</span> <span class="n">fieldName</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">nodeFields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">nextIndexInDofVector</span> <span class="o">=</span> <span class="n">currentIndexInDofVector</span> <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">dimension</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-            <span class="n">indicesOfFieldsInDofVector</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">currentIndexInDofVector</span><span class="p">,</span> <span class="n">nextIndexInDofVector</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">nField</span> <span class="ow">in</span> <span class="n">nodeFields</span><span class="p">:</span>
+            <span class="n">nextIdxInDofVector</span> <span class="o">=</span> <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">nField</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nField</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">currentIdxInDofVector</span><span class="p">,</span> <span class="n">nextIdxInDofVector</span><span class="p">)</span>
 
-            <span class="n">indicesOfNodeFieldVariablesInDofVector</span> <span class="o">|=</span> <span class="p">{</span>
-                <span class="n">n</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                    <span class="n">currentIndexInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">field</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
-                    <span class="n">currentIndexInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">field</span><span class="o">.</span><span class="n">dimension</span> <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
+            <span class="n">idcsOfNodeFieldVariablesInDofVector</span> <span class="o">|=</span> <span class="p">{</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">nField</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                    <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
+                    <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span> <span class="o">+</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
                     <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nField</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
             <span class="p">}</span>
-            <span class="n">currentIndexInDofVector</span> <span class="o">=</span> <span class="n">nextIndexInDofVector</span>
+            <span class="n">currentIdxInDofVector</span> <span class="o">=</span> <span class="n">nextIdxInDofVector</span>
 
-        <span class="n">indicesOfScalarVariablesInDofVector</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">scalarVariable</span><span class="p">:</span> <span class="n">currentIndexInDofVector</span> <span class="o">+</span> <span class="n">i</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">scalarVariable</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">scalarVariables</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">idcsOfScalarVariablesInDofVector</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">scalarVariable</span><span class="p">:</span> <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">scalarVariable</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scalarVariables</span><span class="p">)</span>
         <span class="p">}</span>
 
-        <span class="n">currentIndexInDofVector</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indicesOfScalarVariablesInDofVector</span><span class="p">)</span>
-        <span class="n">nDof</span> <span class="o">=</span> <span class="n">currentIndexInDofVector</span>
+        <span class="n">currentIdxInDofVector</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idcsOfScalarVariablesInDofVector</span><span class="p">)</span>
+        <span class="n">nDof</span> <span class="o">=</span> <span class="n">currentIdxInDofVector</span>
 
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">nDof</span><span class="p">,</span>
-            <span class="n">indicesOfNodeFieldVariablesInDofVector</span><span class="p">,</span>
-            <span class="n">indicesOfFieldsInDofVector</span><span class="p">,</span>
-            <span class="n">indicesOfScalarVariablesInDofVector</span><span class="p">,</span>
+            <span class="n">idcsOfNodeFieldVariablesInDofVector</span><span class="p">,</span>
+            <span class="n">idcsOfFieldsInDofVector</span><span class="p">,</span>
+            <span class="n">idcsOfScalarVariablesInDofVector</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_determineIndexToNodeMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-        <span class="n">indexToNodeMapping</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">index</span><span class="p">:</span> <span class="n">node</span>
-            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">f</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span>
-        <span class="p">}</span>
+    <span class="k">def</span> <span class="nf">_determineIndexToNodeMap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Node</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine the map from each index (associated with a FieldVariable)</span>
+<span class="sd">        in the DofVector to the corresponding attached Node oject.</span>
+<span class="sd">        Useful for determining, e.g., the Node associated with a residual outlier in nonlinear</span>
+<span class="sd">        simulations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[int, Node]</span>
+<span class="sd">            The dictionary containing the map from index of a FieldVariable (component) in the DofVector to the respective Node instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indexToNodeMapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">fieldVariable</span><span class="p">,</span> <span class="n">fieldVariableIndices</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">fieldVariableIndices</span><span class="p">:</span>
+                <span class="n">indexToNodeMapping</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">fieldVariable</span><span class="o">.</span><span class="n">node</span>
 
         <span class="k">return</span> <span class="n">indexToNodeMapping</span>
 
-    <span class="k">def</span> <span class="nf">_countNodalFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="c1"># def _countNodalFluxesFieldWise(self, listOfEntities:list) -&gt; dict[str,int]:</span>
+    <span class="c1">#     &quot;&quot;&quot;For the VIJ (COO) system matrix and the Abaqus like convergence test,</span>
+    <span class="c1">#     the number of dofs &#39;entity-wise&#39; is needed:</span>
+    <span class="c1">#     = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).</span>
+
+    <span class="c1">#     Returns</span>
+    <span class="c1">#     -------</span>
+    <span class="c1">#     dict</span>
+    <span class="c1">#         Number of accumulated fluxes per field:</span>
+    <span class="c1">#             - Field</span>
+    <span class="c1">#             - Number of accumulated fluxes</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+
+    <span class="c1">#     # indicesOfFieldsInDofVector = self.idcsOfFieldsInDofVector</span>
+
+    <span class="c1">#     accumulatedNumberOfFieldFluxes = {}</span>
+    <span class="c1">#     # accumulatedNodalFluxesTotal = 0</span>
+
+    <span class="c1">#     for field in indicesOfFieldsInDofVector.keys():</span>
+    <span class="c1">#         accumulatedNumberOfFieldFluxes[field] = np.sum(</span>
+    <span class="c1">#             [</span>
+    <span class="c1">#                 len(self.idcsOfFieldVariablesInDofVector[node.fields[field]])</span>
+    <span class="c1">#                 for entity in listOfEntities</span>
+    <span class="c1">#                 for node in (entity.nodes)</span>
+    <span class="c1">#                 if field in node.fields</span>
+    <span class="c1">#             ]</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     return accumulatedNumberOfFieldFluxes</span>
+
+    <span class="k">def</span> <span class="nf">_computeAccumulatedNodalFluxesFieldWise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;For the VIJ (COO) system matrix and the Abaqus like convergence test,</span>
 <span class="sd">        the number of dofs &#39;entity-wise&#39; is needed:</span>
 <span class="sd">        = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fields:</span>
+<span class="sd">            The list of fields for which the accumulated nodal fluxes should be computed.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            - Number of accumulated fluxes in total</span>
-<span class="sd">            - Number of accumulated fluxes per field:</span>
+<span class="sd">        dict</span>
+<span class="sd">            Number of accumulated fluxes per field:</span>
 <span class="sd">                - Field</span>
 <span class="sd">                - Number of accumulated fluxes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">indicesOfFieldsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span>
+        <span class="n">nAccumulatedNodalFluxesFieldwise</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">elements</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">nAccumulatedNodalFluxesFieldwise</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nAccumulatedNodalFluxesFieldwiseFromElements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">field</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nAccumulatedNodalFluxesFieldwiseFromConstraints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">accumulatedNumberOfFieldFluxes</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">accumulatedNodalFluxesTotal</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">nAccumulatedNodalFluxesFieldwise</span>
 
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">indicesOfFieldsInDofVector</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">accumulatedNumberOfFieldFluxes</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]])</span>
-                    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span>
-                <span class="p">]</span>
-                <span class="o">+</span> <span class="p">[</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]])</span>
-                    <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
-
-            <span class="n">accumulatedNodalFluxesTotal</span> <span class="o">+=</span> <span class="n">accumulatedNumberOfFieldFluxes</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="n">accumulatedNodalFluxesTotal</span><span class="p">,</span>
-            <span class="n">accumulatedNumberOfFieldFluxes</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_countAccumulatedEntityDofs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_gatherEntitiesInformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entities</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates some auxiliary information,</span>
 <span class="sd">        which may be required by some modules of EdelweissFE.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entities</span>
+<span class="sd">           The list of entities, for which the information is gathered.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple[int,int,int,int]</span>
+<span class="sd">        tuple[int,int]</span>
 <span class="sd">            The tuple of</span>
-<span class="sd">                - number of elemental degrees of freedom,</span>
-<span class="sd">                - number of constraint degrees of freedom,</span>
-<span class="sd">                - size of system matrix,</span>
-<span class="sd">                - largest number of dofs on a element</span>
+<span class="sd">                - number of accumulated elemental degrees of freedom.</span>
+<span class="sd">                - number of accumulated system matrix sizes.</span>
+<span class="sd">                - the number of  acummulated fluxes Σ_entities Σ_nodes ( nDof (field) ) for Abaqus-like convergence tests.</span>
+<span class="sd">                - largest occuring number of dofs on any element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">accumulatedEntityNDof</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">accumulatedEntityVIJSize</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">largestNumberOfAnyEntitityDof</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">nAccumulatedFluxesFieldwise</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">:</span>
+            <span class="n">accumulatedEntityNDof</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">nDof</span>
+            <span class="n">accumulatedEntityVIJSize</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">nDof</span><span class="o">**</span><span class="mi">2</span>
+
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">fv</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">nAccumulatedFluxesFieldwise</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">fv</span><span class="p">])</span>
+
+            <span class="n">largestNumberOfAnyEntitityDof</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="n">largestNumberOfAnyEntitityDof</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">accumulatedEntityNDof</span><span class="p">,</span>
+            <span class="n">accumulatedEntityVIJSize</span><span class="p">,</span>
+            <span class="n">nAccumulatedFluxesFieldwise</span><span class="p">,</span>
+            <span class="n">largestNumberOfAnyEntitityDof</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_computeSizeVIJ</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine the required size of the VIJ system matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The size of the VIJ system.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">elements</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accumulatedElementVIJSize</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accumulatedConstraintVIJSize</span>
 
-        <span class="n">sizeVIJ</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">accumulatedElementNDof</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">largestNumberOfElNDof</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">accumulatedElementNDof</span> <span class="o">+=</span> <span class="n">el</span><span class="o">.</span><span class="n">nDof</span>
-            <span class="n">sizeVIJ</span> <span class="o">+=</span> <span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="o">**</span><span class="mi">2</span>
-
-            <span class="n">largestNumberOfElNDof</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="n">largestNumberOfElNDof</span><span class="p">)</span>
-
-        <span class="n">nNDofAccumulatedConstraints</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">nNDofAccumulatedConstraints</span> <span class="o">+=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span>
-
-            <span class="n">sizeVIJ</span> <span class="o">+=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">nDof</span><span class="o">**</span><span class="mi">2</span>
-
-        <span class="k">return</span> <span class="n">accumulatedElementNDof</span><span class="p">,</span> <span class="n">nNDofAccumulatedConstraints</span><span class="p">,</span> <span class="n">sizeVIJ</span><span class="p">,</span> <span class="n">largestNumberOfElNDof</span>
-
-    <span class="k">def</span> <span class="nf">_locateElementsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_locateElementsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a dictionary containing the location (indices) of each entity (elements, constraints)</span>
 <span class="sd">        within the DofVector structure.</span>
 
@@ -354,10 +439,9 @@
 <span class="sd">            A dictionary containing the location mapping.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">elements</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">elements</span>
         <span class="n">idcsOfElementsInDofVector</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
             <span class="n">destList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">nodeField</span><span class="p">]]</span>
@@ -370,7 +454,7 @@
 
         <span class="k">return</span> <span class="n">idcsOfElementsInDofVector</span>
 
-    <span class="k">def</span> <span class="nf">_locateConstraintsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_locateConstraintsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a dictionary containing the location (indices) of each entity (elements, constraints)</span>
 <span class="sd">        within the DofVector structure.</span>
 
@@ -380,10 +464,10 @@
 <span class="sd">            A dictionary containing the location mapping.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">constraints</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="n">constraints</span>
         <span class="n">idcsOfConstraintsInDofVector</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
             <span class="n">destList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">nodeField</span><span class="p">]]</span>
@@ -396,7 +480,7 @@
 
         <span class="k">return</span> <span class="n">idcsOfConstraintsInDofVector</span>
 
-    <span class="k">def</span> <span class="nf">_locateFieldsOnNodeSetFieldsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_locateFieldsOnNodeSetsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodeSets</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a dictionary containing the location (indices) of each entity (elements, constraints)</span>
 <span class="sd">        within the DofVector structure.</span>
 
@@ -406,15 +490,16 @@
 <span class="sd">            A dictionary containing the location mapping.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">nodeSets</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">nodeSets</span>
+        <span class="n">nodeSets</span> <span class="o">=</span> <span class="n">nodeSets</span>
         <span class="n">nodeSetFieldsInDofVector</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">:</span>
             <span class="n">nodeSetFieldsInDofVector</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-            <span class="k">for</span> <span class="n">nSetName</span><span class="p">,</span> <span class="n">nSet</span> <span class="ow">in</span> <span class="n">nodeSets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">nodeSetFieldsInDofVector</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="n">nSetName</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nSet</span> <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">nSet</span> <span class="ow">in</span> <span class="n">nodeSets</span><span class="p">:</span>
+                <span class="n">nodeSetFieldsInDofVector</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="n">nSet</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nSet</span> <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">],</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">nodeSetFieldsInDofVector</span>
@@ -454,7 +539,7 @@
 
         <span class="k">return</span> <span class="n">I</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">entitiesInVIJ</span>
 
-<div class="viewcode-block" id="DofManager.getIndicesOfAllVariablesInDofVector"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.numerics.dofmanager.DofManager.getIndicesOfAllVariablesInDofVector">[docs]</a>    <span class="k">def</span> <span class="nf">getIndicesOfAllVariablesInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getIndicesOfBasicVariablesInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get list of indices of all lower order entitties (variables).</span>
 
@@ -463,9 +548,9 @@
 <span class="sd">        list</span>
 <span class="sd">            The indices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfScalarVariablesInDofVector</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfScalarVariablesInDofVector</span>
 
-<div class="viewcode-block" id="DofManager.getIndicesOfAllHigherOrderEntitiesInDofVector"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.numerics.dofmanager.DofManager.getIndicesOfAllHigherOrderEntitiesInDofVector">[docs]</a>    <span class="k">def</span> <span class="nf">getIndicesOfAllHigherOrderEntitiesInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getIndicesOfAllHigherOrderEntitiesInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get list of indices of all higher order entitties.</span>
 
@@ -475,7 +560,7 @@
 <span class="sd">            The indices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfElementsInDofVector</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfConstraintsInDofVector</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfElementsInDofVector</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfConstraintsInDofVector</span>
 
 <div class="viewcode-block" id="DofManager.constructVIJSystemMatrix"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.numerics.dofmanager.DofManager.constructVIJSystemMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">constructVIJSystemMatrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -492,9 +577,8 @@
         <span class="n">nDof</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nDof</span>
         <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span>
         <span class="n">J</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span>
-        <span class="n">entitiesInVIJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entitiesInVIJ</span>
 
-        <span class="k">return</span> <span class="n">VIJSystemMatrix</span><span class="p">(</span><span class="n">nDof</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">entitiesInVIJ</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">VIJSystemMatrix</span><span class="p">(</span><span class="n">nDof</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfHigherOrderEntitiesInVIJ</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DofManager.constructDofVector"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.numerics.dofmanager.DofManager.constructDofVector">[docs]</a>    <span class="k">def</span> <span class="nf">constructDofVector</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -508,7 +592,8 @@
 <span class="sd">            A DofVector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">DofVector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsInDofVector</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">DofVector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfHigherOrderEntitiesInDofVector</span><span class="p">)</span></div>
+        <span class="c1"># return DofVector(self.nDof, self.idcsInDofVector)</span>
 
 <div class="viewcode-block" id="DofManager.getNodeForIndexInDofVector"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector">[docs]</a>    <span class="k">def</span> <span class="nf">getNodeForIndexInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the node for a given index in the equuation system.</span>
@@ -545,10 +630,10 @@
 <span class="sd">            The updated NodeField.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">resultName</span> <span class="ow">in</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resultName</span> <span class="ow">in</span> <span class="n">nodeField</span><span class="p">:</span>
             <span class="n">nodeField</span><span class="o">.</span><span class="n">createFieldValueEntry</span><span class="p">(</span><span class="n">resultName</span><span class="p">)</span>
 
-        <span class="n">nodeField</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">resultName</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">dofVector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nodeField</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+        <span class="n">nodeField</span><span class="p">[</span><span class="n">resultName</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">dofVector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nodeField</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
             <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">dimension</span><span class="p">)</span>
         <span class="p">)</span>
 
@@ -573,48 +658,9 @@
 <span class="sd">            The DofVector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">dofVector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nodeField</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span> <span class="o">=</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">resultName</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">dofVector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nodeField</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span> <span class="o">=</span> <span class="n">nodeField</span><span class="p">[</span><span class="n">resultName</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">dofVector</span></div>
-
-<div class="viewcode-block" id="DofManager.initializeFromModel"><a class="viewcode-back" href="../../../documentation/dofmanager.html#fe.numerics.dofmanager.DofManager.initializeFromModel">[docs]</a>    <span class="k">def</span> <span class="nf">initializeFromModel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the manged DofVector and VIJ-format system matrix structures from a given FEModel tree.</span>
-
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        model</span>
-<span class="sd">            The model tree.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">nDof</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsInDofVector</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfScalarVariablesInDofVector</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeDofVectorStructure</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">indexToNodeMapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determineIndexToNodeMapping</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nAccumulatedNodalFluxes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nAccumulatedNodalFluxesFieldwise</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_countNodalFluxes</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-        <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">accumulatedElementNDof</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">accumulatedConstraintNDof</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sizeVIJ</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">largestNumberOfElNDof</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_countAccumulatedEntityDofs</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsOnNodeSetsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateFieldsOnNodeSetFieldsInDofVector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfElementsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateElementsInDofVector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfConstraintsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateConstraintsInDofVector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfVariablesInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIndicesOfAllVariablesInDofVector</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfHigherOrderEntitiesInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIndicesOfAllHigherOrderEntitiesInDofVector</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfVariablesInDofVector</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfHigherOrderEntitiesInDofVector</span>
-
-        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entitiesInVIJ</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializeVIJPattern</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">dofVector</span></div></div>
 </pre></div>
 
            </div>

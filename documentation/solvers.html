@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solvers &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Solvers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#fe.config.solvers.getSolverByName"><code class="docutils literal notranslate"><span class="pre">getSolverByName()</span></code></a></li>
@@ -200,7 +202,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet" title="fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichlet</span></code></a>(increment, R, dirichlets)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet" title="fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichlet</span></code></a>(timeStep, R, dirichlets)</p></td>
 <td><p>Apply the dirichlet bcs on the residual vector Is called by solveStep() before solving the global equatuon system.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK" title="fe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichletK</span></code></a>(K, dirichlets)</p></td>
@@ -272,15 +274,16 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet">
-<span class="sig-name descname"><span class="pre">applyDirichlet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.applyDirichlet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">applyDirichlet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.applyDirichlet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet" title="Permalink to this definition"></a></dt>
 <dd><p>Apply the dirichlet bcs on the residual vector
 Is called by solveStep() before solving the global equatuon system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
+<li><p><strong>increment</strong> – The increment.</p></li>
 <li><p><strong>R</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The residual vector of the global equation system to be modified.</p></li>
 <li><p><strong>dirichlets</strong> (<em>list</em><em>[</em><a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase"><em>fe.stepactions.base.stepactionbase.StepActionBase</em></a><em>]</em>) – The list of dirichlet boundary conditions.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -316,14 +319,15 @@ Is called by solveStep() before solving the global system.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart">
-<span class="sig-name descname"><span class="pre">applyStepActionsAtIncrementStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.applyStepActionsAtIncrementStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">applyStepActionsAtIncrementStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.applyStepActionsAtIncrementStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart" title="Permalink to this definition"></a></dt>
 <dd><p>Called when all step actions should be applied at the start of a step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The time increment.</p></li>
+<li><p><strong>increment</strong> – The time increment.</p></li>
 <li><p><strong>stepActions</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase"><em>fe.stepactions.base.stepactionbase.StepActionBase</em></a><em>]</em>) – The dictionary of active step actions.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -359,7 +363,7 @@ Is called by solveStep() before solving the global system.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints">
-<span class="sig-name descname"><span class="pre">assembleConstraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.assembleConstraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">assembleConstraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.assembleConstraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints" title="Permalink to this definition"></a></dt>
 <dd><p>Loop over all elements, and evaluate them.
 Is is called by solveStep() in each iteration.</p>
 <dl class="field-list simple">
@@ -370,7 +374,9 @@ Is is called by solveStep() in each iteration.</p>
 <li><p><strong>dU</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution increment vector.</p></li>
 <li><p><strong>PExt</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The external load vector.</p></li>
 <li><p><strong>K</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.VIJSystemMatrix" title="fe.numerics.dofmanager.VIJSystemMatrix"><em>VIJSystemMatrix</em></a>) – The system matrix.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
+<li><p><strong>dT</strong> – The time increment.</p></li>
+<li><p><strong>time</strong> – The step and total time.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -388,7 +394,7 @@ Is is called by solveStep() in each iteration.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads">
-<span class="sig-name descname"><span class="pre">assembleLoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.assembleLoads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">assembleLoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.assembleLoads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.assembleLoads" title="Permalink to this definition"></a></dt>
 <dd><p>Assemble all loads into a right hand side vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -399,13 +405,13 @@ Is is called by solveStep() in each iteration.</p>
 <li><p><strong>U_np</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
 <li><p><strong>PExt</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The external load vector.</p></li>
 <li><p><strong>K</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.VIJSystemMatrix" title="fe.numerics.dofmanager.VIJSystemMatrix"><em>VIJSystemMatrix</em></a>) – The system matrix.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – The current time step.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p>The modified external load vector.</p></li>
-<li><p>The modified system matrix.</p></li>
+<li><p>The augmented external load vector.</p></li>
+<li><p>The augmented system matrix.</p></li>
 </ul>
 </p>
 </dd>
@@ -483,7 +489,7 @@ Is called by solveStep() to decide whether to continue iterating or stop.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">
-<span class="sig-name descname"><span class="pre">computeBodyForces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodyForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.computeBodyForces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeBodyForces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodyForces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.computeBodyForces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces" title="Permalink to this definition"></a></dt>
 <dd><p>Loop over all body forces loads acting on elements, and evaluate them.
 Assembles into the global external load vector and the system matrix.</p>
 <dl class="field-list simple">
@@ -493,8 +499,9 @@ Assembles into the global external load vector and the system matrix.</p>
 <li><p><strong>U_np</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
 <li><p><strong>PExt</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The external load vector to be augmented.</p></li>
 <li><p><strong>K</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.VIJSystemMatrix" title="fe.numerics.dofmanager.VIJSystemMatrix"><em>VIJSystemMatrix</em></a>) – The system matrix to be augmented.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
+<li><p><strong>increment</strong> – The increment.</p></li>
 <li><p><strong>bodyForces</strong> (<em>list</em><em>[</em><a class="reference internal" href="stepactions.html#fe.stepactions.base.stepactionbase.StepActionBase" title="fe.stepactions.base.stepactionbase.StepActionBase"><em>fe.stepactions.base.stepactionbase.StepActionBase</em></a><em>]</em>) – </p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -508,7 +515,7 @@ Assembles into the global external load vector and the system matrix.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads">
-<span class="sig-name descname"><span class="pre">computeDistributedLoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distributedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.computeDistributedLoads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeDistributedLoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distributedLoads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PExt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.computeDistributedLoads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads" title="Permalink to this definition"></a></dt>
 <dd><p>Loop over all distributed loads acting on elements, and evaluate them.
 Assembles into the global external load vector and the system matrix.</p>
 <dl class="field-list simple">
@@ -518,7 +525,7 @@ Assembles into the global external load vector and the system matrix.</p>
 <li><p><strong>U_np</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The current solution vector.</p></li>
 <li><p><strong>PExt</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The external load vector to be augmented.</p></li>
 <li><p><strong>K</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.VIJSystemMatrix" title="fe.numerics.dofmanager.VIJSystemMatrix"><em>VIJSystemMatrix</em></a>) – The system matrix to be augmented.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – The current time step.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -532,7 +539,7 @@ Assembles into the global external load vector and the system matrix.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.computeElements">
-<span class="sig-name descname"><span class="pre">computeElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.computeElements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeElements" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.computeElements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.computeElements" title="Permalink to this definition"></a></dt>
 <dd><p>Loop over all elements, and evalute them.
 Is is called by solveStep() in each iteration.</p>
 <dl class="field-list simple">
@@ -544,7 +551,7 @@ Is is called by solveStep() in each iteration.</p>
 <li><p><strong>P</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The reaction vector.</p></li>
 <li><p><strong>K</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.VIJSystemMatrix" title="fe.numerics.dofmanager.VIJSystemMatrix"><em>VIJSystemMatrix</em></a>) – The system matrix.</p></li>
 <li><p><strong>F</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The vector of accumulated fluxes for convergence checks.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – The time step.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -581,16 +588,17 @@ Is usually called by checkConvergence().</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement">
-<span class="sig-name descname"><span class="pre">extrapolateLastIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.extrapolateLastIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">extrapolateLastIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prevTimeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.extrapolateLastIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement" title="Permalink to this definition"></a></dt>
 <dd><p>Depending on the current setting, extrapolate the solution of the last increment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>extrapolation</strong> (<em>str</em>) – The type of extrapolation.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The current time increment.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – The current time step.</p></li>
 <li><p><strong>dU</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The last solution increment.</p></li>
 <li><p><strong>dirichlets</strong> (<em>list</em>) – The list of active dirichlet boundary conditions.</p></li>
-<li><p><strong>lastIncrementSize</strong> (<em>float</em>) – The size of the last increment.</p></li>
+<li><p><strong>lastIncrementSize</strong> – The size of the last increment.</p></li>
+<li><p><strong>prevTimeStep</strong> (<em>TimeStep</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -639,7 +647,7 @@ Is usually called by checkConvergence().</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement">
-<span class="sig-name descname"><span class="pre">solveIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.solveIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solveIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prevTimeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstatic.html#NIST.solveIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstatic.NIST.solveIncrement" title="Permalink to this definition"></a></dt>
 <dd><p>Standard Newton-Raphson scheme to solve for an increment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -651,12 +659,14 @@ Is usually called by checkConvergence().</p>
 <li><p><strong>elements</strong> – The dictionary containing all elements.</p></li>
 <li><p><strong>stepActions</strong> (<em>list</em>) – The list of active step actions.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
-<li><p><strong>lastIncrementSize</strong> (<em>float</em>) – The size of the previous increment.</p></li>
+<li><p><strong>increment</strong> – The increment.</p></li>
+<li><p><strong>lastIncrementSize</strong> – The size of the previous increment.</p></li>
 <li><p><strong>extrapolation</strong> (<em>str</em>) – The type of extrapolation to be used.</p></li>
 <li><p><strong>maxIter</strong> (<em>int</em>) – The maximum number of iterations to be used.</p></li>
 <li><p><strong>maxGrowingIter</strong> (<em>int</em>) – The maximum number of growing residuals until the Newton-Raphson is terminated.</p></li>
 <li><p><strong>U_n</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – </p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – </p></li>
+<li><p><strong>prevTimeStep</strong> (<em>TimeStep</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -715,7 +725,7 @@ Is usually called by checkConvergence().</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichlet</span></code>(increment, R, dirichlets)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichlet</span></code>(timeStep, R, dirichlets)</p></td>
 <td><p>Apply the dirichlet bcs on the residual vector Is called by solveStep() before solving the global equatuon system.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.applyDirichletK" title="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.applyDirichletK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichletK</span></code></a>(K, dirichlets)</p></td>
@@ -810,7 +820,7 @@ Is called by solveStep() before solving the global sys.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.computeElements">
-<span class="sig-name descname"><span class="pre">computeElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.computeElements" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">computeElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Un1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.computeElements" title="Permalink to this definition"></a></dt>
 <dd><p>Loop over all elements, and evalute them.
 Is is called by solveStep() in each iteration.</p>
 <dl class="field-list simple">
@@ -822,7 +832,7 @@ Is is called by solveStep() in each iteration.</p>
 <li><p><strong>P</strong> – The reaction vector.</p></li>
 <li><p><strong>K</strong> – The system matrix.</p></li>
 <li><p><strong>F</strong> – The vector of accumulated fluxes for convergence checks.</p></li>
-<li><p><strong>increment</strong> – The increment.</p></li>
+<li><p><strong>timeStep</strong> – The time step.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -873,7 +883,7 @@ Replaces the NewtonRaphson scheme of the NISTParallel Solver.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichlet</span></code>(increment, R, dirichlets)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichlet</span></code>(timeStep, R, dirichlets)</p></td>
 <td><p>Apply the dirichlet bcs on the residual vector Is called by solveStep() before solving the global equatuon system.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">applyDirichletK</span></code>(K, dirichlets)</p></td>
@@ -965,19 +975,19 @@ step is finished.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.extrapolateLastIncrement">
-<span class="sig-name descname"><span class="pre">extrapolateLastIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dLambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstaticparallelarclength.html#NISTPArcLength.extrapolateLastIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.extrapolateLastIncrement" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">extrapolateLastIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirichlets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prevTimeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dLambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstaticparallelarclength.html#NISTPArcLength.extrapolateLastIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.extrapolateLastIncrement" title="Permalink to this definition"></a></dt>
 <dd><p>Depending on the current setting, extrapolate the solution of the last increment.
 Also accounts for the arc length loading parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>extrapolation</strong> (<em>str</em>) – The type of extrapolation.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The current time increment.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – The current time increment.</p></li>
 <li><p><strong>dU</strong> (<a class="reference internal" href="dofmanager.html#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The last solution increment.</p></li>
 <li><p><strong>dirichlets</strong> (<em>list</em>) – The list of active dirichlet boundary conditions.</p></li>
-<li><p><strong>lastIncrementSize</strong> (<em>float</em>) – The size of the last increment.</p></li>
+<li><p><strong>prevTimeStep</strong> (<em>TimeStep</em>) – The previous TimeStep</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – </p></li>
-<li><p><strong>dLambda</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>dLambda</strong> (<em>float</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -995,7 +1005,7 @@ Also accounts for the arc length loading parameter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement">
-<span class="sig-name descname"><span class="pre">solveIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastIncrementSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstaticparallelarclength.html#NISTPArcLength.solveIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solveIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prevTimeStep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrapolation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxGrowingIter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/solvers/nonlinearimplicitstaticparallelarclength.html#NISTPArcLength.solveIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.solveIncrement" title="Permalink to this definition"></a></dt>
 <dd><p>Arc length method scheme to solve for an increment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1007,8 +1017,8 @@ Also accounts for the arc length loading parameter.</p>
 <li><p><strong>elements</strong> – The dictionary containing all elements.</p></li>
 <li><p><strong>activeStepActions</strong> – The list of active step actions.</p></li>
 <li><p><strong>constraints</strong> – The dictionary containing all elements.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The increment.</p></li>
-<li><p><strong>lastIncrementSize</strong> (<em>float</em>) – The size of the previous increment.</p></li>
+<li><p><strong>timeStep</strong> (<em>TimeStep</em>) – The current time step.</p></li>
+<li><p><strong>prevTimeStep</strong> (<em>TimeStep</em>) – The previous time step.</p></li>
 <li><p><strong>extrapolation</strong> (<em>str</em>) – The type of extrapolation to be used.</p></li>
 <li><p><strong>maxIter</strong> (<em>int</em>) – The maximum number of iterations to be used.</p></li>
 <li><p><strong>maxGrowingIter</strong> (<em>int</em>) – The maximum number of growing residuals until the Newton-Raphson is terminated.</p></li>

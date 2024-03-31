@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>fe.steps.adaptivestep &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -107,7 +109,8 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">fe.steps.base.stepbase</span> <span class="kn">import</span> <span class="n">StepBase</span>
 <span class="kn">from</span> <span class="nn">fe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
-<span class="kn">from</span> <span class="nn">fe.utils.incrementgenerator</span> <span class="kn">import</span> <span class="n">IncrementGenerator</span>
+<span class="kn">from</span> <span class="nn">fe.timesteppers.adaptivetimestepper</span> <span class="kn">import</span> <span class="n">AdaptiveTimeStepper</span>
+<span class="kn">from</span> <span class="nn">fe.timesteppers.timestep</span> <span class="kn">import</span> <span class="n">TimeStep</span>
 <span class="kn">from</span> <span class="nn">fe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
 <span class="kn">from</span> <span class="nn">fe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
 <span class="kn">from</span> <span class="nn">fe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
@@ -146,7 +149,7 @@
         <span class="n">fieldOutputController</span><span class="p">:</span> <span class="n">FieldOutputController</span><span class="p">,</span>
         <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span>
         <span class="n">jobInfo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">solvers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
         <span class="n">outputManagers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
@@ -157,7 +160,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputController</span> <span class="o">=</span> <span class="n">fieldOutputController</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span> <span class="o">=</span> <span class="n">journal</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">solvers</span> <span class="o">=</span> <span class="n">solvers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputManagers</span> <span class="o">=</span> <span class="n">outputManagers</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stepLength&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1">#: The durcation of the step.</span>
@@ -181,7 +184,7 @@
             <span class="s2">&quot;maxGrowIter&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMaxGrowingIter</span>
         <span class="p">)</span>  <span class="c1">#: The number of residual growths before the increment is discarded.</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span> <span class="o">=</span> <span class="n">IncrementGenerator</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span> <span class="o">=</span> <span class="n">AdaptiveTimeStepper</span><span class="p">(</span>
             <span class="n">model</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">startIncrementSize</span><span class="p">,</span>
@@ -193,28 +196,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">stepActions</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">solverName</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;solver&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
 <div class="viewcode-block" id="AdaptiveStep.solve"><a class="viewcode-back" href="../../../documentation/steps.html#fe.steps.adaptivestep.AdaptiveStep.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="n">fieldOutputController</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputController</span>
         <span class="n">journal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">journal</span>
-        <span class="n">solvers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solvers</span>
         <span class="n">outputManagers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputManagers</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solverName</span> <span class="ow">in</span> <span class="n">solvers</span><span class="p">:</span>
-            <span class="n">solver</span> <span class="o">=</span> <span class="n">solvers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">solverName</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
-
-            <span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Warning, not defining a solver for a step is deprecated; assign a solver using the solver= option&quot;</span><span class="p">,</span>
-                <span class="ne">DeprecationWarning</span><span class="p">,</span>
-                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">solver</span> <span class="o">=</span> <span class="n">solvers</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">modelUpdate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;modelupdate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -224,17 +212,17 @@
             <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputManagers</span><span class="p">:</span>
                 <span class="n">manager</span><span class="o">.</span><span class="n">initializeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-            <span class="n">solver</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputManagers</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputManagers</span><span class="p">)</span>
 
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">fieldOutputController</span><span class="o">.</span><span class="n">finalizeStep</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputManagers</span><span class="p">:</span>
                 <span class="n">manager</span><span class="o">.</span><span class="n">finalizeStep</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">getTimeIncrement</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">getTimeStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span><span class="o">.</span><span class="n">generateIncrement</span><span class="p">()</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span><span class="o">.</span><span class="n">generateTimeStep</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cutbackFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span><span class="o">.</span><span class="n">discardAndChangeIncrement</span><span class="p">(</span><span class="n">cutbackFactor</span><span class="p">)</span>

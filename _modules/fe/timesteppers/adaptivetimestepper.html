@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fe.utils.incrementgenerator &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <title>fe.timesteppers.adaptivetimestepper &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -66,7 +68,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">fe.utils.incrementgenerator</li>
+      <li class="breadcrumb-item active">fe.timesteppers.adaptivetimestepper</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,7 +77,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for fe.utils.incrementgenerator</h1><div class="highlight"><pre>
+  <h1>Source code for fe.timesteppers.adaptivetimestepper</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 <span class="c1">#</span>
@@ -107,10 +109,11 @@
 <span class="c1"># @author: Matthias</span>
 <span class="kn">from</span> <span class="nn">fe.utils.exceptions</span> <span class="kn">import</span> <span class="n">ReachedMaxIncrements</span><span class="p">,</span> <span class="n">ReachedMinIncrementSize</span>
 <span class="kn">from</span> <span class="nn">fe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span> <span class="nn">fe.timesteppers.timestep</span> <span class="kn">import</span> <span class="n">TimeStep</span>
 
 
-<div class="viewcode-block" id="IncrementGenerator"><a class="viewcode-back" href="../../../documentation/utils.html#fe.utils.incrementgenerator.IncrementGenerator">[docs]</a><span class="k">class</span> <span class="nc">IncrementGenerator</span><span class="p">:</span>
-    <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;IncGen&quot;</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper"><a class="viewcode-back" href="../../../documentation/utils.html#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveTimeStepper</span><span class="p">:</span>
+    <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;AdaptiveTimeStepper&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -121,7 +124,7 @@
         <span class="n">minIncrement</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">maxNumberIncrements</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An increment generator for incremental-iterative simulations.</span>
 
@@ -161,18 +164,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dT</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span> <span class="o">=</span> <span class="n">journal</span>
 
-<div class="viewcode-block" id="IncrementGenerator.generateIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#fe.utils.incrementgenerator.IncrementGenerator.generateIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">generateIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.generateTimeStep"><a class="viewcode-back" href="../../../documentation/utils.html#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep">[docs]</a>    <span class="k">def</span> <span class="nf">generateTimeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeStep</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the next increment.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total).</span>
+<span class="sd">        TimeStep</span>
+<span class="sd">            The current time step.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># zero increment; return value for first function call</span>
-        <span class="k">yield</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">TimeStep</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">finishedStepProgress</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1e-15</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalIncrements</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxNumberIncrements</span><span class="p">:</span>
@@ -190,23 +193,23 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">increment</span> <span class="o">=</span> <span class="n">remainder</span>
 
             <span class="n">dT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepLength</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">increment</span>
-            <span class="n">startTimeOfIncrementInStep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepLength</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">finishedStepProgress</span>
-            <span class="n">startTimeOfIncrementInTotal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">+</span> <span class="n">startTimeOfIncrementInStep</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">finishedStepProgress</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">increment</span>
+            <span class="n">endTimeOfIncrementInStep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepLength</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">finishedStepProgress</span>
+            <span class="n">endTimeOfIncrementInTotal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">+</span> <span class="n">endTimeOfIncrementInStep</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">totalIncrements</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nPassedGoodIncrements</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="k">yield</span> <span class="p">(</span>
+            <span class="k">yield</span> <span class="n">TimeStep</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">totalIncrements</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">increment</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">finishedStepProgress</span><span class="p">,</span>
                 <span class="n">dT</span><span class="p">,</span>
-                <span class="n">startTimeOfIncrementInStep</span><span class="p">,</span>
-                <span class="n">startTimeOfIncrementInTotal</span><span class="p">,</span>
+                <span class="n">endTimeOfIncrementInStep</span><span class="p">,</span>
+                <span class="n">endTimeOfIncrementInTotal</span><span class="p">,</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="IncrementGenerator.preventIncrementIncrease"><a class="viewcode-back" href="../../../documentation/utils.html#fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease">[docs]</a>    <span class="k">def</span> <span class="nf">preventIncrementIncrease</span><span class="p">(</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.preventIncrementIncrease"><a class="viewcode-back" href="../../../documentation/utils.html#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease">[docs]</a>    <span class="k">def</span> <span class="nf">preventIncrementIncrease</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;May be called before an increment is requested, to prevent from</span>
@@ -214,7 +217,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">allowedToIncreasedNext</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="IncrementGenerator.discardAndChangeIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.discardAndChangeIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Change increment size between minIncrement and</span>
 <span class="sd">        maxIncrement by a given scale factor.</span>
 

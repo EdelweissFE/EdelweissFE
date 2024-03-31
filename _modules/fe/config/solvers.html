@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>fe.config.solvers &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -145,7 +147,12 @@
 <span class="sd">        The solver class type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">solver</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;fe.solvers.</span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">solverLibrary</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">solverType</span> <span class="o">=</span> <span class="n">solverLibrary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Solver </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found in library. Available solvers: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">solverLibrary</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;fe.solvers.</span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">solverType</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 </pre></div>
 

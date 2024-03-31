@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Field outputs &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
@@ -59,11 +61,36 @@
 <li class="toctree-l2"><a class="reference internal" href="dofmanager.html">DOF manager</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Field outputs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController"><code class="docutils literal notranslate"><span class="pre">FieldOutputController</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addFieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.addFieldOutput()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.addExpressionFieldOutput()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.addPerElementFieldOutput()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.addPerNodeFieldOutput()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeIncrement"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.finalizeIncrement()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeJob"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.finalizeJob()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeStep"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.finalizeStep()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.initializeStep"><code class="docutils literal notranslate"><span class="pre">FieldOutputController.initializeStep()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.finalizeIncrement"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.finalizeIncrement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.getLastResult"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.getLastResult()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.getResultHistory"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.getResultHistory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.getTimeHistory"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.getTimeHistory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.initializeJob"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.initializeJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.setResults"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.setResults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.writeLastResult"><code class="docutils literal notranslate"><span class="pre">_FieldOutputBase.writeLastResult()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput.ElementFieldOutput"><code class="docutils literal notranslate"><span class="pre">ElementFieldOutput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.ElementFieldOutput.setResults"><code class="docutils literal notranslate"><span class="pre">ElementFieldOutput.setResults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.ElementFieldOutput.updateResults"><code class="docutils literal notranslate"><span class="pre">ElementFieldOutput.updateResults()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput.NodeFieldOutput"><code class="docutils literal notranslate"><span class="pre">NodeFieldOutput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.NodeFieldOutput.updateResults"><code class="docutils literal notranslate"><span class="pre">NodeFieldOutput.updateResults()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fe.utils.fieldoutput.ExpressionFieldOutput"><code class="docutils literal notranslate"><span class="pre">ExpressionFieldOutput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.utils.fieldoutput.ExpressionFieldOutput.updateResults"><code class="docutils literal notranslate"><span class="pre">ExpressionFieldOutput.updateResults()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -129,8 +156,8 @@ Furthermore, they can be exported to <code class="docutils literal notranslate">
 <p>If the results are exported to a .csv file with enabled “saveHistory”,
 the time History is automatically appended to the .csv file”</p>
 </div>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id17">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id17" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -167,8 +194,8 @@ the time History is automatically appended to the .csv file”</p>
 </tr>
 </tbody>
 </table>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Example file: <code class="docutils literal notranslate"><span class="pre">../../../testfiles/FieldOutput/fieldOutput.inp</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-text">Example file: <code class="docutils literal notranslate"><span class="pre">../../../testfiles/FieldOutput/fieldOutput.inp</span></code></span><a class="headerlink" href="#id18" title="Permalink to this code"></a></div>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">modleon</span>
 30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
 
@@ -185,14 +212,14 @@ all
 <span class="nv">nY</span><span class="ow">=</span><span class="m">20</span>
 
 <span class="k">*fieldOutput</span>,
-<span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">              nSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">           field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,
-<span class="nv">name</span><span class="ow">=</span><span class="m">displacement_top</span>,<span class="nv">          nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">displacement_top_mean_1</span>,<span class="nv">   nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean( x[:,1])&#39;</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv">                 nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">RF_bottom_sum_1</span>,<span class="nv">           nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">stress_top</span>,<span class="nv">                elSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">      result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">              nSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">           field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement_top</span>,<span class="nv">          nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement_top_mean_1</span>,<span class="nv">   nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">       field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean( x[:,1])&#39;</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv">                 nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF_bottom_sum_1</span>,<span class="nv">           nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;sum(x[:,1])&#39;</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress_top</span>,<span class="nv">                elSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">      result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">meshPlot</span>, 
 <span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">221</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">       fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">       f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">U2</span>
@@ -233,10 +260,16 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addFieldOutput" title="fe.utils.fieldoutput.FieldOutputController.addFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addFieldOutput</span></code></a>(name, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput" title="fe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addExpressionFieldOutput</span></code></a>(name, **kwargs)</p></td>
 <td><p>Add a new FieldOutput entry to be computed during the simulation</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeIncrement" title="fe.utils.fieldoutput.FieldOutputController.finalizeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code></a>(increment)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput" title="fe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addPerElementFieldOutput</span></code></a>(name, elSet, ...)</p></td>
+<td><p>Add a new FieldOutput entry to be computed during the simulation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput" title="fe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addPerNodeFieldOutput</span></code></a>(name, nodeField, ...)</p></td>
+<td><p>Add a new FieldOutput entry to be computed during the simulation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeIncrement" title="fe.utils.fieldoutput.FieldOutputController.finalizeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code></a>()</p></td>
 <td><p>Finalize all field outputs at the end of an increment.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.FieldOutputController.finalizeJob" title="fe.utils.fieldoutput.FieldOutputController.finalizeJob"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeJob</span></code></a>()</p></td>
@@ -270,16 +303,53 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController.addFieldOutput">
-<span class="sig-name descname"><span class="pre">addFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController.addFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController.addFieldOutput" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput">
+<span class="sig-name descname"><span class="pre">addExpressionFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController.addExpressionFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Add a new FieldOutput entry to be computed during the simulation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
-<li><p><strong>model</strong> – The model tree.</p></li>
-<li><p><strong>journal</strong> – The Journal instance for logging purposes.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition of the FieldOutput</p></li>
+<li><p><strong>nodeField</strong> – The :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>NodeField, on which this FieldOutput should operate.</p></li>
+<li><p><strong>resultName</strong> – The name of the result entry in the :class:<a href="#id3"><span class="problematic" id="id4">`</span></a>NodeField</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Further definitions of the FieldOutput</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput">
+<span class="sig-name descname"><span class="pre">addPerElementFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController.addPerElementFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput" title="Permalink to this definition"></a></dt>
+<dd><p>Add a new FieldOutput entry to be computed during the simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
+<li><p><strong>elSet</strong> (<a class="reference internal" href="sets.html#fe.sets.elementset.ElementSet" title="fe.sets.elementset.ElementSet"><em>ElementSet</em></a>) – The :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>ElementSet on which this FieldOutput should operate.</p></li>
+<li><p><strong>resultname</strong> – The name of the result, which is provided by the Elements in the :class:<a href="#id7"><span class="problematic" id="id8">`</span></a>ElementSet.</p></li>
+<li><p><strong>journal</strong> – The :class:<a href="#id9"><span class="problematic" id="id10">`</span></a>Journal instance for logging purposes.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Further definition of the FieldOutput</p></li>
+<li><p><strong>resultName</strong> (<em>str</em>) – </p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput">
+<span class="sig-name descname"><span class="pre">addPerNodeFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController.addPerNodeFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput" title="Permalink to this definition"></a></dt>
+<dd><p>Add a new FieldOutput entry to be computed during the simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
+<li><p><strong>nodeField</strong> (<a class="reference internal" href="fields.html#fe.fields.nodefield.NodeField" title="fe.fields.nodefield.NodeField"><em>NodeField</em></a>) – The :class:<a href="#id11"><span class="problematic" id="id12">`</span></a>NodeField, on which this FieldOutput should operate.</p></li>
+<li><p><strong>resultName</strong> – The name of the result entry in the :class:<a href="#id13"><span class="problematic" id="id14">`</span></a>NodeField</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Further definitions of the FieldOutput</p></li>
+<li><p><strong>result</strong> (<em>str</em>) – </p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
 </dd>
 </dl>
@@ -287,16 +357,8 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.utils.fieldoutput.FieldOutputController.finalizeIncrement">
-<span class="sig-name descname"><span class="pre">finalizeIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">increment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController.finalizeIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController.finalizeIncrement" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">finalizeIncrement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#FieldOutputController.finalizeIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.FieldOutputController.finalizeIncrement" title="Permalink to this definition"></a></dt>
 <dd><p>Finalize all field outputs at the end of an increment.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – The model tree.</p></li>
-<li><p><strong>increment</strong> (<em>tuple</em>) – The time increment.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -318,6 +380,404 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>step</strong> – The step information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">_FieldOutputBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase" title="Permalink to this definition"></a></dt>
+<dd><p>Entity of a fieldOutput request.</p>
+<p>Carries the history or the latest result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – A dictionary containing the model tree.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.finalizeIncrement" title="fe.utils.fieldoutput._FieldOutputBase.finalizeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code></a>()</p></td>
+<td><p>Finalize an increment, i.e. store the current results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.getLastResult" title="fe.utils.fieldoutput._FieldOutputBase.getLastResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLastResult</span></code></a>()</p></td>
+<td><p>Get the last result, no matter if the history is stored or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.getResultHistory" title="fe.utils.fieldoutput._FieldOutputBase.getResultHistory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultHistory</span></code></a>()</p></td>
+<td><p>Get the history.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.getTimeHistory" title="fe.utils.fieldoutput._FieldOutputBase.getTimeHistory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTimeHistory</span></code></a>()</p></td>
+<td><p>Get the time history.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.initializeJob" title="fe.utils.fieldoutput._FieldOutputBase.initializeJob"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeJob</span></code></a>()</p></td>
+<td><p>Initalize everything.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.setResults" title="fe.utils.fieldoutput._FieldOutputBase.setResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResults</span></code></a>(values)</p></td>
+<td><p>Modifies a result at it's origin, if possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput._FieldOutputBase.writeLastResult" title="fe.utils.fieldoutput._FieldOutputBase.writeLastResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeLastResult</span></code></a>()</p></td>
+<td><p>Update file output.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>finalizeJob</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>finalizeStep</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>initializeStep</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.finalizeIncrement">
+<span class="sig-name descname"><span class="pre">finalizeIncrement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.finalizeIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.finalizeIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Finalize an increment, i.e. store the current results.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.getLastResult">
+<span class="sig-name descname"><span class="pre">getLastResult</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.getLastResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.getLastResult" title="Permalink to this definition"></a></dt>
+<dd><p>Get the last result, no matter if the history is stored or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The result array.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.getResultHistory">
+<span class="sig-name descname"><span class="pre">getResultHistory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.getResultHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.getResultHistory" title="Permalink to this definition"></a></dt>
+<dd><p>Get the history.
+Throws an exception if the history is not stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The result history.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.getTimeHistory">
+<span class="sig-name descname"><span class="pre">getTimeHistory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.getTimeHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.getTimeHistory" title="Permalink to this definition"></a></dt>
+<dd><p>Get the time history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The time history.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.initializeJob">
+<span class="sig-name descname"><span class="pre">initializeJob</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.initializeJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.initializeJob" title="Permalink to this definition"></a></dt>
+<dd><p>Initalize everything. Will also update the results
+based on the proved start time and solution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.setResults">
+<span class="sig-name descname"><span class="pre">setResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.setResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.setResults" title="Permalink to this definition"></a></dt>
+<dd><p>Modifies a result at it’s origin, if possible.
+Throws an exception if not possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>ndarray</em>) – The values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput._FieldOutputBase.writeLastResult">
+<span class="sig-name descname"><span class="pre">writeLastResult</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#_FieldOutputBase.writeLastResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput._FieldOutputBase.writeLastResult" title="Permalink to this definition"></a></dt>
+<dd><p>Update file output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> – The model tree.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.ElementFieldOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">ElementFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#ElementFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.ElementFieldOutput" title="Permalink to this definition"></a></dt>
+<dd><p>This is a Element based FieldOutput.
+It operates on ElementSets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
+<li><p><strong>elSet</strong> – The ElementSet on which this FieldOutput operates.</p></li>
+<li><p><strong>resultName</strong> (<em>str</em>) – The name of the result entry in the :class:<a href="#id15"><span class="problematic" id="id16">`</span></a>ElementBase.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree instance.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code>()</p></td>
+<td><p>Finalize an increment, i.e. store the current results.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLastResult</span></code>()</p></td>
+<td><p>Get the last result, no matter if the history is stored or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultHistory</span></code>()</p></td>
+<td><p>Get the history.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTimeHistory</span></code>()</p></td>
+<td><p>Get the time history.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeJob</span></code>()</p></td>
+<td><p>Initalize everything.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.ElementFieldOutput.setResults" title="fe.utils.fieldoutput.ElementFieldOutput.setResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResults</span></code></a>(values)</p></td>
+<td><p>Modifies a result at it's origin, if possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.ElementFieldOutput.updateResults" title="fe.utils.fieldoutput.ElementFieldOutput.updateResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateResults</span></code></a>(model)</p></td>
+<td><p>Update the field output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeLastResult</span></code>()</p></td>
+<td><p>Update file output.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>finalizeJob</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>finalizeStep</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>initializeStep</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.ElementFieldOutput.setResults">
+<span class="sig-name descname"><span class="pre">setResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#ElementFieldOutput.setResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.ElementFieldOutput.setResults" title="Permalink to this definition"></a></dt>
+<dd><p>Modifies a result at it’s origin, if possible.
+Throws an exception if not possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>ndarray</em>) – The values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.ElementFieldOutput.updateResults">
+<span class="sig-name descname"><span class="pre">updateResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#ElementFieldOutput.updateResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.ElementFieldOutput.updateResults" title="Permalink to this definition"></a></dt>
+<dd><p>Update the field output.
+Will use the current solution and reaction vector if result is a nodal result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.NodeFieldOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">NodeFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#NodeFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.NodeFieldOutput" title="Permalink to this definition"></a></dt>
+<dd><p>This is a Node based FieldOutput.
+It operates on NodeFields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
+<li><p><strong>nodeField</strong> – The NodeField, on which this FieldOutput operates.</p></li>
+<li><p><strong>result</strong> (<em>str</em>) – The name of the result entry in the NodeField.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree instance.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code>()</p></td>
+<td><p>Finalize an increment, i.e. store the current results.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLastResult</span></code>()</p></td>
+<td><p>Get the last result, no matter if the history is stored or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultHistory</span></code>()</p></td>
+<td><p>Get the history.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTimeHistory</span></code>()</p></td>
+<td><p>Get the time history.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeJob</span></code>()</p></td>
+<td><p>Initalize everything.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResults</span></code>(values)</p></td>
+<td><p>Modifies a result at it's origin, if possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.NodeFieldOutput.updateResults" title="fe.utils.fieldoutput.NodeFieldOutput.updateResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateResults</span></code></a>(model)</p></td>
+<td><p>Update the field output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeLastResult</span></code>()</p></td>
+<td><p>Update file output.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>finalizeJob</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>finalizeStep</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>initializeStep</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.NodeFieldOutput.updateResults">
+<span class="sig-name descname"><span class="pre">updateResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#NodeFieldOutput.updateResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.NodeFieldOutput.updateResults" title="Permalink to this definition"></a></dt>
+<dd><p>Update the field output.
+Will use the current solution and reaction vector if result is a nodal result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.ExpressionFieldOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">ExpressionFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#ExpressionFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.ExpressionFieldOutput" title="Permalink to this definition"></a></dt>
+<dd><p>This is a Node based FieldOutput.
+It operates on NodeFields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
+<li><p><strong>nodeField</strong> – The NodeField, on which this FieldOutput operates.</p></li>
+<li><p><strong>result</strong> – The name of the result entry in the NodeField.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree instance.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code>()</p></td>
+<td><p>Finalize an increment, i.e. store the current results.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLastResult</span></code>()</p></td>
+<td><p>Get the last result, no matter if the history is stored or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultHistory</span></code>()</p></td>
+<td><p>Get the history.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTimeHistory</span></code>()</p></td>
+<td><p>Get the time history.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeJob</span></code>()</p></td>
+<td><p>Initalize everything.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResults</span></code>(values)</p></td>
+<td><p>Modifies a result at it's origin, if possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.fieldoutput.ExpressionFieldOutput.updateResults" title="fe.utils.fieldoutput.ExpressionFieldOutput.updateResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateResults</span></code></a>(model)</p></td>
+<td><p>Update the field output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeLastResult</span></code>()</p></td>
+<td><p>Update file output.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>finalizeJob</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>finalizeStep</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>initializeStep</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.utils.fieldoutput.ExpressionFieldOutput.updateResults">
+<span class="sig-name descname"><span class="pre">updateResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/fieldoutput.html#ExpressionFieldOutput.updateResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.fieldoutput.ExpressionFieldOutput.updateResults" title="Permalink to this definition"></a></dt>
+<dd><p>Update the field output.
+Will use the current solution and reaction vector if result is a nodal result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree.</p>
 </dd>
 </dl>
 </dd></dl>

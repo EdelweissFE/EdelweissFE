@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>fe.elements.marmotsingleqpelement.element &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -142,6 +144,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_elNumber</span> <span class="o">=</span> <span class="n">elNumber</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_materialType</span> <span class="o">=</span> <span class="n">materialType</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nSpatialDimensions</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span> <span class="o">=</span> <span class="s2">&quot;point&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span> <span class="o">=</span> <span class="n">marmotMaterialWrappers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_materialType</span><span class="p">]()</span>
@@ -158,6 +161,10 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nSpatialDimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nSpatialDimensions</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -191,7 +198,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="n">nodes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qpCoordinates</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span></div>
 
 <div class="viewcode-block" id="MarmotMaterialWrappingElement.setProperties"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties">[docs]</a>    <span class="k">def</span> <span class="nf">setProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementProperties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -222,6 +230,7 @@
 <span class="sd">            The properties for he requested material.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_materialProperties</span> <span class="o">=</span> <span class="n">materialProperties</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">createMaterial</span><span class="p">(</span><span class="n">materialName</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_nStateVars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">getNumberOfRequiredStateVars</span><span class="p">()</span>
@@ -295,7 +304,27 @@
 <span class="sd">        np.ndarray</span>
 <span class="sd">            The node&#39;s coordinates.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the only qp&#39;s coordinates.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The qp&#39;s coordinates.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qpCoordinates</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.getNumberOfQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints">[docs]</a>    <span class="k">def</span> <span class="nf">getNumberOfQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the only qp&#39;s coordinates.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The qp&#39;s coordinates.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="mi">1</span></div></div>
 </pre></div>
 
            </div>

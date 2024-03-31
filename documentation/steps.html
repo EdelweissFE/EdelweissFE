@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Steps &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Steps</a><ul>
@@ -123,7 +125,7 @@ have a distinct (physical) runtime, and may contain multiple StepActions.
 Subsequent Steps inherit StepActions, and they may be updated.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.steps.base.stepbase.StepBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.base.stepbase.</span></span><span class="sig-name descname"><span class="pre">StepBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/base/stepbase.html#StepBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.base.stepbase.StepBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.base.stepbase.</span></span><span class="sig-name descname"><span class="pre">StepBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/base/stepbase.html#StepBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.base.stepbase.StepBase" title="Permalink to this definition"></a></dt>
 <dd><p>This is a simulation step.</p>
 <p>It has a specific runtime, and it holds StepActions to executed.</p>
 <dl class="field-list simple">
@@ -134,7 +136,7 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – The FieldOutputController instance for processing results.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The Journal instance for logging purposes.</p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – Additional information about the job</p></li>
-<li><p><strong>solvers</strong> (<em>dict</em>) – The instances of solvers available to this step.</p></li>
+<li><p><strong>solvers</strong> – The instances of solvers available to this step.</p></li>
 <li><p><strong>outputManagers</strong> (<em>list</em>) – The OutputManagers used.</p></li>
 <li><p><strong>stepActions</strong> (<em>dict</em>) – The collection of actions for this step.</p></li>
 <li><p><strong>**kwargs</strong> – Additional options for the step.</p></li>
@@ -173,7 +175,7 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <span id="adaptivestep-a-classical-adpative-step-for-transient-simulations"></span><h2><code class="docutils literal notranslate"><span class="pre">AdaptiveStep</span></code> - A classical adpative step for transient simulations<a class="headerlink" href="#module-fe.steps.adaptivestep" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.steps.adaptivestep.AdaptiveStep">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.adaptivestep.</span></span><span class="sig-name descname"><span class="pre">AdaptiveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solvers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/adaptivestep.html#AdaptiveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.steps.adaptivestep.</span></span><span class="sig-name descname"><span class="pre">AdaptiveStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOutputController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputManagers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepActions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/steps/adaptivestep.html#AdaptiveStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.steps.adaptivestep.AdaptiveStep" title="Permalink to this definition"></a></dt>
 <dd><p>A standard adaptive incremental step to be used in nonlinear simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -186,7 +188,6 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#fe.models.femodel.FEModel" title="fe.models.femodel.FEModel"><em>FEModel</em></a>) – </p></li>
 <li><p><strong>fieldOutputController</strong> (<a class="reference internal" href="fieldoutputmanager.html#fe.utils.fieldoutput.FieldOutputController" title="fe.utils.fieldoutput.FieldOutputController"><em>FieldOutputController</em></a>) – </p></li>
 <li><p><strong>jobInfo</strong> (<em>dict</em>) – </p></li>
-<li><p><strong>solvers</strong> (<em>dict</em>) – </p></li>
 <li><p><strong>outputManagers</strong> (<em>list</em>) – </p></li>
 </ul>
 </dd>
@@ -212,7 +213,7 @@ Subsequent Steps inherit StepActions, and they may be updated.</p>
 <tr class="row-odd"><td><p><strong>discardAndChangeIncrement</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>getTimeIncrement</strong></p></td>
+<tr class="row-even"><td><p><strong>getTimeStep</strong></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p><strong>preventIncrementIncrease</strong></p></td>

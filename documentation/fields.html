@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fields &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
@@ -61,6 +63,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Fields</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-fe.fields.nodefield"><code class="docutils literal notranslate"><span class="pre">NodeField</span></code> - A physical field on nodes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#fe.fields.nodefield.NodeField"><code class="docutils literal notranslate"><span class="pre">NodeField</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.fields.nodefield.NodeFieldSubset"><code class="docutils literal notranslate"><span class="pre">NodeFieldSubset</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -118,7 +121,7 @@
 <span id="nodefield-a-physical-field-on-nodes"></span><h2><code class="docutils literal notranslate"><span class="pre">NodeField</span></code> - A physical field on nodes<a class="headerlink" href="#module-fe.fields.nodefield" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="fe.fields.nodefield.NodeField">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.fields.nodefield.</span></span><span class="sig-name descname"><span class="pre">NodeField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeField" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.fields.nodefield.</span></span><span class="sig-name descname"><span class="pre">NodeField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSet</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeField" title="Permalink to this definition"></a></dt>
 <dd><p>This class represents a node field.
 A node field associates every node with multiple entries (e.g., flux and effort) of a field variable.
 Furthermore, for convencience, it allows to get fast access to values for individual nodes or node sets.</p>
@@ -149,8 +152,8 @@ all individual nodes.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fieldName</strong> (<em>str</em>) – The name of the field.</p></li>
 <li><p><strong>dimension</strong> (<em>int</em>) – The dimension of the field.</p></li>
-<li><p><strong>nodes</strong> (<em>list</em>) – The associated nodes. Only nodes with active fields are considered.</p></li>
-<li><p><strong>model</strong> – The model tree.</p></li>
+<li><p><strong>nodes</strong> – The associated nodes. Only nodes with active fields are considered.</p></li>
+<li><p><strong>nodeSet</strong> (<a class="reference internal" href="sets.html#fe.sets.nodeset.NodeSet" title="fe.sets.nodeset.NodeSet"><em>NodeSet</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -161,11 +164,32 @@ all individual nodes.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.fields.nodefield.NodeField.createFieldValueEntry" title="fe.fields.nodefield.NodeField.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.fields.nodefield.NodeField.copyEntriesFromOther" title="fe.fields.nodefield.NodeField.copyEntriesFromOther"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copyEntriesFromOther</span></code></a>(other[, fieldValueEntries])</p></td>
+<td><p>Copy values from another NodeField.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.fields.nodefield.NodeField.createFieldValueEntry" title="fe.fields.nodefield.NodeField.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
 <td><p>Add an empty entry with given name for the field, e.g, 'U' or 'P' for flux or effort entries.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.fields.nodefield.NodeField.subset" title="fe.fields.nodefield.NodeField.subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset</span></code></a>(subset)</p></td>
+<td><p>Get a view on a subset of the field.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.fields.nodefield.NodeField.copyEntriesFromOther">
+<span class="sig-name descname"><span class="pre">copyEntriesFromOther</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldValueEntries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeField.copyEntriesFromOther"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeField.copyEntriesFromOther" title="Permalink to this definition"></a></dt>
+<dd><p>Copy values from another NodeField.
+If the fields differ, the intersection is considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subset</strong> – The sub NodeField.</p></li>
+<li><p><strong>fieldValueEntries</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – The list of entries which should be copied. Default: all entries are copied.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.fields.nodefield.NodeField.createFieldValueEntry">
 <span class="sig-name descname"><span class="pre">createFieldValueEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeField.createFieldValueEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeField.createFieldValueEntry" title="Permalink to this definition"></a></dt>
@@ -174,8 +198,85 @@ all individual nodes.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the entry.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The new entry</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.fields.nodefield.NodeField.subset">
+<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeField.subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeField.subset" title="Permalink to this definition"></a></dt>
+<dd><p>Get a view on a subset of the field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>subset</strong> – The subset, e.g., a single :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>Node, or a :class:<a href="#id3"><span class="problematic" id="id4">`</span></a>NodeSet or :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>ElementSet.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The subset of the present NodeField.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#fe.fields.nodefield.NodeFieldSubset" title="fe.fields.nodefield.NodeFieldSubset">NodeFieldSubset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.fields.nodefield.NodeFieldSubset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.fields.nodefield.</span></span><span class="sig-name descname"><span class="pre">NodeFieldSubset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentNodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeFieldSubset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeFieldSubset" title="Permalink to this definition"></a></dt>
+<dd><p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copyEntriesFromOther</span></code>(other[, fieldValueEntries])</p></td>
+<td><p>Copy values from another NodeField.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.fields.nodefield.NodeFieldSubset.createFieldValueEntry" title="fe.fields.nodefield.NodeFieldSubset.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
+<td><p>Add an empty entry with given name for the field, e.g, 'U' or 'P' for flux or effort entries.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.fields.nodefield.NodeFieldSubset.subset" title="fe.fields.nodefield.NodeFieldSubset.subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset</span></code></a>(subset)</p></td>
+<td><p>Get a view on a subset of the field.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.fields.nodefield.NodeFieldSubset.createFieldValueEntry">
+<span class="sig-name descname"><span class="pre">createFieldValueEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeFieldSubset.createFieldValueEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeFieldSubset.createFieldValueEntry" title="Permalink to this definition"></a></dt>
+<dd><p>Add an empty entry with given name for the field, e.g, ‘U’ or ‘P’ for flux or effort entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the entry.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The new entry</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.fields.nodefield.NodeFieldSubset.subset">
+<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fields/nodefield.html#NodeFieldSubset.subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fields.nodefield.NodeFieldSubset.subset" title="Permalink to this definition"></a></dt>
+<dd><p>Get a view on a subset of the field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>subset</strong> – The subset, e.g., a single :class:<a href="#id7"><span class="problematic" id="id8">`</span></a>Node, or a :class:<a href="#id9"><span class="problematic" id="id10">`</span></a>NodeSet or :class:<a href="#id11"><span class="problematic" id="id12">`</span></a>ElementSet.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The subset of the present NodeField.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#fe.fields.nodefield.NodeFieldSubset" title="fe.fields.nodefield.NodeFieldSubset">NodeFieldSubset</a></p>
 </dd>
 </dl>
 </dd></dl>

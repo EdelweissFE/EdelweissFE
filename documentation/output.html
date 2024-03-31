@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Outputmanagers &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
@@ -146,22 +148,22 @@ all
 <span class="nv">nY</span><span class="ow">=</span><span class="m">50</span>
 
 <span class="k">*fieldOutput</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">Displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
-<span class="nv">name</span><span class="ow">=</span><span class="m">Stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">Strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">AlphaP</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">AlphaD</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">alphaD</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">Omega</span>,<span class="nv">  elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">omega</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">Displacement_Top</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">Force_Bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> export</span><span class="ow">=</span><span class="m">ReactionForce</span>,<span class="nv"> f_export(x)</span><span class="ow">=</span><span class="s">&#39;x[:,:,1]&#39;</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">AlphaP</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">AlphaD</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">alphaD</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Omega</span>,<span class="nv">  elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">omega</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Displacement_Top</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Force_Bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,<span class="nv"> saveHistory</span><span class="ow">=</span><span class="m">True</span>,<span class="nv"> export</span><span class="ow">=</span><span class="m">ReactionForce</span>,<span class="nv"> f_export(x)</span><span class="ow">=</span><span class="s">&#39;x[:,:,1]&#39;</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myEnsightExport</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Displacement</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Stress</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Strain</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">AlphaP</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">AlphaD</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Omega</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">Displacement</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Stress</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Strain</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">AlphaP</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">AlphaD</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">Omega</span>
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myNodeSetMonitor</span>
@@ -171,7 +173,7 @@ configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span c
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plotAlongPath</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myNodeSetPlotter</span>
 <span class="nv">fieldOutput</span><span class="ow">=</span><span class="m">Displacement_Top</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">Ualongtopsurface</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> nStages</span><span class="ow">=</span><span class="m">5</span>,<span class="nv"> export</span><span class="ow">=</span><span class="m">True</span>
 
-<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-8</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">Ensight</span>,<span class="nv"> intermediateSaveInterval</span><span class="ow">=</span><span class="m">2</span>,<span class="nv"> minDTForOutput</span><span class="ow">=</span><span class="m">20</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">1</span>,<span class="nv">          nSet</span><span class="ow">=</span><span class="m">gen_leftBottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>

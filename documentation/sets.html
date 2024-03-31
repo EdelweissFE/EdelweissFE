@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sets &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
@@ -72,11 +74,14 @@
 <li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sections.html">Sections</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Sets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fe.sets.orderedset.ImmutableOrderedSet"><code class="docutils literal notranslate"><span class="pre">ImmutableOrderedSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.ImmutableOrderedSet.add"><code class="docutils literal notranslate"><span class="pre">ImmutableOrderedSet.add()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet"><code class="docutils literal notranslate"><span class="pre">OrderedSet</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.add"><code class="docutils literal notranslate"><span class="pre">OrderedSet.add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.append"><code class="docutils literal notranslate"><span class="pre">OrderedSet.append()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.checkObjectType"><code class="docutils literal notranslate"><span class="pre">OrderedSet.checkObjectType()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.extend"><code class="docutils literal notranslate"><span class="pre">OrderedSet.extend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.forceIter"><code class="docutils literal notranslate"><span class="pre">OrderedSet.forceIter()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#fe.sets.nodeset.NodeSet"><code class="docutils literal notranslate"><span class="pre">NodeSet</span></code></a></li>
@@ -133,15 +138,14 @@ they are based on a custom ordered set object.</p>
 </ul>
 </div></blockquote>
 <span class="target" id="module-fe.sets.orderedset"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.sets.orderedset.</span></span><span class="sig-name descname"><span class="pre">OrderedSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet" title="Permalink to this definition"></a></dt>
-<dd><p>An ordered set.
-It has a label, and a list containing unique items.</p>
+<dt class="sig sig-object py" id="fe.sets.orderedset.ImmutableOrderedSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.sets.orderedset.</span></span><span class="sig-name descname"><span class="pre">ImmutableOrderedSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#ImmutableOrderedSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.ImmutableOrderedSet" title="Permalink to this definition"></a></dt>
+<dd><p>An immutable ordered set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<em>str</em>) – A label for the object.</p></li>
-<li><p><strong>items</strong> (<em>list</em>) – A list of items.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – A name for the object.</p></li>
+<li><p><strong>items</strong> – A list of items.</p></li>
 </ul>
 </dd>
 </dl>
@@ -152,84 +156,153 @@ It has a label, and a list containing unique items.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.add" title="fe.sets.orderedset.OrderedSet.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(items)</p></td>
-<td><p>Add a list of items to the OrderedSet.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.ImmutableOrderedSet.add" title="fe.sets.orderedset.ImmutableOrderedSet.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(item_s)</p></td>
+<td><p>Add an item or an iterable of items to the OrderedSet</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.append" title="fe.sets.orderedset.OrderedSet.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a>(item)</p></td>
-<td><p>Append object to the end of the list.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code>(obj)</p></td>
+<td><p>Checks if the object type is allowed in the OrderedSet</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.checkObjectType" title="fe.sets.orderedset.OrderedSet.checkObjectType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code></a>(obj)</p></td>
-<td><p>Checks if the object type is allowed for the respective OrderedSet</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>(/)</p></td>
-<td><p>Remove all items from list.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forceIter</span></code>(item_s)</p></td>
+<td><p>Return an iterator object for item_s even if item_s itself is not iterable</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>(/)</p></td>
-<td><p>Return a shallow copy of the list.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(k[,d])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>(value, /)</p></td>
-<td><p>Return number of occurrences of value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">items</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.extend" title="fe.sets.orderedset.OrderedSet.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a>(items)</p></td>
-<td><p>Extend list by appending elements from the iterable.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code>(value[, start, stop])</p></td>
-<td><p>Return first index of value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>(k[,d])</p></td>
+<td><p>If key is not found, d is returned if given, otherwise KeyError is raised.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code>(index, object, /)</p></td>
-<td><p>Insert object before index.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">popitem</span></code>()</p></td>
+<td><p>as a 2-tuple; but raise KeyError if D is empty.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>([index])</p></td>
-<td><p>Remove and return item at index (default last).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setdefault</span></code>(k[,d])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code>(value, /)</p></td>
-<td><p>Remove first occurrence of value.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([E, ]**F)</p></td>
+<td><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k] If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v In either case, this is followed by: for k, v in F.items(): D[k] = v</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reverse</span></code>(/)</p></td>
-<td><p>Reverse <em>IN PLACE</em>.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort</span></code>(*[, key, reverse])</p></td>
-<td><p>Sort the list in ascending order and return None.</p></td>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>copy</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fromkeys</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="fe.sets.orderedset.ImmutableOrderedSet.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#ImmutableOrderedSet.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.ImmutableOrderedSet.add" title="Permalink to this definition"></a></dt>
+<dd><p>Add an item or an iterable of items to the OrderedSet</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.sets.orderedset.</span></span><span class="sig-name descname"><span class="pre">OrderedSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet" title="Permalink to this definition"></a></dt>
+<dd><p>An ordered set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – A name for the object.</p></li>
+<li><p><strong>items</strong> – A list of items.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.add" title="fe.sets.orderedset.OrderedSet.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(item_s)</p></td>
+<td><p>Add an item or an iterable of items to the OrderedSet</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.checkObjectType" title="fe.sets.orderedset.OrderedSet.checkObjectType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code></a>(obj)</p></td>
+<td><p>Checks if the object type is allowed in the OrderedSet</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.sets.orderedset.OrderedSet.forceIter" title="fe.sets.orderedset.OrderedSet.forceIter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forceIter</span></code></a>(item_s)</p></td>
+<td><p>Return an iterator object for item_s even if item_s itself is not iterable</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(k[,d])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">items</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>(k[,d])</p></td>
+<td><p>If key is not found, d is returned if given, otherwise KeyError is raised.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">popitem</span></code>()</p></td>
+<td><p>as a 2-tuple; but raise KeyError if D is empty.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setdefault</span></code>(k[,d])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([E, ]**F)</p></td>
+<td><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k] If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v In either case, this is followed by: for k, v in F.items(): D[k] = v</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>copy</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fromkeys</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.add" title="Permalink to this definition"></a></dt>
-<dd><p>Add a list of items to the OrderedSet.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>items</strong> (<em>list</em>) – A list of items to be added.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.append" title="Permalink to this definition"></a></dt>
-<dd><p>Append object to the end of the list.</p>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.add" title="Permalink to this definition"></a></dt>
+<dd><p>Add an item or an iterable of items to the OrderedSet</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.checkObjectType">
 <span class="sig-name descname"><span class="pre">checkObjectType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.checkObjectType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.checkObjectType" title="Permalink to this definition"></a></dt>
-<dd><p>Checks if the object type is allowed for the respective OrderedSet</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – An arbitrary object to be checked</p>
-</dd>
-</dl>
+<dd><p>Checks if the object type is allowed in the OrderedSet</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.extend">
-<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.extend" title="Permalink to this definition"></a></dt>
-<dd><p>Extend list by appending elements from the iterable.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>items</strong> (<em>list</em>) – </p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="fe.sets.orderedset.OrderedSet.forceIter">
+<span class="sig-name descname"><span class="pre">forceIter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/sets/orderedset.html#OrderedSet.forceIter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.sets.orderedset.OrderedSet.forceIter" title="Permalink to this definition"></a></dt>
+<dd><p>Return an iterator object for item_s even if item_s itself is not iterable</p>
 </dd></dl>
 
 </dd></dl>
@@ -243,7 +316,7 @@ It has a label, and a list containing the unique nodes.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>str</em>) – The unique label for this element set.</p></li>
-<li><p><strong>nodes</strong> (<em>list</em>) – A list of nodes.</p></li>
+<li><p><strong>nodes</strong> – A list of nodes.</p></li>
 </ul>
 </dd>
 </dl>
@@ -254,44 +327,55 @@ It has a label, and a list containing the unique nodes.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code>(items)</p></td>
-<td><p>Add a list of items to the OrderedSet.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code>(item_s)</p></td>
+<td><p>Add an item or an iterable of items to the OrderedSet</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code>(item)</p></td>
-<td><p>Append object to the end of the list.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code>(obj)</p></td>
+<td><p>Checks if the object type is allowed in the OrderedSet</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code>(obj)</p></td>
-<td><p>Checks if the object type is allowed for the respective OrderedSet</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>(/)</p></td>
-<td><p>Remove all items from list.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forceIter</span></code>(item_s)</p></td>
+<td><p>Return an iterator object for item_s even if item_s itself is not iterable</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>(/)</p></td>
-<td><p>Return a shallow copy of the list.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(k[,d])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>(value, /)</p></td>
-<td><p>Return number of occurrences of value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">items</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code>(items)</p></td>
-<td><p>Extend list by appending elements from the iterable.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code>(value[, start, stop])</p></td>
-<td><p>Return first index of value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>(k[,d])</p></td>
+<td><p>If key is not found, d is returned if given, otherwise KeyError is raised.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code>(index, object, /)</p></td>
-<td><p>Insert object before index.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">popitem</span></code>()</p></td>
+<td><p>as a 2-tuple; but raise KeyError if D is empty.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>([index])</p></td>
-<td><p>Remove and return item at index (default last).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setdefault</span></code>(k[,d])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code>(value, /)</p></td>
-<td><p>Remove first occurrence of value.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([E, ]**F)</p></td>
+<td><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k] If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v In either case, this is followed by: for k, v in F.items(): D[k] = v</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reverse</span></code>(/)</p></td>
-<td><p>Reverse <em>IN PLACE</em>.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort</span></code>(*[, key, reverse])</p></td>
-<td><p>Sort the list in ascending order and return None.</p></td>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>copy</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fromkeys</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -305,8 +389,9 @@ It has a label, and a list containing unique elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<em>str</em>) – The unique label for this element set.</p></li>
-<li><p><strong>elements</strong> (<em>list</em>) – A list of elements.</p></li>
+<li><p><strong>name</strong> – The unique label for this element set.</p></li>
+<li><p><strong>elements</strong> – A list of elements.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -317,44 +402,58 @@ It has a label, and a list containing unique elements.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code>(items)</p></td>
-<td><p>Add a list of items to the OrderedSet.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code>(item_s)</p></td>
+<td><p>Add an item or an iterable of items to the OrderedSet</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code>(item)</p></td>
-<td><p>Append object to the end of the list.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code>(obj)</p></td>
+<td><p>Checks if the object type is allowed in the OrderedSet</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkObjectType</span></code>(obj)</p></td>
-<td><p>Checks if the object type is allowed for the respective OrderedSet</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>(/)</p></td>
-<td><p>Remove all items from list.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forceIter</span></code>(item_s)</p></td>
+<td><p>Return an iterator object for item_s even if item_s itself is not iterable</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>(/)</p></td>
-<td><p>Return a shallow copy of the list.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(k[,d])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>(value, /)</p></td>
-<td><p>Return number of occurrences of value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">items</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code>(items)</p></td>
-<td><p>Extend list by appending elements from the iterable.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code>(value[, start, stop])</p></td>
-<td><p>Return first index of value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>(k[,d])</p></td>
+<td><p>If key is not found, d is returned if given, otherwise KeyError is raised.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code>(index, object, /)</p></td>
-<td><p>Insert object before index.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">popitem</span></code>()</p></td>
+<td><p>as a 2-tuple; but raise KeyError if D is empty.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>([index])</p></td>
-<td><p>Remove and return item at index (default last).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setdefault</span></code>(k[,d])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code>(value, /)</p></td>
-<td><p>Remove first occurrence of value.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([E, ]**F)</p></td>
+<td><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k] If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v In either case, this is followed by: for k, v in F.items(): D[k] = v</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reverse</span></code>(/)</p></td>
-<td><p>Reverse <em>IN PLACE</em>.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code>()</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort</span></code>(*[, key, reverse])</p></td>
-<td><p>Sort the list in ascending order and return None.</p></td>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>copy</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>extractNodeSet</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>fromkeys</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>

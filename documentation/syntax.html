@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Input file syntax &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -20,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Jobs" href="jobs.html" />
+    <link rel="next" title="Inputfile driven simulations" href="jobs.html" />
     <link rel="prev" title="Documentation" href="index.html" /> 
 </head>
 
@@ -56,7 +58,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#keywords">Keywords</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
@@ -146,9 +148,9 @@ and available keywords can be printed using</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fileName</strong> (<em>str</em>) – The name of the file to parse.</p></li>
-<li><p><strong>currentKeyword</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – If nested parsing is performed by using <code class="docutils literal notranslate"><span class="pre">*include</span></code>, this option tells which
+<li><p><strong>currentKeyword</strong> (<em>str</em>) – If nested parsing is performed by using <code class="docutils literal notranslate"><span class="pre">*include</span></code>, this option tells which
 keyword is currently active.</p></li>
-<li><p><strong>existingFileDict</strong> (<em>Optional</em><em>[</em><em>CaseInsensitiveDict</em><em>]</em>) – An existing dictionary to append. If Nonde, a new dictionary is created.</p></li>
+<li><p><strong>existingFileDict</strong> (<em>CaseInsensitiveDict</em>) – An existing dictionary to append. If Nonde, a new dictionary is created.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -742,7 +744,7 @@ keyword is currently active.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="jobs.html" class="btn btn-neutral float-right" title="Jobs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jobs.html" class="btn btn-neutral float-right" title="Inputfile driven simulations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

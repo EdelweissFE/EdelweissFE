@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jobs &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <title>Inputfile driven simulations &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,8 +52,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Jobs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.fecore.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Inputfile driven simulations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fe.drivers.inputfiledrivensimulation.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
@@ -99,7 +101,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Documentation</a></li>
-      <li class="breadcrumb-item active">Jobs</li>
+      <li class="breadcrumb-item active">Inputfile driven simulations</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/documentation/jobs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -109,15 +111,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="jobs">
-<h1>Jobs<a class="headerlink" href="#jobs" title="Permalink to this heading"></a></h1>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.fecore</span></code></p>
-<span class="target" id="module-fe.fecore"></span><p>This is the main module of EdelweissFE.</p>
+  <div class="section" id="inputfile-driven-simulations">
+<h1>Inputfile driven simulations<a class="headerlink" href="#inputfile-driven-simulations" title="Permalink to this heading"></a></h1>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.drivers.inputfiledrivensimulation</span></code></p>
+<span class="target" id="module-fe.drivers.inputfiledrivensimulation"></span><p>This is the main module of EdelweissFE.</p>
 <p>Heart is the <code class="docutils literal notranslate"><span class="pre">*job</span></code> keyword, which defines the spatial dimension
 A <code class="docutils literal notranslate"><span class="pre">*job</span></code> definition consists of multiple <code class="docutils literal notranslate"><span class="pre">*steps</span></code>, associated with that job.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="fe.fecore.finiteElementSimulation">
-<span class="sig-prename descclassname"><span class="pre">fe.fecore.</span></span><span class="sig-name descname"><span class="pre">finiteElementSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressPlots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/fecore.html#finiteElementSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.fecore.finiteElementSimulation" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.drivers.inputfiledrivensimulation.finiteElementSimulation">
+<span class="sig-prename descclassname"><span class="pre">fe.drivers.inputfiledrivensimulation.</span></span><span class="sig-name descname"><span class="pre">finiteElementSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressPlots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/drivers/inputfiledrivensimulation.html#finiteElementSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.drivers.inputfiledrivensimulation.finiteElementSimulation" title="Permalink to this definition"></a></dt>
 <dd><p>This is core function of the finite element analysis.
 Based on the keyword <code class="docutils literal notranslate"><span class="pre">*job</span></code>, the finite element model is defined.</p>
 <dl class="simple">

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>fe.solvers.nonlinearimplicitstaticparallelarclength &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -121,6 +123,7 @@
 <span class="kn">from</span> <span class="nn">fe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
 <span class="kn">from</span> <span class="nn">fe.outputmanagers.base.outputmanagerbase</span> <span class="kn">import</span> <span class="n">OutputManagerBase</span>
 <span class="kn">from</span> <span class="nn">fe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
+<span class="kn">from</span> <span class="nn">fe.timesteppers.timestep</span> <span class="kn">import</span> <span class="n">TimeStep</span>
 
 
 <div class="viewcode-block" id="NISTPArcLength"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength">[docs]</a><span class="k">class</span> <span class="nc">NISTPArcLength</span><span class="p">(</span><span class="n">NISTParallel</span><span class="p">):</span>
@@ -146,24 +149,34 @@
         <span class="k">if</span> <span class="s2">&quot;arc length parameter&quot;</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">additionalParameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">additionalParameters</span><span class="p">[</span><span class="s2">&quot;arc length parameter&quot;</span><span class="p">]</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">arcLengthControllerType</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">][</span><span class="s2">&quot;arcLengthController&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">arcLengthControllerType</span> <span class="o">==</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
+        <span class="n">arcLengthControllerOptions</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arcLengthControllerOptions</span><span class="p">:</span>
+            <span class="n">arcLengthController</span> <span class="o">=</span> <span class="n">arcLengthControllerOptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;arcLengthController&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">arcLengthController</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">arcLengthController</span><span class="p">][</span><span class="n">arcLengthController</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">errorMessage</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Arc length controller &quot;</span><span class="si">{</span><span class="n">arcLengthController</span><span class="si">}</span><span class="s1">&quot; not found in current step or not configured correctly&#39;</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;No ArcLengthController specified in current step&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">arcLengthControllerType</span><span class="p">][</span><span class="n">arcLengthControllerType</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">pass</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">stopCondition</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;NISTArcLength&quot;</span><span class="p">][</span><span class="s2">&quot;stopCondition&quot;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">checkConditionalStop</span> <span class="o">=</span> <span class="n">createModelAccessibleFunction</span><span class="p">(</span>
-                <span class="n">stopCondition</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputs</span><span class="o">=</span><span class="n">fieldOutputController</span><span class="o">.</span><span class="n">fieldOutputs</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">pass</span>
+            <span class="n">stopCondition</span> <span class="o">=</span> <span class="n">arcLengthControllerOptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stopCondition&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stopCondition</span><span class="p">:</span>
+                <span class="c1"># self.journal.message(&quot;St&quot;, self.identification)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">checkConditionalStop</span> <span class="o">=</span> <span class="n">createModelAccessibleFunction</span><span class="p">(</span>
+                    <span class="n">stopCondition</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputs</span><span class="o">=</span><span class="n">fieldOutputController</span><span class="o">.</span><span class="n">fieldOutputs</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;No ArcLengthController specified in current step&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">solveStep</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fieldOutputController</span><span class="p">,</span> <span class="n">outputmanagers</span><span class="p">)</span></div>
 
@@ -175,8 +188,8 @@
         <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span>
         <span class="n">stepActions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">model</span><span class="p">,</span>
-        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
-        <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">timeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span>
+        <span class="n">prevTimeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span>
         <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">maxIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -199,10 +212,10 @@
 <span class="sd">            The list of active step actions.</span>
 <span class="sd">        constraints</span>
 <span class="sd">            The dictionary containing all elements.</span>
-<span class="sd">        increment</span>
-<span class="sd">            The increment.</span>
-<span class="sd">        lastIncrementSize</span>
-<span class="sd">            The size of the previous increment.</span>
+<span class="sd">        timeStep</span>
+<span class="sd">            The current time step.</span>
+<span class="sd">        prevTimeStep</span>
+<span class="sd">            The previous time step.</span>
 <span class="sd">        extrapolation</span>
 <span class="sd">            The type of extrapolation to be used.</span>
 <span class="sd">        maxIter</span>
@@ -229,16 +242,14 @@
                 <span class="n">K</span><span class="p">,</span>
                 <span class="n">stepActions</span><span class="p">,</span>
                 <span class="n">model</span><span class="p">,</span>
-                <span class="n">increment</span><span class="p">,</span>
-                <span class="n">lastIncrementSize</span><span class="p">,</span>
+                <span class="n">timeStep</span><span class="p">,</span>
+                <span class="n">prevTimeStep</span><span class="p">,</span>
                 <span class="n">extrapolation</span><span class="p">,</span>
                 <span class="n">maxIter</span><span class="p">,</span>
                 <span class="n">maxGrowingIter</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
-
-        <span class="k">if</span> <span class="n">incNumber</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConditionalStop</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">timeStep</span><span class="o">.</span><span class="n">number</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConditionalStop</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">ConditionalStop</span>
 
         <span class="n">iterationCounter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -251,7 +262,7 @@
 
         <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">)</span>
 
         <span class="n">R_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="o">.</span><span class="n">constructDofVector</span><span class="p">(),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># 2 RHSs</span>
         <span class="n">R_0</span> <span class="o">=</span> <span class="n">R_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
@@ -270,11 +281,13 @@
         <span class="n">ddLambda</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span><span class="p">,</span> <span class="n">dLambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span>
-            <span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dLambda</span>
+            <span class="n">extrapolation</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">prevTimeStep</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dLambda</span>
         <span class="p">)</span>
 
-        <span class="n">referenceIncrement</span> <span class="o">=</span> <span class="n">incNumber</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
-        <span class="n">zeroIncrement</span> <span class="o">=</span> <span class="n">incNumber</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="c1"># referenceIncrement = incNumber, 1.0, 1.0, 0.0, 0.0, 0.0</span>
+        <span class="c1"># zeroIncrement = incNumber, 0.0, 0.0, 0.0, 0.0, 0.0</span>
+        <span class="n">referenceTimeStep</span> <span class="o">=</span> <span class="n">TimeStep</span><span class="p">(</span><span class="n">timeStep</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">zeroTimeStep</span> <span class="o">=</span> <span class="n">TimeStep</span><span class="p">(</span><span class="n">timeStep</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">geostatic</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="p">[</span><span class="s2">&quot;geostatics&quot;</span><span class="p">]:</span>
@@ -285,14 +298,14 @@
 
             <span class="n">P</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P_0</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">P_f</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K_f</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">K_0</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
-            <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+            <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeElements</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">)</span>
+            <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleConstraints</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">constraints</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">)</span>
 
             <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span>
-                <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span><span class="p">,</span> <span class="n">zeroIncrement</span>
+                <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_0</span><span class="p">,</span> <span class="n">K_0</span><span class="p">,</span> <span class="n">zeroTimeStep</span>
             <span class="p">)</span>  <span class="c1"># compute &#39;dead&#39; deadloads, like gravity</span>
             <span class="n">P_f</span><span class="p">,</span> <span class="n">K_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleLoads</span><span class="p">(</span>
-                <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_f</span><span class="p">,</span> <span class="n">K_f</span><span class="p">,</span> <span class="n">referenceIncrement</span>
+                <span class="n">nodeForces</span><span class="p">,</span> <span class="n">distributedLoads</span><span class="p">,</span> <span class="n">bodyForces</span><span class="p">,</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">P_f</span><span class="p">,</span> <span class="n">K_f</span><span class="p">,</span> <span class="n">referenceTimeStep</span>
             <span class="p">)</span>  <span class="c1"># compute &#39;dead&#39; deadloads, like gravity</span>
 
             <span class="n">P_f</span> <span class="o">-=</span> <span class="n">P_0</span>  <span class="c1"># and subtract the dead part, since we are only interested in the homogeneous linear part</span>
@@ -308,12 +321,12 @@
 
             <span class="c1"># Dirichlets ..</span>
             <span class="k">if</span> <span class="n">isExtrapolatedIncrement</span> <span class="ow">and</span> <span class="n">iterationCounter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">R_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">zeroIncrement</span><span class="p">,</span> <span class="n">R_0</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
+                <span class="n">R_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">zeroTimeStep</span><span class="p">,</span> <span class="n">R_0</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">modifiedIncrement</span> <span class="o">=</span> <span class="n">incNumber</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">,</span> <span class="n">Lambda</span> <span class="o">+</span> <span class="n">dLambda</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
-                <span class="n">R_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">modifiedIncrement</span><span class="p">,</span> <span class="n">R_0</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
+                <span class="n">modifiedTimeStep</span> <span class="o">=</span> <span class="n">TimeStep</span><span class="p">(</span><span class="n">timeStep</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">,</span> <span class="n">Lambda</span> <span class="o">+</span> <span class="n">dLambda</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">R_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">modifiedTimeStep</span><span class="p">,</span> <span class="n">R_0</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
 
-            <span class="n">R_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">referenceIncrement</span><span class="p">,</span> <span class="n">R_f</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
+            <span class="n">R_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichlet</span><span class="p">(</span><span class="n">referenceTimeStep</span><span class="p">,</span> <span class="n">R_f</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">iterationCounter</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">isExtrapolatedIncrement</span><span class="p">:</span>
                 <span class="n">converged</span><span class="p">,</span> <span class="n">nodesWithLargestResidual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConvergence</span><span class="p">(</span>
@@ -331,9 +344,6 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">printResidualOutlierNodes</span><span class="p">(</span><span class="n">nodesWithLargestResidual</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">ReachedMaxIterations</span><span class="p">(</span><span class="s2">&quot;Reached max. iterations in current increment, cutting back&quot;</span><span class="p">)</span>
 
-            <span class="c1"># if iterationCounter == maxIter:</span>
-            <span class="c1">#     raise ReachedMaxIterations(&quot;Reached max. iterations in current increment, cutting back&quot;)</span>
-
             <span class="n">K_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembleStiffnessCSR</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
             <span class="n">K_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyDirichletK</span><span class="p">(</span><span class="n">K_</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">)</span>
 
@@ -344,7 +354,7 @@
             <span class="n">ddU_0</span><span class="p">,</span> <span class="n">ddU_f</span> <span class="o">=</span> <span class="n">ddU_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ddU_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># compute the increment of the load parameter. Method depends on the employed arc length controller</span>
-            <span class="n">ddLambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">computeDDLambda</span><span class="p">(</span><span class="n">dU</span><span class="p">,</span> <span class="n">ddU_0</span><span class="p">,</span> <span class="n">ddU_f</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="p">)</span>
+            <span class="n">ddLambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">computeDDLambda</span><span class="p">(</span><span class="n">dU</span><span class="p">,</span> <span class="n">ddU_0</span><span class="p">,</span> <span class="n">ddU_f</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="p">)</span>
 
             <span class="c1"># assemble total solution</span>
             <span class="n">ddU</span> <span class="o">=</span> <span class="n">ddU_0</span> <span class="o">+</span> <span class="n">ddLambda</span> <span class="o">*</span> <span class="n">ddU_f</span>
@@ -357,12 +367,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span> <span class="o">+=</span> <span class="n">dLambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span> <span class="o">=</span> <span class="n">dLambda</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">finishIncrement</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arcLengthController</span><span class="o">.</span><span class="n">finishIncrement</span><span class="p">(</span><span class="n">U_n</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dLambda</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theDofManager</span><span class="p">)</span>
         <span class="n">model</span><span class="o">.</span><span class="n">additionalParameters</span><span class="p">[</span><span class="s2">&quot;additionalParameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span>
 
         <span class="k">for</span> <span class="n">stepActionType</span> <span class="ow">in</span> <span class="n">stepActions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
             <span class="s2">&quot;Current load parameter: lambda=</span><span class="si">{:6.2e}</span><span class="s2">, last increment: dLambda=</span><span class="si">{:6.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Lambda</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dLambda</span><span class="p">),</span>
@@ -375,10 +385,10 @@
 <div class="viewcode-block" id="NISTPArcLength.extrapolateLastIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#fe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength.extrapolateLastIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">extrapolateLastIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">increment</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+        <span class="n">timeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span>
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">lastIncrementSize</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">prevTimeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
         <span class="n">dLambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DofVector</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
@@ -389,14 +399,14 @@
 <span class="sd">        ----------</span>
 <span class="sd">        extrapolation</span>
 <span class="sd">            The type of extrapolation.</span>
-<span class="sd">        increment</span>
+<span class="sd">        timeStep</span>
 <span class="sd">            The current time increment.</span>
 <span class="sd">        dU</span>
 <span class="sd">            The last solution increment.</span>
 <span class="sd">        dirichlets</span>
 <span class="sd">            The list of active dirichlet boundary conditions.</span>
-<span class="sd">        lastIncrementSize</span>
-<span class="sd">            The size of the last increment.</span>
+<span class="sd">        prevTimeStep</span>
+<span class="sd">            The previous TimeStep</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -405,16 +415,16 @@
 <span class="sd">            - True if an extrapolation was performed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">incNumber</span><span class="p">,</span> <span class="n">incrementSize</span><span class="p">,</span> <span class="n">stepProgress</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">stepTime</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="n">increment</span>
+        <span class="c1"># incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment</span>
 
         <span class="k">if</span> <span class="n">dLambda</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># arclength control is inactive</span>
-            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span><span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">lastIncrementSize</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span><span class="n">extrapolation</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">,</span> <span class="n">prevTimeStep</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">extrapolation</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span> <span class="ow">and</span> <span class="n">lastIncrementSize</span><span class="p">:</span>
-            <span class="n">dLambda</span> <span class="o">=</span> <span class="n">dLambda</span> <span class="o">*</span> <span class="p">(</span><span class="n">incrementSize</span> <span class="o">/</span> <span class="n">lastIncrementSize</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">extrapolation</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span> <span class="ow">and</span> <span class="n">prevTimeStep</span> <span class="ow">and</span> <span class="n">prevTimeStep</span><span class="o">.</span><span class="n">stepProgressIncrement</span><span class="p">:</span>
+            <span class="n">dLambda</span> <span class="o">=</span> <span class="n">dLambda</span> <span class="o">*</span> <span class="p">(</span><span class="n">timeStep</span><span class="o">.</span><span class="n">stepProgressIncrement</span> <span class="o">/</span> <span class="n">prevTimeStep</span><span class="o">.</span><span class="n">stepProgressIncrement</span><span class="p">)</span>
             <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extrapolateLastIncrement</span><span class="p">(</span>
-                <span class="n">extrapolation</span><span class="p">,</span> <span class="n">increment</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="p">{},</span> <span class="n">lastIncrementSize</span>
+                <span class="n">extrapolation</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="p">{},</span> <span class="n">prevTimeStep</span><span class="p">,</span> <span class="n">model</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dLambda</span> <span class="o">=</span> <span class="mf">0.0</span>

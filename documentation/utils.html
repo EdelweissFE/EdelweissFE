@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Utilities &mdash; EdelweissFE v22.07 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jobs.html">Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
@@ -83,7 +85,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#adaptive-time-stepping">Adaptive time stepping</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator"><code class="docutils literal notranslate"><span class="pre">IncrementGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper"><code class="docutils literal notranslate"><span class="pre">AdaptiveTimeStepper</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -237,10 +239,10 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 </div>
 <div class="section" id="adaptive-time-stepping">
 <h2>Adaptive time stepping<a class="headerlink" href="#adaptive-time-stepping" title="Permalink to this heading"></a></h2>
-<p>Module <code class="docutils literal notranslate"><span class="pre">fe.utils.incrementgenerator</span></code></p>
+<p>Module <code class="docutils literal notranslate"><span class="pre">fe.timesteppers.adaptivetimestepper</span></code></p>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.incrementgenerator.</span></span><span class="sig-name descname"><span class="pre">IncrementGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.timesteppers.adaptivetimestepper.</span></span><span class="sig-name descname"><span class="pre">AdaptiveTimeStepper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper" title="Permalink to this definition"></a></dt>
 <dd><p>An increment generator for incremental-iterative simulations.</p>
 <p>Implementation as generator class.</p>
 <dl class="field-list simple">
@@ -255,9 +257,6 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging purposes.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple</p>
-</dd>
 </dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
@@ -266,20 +265,20 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement" title="fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discardAndChangeIncrement</span></code></a>(scaleFactor)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement" title="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discardAndChangeIncrement</span></code></a>(scaleFactor)</p></td>
 <td><p>Change increment size between minIncrement and maxIncrement by a given scale factor.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator.generateIncrement" title="fe.utils.incrementgenerator.IncrementGenerator.generateIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generateIncrement</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep" title="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generateTimeStep</span></code></a>()</p></td>
 <td><p>Generate the next increment.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease" title="fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preventIncrementIncrease</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease" title="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preventIncrementIncrease</span></code></a>()</p></td>
 <td><p>May be called before an increment is requested, to prevent from automatically increasing, e.g.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement">
-<span class="sig-name descname"><span class="pre">discardAndChangeIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaleFactor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator.discardAndChangeIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator.discardAndChangeIncrement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement">
+<span class="sig-name descname"><span class="pre">discardAndChangeIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaleFactor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.discardAndChangeIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement" title="Permalink to this definition"></a></dt>
 <dd><p>Change increment size between minIncrement and
 maxIncrement by a given scale factor.</p>
 <dl class="field-list simple">
@@ -290,22 +289,22 @@ maxIncrement by a given scale factor.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator.generateIncrement">
-<span class="sig-name descname"><span class="pre">generateIncrement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator.generateIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator.generateIncrement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep">
+<span class="sig-name descname"><span class="pre">generateTimeStep</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.generateTimeStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep" title="Permalink to this definition"></a></dt>
 <dd><p>Generate the next increment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The hexatuple consisting of (increment number, increment fraction, finished step progress, dT, increment start time of step, increment start time total).</p>
+<dd class="field-odd"><p>The current time step.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-even"><p>TimeStep</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease">
-<span class="sig-name descname"><span class="pre">preventIncrementIncrease</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/incrementgenerator.html#IncrementGenerator.preventIncrementIncrease"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.incrementgenerator.IncrementGenerator.preventIncrementIncrease" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease">
+<span class="sig-name descname"><span class="pre">preventIncrementIncrease</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.preventIncrementIncrease"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease" title="Permalink to this definition"></a></dt>
 <dd><p>May be called before an increment is requested, to prevent from
 automatically increasing, e.g. in case of bad convergency.</p>
 </dd></dl>
