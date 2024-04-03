@@ -152,8 +152,7 @@ environment:</p>
 <p>Add mamba to your environment:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Step 2</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export EWROOT=$PWD</span>
-<span class="go"> export PATH=$EWROOT/mambaforge3/bin:$PATH</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export PATH=$EWROOT/mambaforge3/bin:$PATH</span>
 <span class="go"> mamba init --all</span>
 <span class="go"> exit</span>
 </pre></div>
@@ -162,7 +161,8 @@ environment:</p>
 <p>Restart shell and activate mamba</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Step 3</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> mamba activate</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export EWROOT=$PWD</span>
+<span class="go"> mamba activate</span>
 </pre></div>
 </div>
 </div>

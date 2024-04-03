@@ -71,15 +71,15 @@
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phenomena.html">Physical phenomena</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Plotting</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.utils.plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.configurePlotter"><code class="docutils literal notranslate"><span class="pre">Plotter.configurePlotter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.exportFigure"><code class="docutils literal notranslate"><span class="pre">Plotter.exportFigure()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.exportPlots"><code class="docutils literal notranslate"><span class="pre">Plotter.exportPlots()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.finalize"><code class="docutils literal notranslate"><span class="pre">Plotter.finalize()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.getAx"><code class="docutils literal notranslate"><span class="pre">Plotter.getAx()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.getFig"><code class="docutils literal notranslate"><span class="pre">Plotter.getFig()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.plotXYData"><code class="docutils literal notranslate"><span class="pre">Plotter.plotXYData()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.utils.plotter.Plotter.show"><code class="docutils literal notranslate"><span class="pre">Plotter.show()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.configurePlotter"><code class="docutils literal notranslate"><span class="pre">Plotter.configurePlotter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.exportFigure"><code class="docutils literal notranslate"><span class="pre">Plotter.exportFigure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.exportPlots"><code class="docutils literal notranslate"><span class="pre">Plotter.exportPlots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.finalize"><code class="docutils literal notranslate"><span class="pre">Plotter.finalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.getAx"><code class="docutils literal notranslate"><span class="pre">Plotter.getAx()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.getFig"><code class="docutils literal notranslate"><span class="pre">Plotter.getFig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.plotXYData"><code class="docutils literal notranslate"><span class="pre">Plotter.plotXYData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.show"><code class="docutils literal notranslate"><span class="pre">Plotter.show()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -123,8 +123,8 @@
              
   <div class="section" id="plotting">
 <h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading"></a></h1>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.utils.plotter</span></code></p>
-<span class="target" id="module-fe.utils.plotter"></span><p>Plotting in EdelweissFE through matplotlib can be performed easily
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.utils.plotter</span></code></p>
+<span class="target" id="module-edelweissfe.utils.plotter"></span><p>Plotting in EdelweissFE through matplotlib can be performed easily
 through a global plotting instance, which is passed to all output managers.
 Output managers may use the plotter for visualizing all kinds of outputs.</p>
 <p>The style of the plots can be configured through
@@ -144,13 +144,13 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 </div>
 <p>The default style of plots can be configured via a classical rcparams.py file, which may be located in the current working directory.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.utils.plotter.</span></span><span class="sig-name descname"><span class="pre">Plotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotConfigurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportJobs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.plotter.</span></span><span class="sig-name descname"><span class="pre">Plotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotConfigurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportJobs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter" title="Permalink to this definition"></a></dt>
 <dd><p>The unified plotter, which can be accessed and used by all outputmanagers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging.</p></li>
+<li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging.</p></li>
 <li><p><strong>plotConfigurations</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – The list of dictionaries configuring individual plots.</p></li>
 <li><p><strong>exportJobs</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – The list of jobs to export plots at the end of a simulations.</p></li>
 </ul>
@@ -163,41 +163,41 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.configurePlotter" title="fe.utils.plotter.Plotter.configurePlotter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configurePlotter</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.configurePlotter" title="edelweissfe.utils.plotter.Plotter.configurePlotter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configurePlotter</span></code></a>()</p></td>
 <td><p>Set global options of the plotter.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.exportFigure" title="fe.utils.plotter.Plotter.exportFigure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exportFigure</span></code></a>(fileName, figureID[, width, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.exportFigure" title="edelweissfe.utils.plotter.Plotter.exportFigure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exportFigure</span></code></a>(fileName, figureID[, width, ...])</p></td>
 <td><p>Export a figure.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.exportPlots" title="fe.utils.plotter.Plotter.exportPlots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exportPlots</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.exportPlots" title="edelweissfe.utils.plotter.Plotter.exportPlots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exportPlots</span></code></a>()</p></td>
 <td><p>Export all plots according to the export job definitions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.finalize" title="fe.utils.plotter.Plotter.finalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.finalize" title="edelweissfe.utils.plotter.Plotter.finalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize</span></code></a>()</p></td>
 <td><p>Finalize and export plots.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.getAx" title="fe.utils.plotter.Plotter.getAx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getAx</span></code></a>([figureID, axSpec])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.getAx" title="edelweissfe.utils.plotter.Plotter.getAx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getAx</span></code></a>([figureID, axSpec])</p></td>
 <td><p>Get or create a figure with axes if it doesn't exist yet.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.getFig" title="fe.utils.plotter.Plotter.getFig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFig</span></code></a>([figureID])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.getFig" title="edelweissfe.utils.plotter.Plotter.getFig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFig</span></code></a>([figureID])</p></td>
 <td><p>Get or create a figure doesn't exist yet.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.plotXYData" title="fe.utils.plotter.Plotter.plotXYData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotXYData</span></code></a>(x, y[, figureID, axSpec, plotOptions])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.plotXYData" title="edelweissfe.utils.plotter.Plotter.plotXYData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotXYData</span></code></a>(x, y[, figureID, axSpec, plotOptions])</p></td>
 <td><p>Plots a single curve.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.utils.plotter.Plotter.show" title="fe.utils.plotter.Plotter.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.plotter.Plotter.show" title="edelweissfe.utils.plotter.Plotter.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a>()</p></td>
 <td><p>Show the plots!</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.configurePlotter">
-<span class="sig-name descname"><span class="pre">configurePlotter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.configurePlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.configurePlotter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.configurePlotter">
+<span class="sig-name descname"><span class="pre">configurePlotter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.configurePlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.configurePlotter" title="Permalink to this definition"></a></dt>
 <dd><p>Set global options of the plotter.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.exportFigure">
-<span class="sig-name descname"><span class="pre">exportFigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figureID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">469.47</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heightRatio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">png</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.exportFigure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.exportFigure" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.exportFigure">
+<span class="sig-name descname"><span class="pre">exportFigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figureID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">469.47</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heightRatio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">png</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.exportFigure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.exportFigure" title="Permalink to this definition"></a></dt>
 <dd><p>Export a figure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -215,20 +215,20 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.exportPlots">
-<span class="sig-name descname"><span class="pre">exportPlots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.exportPlots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.exportPlots" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.exportPlots">
+<span class="sig-name descname"><span class="pre">exportPlots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.exportPlots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.exportPlots" title="Permalink to this definition"></a></dt>
 <dd><p>Export all plots according to the export job definitions.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.finalize">
-<span class="sig-name descname"><span class="pre">finalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.finalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.finalize" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.finalize">
+<span class="sig-name descname"><span class="pre">finalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.finalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.finalize" title="Permalink to this definition"></a></dt>
 <dd><p>Finalize and export plots.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.getAx">
-<span class="sig-name descname"><span class="pre">getAx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figureID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axSpec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">111</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.getAx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.getAx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.getAx">
+<span class="sig-name descname"><span class="pre">getAx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figureID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axSpec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">111</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.getAx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.getAx" title="Permalink to this definition"></a></dt>
 <dd><p>Get or create a figure with axes if it doesn’t exist yet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -247,8 +247,8 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.getFig">
-<span class="sig-name descname"><span class="pre">getFig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figureID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.getFig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.getFig" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.getFig">
+<span class="sig-name descname"><span class="pre">getFig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figureID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.getFig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.getFig" title="Permalink to this definition"></a></dt>
 <dd><p>Get or create a figure doesn’t exist yet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -264,8 +264,8 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.plotXYData">
-<span class="sig-name descname"><span class="pre">plotXYData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figureID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axSpec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">111</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotOptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.plotXYData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.plotXYData" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.plotXYData">
+<span class="sig-name descname"><span class="pre">plotXYData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figureID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axSpec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">111</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotOptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.plotXYData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.plotXYData" title="Permalink to this definition"></a></dt>
 <dd><p>Plots a single curve.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -281,8 +281,8 @@ the keyword <code class="docutils literal notranslate"><span class="pre">*config
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.utils.plotter.Plotter.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/plotter.html#Plotter.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.plotter.Plotter.show" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter.show" title="Permalink to this definition"></a></dt>
 <dd><p>Show the plots!</p>
 </dd></dl>
 

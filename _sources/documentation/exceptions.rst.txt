@@ -1,7 +1,7 @@
 Exceptions
 ===========
 
-Module ``fe.utils.exceptions``
+Module ``edelweissfe.utils.exceptions``
 
-.. automodule:: fe.utils.exceptions
+.. automodule:: edelweissfe.utils.exceptions
    :members: 

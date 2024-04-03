@@ -68,15 +68,15 @@
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mesh.html">Creating finite element meshes</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Outputmanagers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.ensight"><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.monitor"><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.meshplot"><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.fractureenergyintegrator"><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.plotalongpath"><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.statusfile"><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.meshdatatofile"><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.outputmanagers.computetimemonitor"><code class="docutils literal notranslate"><span class="pre">computetimemonitor</span></code> - Print and write compute times per increment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.ensight"><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.monitor"><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.meshplot"><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.fractureenergyintegrator"><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.plotalongpath"><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.conditionalstop"><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.statusfile"><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.meshdatatofile"><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.outputmanagers.computetimemonitor"><code class="docutils literal notranslate"><span class="pre">computetimemonitor</span></code> - Print and write compute times per increment</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="parallelization.html">Parallelization</a></li>
@@ -119,8 +119,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-fe.config.outputmanagers">
-<span id="outputmanagers"></span><h1>Outputmanagers<a class="headerlink" href="#module-fe.config.outputmanagers" title="Permalink to this heading"></a></h1>
+  <div class="section" id="module-edelweissfe.config.outputmanagers">
+<span id="outputmanagers"></span><h1>Outputmanagers<a class="headerlink" href="#module-edelweissfe.config.outputmanagers" title="Permalink to this heading"></a></h1>
 <p>Outputmanagers are used for monitoring and exporting results to variuous formats.
 They are defined globally:</p>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myEnsightExport</span>
@@ -182,8 +182,8 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </pre></div>
 </div>
 </div>
-<div class="section" id="module-fe.outputmanagers.ensight">
-<span id="ensight-export-to-ensight-gold-format"></span><h2><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format<a class="headerlink" href="#module-fe.outputmanagers.ensight" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.ensight">
+<span id="ensight-export-to-ensight-gold-format"></span><h2><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format<a class="headerlink" href="#module-edelweissfe.outputmanagers.ensight" title="Permalink to this heading"></a></h2>
 <p>Output manager for Ensight exports.
 If loaded, it automatically exports all elSets as Ensight parts.
 For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.</p>
@@ -217,8 +217,8 @@ For each part, perNode and perElement results can be exported, which are importe
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.monitor">
-<span id="monitor-monitor-quantities-in-the-terminal"></span><h2><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal<a class="headerlink" href="#module-fe.outputmanagers.monitor" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.monitor">
+<span id="monitor-monitor-quantities-in-the-terminal"></span><h2><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal<a class="headerlink" href="#module-edelweissfe.outputmanagers.monitor" title="Permalink to this heading"></a></h2>
 <p>A simple monitor to observe results (fieldOutputs) in the console during analysis.</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
@@ -248,8 +248,8 @@ For each part, perNode and perElement results can be exported, which are importe
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.meshplot">
-<span id="meshplot-export-to-matplotlib"></span><h2><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib<a class="headerlink" href="#module-fe.outputmanagers.meshplot" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.meshplot">
+<span id="meshplot-export-to-matplotlib"></span><h2><code class="docutils literal notranslate"><span class="pre">meshplot</span></code> - Export to matplotlib<a class="headerlink" href="#module-edelweissfe.outputmanagers.meshplot" title="Permalink to this heading"></a></h2>
 <p>&#64;author: Magdalena</p>
 <dl class="simple">
 <dt>Module meshplot divided into classes:</dt><dd><ul class="simple">
@@ -305,8 +305,8 @@ options</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.fractureenergyintegrator">
-<span id="fractureenergyintegrator-determine-the-fracture-energy"></span><h2><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy<a class="headerlink" href="#module-fe.outputmanagers.fractureenergyintegrator" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.fractureenergyintegrator">
+<span id="fractureenergyintegrator-determine-the-fracture-energy"></span><h2><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy<a class="headerlink" href="#module-edelweissfe.outputmanagers.fractureenergyintegrator" title="Permalink to this heading"></a></h2>
 <p>A simple integrator to compute the fracture energy by integrating a load-displacement curve.</p>
 <div class="literal-block-wrapper docutils container" id="id6">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
@@ -339,8 +339,8 @@ options</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.plotalongpath">
-<span id="plotalongpath-plot-a-result-along-a-line"></span><h2><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line<a class="headerlink" href="#module-fe.outputmanagers.plotalongpath" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.plotalongpath">
+<span id="plotalongpath-plot-a-result-along-a-line"></span><h2><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line<a class="headerlink" href="#module-edelweissfe.outputmanagers.plotalongpath" title="Permalink to this heading"></a></h2>
 <p>Plot result for a nodeSet or an elementSet along the true geometrical distance.
 Corresponds to the plot along path functionality in Abaqus.</p>
 <table class="docutils align-default" id="id8">
@@ -376,8 +376,8 @@ Corresponds to the plot along path functionality in Abaqus.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.conditionalstop">
-<span id="conditionalstop-conditional-stop-if-expression-becomes-true"></span><h2><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true<a class="headerlink" href="#module-fe.outputmanagers.conditionalstop" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.conditionalstop">
+<span id="conditionalstop-conditional-stop-if-expression-becomes-true"></span><h2><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true<a class="headerlink" href="#module-edelweissfe.outputmanagers.conditionalstop" title="Permalink to this heading"></a></h2>
 <p>A conditional stop conditions wenn an expression becomes true.
 Useful, e.g., for indirect displacement control.</p>
 <div class="literal-block-wrapper docutils container" id="id9">
@@ -406,8 +406,8 @@ Useful, e.g., for indirect displacement control.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.statusfile">
-<span id="statusfile-write-the-status-of-the-simulation-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file<a class="headerlink" href="#module-fe.outputmanagers.statusfile" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.statusfile">
+<span id="statusfile-write-the-status-of-the-simulation-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file<a class="headerlink" href="#module-edelweissfe.outputmanagers.statusfile" title="Permalink to this heading"></a></h2>
 <p>Writes a status file during the analysis.</p>
 <div class="literal-block-wrapper docutils container" id="id11">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
@@ -434,8 +434,8 @@ Useful, e.g., for indirect displacement control.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.meshdatatofile">
-<span id="meshdatatofile-write-the-generated-mesh-data-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file<a class="headerlink" href="#module-fe.outputmanagers.meshdatatofile" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.meshdatatofile">
+<span id="meshdatatofile-write-the-generated-mesh-data-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file<a class="headerlink" href="#module-edelweissfe.outputmanagers.meshdatatofile" title="Permalink to this heading"></a></h2>
 <p>Writes the (generated) mesh data to a file.</p>
 <div class="literal-block-wrapper docutils container" id="id13">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
@@ -462,8 +462,8 @@ Useful, e.g., for indirect displacement control.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-fe.outputmanagers.computetimemonitor">
-<span id="computetimemonitor-print-and-write-compute-times-per-increment"></span><h2><code class="docutils literal notranslate"><span class="pre">computetimemonitor</span></code> - Print and write compute times per increment<a class="headerlink" href="#module-fe.outputmanagers.computetimemonitor" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.outputmanagers.computetimemonitor">
+<span id="computetimemonitor-print-and-write-compute-times-per-increment"></span><h2><code class="docutils literal notranslate"><span class="pre">computetimemonitor</span></code> - Print and write compute times per increment<a class="headerlink" href="#module-edelweissfe.outputmanagers.computetimemonitor" title="Permalink to this heading"></a></h2>
 <p>Prints the compute times per increment to the screen and writes them into a file (optional).</p>
 <div class="literal-block-wrapper docutils container" id="id15">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id15" title="Permalink to this code"></a></div>

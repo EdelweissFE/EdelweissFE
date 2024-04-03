@@ -9,15 +9,15 @@ they are based on a custom ordered set object.
 
 Relevant modules: 
 
- * ``fe.sets.orderedset``
- * ``fe.sets.nodeset``
- * ``fe.sets.elementset``
+ * ``edelweissfe.sets.orderedset``
+ * ``edelweissfe.sets.nodeset``
+ * ``edelweissfe.sets.elementset``
 
-.. automodule:: fe.sets.orderedset
+.. automodule:: edelweissfe.sets.orderedset
    :members: 
 
-.. automodule:: fe.sets.nodeset
+.. automodule:: edelweissfe.sets.nodeset
    :members: 
 
-.. automodule:: fe.sets.elementset
+.. automodule:: edelweissfe.sets.elementset
    :members: 

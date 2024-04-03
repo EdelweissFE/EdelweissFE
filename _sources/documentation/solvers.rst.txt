@@ -1,28 +1,28 @@
 Solvers
 =======
 
-.. automodule:: fe.config.solvers
+.. automodule:: edelweissfe.config.solvers
    :members: 
 
-.. pprint:: fe.config.solvers.solverLibrary
+.. pprint:: edelweissfe.config.solvers.solverLibrary
    :caption: Currently available:
 
 
 ``NIST`` - Nonlinear Implicit Static
 ------------------------------------
 
-.. automodule:: fe.solvers.nonlinearimplicitstatic
+.. automodule:: edelweissfe.solvers.nonlinearimplicitstatic
    :members: 
 
 
 ``NISTParallelForMarmotElements`` - Nonlinear Implicit Static (parallel)
 ------------------------------------------------------------------------
 
-.. automodule:: fe.solvers.nonlinearimplicitstaticparallelmk2
+.. automodule:: edelweissfe.solvers.nonlinearimplicitstaticparallelmk2
    :members: 
 
 ``NISTPArcLength`` - Nonlinear Implicit Static - Arc length 
 -----------------------------------------------------------
 
-.. automodule:: fe.solvers.nonlinearimplicitstaticparallelarclength
+.. automodule:: edelweissfe.solvers.nonlinearimplicitstaticparallelarclength
    :members: 

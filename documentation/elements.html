@@ -62,17 +62,17 @@
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html">Fields</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Elements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.config.elementlibrary.getElementClass"><code class="docutils literal notranslate"><span class="pre">getElementClass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.config.elementlibrary.getElementClass"><code class="docutils literal notranslate"><span class="pre">getElementClass()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#provider-marmot">Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper"><code class="docutils literal notranslate"><span class="pre">MarmotElementWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper"><code class="docutils literal notranslate"><span class="pre">MarmotElementWrapper</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#provider-marmotsingleqpelement">Provider <code class="docutils literal notranslate"><span class="pre">marmotsingleqpelement</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement"><code class="docutils literal notranslate"><span class="pre">MarmotMaterialWrappingElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement"><code class="docutils literal notranslate"><span class="pre">MarmotMaterialWrappingElement</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-elements">Implementing your own elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement"><code class="docutils literal notranslate"><span class="pre">BaseElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement"><code class="docutils literal notranslate"><span class="pre">BaseElement</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -125,8 +125,8 @@
              
   <div class="section" id="elements">
 <h1>Elements<a class="headerlink" href="#elements" title="Permalink to this heading"></a></h1>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.config.elementlibrary</span></code></p>
-<span class="target" id="module-fe.config.elementlibrary"></span><p>EdelweissFE currently supports finite element implementations provided by the Marmot library.
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.config.elementlibrary</span></code></p>
+<span class="target" id="module-edelweissfe.config.elementlibrary"></span><p>EdelweissFE currently supports finite element implementations provided by the Marmot library.
 In future, elements by other providers or elements directly implemented in EdelweissFE may be added here.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
@@ -137,8 +137,8 @@ In future, elements by other providers or elements directly implemented in Edelw
 </div>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="fe.config.elementlibrary.getElementClass">
-<span class="sig-prename descclassname"><span class="pre">fe.config.elementlibrary.</span></span><span class="sig-name descname"><span class="pre">getElementClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/config/elementlibrary.html#getElementClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.config.elementlibrary.getElementClass" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.config.elementlibrary.getElementClass">
+<span class="sig-prename descclassname"><span class="pre">edelweissfe.config.elementlibrary.</span></span><span class="sig-name descname"><span class="pre">getElementClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/config/elementlibrary.html#getElementClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.config.elementlibrary.getElementClass" title="Permalink to this definition"></a></dt>
 <dd><p>Get the class type of the requested element provider.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -155,10 +155,10 @@ In future, elements by other providers or elements directly implemented in Edelw
 
 <div class="section" id="provider-marmot">
 <h2>Provider <code class="docutils literal notranslate"><span class="pre">marmot</span></code><a class="headerlink" href="#provider-marmot" title="Permalink to this heading"></a></h2>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.elements.marmotelement.element</span></code></p>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.elements.marmotelement.element</span></code></p>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.elements.marmotelement.element.</span></span><span class="sig-name descname"><span class="pre">MarmotElementWrapper</span></span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.elements.marmotelement.element.</span></span><span class="sig-name descname"><span class="pre">MarmotElementWrapper</span></span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper" title="Permalink to this definition"></a></dt>
 <dd><p>This element serves as a wrapper for MarmotElements.</p>
 <p>For the documentation of MarmotElements, please refer to <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a>.</p>
 <dl class="field-list simple">
@@ -190,120 +190,120 @@ In future, elements by other providers or elements directly implemented in Edelw
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState" title="fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
 <td><p>Accept the computed state (in nonlinear iteration schemes).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment due to a volume load.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(Ke, Pe, U, dU, time, dTime)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(Ke, Pe, U, dU, time, dTime)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter" title="fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement centroid coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints" title="fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement qp coordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints" title="fe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement qp coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
 <td><p>Get the array of a result, possibly as a persistent view which is continiously updated by the underlying MarmotElement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement" title="fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.initializeElement" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
 <td><p>Let the underlying MarmotElement initialize itself</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState" title="fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
 <td><p>Reset to the last valid state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
 <td><p>Assign initial conditions to the underlying Marmot element</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
 <td><p>Assign a material and material properties to the underlying MarmotElement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="fe.elements.marmotelement.element.MarmotElementWrapper.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
 <td><p>Assign the nodes coordinates to the underyling MarmotElement</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="fe.elements.marmotelement.element.MarmotElementWrapper.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
 <td><p>Assign a set of properties to the underyling MarmotElement</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState">
-<span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState">
+<span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState" title="Permalink to this definition"></a></dt>
 <dd><p>Accept the computed state (in nonlinear iteration schemes).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce">
-<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce">
+<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a volume load.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad">
-<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad">
+<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself">
-<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ke</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeYourself">
+<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ke</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeYourself" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter">
-<span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter">
+<span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the underlying MarmotElement centroid coordinates.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints">
-<span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints">
+<span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the underlying MarmotElement qp coordinates.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints">
-<span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints">
+<span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the underlying MarmotElement qp coordinates.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray">
-<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getResultArray">
+<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getResultArray" title="Permalink to this definition"></a></dt>
 <dd><p>Get the array of a result, possibly as a persistent view which is continiously
 updated by the underlying MarmotElement.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement">
-<span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.initializeElement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.initializeElement">
+<span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.initializeElement" title="Permalink to this definition"></a></dt>
 <dd><p>Let the underlying MarmotElement initialize itself</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState">
-<span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState">
+<span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState" title="Permalink to this definition"></a></dt>
 <dd><p>Reset to the last valid state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition">
-<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition">
+<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition" title="Permalink to this definition"></a></dt>
 <dd><p>Assign initial conditions to the underlying Marmot element</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial">
-<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setMaterial">
+<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a material and material properties to the underlying MarmotElement.
 Furthermore, create two sets of state vars:</p>
 <blockquote>
@@ -315,14 +315,14 @@ Furthermore, create two sets of state vars:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setNodes">
-<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setNodes">
+<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setNodes" title="Permalink to this definition"></a></dt>
 <dd><p>Assign the nodes coordinates to the underyling MarmotElement</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotelement.element.MarmotElementWrapper.setProperties">
-<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setProperties">
+<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setProperties" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a set of properties to the underyling MarmotElement</p>
 </dd></dl>
 
@@ -331,10 +331,10 @@ Furthermore, create two sets of state vars:</p>
 </div>
 <div class="section" id="provider-marmotsingleqpelement">
 <h2>Provider <code class="docutils literal notranslate"><span class="pre">marmotsingleqpelement</span></code><a class="headerlink" href="#provider-marmotsingleqpelement" title="Permalink to this heading"></a></h2>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.elements.marmotsingleqpelement.element</span></code></p>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.elements.marmotsingleqpelement.element</span></code></p>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.elements.marmotsingleqpelement.element.</span></span><span class="sig-name descname"><span class="pre">MarmotMaterialWrappingElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.elements.marmotsingleqpelement.element.</span></span><span class="sig-name descname"><span class="pre">MarmotMaterialWrappingElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement" title="Permalink to this definition"></a></dt>
 <dd><p>This element serves as a wrapper for MarmotMaterials, cf. <a class="reference external" href="https://github.com/MAteRialMOdelingToolbox/Marmot/">Marmot</a>.</p>
 <p>It has a single quadrature point, and one (dummy) node.
 For interfacing with specific Marmot materials,
@@ -350,20 +350,20 @@ for development purposes.</p>
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
 </dd>
 <dt><strong>nSpatialDimensions</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
 </dd>
 </dl>
 </dd>
@@ -375,71 +375,71 @@ for development purposes.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
 <td><p>Accept the computed state.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
 <td><p>Not implemented for this wrapper.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
 <td><p>Not implemented for this wrapper.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(Ke, Pe, U, dU, time, dTime)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(Ke, Pe, U, dU, time, dTime)</p></td>
 <td><p>Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
 <td><p>Return the only node's coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
 <td><p>Return the only qp's coordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
 <td><p>Return the only qp's coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
 <td><p>Get the array of a result, possibly as a persistent view which is continiously updated by the element.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
 <td><p>Not used by this wrapper</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
 <td><p>Rest to the last valid state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
 <td><p>Assign initial conditions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
 <td><p>Assign a material and material properties to the underlying Wrapper.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
 <td><p>Assign the nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties" title="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
 <td><p>Not used by this wrapper</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState">
-<span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.acceptLastState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState">
+<span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.acceptLastState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState" title="Permalink to this definition"></a></dt>
 <dd><p>Accept the computed state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce">
-<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.computeBodyForce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce">
+<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.computeBodyForce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce" title="Permalink to this definition"></a></dt>
 <dd><p>Not implemented for this wrapper.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad">
-<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.computeDistributedLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad">
+<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.computeDistributedLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad" title="Permalink to this definition"></a></dt>
 <dd><p>Not implemented for this wrapper.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself">
-<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ke</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.computeYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself">
+<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ke</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.computeYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -456,8 +456,8 @@ for development purposes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter">
-<span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getCoordinatesAtCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter">
+<span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getCoordinatesAtCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
 <dd><p>Return the only node’s coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -470,8 +470,8 @@ for development purposes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints">
-<span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints">
+<span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
 <dd><p>Return the only qp’s coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -484,8 +484,8 @@ for development purposes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints">
-<span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getNumberOfQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints">
+<span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getNumberOfQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
 <dd><p>Return the only qp’s coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -498,8 +498,8 @@ for development purposes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray">
-<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getResultArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray">
+<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.getResultArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray" title="Permalink to this definition"></a></dt>
 <dd><p>Get the array of a result, possibly as a persistent view which is continiously
 updated by the element.</p>
 <dl class="field-list simple">
@@ -520,20 +520,20 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement">
-<span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.initializeElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement">
+<span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.initializeElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement" title="Permalink to this definition"></a></dt>
 <dd><p>Not used by this wrapper</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState">
-<span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.resetToLastValidState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState">
+<span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.resetToLastValidState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState" title="Permalink to this definition"></a></dt>
 <dd><p>Rest to the last valid state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition">
-<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setInitialCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition">
+<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setInitialCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition" title="Permalink to this definition"></a></dt>
 <dd><p>Assign initial conditions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -546,8 +546,8 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial">
-<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial">
+<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a material and material properties to the underlying Wrapper.
 Furthermore, create two sets of state vars:</p>
 <blockquote>
@@ -567,8 +567,8 @@ Furthermore, create two sets of state vars:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes">
-<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes">
+<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes" title="Permalink to this definition"></a></dt>
 <dd><p>Assign the nodes.</p>
 <p>Only the first node is considered.</p>
 <dl class="field-list simple">
@@ -579,51 +579,51 @@ Furthermore, create two sets of state vars:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties">
-<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties">
+<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/marmotsingleqpelement/element.html#MarmotMaterialWrappingElement.setProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties" title="Permalink to this definition"></a></dt>
 <dd><p>Not used by this wrapper</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
 <dd><p>The permutation pattern for the residual vector and the stiffness matrix to
 aggregate all entries in order to resemble the defined fields nodewise.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elNumber</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elNumber</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber" title="Permalink to this definition"></a></dt>
 <dd><p>The unique number of this element</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType" title="Permalink to this definition"></a></dt>
 <dd><p>The shape of the element in Ensight Gold notation.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="Permalink to this definition"></a></dt>
 <dd><p>The list of fields per nodes.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="Permalink to this definition"></a></dt>
 <dd><p>The total number of degrees of freedom this element has</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="Permalink to this definition"></a></dt>
 <dd><p>The number of nodes this element requires</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="Permalink to this definition"></a></dt>
 <dd><p>The list of nodes this element holds</p>
 </dd></dl>
 
@@ -676,12 +676,12 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </div>
 <div class="section" id="implementing-your-own-elements">
 <h2>Implementing your own elements<a class="headerlink" href="#implementing-your-own-elements" title="Permalink to this heading"></a></h2>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.elements.base.baseelement</span></code></p>
-<span class="target" id="module-fe.elements.base.baseelement"></span><p>Implementing your own finite elements can be done easily by subclassing from
-the abstract base class <a class="reference internal" href="#fe.elements.base.baseelement.BaseElement" title="fe.elements.base.baseelement.BaseElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseElement</span></code></a>.</p>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.elements.base.baseelement</span></code></p>
+<span class="target" id="module-edelweissfe.elements.base.baseelement"></span><p>Implementing your own finite elements can be done easily by subclassing from
+the abstract base class <a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement" title="edelweissfe.elements.base.baseelement.BaseElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseElement</span></code></a>.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.elements.base.baseelement.</span></span><span class="sig-name descname"><span class="pre">BaseElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.elements.base.baseelement.</span></span><span class="sig-name descname"><span class="pre">BaseElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement" title="Permalink to this definition"></a></dt>
 <dd><p>Finite elements in EdelweissFE should be derived from this
 base class in order to follow the general interface.</p>
 <p>EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)
@@ -704,19 +704,19 @@ to be of the form</p>
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.dofIndicesPermutation" title="fe.elements.base.baseelement.BaseElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation" title="edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.elNumber" title="fe.elements.base.baseelement.BaseElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.elNumber" title="edelweissfe.elements.base.baseelement.BaseElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.ensightType" title="fe.elements.base.baseelement.BaseElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.ensightType" title="edelweissfe.elements.base.baseelement.BaseElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.fields" title="fe.elements.base.baseelement.BaseElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.fields" title="edelweissfe.elements.base.baseelement.BaseElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.nDof" title="fe.elements.base.baseelement.BaseElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.nDof" title="edelweissfe.elements.base.baseelement.BaseElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.nNodes" title="fe.elements.base.baseelement.BaseElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.nNodes" title="edelweissfe.elements.base.baseelement.BaseElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
 </dd>
-<dt><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.nodes" title="fe.elements.base.baseelement.BaseElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.nodes" title="edelweissfe.elements.base.baseelement.BaseElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
 </dd>
 </dl>
 </dd>
@@ -728,59 +728,59 @@ to be of the form</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.acceptLastState" title="fe.elements.base.baseelement.BaseElement.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.acceptLastState" title="edelweissfe.elements.base.baseelement.BaseElement.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
 <td><p>Accept the computed state (in nonlinear iteration schemes).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.computeBodyForce" title="fe.elements.base.baseelement.BaseElement.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.computeBodyForce" title="edelweissfe.elements.base.baseelement.BaseElement.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.computeDistributedLoad" title="fe.elements.base.baseelement.BaseElement.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.computeDistributedLoad" title="edelweissfe.elements.base.baseelement.BaseElement.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
 <td><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.computeYourself" title="fe.elements.base.baseelement.BaseElement.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(P, K, U, dU, time, dT)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.computeYourself" title="edelweissfe.elements.base.baseelement.BaseElement.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(P, K, U, dU, time, dT)</p></td>
 <td><p>Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter" title="fe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter" title="edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement centroid coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints" title="fe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints" title="edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement qp coordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints" title="fe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints" title="edelweissfe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
 <td><p>Compute the underlying MarmotElement qp coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.getResultArray" title="fe.elements.base.baseelement.BaseElement.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.getResultArray" title="edelweissfe.elements.base.baseelement.BaseElement.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
 <td><p>Get the array of a result, possibly as a persistent view which is continiously updated by the element.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.initializeElement" title="fe.elements.base.baseelement.BaseElement.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.initializeElement" title="edelweissfe.elements.base.baseelement.BaseElement.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
 <td><p>Initalize the element to be ready for computing.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.resetToLastValidState" title="fe.elements.base.baseelement.BaseElement.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.resetToLastValidState" title="edelweissfe.elements.base.baseelement.BaseElement.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
 <td><p>Rest to the last valid state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.setInitialCondition" title="fe.elements.base.baseelement.BaseElement.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.setInitialCondition" title="edelweissfe.elements.base.baseelement.BaseElement.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
 <td><p>Assign initial conditions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.setMaterial" title="fe.elements.base.baseelement.BaseElement.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.setMaterial" title="edelweissfe.elements.base.baseelement.BaseElement.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(materialName, materialProperties)</p></td>
 <td><p>Assign a material and material properties.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.setNodes" title="fe.elements.base.baseelement.BaseElement.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.setNodes" title="edelweissfe.elements.base.baseelement.BaseElement.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
 <td><p>Assign the nodes to the element.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.elements.base.baseelement.BaseElement.setProperties" title="fe.elements.base.baseelement.BaseElement.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.setProperties" title="edelweissfe.elements.base.baseelement.BaseElement.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
 <td><p>Assign a set of properties to the element.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.acceptLastState">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.acceptLastState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.acceptLastState" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.acceptLastState">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.acceptLastState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.acceptLastState" title="Permalink to this definition"></a></dt>
 <dd><p>Accept the computed state (in nonlinear iteration schemes).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.computeBodyForce">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.computeBodyForce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.computeBodyForce" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.computeBodyForce">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.computeBodyForce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.computeBodyForce" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -797,8 +797,8 @@ to be of the form</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.computeDistributedLoad">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.computeDistributedLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.computeDistributedLoad" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.computeDistributedLoad">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.computeDistributedLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.computeDistributedLoad" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -818,8 +818,8 @@ to be of the form</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.computeYourself">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.computeYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.computeYourself" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.computeYourself">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.computeYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.computeYourself" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate the residual and stiffness for given time, field, and field increment due to a surface load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -837,8 +837,8 @@ to be of the form</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.getCoordinatesAtCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.getCoordinatesAtCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the underlying MarmotElement centroid coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -851,8 +851,8 @@ to be of the form</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.getCoordinatesAtQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.getCoordinatesAtQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the underlying MarmotElement qp coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -865,8 +865,8 @@ to be of the form</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.getNumberOfQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.getNumberOfQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the underlying MarmotElement qp coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -879,8 +879,8 @@ to be of the form</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.getResultArray">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.getResultArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.getResultArray" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.getResultArray">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.getResultArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.getResultArray" title="Permalink to this definition"></a></dt>
 <dd><p>Get the array of a result, possibly as a persistent view which is continiously
 updated by the element.</p>
 <dl class="field-list simple">
@@ -901,20 +901,20 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.initializeElement">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.initializeElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.initializeElement" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.initializeElement">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.initializeElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.initializeElement" title="Permalink to this definition"></a></dt>
 <dd><p>Initalize the element to be ready for computing.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.resetToLastValidState">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.resetToLastValidState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.resetToLastValidState" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.resetToLastValidState">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.resetToLastValidState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.resetToLastValidState" title="Permalink to this definition"></a></dt>
 <dd><p>Rest to the last valid state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.setInitialCondition">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.setInitialCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.setInitialCondition" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.setInitialCondition">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.setInitialCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.setInitialCondition" title="Permalink to this definition"></a></dt>
 <dd><p>Assign initial conditions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -927,8 +927,8 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.setMaterial">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.setMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.setMaterial" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.setMaterial">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.setMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.setMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a material and material properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -941,19 +941,19 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.setNodes">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.setNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.setNodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.setNodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.setNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.setNodes" title="Permalink to this definition"></a></dt>
 <dd><p>Assign the nodes to the element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>nodes</strong> (<em>list</em><em>[</em><a class="reference internal" href="points.html#fe.points.node.Node" title="fe.points.node.Node"><em>fe.points.node.Node</em></a><em>]</em>) – A list of nodes.</p>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>list</em><em>[</em><a class="reference internal" href="points.html#edelweissfe.points.node.Node" title="edelweissfe.points.node.Node"><em>edelweissfe.points.node.Node</em></a><em>]</em>) – A list of nodes.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.setProperties">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/elements/base/baseelement.html#BaseElement.setProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.setProperties" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.setProperties">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/base/baseelement.html#BaseElement.setProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.setProperties" title="Permalink to this definition"></a></dt>
 <dd><p>Assign a set of properties to the element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -963,45 +963,45 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.dofIndicesPermutation">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
 <dd><p>The permutation pattern for the residual vector and the stiffness matrix to
 aggregate all entries in order to resemble the defined fields nodewise.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.elNumber">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elNumber</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.elNumber" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.elNumber">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elNumber</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.elNumber" title="Permalink to this definition"></a></dt>
 <dd><p>The unique number of this element</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.ensightType">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.ensightType" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.ensightType">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.ensightType" title="Permalink to this definition"></a></dt>
 <dd><p>The shape of the element in Ensight Gold notation.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.fields">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.fields" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.fields">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.fields" title="Permalink to this definition"></a></dt>
 <dd><p>The list of fields per nodes.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.nDof">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.nDof" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.nDof">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.nDof" title="Permalink to this definition"></a></dt>
 <dd><p>The total number of degrees of freedom this element has</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.nNodes">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.nNodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.nNodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.nNodes" title="Permalink to this definition"></a></dt>
 <dd><p>The number of nodes this element requires</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="fe.elements.base.baseelement.BaseElement.nodes">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#fe.elements.base.baseelement.BaseElement.nodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.nodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.nodes" title="Permalink to this definition"></a></dt>
 <dd><p>The list of nodes this element holds</p>
 </dd></dl>
 

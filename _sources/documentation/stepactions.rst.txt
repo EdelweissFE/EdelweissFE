@@ -1,18 +1,18 @@
 Step actions
 ============
 
-.. automodule:: fe.config.stepactions
+.. automodule:: edelweissfe.config.stepactions
    :members: __doc__
 
 ``bodyforce`` - Bodyforce loads 
 -------------------------------
 
-Relevant module: ``fe.stepactions.bodyforce``
+Relevant module: ``edelweissfe.stepactions.bodyforce``
 
-.. automodule:: fe.stepactions.bodyforce
+.. automodule:: edelweissfe.stepactions.bodyforce
    :members: __doc__
 
-.. pprint:: fe.stepactions.bodyforce.documentation
+.. pprint:: edelweissfe.stepactions.bodyforce.documentation
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BodyForce3D/test.inp
@@ -22,23 +22,23 @@ Relevant module: ``fe.stepactions.bodyforce``
 ``dirichlet`` - Standard dirichlet BC
 -------------------------------------
 
-Relevant module: ``fe.stepactions.dirichlet``
+Relevant module: ``edelweissfe.stepactions.dirichlet``
 
-.. automodule:: fe.stepactions.dirichlet
+.. automodule:: edelweissfe.stepactions.dirichlet
    :members: __doc__
 
-.. pprint:: fe.stepactions.dirichlet.documentation
+.. pprint:: edelweissfe.stepactions.dirichlet.documentation
    :caption: Options:
 
 ``distributedload`` - Distributed surface loads
 -----------------------------------------------
 
-Relevant module: ``fe.stepactions.distributedload``
+Relevant module: ``edelweissfe.stepactions.distributedload``
 
-.. automodule:: fe.stepactions.distributedload
+.. automodule:: edelweissfe.stepactions.distributedload
     :members: __doc__
 
-.. pprint:: fe.stepactions.distributedload.documentation
+.. pprint:: edelweissfe.stepactions.distributedload.documentation
    :caption: Options:
 
 
@@ -49,12 +49,12 @@ Relevant module: ``fe.stepactions.distributedload``
 ``geostatic`` - Geostatic stress states 
 ---------------------------------------
 
-Relevant module: ``fe.stepactions.geostatic``
+Relevant module: ``edelweissfe.stepactions.geostatic``
 
-.. automodule:: fe.stepactions.geostatic
+.. automodule:: edelweissfe.stepactions.geostatic
     :members: __doc__
 
-.. pprint:: fe.stepactions.geostatic.documentation
+.. pprint:: edelweissfe.stepactions.geostatic.documentation
    :caption: Options:
 
 
@@ -65,12 +65,12 @@ Relevant module: ``fe.stepactions.geostatic``
 ``indirectcontrol`` - Indirect displacement control
 ---------------------------------------------------
 
-Relevant module: ``fe.stepactions.indirectcontrol``
+Relevant module: ``edelweissfe.stepactions.indirectcontrol``
 
-.. automodule:: fe.stepactions.indirectcontrol
+.. automodule:: edelweissfe.stepactions.indirectcontrol
     :members: __doc__
 
-.. pprint:: fe.stepactions.indirectcontrol.documentation
+.. pprint:: edelweissfe.stepactions.indirectcontrol.documentation
    :caption: Options:
 
 
@@ -81,42 +81,42 @@ Relevant module: ``fe.stepactions.indirectcontrol``
 ``indirectcontractioncontrol`` - Indirect displacement -- contraction ring control
 ----------------------------------------------------------------------------------
 
-Relevant module: ``fe.stepactions.indirectcontrol``
+Relevant module: ``edelweissfe.stepactions.indirectcontrol``
 
-.. automodule:: fe.stepactions.indirectcontractioncontrol
+.. automodule:: edelweissfe.stepactions.indirectcontractioncontrol
     :members: __doc__
 
-.. pprint:: fe.stepactions.indirectcontractioncontrol.documentation
+.. pprint:: edelweissfe.stepactions.indirectcontractioncontrol.documentation
    :caption: Options:
 
 ``initializematerial`` - Initialize materials
 ---------------------------------------------
 
-Relevant module: ``fe.stepactions.initializematerial``
+Relevant module: ``edelweissfe.stepactions.initializematerial``
 
-.. automodule:: fe.stepactions.initializematerial
+.. automodule:: edelweissfe.stepactions.initializematerial
     :members: __doc__
 
 ``modelupdate`` - Update the model
 ----------------------------------
 
-Relevant module: ``fe.stepactions.modelupdate``
+Relevant module: ``edelweissfe.stepactions.modelupdate``
 
-.. automodule:: fe.stepactions.modelupdate
+.. automodule:: edelweissfe.stepactions.modelupdate
     :members: __doc__
 
-.. pprint:: fe.stepactions.modelupdate.documentation
+.. pprint:: edelweissfe.stepactions.modelupdate.documentation
    :caption: Options:
 
 ``nodeforces`` - Concentrated node forces
 -----------------------------------------
 
-Relevant module: ``fe.stepactions.nodeforces``
+Relevant module: ``edelweissfe.stepactions.nodeforces``
 
-.. automodule:: fe.stepactions.nodeforces
+.. automodule:: edelweissfe.stepactions.nodeforces
     :members: __doc__
 
-.. pprint:: fe.stepactions.nodeforces.documentation
+.. pprint:: edelweissfe.stepactions.nodeforces.documentation
    :caption: Options:
 
 
@@ -127,29 +127,29 @@ Relevant module: ``fe.stepactions.nodeforces``
 ``setfield`` - Set a field to a prescribed value
 ------------------------------------------------
 
-Relevant module: ``fe.stepactions.setfield``
+Relevant module: ``edelweissfe.stepactions.setfield``
 
-.. automodule:: fe.stepactions.setfield
+.. automodule:: edelweissfe.stepactions.setfield
     :members: __doc__
 
-.. pprint:: fe.stepactions.setfield.documentation
+.. pprint:: edelweissfe.stepactions.setfield.documentation
    :caption: Options:
 
 ``setinitialconditions`` - Set initial conditions to elements
 -------------------------------------------------------------
 
-Relevant module: ``fe.stepactions.setinitialconditions``
+Relevant module: ``edelweissfe.stepactions.setinitialconditions``
 
-.. automodule:: fe.stepactions.setinitialconditions
+.. automodule:: edelweissfe.stepactions.setinitialconditions
     :members: __doc__
 
-.. pprint:: fe.stepactions.setinitialconditions.documentation
+.. pprint:: edelweissfe.stepactions.setinitialconditions.documentation
    :caption: Options:
 
 Implementing your own step actions
 ----------------------------------
 
-Subclass from the step action base class in module ``fe.stepactions.base.stepactionbase``
+Subclass from the step action base class in module ``edelweissfe.stepactions.base.stepactionbase``
 
-.. automodule:: fe.stepactions.base.stepactionbase    
+.. automodule:: edelweissfe.stepactions.base.stepactionbase    
    :members: 

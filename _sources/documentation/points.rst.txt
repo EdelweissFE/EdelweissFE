@@ -5,8 +5,8 @@ Points represent entities with a spatial position and a unique identity,
 
 Relevant modules: 
 
- * ``fe.points.node``
+ * ``edelweissfe.points.node``
 
-.. automodule:: fe.points.node
+.. automodule:: edelweissfe.points.node
    :members: 
 

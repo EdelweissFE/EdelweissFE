@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>edelweissfe.elements.marmotsingleqpelement.element &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../documentation/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">edelweissfe.elements.marmotsingleqpelement.element</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for edelweissfe.elements.marmotsingleqpelement.element</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  _____    _      _              _         _____ _____</span>
+<span class="c1"># | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|</span>
+<span class="c1"># |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|</span>
+<span class="c1"># | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___</span>
+<span class="c1"># |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Unit of Strength of Materials and Structural Analysis</span>
+<span class="c1">#  University of Innsbruck,</span>
+<span class="c1">#  2017 - today</span>
+<span class="c1">#</span>
+<span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
+<span class="c1">#</span>
+<span class="c1">#  This file is part of EdelweissFE.</span>
+<span class="c1">#</span>
+<span class="c1">#  This library is free software; you can redistribute it and/or</span>
+<span class="c1">#  modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1">#  License as published by the Free Software Foundation; either</span>
+<span class="c1">#  version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#  The full text of the license can be found in the file LICENSE.md at</span>
+<span class="c1">#  the top level directory of EdelweissFE.</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1"># Created on Wed Aug 31 08:35:06 2022</span>
+<span class="c1"># @author: matthias</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">CutbackRequest</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.elements.base.baseelement</span> <span class="kn">import</span> <span class="n">BaseElement</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotsingleqpelement.marmotmaterialhypoelasticwrapper</span> <span class="kn">import</span> <span class="n">MarmotMaterialHypoElasticWrapper</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotsingleqpelement.marmotmaterialgradientenhancedhypoelasticwrapper</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MarmotMaterialGradientEnhancedHypoElasticWrapper</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">marmotMaterialWrappers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;MarmotMaterialHypoElastic&quot;</span><span class="p">:</span> <span class="n">MarmotMaterialHypoElasticWrapper</span><span class="p">,</span>
+    <span class="s2">&quot;MarmotMaterialGradientEnhancedHypoElastic&quot;</span><span class="p">:</span> <span class="n">MarmotMaterialGradientEnhancedHypoElasticWrapper</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement">[docs]</a><span class="k">class</span> <span class="nc">MarmotMaterialWrappingElement</span><span class="p">(</span><span class="n">BaseElement</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This element serves as a wrapper for MarmotMaterials, cf. `Marmot &lt;https://github.com/MAteRialMOdelingToolbox/Marmot/&gt;`_.</span>
+
+<span class="sd">        It has a single quadrature point, and one (dummy) node.</span>
+<span class="sd">        For interfacing with specific Marmot materials,</span>
+<span class="sd">        specialized material wrappers are used.</span>
+
+<span class="sd">        The element allows to run quadrature point simulations investigating materials</span>
+<span class="sd">        for development purposes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        materialType</span>
+<span class="sd">            The Marmot material class which should be represented, e.g., MarmotMaterialHypoElastic.</span>
+<span class="sd">        elNumber</span>
+<span class="sd">            The number of the element.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elNumber</span> <span class="o">=</span> <span class="n">elNumber</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_materialType</span> <span class="o">=</span> <span class="n">materialType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nSpatialDimensions</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span> <span class="o">=</span> <span class="s2">&quot;point&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span> <span class="o">=</span> <span class="n">marmotMaterialWrappers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_materialType</span><span class="p">]()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">nU</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndicesPermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elNumber</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nSpatialDimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nSpatialDimensions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dofIndicesPermutation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndicesPermutation</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ensightType</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.setNodes"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes">[docs]</a>    <span class="k">def</span> <span class="nf">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign the nodes.</span>
+
+<span class="sd">        Only the first node is considered.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nodes</span>
+<span class="sd">            The list of node instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="n">nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qpCoordinates</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.setProperties"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties">[docs]</a>    <span class="k">def</span> <span class="nf">setProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementProperties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Not used by this wrapper&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not be called for this material wrapper!&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.initializeElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement">[docs]</a>    <span class="k">def</span> <span class="nf">initializeElement</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Not used by this wrapper&quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.setMaterial"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">setMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a material and material properties to the underlying Wrapper.</span>
+<span class="sd">        Furthermore, create two sets of state vars:</span>
+
+<span class="sd">            * the actual set,</span>
+<span class="sd">            * and a temporary set for backup in nonlinear iteration schemes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        materialName</span>
+<span class="sd">            The name of the requested material.</span>
+<span class="sd">        materialProperties</span>
+<span class="sd">            The properties for he requested material.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_materialProperties</span> <span class="o">=</span> <span class="n">materialProperties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">createMaterial</span><span class="p">(</span><span class="n">materialName</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nStateVars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">getNumberOfRequiredStateVars</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stateVars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nStateVars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nStateVars</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">assignStateVars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_initializeStateVarsTemp</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateVars</span>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.setInitialCondition"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition">[docs]</a>    <span class="k">def</span> <span class="nf">setInitialCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateType</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initializeStateVarsTemp</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">stateType</span> <span class="o">==</span> <span class="s2">&quot;initialize material&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">initializeYourself</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">stateType</span> <span class="o">==</span> <span class="s2">&quot;characteristic element length&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">setCharacteristicElementLength</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">acceptLastState</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.computeYourself"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself">[docs]</a>    <span class="k">def</span> <span class="nf">computeYourself</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">Ke</span><span class="p">,</span>
+        <span class="n">Pe</span><span class="p">,</span>
+        <span class="n">U</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initializeStateVarsTemp</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">computeYourself</span><span class="p">(</span><span class="n">Ke</span><span class="p">,</span> <span class="n">Pe</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dTime</span><span class="p">)</span>
+
+        <span class="n">Pe</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.computeDistributedLoad"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad">[docs]</a>    <span class="k">def</span> <span class="nf">computeDistributedLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loadType</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">faceID</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dTime</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not implemented for this wrapper.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not be called for this wrapper.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.computeBodyForce"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dTime</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not implemented for this wrapper.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not be called for this wrapper.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.acceptLastState"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState">[docs]</a>    <span class="k">def</span> <span class="nf">acceptLastState</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accept the computed state.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stateVars</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.resetToLastValidState"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState">[docs]</a>    <span class="k">def</span> <span class="nf">resetToLastValidState</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.getResultArray"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray">[docs]</a>    <span class="k">def</span> <span class="nf">getResultArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quadraturePoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marmotMaterialWrapper</span><span class="o">.</span><span class="n">getResultArray</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.getCoordinatesAtCenter"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the only node&#39;s coordinates.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The node&#39;s coordinates.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodeCoordinates</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the only qp&#39;s coordinates.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The qp&#39;s coordinates.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qpCoordinates</span></div>
+
+<div class="viewcode-block" id="MarmotMaterialWrappingElement.getNumberOfQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints">[docs]</a>    <span class="k">def</span> <span class="nf">getNumberOfQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the only qp&#39;s coordinates.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The qp&#39;s coordinates.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="mi">1</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

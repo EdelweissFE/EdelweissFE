@@ -52,9 +52,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Input file syntax</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.utils.inputfileparser.parseInputFile"><code class="docutils literal notranslate"><span class="pre">parseInputFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.utils.inputfileparser.printKeywords"><code class="docutils literal notranslate"><span class="pre">printKeywords()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.utils.inputfileparser.printKeywordsRST"><code class="docutils literal notranslate"><span class="pre">printKeywordsRST()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.utils.inputfileparser.parseInputFile"><code class="docutils literal notranslate"><span class="pre">parseInputFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.utils.inputfileparser.printKeywords"><code class="docutils literal notranslate"><span class="pre">printKeywords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.utils.inputfileparser.printKeywordsRST"><code class="docutils literal notranslate"><span class="pre">printKeywordsRST()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#keywords">Keywords</a></li>
 </ul>
 </li>
@@ -116,7 +116,7 @@
              
   <div class="section" id="input-file-syntax">
 <h1>Input file syntax<a class="headerlink" href="#input-file-syntax" title="Permalink to this heading"></a></h1>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.utils.inputfileparser.py</span></code></p>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.utils.inputfileparser.py</span></code></p>
 <p>EdelweissFE uses an input file syntax similar to Abaqus, using human readable input files.
 The general syntax makes use of <code class="docutils literal notranslate"><span class="pre">*keywords</span></code>, possibly with <code class="docutils literal notranslate"><span class="pre">option=values</span></code> in the same line and
 supplemented by data lines.
@@ -139,10 +139,10 @@ and available keywords can be printed using</p>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span>python edelweiss.py --keywords
 </pre></div>
 </div>
-<span class="target" id="module-fe.utils.inputfileparser"></span><p>Inputfileparser for inputfiles employing an Abaqus-like syntax.</p>
+<span class="target" id="module-edelweissfe.utils.inputfileparser"></span><p>Inputfileparser for inputfiles employing an Abaqus-like syntax.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="fe.utils.inputfileparser.parseInputFile">
-<span class="sig-prename descclassname"><span class="pre">fe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">parseInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentKeyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existingFileDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/inputfileparser.html#parseInputFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.inputfileparser.parseInputFile" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.inputfileparser.parseInputFile">
+<span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">parseInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentKeyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existingFileDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/inputfileparser.html#parseInputFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.inputfileparser.parseInputFile" title="Permalink to this definition"></a></dt>
 <dd><p>Parse an Abaqus-like input file to generate a dictionary with its content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -163,14 +163,14 @@ keyword is currently active.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="fe.utils.inputfileparser.printKeywords">
-<span class="sig-prename descclassname"><span class="pre">fe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">printKeywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/inputfileparser.html#printKeywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.inputfileparser.printKeywords" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.inputfileparser.printKeywords">
+<span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">printKeywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/inputfileparser.html#printKeywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.inputfileparser.printKeywords" title="Permalink to this definition"></a></dt>
 <dd><p>Print the input file language set.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="fe.utils.inputfileparser.printKeywordsRST">
-<span class="sig-prename descclassname"><span class="pre">fe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">printKeywordsRST</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/utils/inputfileparser.html#printKeywordsRST"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.utils.inputfileparser.printKeywordsRST" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.utils.inputfileparser.printKeywordsRST">
+<span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.inputfileparser.</span></span><span class="sig-name descname"><span class="pre">printKeywordsRST</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/inputfileparser.html#printKeywordsRST"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.inputfileparser.printKeywordsRST" title="Permalink to this definition"></a></dt>
 <dd><p>Print the input file language set in an RST conform format.</p>
 </dd></dl>
 

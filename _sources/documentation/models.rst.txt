@@ -1,14 +1,14 @@
 Models
 ======
-.. .. automodule:: fe.config.solvers
+.. .. automodule:: edelweissfe.config.solvers
 ..    :members: 
 
-.. .. pprint:: fe.config.solvers.solverLibrary
+.. .. pprint:: edelweissfe.config.solvers.solverLibrary
 ..    :caption: Currently available:
 
 
 ``FEModel`` - A classical finite element model
 ----------------------------------------------
 
-.. automodule:: fe.models.femodel
+.. automodule:: edelweissfe.models.femodel
    :members: 

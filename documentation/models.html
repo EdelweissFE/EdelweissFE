@@ -54,8 +54,8 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Models</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-fe.models.femodel"><code class="docutils literal notranslate"><span class="pre">FEModel</span></code> - A classical finite element model</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.models.femodel.FEModel"><code class="docutils literal notranslate"><span class="pre">FEModel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-edelweissfe.models.femodel"><code class="docutils literal notranslate"><span class="pre">FEModel</span></code> - A classical finite element model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.models.femodel.FEModel"><code class="docutils literal notranslate"><span class="pre">FEModel</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -116,11 +116,11 @@
              
   <div class="section" id="models">
 <h1>Models<a class="headerlink" href="#models" title="Permalink to this heading"></a></h1>
-<div class="section" id="module-fe.models.femodel">
-<span id="femodel-a-classical-finite-element-model"></span><h2><code class="docutils literal notranslate"><span class="pre">FEModel</span></code> - A classical finite element model<a class="headerlink" href="#module-fe.models.femodel" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-edelweissfe.models.femodel">
+<span id="femodel-a-classical-finite-element-model"></span><h2><code class="docutils literal notranslate"><span class="pre">FEModel</span></code> - A classical finite element model<a class="headerlink" href="#module-edelweissfe.models.femodel" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.models.femodel.</span></span><span class="sig-name descname"><span class="pre">FEModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/models/femodel.html#FEModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.models.femodel.FEModel" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.models.femodel.</span></span><span class="sig-name descname"><span class="pre">FEModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/models/femodel.html#FEModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.models.femodel.FEModel" title="Permalink to this definition"></a></dt>
 <dd><p>This is is a standard finite element model tree.
 It takes care of the correct number of variables,
 for nodes and scalar degrees of freedem, and it manages the fields.</p>
@@ -136,10 +136,10 @@ for nodes and scalar degrees of freedem, and it manages the fields.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.models.femodel.FEModel.advanceToTime" title="fe.models.femodel.FEModel.advanceToTime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advanceToTime</span></code></a>(time)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.models.femodel.FEModel.advanceToTime" title="edelweissfe.models.femodel.FEModel.advanceToTime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advanceToTime</span></code></a>(time)</p></td>
 <td><p>Accept the current state of the model and sub instances, and set the new time.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.models.femodel.FEModel.prepareYourself" title="fe.models.femodel.FEModel.prepareYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepareYourself</span></code></a>(journal)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.models.femodel.FEModel.prepareYourself" title="edelweissfe.models.femodel.FEModel.prepareYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepareYourself</span></code></a>(journal)</p></td>
 <td><p>Prepare the model for a simulation.</p></td>
 </tr>
 </tbody>
@@ -159,8 +159,8 @@ for nodes and scalar degrees of freedem, and it manages the fields.</p>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.advanceToTime">
-<span class="sig-name descname"><span class="pre">advanceToTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/models/femodel.html#FEModel.advanceToTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.models.femodel.FEModel.advanceToTime" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.advanceToTime">
+<span class="sig-name descname"><span class="pre">advanceToTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/models/femodel.html#FEModel.advanceToTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.advanceToTime" title="Permalink to this definition"></a></dt>
 <dd><p>Accept the current state of the model and sub instances, and
 set the new time.</p>
 <dl class="field-list simple">
@@ -171,99 +171,99 @@ set the new time.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.prepareYourself">
-<span class="sig-name descname"><span class="pre">prepareYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/models/femodel.html#FEModel.prepareYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.models.femodel.FEModel.prepareYourself" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.prepareYourself">
+<span class="sig-name descname"><span class="pre">prepareYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/models/femodel.html#FEModel.prepareYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.prepareYourself" title="Permalink to this definition"></a></dt>
 <dd><p>Prepare the model for a simulation.
 Creates the variables, bundles the fields,
 and initializes elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>journal</strong> (<a class="reference internal" href="journal.html#fe.journal.journal.Journal" title="fe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance.</p>
+<dd class="field-odd"><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.additionalParameters">
-<span class="sig-name descname"><span class="pre">additionalParameters</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.additionalParameters" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.additionalParameters">
+<span class="sig-name descname"><span class="pre">additionalParameters</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.additionalParameters" title="Permalink to this definition"></a></dt>
 <dd><p>Additional information.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.analyticalFields">
-<span class="sig-name descname"><span class="pre">analyticalFields</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.analyticalFields" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.analyticalFields">
+<span class="sig-name descname"><span class="pre">analyticalFields</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.analyticalFields" title="Permalink to this definition"></a></dt>
 <dd><p>AnalyticalFields in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.constraints">
-<span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.constraints" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.constraints">
+<span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.constraints" title="Permalink to this definition"></a></dt>
 <dd><p>Constraints in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.domainSize">
-<span class="sig-name descname"><span class="pre">domainSize</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.domainSize" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.domainSize">
+<span class="sig-name descname"><span class="pre">domainSize</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.domainSize" title="Permalink to this definition"></a></dt>
 <dd><p>Spatial dimension of the model</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.elementSets">
-<span class="sig-name descname"><span class="pre">elementSets</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.elementSets" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.elementSets">
+<span class="sig-name descname"><span class="pre">elementSets</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.elementSets" title="Permalink to this definition"></a></dt>
 <dd><p>ElementSets in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.elements">
-<span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.elements" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.elements" title="Permalink to this definition"></a></dt>
 <dd><p>Elements in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.materials">
-<span class="sig-name descname"><span class="pre">materials</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.materials" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.materials">
+<span class="sig-name descname"><span class="pre">materials</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.materials" title="Permalink to this definition"></a></dt>
 <dd><p>Materials in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.nodeFields">
-<span class="sig-name descname"><span class="pre">nodeFields</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.nodeFields" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.nodeFields">
+<span class="sig-name descname"><span class="pre">nodeFields</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.nodeFields" title="Permalink to this definition"></a></dt>
 <dd><p>NodeFields in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.nodeSets">
-<span class="sig-name descname"><span class="pre">nodeSets</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.nodeSets" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.nodeSets">
+<span class="sig-name descname"><span class="pre">nodeSets</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.nodeSets" title="Permalink to this definition"></a></dt>
 <dd><p>NodeSets in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.nodes">
-<span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.nodes" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.nodes">
+<span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.nodes" title="Permalink to this definition"></a></dt>
 <dd><p>Nodes in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.scalarVariables">
-<span class="sig-name descname"><span class="pre">scalarVariables</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.scalarVariables" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.scalarVariables">
+<span class="sig-name descname"><span class="pre">scalarVariables</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.scalarVariables" title="Permalink to this definition"></a></dt>
 <dd><p>ScalarVariables in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.sections">
-<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.sections" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.sections">
+<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.sections" title="Permalink to this definition"></a></dt>
 <dd><p>Sections in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.surfaces">
-<span class="sig-name descname"><span class="pre">surfaces</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.surfaces" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.surfaces">
+<span class="sig-name descname"><span class="pre">surfaces</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.surfaces" title="Permalink to this definition"></a></dt>
 <dd><p>Surface definitions in the model.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="fe.models.femodel.FEModel.time">
-<span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#fe.models.femodel.FEModel.time" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.time">
+<span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.time" title="Permalink to this definition"></a></dt>
 <dd><p>Current time of the model.</p>
 </dd></dl>
 

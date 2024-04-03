@@ -1,7 +1,7 @@
 Inputfile driven simulations
 ============================
 
-Relevant module: ``fe.drivers.inputfiledrivensimulation``
+Relevant module: ``edelweissfe.drivers.inputfiledrivensimulation``
 
-.. automodule:: fe.drivers.inputfiledrivensimulation
+.. automodule:: edelweissfe.drivers.inputfiledrivensimulation
    :members: 

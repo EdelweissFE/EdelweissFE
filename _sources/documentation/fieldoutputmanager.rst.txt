@@ -1,12 +1,12 @@
 Field outputs 
 =============
 
-Relevant module: ``fe.utils.fieldoutput``
+Relevant module: ``edelweissfe.utils.fieldoutput``
 
-.. automodule:: fe.utils.fieldoutput
+.. automodule:: edelweissfe.utils.fieldoutput
    :members: __doc__
 
-.. pprint:: fe.utils.fieldoutput.documentation
+.. pprint:: edelweissfe.utils.fieldoutput.documentation
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/FieldOutput/fieldOutput.inp
@@ -16,17 +16,17 @@ Relevant module: ``fe.utils.fieldoutput``
 Module documentation:
 
 
-.. autoclass:: fe.utils.fieldoutput.FieldOutputController
+.. autoclass:: edelweissfe.utils.fieldoutput.FieldOutputController
    :members:
 
-.. autoclass:: fe.utils.fieldoutput._FieldOutputBase
+.. autoclass:: edelweissfe.utils.fieldoutput._FieldOutputBase
    :members:
 
-.. autoclass:: fe.utils.fieldoutput.ElementFieldOutput
+.. autoclass:: edelweissfe.utils.fieldoutput.ElementFieldOutput
    :members:
 
-.. autoclass:: fe.utils.fieldoutput.NodeFieldOutput
+.. autoclass:: edelweissfe.utils.fieldoutput.NodeFieldOutput
    :members:
 
-.. autoclass:: fe.utils.fieldoutput.ExpressionFieldOutput
+.. autoclass:: edelweissfe.utils.fieldoutput.ExpressionFieldOutput
    :members:

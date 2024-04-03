@@ -1,7 +1,7 @@
 Journal
 =======
 
-Relevant module: ``fe.journal.journal``
+Relevant module: ``edelweissfe.journal.journal``
 
-.. automodule:: fe.journal.journal
+.. automodule:: edelweissfe.journal.journal
    :members: 

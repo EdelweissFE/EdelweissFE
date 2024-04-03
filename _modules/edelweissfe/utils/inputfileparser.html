@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>edelweissfe.utils.inputfileparser &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">edelweissfe.utils.inputfileparser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for edelweissfe.utils.inputfileparser</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  _____    _      _              _         _____ _____</span>
+<span class="c1"># | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|</span>
+<span class="c1"># |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|</span>
+<span class="c1"># | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___</span>
+<span class="c1"># |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Unit of Strength of Materials and Structural Analysis</span>
+<span class="c1">#  University of Innsbruck,</span>
+<span class="c1">#  2017 - today</span>
+<span class="c1">#</span>
+<span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
+<span class="c1">#</span>
+<span class="c1">#  This file is part of EdelweissFE.</span>
+<span class="c1">#</span>
+<span class="c1">#  This library is free software; you can redistribute it and/or</span>
+<span class="c1">#  modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1">#  License as published by the Free Software Foundation; either</span>
+<span class="c1">#  version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#  The full text of the license can be found in the file LICENSE.md at</span>
+<span class="c1">#  the top level directory of EdelweissFE.</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1"># Created on Tue Jan  17 19:10:42 2017</span>
+
+<span class="c1"># @author: Matthias Neuner</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Inputfileparser for inputfiles employing an Abaqus-like syntax.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">typeMappings</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">&quot;float&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="s2">&quot;bool&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+    <span class="c1"># &quot;numpy float array&quot;: lambda x: np.asarray(x, dtype=np.double),</span>
+    <span class="c1"># &quot;numpy integer array&quot;: lambda x: np.asarray(x, dtype=np.int),</span>
+<span class="p">}</span>
+
+
+<span class="n">inputLanguage</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;*element&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of element(s)&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;elSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;assign one of the types defined in the elementlibrary&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;provider (library) for the element type. Default: Marmot&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;numpy integer array&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like element definition lines&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*elSet&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of an element set&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;elSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;set True to generate from data line 1: start-element, end-element, step&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like element set definition lines&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*node&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of nodes&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;nSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;numpy float array&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like node definition lines: label, x, [y], [z]&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*nSet&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of an element set&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;nSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;set True to generate from data line 1: start-node, end-node, step&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like node set definition lines&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*surface&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of surface set&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;type of surface (currently &#39;element&#39; only)&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like definition. Type &#39;element&#39;: elSet, faceID&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*section&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of a section&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;thickness&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;associated element set&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;material&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;associated id of defined material&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;list of associated element sets&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;type of the section&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*material&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of a material&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name of the property&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name of the property&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;statevars&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;(deprecated and ignored) number of statevars&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;numpy float array&quot;</span><span class="p">,</span> <span class="s2">&quot;material properties, multiline possible&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*fieldOutput&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;define fieldoutput, which is used by outputmanagers&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition lines for the output module&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*analyticalField&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;define an analytical field&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name of analytical field&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;type of analytical field (currently &#39;expression&#39; only)&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*output&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;define an output module&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional), name of manager, standard=None&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;output module &quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition lines for the output module&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*job&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of an analysis job&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) name of job, standard = defaultJob&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define spatial domain: 1d, 2d, 3d&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(deprecated) define the solver to be used&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) start time of job, standard = 0.0&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*solver&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of solver&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Name of this solver&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Solvertype&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define options which are passed to the respective solver instance.&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*step&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;definition of job steps&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;stepLength&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;time period of step&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;startInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;size of the start increment&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;maxInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum size of increment&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;minInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;minimum size of increment&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;maxNumInc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of increments&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;maxIter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of iterations&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) define step type, default = AdaptiveStep&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) solver to be used&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;criticalIter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of iterations to prevent from increasing the increment&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define step actions, which are handled by the corresponding stepaction modules&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*updateConfiguration&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;update a configuration&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot; name of the modified settings category&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;key=value pairs&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*modelGenerator&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;define a model generator, loaded from a module&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;generator&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;generator module&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) name of the generator&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;executeAfterManualGeneration&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;(optional) Delay the execution of the generator after the manual creation of the mesh, default=False&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;key=value pairs&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*constraint&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;define a constraint&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;constraint type&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) name of the constraint&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition of the constraint&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*configurePlots&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;customize the figures and axes&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;key=value pairs for configuration of figures and axes&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*exportPlots&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;export your figures&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;key=value pairs for exporting of figures and axes&quot;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;*include&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;(optional) load extra .inp file (fragment), use relative path to current .inp&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">)},</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">inputLanguage_</span> <span class="o">=</span> <span class="n">CaseInsensitiveDict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span> <span class="ow">in</span> <span class="n">inputLanguage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">inputLanguage_</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">opts</span><span class="p">))</span>
+<span class="n">inputLanguage</span> <span class="o">=</span> <span class="n">inputLanguage_</span>
+
+
+<div class="viewcode-block" id="parseInputFile"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.parseInputFile">[docs]</a><span class="k">def</span> <span class="nf">parseInputFile</span><span class="p">(</span>
+    <span class="n">fileName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">currentKeyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">existingFileDict</span><span class="p">:</span> <span class="n">CaseInsensitiveDict</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CaseInsensitiveDict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse an Abaqus-like input file to generate a dictionary with its content.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fileName</span>
+<span class="sd">        The name of the file to parse.</span>
+<span class="sd">    currentKeyword</span>
+<span class="sd">        If nested parsing is performed by using ``*include``, this option tells which</span>
+<span class="sd">        keyword is currently active.</span>
+<span class="sd">    existingFileDict</span>
+<span class="sd">        An existing dictionary to append. If Nonde, a new dictionary is created.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CaseInsensitiveDict</span>
+<span class="sd">        The parsed input file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">existingFileDict</span><span class="p">:</span>
+        <span class="n">fileDict</span> <span class="o">=</span> <span class="n">CaseInsensitiveDict</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">inputLanguage</span><span class="o">.</span><span class="n">keys</span><span class="p">()})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fileDict</span> <span class="o">=</span> <span class="n">existingFileDict</span>
+
+    <span class="n">keyword</span> <span class="o">=</span> <span class="n">currentKeyword</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="c1"># filter out empty lines and comments</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+                <span class="n">lexer</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">shlex</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">lexer</span><span class="o">.</span><span class="n">whitespace_split</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">lexer</span><span class="o">.</span><span class="n">whitespace</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span>
+
+                <span class="n">lineElements</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lexer</span><span class="p">]</span>
+
+                <span class="c1"># line is keywordline</span>
+                <span class="n">lastkeyword</span> <span class="o">=</span> <span class="n">keyword</span>
+                <span class="n">keyword</span> <span class="o">=</span> <span class="n">lineElements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">optionAssignments</span> <span class="o">=</span> <span class="n">lineElements</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+                <span class="n">objectentry</span> <span class="o">=</span> <span class="n">CaseInsensitiveDict</span><span class="p">()</span>
+                <span class="n">objectentry</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">objectentry</span><span class="p">[</span><span class="s2">&quot;inputFile&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fileName</span>  <span class="c1"># save also the filename of the original inputfile!</span>
+
+                <span class="k">for</span> <span class="n">ass</span> <span class="ow">in</span> <span class="n">optionAssignments</span><span class="p">:</span>
+                    <span class="n">opts</span> <span class="o">=</span> <span class="n">ass</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+                    <span class="n">optKey</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                    <span class="n">doc</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">inputLanguage</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">optKey</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;option &quot;</span><span class="si">{:}</span><span class="s1">&quot; not valid for </span><span class="si">{:}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optKey</span><span class="p">,</span> <span class="n">keyword</span><span class="p">))</span>
+
+                    <span class="n">optionDataType</span><span class="p">,</span> <span class="n">optionDoc</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="n">optKey</span><span class="p">]</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">objectentry</span><span class="p">[</span><span class="n">optKey</span><span class="p">]</span> <span class="o">=</span> <span class="n">typeMappings</span><span class="p">[</span><span class="n">optionDataType</span><span class="p">](</span><span class="n">val</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s1">&#39;</span><span class="si">{:}</span><span class="s1">, option </span><span class="si">{:}</span><span class="s1">: cannot convert &quot;</span><span class="si">{:}</span><span class="s1">&quot; to </span><span class="si">{:}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">optKey</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">optionDataType</span><span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">raise</span>
+
+                <span class="c1"># special treatment for *include:</span>
+                <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;*include&quot;</span><span class="p">:</span>
+                    <span class="n">includeFile</span> <span class="o">=</span> <span class="n">objectentry</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
+                    <span class="n">parseInputFile</span><span class="p">(</span>
+                        <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileName</span><span class="p">),</span> <span class="n">includeFile</span><span class="p">),</span> <span class="n">currentKeyword</span><span class="o">=</span><span class="n">lastkeyword</span><span class="p">,</span> <span class="n">existingFileDict</span><span class="o">=</span><span class="n">fileDict</span>
+                    <span class="p">)</span>
+                    <span class="n">keyword</span> <span class="o">=</span> <span class="n">lastkeyword</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fileDict</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objectentry</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># line is a dataline</span>
+                <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputLanguage</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:}</span><span class="s2"> expects no data lines&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">))</span>
+
+                <span class="n">fileDict</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+
+    <span class="c1"># raise deprecation warning if deprecated jobName option is set in keywords</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*step&quot;</span><span class="p">,</span> <span class="s2">&quot;*fieldOutput&quot;</span><span class="p">,</span> <span class="s2">&quot;*output&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">fileDict</span><span class="p">[</span><span class="n">keyword</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;jobName&quot;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Option &quot;jobName&quot; in </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s1"> is deprecated and will be removed in future&#39;</span><span class="p">,</span>
+                    <span class="ne">DeprecationWarning</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">fileDict</span><span class="p">[</span><span class="s2">&quot;*job&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s2">&quot;solver&quot;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Warning, defining a Solver in *job is deprecated; Define solver using *solver keyword&quot;</span><span class="p">,</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fileDict</span></div>
+
+
+<div class="viewcode-block" id="printKeywords"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.printKeywords">[docs]</a><span class="k">def</span> <span class="nf">printKeywords</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the input file language set.&quot;&quot;&quot;</span>
+
+    <span class="n">kwString</span> <span class="o">=</span> <span class="s2">&quot;    </span><span class="si">{:}</span><span class="s2">    &quot;</span>
+    <span class="n">kwDataString</span> <span class="o">=</span> <span class="s2">&quot;        </span><span class="si">{:22}{:20}</span><span class="s2">&quot;</span>
+
+    <span class="n">wrapper</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">TextWrapper</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">replace_whitespace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="p">(</span><span class="n">kwDoc</span><span class="p">,</span> <span class="n">optiondict</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">inputLanguage</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">wrapper</span><span class="o">.</span><span class="n">initial_indent</span> <span class="o">=</span> <span class="n">kwString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">kw</span><span class="p">))</span>
+        <span class="n">wrapper</span><span class="o">.</span><span class="n">subsequent_indent</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrapper</span><span class="o">.</span><span class="n">initial_indent</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">wrapper</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">kwDoc</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">optiondict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">optionName</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">dType</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">optiondict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">wrapper</span><span class="o">.</span><span class="n">initial_indent</span> <span class="o">=</span> <span class="n">kwDataString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">optionName</span><span class="p">),</span> <span class="n">dType</span><span class="p">)</span>
+            <span class="n">wrapper</span><span class="o">.</span><span class="n">subsequent_indent</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrapper</span><span class="o">.</span><span class="n">initial_indent</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">wrapper</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">description</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="printKeywordsRST"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.printKeywordsRST">[docs]</a><span class="k">def</span> <span class="nf">printKeywordsRST</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the input file language set in an RST conform format.&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="p">(</span><span class="n">kwDoc</span><span class="p">,</span> <span class="n">optiondict</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">inputLanguage</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;.. list-table:: &quot;</span> <span class="o">+</span> <span class="s2">&quot;``</span><span class="si">{:}</span><span class="s2">`` : </span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kw</span><span class="p">,</span> <span class="n">kwDoc</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    :width: 100%&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    :widths: 25 25 40&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    :header-rows: 1&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    * - Option&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      - Type&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      - Description&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">optiondict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">optionName</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">dType</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">optiondict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    * - ``</span><span class="si">{:}</span><span class="s2">``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optionName</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      - ``</span><span class="si">{:}</span><span class="s2">``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dType</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      - &quot;</span> <span class="o">+</span> <span class="n">description</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

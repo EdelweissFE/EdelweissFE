@@ -53,7 +53,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Input file syntax</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Inputfile driven simulations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.drivers.inputfiledrivensimulation.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.drivers.inputfiledrivensimulation.finiteElementSimulation"><code class="docutils literal notranslate"><span class="pre">finiteElementSimulation()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
@@ -113,13 +113,13 @@
              
   <div class="section" id="inputfile-driven-simulations">
 <h1>Inputfile driven simulations<a class="headerlink" href="#inputfile-driven-simulations" title="Permalink to this heading"></a></h1>
-<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">fe.drivers.inputfiledrivensimulation</span></code></p>
-<span class="target" id="module-fe.drivers.inputfiledrivensimulation"></span><p>This is the main module of EdelweissFE.</p>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.drivers.inputfiledrivensimulation</span></code></p>
+<span class="target" id="module-edelweissfe.drivers.inputfiledrivensimulation"></span><p>This is the main module of EdelweissFE.</p>
 <p>Heart is the <code class="docutils literal notranslate"><span class="pre">*job</span></code> keyword, which defines the spatial dimension
 A <code class="docutils literal notranslate"><span class="pre">*job</span></code> definition consists of multiple <code class="docutils literal notranslate"><span class="pre">*steps</span></code>, associated with that job.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="fe.drivers.inputfiledrivensimulation.finiteElementSimulation">
-<span class="sig-prename descclassname"><span class="pre">fe.drivers.inputfiledrivensimulation.</span></span><span class="sig-name descname"><span class="pre">finiteElementSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressPlots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/drivers/inputfiledrivensimulation.html#finiteElementSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.drivers.inputfiledrivensimulation.finiteElementSimulation" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.drivers.inputfiledrivensimulation.finiteElementSimulation">
+<span class="sig-prename descclassname"><span class="pre">edelweissfe.drivers.inputfiledrivensimulation.</span></span><span class="sig-name descname"><span class="pre">finiteElementSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressPlots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/drivers/inputfiledrivensimulation.html#finiteElementSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.drivers.inputfiledrivensimulation.finiteElementSimulation" title="Permalink to this definition"></a></dt>
 <dd><p>This is core function of the finite element analysis.
 Based on the keyword <code class="docutils literal notranslate"><span class="pre">*job</span></code>, the finite element model is defined.</p>
 <dl class="simple">

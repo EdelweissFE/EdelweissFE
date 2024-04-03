@@ -77,8 +77,8 @@
 <li class="toctree-l2"><a class="reference internal" href="stepactions.html">Step actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Variables</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.fieldvariable.FieldVariable"><code class="docutils literal notranslate"><span class="pre">FieldVariable</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.variables.scalarvariable.ScalarVariable"><code class="docutils literal notranslate"><span class="pre">ScalarVariable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.variables.fieldvariable.FieldVariable"><code class="docutils literal notranslate"><span class="pre">FieldVariable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.variables.scalarvariable.ScalarVariable"><code class="docutils literal notranslate"><span class="pre">ScalarVariable</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -121,13 +121,13 @@ The latter may be used for, e.g., Lagrangian multipliers.</p>
 <p>Relevant modules:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.fieldvariable</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fe.variables.scalarvariable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">edelweissfe.variables.fieldvariable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">edelweissfe.variables.scalarvariable</span></code></p></li>
 </ul>
 </div></blockquote>
-<span class="target" id="module-fe.variables.fieldvariable"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.fieldvariable.FieldVariable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.fieldvariable.</span></span><span class="sig-name descname"><span class="pre">FieldVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/variables/fieldvariable.html#FieldVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.fieldvariable.FieldVariable" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-edelweissfe.variables.fieldvariable"></span><dl class="py class">
+<dt class="sig sig-object py" id="edelweissfe.variables.fieldvariable.FieldVariable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.variables.fieldvariable.</span></span><span class="sig-name descname"><span class="pre">FieldVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/variables/fieldvariable.html#FieldVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.variables.fieldvariable.FieldVariable" title="Permalink to this definition"></a></dt>
 <dd><p>This is a basic field variable, tied to a spatial position.
 Currently, it is a placeholder used to indicate the presence field variables at a certain location, and associate them with e.g, nodes.
 Furthermore, it allows us to adress them by their unique id (= hash value).
@@ -135,9 +135,9 @@ Unlike ScalarVariables, FieldVariable does not directly holds any results/values
 we store results in cumulative Fields, such as NodeField.</p>
 </dd></dl>
 
-<span class="target" id="module-fe.variables.scalarvariable"></span><dl class="py class">
-<dt class="sig sig-object py" id="fe.variables.scalarvariable.ScalarVariable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.variables.scalarvariable.</span></span><span class="sig-name descname"><span class="pre">ScalarVariable</span></span><a class="reference internal" href="../_modules/fe/variables/scalarvariable.html#ScalarVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.variables.scalarvariable.ScalarVariable" title="Permalink to this definition"></a></dt>
+<span class="target" id="module-edelweissfe.variables.scalarvariable"></span><dl class="py class">
+<dt class="sig sig-object py" id="edelweissfe.variables.scalarvariable.ScalarVariable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.variables.scalarvariable.</span></span><span class="sig-name descname"><span class="pre">ScalarVariable</span></span><a class="reference internal" href="../_modules/edelweissfe/variables/scalarvariable.html#ScalarVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.variables.scalarvariable.ScalarVariable" title="Permalink to this definition"></a></dt>
 <dd><p>A basic scalar variable, not tied to a spatial position.</p>
 </dd></dl>
 

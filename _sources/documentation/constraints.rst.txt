@@ -1,18 +1,18 @@
 Constraints
 ===========
 
-.. automodule:: fe.config.constraints
+.. automodule:: edelweissfe.config.constraints
     :members: __doc__
 
 ``equalvaluelagrangian`` - Constrain nodal values to equal values 
 -----------------------------------------------------------------
 
-Module ``fe.constraints.equalvaluelagrangian``
+Module ``edelweissfe.constraints.equalvaluelagrangian``
 
-.. automodule:: fe.constraints.equalvaluelagrangian
+.. automodule:: edelweissfe.constraints.equalvaluelagrangian
     :members: __doc__
 
-.. pprint:: fe.constraints.equalvaluelagrangian.documentation
+.. pprint:: edelweissfe.constraints.equalvaluelagrangian.documentation
     :caption: Options:
 
 .. literalinclude:: ../../../testfiles/EqualValueLagrangianConstraint/test.inp
@@ -23,12 +23,12 @@ Module ``fe.constraints.equalvaluelagrangian``
 ``equalvaluepenalty`` - Constrain nodal values to equal values 
 --------------------------------------------------------------
 
-Module ``fe.constraints.equalvaluepenalty``
+Module ``edelweissfe.constraints.equalvaluepenalty``
 
-.. automodule:: fe.constraints.equalvaluepenalty
+.. automodule:: edelweissfe.constraints.equalvaluepenalty
     :members: __doc__
 
-.. pprint:: fe.constraints.equalvaluepenalty.documentation
+.. pprint:: edelweissfe.constraints.equalvaluepenalty.documentation
     :caption: Options:
 
 .. literalinclude:: ../../../testfiles/EqualValuePenaltyConstraint/test.inp
@@ -39,12 +39,12 @@ Module ``fe.constraints.equalvaluepenalty``
 ``linearizedrigidbody`` - Linearized rigid body constraints in 2D
 ------------------------------------------------------------------
 
-Module ``fe.constraints.linearizedrigidbody``
+Module ``edelweissfe.constraints.linearizedrigidbody``
 
-.. automodule:: fe.constraints.linearizedrigidbody
+.. automodule:: edelweissfe.constraints.linearizedrigidbody
     :members: __doc__
 
-.. pprint:: fe.constraints.linearizedrigidbody.documentation
+.. pprint:: edelweissfe.constraints.linearizedrigidbody.documentation
     :caption: Options:
 
 .. literalinclude:: ../../../testfiles/LinearizedRigidBodyConstraint/test.inp
@@ -55,12 +55,12 @@ Module ``fe.constraints.linearizedrigidbody``
 ``rigidbody`` - Geometrically exact rigid body constraints in 3D
 ---------------------------------------------------------------------------
 
-Module ``fe.constraints.rigidbody``
+Module ``edelweissfe.constraints.rigidbody``
 
-.. automodule:: fe.constraints.rigidbody
+.. automodule:: edelweissfe.constraints.rigidbody
     :members: __doc__
 
-.. pprint:: fe.constraints.rigidbody.documentation
+.. pprint:: edelweissfe.constraints.rigidbody.documentation
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/RigidBodyConstraintLargeDeformations3D/test.inp
@@ -70,12 +70,12 @@ Module ``fe.constraints.rigidbody``
 ``penaltyindirectcontrol`` - Penalty based indirect control
 -----------------------------------------------------------
 
-Module ``fe.constraints.penaltyindirectcontrol``
+Module ``edelweissfe.constraints.penaltyindirectcontrol``
 
-.. automodule:: fe.constraints.penaltyindirectcontrol
+.. automodule:: edelweissfe.constraints.penaltyindirectcontrol
     :members: __doc__
 
-.. pprint:: fe.constraints.penaltyindirectcontrol.documentation
+.. pprint:: edelweissfe.constraints.penaltyindirectcontrol.documentation
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/PenaltyBasedIndirectControl/test.inp
@@ -86,7 +86,7 @@ Module ``fe.constraints.penaltyindirectcontrol``
 Implementing your own constraints
 ---------------------------------
 
-Subclass from the constraint base class in module ``fe.constraints.base.constraintbase``
+Subclass from the constraint base class in module ``edelweissfe.constraints.base.constraintbase``
 
-.. automodule:: fe.constraints.base.constraintbase
+.. automodule:: edelweissfe.constraints.base.constraintbase
     :members: 

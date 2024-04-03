@@ -59,16 +59,16 @@
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DOF manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fe.numerics.dofmanager.DofManager"><code class="docutils literal notranslate"><span class="pre">DofManager</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.constructDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.constructDofVector()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.constructVIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">DofManager.constructVIJSystemMatrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.getNodeForIndexInDofVector()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.writeDofVectorToNodeField"><code class="docutils literal notranslate"><span class="pre">DofManager.writeDofVectorToNodeField()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.writeNodeFieldToDofVector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager"><code class="docutils literal notranslate"><span class="pre">DofManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.constructDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.constructDofVector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.constructVIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">DofManager.constructVIJSystemMatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.getNodeForIndexInDofVector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField"><code class="docutils literal notranslate"><span class="pre">DofManager.writeDofVectorToNodeField()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.writeNodeFieldToDofVector()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.numerics.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fe.numerics.dofmanager.VIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">VIJSystemMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.VIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">VIJSystemMatrix</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="fieldoutputmanager.html">Field outputs</a></li>
@@ -122,11 +122,11 @@
              
   <div class="section" id="dof-manager">
 <h1>DOF manager<a class="headerlink" href="#dof-manager" title="Permalink to this heading"></a></h1>
-<p>Module <code class="docutils literal notranslate"><span class="pre">fe.numerics.dofmanager</span></code></p>
-<span class="target" id="module-fe.numerics.dofmanager"></span><p>This module contains important classes for describing the global equation system by means of a sparse system.</p>
+<p>Module <code class="docutils literal notranslate"><span class="pre">edelweissfe.numerics.dofmanager</span></code></p>
+<span class="target" id="module-edelweissfe.numerics.dofmanager"></span><p>This module contains important classes for describing the global equation system by means of a sparse system.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeFields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeFields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
 <dd><p>The DofManager</p>
 <blockquote>
 <div><ul class="simple">
@@ -155,26 +155,26 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.constructDofVector" title="fe.numerics.dofmanager.DofManager.constructDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constructDofVector</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.constructDofVector" title="edelweissfe.numerics.dofmanager.DofManager.constructDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constructDofVector</span></code></a>()</p></td>
 <td><p>Construct a vector with size=nDof and which has knowledge about the location of each entity.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.constructVIJSystemMatrix" title="fe.numerics.dofmanager.DofManager.constructVIJSystemMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constructVIJSystemMatrix</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.constructVIJSystemMatrix" title="edelweissfe.numerics.dofmanager.DofManager.constructVIJSystemMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constructVIJSystemMatrix</span></code></a>()</p></td>
 <td><p>Construct a VIJ (COO) Sparse System matrix object, which also has knowledge about the location of each entity.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector" title="fe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNodeForIndexInDofVector</span></code></a>(index)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector" title="edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNodeForIndexInDofVector</span></code></a>(index)</p></td>
 <td><p>Find the node for a given index in the equuation system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.writeDofVectorToNodeField" title="fe.numerics.dofmanager.DofManager.writeDofVectorToNodeField"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeDofVectorToNodeField</span></code></a>(dofVector, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField" title="edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeDofVectorToNodeField</span></code></a>(dofVector, ...)</p></td>
 <td><p>Write the current values of an entire NodeField from the respective locations in a given DofVector.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#fe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="fe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeNodeFieldToDofVector</span></code></a>(dofVector, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeNodeFieldToDofVector</span></code></a>(dofVector, ...)</p></td>
 <td><p>Write the current values of an entire NodeField to the respective locations in a given DofVector.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofManager.constructDofVector">
-<span class="sig-name descname"><span class="pre">constructDofVector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofManager.constructDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofManager.constructDofVector" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.constructDofVector">
+<span class="sig-name descname"><span class="pre">constructDofVector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.constructDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.constructDofVector" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a vector with size=nDof and which has knowledge about
 the location of each entity.</p>
 <dl class="field-list simple">
@@ -182,14 +182,14 @@ the location of each entity.</p>
 <dd class="field-odd"><p>A DofVector.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector">DofVector</a></p>
+<dd class="field-even"><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector" title="edelweissfe.numerics.dofmanager.DofVector">DofVector</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofManager.constructVIJSystemMatrix">
-<span class="sig-name descname"><span class="pre">constructVIJSystemMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofManager.constructVIJSystemMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofManager.constructVIJSystemMatrix" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.constructVIJSystemMatrix">
+<span class="sig-name descname"><span class="pre">constructVIJSystemMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.constructVIJSystemMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.constructVIJSystemMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a VIJ (COO) Sparse System matrix object, which also has knowledge about
 the location of each entity.</p>
 <dl class="field-list simple">
@@ -197,14 +197,14 @@ the location of each entity.</p>
 <dd class="field-odd"><p>The system Matrix.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#fe.numerics.dofmanager.VIJSystemMatrix" title="fe.numerics.dofmanager.VIJSystemMatrix">VIJSystemMatrix</a></p>
+<dd class="field-even"><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.VIJSystemMatrix" title="edelweissfe.numerics.dofmanager.VIJSystemMatrix">VIJSystemMatrix</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector">
-<span class="sig-name descname"><span class="pre">getNodeForIndexInDofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofManager.getNodeForIndexInDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector">
+<span class="sig-name descname"><span class="pre">getNodeForIndexInDofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.getNodeForIndexInDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector" title="Permalink to this definition"></a></dt>
 <dd><p>Find the node for a given index in the equuation system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -214,14 +214,14 @@ the location of each entity.</p>
 <dd class="field-even"><p>The attached Node.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="points.html#fe.points.node.Node" title="fe.points.node.Node">Node</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="points.html#edelweissfe.points.node.Node" title="edelweissfe.points.node.Node">Node</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofManager.writeDofVectorToNodeField">
-<span class="sig-name descname"><span class="pre">writeDofVectorToNodeField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dofVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofManager.writeDofVectorToNodeField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofManager.writeDofVectorToNodeField" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField">
+<span class="sig-name descname"><span class="pre">writeDofVectorToNodeField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dofVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.writeDofVectorToNodeField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField" title="Permalink to this definition"></a></dt>
 <dd><p>Write the current values of an entire NodeField from the respective locations in a given DofVector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -235,20 +235,20 @@ the location of each entity.</p>
 <dd class="field-even"><p>The updated NodeField.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="fields.html#fe.fields.nodefield.NodeField" title="fe.fields.nodefield.NodeField">NodeField</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField">NodeField</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector">
-<span class="sig-name descname"><span class="pre">writeNodeFieldToDofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dofVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofManager.writeNodeFieldToDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector">
+<span class="sig-name descname"><span class="pre">writeNodeFieldToDofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dofVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.writeNodeFieldToDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="Permalink to this definition"></a></dt>
 <dd><p>Write the current values of an entire NodeField to the respective locations in a given DofVector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dofVector</strong> (<a class="reference internal" href="#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The result DofVector.</p></li>
-<li><p><strong>nodeField</strong> (<a class="reference internal" href="fields.html#fe.fields.nodefield.NodeField" title="fe.fields.nodefield.NodeField"><em>NodeField</em></a>) – The NodeField holding the values.</p></li>
+<li><p><strong>dofVector</strong> (<a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector" title="edelweissfe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The result DofVector.</p></li>
+<li><p><strong>nodeField</strong> (<a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField"><em>NodeField</em></a>) – The NodeField holding the values.</p></li>
 <li><p><strong>resultname</strong> – The name of the value entries held by the NodeField.</p></li>
 <li><p><strong>resultName</strong> (<em>str</em>) – </p></li>
 </ul>
@@ -257,7 +257,7 @@ the location of each entity.</p>
 <dd class="field-even"><p>The DofVector.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#fe.numerics.dofmanager.DofVector" title="fe.numerics.dofmanager.DofVector">DofVector</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector" title="edelweissfe.numerics.dofmanager.DofVector">DofVector</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,8 +265,8 @@ the location of each entity.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.DofVector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entitiesInDofVector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#DofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.DofVector" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofVector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entitiesInDofVector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofVector" title="Permalink to this definition"></a></dt>
 <dd><p>This class represents a Dof Vector, which also has knowledge of each entities (elements, constraints) location within.
 The [] operator allows to access (non-contigouos read, write) at each entities location</p>
 <dl class="field-list simple">
@@ -500,8 +500,8 @@ The [] operator allows to access (non-contigouos read, write) at each entities l
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="fe.numerics.dofmanager.VIJSystemMatrix">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">VIJSystemMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entitiesInVIJ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fe/numerics/dofmanager.html#VIJSystemMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fe.numerics.dofmanager.VIJSystemMatrix" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.VIJSystemMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">VIJSystemMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entitiesInVIJ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#VIJSystemMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.VIJSystemMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>This class represents the V Vector of VIJ triple (sparse matrix in COO format),
 which</p>
 <blockquote>

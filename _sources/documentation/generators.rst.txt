@@ -1,20 +1,20 @@
 Generators
 ==========
 
-Relevant module: ``fe.config.generators``
+Relevant module: ``edelweissfe.config.generators``
 
-.. automodule:: fe.config.generators
+.. automodule:: edelweissfe.config.generators
    :members: __doc__
 
 ``boxgen`` - A 3D box mesh generator
 ------------------------------------
 
-Relevant module ``fe.generators.boxgen``
+Relevant module ``edelweissfe.generators.boxgen``
 
-.. automodule:: fe.generators.boxgen
+.. automodule:: edelweissfe.generators.boxgen
     :members: __doc__
 
-.. pprint:: fe.generators.boxgen.documentation
+.. pprint:: edelweissfe.generators.boxgen.documentation
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BoxGen/test.inp
@@ -24,12 +24,12 @@ Relevant module ``fe.generators.boxgen``
 ``planerectquad`` - A 2D plane rectangular mesh generator
 ---------------------------------------------------------
 
-Relevant module ``fe.generators.planerectquad``
+Relevant module ``edelweissfe.generators.planerectquad``
 
-.. automodule:: fe.generators.planerectquad
+.. automodule:: edelweissfe.generators.planerectquad
    :members: __doc__, 
 
-.. pprint:: fe.generators.planerectquad.documentation
+.. pprint:: edelweissfe.generators.planerectquad.documentation
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/NodeForces/test.inp
@@ -39,12 +39,12 @@ Relevant module ``fe.generators.planerectquad``
 ``cubit`` - A cubit mesh generator
 ----------------------------------
 
-Relevant module ``fe.generators.cubit``
+Relevant module ``edelweissfe.generators.cubit``
 
-.. automodule:: fe.generators.cubit
+.. automodule:: edelweissfe.generators.cubit
    :members: __doc__
 
-.. pprint:: fe.generators.cubit.documentation
+.. pprint:: edelweissfe.generators.cubit.documentation
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/CubitGen/test.inp
@@ -54,24 +54,24 @@ Relevant module ``fe.generators.cubit``
 ``findclosestnode`` - Find the closest node 
 -------------------------------------------
 
-Relevant module ``fe.generators.findclosestnode``
+Relevant module ``edelweissfe.generators.findclosestnode``
 
-.. automodule:: fe.generators.findclosestnode
+.. automodule:: edelweissfe.generators.findclosestnode
    :members: __doc__
 
-.. pprint:: fe.generators.findclosestnode.documentation
+.. pprint:: edelweissfe.generators.findclosestnode.documentation
    :caption: Options:
 
 
 ``executepythoncode`` - Script model generation using Python
 ------------------------------------------------------------
 
-Relevant module ``fe.generators.executepythoncode``
+Relevant module ``edelweissfe.generators.executepythoncode``
 
-.. automodule:: fe.generators.executepythoncode
+.. automodule:: edelweissfe.generators.executepythoncode
     :members: __doc__
 
-.. pprint:: fe.generators.executepythoncode.documentation
+.. pprint:: edelweissfe.generators.executepythoncode.documentation
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/PythonCodeModelGeneration/test.inp

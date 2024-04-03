@@ -1,7 +1,7 @@
 Input file syntax
 =================
 
-Relevant module: ``fe.utils.inputfileparser.py``
+Relevant module: ``edelweissfe.utils.inputfileparser.py``
 
 EdelweissFE uses an input file syntax similar to Abaqus, using human readable input files.
 The general syntax makes use of ``*keywords``, possibly with ``option=values`` in the same line and 
@@ -30,7 +30,7 @@ and available keywords can be printed using
 
     python edelweiss.py --keywords
 
-.. automodule:: fe.utils.inputfileparser
+.. automodule:: edelweissfe.utils.inputfileparser
    :members: 
 
 Keywords

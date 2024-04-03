@@ -8,23 +8,23 @@ but very handy if fundamental new functionalities should be added.
 Matrix conversion from COO sparse format to CSR format
 ------------------------------------------------------
 
-Module ``fe.numerics.csrgenerator``
+Module ``edelweissfe.numerics.csrgenerator``
 
-.. autoclass:: fe.numerics.csrgenerator.CSRGenerator
+.. autoclass:: edelweissfe.numerics.csrgenerator.CSRGenerator
    :members: 
 
 Gathering efficiently of element results
 ----------------------------------------
 
-Module ``fe.utils.elementresultcollector``
+Module ``edelweissfe.utils.elementresultcollector``
 
-.. autoclass:: fe.utils.elementresultcollector.ElementResultCollector
+.. autoclass:: edelweissfe.utils.elementresultcollector.ElementResultCollector
    :members: 
 
 Adaptive time stepping
 ----------------------
 
-Module ``fe.timesteppers.adaptivetimestepper``
+Module ``edelweissfe.timesteppers.adaptivetimestepper``
 
-.. autoclass:: fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper
+.. autoclass:: edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper
    :members: 
