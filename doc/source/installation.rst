@@ -39,7 +39,7 @@ Run all the validation examples
 
 .. code-block:: console
 
-    run_tests_edelweissfe ./testfiles
+    run_tests_edelweissfe ./testfiles/
 
 Recreate the validation reference solutions (only if you know what you are doing)
 
@@ -47,7 +47,7 @@ Recreate the validation reference solutions (only if you know what you are doing
 
     run_tests_edelweissfe --create
 
-Alternatetively, to build the modules (inplace) and not install them using pip, simply run
+Alternatively, to build the modules (inplace) and not install them using pip, simply run
 
 .. code-block:: console
 
@@ -79,13 +79,22 @@ If necessary, get `mamba <https://github.com/mamba-org/mamba>`_:
         https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
     bash Mambaforge-Linux-x86_64.sh -b -p ./mambaforge3
 
-Add mamba to your environment (repeat this step if you close your shell):
+Add mamba to your environment:
 
 .. code-block:: console
    :caption: Step 2
 
     export EWROOT=$PWD
     export PATH=$EWROOT/mambaforge3/bin:$PATH
+    mamba init --all
+    exit
+
+Restart shell and activate mamba
+
+.. code-block:: console
+   :caption: Step 3
+
+    mamba activate
 
 Get EdelweissFE:
 
@@ -104,10 +113,10 @@ Install necessary mamba packages:
 Get Eigen (for EdelweissFE and Marmot):
 
 .. code-block:: console
-   :caption: Step 5
+   :caption: Step 6
 
     cd $EWROOT
-    git clone   https://gitlab.com/libeigen/eigen.git
+    git clone --branch 3.4.0  https://gitlab.com/libeigen/eigen.git
     cd eigen
     mkdir build
     cd build
@@ -121,10 +130,10 @@ Get Eigen (for EdelweissFE and Marmot):
 Get autodiff (for Marmot):
 
 .. code-block:: console
-   :caption: Step 6
+   :caption: Step 7
 
     cd $EWROOT
-    git clone  https://github.com/autodiff/autodiff.git
+    git clone --branch v1.1.0 https://github.com/autodiff/autodiff.git
     cd autodiff
     mkdir build
     cd build
@@ -137,20 +146,21 @@ Get autodiff (for Marmot):
         ..
     make install
 
-.. Get Fastor:
+Get Fastor:
 
-.. .. code-block:: console
+.. code-block:: console
+   :caption: Step 8
 
-..     git clone https://github.com/romeric/Fastor.git
-..     cd Fastor
-..     cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") .
-..     make install
-..     cd ../
+    git clone https://github.com/romeric/Fastor.git
+    cd Fastor
+    cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") .
+    make install
+    cd ../
 
 Get Marmot: 
 
 .. code-block:: console
-   :caption: Step 7
+   :caption: Step 9
 
     cd $EWROOT
     git clone --recurse https://github.com/MAteRialMOdelingToolbox/Marmot.git
@@ -165,16 +175,16 @@ Get Marmot:
 Build and test EdelweissFE:
 
 .. code-block:: console
-   :caption: Step 8
+   :caption: Step 10
 
     cd $EWROOT
     cd EdelweissFE
     pip install .
-    run_tests_edelweissfe testfiles
+    run_tests_edelweissfe ./testfiles/
 
 Build this documentation:
 
 .. code-block:: console
-   :caption: Step 9
+   :caption: Step 11
 
     sphinx-build ./doc/source/ ./docs -b html

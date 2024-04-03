@@ -1,9 +1,9 @@
 Creating finite element meshes
 ==============================
 
-Relevant module ``fe.utils.abqmodelconstructor``
+Relevant module ``fe.generators.abqmodelconstructor``
 
-.. automodule:: fe.utils.abqmodelconstructor
+.. automodule:: fe.generators.abqmodelconstructor
    :members: __doc__
 
 .. literalinclude:: ../../../testfiles/LinearElasticIsotropic/test.inp

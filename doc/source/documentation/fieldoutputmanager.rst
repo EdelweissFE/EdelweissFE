@@ -15,8 +15,18 @@ Relevant module: ``fe.utils.fieldoutput``
 
 Module documentation:
 
-.. autoclass:: fe.utils.fieldoutput.FieldOutput
-   :members:
 
 .. autoclass:: fe.utils.fieldoutput.FieldOutputController
+   :members:
+
+.. autoclass:: fe.utils.fieldoutput._FieldOutputBase
+   :members:
+
+.. autoclass:: fe.utils.fieldoutput.ElementFieldOutput
+   :members:
+
+.. autoclass:: fe.utils.fieldoutput.NodeFieldOutput
+   :members:
+
+.. autoclass:: fe.utils.fieldoutput.ExpressionFieldOutput
    :members:

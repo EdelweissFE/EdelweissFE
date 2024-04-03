@@ -24,7 +24,7 @@ Module ``fe.utils.elementresultcollector``
 Adaptive time stepping
 ----------------------
 
-Module ``fe.utils.incrementgenerator``
+Module ``fe.timesteppers.adaptivetimestepper``
 
-.. autoclass:: fe.utils.incrementgenerator.IncrementGenerator
+.. autoclass:: fe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper
    :members: 
