@@ -1,7 +1,7 @@
 Sections
 ========
 
-Relevant module: ``fe.config.sections``
+Relevant module: ``edelweissfe.config.sections``
 
-.. automodule:: fe.config.sections
+.. automodule:: edelweissfe.config.sections
    :members: __doc__

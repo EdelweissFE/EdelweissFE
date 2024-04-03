@@ -1,7 +1,7 @@
 DOF manager
 ===========
 
-Module ``fe.numerics.dofmanager``
+Module ``edelweissfe.numerics.dofmanager``
 
-.. automodule:: fe.numerics.dofmanager
+.. automodule:: edelweissfe.numerics.dofmanager
    :members: 

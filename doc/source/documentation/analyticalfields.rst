@@ -1,18 +1,18 @@
 Analytical fields
 =================
 
-.. automodule:: fe.config.analyticalfields
+.. automodule:: edelweissfe.config.analyticalfields
     :members: __doc__
 
 ``scalarexpression`` - Field defined by expression
 --------------------------------------------------
 
-Relevant module ``fe.analyticalfields.scalarexpression``
+Relevant module ``edelweissfe.analyticalfields.scalarexpression``
 
-.. automodule:: fe.analyticalfields.scalarexpression
+.. automodule:: edelweissfe.analyticalfields.scalarexpression
     :members: __doc__
 
-.. pprint:: fe.analyticalfields.scalarexpression.documentation
+.. pprint:: edelweissfe.analyticalfields.scalarexpression.documentation
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/AnalyticalFieldsScalarExpression/test.inp
@@ -22,12 +22,12 @@ Relevant module ``fe.analyticalfields.scalarexpression``
 ``randomscalar`` - A random field
 ---------------------------------
 
-Relevant module ``fe.analyticalfields.randomscalar``
+Relevant module ``edelweissfe.analyticalfields.randomscalar``
 
-.. automodule:: fe.analyticalfields.randomscalar
+.. automodule:: edelweissfe.analyticalfields.randomscalar
     :members: __doc__
 
-.. pprint:: fe.analyticalfields.randomscalar.documentation
+.. pprint:: edelweissfe.analyticalfields.randomscalar.documentation
     :caption: Options
 
 .. literalinclude:: ../../../testfiles/AnalyticalFieldsRandomScalar/test.inp
@@ -37,7 +37,7 @@ Relevant module ``fe.analyticalfields.randomscalar``
 Implementing your own fields
 ----------------------------
 
-Subclass from the field base class in module ``fe.analyticalfields.base.analyticalfieldbase``
+Subclass from the field base class in module ``edelweissfe.analyticalfields.base.analyticalfieldbase``
 
-.. automodule:: fe.analyticalfields.base.analyticalfieldbase    
+.. automodule:: edelweissfe.analyticalfields.base.analyticalfieldbase    
    :members: 

@@ -1,14 +1,14 @@
 Plotting
 ========
 
-Relevant module: ``fe.utils.plotter``
+Relevant module: ``edelweissfe.utils.plotter``
 
-.. automodule:: fe.utils.plotter
+.. automodule:: edelweissfe.utils.plotter
    :members:
 
-.. pprint:: fe.utils.plotter.documentation_configurePlots
+.. pprint:: edelweissfe.utils.plotter.documentation_configurePlots
    :caption: Options ``*configurePlots``:
 
-.. pprint:: fe.utils.plotter.documentation_exportPlots
+.. pprint:: edelweissfe.utils.plotter.documentation_exportPlots
    :caption: Options ``*exportPlots``:
 

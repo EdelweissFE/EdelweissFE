@@ -1,25 +1,25 @@
 Elements
 ========
 
-Relevant module: ``fe.config.elementlibrary``
+Relevant module: ``edelweissfe.config.elementlibrary``
 
-.. automodule:: fe.config.elementlibrary
+.. automodule:: edelweissfe.config.elementlibrary
    :members: 
 
 Provider ``marmot`` 
 -------------------
 
-Relevant module: ``fe.elements.marmotelement.element``
+Relevant module: ``edelweissfe.elements.marmotelement.element``
 
-.. autoclass:: fe.elements.marmotelement.element.MarmotElementWrapper
+.. autoclass:: edelweissfe.elements.marmotelement.element.MarmotElementWrapper
    :members: 
 
 Provider ``marmotsingleqpelement`` 
 ----------------------------------
 
-Relevant module: ``fe.elements.marmotsingleqpelement.element``
+Relevant module: ``edelweissfe.elements.marmotsingleqpelement.element``
 
-.. autoclass:: fe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement
+.. autoclass:: edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement
    :members: 
 
 .. literalinclude:: ../../../testfiles/QPMarmotMaterialHypoElastic/test.inp
@@ -29,7 +29,7 @@ Relevant module: ``fe.elements.marmotsingleqpelement.element``
 Implementing your own elements
 ------------------------------
 
-Relevant module: ``fe.elements.base.baseelement``
+Relevant module: ``edelweissfe.elements.base.baseelement``
 
-.. automodule:: fe.elements.base.baseelement
+.. automodule:: edelweissfe.elements.base.baseelement
    :members: 

@@ -8,11 +8,11 @@ The latter may be used for, e.g., Lagrangian multipliers.
 
 Relevant modules: 
 
- * ``fe.variables.fieldvariable``
- * ``fe.variables.scalarvariable``
+ * ``edelweissfe.variables.fieldvariable``
+ * ``edelweissfe.variables.scalarvariable``
 
-.. automodule:: fe.variables.fieldvariable
+.. automodule:: edelweissfe.variables.fieldvariable
    :members: 
 
-.. automodule:: fe.variables.scalarvariable
+.. automodule:: edelweissfe.variables.scalarvariable
    :members: 

@@ -1,7 +1,7 @@
 Physical phenomena
 ==================
 
-Relevant module: ``fe.config.phenomena``
+Relevant module: ``edelweissfe.config.phenomena``
 
-.. automodule:: fe.config.phenomena
+.. automodule:: edelweissfe.config.phenomena
    :members: 
