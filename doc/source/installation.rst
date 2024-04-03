@@ -84,7 +84,6 @@ Add mamba to your environment:
 .. code-block:: console
    :caption: Step 2
 
-    export EWROOT=$PWD
     export PATH=$EWROOT/mambaforge3/bin:$PATH
     mamba init --all
     exit
@@ -94,6 +93,7 @@ Restart shell and activate mamba
 .. code-block:: console
    :caption: Step 3
 
+    export EWROOT=$PWD
     mamba activate
 
 Get EdelweissFE:
