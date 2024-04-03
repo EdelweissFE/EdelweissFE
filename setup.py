@@ -66,7 +66,7 @@ print("Gather the extension for the MarmotElement base element, linked to the Ma
 extensions = [
     Extension(
         "*",
-        sources=["fe/elements/marmotelement/element.pyx"],
+        sources=["edelweissfe/elements/marmotelement/element.pyx"],
         include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
         libraries=["Marmot"],
         library_dirs=[join(marmot_dir, "lib")],
@@ -82,7 +82,7 @@ extensions += [
     Extension(
         "*",
         sources=[
-            "fe/elements/marmotsingleqpelement/marmot.pyx",
+            "edelweissfe/elements/marmotsingleqpelement/marmot.pyx",
         ],
         include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
         libraries=["Marmot"],
@@ -96,7 +96,7 @@ extensions += [
     Extension(
         "*",
         sources=[
-            "fe/elements/marmotsingleqpelement/marmotmaterialhypoelasticwrapper.pyx",
+            "edelweissfe/elements/marmotsingleqpelement/marmotmaterialhypoelasticwrapper.pyx",
         ],
         include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
         libraries=["Marmot"],
@@ -110,7 +110,7 @@ extensions += [
     Extension(
         "*",
         sources=[
-            "fe/elements/marmotsingleqpelement/marmotmaterialgradientenhancedhypoelasticwrapper.pyx",
+            "edelweissfe/elements/marmotsingleqpelement/marmotmaterialgradientenhancedhypoelasticwrapper.pyx",
         ],
         include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
         libraries=["Marmot"],
@@ -124,7 +124,7 @@ print("Gather the extension for the fast element result collector")
 extensions += [
     Extension(
         "*",
-        ["fe/utils/elementresultcollector.pyx"],
+        ["edelweissfe/utils/elementresultcollector.pyx"],
         include_dirs=[numpy.get_include()],
         language="c++",
     )
@@ -134,7 +134,7 @@ print("Gather the extension for the fast CSR matrix generator")
 extensions += [
     Extension(
         "*",
-        ["fe/numerics/csrgenerator.pyx"],
+        ["edelweissfe/numerics/csrgenerator.pyx"],
         include_dirs=[numpy.get_include()],
         language="c++",
     )
@@ -144,7 +144,7 @@ print("Gather the extension for the NISTParallel solver")
 extensions += [
     Extension(
         "*",
-        sources=["fe/solvers/nonlinearimplicitstaticparallelmk2.pyx"],
+        sources=["edelweissfe/solvers/nonlinearimplicitstaticparallelmk2.pyx"],
         include_dirs=[numpy.get_include()],
         language="c++",
         extra_compile_args=[
@@ -159,7 +159,7 @@ print("Gather the extension for the NISTParallel (MarmotElements only) solver")
 extensions += [
     Extension(
         "*",
-        sources=["fe/solvers/nonlinearimplicitstaticparallel.pyx"],
+        sources=["edelweissfe/solvers/nonlinearimplicitstaticparallel.pyx"],
         include_dirs=[numpy.get_include()] + [join(marmot_dir, "include")],
         language="c++",
         extra_compile_args=[
@@ -175,8 +175,8 @@ extensions += [
     Extension(
         "*",
         sources=[
-            "fe/linsolve/pardiso/pardiso.pyx",
-            "fe/linsolve/pardiso/pardisoInterface.cpp",
+            "edelweissfe/linsolve/pardiso/pardiso.pyx",
+            "edelweissfe/linsolve/pardiso/pardisoInterface.cpp",
         ],
         include_dirs=[
             numpy.get_include(),
@@ -209,8 +209,8 @@ setup(
     cmdclass={"build_ext": build_ext},
     entry_points={
         "console_scripts": [
-            "edelweissfe=fe._cli._edelweissfe:main",
-            "run_tests_edelweissfe=fe._cli._run_tests_edelweissfe:main",
+            "edelweissfe=edelweissfe._cli._edelweissfe:main",
+            "run_tests_edelweissfe=edelweissfe._cli._run_tests_edelweissfe:main",
         ],
     },
     ext_modules=cythonize(extensions, compiler_directives=directives, annotate=True, language_level=3),
