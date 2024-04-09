@@ -1,0 +1,24 @@
+*material, name=VonMises, id=myMaterial
+210000, 0.3, 550, 1000, 200, 1400
+
+*section, name=section1, material=myMaterial, type=plane, thickness=1
+all
+
+*job, name=c3d8job, domain=2d
+*solver, solver=NIST, name=theSolver
+linsolver=mumps
+
+*modelGenerator, generator=planeRectQuad, name=gen
+l=10
+h=10
+nX=2
+nY=2
+elType=CPE4
+
+
+*step, maxInc=1e0, minInc=1e-2, maxNumInc=100, maxIter=25, stepLength=1, solver=theSolver
+dirichlet, name=left, nSet=gen_left, field=displacement, 1=0, 2=0
+dirichlet, name=bottom, nSet=gen_leftBottom, field=displacement, 2=0
+
+*step, maxInc=5e-3, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=1, solver=theSolver
+dirichlet, name=right, nSet=gen_right, field=displacement, 2=0.2

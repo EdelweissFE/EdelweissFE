@@ -11,10 +11,13 @@ make
 matplotlib 
 numpy 
 numpydoc
+petsc4py
+pymumps
 python>=3.9
 pytest
 prettytable
 scipy
+suitesparse
 sphinx 
 sphinx_rtd_theme
 sympy 
