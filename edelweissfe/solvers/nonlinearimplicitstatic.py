@@ -79,6 +79,7 @@ class NIST:
         "defaultCriticalIter": 5,
         "defaultMaxGrowingIter": 10,
         "extrapolation": "linear",
+        "linsolver": "pardiso",
     }
 
     def __init__(self, jobInfo, journal, **kwargs):

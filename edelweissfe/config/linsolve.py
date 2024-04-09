@@ -56,9 +56,25 @@ def getLinSolverByName(linsolverName):
         from edelweissfe.linsolve.pardiso.pardiso import pardisoSolve
 
         return pardisoSolve
+    elif linsolverName.lower() == "panuapardiso":
+        from edelweissfe.linsolve.panuapardiso.panuapardiso import panuaPardisoSolve
+
+        return panuaPardisoSolve
     elif linsolverName.lower() == "amgcl":
         from edelweissfe.linsolve.amgcl.amgcl import amgclSolve
 
         return amgclSolve
+    elif linsolverName.lower() == "klu":
+        from edelweissfe.linsolve.klu.klu import kluSolve
+
+        return kluSolve
+    elif linsolverName.lower() == "petsclu":
+        from edelweissfe.linsolve.petsclu.petsclu import petscluSolve
+
+        return petscluSolve
+    elif linsolverName.lower() == "mumps":
+        from edelweissfe.linsolve.mumps.mumps import mumpsSolve
+
+        return mumpsSolve
     else:
         raise AttributeError("invalid linear solver {:} requested".format(linsolverName))
