@@ -152,7 +152,8 @@ environment:</p>
 <p>Add mamba to your environment:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Step 2</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export PATH=$EWROOT/mambaforge3/bin:$PATH</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export EWROOT=$PWD</span>
+<span class="go"> export PATH=$EWROOT/mambaforge3/bin:$PATH</span>
 <span class="go"> mamba init --all</span>
 <span class="go"> exit</span>
 </pre></div>
@@ -190,8 +191,8 @@ environment:</p>
 <span class="go"> cd build</span>
 <span class="go"> cmake \</span>
 <span class="go">     -DBUILD_TESTING=OFF  \</span>
-<span class="go">     -DINCLUDE_INSTALL_DIR=$(python -c &quot;import sys; print(sys.prefix)&quot;)/include \</span>
-<span class="go">     -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) \</span>
+<span class="go">     -DINCLUDE_INSTALL_DIR=$CONDA_PREFIX/include \</span>
+<span class="go">     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \</span>
 <span class="go">     ..</span>
 <span class="go"> make install</span>
 </pre></div>
@@ -210,7 +211,7 @@ environment:</p>
 <span class="go">     -DAUTODIFF_BUILD_PYTHON=OFF \</span>
 <span class="go">     -DAUTODIFF_BUILD_EXAMPLES=OFF \</span>
 <span class="go">     -DAUTODIFF_BUILD_DOCS=OFF \</span>
-<span class="go">     -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) \</span>
+<span class="go">     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \</span>
 <span class="go">     ..</span>
 <span class="go"> make install</span>
 </pre></div>
@@ -219,9 +220,10 @@ environment:</p>
 <p>Get Fastor:</p>
 <div class="literal-block-wrapper docutils container" id="id9">
 <div class="code-block-caption"><span class="caption-text">Step 8</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> git clone https://github.com/romeric/Fastor.git</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> cd $EWROOT</span>
+<span class="go"> git clone https://github.com/romeric/Fastor.git</span>
 <span class="go"> cd Fastor</span>
-<span class="go"> cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) .</span>
+<span class="go"> cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX .</span>
 <span class="go"> make install</span>
 <span class="go"> cd ../</span>
 </pre></div>
@@ -236,7 +238,7 @@ environment:</p>
 <span class="go"> mkdir build</span>
 <span class="go"> cd build</span>
 <span class="go"> cmake \</span>
-<span class="go">     -DCMAKE_INSTALL_PREFIX=$(python -c &quot;import sys; print(sys.prefix)&quot;) \</span>
+<span class="go">     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \</span>
 <span class="go">     ..</span>
 <span class="go"> make install</span>
 </pre></div>
