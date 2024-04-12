@@ -1,7 +1,7 @@
-*material, name=modleon, id=modleon, 
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
+*material, name=VonMises, id=mat
+210000, 0.3, 550, 1000, 200, 1400
 
-*section, name=section1, thickness=1.0, material=modleon, type=plane
+*section, name=section1, thickness=1.0, material=mat, type=plane
 all
 
 *job, name=cpe4job, domain=2d
@@ -10,9 +10,7 @@ all
 create=perNode, elSet=all, field=displacement, result=U, name=displacement
 create=perElement, elSet=all, result=stress, quadraturePoint=0:4, name=stress, f(x)='mean(x, axis=1)'
 create=perElement, elSet=all, result=strain, quadraturePoint=0:4, name=strain, f(x)='mean(x, axis=1)'
-create=perElement, elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f(x)='mean( x[:,:], axis=1) '
-create=perElement, elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)='mean( x[:,:], axis=1) '
-create=perElement, elSet=all, result=omega,  quadraturePoint=0:4, name=omega,  f(x)='mean( x[:,:], axis=1) '
+create=perElement, elSet=all, result=kappa, quadraturePoint=0:4, name=kappa, f(x)='mean( x[:,:], axis=1) '
 
 
 *modelGenerator, generator=planeRectQuad, name=gen
@@ -27,9 +25,7 @@ configuration, overwrite=yes
 create=perNode,    fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
-create=perElement, fieldOutput=alphaP
-create=perElement, fieldOutput=alphaD
-create=perElement, fieldOutput=omega
+create=perElement, fieldOutput=kappa
 
 *step, solver=theSolver, maxInc=1e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear

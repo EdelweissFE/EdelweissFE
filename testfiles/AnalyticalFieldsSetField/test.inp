@@ -1,10 +1,5 @@
-*material, name=cdp, id=cdp
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 0
-
-*material, name=LinearElastic, id=myMaterial
-**Isotropic
-**E    nu
-1.8e4, 0.22
+*material, name=VonMises, id=mat
+210000, 0.3, 550, 1000, 200, 1400
 
 *job, name=job, domain=3d
 *solver, solver=NISTParallel, name=theSolver
@@ -21,7 +16,7 @@ lY      =50
 lZ      =10
 elType  =C3D8
 
-*section, name=section1, material=cdp, type=solid
+*section, name=section1, material=mat, type=solid
 all
 
 *fieldOutput
@@ -29,14 +24,14 @@ create=perNode, elSet=all, field=displacement, result=U, name=displacement
 create=perElement, elSet=all, result=strain, name=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 
-create=perElement, elSet=all, result=alphaP, name=alphaP, quadraturePoint=0:8
-create=perElement, elSet=all, result=alphaP, name=alphaPMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
+create=perElement, elSet=all, result=kappa, name=kappa, quadraturePoint=0:8
+create=perElement, elSet=all, result=kappa, name=kappaMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
 
 *output, type=ensight, name=test
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain
-create=perElement, fieldOutput=alphaPMax
+create=perElement, fieldOutput=kappaMax
 configuration, overwrite=yes
 
 ***output, type=monitor
@@ -45,7 +40,7 @@ configuration, overwrite=yes
 "f(x,y,z)" = "x/30"
 
 *step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1, solver=theSolver
-setfield,   name=sf,  fieldOutput=alphaP, type=analyticalField, value=AnalyticalField-01
+setfield,   name=sf,  fieldOutput=kappa, type=analyticalField, value=AnalyticalField-01
 dirichlet,  name=x0u, nSet=gen_left,      field=displacement, 1=0.
 dirichlet,  name=y0u, nSet=gen_bottom,    field=displacement, 2=0.
 dirichlet,  name=z0u, nSet=gen_back,      field=displacement, 3=0.
