@@ -33,17 +33,17 @@
 Replaces the NewtonRaphson scheme of the NISTParallel Solver.
 """
 
-from fe.solvers.nonlinearimplicitstaticparallel import NISTParallel
+from edelweissfe.solvers.nonlinearimplicitstaticparallel import NISTParallel
 
 import numpy as np
-from fe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
-from fe.utils.math import createModelAccessibleFunction
-from fe.numerics.dofmanager import DofVector, VIJSystemMatrix
-from fe.stepactions.base.stepactionbase import StepActionBase
-from fe.utils.fieldoutput import FieldOutputController
-from fe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from fe.models.femodel import FEModel
-from fe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
+from edelweissfe.utils.math import createModelAccessibleFunction
+from edelweissfe.numerics.dofmanager import DofVector, VIJSystemMatrix
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+from edelweissfe.utils.fieldoutput import FieldOutputController
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.timesteppers.timestep import TimeStep
 
 
 class NISTPArcLength(NISTParallel):
