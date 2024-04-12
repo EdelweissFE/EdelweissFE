@@ -64,6 +64,9 @@ cdef class CSRGenerator:
         # abuse Scipy to create the object
         self.csrMatrix = csr_matrix( (np.zeros_like(I, dtype=np.double), (I,J) ), (nDof, nDof) )   
 
+        if not self.csrMatrix.has_canonical_format:
+            self.csrMatrix.sum_duplicates()
+
         cdef int[:] indices, indptr
         
         self.data = self.csrMatrix.data
