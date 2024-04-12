@@ -1,0 +1,54 @@
+*material, name=ADVonMises, id=myMaterial
+210000, 0.3, 550, 1000, 200, 1400
+
+*section, name=section1, material=myMaterial, type=plane, thickness=1
+all
+
+*job, name=c3d8job, domain=2d
+*solver, solver=NIST, name=theSolver
+
+*modelGenerator, generator=planeRectQuad, name=gen
+l=10
+h=10
+nX=2
+nY=2
+elType=CPE4
+
+***fieldOutput
+**elSet=all, field=displacement, result=U, name=displacement
+**elSet=all, result=strain, name=strain, quadraturePoint=3, f(x)='x'
+**elSet=all, result=stress, name=stress, quadraturePoint=3, f(x)='x'
+**name=sig11, elSet=all, result=stress, quadraturePoint=0:3, f(x)='np.mean(x[:,:,0],axis=1)', saveHistory=True
+**name=sig22, elSet=all, result=stress, quadraturePoint=0:3, f(x)='np.mean(x[:,:,1],axis=1)', saveHistory=True
+**name=sig12, elSet=all, result=stress, quadraturePoint=0:3, f(x)='np.mean(x[:,:,3],axis=1)', saveHistory=True
+**name=sig33, elSet=all, result=stress, quadraturePoint=0:3, f(x)='np.mean(x[:,:,2],axis=1)', saveHistory=True
+**name=eps22, elSet=all, result=strain, quadraturePoint=0:3, f(x)='np.mean(x[:,:,1],axis=1)', saveHistory=True
+**name=eps11, elSet=all, result=strain, quadraturePoint=0:3, f(x)='np.mean(x[:,:,0],axis=1)', saveHistory=True
+**name=eps33, elSet=all, result=strain, quadraturePoint=0:3, f(x)='np.mean(x[:,:,2],axis=1)', saveHistory=True
+**name=eps12, elSet=all, result=strain, quadraturePoint=0:3, f(x)='np.mean(x[:,:,3],axis=1)', saveHistory=True
+**name=kappa, elSet=all, result=kappa, quadraturePoint=0:3, f(x)='np.mean(x[:,0],axis=0)', saveHistory=True
+
+
+***output, type=meshPlot
+**figure=1, axSpec=111, c=red, create=xyData, x=eps11, y=sig11
+**figure=2, axSpec=111, c=red, create=xyData, x=eps12, y=sig12
+
+***output, type=monitor
+**fieldOutput=sig11
+**fieldOutput=sig22
+**fieldOutput=sig33
+**fieldOutput=sig12
+**fieldOutput=eps11
+**fieldOutput=eps22
+**fieldOutput=eps33
+**fieldOutput=eps12
+**fieldOutput=kappa
+**fieldOutput=stress
+**fieldOutput=strain
+
+*step, maxInc=1e0, minInc=1e-2, maxNumInc=100, maxIter=25, stepLength=1, solver=theSolver
+dirichlet, name=left, nSet=gen_left, field=displacement, 1=0, 2=0
+dirichlet, name=bottom, nSet=gen_leftBottom, field=displacement, 2=0
+
+*step, maxInc=5e-3, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=1, solver=theSolver
+dirichlet, name=right, nSet=gen_right, field=displacement, 2=0.2

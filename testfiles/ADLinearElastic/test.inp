@@ -1,0 +1,70 @@
+*node
+** Our  nodes
+** ID   coordinates
+0,  0,       0,      0
+1,  0.100,   0,      0
+2,  0.100,   0.100,  0
+3,  0,       0.100,  0
+4,  0,       0,      0.100
+5,  0.100,   0,      0.100
+6,  0.100,   0.100,  0.100
+7,  0,       0.100,  0.100
+
+*element, type=C3D8, provider=marmot
+** We create a single hex8 element
+** ID       node IDs 
+1,      0,1,2,3,4,5,6,7
+
+*nSet, nSet=left
+0,1,4,5
+*nSet, nSet=bottomleft
+1
+*nSet, nSet=bottomback
+0
+
+*elSet, elSet=theOnlyElement
+1
+
+*material, name=ADLinearElastic, id=myMaterial
+**Isotropic
+**E   | nu |
+1.8e4, 0.22
+
+*section, name=section1, material=myMaterial, type=solid
+** element set 'all' is automatically created
+** we could also use the set 'theOnlyElement'
+all
+
+*surface, type=element, name=surfaceRight
+** Elset,   faceID
+all,        4
+
+*job, name=mySingleElementJob, domain=3d, solver=NIST
+
+*step, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
+** The first step: set the BCs
+dirichlet, name=1, nSet=left,       field=displacement, 2=0
+dirichlet, name=2, nSet=bottomback, field=displacement, 1=0,3=0
+dirichlet, name=3, nSet=bottomleft, field=displacement, 3=0
+
+*step, maxInc=1e0, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
+** The second step: apply the load
+distributedload, name=dload, surface=surfaceRight, type=pressure, magnitude=0.15, f(t)='t**2'
+
+*fieldOutput
+** The results we are interested in
+create=perElement, name=strain,       elSet=all, result=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+create=perElement, name=stress,       elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
+create=perNode, name=RF_left,      nSet=left, field=displacement, result=P, f(x)='np.sum(x[:,1])'
+create=perNode, name=displacement, elSet=theOnlyElement, field=displacement, result=U
+
+*output, type=ensight
+** For visualization in Paraview etc.
+create=perNode, fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+configuration, overwrite=yes
+
+*output, type=monitor, name=myMonitor
+** Directly print to the terminal
+fieldOutput=RF_left
