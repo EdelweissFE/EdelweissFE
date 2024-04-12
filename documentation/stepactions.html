@@ -291,11 +291,11 @@ If not modified in subsequent steps, the load held constant.</p>
 <span class="c c-Singleline">**elset, faceID</span>
 loadEls, 3
 
-<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">modleon</span>
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.125, 1
 
-<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">mat</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
+<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">VonMises</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">mat</span>
+210000, 0.3, 550, 1000, 200, 1400
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cpe4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
 <span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
@@ -615,10 +615,10 @@ of a step.</p>
 </table>
 <div class="literal-block-wrapper docutils container" id="id13">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/NodeForces/test.inp</span></code></span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">modleon</span>
-30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">VonMises</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">mat</span>
+210000, 0.3, 550, 1000, 200, 1400
 
-<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">mat</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
 
 <span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">cps4job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">2d</span>
