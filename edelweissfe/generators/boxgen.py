@@ -83,6 +83,7 @@ from edelweissfe.config.elementlibrary import getElementClass
 from edelweissfe.utils.misc import convertLinesToStringDictionary
 from edelweissfe.models.femodel import FEModel
 
+from operator import attrgetter
 import numpy as np
 import os
 
@@ -323,50 +324,50 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     nodeSets = []
 
     # 6 faces
-    nodeSets.append(NodeSet("{:}_top".format(name), [n for n in np.ravel(nG[:, -1, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_bottom".format(name), [n for n in np.ravel(nG[:, 0, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_right".format(name), [n for n in np.ravel(nG[-1, :, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_left".format(name), [n for n in np.ravel(nG[0, :, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_front".format(name), [n for n in np.ravel(nG[:, :, -1]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_back".format(name), [n for n in np.ravel(nG[:, :, 0]) if len(n.fields) > 0]))
+    getFields = np.vectorize(attrgetter("fields"))
+    getLength = np.vectorize(len)
+    filterGrid = getLength(getFields(nG)) > 0
+
+    getFilteredNodes = lambda s: nG[s][filterGrid[s]]
+
+    nodeSets.append(NodeSet("{:}_top".format(name), getFilteredNodes(np.s_[:, -1, :])))
+    nodeSets.append(NodeSet("{:}_bottom".format(name), getFilteredNodes(np.s_[:, 0, :])))
+    nodeSets.append(NodeSet("{:}_right".format(name), getFilteredNodes(np.s_[-1, :, :])))
+    nodeSets.append(NodeSet("{:}_left".format(name), getFilteredNodes(np.s_[0, :, :])))
+    nodeSets.append(NodeSet("{:}_front".format(name), getFilteredNodes(np.s_[:, :, -1])))
+    nodeSets.append(NodeSet("{:}_back".format(name), getFilteredNodes(np.s_[:, :, 0])))
 
     # 12 edges
-    nodeSets.append(NodeSet("{:}_bottomRight".format(name), [n for n in np.ravel(nG[-1, 0, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_bottomLeft".format(name), [n for n in np.ravel(nG[0, 0, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_bottomFront".format(name), [n for n in np.ravel(nG[:, 0, -1]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_bottomBack".format(name), [n for n in np.ravel(nG[:, 0, 0]) if len(n.fields) > 0]))
+    nodeSets.append(NodeSet("{:}_bottomRight".format(name), getFilteredNodes(np.s_[-1, 0, :])))
+    nodeSets.append(NodeSet("{:}_bottomLeft".format(name), getFilteredNodes(np.s_[0, 0, :])))
+    nodeSets.append(NodeSet("{:}_bottomFront".format(name), getFilteredNodes(np.s_[:, 0, -1])))
+    nodeSets.append(NodeSet("{:}_bottomBack".format(name), getFilteredNodes(np.s_[:, 0, 0])))
 
-    nodeSets.append(NodeSet("{:}_topRight".format(name), [n for n in np.ravel(nG[-1, -1, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_topLeft".format(name), [n for n in np.ravel(nG[0, -1, :]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_topFront".format(name), [n for n in np.ravel(nG[:, -1, -1]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_topBack".format(name), [n for n in np.ravel(nG[:, -1, 0]) if len(n.fields) > 0]))
+    nodeSets.append(NodeSet("{:}_topRight".format(name), getFilteredNodes(np.s_[-1, -1, :])))
+    nodeSets.append(NodeSet("{:}_topLeft".format(name), getFilteredNodes(np.s_[0, -1, :])))
+    nodeSets.append(NodeSet("{:}_topFront".format(name), getFilteredNodes(np.s_[:, -1, -1])))
+    nodeSets.append(NodeSet("{:}_topBack".format(name), getFilteredNodes(np.s_[:, -1, 0])))
 
-    nodeSets.append(NodeSet("{:}_rightBack".format(name), [n for n in np.ravel(nG[-1, :, 0]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_rightFront".format(name), [n for n in np.ravel(nG[-1, :, -1]) if len(n.fields) > 0]))
+    nodeSets.append(NodeSet("{:}_rightBack".format(name), getFilteredNodes(np.s_[-1, :, 0])))
+    nodeSets.append(NodeSet("{:}_rightFront".format(name), getFilteredNodes(np.s_[-1, :, -1])))
 
-    nodeSets.append(NodeSet("{:}_leftBack".format(name), [n for n in np.ravel(nG[0, :, 0]) if len(n.fields) > 0]))
-    nodeSets.append(NodeSet("{:}_leftFront".format(name), [n for n in np.ravel(nG[0, :, -1]) if len(n.fields) > 0]))
+    nodeSets.append(NodeSet("{:}_leftBack".format(name), getFilteredNodes(np.s_[0, :, 0])))
+    nodeSets.append(NodeSet("{:}_leftFront".format(name), getFilteredNodes(np.s_[0, :, -1])))
 
-    nodeSets.append(
-        NodeSet("{:}_centerX".format(name), [n for n in np.ravel(nG[int(nNodesX / 2), :, :]) if len(n.fields) > 0])
-    )
-    nodeSets.append(
-        NodeSet("{:}_centerY".format(name), [n for n in np.ravel(nG[:, int(nNodesY / 2), :]) if len(n.fields) > 0])
-    )
-    nodeSets.append(
-        NodeSet("{:}_centerZ".format(name), [n for n in np.ravel(nG[:, :, int(nNodesZ / 2)]) if len(n.fields) > 0])
-    )
+    nodeSets.append(NodeSet("{:}_centerX".format(name), getFilteredNodes(np.s_[int(nNodesX / 2), :, :])))
+    nodeSets.append(NodeSet("{:}_centerY".format(name), getFilteredNodes(np.s_[:, int(nNodesY / 2), :])))
+    nodeSets.append(NodeSet("{:}_centerZ".format(name), getFilteredNodes(np.s_[:, :, int(nNodesZ / 2)])))
 
     # 8 vertices
-    nodeSets.append(NodeSet("{:}_bottomRightFront".format(name), [nG[-1, 0, -1]]))
-    nodeSets.append(NodeSet("{:}_bottomRightBack".format(name), [nG[-1, 0, 0]]))
-    nodeSets.append(NodeSet("{:}_bottomLeftFront".format(name), [nG[0, 0, -1]]))
-    nodeSets.append(NodeSet("{:}_bottomLeftBack".format(name), [nG[0, 0, 0]]))
+    nodeSets.append(NodeSet("{:}_bottomRightFront".format(name), nG[-1, 0, -1]))
+    nodeSets.append(NodeSet("{:}_bottomRightBack".format(name), nG[-1, 0, 0]))
+    nodeSets.append(NodeSet("{:}_bottomLeftFront".format(name), nG[0, 0, -1]))
+    nodeSets.append(NodeSet("{:}_bottomLeftBack".format(name), nG[0, 0, 0]))
 
-    nodeSets.append(NodeSet("{:}_topRightFront".format(name), [nG[-1, -1, -1]]))
-    nodeSets.append(NodeSet("{:}_topRightBack".format(name), [nG[-1, -1, 0]]))
-    nodeSets.append(NodeSet("{:}_topLeftFront".format(name), [nG[0, -1, -1]]))
-    nodeSets.append(NodeSet("{:}_topLeftBack".format(name), [nG[0, -1, 0]]))
+    nodeSets.append(NodeSet("{:}_topRightFront".format(name), nG[-1, -1, -1]))
+    nodeSets.append(NodeSet("{:}_topRightBack".format(name), nG[-1, -1, 0]))
+    nodeSets.append(NodeSet("{:}_topLeftFront".format(name), nG[0, -1, -1]))
+    nodeSets.append(NodeSet("{:}_topLeftBack".format(name), nG[0, -1, 0]))
 
     for nodeSet in nodeSets:
         model.nodeSets[nodeSet.name] = nodeSet
