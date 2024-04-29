@@ -147,7 +147,14 @@ class ImmutableOrderedSet(OrderedSet):
         name: str,
         item_s,
     ):
-        self.data = MappingProxyType({item: None for item in self.forceIter(item_s) if self.checkObjectType(item)})
+        filteredItems = dict()
+        for item in self.forceIter(item_s):
+            if self.checkObjectType(item):
+                filteredItems.update({item: None})
+            else:
+                raise TypeError(f"You tried to add an item with wrong type: {item} of type {type(item)}")
+
+        self.data = MappingProxyType(filteredItems)
         self.items = self.data.keys()
         self.keys = None
         self.values = None
