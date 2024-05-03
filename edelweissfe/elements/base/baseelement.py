@@ -88,6 +88,14 @@ class BaseElement(ABC):
     @abstractmethod
     def ensightType(self) -> str:
         """The shape of the element in Ensight Gold notation."""
+
+        pass
+
+    @property
+    @abstractmethod
+    def hasMaterial(self) -> str:
+        """Flag to check if a material was assigned to this element."""
+
         pass
 
     @abstractmethod

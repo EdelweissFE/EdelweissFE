@@ -71,7 +71,6 @@ cdef class MarmotElementWrapper:
             
         self._elNumber = elNumber
         self._elType = elementType
-
         
         self._nNodes                         = self.marmotElement.getNNodes()
         self._nSpatialDimensions             = self.marmotElement.getNSpatialDimensions()
@@ -137,6 +136,10 @@ cdef class MarmotElementWrapper:
     @property
     def ensightType(self):
         return self._ensightType
+
+    @property
+    def hasMaterial(self):
+        return self._hasMaterial
 
     def setNodes (self, nodes):
         """Assign the nodes coordinates to the underyling MarmotElement"""
