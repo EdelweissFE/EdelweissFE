@@ -97,7 +97,7 @@ class StepAction(DirichletBase):
         if "analyticalField" in action:
             self.analyticalField = model.analyticalFields[action["analyticalField"]]
             for i, node in enumerate(self.nSet):
-                self.delta[i, :] *= float(self.analyticalField.evaluateAtCoordinates(node.coordinates))
+                self.delta[i, :] *= self.analyticalField.evaluateAtCoordinates(node.coordinates)[0][0]
 
         self._components = components
 
