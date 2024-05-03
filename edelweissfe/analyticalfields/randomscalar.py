@@ -40,6 +40,7 @@ import numpy as np
 import sympy as sp
 import gstools
 from edelweissfe.utils.misc import convertLinesToStringDictionary
+from edelweissfe.utils.misc import CaseInsensitiveDict
 from edelweissfe.utils.math import createFunction
 from edelweissfe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
@@ -78,4 +79,4 @@ class AnalyticalField(AnalyticalFieldBase):
         if coords.ndim == 1:
             coords = np.expand_dims(coords, 0)
 
-        return np.expand_dims(self.srf(coords), 1)
+        return np.expand_dims(np.array([self.srf(coords_)[0] for coords_ in coords]), 1)
