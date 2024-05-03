@@ -109,7 +109,7 @@ class Section(ABC):
 
         for definition in self.materialParameterFromFieldDefs:
             index = int(definition["index"])
-            fieldValue = model.analyticalFields[definition["field"]].evaluateAtCoordinates(coordinatesAtCenter)
+            fieldValue = model.analyticalFields[definition["field"]].evaluateAtCoordinates(coordinatesAtCenter)[0][0]
             parameterValue = materialProperties[index]
 
             if strCaseCmp(definition["type"], "setToValue"):
