@@ -66,6 +66,7 @@ class MarmotMaterialWrappingElement(BaseElement):
         self._nNodes = 1
         self._nSpatialDimensions = 0
         self._ensightType = "point"
+        self._hasMaterial = False
 
         self._marmotMaterialWrapper = marmotMaterialWrappers[self._materialType]()
         self._fields = [
@@ -105,6 +106,10 @@ class MarmotMaterialWrappingElement(BaseElement):
     @property
     def ensightType(self):
         return self._ensightType
+
+    @property
+    def hasMaterial(self):
+        return self._hasMaterial
 
     def setNodes(self, nodes: list):
         """Assign the nodes.
@@ -159,6 +164,8 @@ class MarmotMaterialWrappingElement(BaseElement):
         self._stateVarsTemp = np.zeros(self._nStateVars)
 
         self._marmotMaterialWrapper.assignStateVars(self._stateVarsTemp)
+
+        self._hasMaterial = True
 
     def _initializeStateVarsTemp(
         self,

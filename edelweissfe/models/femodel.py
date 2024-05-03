@@ -37,6 +37,7 @@ from edelweissfe.variables.scalarvariable import ScalarVariable
 from edelweissfe.variables.fieldvariable import FieldVariable
 from edelweissfe.journal.journal import Journal
 import textwrap
+from operator import attrgetter
 
 
 class FEModel:
@@ -217,6 +218,12 @@ class FEModel:
         for section in self.sections.values():
             section.assignSectionPropertiesToModel(self)
 
+        # check if all elements are assigned a material
+        materialAssigned = np.fromiter(map(attrgetter("hasMaterial"), self.elements.values()), dtype=bool)
+        if not materialAssigned.all():
+            elementIds = np.array([str(elId) for elId in self.elements.keys()])[np.logical_not(materialAssigned)]
+            raise Exception(f"No material was assigned to element(s) with id(s) {', '.join(elementIds)}.")
+
     def prepareYourself(self, journal: Journal):
         """Prepare the model for a simulation.
         Creates the variables, bundles the fields,
@@ -231,6 +238,8 @@ class FEModel:
 
         self._prepareVariablesAndFields(journal)
         self._prepareElements(journal)
+
+        print("Elo")
 
     def advanceToTime(self, time: float):
         """Accept the current state of the model and sub instances, and
