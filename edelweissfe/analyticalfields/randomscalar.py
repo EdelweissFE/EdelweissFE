@@ -41,11 +41,9 @@ import sympy as sp
 import gstools
 from edelweissfe.utils.misc import convertLinesToStringDictionary
 from edelweissfe.utils.misc import CaseInsensitiveDict
-from edelweissfe.utils.math import createFunction
 from edelweissfe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
 )
-from inspect import signature
 
 
 class AnalyticalField(AnalyticalFieldBase):
@@ -53,7 +51,7 @@ class AnalyticalField(AnalyticalFieldBase):
         self.name = name
         self.type = "randomScalar"
 
-        options = convertLinesToStringDictionary(data)
+        options = CaseInsensitiveDict(convertLinesToStringDictionary(data))
 
         self.domainSize = model.domainSize
 
