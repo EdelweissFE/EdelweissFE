@@ -56,20 +56,22 @@ class Constraint(ConstraintBase):
         rbNset = definition["nSet"]
         nodeSets = model.nodeSets
 
-        if len(nodeSets[definition["referencePoint"]]) > 1:
+        rpNodeSet = nodeSets[definition["referencePoint"]]
+
+        if len(rpNodeSet) > 1:
             raise Exception(
                 "node set for reference point '{:}' contains more than one node".format(definition["referencePoint"])
             )
 
-        self.rp = list(nodeSets[definition["referencePoint"]])[0]
-        slaveNodeSet = nodeSets[rbNset]
-        self.slaveNodes = [node for node in slaveNodeSet]  # may also contain the RP, doesn't really matter as we remove it
+        self.rp = rpNodeSet[0]
 
-        if self.rp in self.slaveNodes:  # remove the rp from the slave node set
-            self.slaveNodes = [s for s in self.slaveNodes if s is not self.rp]
+        slaveNodeSet = nodeSets[rbNset]  # slave node set may contain the reference point
 
-        # all nodes
-        self._nodes = self.slaveNodes + [self.rp]
+        # reference point is removed (if present) and node set is converted to list
+        self.slaveNodes = [node for node in slaveNodeSet ^ rpNodeSet]
+
+        # list of all nodes from union of slaveNodeSet and rpNodeSet
+        self._nodes = [node for node in slaveNodeSet | rpNodeSet]
 
         nSlaves = len(self.slaveNodes)
         self.slaveNodesFields = [["displacement"]] * nSlaves
