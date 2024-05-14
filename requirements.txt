@@ -15,6 +15,7 @@ petsc4py
 pymumps
 python>=3.9
 pytest
+pyvista
 prettytable
 scipy
 suitesparse
