@@ -30,14 +30,15 @@
 # @author: Matthias Neuner
 
 """
-Implementing your own finite elements can be done easily by subclassing from 
+Implementing your own finite elements can be done easily by subclassing from
 the abstract base class :class:`~BaseElement`.
 """
 
 from abc import ABC, abstractmethod
+
 import numpy as np
+
 from edelweissfe.points.node import Node
-from edelweissfe.timesteppers.timestep import TimeStep
 
 
 class BaseElement(ABC):
@@ -46,35 +47,25 @@ class BaseElement(ABC):
     def elNumber(self) -> int:
         """The unique number of this element"""
 
-        pass
-
     @property
     @abstractmethod
     def nNodes(self) -> int:
         """The number of nodes this element requires"""
-
-        pass
 
     @property
     @abstractmethod
     def nodes(self) -> int:
         """The list of nodes this element holds"""
 
-        pass
-
     @property
     @abstractmethod
     def nDof(self) -> int:
         """The total number of degrees of freedom this element has"""
 
-        pass
-
     @property
     @abstractmethod
     def fields(self) -> list[list[str]]:
         """The list of fields per nodes."""
-
-        pass
 
     @property
     @abstractmethod
@@ -82,21 +73,15 @@ class BaseElement(ABC):
         """The permutation pattern for the residual vector and the stiffness matrix to
         aggregate all entries in order to resemble the defined fields nodewise."""
 
-        pass
-
     @property
     @abstractmethod
     def ensightType(self) -> str:
         """The shape of the element in Ensight Gold notation."""
 
-        pass
-
     @property
     @abstractmethod
     def hasMaterial(self) -> str:
         """Flag to check if a material was assigned to this element."""
-
-        pass
 
     @abstractmethod
     def __init__(self, elementType: str, elNumber: int):
@@ -124,8 +109,6 @@ class BaseElement(ABC):
             A unique integer label used for all kinds of purposes.
         """
 
-        pass
-
     @abstractmethod
     def setNodes(self, nodes: list[Node]):
         """Assign the nodes to the element.
@@ -135,8 +118,6 @@ class BaseElement(ABC):
         nodes
             A list of nodes.
         """
-
-        pass
 
     @abstractmethod
     def setProperties(self, elementProperties: np.ndarray):
@@ -148,15 +129,11 @@ class BaseElement(ABC):
             A numpy array containing the element properties.
         """
 
-        pass
-
     @abstractmethod
     def initializeElement(
         self,
     ):
         """Initalize the element to be ready for computing."""
-
-        pass
 
     @abstractmethod
     def setMaterial(self, materialName: str, materialProperties: np.ndarray):
@@ -181,8 +158,6 @@ class BaseElement(ABC):
         values
             The numpy array describing the initial state.
         """
-
-        pass
 
     @abstractmethod
     def computeDistributedLoad(
@@ -218,8 +193,6 @@ class BaseElement(ABC):
             The time increment.
         """
 
-        pass
-
     @abstractmethod
     def computeYourself(
         self,
@@ -248,11 +221,15 @@ class BaseElement(ABC):
             The time increment.
         """
 
-        pass
-
     @abstractmethod
     def computeBodyForce(
-        self, P: np.ndarray, K: np.ndarray, load: np.ndarray, U: np.ndarray, time: np.ndarray, dTime: float
+        self,
+        P: np.ndarray,
+        K: np.ndarray,
+        load: np.ndarray,
+        U: np.ndarray,
+        time: np.ndarray,
+        dTime: float,
     ):
         """Evaluate residual and stiffness for given time, field, and field increment due to a body force load.
 
@@ -272,23 +249,17 @@ class BaseElement(ABC):
             The time increment.
         """
 
-        pass
-
     @abstractmethod
     def acceptLastState(
         self,
     ):
         """Accept the computed state (in nonlinear iteration schemes)."""
 
-        pass
-
     @abstractmethod
     def resetToLastValidState(
         self,
     ):
         """Rest to the last valid state."""
-
-        pass
 
     @abstractmethod
     def getResultArray(self, result: str, quadraturePoint: int, getPersistentView: bool = True) -> np.ndarray:
@@ -310,8 +281,6 @@ class BaseElement(ABC):
             The result.
         """
 
-        pass
-
     @abstractmethod
     def getCoordinatesAtCenter(self) -> np.ndarray:
         """Compute the underlying MarmotElement centroid coordinates.
@@ -321,8 +290,6 @@ class BaseElement(ABC):
         np.ndarray
             The element's central coordinates.
         """
-
-        pass
 
     @abstractmethod
     def getCoordinatesAtQuadraturePoints(self) -> np.ndarray:
@@ -334,8 +301,6 @@ class BaseElement(ABC):
             The element's qp coordinates.
         """
 
-        pass
-
     @abstractmethod
     def getNumberOfQuadraturePoints(self) -> int:
         """Compute the underlying MarmotElement qp coordinates.
@@ -345,5 +310,3 @@ class BaseElement(ABC):
         np.ndarray
             The element's qp coordinates.
         """
-
-        pass

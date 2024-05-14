@@ -2,7 +2,7 @@
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -15,24 +15,24 @@
     * - ``type``
       - ``string``
       - type of analytical field (currently 'expression' only)
- 
+
 .. list-table:: ``*configureplots`` : customize the figures and axes
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
     * - ``data``
       - ``string``
       - key=value pairs for configuration of figures and axes
- 
+
 .. list-table:: ``*constraint`` : define a constraint
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -45,12 +45,12 @@
     * - ``type``
       - ``string``
       - constraint type
- 
+
 .. list-table:: ``*element`` : definition of element(s)
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -66,12 +66,12 @@
     * - ``type``
       - ``string``
       - assign one of the types definied in the elementlibrary
- 
+
 .. list-table:: ``*elset`` : definition of an element set
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -84,24 +84,24 @@
     * - ``generate``
       - ``string``
       - set True to generate from data line 1: start-element, end-element, step
- 
+
 .. list-table:: ``*exportplots`` : export your figures
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
     * - ``data``
       - ``string``
       - key=value pairs for exporting of figures and axes
- 
+
 .. list-table:: ``*fieldoutput`` : define fieldoutput, which is used by outputmanagers
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -111,24 +111,24 @@
     * - ``jobname``
       - ``string``
       - (optional), name of job, standard=defaultJob
- 
+
 .. list-table:: ``*include`` : (optional) load extra .inp file (fragment), use relative path to current .inp
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
     * - ``input``
       - ``string``
       - filename
- 
+
 .. list-table:: ``*job`` : definition of an analysis job
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -147,12 +147,12 @@
     * - ``starttime``
       - ``float``
       - (optional) start time of job, standard = 0.0
- 
+
 .. list-table:: ``*material`` : definition of a material
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -168,12 +168,12 @@
     * - ``statevars``
       - ``integer``
       - (deprecated and ignored) number of statevars
- 
+
 .. list-table:: ``*modelgenerator`` : define a model generator, loaded from a module
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -186,12 +186,12 @@
     * - ``name``
       - ``string``
       - (optional) name of the generator
- 
+
 .. list-table:: ``*node`` : definition of nodes
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -201,12 +201,12 @@
     * - ``nset``
       - ``string``
       - name
- 
+
 .. list-table:: ``*nset`` : definition of an element set
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -219,12 +219,12 @@
     * - ``nset``
       - ``string``
       - name
- 
+
 .. list-table:: ``*output`` : define an output module
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -239,13 +239,13 @@
       - (optional), name of manager, standard=None
     * - ``type``
       - ``string``
-      - output module 
- 
+      - output module
+
 .. list-table:: ``*parameteridentification`` : identify material parameter for given x and y data
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -270,12 +270,12 @@
     * - ``ydata``
       - ``string``
       - filename where yData is given
- 
+
 .. list-table:: ``*section`` : definition of an section
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -294,12 +294,12 @@
     * - ``type``
       - ``string``
       - type of the section
- 
+
 .. list-table:: ``*step`` : definition of job steps
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -327,12 +327,12 @@
     * - ``steplength``
       - ``float``
       - time period of step
- 
+
 .. list-table:: ``*surface`` : definition of surface set
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -345,12 +345,12 @@
     * - ``type``
       - ``string``
       - type of surface (currently 'element' only)
- 
+
 .. list-table:: ``*updateconfiguration`` : update an configuration
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description
@@ -360,4 +360,4 @@
     * - ``data``
       - ``string``
       - key=value pairs
- 
+

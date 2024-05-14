@@ -1,5 +1,5 @@
-*material, name=linearelastic, id=linearelastic, 
-30000.0, 0.15 
+*material, name=linearelastic, id=linearelastic,
+30000.0, 0.15
 
 *section, name=section1, thickness=1.0, material=linearelastic, type=plane
 all
@@ -29,7 +29,7 @@ nY=1
 **name=UMag, nSet=all, field=displacement, result=U, f(x)='linalg.norm(x, axis=1)'
 ****fieldOutputs for xy plot
 
-*output, type=meshPlot, 
+*output, type=meshPlot,
 figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=time, y=RF
 **figure=1, axSpec=211, create=perNode, fieldOutput=
 **figure=1, axSpec=212, create=perElement, fieldOutput=stress, f(x)='mean(x, axis=1)'

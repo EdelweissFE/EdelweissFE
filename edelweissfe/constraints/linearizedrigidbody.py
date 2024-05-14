@@ -29,22 +29,23 @@
 
 # @author: Matthias Neuner
 
+import numpy as np
+
+from edelweissfe.constraints.base.constraintbase import ConstraintBase
+from edelweissfe.utils.exceptions import WrongDomain
+from edelweissfe.utils.misc import convertLinesToStringDictionary
+
 documentation = {
     "nSet": "(Slave) node set, which is constrained to the reference point",
     "referencePoint": "(Master) reference point",
 }
 
-import numpy as np
-
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.utils.exceptions import WrongDomain
-from edelweissfe.constraints.base.constraintbase import ConstraintBase
-
 
 class Constraint(ConstraintBase):
     """Linearized Rigid Body constraint.
 
-    A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D."""
+    A very simple implementation of a linearized rigid body constraint for displacements, currently only in 2D.
+    """
 
     def __init__(self, name, options, model):
         if model.domainSize != 2:

@@ -1,12 +1,12 @@
 Points
 ======
 
-Points represent entities with a spatial position and a unique identity, 
+Points represent entities with a spatial position and a unique identity,
 
-Relevant modules: 
+Relevant modules:
 
  * ``edelweissfe.points.node``
 
 .. automodule:: edelweissfe.points.node
-   :members: 
+   :members:
 

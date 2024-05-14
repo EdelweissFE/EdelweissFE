@@ -1,6 +1,6 @@
 *include, input=mesh.inp
 
-*material, name=GCDP, id=GCDP, 
+*material, name=GCDP, id=GCDP,
 ** E
 25850,
 ** nu
@@ -60,12 +60,12 @@ elSet=secConc, name=damage, result=omega, quadraturePoint=0:8, f(x)='np.mean(x,a
 fieldOutput=RF
 
 *output, type=ensight, name=esExport
-create=perNode, fieldOutput=displacement 
+create=perNode, fieldOutput=displacement
 create=perNode, fieldOutput=nonlocal damage
 create=perElement, fieldOutput=damage
 configuration, overwrite=yes
 
 *step, maxInc=1e-2, minInc=1e-8, maxNumInc=10000, maxIter=25, stepLength=100
-options, category=NISTSolver, extrapolation=linear 
+options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom, nSet=setBottom, field=displacement, 2=0, 1=0, 3=0
 dirichlet, name=load, nSet=setLoad, field=displacement, 2=+1

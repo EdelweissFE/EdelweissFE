@@ -28,25 +28,20 @@
 """Use PyVista to interpolate from vtk data.
 """
 
+import numpy as np
+import pyvista
+
+from edelweissfe.analyticalfields.base.analyticalfieldbase import (
+    AnalyticalField as AnalyticalFieldBase,
+)
+from edelweissfe.utils.misc import convertLinesToStringDictionary
+
 documentation = {
     "file": "path to database file",
     "result": "result name in database (optional if database contains only one dataset)",
 }
 
-import numpy as np
-
-# import sympy as sp
-# import gstools
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-
-# from edelweissfe.utils.math import createFunction
-from edelweissfe.analyticalfields.base.analyticalfieldbase import (
-    AnalyticalField as AnalyticalFieldBase,
-)
-
 # from inspect import signature
-
-import pyvista
 
 
 class AnalyticalField(AnalyticalFieldBase):

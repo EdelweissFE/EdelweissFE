@@ -28,6 +28,18 @@
 # Created on Mon Jul 24 15:30:36 2017
 
 # @author: Matthias Neuner
+
+import itertools
+import os
+import sys
+from distutils.spawn import find_executable
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+from edelweissfe.journal.journal import Journal
+
 """
 Plotting in EdelweissFE through matplotlib can be performed easily
 through a global plotting instance, which is passed to all output managers.
@@ -39,7 +51,7 @@ the keyword ``*configurePlots``:
 .. code-block:: edelweiss
 
     *configurePlots,
-        figure=1, axSpec=211, 
+        figure=1, axSpec=211,
         figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
         figure=3, axSpec=111,  xLabel=U1, yLabel=P2, flipX=True
         figure=4, axSpec=111, aspect=equal
@@ -52,7 +64,8 @@ Plots can be exported to .pdf (and png) files using the ``*exportPlots`` keyword
         figure=1, fileName=fig1, png=True
         figure=2, fileName=fig2
 
-The default style of plots can be configured via a classical rcparams.py file, which may be located in the current working directory.
+The default style of plots can be configured via a classical rcparams.py file,
+which may be located in the current working directory.
 """
 
 documentation_configurePlots = {
@@ -75,16 +88,6 @@ documentation_exportPlots = {
     "png": "Set true to export .png additionally",
     "scale": "Scale the figure",
 }
-
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-import sys
-import itertools
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from distutils.spawn import find_executable
-from edelweissfe.journal.journal import Journal
 
 defaultMarkerCycle = itertools.cycle(("o", "v", "D", "s", "^"))
 defaultLinePlotColorCycle = itertools.cycle(("k"))
@@ -117,9 +120,9 @@ class Plotter:
         self.rcParams = {
             "pgf.texsystem": "pdflatex",  # change this if using xetex or lautex
             "text.usetex": latexAvailable,  # use LaTeX to write all text
-            "text.latex.preamble": r" \usepackage[utf8]{inputenc} \usepackage{amsmath} \usepackage{amssymb} \usepackage{mathpazo} \usepackage{siunitx}",
+            "text.latex.preamble": r" \usepackage[utf8]{inputenc} \usepackage{amsmath} \usepackage{amssymb} \usepackage{mathpazo} \usepackage{siunitx}",  # noqa: E501
             "font.family": "serif",
-            #                "font.serif": [],                   # blank entries should cause plots to inherit fonts from the document
+            #                "font.serif": [],  # blank entries should cause plots to inherit fonts from the document
             #                "font.sans-serif": [],
             "font.monospace": [],
             "axes.labelsize": 10,  # LaTeX default is 10pt font.
@@ -162,12 +165,12 @@ class Plotter:
             The matplotlib Axes instance.
         """
 
-        if not figureID in self.figsWithAxes:
+        if figureID not in self.figsWithAxes:
             self.figsWithAxes[figureID] = (plt.figure(figureID), {})
 
         fig, axes = self.figsWithAxes[figureID]
         axSpec = axSpec
-        if not axSpec in axes:
+        if axSpec not in axes:
             self.figsWithAxes[figureID][1][axSpec] = fig.add_subplot(int(axSpec))
             self.figsWithAxes[figureID][1][axSpec].grid(True)
 
@@ -186,12 +189,19 @@ class Plotter:
             The matplotlib Figure instance.
         """
 
-        if not figureID in self.figsWithAxes:
+        if figureID not in self.figsWithAxes:
             self.figsWithAxes[figureID] = (plt.figure(figureID), {})
 
         return self.figsWithAxes[figureID][0]
 
-    def plotXYData(self, x: np.ndarray, y: np.ndarray, figureID: int = 1, axSpec: int = 111, plotOptions: dict = None):
+    def plotXYData(
+        self,
+        x: np.ndarray,
+        y: np.ndarray,
+        figureID: int = 1,
+        axSpec: int = 111,
+        plotOptions: dict = None,
+    ):
         """Plots a single curve.
 
         Parameters
@@ -229,7 +239,10 @@ class Plotter:
             plotDefinition["linestyle"] = plotOptions.get("ls", False) or next(defaultLineStyleCycle)
             lsParts = plotDefinition["linestyle"].split("-")
             if len(lsParts) >= 3:
-                plotDefinition["linestyle"] = (float(lsParts[0]), [int(onOff) for onOff in lsParts[1:]])
+                plotDefinition["linestyle"] = (
+                    float(lsParts[0]),
+                    [int(onOff) for onOff in lsParts[1:]],
+                )
         ax.plot(x, y, **plotDefinition)
 
     def configurePlotter(self):

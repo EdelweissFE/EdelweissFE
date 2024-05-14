@@ -28,6 +28,7 @@
 #  ---------------------------------------------------------------------
 
 from collections import UserDict
+from collections.abc import Iterable
 from types import MappingProxyType
 
 
@@ -69,9 +70,9 @@ class OrderedSet(UserDict):
     def forceIter(self, item_s):
         """Return an iterator object for item_s even if item_s itself is not iterable"""
 
-        try:
+        if isinstance(item_s, Iterable):
             return iter(item_s)
-        except:
+        else:
             return iter([item_s])
 
     def add(self, item_s):
@@ -92,21 +93,21 @@ class OrderedSet(UserDict):
 
     # define &
     def __and__(self, other):
-        if type(self) == type(other):
+        if type(self) is type(other):
             return self.items & other.items
         else:
             raise TypeError("You can only compare OrderedSets with matching types")
 
     # define ^
     def __xor__(self, other):
-        if type(self) == type(other):
+        if type(self) is type(other):
             return self.items ^ other.items
         else:
             raise TypeError("You can only compare OrderedSets with matching types")
 
     # define |
     def __or__(self, other):
-        if type(self) == type(other):
+        if type(self) is type(other):
             return self.items | other.items
         else:
             raise TypeError("You can only compare OrderedSets with matching types")
@@ -115,7 +116,7 @@ class OrderedSet(UserDict):
         return hash(self.name)
 
     def __eq__(self, other):
-        if type(self) == type(other):
+        if type(self) is type(other):
             return self.__dict__ == other.__dict__
         else:
             return False

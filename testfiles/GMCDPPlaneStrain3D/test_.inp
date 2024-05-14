@@ -1,29 +1,29 @@
 *material, name=GMCDP, id=GMCDP
-**E,        nu,     GcToG,  lb, lt          polarRatio,     
+**E,        nu,     GcToG,  lb, lt          polarRatio,
 30000.0,    0.15 ,  1,     2, 4,          1.499999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4,       13,     4.74,   55,         0.85,           0.0003,       .99,             2,       1
-**Ah,       Bh,     Ch,     Dh,         Hp,             As,     
+**Ah,       Bh,     Ch,     Dh,         Hp,             As,
 0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
-**a1,       a2,     a3,     a4,         a5,             a6,         
+**a1,       a2,     a3,     a4,         a5,             a6,
 0.25,        0.25,   0.5,     .0,           0.333333332,  0
 *material, name=GMCDP, id=GMCDPWeak
-**E,        nu,     GcToG,  lb, lt          polarRatio,     
+**E,        nu,     GcToG,  lb, lt          polarRatio,
 30000.0,    0.15 ,  1,     2, 4,          1.499999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 44.4,       13,     4.54,   53,         0.85,           0.0003,       .99,             2,       1
-**Ah,       Bh,     Ch,     Dh,         Hp,             As,     
+**Ah,       Bh,     Ch,     Dh,         Hp,             As,
 0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
-**a1,       a2,     a3,     a4,         a5,             a6,         
+**a1,       a2,     a3,     a4,         a5,             a6,
 0.25,        0.25,   0.5,     .0,           0.333333332,  0
 *material, name=GMCDP, id=GMCDPLE
-**E,        nu,     GcToG,  lb, lt          polarRatio,     
+**E,        nu,     GcToG,  lb, lt          polarRatio,
 30000.0,    0.15 ,  1,     2, 4,          1.499999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4e3,       13e3,     4.74e3,   55e3,         0.85,           0.0003,       .0,             2,       1
-**Ah,       Bh,     Ch,     Dh,         Hp,             As,     
-0.12,       0.003,  2.0,    0.000001,   0.000,          15.0, 
-**a1,       a2,     a3,     a4,         a5,             a6,         
+**Ah,       Bh,     Ch,     Dh,         Hp,             As,
+0.12,       0.003,  2.0,    0.000001,   0.000,          15.0,
+**a1,       a2,     a3,     a4,         a5,             a6,
 0.25,        0.25,   0.5,     .0,           0.333333332,  0
 *include, input=mesh.inp
 
@@ -31,7 +31,7 @@
 *section, name=section1, material=GMCDP, type=solid
 all
 *section, name=section2, material=GMCDPWeak, type=solid
-weak 
+weak
 *section, name=sectionLE, material=GMCDPLE, type=solid
 top
 bottom
@@ -46,7 +46,7 @@ create=perElement, elSet=all, result=alphaP, quadraturePoint=0:4, name=alphaP, f
 create=perElement, elSet=all, result=alphaD, quadraturePoint=0:4, name=alphaD, f(x)='max( x[:,:], axis=1) '
 create=perElement, elSet=all, result=omega, quadraturePoint=0:4, name=omega, f(x)='max( x[:,:], axis=1) '
 create=perNode, name=RF, nSet=top, field=displacement, result=P, f(x)='sum(x[:,1])/2.5', saveHistory=True
-create=perNode, name=U, nSet=top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True 
+create=perNode, name=U, nSet=top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True
 
 *output, type=monitor, name=omegaMon
 fieldOutput=omega, f(x)='max(x)'
@@ -69,7 +69,7 @@ figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 *step, maxInc=1e-2, minInc=5e-4, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear
 options, category=Ensight, intermediateSaveInterval=1
-dirichlet, name=bottom, nSet=bottom,  field=displacement, 2=0, 
+dirichlet, name=bottom, nSet=bottom,  field=displacement, 2=0,
 **dirichlet, name=bottomR, nSet=bottom,  field=micro rotation, 1=0,2=0,3=0
 **dirichlet, name=topR, nSet=top,  field=micro rotation, 1=0,2=0,3=0
 dirichlet, name=origin, nSet=origin,  field=displacement, 2=0, 1=0, 3=0

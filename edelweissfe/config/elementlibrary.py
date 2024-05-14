@@ -36,7 +36,7 @@ In future, elements by other providers or elements directly implemented in Edelw
     :caption: Example:
 
     *element, type=C3D8, provider=marmot
-        ** el_label, node1, node2, node3, node4, ... 
+        ** el_label, node1, node2, node3, node4, ...
         1000,        1,     2,     3,     4,     ...
 """
 
@@ -55,7 +55,7 @@ def getElementClass(provider: str = None) -> type:
         The element provider class type.
     """
 
-    if provider == None:
+    if provider is None:
         provider = "marmot"
 
     if provider.lower() == "marmot":
@@ -64,6 +64,8 @@ def getElementClass(provider: str = None) -> type:
         return MarmotElementWrapper
 
     if provider.lower() == "marmotsingleqpelement":
-        from edelweissfe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
+        from edelweissfe.elements.marmotsingleqpelement.element import (
+            MarmotMaterialWrappingElement,
+        )
 
         return MarmotMaterialWrappingElement

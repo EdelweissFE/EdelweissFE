@@ -1,5 +1,5 @@
 [![documentation](https://github.com/EdelweissFE/EdelweissFE/actions/workflows/sphinx.yml/badge.svg)](https://edelweissfe.github.io/EdelweissFE)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
 
@@ -14,7 +14,7 @@ Some features are:
 
  * Python for non performance-critical routines
  * Cython for performance-critical routines
- * Parallelization 
+ * Parallelization
  * Modular system, which is easy to extend
  * Output to Paraview, Ensight, CSV, matplotlib
  * Interfaces to powerful direct and iterative linear solvers

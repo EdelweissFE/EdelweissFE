@@ -47,4 +47,4 @@ def printDocumentation(module):
     except ModuleNotFoundError as e:
         print(e)
     except AttributeError as e:
-        print("documentation for module {:} not found".format(module))
+        print("documentation for module {:} not found:".format(module), str(e))

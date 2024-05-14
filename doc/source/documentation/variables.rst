@@ -6,13 +6,13 @@ FieldVariables, i.e., variables associated with spatial positions,
 and scalar variables, not associated with a spatial position.
 The latter may be used for, e.g., Lagrangian multipliers.
 
-Relevant modules: 
+Relevant modules:
 
  * ``edelweissfe.variables.fieldvariable``
  * ``edelweissfe.variables.scalarvariable``
 
 .. automodule:: edelweissfe.variables.fieldvariable
-   :members: 
+   :members:
 
 .. automodule:: edelweissfe.variables.scalarvariable
-   :members: 
+   :members:

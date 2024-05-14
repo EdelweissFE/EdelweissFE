@@ -21,7 +21,7 @@ create=perElement, elSet=all,  name=stress,        result=stress,      quadratur
 create=perElement, elSet=all,  name=strain,        result=strain,      quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 
 *output, type=ensight, name=esExport
-create=perNode,     fieldOutput=displacement 
+create=perNode,     fieldOutput=displacement
 create=perElement,  fieldOutput=stress
 create=perElement,  fieldOutput=strain
 configuration, overwrite=yes

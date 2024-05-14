@@ -32,11 +32,9 @@ Created on Thu Apr 13 14:08:32 2017
 """
 
 
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.models.femodel import FEModel
 import numpy as np
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
 
 class OutputManager(OutputManagerBase):

@@ -4,11 +4,11 @@
 *section, name=section1, thickness=1.0, material=mat, type=plane
 all
 
-*job, name=cps8rnljob, domain=2d, 
+*job, name=cps8rnljob, domain=2d,
 *solver, solver=NIST, name=theSolver
 *fieldOutput
-create=perNode, name=RFRight, nSet=right, field=displacement, result=P, 
-create=perNode, name=displacement, elSet=all, field=displacement, result=U, 
+create=perNode, name=RFRight, nSet=right, field=displacement, result=P,
+create=perNode, name=displacement, elSet=all, field=displacement, result=U,
 create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=0:4, f(x)=' mean(x, axis=1) '
 create=perElement, name=strain, elSet=all, result=strain, quadraturePoint=0:4, f(x)=' mean(x, axis=1) '
 
@@ -21,12 +21,12 @@ create=perElement, fieldOutput=strain
 create=perElement, fieldOutput=stress
 configuration, overwrite=yes
 
-*step, solver=theSolver, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, 
+*step, solver=theSolver, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25,
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 1=-1
 
-*nSet, nSet=left, 
+*nSet, nSet=left,
 1, 8, 15, 22, 32, 50, 63
 *nSet, nSet=right
 7, 14, 21, 28, 46, 59, 72

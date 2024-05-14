@@ -60,7 +60,7 @@ dirichlet, name=top, nSet=top,      field=displacement, 3=-2.0
 dirichlet, name=right, nSet=right,      field=displacement, 1=-2.0
 dirichlet, name=front, nSet=front,      field=displacement, 2=-2.0
 
-*output, type=meshPlot, 
+*output, type=meshPlot,
 figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=lnp, y=v
 figure=2, axSpec=111, c=red, ls=dashed, create=xyData, x=p, y=epsv
 

@@ -1,7 +1,7 @@
 *include, input=mesh.inp
 
-*material, name=stvenantkirchhoffisotropic, id=le, 
-30000.0, 0.15 
+*material, name=stvenantkirchhoffisotropic, id=le,
+30000.0, 0.15
 
 *section, name=section1, material=le, type=solid
 all
@@ -24,4 +24,4 @@ configuration, overwrite=yes
 *step, solver=theSolver, maxInc=2e-1, minInc=1e-4, maxNumInc=1000, maxIter=10
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
-dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=3.141,  
+dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=3.141,

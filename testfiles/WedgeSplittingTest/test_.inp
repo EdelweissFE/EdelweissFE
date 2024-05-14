@@ -14049,37 +14049,37 @@
     1,  7100,     1
 *Elset, elset=Set-Complete, generate=True
     1,  6940,     1
-*Nset, nset=Set-BCBottom, 
+*Nset, nset=Set-BCBottom,
   6,  8, 10, 11, 13
-*Elset, elset=Set-BCBottom, 
+*Elset, elset=Set-BCBottom,
  120, 127, 128, 132
-*Nset, nset=Set-PointNotchL, 
+*Nset, nset=Set-PointNotchL,
  6592,
-*Nset, nset=Set-PointNotchR, 
+*Nset, nset=Set-PointNotchR,
  6595,
-*Nset, nset=Set-PointLoadL, 
+*Nset, nset=Set-PointLoadL,
  1844,
-*Nset, nset=Set-PointLoadR, 
+*Nset, nset=Set-PointLoadR,
  365,
-*Nset, nset=Set-PointLoad, 
+*Nset, nset=Set-PointLoad,
  1844, 365
-*Nset, nset=Set-PressureLeft, 
+*Nset, nset=Set-PressureLeft,
    21, 1840, 1841, 1842, 1843, 1844, 1845, 1846, 1847
 *Elset, elset=Set-PressureLeft,  generate=True
  2223,  2398,    25
-*Nset, nset=Set-PressureRight, 
+*Nset, nset=Set-PressureRight,
   24,  29, 362, 363, 364, 365, 366, 367, 368
 *Elset, elset=Set-PressureRight,  generate=True
  1449,  1624,    25
-*Nset, nset=_PickedSet17, 
+*Nset, nset=_PickedSet17,
  1,
-*Nset, nset=_PickedSet18,  
+*Nset, nset=_PickedSet18,
    21, 1840, 1841, 1842, 1843, 1844, 1845, 1846, 1847
 *Elset, elset=_PickedSet18,  generate=True
  2223,  2398,    25
-*Nset, nset=_PickedSet19, 
+*Nset, nset=_PickedSet19,
  2,
-*Nset, nset=_PickedSet20,  
+*Nset, nset=_PickedSet20,
   24,  29, 362, 363, 364, 365, 366, 367, 368
 *Elset, elset=_PickedSet20,  generate=True
  1449,  1624,    25
@@ -14091,7 +14091,7 @@
 _Surf-PressureL_S2, 2
 *Surface, type=ELEMENT, name=Surf-PressureR
 _Surf-PressureR_S4, 4
-*Nset, nset=Set-PointNotch, 
+*Nset, nset=Set-PointNotch,
  6592, 6595
 ** Constraint: Constraint-1
 ***Rigid Body, ref node=_PickedSet17, tie nset=_PickedSet18
@@ -14099,36 +14099,36 @@ _Surf-PressureR_S4, 4
 ***Rigid Body, ref node=_PickedSet19, tie nset=_PickedSet20
 
 ***material, name=UntereggerRockMassNonLocal, id=urmnl,
-*****include, input=identifiedParameters_GSI100.inp 
-*****include, input=identifiedParameters_GSI40.inp 
-*****include, input=identifiedParameters_GSI100_h015.inp 
-*****include, input=identifiedParameters_GSI40_h015_neu.inp 
-*****include, input=identifiedParameters_GSI40_h030_neu.inp 
+*****include, input=identifiedParameters_GSI100.inp
+*****include, input=identifiedParameters_GSI40.inp
+*****include, input=identifiedParameters_GSI100_h015.inp
+*****include, input=identifiedParameters_GSI40_h015_neu.inp
+*****include, input=identifiedParameters_GSI40_h030_neu.inp
 ****** units in N and mm
-****** ,  E             nu          fcu         m0            e       mg1          fcy         Ah         
-**56665,           0.2040,  	41.60,    	11.95,  	    0.51,   9.943,   	29.53,  0.004467   
-********   Bh          Ch          Dh      Gh      As     Bs           GSI   D 
+****** ,  E             nu          fcu         m0            e       mg1          fcy         Ah
+**56665,           0.2040,  	41.60,    	11.95,  	    0.51,   9.943,   	29.53,  0.004467
+********   Bh          Ch          Dh      Gh      As     Bs           GSI   D
 **1e-05,     8.817,  	 1e-6,    	0,  	15,     2.0,        100,   0
-******** omegaMax, nonlocalRadius nonlocalweight              epsilonF   
-**0.999999,   2.0,        1.050,     6.5815e-02 
+******** omegaMax, nonlocalRadius nonlocalweight              epsilonF
+**0.999999,   2.0,        1.050,     6.5815e-02
 
 *material, name=UntereggerRockMassNonLocal, id=urmnl,
-***include, input=identifiedParameters_GSI100.inp 
-***include, input=identifiedParameters_GSI40.inp 
-***include, input=identifiedParameters_GSI100_h015.inp 
-***include, input=identifiedParameters_GSI40_h015_neu.inp 
-***include, input=identifiedParameters_GSI40_h030_neu.inp 
+***include, input=identifiedParameters_GSI100.inp
+***include, input=identifiedParameters_GSI40.inp
+***include, input=identifiedParameters_GSI100_h015.inp
+***include, input=identifiedParameters_GSI40_h015_neu.inp
+***include, input=identifiedParameters_GSI40_h030_neu.inp
 **** units in N and mm
-**** ,  E             nu          fcu         m0            e       mg1          fcy         Ah         
-    **15000,           0.2040,  	10.00,    	11.95,  	    0.51,   9.943,   	10.00,  0.004467   
-    22000,           0.15,  	20.00,    	      6.5,  	    0.51,   5.0,   	13.00,  0.004467   
-**56665,           0.2040,  	41.60,    	11.95,  	    0.51,   9.943,   	29.53,  0.004467   
-******   Bh          Ch          Dh      Gh      As     Bs           GSI   D 
+**** ,  E             nu          fcu         m0            e       mg1          fcy         Ah
+    **15000,           0.2040,  	10.00,    	11.95,  	    0.51,   9.943,   	10.00,  0.004467
+    22000,           0.15,  	20.00,    	      6.5,  	    0.51,   5.0,   	13.00,  0.004467
+**56665,           0.2040,  	41.60,    	11.95,  	    0.51,   9.943,   	29.53,  0.004467
+******   Bh          Ch          Dh      Gh      As     Bs           GSI   D
   1e-05,     20,  	 1e-6,    	0,  	15,     2.0,        100,   0
 **1e-05,     8.817,  	 1e-6,    	0,  	15,     10.0,        100,   0
-****** omegaMax, nonlocalRadius nonlocalweight              epsilonF   
-**     0.999999,   2.0,        1.05,     4e-04 
-     0.99,   4.0,        1.05,     8e-04 
+****** omegaMax, nonlocalRadius nonlocalweight              epsilonF
+**     0.999999,   2.0,        1.05,     4e-04
+     0.99,   4.0,        1.05,     8e-04
 *section, name=sectionAll, thickness=100.00, material=urmnl, type=plane
 Set-Complete
 
@@ -14154,7 +14154,7 @@ name=Force_SPnew, nSet=Set-PointLoadL,  field=displacement, result=P, saveHistor
 ***constraint, type=linearizedRigidBody, name=rb2
 **nSet=_PickedSet20,
 **referencePoint=_PickedSet19
-*output, type=meshPlot, 
+*output, type=meshPlot,
 figure=1, create=xyData,  export=True, label=FSP_CMOD_medium_E22000_epsF8e-4_fcu20MPa_nu0_15_mg1_5_m0_6_5_l4mm_BC10mm_thick100mm_allCycles_looseTol_pointLoad, x=Displacement_NotchNew, y=Force_SPnew, f(x)='sum(abs(x[:,:,0]), axis=1)', f(y)='sum(y[:,:,0], axis=1)'
 
 
@@ -14176,8 +14176,8 @@ dirichlet, name=bottom_h, nSet=Set-BCBottom, field=displacement, 1=0.0
 dirichlet, name=bottom_v, nSet=Set-BCBottom, field=displacement, 2=0.0
 nodeforces, name=cloadRight, nSet=Set-PointLoadR, field=displacement, 1=100
 nodeforces, name=cloadLeft, nSet=Set-PointLoadL, field=displacement, 1=-100
-indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.111, 
-**indirectcontrol, dof1=' nodes[260].fields["displacement"][0] ', dof2=' nodes[521].fields["displacement"][0] ', L=+0.175, 
+indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.111,
+**indirectcontrol, dof1=' nodes[260].fields["displacement"][0] ', dof2=' nodes[521].fields["displacement"][0] ', L=+0.175,
 
 *step, maxInc=5e-3, minInc=1e-7
 **options, category=NISTArcLength, arcLengthController=off
@@ -14193,7 +14193,7 @@ options, category=NISTArcLength, arcLengthController=indirectcontrol, extrapolat
 ** stopCondition = 'sum(fieldOutputs["Force_SP"][:,0])>=6.0'
 nodeforces, name=cloadRight, nSet=Set-PointLoadR, field=displacement, 1=100
 nodeforces, name=cloadLeft, nSet=Set-PointLoadL, field=displacement, 1=-100
-indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.128, 
+indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.128,
 
 *step, maxInc=5e-3, minInc=1e-7
 **options, category=NISTArcLength, arcLengthController=off
@@ -14209,7 +14209,7 @@ options, category=NISTArcLength, arcLengthController=indirectcontrol, extrapolat
 ** stopCondition = 'sum(fieldOutputs["Force_SP"][:,0])>=6.0'
 nodeforces, name=cloadRight, nSet=Set-PointLoadR, field=displacement, 1=100
 nodeforces, name=cloadLeft, nSet=Set-PointLoadL, field=displacement, 1=-100
-indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.151, 
+indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.151,
 
 *step, maxInc=5e-3, minInc=1e-7
 **options, category=NISTArcLength, arcLengthController=off
@@ -14225,7 +14225,7 @@ options, category=NISTArcLength, arcLengthController=indirectcontrol, extrapolat
 ** stopCondition = 'sum(fieldOutputs["Force_SP"][:,0])>=6.0'
 nodeforces, name=cloadRight, nSet=Set-PointLoadR, field=displacement, 1=100
 nodeforces, name=cloadLeft, nSet=Set-PointLoadL, field=displacement, 1=-100
-indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.175, 
+indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.175,
 
 *step, maxInc=5e-3, minInc=1e-7
 **options, category=NISTArcLength, arcLengthController=off
@@ -14241,7 +14241,7 @@ options, category=NISTArcLength, arcLengthController=indirectcontrol, extrapolat
 ** stopCondition = 'sum(fieldOutputs["Force_SP"][:,0])>=6.0'
 nodeforces, name=cloadRight, nSet=Set-PointLoadR, field=displacement, 1=100
 nodeforces, name=cloadLeft, nSet=Set-PointLoadL, field=displacement, 1=-100
-indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.204, 
+indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.204,
 
 *step, maxInc=5e-3, minInc=1e-7
 **options, category=NISTArcLength, arcLengthController=off
@@ -14257,5 +14257,5 @@ options, category=NISTArcLength, arcLengthController=indirectcontrol, extrapolat
 ** stopCondition = 'sum(fieldOutputs["Force_SP"][:,0])>=6.0'
 nodeforces, name=cloadRight, nSet=Set-PointLoadR, field=displacement, 1=100
 nodeforces, name=cloadLeft, nSet=Set-PointLoadL, field=displacement, 1=-100
-indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.300, 
+indirectcontrol, dof1=' nodes[1844].fields["displacement"][0] ', dof2=' nodes[365].fields["displacement"][0] ', L=+0.300,
 

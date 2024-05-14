@@ -29,6 +29,14 @@
 
 # @author: Matthias Neuner
 
+import numpy as np
+
+from edelweissfe.config.phenomena import getFieldSize
+from edelweissfe.constraints.base.constraintbase import ConstraintBase
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.misc import convertLinesToStringDictionary
+
 """
 A penalty based constraint used for constraining nodal values
 of a node set to be equal.
@@ -40,14 +48,6 @@ documentation = {
     "penalty": "The numerical penalty value.",
     "nSet": "The node set to be constrained.",
 }
-
-import numpy as np
-
-from edelweissfe.config.phenomena import getFieldSize
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.constraints.base.constraintbase import ConstraintBase
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.timesteppers.timestep import TimeStep
 
 
 class Constraint(ConstraintBase):
@@ -86,8 +86,15 @@ class Constraint(ConstraintBase):
     def nDof(self) -> int:
         return self._nDof
 
-    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, K: np.ndarray, timeStep: TimeStep):
-        if self.active == False:
+    def applyConstraint(
+        self,
+        U_np: np.ndarray,
+        dU: np.ndarray,
+        PExt: np.ndarray,
+        K: np.ndarray,
+        timeStep: TimeStep,
+    ):
+        if not self.active:
             return
 
         values = U_np[self.indices_component]

@@ -31,25 +31,30 @@ Created on Wed Jun 14 21:40:55 2017
 @author: Matthias Neuner
 """
 
-import os, sys
+import argparse
+import os
+import sys
+from timeit import default_timer as timer
 
 import matplotlib
-
-matplotlib.use("Agg")
+import numpy as np
+from rich import print
 
 from edelweissfe.drivers.inputfiledrivensimulation import finiteElementSimulation
 from edelweissfe.utils.inputfileparser import parseInputFile
-import numpy as np
-import argparse
-from timeit import default_timer as timer
-from rich import print
-import rich
+
+matplotlib.use("Agg")
 
 
 def main():
     parser = argparse.ArgumentParser(description="validation script for FE analyses")
     parser.add_argument("testdirectory", help="The directory containing the testfiles")
-    parser.add_argument("--create", dest="create", action="store_true", help="create reference solutions")
+    parser.add_argument(
+        "--create",
+        dest="create",
+        action="store_true",
+        help="create reference solutions",
+    )
     parser.add_argument(
         "--tests",
         help="comma-separated list (without whitespace inbetween) with names of analyzed test files, "
@@ -88,10 +93,10 @@ def main():
             model, fieldOutputController = finiteElementSimulation(inputFile, verbose=False, suppressPlots=True)
             toc = timer()
 
-            U = np.hstack(
-                [f["U"].flatten() for f in model.nodeFields.values()]
-                + [v.value for v in model.scalarVariables.values()]
-            ).flatten()
+            u = [f["U"].flatten() for f in model.nodeFields.values()]
+            sv = [v.value for v in model.scalarVariables.values()]
+
+            U = np.hstack(u + sv).flatten()
 
             if not args.create:
                 UReference = np.loadtxt(referenceSolutionFile)

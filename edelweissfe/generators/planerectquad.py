@@ -46,12 +46,20 @@ A mesh generator, for rectangular geometries and structured quad meshes:
       | |__|__|__|__|  V
     x0|_____
       y0
-  
+
 nSets, elSets, surface : 'name'_top, _bottom, _left, _right, ...
 are automatically generated
 
 Datalines:
 """
+
+import numpy as np
+
+from edelweissfe.config.elementlibrary import getElementClass
+from edelweissfe.points.node import Node
+from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.sets.nodeset import NodeSet
+from edelweissfe.utils.misc import convertLinesToStringDictionary
 
 documentation = {
     "x0": "(optional) origin at x axis",
@@ -63,15 +71,6 @@ documentation = {
     "elType": "type of element",
 }
 
-from edelweissfe.points.node import Node
-from edelweissfe.sets.elementset import ElementSet
-from edelweissfe.sets.nodeset import NodeSet
-from edelweissfe.config.elementlibrary import getElementClass
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.models.femodel import FEModel
-
-import numpy as np
-
 
 def generateModelData(generatorDefinition, model, journal):
     options = generatorDefinition["data"]
@@ -82,7 +81,7 @@ def generateModelData(generatorDefinition, model, journal):
     x0 = float(options.get("x0", 0.0))
     y0 = float(options.get("y0", 0.0))
     h = float(options.get("h", 1.0))
-    l = float(options.get("l", 1.0))
+    l = float(options.get("l", 1.0))  # noqa: E741
     nX = int(options.get("nX", 10))
     nY = int(options.get("nY", 10))
     elType = getElementClass(options.get("elProvider", None))

@@ -24,8 +24,8 @@ all
 *solver, solver=NISTParallel, name=theSolver
 
 *fieldOutput
-create=perNode, name=Displacement,      elSet=all,           field=displacement, result=U, 
-create=perNode, name=DisplacementN,      nSet=all,           field=displacement, result=U, 
+create=perNode, name=Displacement,      elSet=all,           field=displacement, result=U,
+create=perNode, name=DisplacementN,      nSet=all,           field=displacement, result=U,
 create=perNode, name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 create=perNode, name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 create=perElement, name=E,                 elSet=all,          result=EStatic,  quadraturePoint=1, f(x)= 'x[0]', saveHistory=True
@@ -34,15 +34,15 @@ create=perElement, name=E,                 elSet=all,          result=EStatic,  
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, 
+*output, type=ensight,
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 **create=perNode, fieldOutput=Nonlocal Damage
 
 *output, type=meshPlot
-figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', label=Neuner et al. (24h), 
+figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', label=Neuner et al. (24h),
 figure=1, axSpec=122, create=perNode, fieldOutput=DisplacementN, f(x)='x[:,1]', label=U
-figure=2, axSpec=111, create=xyData,  y=E, x=time,  label=E, 
+figure=2, axSpec=111, create=xyData,  y=E, x=time,  label=E,
 
 *configurePlots
 figure=1, axSpec=121, flipY=True, yLabel=$\\varepsilon\\thinspace$(-), xLabel=$t\\thinspace$(h)

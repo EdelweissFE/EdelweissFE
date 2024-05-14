@@ -30,12 +30,10 @@
 # @author: Matthias Neuner
 
 import numpy as np
-from edelweissfe.config.phenomena import phenomena, getFieldSize
 
 from edelweissfe.points.node import Node
-from edelweissfe.sets.nodeset import NodeSet
 from edelweissfe.sets.elementset import ElementSet
-from edelweissfe.utils.meshtools import extractNodesFromElementSet
+from edelweissfe.sets.nodeset import NodeSet
 
 
 class NodeFieldSubset:
@@ -217,13 +215,13 @@ class NodeFieldSubset(NodeField):
         list[Node]
             The list of subset nodes.
         """
-        if type(subset) == Node:
+        if type(subset) is Node:
             nodeCandidates = [
                 subset,
             ]
-        elif type(subset) == ElementSet:
+        elif type(subset) is ElementSet:
             nodeCandidates = subset.extractNodeSet()
-        elif type(subset) == NodeSet:
+        elif type(subset) is NodeSet:
             nodeCandidates = subset
         else:
             raise Exception("Invalid subset")

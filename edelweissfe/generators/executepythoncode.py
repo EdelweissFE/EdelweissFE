@@ -34,9 +34,6 @@ Directly execute Python code to create the model tree.
 
 documentation = {}
 
-import os
-from edelweissfe.models.femodel import FEModel
-
 
 def generateModelData(generatorDefinition, model, journal):
     codeLines = "\n".join(generatorDefinition["data"])

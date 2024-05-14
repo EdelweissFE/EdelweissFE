@@ -1,4 +1,4 @@
-Field outputs 
+Field outputs
 =============
 
 Relevant module: ``edelweissfe.utils.fieldoutput``

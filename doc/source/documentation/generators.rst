@@ -27,7 +27,7 @@ Relevant module ``edelweissfe.generators.boxgen``
 Relevant module ``edelweissfe.generators.planerectquad``
 
 .. automodule:: edelweissfe.generators.planerectquad
-   :members: __doc__, 
+   :members: __doc__,
 
 .. pprint:: edelweissfe.generators.planerectquad.documentation
    :caption: Options:
@@ -51,7 +51,7 @@ Relevant module ``edelweissfe.generators.cubit``
     :language: edelweiss
     :caption: Example: ``testfiles/CubitGen/test.inp``
 
-``findclosestnode`` - Find the closest node 
+``findclosestnode`` - Find the closest node
 -------------------------------------------
 
 Relevant module ``edelweissfe.generators.findclosestnode``

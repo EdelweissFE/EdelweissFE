@@ -25,6 +25,10 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+
 """
 Writes the (generated) mesh data to a file.
 
@@ -38,11 +42,6 @@ Writes the (generated) mesh data to a file.
 documentation = {
     "filename": "(optional), name of the file to write to; default: 'jobname'_mesh.inc",
 }
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.utils.math import createMathExpression
-from edelweissfe.models.femodel import FEModel
 
 
 class OutputManager(OutputManagerBase):

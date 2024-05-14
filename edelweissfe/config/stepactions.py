@@ -29,15 +29,15 @@
 
 # @author: Matthias Neuner
 """
-Step actions define actions run during a simulation. 
-They are defined within a ``*step`` definition, line by line, 
+Step actions define actions run during a simulation.
+They are defined within a ``*step`` definition, line by line,
 by specifying their ``name`` and a list of ``option=value``, for example
 
 .. code-block:: edelweiss
 
-    *step, jobName=myJob, 
+    *step, jobName=myJob,
         dirichlet, name=bottom,   nSet=bottom,   field=displacement, 2=0, 1=0
-        dirichlet, name=rightTop, nSet=rightTop, field=displacement, 2=0, 
+        dirichlet, name=rightTop, nSet=rightTop, field=displacement, 2=0,
         distributedload, name=dload1, surface=top,  type=pressure, magnitude=10, f(t)=t*2
         distributedload, name=dload2, surface=left, type=pressure, magnitude=50, f(t)=t
 """

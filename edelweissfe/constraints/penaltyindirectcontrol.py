@@ -28,6 +28,14 @@
 # Created on Sun May 21 11:34:35 2017
 
 # @author: Matthias Neuner
+
+import numpy as np
+import sympy as sp
+
+from edelweissfe.constraints.base.constraintbase import ConstraintBase
+from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.misc import convertLinesToStringDictionary, strtobool
+
 """
 A penalty based constraint used for indirect (displacement) control.
 """
@@ -41,18 +49,8 @@ documentation = {
     "length": "The value of the constraint (e.g., CMOD)",
     "penaltyStiffness": "The stiffness for formulating the constraint",
     "offset": "(Optional) a correction value for the computation of the constraint (e.g, initial displacement)",
-    "normalizeLoad": "(Optional) normalize the applied force per node wrt. the number of nodes, i.e., apply a load irrespective of the total number of nodes in ``loadNSet``",
+    "normalizeLoad": "(Optional) normalize the applied force per node wrt. the number of nodes, i.e., apply a load irrespective of the total number of nodes in ``loadNSet``",  # noqa: E501
 }
-
-import numpy as np
-import itertools
-
-from edelweissfe.config.phenomena import getFieldSize
-from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.utils.misc import convertLinesToStringDictionary, strtobool
-from edelweissfe.utils.exceptions import WrongDomain
-from edelweissfe.constraints.base.constraintbase import ConstraintBase
-from edelweissfe.sets.nodeset import NodeSet
 
 
 class Constraint(ConstraintBase):
@@ -75,7 +73,7 @@ class Constraint(ConstraintBase):
             self.loadVector *= 1.0 / len(self.loadNSet)
 
         self.penaltyStiffness = float(definition["penaltyStiffness"])
-        self.l = float(definition["length"])
+        self.length = float(definition["length"])
 
         if "f(t)" in definition:
             t = sp.symbols("t")
@@ -124,7 +122,7 @@ class Constraint(ConstraintBase):
         return self._nDof
 
     def applyConstraint(self, U_np, dU, PExt, K, timeStep: TimeStep):
-        if self.active == False:
+        if not self.active:
             return
 
         sBL = self.startBlock_loadNodes
@@ -134,7 +132,7 @@ class Constraint(ConstraintBase):
 
         U_c = U_np[sBC:eBC]
 
-        L = self.l * self.amplitude(timeStep.stepProgress)
+        L = self.length * self.amplitude(timeStep.stepProgress)
 
         cVector = self.cVector
 

@@ -1,6 +1,6 @@
 *job, name=job, domain=3d
 
-*solver, solver=NISTPArcLength, name=NISTPArcLen 
+*solver, solver=NISTPArcLength, name=NISTPArcLen
 
 *modelGenerator, generator=boxGen, name=gen
 lX     = 100
@@ -12,9 +12,9 @@ nZ     = 1
 elType = GC3D8
 
 *material, name=gcdp, id=concrete
-**E         nu      fcy         fcu         fbu         ftu         Df          Ah        
-100.0,      0.00,   10,         30,         35,         3.00,       0.85,       0.12, 
-**Bh        Ch      Dh          As          softmod     l           m           omegaMax 
+**E         nu      fcy         fcu         fbu         ftu         Df          Ah
+100.0,      0.00,   10,         30,         35,         3.00,       0.85,       0.12,
+**Bh        Ch      Dh          As          softmod     l           m           omegaMax
 0.003,      2.0,    1e-6,       15.0,       .1,         2,          1.05,       1,
 **derivativeMethod, dTThresholdElasticStiffness
 1,                  1e-8
@@ -37,7 +37,7 @@ setfield,   name=omegaIni,  fieldOutput=alphaDWeak, value=1e-2, type=uniform
 options, category=Ensight, intermediateSaveInterval=1, minDTForOutput=0
 options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition='fieldOutputs["I1pMax"] > 0.01'
 
-indirectcontrol, dof1='model.nodeSets["IDC1"][0].fields["displacement"]', cVector1='[-1,0,0]', dof2='model.nodeSets["IDC2"][0].fields["displacement"]', cVector2='[1,0,0]', L=1., 
+indirectcontrol, dof1='model.nodeSets["IDC1"][0].fields["displacement"]', cVector1='[-1,0,0]', dof2='model.nodeSets["IDC2"][0].fields["displacement"]', cVector2='[1,0,0]', L=1.,
 
 dirichlet, name=leftX, nSet=gen_left,  field=displacement, 1=0.
 dirichlet, name=leftY, nSet=gen_left,  field=displacement, 2=0.
@@ -46,7 +46,7 @@ dirichlet, name=right, nSet=gen_right, field=displacement, 1=1.
 
 *fieldOutput
 name=displacement,    create=perNode, elSet=all, field=displacement, result=U
-name=nonlocal_damage, create=perNode, elSet=all, field=nonlocal damage, result=U 
+name=nonlocal_damage, create=perNode, elSet=all, field=nonlocal damage, result=U
 
 name=strain, create=perElement, elSet=all, result=strain, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'
 name=stress, create=perElement, elSet=all, result=stress, quadraturePoint=0:8, f(x)='np.mean(x,axis=1)'

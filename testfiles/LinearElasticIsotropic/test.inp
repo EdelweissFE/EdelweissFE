@@ -12,7 +12,7 @@
 
 *element, type=C3D8, provider=marmot
 ** We create a single hex8 element
-** ID       node IDs 
+** ID       node IDs
 1,      0,1,2,3,4,5,6,7
 
 *nSet, nSet=left

@@ -30,11 +30,12 @@
 
 import numpy as np
 
-from edelweissfe.utils.exceptions import CutbackRequest
 from edelweissfe.elements.base.baseelement import BaseElement
-from edelweissfe.elements.marmotsingleqpelement.marmotmaterialhypoelasticwrapper import MarmotMaterialHypoElasticWrapper
 from edelweissfe.elements.marmotsingleqpelement.marmotmaterialgradientenhancedhypoelasticwrapper import (
     MarmotMaterialGradientEnhancedHypoElasticWrapper,
+)
+from edelweissfe.elements.marmotsingleqpelement.marmotmaterialhypoelasticwrapper import (
+    MarmotMaterialHypoElasticWrapper,
 )
 
 marmotMaterialWrappers = {
@@ -45,7 +46,8 @@ marmotMaterialWrappers = {
 
 class MarmotMaterialWrappingElement(BaseElement):
     def __init__(self, materialType: str, elNumber: int):
-        """This element serves as a wrapper for MarmotMaterials, cf. `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_.
+        """This element serves as a wrapper for MarmotMaterials,
+        cf. `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_.
 
         It has a single quadrature point, and one (dummy) node.
         For interfacing with specific Marmot materials,
@@ -137,8 +139,6 @@ class MarmotMaterialWrappingElement(BaseElement):
     ):
         """
         Not used by this wrapper"""
-
-        pass
 
     def setMaterial(self, materialName: str, materialProperties: np.ndarray):
         """Assign a material and material properties to the underlying Wrapper.

@@ -29,36 +29,31 @@
 
 # @author: Matthias Neuner
 
+from time import time as getCurrentTime
+
 import numpy as np
+from numpy import ndarray
+from scipy.sparse import csr_matrix
+
+from edelweissfe.config.linsolve import getDefaultLinSolver, getLinSolverByName
+from edelweissfe.config.timing import createTimingDict
+from edelweissfe.constraints.base.constraintbase import ConstraintBase
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.numerics.csrgenerator import CSRGenerator
+from edelweissfe.numerics.dofmanager import DofManager, DofVector, VIJSystemMatrix
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+from edelweissfe.timesteppers.timestep import TimeStep
 from edelweissfe.utils.exceptions import (
+    ConditionalStop,
+    CutbackRequest,
+    DivergingSolution,
     ReachedMaxIncrements,
     ReachedMaxIterations,
     ReachedMinIncrementSize,
-    CutbackRequest,
-    DivergingSolution,
-    ConditionalStop,
     StepFailed,
 )
-from time import time as getCurrentTime
-from collections import defaultdict
-from edelweissfe.config.linsolve import getLinSolverByName, getDefaultLinSolver
-from edelweissfe.config.timing import createTimingDict
-from edelweissfe.config.phenomena import getFieldSize
-from edelweissfe.numerics.csrgenerator import CSRGenerator
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.numerics.dofmanager import DofManager, DofVector, VIJSystemMatrix
 from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.constraints.base.constraintbase import ConstraintBase
-from edelweissfe.config.phenomena import (
-    fieldCorrectionTolerance,
-    fluxResidualTolerance,
-    fluxResidualToleranceAlternative,
-)
-from edelweissfe.timesteppers.timestep import TimeStep
-from scipy.sparse import csr_matrix
-from numpy import ndarray
 
 
 class NIST:
@@ -141,7 +136,11 @@ class NIST:
             model.constraints.values(),
             model.nodeSets.values(),
         )
-        self.journal.message("total size of eq. system: {:}".format(self.theDofManager.nDof), self.identification, 0)
+        self.journal.message(
+            "total size of eq. system: {:}".format(self.theDofManager.nDof),
+            self.identification,
+            0,
+        )
 
         self.journal.printSeperationLine()
 
@@ -178,9 +177,9 @@ class NIST:
         criticalIter = step.criticalIter
         maxGrowingIter = step.maxGrowIter
 
-        nodes = model.nodes
-        elements = model.elements
-        constraints = model.constraints
+        # nodes = model.nodes
+        # elements = model.elements
+        # constraints = model.constraints
 
         U = self.theDofManager.constructDofVector()
         P = self.theDofManager.constructDofVector()
@@ -248,7 +247,8 @@ class NIST:
 
                     for man in outputmanagers:
                         man.finalizeFailedIncrement(
-                            statusInfoDict=statusInfoDict, currentComputingTimes=self.computationTimes
+                            statusInfoDict=statusInfoDict,
+                            currentComputingTimes=self.computationTimes,
                         )
 
                 except (ReachedMaxIterations, DivergingSolution) as e:
@@ -261,7 +261,8 @@ class NIST:
 
                     for man in outputmanagers:
                         man.finalizeFailedIncrement(
-                            statusInfoDict=statusInfoDict, currentComputingTimes=self.computationTimes
+                            statusInfoDict=statusInfoDict,
+                            currentComputingTimes=self.computationTimes,
                         )
 
                 else:
@@ -281,7 +282,9 @@ class NIST:
                     model.advanceToTime(timeStep.totalTime)
 
                     self.journal.message(
-                        "Converged in {:} iteration(s)".format(iterationCounter), self.identification, 1
+                        "Converged in {:} iteration(s)".format(iterationCounter),
+                        self.identification,
+                        1,
                     )
 
                     statusInfoDict["iters"] = iterationCounter
@@ -290,7 +293,8 @@ class NIST:
                     fieldOutputController.finalizeIncrement()
                     for man in outputmanagers:
                         man.finalizeIncrement(
-                            currentComputingTimes=self.computationTimes, statusInfoDict=statusInfoDict
+                            currentComputingTimes=self.computationTimes,
+                            statusInfoDict=statusInfoDict,
                         )
 
         except (ReachedMaxIncrements, ReachedMinIncrementSize):
@@ -487,7 +491,12 @@ class NIST:
         return PExt, K
 
     def computeBodyForces(
-        self, bodyForces: list[StepActionBase], U_np: DofVector, PExt: DofVector, K: VIJSystemMatrix, timeStep: TimeStep
+        self,
+        bodyForces: list[StepActionBase],
+        U_np: DofVector,
+        PExt: DofVector,
+        K: VIJSystemMatrix,
+        timeStep: TimeStep,
     ) -> tuple[DofVector, VIJSystemMatrix]:
         """Loop over all body forces loads acting on elements, and evaluate them.
         Assembles into the global external load vector and the system matrix.
@@ -597,7 +606,12 @@ class NIST:
         return R
 
     def checkConvergence(
-        self, R: DofVector, ddU: DofVector, F: DofVector, iterationCounter: int, residualHistory: dict
+        self,
+        R: DofVector,
+        ddU: DofVector,
+        F: DofVector,
+        iterationCounter: int,
+        residualHistory: dict,
     ) -> tuple[bool, dict]:
         """Check the convergence, individually for each field,
         similar to Abaqus based on the current total flux residual and the field correction
@@ -666,7 +680,10 @@ class NIST:
         if self.theDofManager.idcsOfScalarVariablesInDofVector:
             residualScalarVariables = max(np.abs(R[list(self.theDofManager.idcsOfScalarVariablesInDofVector.values())]))
             correction = (
-                np.linalg.norm(ddU[list(self.theDofManager.idcsOfScalarVariablesInDofVector.values())], np.inf)
+                np.linalg.norm(
+                    ddU[list(self.theDofManager.idcsOfScalarVariablesInDofVector.values())],
+                    np.inf,
+                )
                 if ddU is not None
                 else 0.0
             )
@@ -751,7 +768,8 @@ class NIST:
         spatialAveragedFluxes = dict.fromkeys(self.theDofManager.idcsOfFieldsInDofVector, 0.0)
         for field, nDof in self.theDofManager.nAccumulatedNodalFluxesFieldwise.items():
             spatialAveragedFluxes[field] = max(
-                1e-10, np.linalg.norm(F[self.theDofManager.idcsOfFieldsInDofVector[field]], 1) / nDof
+                1e-10,
+                np.linalg.norm(F[self.theDofManager.idcsOfFieldsInDofVector[field]], 1) / nDof,
             )
 
         return spatialAveragedFluxes
@@ -910,7 +928,13 @@ class NIST:
         return PExt, K
 
     def extrapolateLastIncrement(
-        self, extrapolation: str, timeStep: TimeStep, dU: DofVector, dirichlets: list, prevTimeStep: TimeStep, model
+        self,
+        extrapolation: str,
+        timeStep: TimeStep,
+        dU: DofVector,
+        dirichlets: list,
+        prevTimeStep: TimeStep,
+        model,
     ) -> tuple[DofVector, bool]:
         """Depending on the current setting, extrapolate the solution of the last increment.
 

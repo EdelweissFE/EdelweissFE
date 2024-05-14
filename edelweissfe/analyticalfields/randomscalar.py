@@ -28,6 +28,15 @@
 """Define a random field using the GSTools library.
 """
 
+import gstools
+import numpy as np
+
+from edelweissfe.analyticalfields.base.analyticalfieldbase import (
+    AnalyticalField as AnalyticalFieldBase,
+)
+from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
+from edelweissfe.utils.misc import convertLinesToStringDictionary
+
 documentation = {
     "model": "(Optional) default = Gaussian",
     "mean": "(Optional) default = 0.",
@@ -35,15 +44,6 @@ documentation = {
     "lengthScale": "(Optional) default = 10.",
     "seed": "(Optional) default = 0",
 }
-
-import numpy as np
-import sympy as sp
-import gstools
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.utils.misc import CaseInsensitiveDict
-from edelweissfe.analyticalfields.base.analyticalfieldbase import (
-    AnalyticalField as AnalyticalFieldBase,
-)
 
 
 class AnalyticalField(AnalyticalFieldBase):

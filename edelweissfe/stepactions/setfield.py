@@ -28,6 +28,11 @@
 # Created on Tue Feb 9 10:05:41 2021
 
 # @author: Matthias Neuner
+
+import numpy as np
+
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+
 """
 Set a field (via fieldOutput) to a predefined value.
 """
@@ -37,9 +42,6 @@ documentation = {
     "type": "'Const' or 'analyticalField'",
     "value": "Scalar value if type 'const'; name of analyticalField if type 'analyticalField'",
 }
-
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-import numpy as np
 
 
 class StepAction(StepActionBase):
@@ -52,7 +54,7 @@ class StepAction(StepActionBase):
         self.type = action["type"]
         self.value = action["value"]
 
-        if not self.type in ["uniform", "analyticalField"]:
+        if self.type not in ["uniform", "analyticalField"]:
             raise Exception("Invalid type: {}".format(self.type))
 
         if self.type == "analyticalField":
@@ -80,14 +82,15 @@ class StepAction(StepActionBase):
 
             if not currentResults.shape[-1] == newResult.shape[-1]:
                 self.journal.errorMessage(
-                    f"Dimension mismatch. Result '{self.fieldOutputName}' has length {currentResults.shape[-1]} but value has length {newResult.shape[-1]}",
+                    f"Dimension mismatch. Result '{self.fieldOutputName}' has length {currentResults.shape[-1]} but value has length {newResult.shape[-1]}",  # noqa: E501
                     self.name,
                 )
                 raise Exception
 
             currentResults[:] = newResult
             self.journal.message(
-                "Setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value), self.name
+                "Setting field {:} to uniform value {:}".format(self.fieldOutputName, self.value),
+                self.name,
             )
             self.fieldOutput.setResults(currentResults)
 

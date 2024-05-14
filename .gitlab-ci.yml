@@ -5,5 +5,7 @@ linting:
   stage: linting
   image: condaforge/mambaforge:22.9.0-2
   script:
-    - conda install black
+    - mamba install black isort flake8
+    - isort --profile black .
     - black --check . --line-length 120
+    - flake8 . --ignore=E203,E501 --extend-ignore=W503 --max-line-length=120

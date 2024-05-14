@@ -1,7 +1,7 @@
 ** *include, input=mesh_quad.inp
 ** *include, input=mesh_quad_fine.inp
 *include, input=mesh_lin.inp
-*material, name=GMNeoHooke, id=le, 
+*material, name=GMNeoHooke, id=le,
 3000.0, 0.15, 0.1, 10, 20, 1.499999999
 
 *section, name=section1, material=le, type=solid
@@ -14,20 +14,20 @@ referencePoint=center_front
 *job, name=c3d8job, domain=3d
 *solver, solver=NISTParallelForMarmotElements, name=theSolver
 *fieldOutput
-create=perNode, name=displacement, elSet=all, field=displacement, result=U, 
+create=perNode, name=displacement, elSet=all, field=displacement, result=U,
 create=perNode, name=reaction force, nSet=back, field=displacement, result=P, f(x)=' sum  ( x, axis=0 )'
 
 *output, type=ensight, name=ensightExport
 configuration, overwrite=True
-create=perNode, fieldOutput=displacement, 
+create=perNode, fieldOutput=displacement,
 
 *output, type=monitor, name=omegaMon
 fieldOutput=reaction force
 
 *step, solver=theSolver, maxInc=2e-1, minInc=1e-6, maxNumInc=1000, maxIter=20
-initializematerial, name=init, elSet=all 
+initializematerial, name=init, elSet=all
 dirichlet, name=rt,   nSet=back,         field=micro rotation, 1=0.0, 2=0, 3=0
 dirichlet, name=back,   nSet=back,         field=displacement, 1=0.0, 2=0, 3=0
 
 dirichlet, name=rf,   nSet=front,         field=micro rotation, 1=0.0, 2=3.141, 3=0
-dirichlet, name=rotRP,  nSet=center_front,   field=rotation, 2=3.141,  
+dirichlet, name=rotRP,  nSet=center_front,   field=rotation, 2=3.141,

@@ -28,6 +28,12 @@
 # Created on Thu May 12 18:35:44 2022
 
 # @author: Matthias Neuner
+
+import numpy as np
+
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+from edelweissfe.timesteppers.timestep import TimeStep
+
 """
 Indirect (displacement) controller for the NISTArcLength solver
 uses a ring to control the contraction, e.g., for tunneling simulations.
@@ -42,11 +48,6 @@ documentation = {
     "L": "Final distance (e.g. crack opening)",
     "exportCVector": "(Optional) file to export the computed c vector",
 }
-
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.timesteppers.timestep import TimeStep
-import numpy as np
-from edelweissfe.utils.math import evalModelAccessibleExpression
 
 
 class StepAction(StepActionBase):
@@ -85,9 +86,9 @@ class StepAction(StepActionBase):
         else:
             self.L = float(action["L"])
 
-        self.generateCVectorAndIndices(name, action, jobInfo, model, fieldOutputController, journal)
+        self.generateCVectorAndIndices(action, jobInfo, model, fieldOutputController, journal)
 
-    def generateCVectorAndIndices(self, name, action, jobInfo, model, fieldOutputController, journal):
+    def generateCVectorAndIndices(self, action, jobInfo, model, fieldOutputController, journal):
         contractionNSet = model.nodeSets[action["contractionNSet"]]
 
         nNodes = len(contractionNSet)

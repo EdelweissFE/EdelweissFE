@@ -25,8 +25,9 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from time import time
 from collections import defaultdict
+from time import time
+
 from prettytable import PrettyTable
 
 
@@ -138,7 +139,13 @@ def makePrettyTable(maxLevels: int = 4) -> PrettyTable:
     prettytable.field_names = ["function", "acc. runtime", "calls"]
     prettytable.align = "l"
 
-    for level, cat, time, calls in theTable:
-        prettytable.add_row(("{:}{:}".format(" " * level, cat), "{:}{:10.4f}s".format(" " * level, time), calls))
+    for level, cat, t, calls in theTable:
+        prettytable.add_row(
+            (
+                "{:}{:}".format(" " * level, cat),
+                "{:}{:10.4f}s".format(" " * level, t),
+                calls,
+            )
+        )
 
     return prettytable

@@ -27,32 +27,32 @@
 #  ---------------------------------------------------------------------
 """
 A mesh generator for cuboid geometries and structured hex meshes:
-    
+
 .. code-block:: console
 
-                          __ __ __ __                          
+                          __ __ __ __
                         /__/__/__/__/|    A                               back
-                       /__/__/__/__/ |    |                           top / 
+                       /__/__/__/__/ |    |                           top /
                       /__/__/__/__/ /|    | lY                         | /
                       |__|__|__|__|//|    | nY elements                |/
            y          |__|__|__|__|//|    |                    left----/----right
-           |          |__|__|__|__|//|    V                           /| 
-           |___x      |__|__|__|__|//|   /                           / |   
+           |          |__|__|__|__|//|    V                           /|
+           |___x      |__|__|__|__|//|   /                           / |
           /           |__|__|__|__|//   / lZ                        / bottom
-         z            |__|__|__|__|/   /  nZ elements           front             
-                                                                        
-                     <----lX-----> 
+         z            |__|__|__|__|/   /  nZ elements           front
+
+                     <----lX----->
                       nX elements
-    
-nSets, elSets, surface : 'name'_left, _right, _bottom, _top, _front, _back, _all, 
+
+nSets, elSets, surface : 'name'_left, _right, _bottom, _top, _front, _back, _all,
 elSets : 'name'_centralFrontToBack, _shearBandFrontToBack, _shearBandCenterFrontToBack
 are automatically generated
 
 .. code-block:: edelweiss
-    :caption: Generate meshes on the fly. Example: 
+    :caption: Generate meshes on the fly. Example:
 
     *job, name=job, domain=3d, solver=NIST
-    
+
     *modelGenerator, generator=boxGen, name=gen
         nX      =4
         nY      =8
@@ -62,6 +62,17 @@ are automatically generated
         lZ      =1
         elType  =C3D20R
 """
+
+from operator import attrgetter
+
+import numpy as np
+
+from edelweissfe.config.elementlibrary import getElementClass
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.points.node import Node
+from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.sets.nodeset import NodeSet
+from edelweissfe.utils.misc import convertLinesToStringDictionary
 
 documentation = {
     "x0": "(optional) origin at x axis",
@@ -75,17 +86,6 @@ documentation = {
     "nZ": "(optional) number of elements along z",
     "elType": "type of element",
 }
-
-from edelweissfe.points.node import Node
-from edelweissfe.sets.nodeset import NodeSet
-from edelweissfe.sets.elementset import ElementSet
-from edelweissfe.config.elementlibrary import getElementClass
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.models.femodel import FEModel
-
-from operator import attrgetter
-import numpy as np
-import os
 
 
 def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dict:
@@ -328,7 +328,8 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     getLength = np.vectorize(len)
     filterGrid = getLength(getFields(nG)) > 0
 
-    getFilteredNodes = lambda s: nG[s][filterGrid[s]]
+    def getFilteredNodes(s):
+        return nG[s][filterGrid[s]]
 
     nodeSets.append(NodeSet("{:}_top".format(name), getFilteredNodes(np.s_[:, -1, :])))
     nodeSets.append(NodeSet("{:}_bottom".format(name), getFilteredNodes(np.s_[:, 0, :])))
@@ -385,7 +386,10 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     elementSets.append(ElementSet("{:}_back".format(name), np.ravel(elGrid[:, :, 0])))
 
     elementSets.append(
-        ElementSet("{:}_centralFrontToBack".format(name), np.ravel(elGrid[int(nX / 2), int(nY / 2), 0:nZ]))
+        ElementSet(
+            "{:}_centralFrontToBack".format(name),
+            np.ravel(elGrid[int(nX / 2), int(nY / 2), 0:nZ]),
+        )
     )
 
     elementSets.append(ElementSet("{:}_centerSliceX".format(name), np.ravel(elGrid[int(nX / 2), :, :])))

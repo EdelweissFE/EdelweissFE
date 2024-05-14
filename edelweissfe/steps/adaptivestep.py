@@ -26,14 +26,13 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from collections import defaultdict
-from edelweissfe.steps.base.stepbase import StepBase
+from edelweissfe.journal.journal import Journal
 from edelweissfe.models.femodel import FEModel
+from edelweissfe.steps.base.stepbase import StepBase
 from edelweissfe.timesteppers.adaptivetimestepper import AdaptiveTimeStepper
 from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.journal.journal import Journal
 from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
+from edelweissfe.utils.fieldoutput import FieldOutputController
 
 
 class AdaptiveStep(StepBase):

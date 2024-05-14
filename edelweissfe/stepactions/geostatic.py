@@ -34,9 +34,9 @@
 Initialize materials to an geostatic stress state
 """
 
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 
 documentation = {
     "p1": "sig_x=sig_y=sig_z in first point",

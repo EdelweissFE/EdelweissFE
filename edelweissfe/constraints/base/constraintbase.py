@@ -1,8 +1,38 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#  ---------------------------------------------------------------------
+#
+#  _____    _      _              _         _____ _____
+# | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|
+# |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|
+# | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___
+# |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|
+#
+#
+#  Unit of Strength of Materials and Structural Analysis
+#  University of Innsbruck,
+#  2017 - today
+#
+#  Matthias Neuner matthias.neuner@uibk.ac.at
+#
+#  This file is part of EdelweissFE.
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#
+#  The full text of the license can be found in the file LICENSE.md at
+#  the top level directory of EdelweissFE.
+#  ---------------------------------------------------------------------
+
 from abc import ABC, abstractmethod
-from edelweissfe.variables.scalarvariable import ScalarVariable
-from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.models.femodel import FEModel
+
 import numpy as np
+
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.variables.scalarvariable import ScalarVariable
 
 
 class ConstraintBase(ABC):
@@ -16,8 +46,8 @@ class ConstraintBase(ABC):
         :func:`~ConstraintBase.getNumberOfAdditionalNeededScalarVariables` and
         :func:`~ConstraintBase.assignAdditionalScalarVariables`, which are called at the beginning of an analysis.
 
-        If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt (and the stiffness)
-        to be of the form
+        If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt
+        (and the stiffness) to be of the form
 
         .. code-block:: console
 
@@ -50,21 +80,15 @@ class ConstraintBase(ABC):
     def nodes(self) -> list:
         """The nodes this constraint is acting on."""
 
-        pass
-
     @property
     @abstractmethod
     def fieldsOnNodes(self) -> list:
         """The fields on the nodes this constraint is acting on."""
 
-        pass
-
     @property
     @abstractmethod
     def nDof(self) -> int:
         """The total number of degrees of freedom this constraint is associated with."""
-
-        pass
 
     def getNumberOfAdditionalNeededScalarVariables(
         self,
@@ -94,7 +118,14 @@ class ConstraintBase(ABC):
         self.scalarVariables = scalarVariables
 
     @abstractmethod
-    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, V: np.ndarray, timeStep: TimeStep):
+    def applyConstraint(
+        self,
+        U_np: np.ndarray,
+        dU: np.ndarray,
+        PExt: np.ndarray,
+        V: np.ndarray,
+        timeStep: TimeStep,
+    ):
         """Apply the constraint.  Add the contributions to the external load vector and the system matrix.
 
         Parameters
@@ -112,5 +143,3 @@ class ConstraintBase(ABC):
         time
             The current step and total time.
         """
-
-        pass

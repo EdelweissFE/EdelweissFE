@@ -26,9 +26,10 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
+from abc import ABC, abstractmethod
+
 import numpy as np
 
-from abc import ABC, abstractmethod
 from edelweissfe.models.femodel import FEModel
 
 
@@ -46,7 +47,6 @@ class AnalyticalField(ABC):
         model
             The dictionary containing the model tree.
         """
-        pass
 
     @abstractmethod
     def evaluateAtCoordinates(self, coordinates: np.ndarray):
@@ -62,5 +62,3 @@ class AnalyticalField(ABC):
         float
             The value of the field.
         """
-
-        pass

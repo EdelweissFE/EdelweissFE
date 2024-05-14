@@ -32,17 +32,18 @@
 Find the node closest to a given spatial position, and store it in an existing or new node set.
 """
 
-documentation = {"location": "The location of the node", "storeIn": "Store in this node set"}
+import numpy as np
 
-from edelweissfe.points.node import Node
-from edelweissfe.sets.nodeset import NodeSet
-from edelweissfe.utils.misc import convertLinesToStringDictionary
 from edelweissfe.journal.journal import Journal
 from edelweissfe.models.femodel import FEModel
-
+from edelweissfe.sets.nodeset import NodeSet
 from edelweissfe.utils.exceptions import WrongDomain
+from edelweissfe.utils.misc import convertLinesToStringDictionary
 
-import numpy as np
+documentation = {
+    "location": "The location of the node",
+    "storeIn": "Store in this node set",
+}
 
 identification = "findclosestnode"
 

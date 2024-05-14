@@ -1014,9 +1014,9 @@
 400, 605, 606, 612, 611, 569, 570, 576, 575
 *Nset, nset=left, generate=True
  577,  612,  1
-*Nset, nset=rBottom, 
+*Nset, nset=rBottom,
  6,
-*Nset, nset=rTop, 
+*Nset, nset=rTop,
  1,
 *Nset, nset=right, generate=True
   1,  36,   1

@@ -32,14 +32,19 @@ Created on Tue Jan  17 19:10:42 2017
 """
 
 import argparse
+import sys
+import warnings
+
 import matplotlib
 import numpy as np
-import sys
-from edelweissfe.drivers.inputfiledrivensimulation import finiteElementSimulation
-from edelweissfe.utils.inputfileparser import parseInputFile, printKeywords, printKeywordsRST
-from edelweissfe.utils.printdocumentation import printDocumentation
 
-import warnings
+from edelweissfe.drivers.inputfiledrivensimulation import finiteElementSimulation
+from edelweissfe.utils.inputfileparser import (
+    parseInputFile,
+    printKeywords,
+    printKeywordsRST,
+)
+from edelweissfe.utils.printdocumentation import printDocumentation
 
 warnings.simplefilter("always", DeprecationWarning)
 
@@ -54,10 +59,27 @@ def main():
     )
     parser.add_argument("--quiet", dest="verbose", action="store_false", help="suppress output")
     parser.add_argument("--noplot", dest="noplot", action="store_true", help="suppress plots")
-    parser.add_argument("--mplBackend", dest="mplBackend", default=None, type=str, help="define a matplotlib backend")
-    parser.add_argument("--output", dest="output", default=None, type=str, help="write the final solution to a file")
+    parser.add_argument(
+        "--mplBackend",
+        dest="mplBackend",
+        default=None,
+        type=str,
+        help="define a matplotlib backend",
+    )
+    parser.add_argument(
+        "--output",
+        dest="output",
+        default=None,
+        type=str,
+        help="write the final solution to a file",
+    )
     parser.add_argument("--keywords", dest="kw", action="store_true", help="print keywords")
-    parser.add_argument("--keywordsRST", dest="kwRST", action="store_true", help="print keywords in RST format")
+    parser.add_argument(
+        "--keywordsRST",
+        dest="kwRST",
+        action="store_true",
+        help="print keywords in RST format",
+    )
     parser.add_argument("--doc=module", dest="doc", help="print keywords")
     args = parser.parse_args()
 

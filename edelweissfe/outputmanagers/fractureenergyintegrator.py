@@ -28,11 +28,17 @@
 # Created on Tue Dec 17 08:26:01 2019
 
 # @author: Matthias Neuner
+
+import numpy as np
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.utils.math import createMathExpression
+
 """
 A simple integrator to compute the fracture energy by integrating a load-displacement curve.
 
 .. code-block:: edelweiss
-    :caption: Example: 
+    :caption: Example:
 
     *output, type=fractureenergyintegrator, jobName=myJob, name=gfi
         forceFieldOutput=RF, displacementFieldOutput=U, fractureArea='100.0*1.0'
@@ -43,12 +49,6 @@ documentation = {
     "displacementFieldOutput": "fieldOutput for displacement (with time history)",
     "fractureArea": "(math expression for) area of fracture",
 }
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.utils.math import createMathExpression
-
-import numpy as np
 
 
 class OutputManager(OutputManagerBase):
@@ -63,8 +63,8 @@ class OutputManager(OutputManagerBase):
         self.fieldOutputController = fieldOutputController
 
     def updateDefinition(self, **kwargs: dict):
-        self.fpF = fieldOutputController.fieldOutputs[kwargs["forceFieldOutput"]]
-        self.fpU = fieldOutputController.fieldOutputs[kwargs["displacementFieldOutput"]]
+        self.fpF = self.fieldOutputController.fieldOutputs[kwargs["forceFieldOutput"]]
+        self.fpU = self.fieldOutputController.fieldOutputs[kwargs["displacementFieldOutput"]]
         self.A = createMathExpression(kwargs["fractureArea"])(0.0)
         self.fractureEnergy = 0.0
 
@@ -89,4 +89,7 @@ class OutputManager(OutputManagerBase):
         self,
     ):
         self.fractureEnergy = np.trapz(self.fpF.getResultHistory(), x=self.fpU.getResultHistory()) / self.A
-        self.journal.message("integrated fracture energy: {:3.4f}".format(self.fractureEnergy), self.identification)
+        self.journal.message(
+            "integrated fracture energy: {:3.4f}".format(self.fractureEnergy),
+            self.identification,
+        )

@@ -8,7 +8,7 @@ elType=CPE4
 *material, name=ORDP, id=RockMat
 **Orthotropic Elastic
 **E1  |   E2  |   E3  |  nu12 | nu23 |  nu13 |  G12  |  G23  |  G13            ** G23 = 2*(1+nu23)/E2 ---> transverse isotropy
-8e3, 1.7e4, 1.7e4, 0.3, 0.25, 0.3, 4.56e3, 6.8e3, 4.56e3 
+8e3, 1.7e4, 1.7e4, 0.3, 0.25, 0.3, 4.56e3, 6.8e3, 4.56e3
 **Normal Vector Plane1
 **nx | ny | nz
 1,0,0
@@ -16,7 +16,7 @@ elType=CPE4
 **fcu | m0 |  e  |  mg1  |  fcy |  GFI |   Ah  |  Bh   |  Ch  |   Dh  | Gh  | As | Bs | GSI  |  D | omegaMax
 41.22,  1.767, 0.51,  1,   22.5,  0.5, 2e-2, 2.2e-2,   8.8,   1e-6,   0,   10,  2,   100,    0,    0.0
 **Anisotropic Parameter
-**c1 | c2 | c3 
+**c1 | c2 | c3
 0.5453, -0.4015, 0.479
 
 *section, name=section1, thickness=1.0, material=RockMat, type=plane
@@ -50,13 +50,13 @@ figure=1, axSpec=111, c=red, create=xyData, x=dispRight, y=RFLeft
 figure=2, axSpec=111, c=red, create=xyData, x=dispTop, y=RFBottom
 
 *step, solver=theSolver, maxInc=0.5
-dirichlet, name=left,   nSet=gen_left,   field=displacement,	1=0.0 
-dirichlet, name=bottom, nSet=gen_bottom, field=displacement, 	2=0.0 
+dirichlet, name=left,   nSet=gen_left,   field=displacement,	1=0.0
+dirichlet, name=bottom, nSet=gen_bottom, field=displacement, 	2=0.0
 geostatic, name=geo, elSet=all, p1=-10, h1=0, p2=-10, h2=30, xLateral=1.0, zLateral=1.0
 distributedload, name=dlRight, surface=gen_right, magnitude=10, f(t)=1, type=pressure
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure
 
-*step, solver=theSolver, maxInc=1e-2, 
+*step, solver=theSolver, maxInc=1e-2,
 dirichlet, name=top,  nSet=gen_top,   field=displacement, 2=-1
 **dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=-1
 

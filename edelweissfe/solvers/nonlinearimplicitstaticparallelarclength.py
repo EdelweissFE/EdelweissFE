@@ -33,17 +33,21 @@
 Replaces the NewtonRaphson scheme of the NISTParallel Solver.
 """
 
-from edelweissfe.solvers.nonlinearimplicitstaticparallel import NISTParallel
-
 import numpy as np
-from edelweissfe.utils.exceptions import ReachedMaxIterations, DivergingSolution, ConditionalStop
-from edelweissfe.utils.math import createModelAccessibleFunction
-from edelweissfe.numerics.dofmanager import DofVector, VIJSystemMatrix
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+
 from edelweissfe.models.femodel import FEModel
+from edelweissfe.numerics.dofmanager import DofVector, VIJSystemMatrix
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.solvers.nonlinearimplicitstaticparallel import NISTParallel
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.exceptions import (
+    ConditionalStop,
+    DivergingSolution,
+    ReachedMaxIterations,
+)
+from edelweissfe.utils.fieldoutput import FieldOutputController
+from edelweissfe.utils.math import createModelAccessibleFunction
 
 
 class NISTPArcLength(NISTParallel):
@@ -83,7 +87,10 @@ class NISTPArcLength(NISTParallel):
                     )
                     raise KeyError
             else:
-                self.journal.message("No ArcLengthController specified in current step", self.identification)
+                self.journal.message(
+                    "No ArcLengthController specified in current step",
+                    self.identification,
+                )
                 self.arcLengthController = None
                 self.dLambda = None
 
@@ -91,7 +98,9 @@ class NISTPArcLength(NISTParallel):
             if stopCondition:
                 # self.journal.message("St", self.identification)
                 self.checkConditionalStop = createModelAccessibleFunction(
-                    stopCondition, model=model, fieldOutputs=fieldOutputController.fieldOutputs
+                    stopCondition,
+                    model=model,
+                    fieldOutputs=fieldOutputController.fieldOutputs,
                 )
         else:
             self.journal.message("No ArcLengthController specified in current step", self.identification)
@@ -154,7 +163,7 @@ class NISTPArcLength(NISTParallel):
                 - the history of residuals per field
         """
 
-        if self.arcLengthController == None:
+        if self.arcLengthController is None:
             return super().solveIncrement(
                 U_n,
                 dU,
@@ -225,7 +234,13 @@ class NISTPArcLength(NISTParallel):
                 nodeForces, distributedLoads, bodyForces, U_np, P_0, K_0, zeroTimeStep
             )  # compute 'dead' deadloads, like gravity
             P_f, K_f = self.assembleLoads(
-                nodeForces, distributedLoads, bodyForces, U_np, P_f, K_f, referenceTimeStep
+                nodeForces,
+                distributedLoads,
+                bodyForces,
+                U_np,
+                P_f,
+                K_f,
+                referenceTimeStep,
             )  # compute 'dead' deadloads, like gravity
 
             P_f -= P_0  # and subtract the dead part, since we are only interested in the homogeneous linear part
@@ -337,7 +352,7 @@ class NISTPArcLength(NISTParallel):
 
         # incNumber, incrementSize, stepProgress, dT, stepTime, totalTime = increment
 
-        if dLambda == None:
+        if dLambda is None:
             # arclength control is inactive
             return super().extrapolateLastIncrement(extrapolation, timeStep, dU, dirichlets, prevTimeStep, model)
 
@@ -372,7 +387,7 @@ class NISTPArcLength(NISTParallel):
             The list of active step actions.
         """
 
-        if self.arcLengthController != None:
+        if self.arcLengthController is not None:
             for stepAction in stepActions["nodeforces"].values():
                 stepAction.applyAtStepEnd(model, stepMagnitude=self.Lambda)
             for stepAction in stepActions["distributedload"].values():

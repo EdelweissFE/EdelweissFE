@@ -38,16 +38,19 @@ Module meshplot divided into classes:
     * Outputmanager:
         creats the plotting specific for the defined keyword lines
 """
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-import numpy as np
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.utils.meshtools import transferElsetResultsToElset, extractNodeCoordinatesFromElset
-import edelweissfe.config.phenomena
-from edelweissfe.utils.math import createMathExpression
-import matplotlib.tri as mtri
-from matplotlib import colors
 from distutils.util import strtobool
+
+import matplotlib.tri as mtri
+import numpy as np
+from matplotlib import colors
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.utils.math import createMathExpression
+from edelweissfe.utils.meshtools import (
+    extractNodeCoordinatesFromElset,
+    transferElsetResultsToElset,
+)
 
 documentation = {
     "figure": "figure number, (default=1)",
@@ -140,7 +143,12 @@ class MeshPlot:
     def plotNodeLabels(self, labels, ax):
         """label nodes of elements"""
         for label in labels:
-            ax.annotate("%i" % label, xy=self.coordinates[label - 1, :], fontsize=6, textcoords="data")
+            ax.annotate(
+                "%i" % label,
+                xy=self.coordinates[label - 1, :],
+                fontsize=6,
+                textcoords="data",
+            )
 
     def plotElementLabels(self, ax, elementList):
         """label nodes of elements"""
@@ -150,13 +158,21 @@ class MeshPlot:
             for node in element.nodes:
                 xCenter += node.coordinates[0]
                 yCenter += node.coordinates[1]
-            ax.annotate("%i" % element.elNumber, xy=[xCenter / 4, yCenter / 4], fontsize=6, textcoords="data")
+            ax.annotate(
+                "%i" % element.elNumber,
+                xy=[xCenter / 4, yCenter / 4],
+                fontsize=6,
+                textcoords="data",
+            )
 
     def plotMeshGrid(self, ax, coordinateList):
         """plot grid of elements; so far only implemented for quads"""
         for element in coordinateList:
             ax.plot(
-                np.append(element[:, 0], element[0, 0]), np.append(element[:, 1], element[0, 1]), "k", linewidth=0.3
+                np.append(element[:, 0], element[0, 0]),
+                np.append(element[:, 1], element[0, 1]),
+                "k",
+                linewidth=0.3,
             )
         ax.set_xlim(self.xLimits)
         ax.set_ylim(self.yLimits)
@@ -216,7 +232,7 @@ class OutputManager(OutputManagerBase):
                 perNodeJob = {}
                 perNodeJob["fieldOutput"] = kwargs["fieldOutput"]
 
-                if type(perNodeJob["fieldOutput"].associatedSet) == ElementSet:
+                if type(perNodeJob["fieldOutput"].associatedSet) is ElementSet:
                     nSet = perNodeJob["fieldOutput"].associatedSet.extractNodeSet()
                 else:
                     raise Exception("perNode job must be defined on a perElement fieldOutput")
@@ -377,7 +393,10 @@ class OutputManager(OutputManagerBase):
                 resultsTarget = np.empty(shape)
                 resultsTarget[:] = np.nan
                 transferElsetResultsToElset(
-                    self.elSets["all"], perElementJob["fieldOutput"].elSet, resultsTarget, resultArray
+                    self.elSets["all"],
+                    perElementJob["fieldOutput"].elSet,
+                    resultsTarget,
+                    resultArray,
                 )
                 resultArray = resultsTarget
 
@@ -396,7 +415,9 @@ class OutputManager(OutputManagerBase):
 
             if meshOnlyJob["configuration"] == "deformed":
                 elCoordinatesListDeformed = extractNodeCoordinatesFromElset(
-                    self.elSets["all"], meshOnlyJob["warpBy"].getLastResult(), meshOnlyJob["scaleFactor"]
+                    self.elSets["all"],
+                    meshOnlyJob["warpBy"].getLastResult(),
+                    meshOnlyJob["scaleFactor"],
                 )
                 self.meshPlot.plotMeshGrid(ax, elCoordinatesListDeformed)
 
@@ -405,8 +426,8 @@ class OutputManager(OutputManagerBase):
                 self.meshPlot.plotMeshGrid(ax, elCoordinatesListUnDeformed)
 
         #        for configJob in self.configJobs:
-        ##            self.plotter.configAxes(**configJob)
-        ##
+        #            self.plotter.configAxes(**configJob)
+
         for saveJob in self.saveJobs:
             self.plotter.exportFigure(
                 saveJob["fileName"],

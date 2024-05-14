@@ -487,14 +487,14 @@ all
 
 *nSet, nSet=nSetLeft,  generate=True
  301,  315,    1
-*nSet, nSet=nSetRight, 
+*nSet, nSet=nSetRight,
   5,  10, 15
 
 *fieldOutput
 create=perNode, elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, name=esExport
-create=perNode, fieldOutput=displacement 
+create=perNode, fieldOutput=displacement
 configuration, overwrite=yes
 
 *step, solver=theSolver, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100

@@ -32,6 +32,13 @@
 Interface to Cubit. Generate mesh using Cubit .jou files.
 """
 
+import os
+import shlex
+
+from edelweissfe.generators.abqmodelconstructor import AbqModelConstructor
+from edelweissfe.utils.inputfileparser import parseInputFile
+from edelweissfe.utils.misc import convertLinesToStringDictionary, strtobool
+
 documentation = {
     "cubitCmd": "(Optional) Cubit executable; default=cubit",
     "jouFile": "Path to Cubit journal (.jou) file",
@@ -44,21 +51,12 @@ documentation = {
     "silent": "(Optional) hide Cubit output; default=False",
 }
 
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.utils.misc import strtobool
-from edelweissfe.utils.inputfileparser import parseInputFile
-from edelweissfe.generators.abqmodelconstructor import AbqModelConstructor
-from edelweissfe.models.femodel import FEModel
-
-import os
-import shlex
-
 
 def generateModelData(generatorDefinition, model, journal):
     options = generatorDefinition["data"]
     options = convertLinesToStringDictionary(options)
 
-    name = generatorDefinition.get("name", "cubit")
+    # name = generatorDefinition.get("name", "cubit")
 
     cubitCmd = options.get("cubitCmd", "cubit")
     jouFile = options.get("jouFile")

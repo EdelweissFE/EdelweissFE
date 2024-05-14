@@ -34,37 +34,23 @@ Heart is the ``*job`` keyword, which defines the spatial dimension
 A ``*job`` definition consists of multiple ``*steps``, associated with that job.
 """
 
-from edelweissfe.models.femodel import FEModel, printPrettyModelSummary
-from collections import OrderedDict, defaultdict
-from edelweissfe.config import analyticalfields
-from edelweissfe.config.phenomena import domainMapping
-from edelweissfe.config.stepactions import stepActionFactory
-from edelweissfe.config.outputmanagers import getOutputManagerClass
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.utils.misc import (
-    convertAssignmentsToStringDictionary,
-    splitLineAtCommas,
-    convertLinesToStringDictionary,
-)
-from edelweissfe.utils.plotter import Plotter
-from edelweissfe.utils.exceptions import StepFailed
-from edelweissfe.numerics.dofmanager import DofVector
+from time import time as getCurrentTime
+
 from edelweissfe.config.configurator import loadConfiguration, updateConfiguration
-from edelweissfe.journal.journal import Journal
-from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
-from edelweissfe.steps.stepmanager import StepManager
+from edelweissfe.config.phenomena import domainMapping
+from edelweissfe.config.solvers import getSolverByName
 from edelweissfe.helpers.inputfilehelpers import (
-    fillFEModelFromInputFile,
-    createStepManagerFromInputFile,
+    createFieldOutputFromInputFile,
     createOutputManagersFromInputFile,
+    createPlotterFromInputFile,
     createSolversFromInputFile,
     createStepManagerFromInputFile,
-    createFieldOutputFromInputFile,
-    createPlotterFromInputFile,
+    fillFEModelFromInputFile,
 )
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.config.solvers import getSolverByName
-from time import time as getCurrentTime
+from edelweissfe.journal.journal import Journal
+from edelweissfe.models.femodel import FEModel, printPrettyModelSummary
+from edelweissfe.utils.exceptions import StepFailed
+from edelweissfe.utils.fieldoutput import FieldOutputController
 
 
 def finiteElementSimulation(
@@ -210,7 +196,10 @@ def finiteElementSimulation(
     finally:
         journal.printTable(
             [
-                ("Job computation time", "{:10.4f}s".format(jobInfo["computationTime"])),
+                (
+                    "Job computation time",
+                    "{:10.4f}s".format(jobInfo["computationTime"]),
+                ),
             ],
             identification,
             level=0,

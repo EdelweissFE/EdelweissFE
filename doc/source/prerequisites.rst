@@ -12,6 +12,6 @@ Anaconda provides free access to Intel MKL binaries (via package ``mkl``, usuall
 In addition
 
 * `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_
-* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ library for linear algebra 
+* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ library for linear algebra
 
 are usually required.

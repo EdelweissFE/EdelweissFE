@@ -28,8 +28,15 @@
 # Created on Mon Apr 17 11:37:26 2017
 
 # @author: Matthias Neuner
-"""
 
+import numpy as np
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.sets.nodeset import NodeSet
+from edelweissfe.utils.math import createMathExpression
+
+"""
 Plot result for a nodeSet or an elementSet along the true geometrical distance.
 Corresponds to the plot along path functionality in Abaqus.
 """
@@ -41,15 +48,6 @@ documentation = {
     "f(x)": "(Optional), apply math",
     "normalize": "(Optional), normalize peak to 1.0",
 }
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.utils.math import createMathExpression
-import numpy as np
-
-from edelweissfe.sets.elementset import ElementSet
-from edelweissfe.sets.nodeset import NodeSet
 
 
 class OutputManager(OutputManagerBase):
@@ -63,8 +61,6 @@ class OutputManager(OutputManagerBase):
         self.model = model
 
     def updateDefinition(self, **kwargs: dict):
-        fieldOutputController = self.fieldOutputController
-
         entry = dict()
 
         entry["fieldOutput"] = kwargs["fieldOutput"]
@@ -76,12 +72,12 @@ class OutputManager(OutputManagerBase):
 
         theSet = entry["fieldOutput"].associatedSet
 
-        if type(theSet) == NodeSet:
+        if type(theSet) is NodeSet:
             # try:  # nSet?
             nodes = theSet
             # 1) distances between nodes:
             distances = [np.linalg.norm(nodes[i + 1].coordinates - nodes[i].coordinates) for i in range(len(nodes) - 1)]
-        elif type(theSet) == ElementSet:
+        elif type(theSet) is ElementSet:
             # except AttributeError:  # no, its an elSet!
             elements = entry["fieldOutput"].elSet
             # dirty computation of centroid by taking the mean (not correct, but fast)
@@ -137,7 +133,8 @@ class OutputManager(OutputManagerBase):
                 if nJob["export"]:
                     exportData = np.column_stack((nJob["pathDistances"], result))
                     np.savetxt(
-                        nJob["label"] + "stage_" + str(nJob["nStages"] - len(self.plotStages)) + ".csv", exportData
+                        nJob["label"] + "stage_" + str(nJob["nStages"] - len(self.plotStages)) + ".csv",
+                        exportData,
                     )
 
                 self.plotter.plotXYData(nJob["pathDistances"], result, nJob["figure"], nJob["axSpec"], nJob_)
@@ -166,6 +163,9 @@ class OutputManager(OutputManagerBase):
 
             if nJob["export"]:
                 exportData = np.column_stack((nJob["pathDistances"], result))
-                np.savetxt(nJob["label"] + "stage_" + str(nJob["nStages"] - len(self.plotStages)) + ".csv", exportData)
+                np.savetxt(
+                    nJob["label"] + "stage_" + str(nJob["nStages"] - len(self.plotStages)) + ".csv",
+                    exportData,
+                )
 
             self.plotter.plotXYData(nJob["pathDistances"], result, nJob["figure"], nJob["axSpec"], nJob)

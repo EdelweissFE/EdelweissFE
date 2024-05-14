@@ -29,6 +29,14 @@
 
 # @author: Matthias Neuner
 
+import numpy as np
+
+from edelweissfe.config.phenomena import getFieldSize
+from edelweissfe.constraints.base.constraintbase import ConstraintBase
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.misc import convertLinesToStringDictionary
+
 """
 A lagrangian multiplier based constraint used for constraining nodal values
 of a node set to be equal.
@@ -39,14 +47,6 @@ documentation = {
     "component": "The component of the field.",
     "nSet": "The node set to be constrained.",
 }
-
-import numpy as np
-
-from edelweissfe.config.phenomena import getFieldSize
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.constraints.base.constraintbase import ConstraintBase
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.timesteppers.timestep import TimeStep
 
 
 class Constraint(ConstraintBase):
@@ -64,7 +64,11 @@ class Constraint(ConstraintBase):
         self._nDof = self.sizeField * self.nNodes + self.nMultipliers
 
         self.index_master = self.component
-        self.indices_slaves = slice(self.sizeField + self.component, self.sizeField * self.nNodes, self.sizeField)
+        self.indices_slaves = slice(
+            self.sizeField + self.component,
+            self.sizeField * self.nNodes,
+            self.sizeField,
+        )
         self.indices_multipliers = slice(self.sizeField * self.nNodes, self._nDof)
 
         self._fieldsOnNodes = [
@@ -90,8 +94,15 @@ class Constraint(ConstraintBase):
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nNodes - 1
 
-    def applyConstraint(self, U_np: np.ndarray, dU: np.ndarray, PExt: np.ndarray, K: np.ndarray, timeStep: TimeStep):
-        if self.active == False:
+    def applyConstraint(
+        self,
+        U_np: np.ndarray,
+        dU: np.ndarray,
+        PExt: np.ndarray,
+        K: np.ndarray,
+        timeStep: TimeStep,
+    ):
+        if not self.active:
             return
 
         val_master = U_np[self.index_master]
