@@ -31,7 +31,7 @@ brick x 5 y 20 z 5
 
 vol 7 move 0 50
 vol 7 move 0 -10
-subtract volume 7 from volume 1 
+subtract volume 7 from volume 1
 
 webcut volume 1 with plane xplane offset 2.5 imprint merge
 webcut volume 1  with plane xplane offset 40 imprint merge
@@ -59,11 +59,11 @@ block 2 name "steel"
 block 1 2 element type hex20
 
 #nodeset 1 add node with x_coord = -200 and y_coord = -55 and z_coord=2.5
-nodeset 1 add node with x_coord >=  -210 and x_coord <= -190 and y_coord = -55 
+nodeset 1 add node with x_coord >=  -210 and x_coord <= -190 and y_coord = -55
 nodeset 1 name "low_p"
 
 #nodeset 2 add node with x_coord = 20 and y_coord = -55 and z_coord=2.5
-nodeset 2 add node with x_coord >= 10 and x_coord <= 30 and y_coord = -55 
+nodeset 2 add node with x_coord >= 10 and x_coord <= 30 and y_coord = -55
 nodeset 2 name "high_p"
 
 #nodeset 3 add node with x_coord = -20 and y_coord = 55
@@ -80,8 +80,8 @@ nodeset 5 name "cmod_left"
 nodeset 6 add node with x_coord = 2.5 and y_coord=50 and z_coord=2.5
 nodeset 6 name "cmod_right"
 
-nodeset 7 add node in nodeset fixed_bc 
-nodeset 7 add node in nodeset supp_y 
+nodeset 7 add node in nodeset fixed_bc
+nodeset 7 add node in nodeset supp_y
 nodeset 7 name "all_bc"
 
 nodeset 8 add node with z_coord = 2.5 and y_coord >= -50 and y_coord <= 50

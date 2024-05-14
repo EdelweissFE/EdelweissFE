@@ -29,14 +29,14 @@ Created on Thu May 21 14:23:14 2015
 
 @author: c8441141
 """
-from setuptools import setup
-from setuptools.extension import Extension
-from setuptools import find_packages
-from Cython.Build import cythonize, build_ext
-from os.path import expanduser, join
-import numpy
-import sys
 import os
+import sys
+from os.path import expanduser, join
+
+import numpy
+from Cython.Build import build_ext, cythonize
+from setuptools import find_packages, setup
+from setuptools.extension import Extension
 
 directives = {
     "boundscheck": False,

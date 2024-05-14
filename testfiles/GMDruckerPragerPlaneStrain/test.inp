@@ -1,6 +1,6 @@
-*material, name=GMDruckerPrager, id=le, 
-**E,     nu,    GcToG,  lb,   lt,       polarRatio,     sigmaYield,     hlin,  hExp,  hDeltaExp         phi(deg), psi(deg) 
-100, 0.25,   .5,    4,   8,     1.4999999,          0.06,               0,     1,     0,                 25,      0.0, 
+*material, name=GMDruckerPrager, id=le,
+**E,     nu,    GcToG,  lb,   lt,       polarRatio,     sigmaYield,     hlin,  hExp,  hDeltaExp         phi(deg), psi(deg)
+100, 0.25,   .5,    4,   8,     1.4999999,          0.06,               0,     1,     0,                 25,      0.0,
 **a1,   a2,     a3,     a4,   lJ2,      softeningModulus,   weightingParemeter,     maxDamage,  nonLocalRadius
 0.5,   0.0,   0.5,     0.0,   10.0,        1e-0,               1.0,                    0.90,       8.0
 
@@ -11,8 +11,8 @@ all
 *job, name=gmdruckerpragerjob, domain=2d
 *solver, solver=NISTParallelForMarmotElements, name=theSolver
 *fieldOutput
-create=perNode, name=displacement, elSet=all, field=displacement, result=U, 
-create=perNode, name=nonlocal damage, elSet=all, field=nonlocal damage, result=U, 
+create=perNode, name=displacement, elSet=all, field=displacement, result=U,
+create=perNode, name=nonlocal damage, elSet=all, field=nonlocal damage, result=U,
 create=perNode, name=umag, elSet=all, field=displacement, result=U, f(x)=' linalg.norm ( x, axis=1 )'
 create=perNode, name=RF, nSet=gen_top, field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True, export=RF
 create=perNode, name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True, export=U
@@ -30,7 +30,7 @@ fieldOutput=RF
 
 *output, type=ensight, name=esExport
 configuration, overwrite=True
-create=perNode, fieldOutput=displacement, 
+create=perNode, fieldOutput=displacement,
 create=perNode, fieldOutput=nonlocal damage
 create=perElement, fieldOutput=alphaP
 
@@ -42,8 +42,8 @@ figure=1, axSpec=122, create=perNode, fieldOutput=umag
 figure=1, fileName=plot
 
 *step, solver=theSolver, maxInc=5e-2, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=100
-initializematerial, name=init, elSet=all 
-dirichlet, name=rbottom, nSet=gen_bottom,  field=micro rotation, 1=0, 
+initializematerial, name=init, elSet=all
+dirichlet, name=rbottom, nSet=gen_bottom,  field=micro rotation, 1=0,
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_top, field=displacement, 2=-10, 
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=-10,

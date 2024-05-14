@@ -28,12 +28,11 @@
 
 from abc import ABC, abstractmethod
 
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.numerics.dofmanager import DofVector
 from edelweissfe.journal.journal import Journal
-from edelweissfe.utils.plotter import Plotter
 from edelweissfe.models.femodel import FEModel
 from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.fieldoutput import FieldOutputController
+from edelweissfe.utils.plotter import Plotter
 
 
 class OutputManagerBase(ABC):
@@ -82,8 +81,6 @@ class OutputManagerBase(ABC):
         ----------
         """
 
-        pass
-
     @abstractmethod
     def initializeStep(self, step: dict):
         """Initalize the output manager at the beginning of a step.
@@ -93,8 +90,6 @@ class OutputManagerBase(ABC):
         step
             A dictionary containing the step definition.
         """
-
-        pass
 
     @abstractmethod
     def finalizeIncrement(self, timeStep: TimeStep, **kwargs):
@@ -112,8 +107,6 @@ class OutputManagerBase(ABC):
             Keyword arguments.
         """
 
-        pass
-
     @abstractmethod
     def finalizeFailedIncrement(self, **kwargs):
         """Finalize the output at the end of a time increment.
@@ -124,15 +117,11 @@ class OutputManagerBase(ABC):
             Keyword arguments.
         """
 
-        pass
-
     @abstractmethod
     def finalizeStep(
         self,
     ):
         """Finalize the output the end of a step."""
-
-        pass
 
     @abstractmethod
     def finalizeJob(
@@ -147,5 +136,3 @@ class OutputManagerBase(ABC):
         P
             The final reaction vector.
         """
-
-        pass

@@ -1,14 +1,14 @@
-*material, name=solidificationcdp, id=cdp 
+*material, name=solidificationcdp, id=cdp
 ** nu
 0.15
-** q1   q2   q3   q4     n    m   nKelvin   tauMin 
-   20,  120, 9,    9,  0.1, 0.5,    12,     1e-5, 
+** q1   q2   q3   q4     n    m   nKelvin   tauMin
+   20,  120, 9,    9,  0.1, 0.5,    12,     1e-5,
 **  s    fcu28
    0.2,   40
 ** fcy/fcu  fbu/fcu  ftu/fcu    Df
-     0.1,    1.16,     0.1,     0.85 
+     0.1,    1.16,     0.1,     0.85
 ** Ah     Bh    Ch     Dh
-  0.12,  0.003,    2,    1e-6,  
+  0.12,  0.003,    2,    1e-6,
 ** As   GfI   omegaMax
    15,     0.1,   0.99
 ** timeToDays, castTime
@@ -501,14 +501,14 @@ all
 
 *nSet, nSet=nSetLeft,  generate=True
  301,  315,    1
-*nSet, nSet=nSetRight, 
+*nSet, nSet=nSetRight,
   5,  10, 15
 
 *fieldOutput
 create=perNode, elSet=all, field=displacement, result=U, name=displacement
 
 *output, type=ensight, name=esExport
-create=perNode, fieldOutput=displacement 
+create=perNode, fieldOutput=displacement
 configuration, overwrite=yes
 
 *step, solver=theSolver, maxInc=5e-3, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=0.1

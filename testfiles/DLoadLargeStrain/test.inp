@@ -6,7 +6,7 @@ l=100
 h=5
 
 *material, name=stvenantkirchhoffisotropic, id=stvenantkirchhoffisotropic
-5000, 0.25 
+5000, 0.25
 
 *section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=plane
 all

@@ -16,8 +16,8 @@ all
 *solver, solver=NISTParallel, name=theSolver
 
 *fieldOutput
-create=perNode, name=Displacement,      elSet=all,           field=displacement, result=U, 
-create=perNode, name=DisplacementN,     nSet=all,           field=displacement, result=U, 
+create=perNode, name=Displacement,      elSet=all,           field=displacement, result=U,
+create=perNode, name=DisplacementN,     nSet=all,           field=displacement, result=U,
 create=perNode, name=DisplacementTop,   elSet=gen_top,       field=displacement, result=U, saveHistory=True
 create=perNode, name=LoadTop,           nSet=gen_bottom,    field=displacement, result=P, saveHistory=True
 
@@ -25,12 +25,12 @@ create=perNode, name=LoadTop,           nSet=gen_bottom,    field=displacement, 
 name='displacement,top,vertical,mean',  fieldOutput=DisplacementTop, f(x)='mean(x[:,1])'
 name='applied load',                    fieldOutput=LoadTop, f(x)='sum(x[:,1]) / (100*1)'
 
-*output, type=ensight, 
+*output, type=ensight,
 create=perNode, fieldOutput=Displacement
 configuration, overwrite=yes
 
 *output, type=meshPlot
-figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200', 
+figure=1, axSpec=121, create=xyData,  y=DisplacementTop, x=time, f(y)='mean(y[:,:,1], axis=1) / 200',
 figure=1, axSpec=122, create=perNode, fieldOutput=Displacement, f(x)='x[:,1]', label=U
 
 *configurePlots

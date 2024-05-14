@@ -28,16 +28,17 @@
 """Define a field using a sclar expression.
 """
 
-documentation = {
-    "f(x,y,z)": "Python expression using variables x, y, z (coordinates); dictionaries contained in model can be accessed",
-}
+import numpy as np
 
-from edelweissfe.utils.misc import convertLinesToStringDictionary
 from edelweissfe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
 )
 from edelweissfe.utils.math import createModelAccessibleFunction
-import numpy as np
+from edelweissfe.utils.misc import convertLinesToStringDictionary
+
+documentation = {
+    "f(x,y,z)": "Python expression using variables x, y, z (coordinates); dictionaries contained in model can be accessed",
+}
 
 
 class AnalyticalField(AnalyticalFieldBase):

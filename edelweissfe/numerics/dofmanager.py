@@ -32,11 +32,10 @@
 This module contains important classes for describing the global equation system by means of a sparse system.
 """
 
-from collections import OrderedDict
-from edelweissfe.config.phenomena import getFieldSize, phenomena
-from edelweissfe.points.node import Node
-from edelweissfe.fields.nodefield import NodeField
 import numpy as np
+
+from edelweissfe.fields.nodefield import NodeField
+from edelweissfe.points.node import Node
 
 
 class VIJSystemMatrix(np.ndarray):
@@ -59,11 +58,11 @@ class VIJSystemMatrix(np.ndarray):
         A dictionary containing the indices of an entitiy in the value vector.
     """
 
-    def __new__(cls, nDof: int, I: np.ndarray, J: np.ndarray, entitiesInVIJ: dict):
+    def __new__(cls, nDof: int, I: np.ndarray, J: np.ndarray, entitiesInVIJ: dict):  # noqa: E741
         obj = np.zeros_like(I, dtype=float).view(cls)
 
         obj.nDof = nDof
-        obj.I = I
+        obj.I = I  # noqa: E741
         obj.J = J
         obj.entitiesInVIJ = entitiesInVIJ
 
@@ -73,7 +72,7 @@ class VIJSystemMatrix(np.ndarray):
         try:
             idxInVIJ = self.entitiesInVIJ[key]
             return super().__getitem__(slice(idxInVIJ, idxInVIJ + key.nDof**2))
-        except:
+        except Exception:
             return super().__getitem__(key)
 
 
@@ -99,13 +98,13 @@ class DofVector(np.ndarray):
     def __getitem__(self, key):
         try:
             return super().__getitem__(self.entitiesInDofVector[key])
-        except:
+        except Exception:
             return super().__getitem__(key)
 
     def __setitem__(self, key, value):
         try:
             return super().__setitem__(self.entitiesInDofVector[key], value)
-        except:
+        except Exception:
             return super().__setitem__(key, value)
 
 
@@ -133,7 +132,14 @@ class DofManager:
         The list of NodeSets for which a map to the respective indices should be created.
     """
 
-    def __init__(self, nodeFields: list, scalarVariables: list, elements: list, constraints: list, nodeSets: list):
+    def __init__(
+        self,
+        nodeFields: list,
+        scalarVariables: list,
+        elements: list,
+        constraints: list,
+        nodeSets: list,
+    ):
         (
             self.nDof,
             self.idcsOfFieldVariablesInDofVector,
@@ -233,7 +239,10 @@ class DofManager:
         """
         indexToNodeMapping = dict()
 
-        for fieldVariable, fieldVariableIndices in self.idcsOfFieldVariablesInDofVector.items():
+        for (
+            fieldVariable,
+            fieldVariableIndices,
+        ) in self.idcsOfFieldVariablesInDofVector.items():
             for index in fieldVariableIndices:
                 indexToNodeMapping[index] = fieldVariable.node
 
@@ -438,15 +447,17 @@ class DofManager:
         """
 
         entitiesInVIJ = {}
-        entitiesInDofVector = self.idcsOfHigherOrderEntitiesInDofVector
 
         sizeVIJ = self.sizeVIJ
 
-        I = np.zeros(sizeVIJ, dtype=int)
-        J = np.zeros(sizeVIJ, dtype=int)
+        I = np.zeros(sizeVIJ, dtype=int)  # noqa: E741
+        J = np.zeros(sizeVIJ, dtype=int)  # noqa: E741
         idxInVIJ = 0
 
-        for entity, entityIdcsInDofVector in self.idcsOfHigherOrderEntitiesInDofVector.items():
+        for (
+            entity,
+            entityIdcsInDofVector,
+        ) in self.idcsOfHigherOrderEntitiesInDofVector.items():
             entitiesInVIJ[entity] = idxInVIJ
 
             nDofEntity = len(entityIdcsInDofVector)
@@ -495,7 +506,7 @@ class DofManager:
         """
 
         nDof = self.nDof
-        I = self.I
+        I = self.I  # noqa: E741
         J = self.J
 
         return VIJSystemMatrix(nDof, I, J, self.idcsOfHigherOrderEntitiesInVIJ)
@@ -550,7 +561,7 @@ class DofManager:
             The updated NodeField.
         """
 
-        if not resultName in nodeField:
+        if resultName not in nodeField:
             nodeField.createFieldValueEntry(resultName)
 
         nodeField[resultName][:] = dofVector[self.idcsOfFieldsInDofVector[nodeField.name]].reshape(

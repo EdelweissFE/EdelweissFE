@@ -23,13 +23,13 @@ create=perElement, name=stress,                    elSet=all,          result=st
 create=perElement, name=stress_top,                elSet=gen_top,      result=stress,      quadraturePoint=1
 create=perElement, name=alphaP,                    elSet=all,          result=alphaP,      quadraturePoint=1
 
-*output, type=meshPlot, 
+*output, type=meshPlot,
 figure=1, axSpec=221, create=perNode,       fieldOutput=displacement,       f(x)='x[:,1]', label=U2
 figure=1, axSpec=222, create=perElement,    fieldOutput=stress,             f(x)='x[:,1]', label=S2
 figure=1, axSpec=212, c=red, ls=dashed, create=xyData, x=time, y=RF_bottom, f(y)='sum ( y[:,:,1], axis=1)', label=Sum(RF)
 
 *output, type=ensight, name=myEnsightExport
-create=perNode,    fieldOutput=displacement, 
+create=perNode,    fieldOutput=displacement,
 create=perElement, fieldOutput=stress,
 create=perElement, fieldOutput=alphaP,
 configuration, overwrite=yes

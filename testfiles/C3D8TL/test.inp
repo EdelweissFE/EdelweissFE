@@ -872,11 +872,11 @@ create=perNode, nSet=nSetLoad, field=displacement, result=P, name=RF, f(x)=' sum
 create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:8, f(x)=' max (x, axis=1) '
 
 *output, type=ensight, name=esExport
-create=perNode, fieldOutput=displacement 
+create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 configuration, overwrite=yes
 
-*output, type=meshPlot, 
+*output, type=meshPlot,
 figure=1, axSpec=111, c=red, ls=dashed, create=xyData, x=time, y=RF
 
 *step, solver=theSolver, maxInc=2e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100

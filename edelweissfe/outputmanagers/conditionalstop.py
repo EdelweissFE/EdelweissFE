@@ -28,23 +28,23 @@
 # Created on Sat Jul 22 21:26:01 2017
 
 # @author: Matthias Neuner
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.utils.exceptions import ConditionalStop
+from edelweissfe.utils.math import createModelAccessibleFunction
+
 """
 A conditional stop conditions wenn an expression becomes true.
 Useful, e.g., for indirect displacement control.
 
 .. code-block:: edelweiss
-    :caption: Example: 
+    :caption: Example:
 
     *output, type=conditionalstop, jobName=myJob, name=condStop
         stop='fieldOutputs["damage"]  >= .99'
         stop='fieldOutputs["displacement"]  < -5'
 """
 documentation = {"stop": "model accessible function describing the stop condition"}
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.utils.math import createModelAccessibleFunction
-from edelweissfe.utils.exceptions import ConditionalStop
 
 
 class OutputManager(OutputManagerBase):
@@ -61,7 +61,7 @@ class OutputManager(OutputManagerBase):
         # for defline in definitionLines:
         entry = {}
         entry["stop"] = createModelAccessibleFunction(
-            kwargs["stop"], model, fieldOutputs=fieldOutputController.fieldOutputs
+            kwargs["stop"], self.model, fieldOutputs=self.fieldOutputController.fieldOutputs
         )
         self.monitorJobs.append(entry)
 

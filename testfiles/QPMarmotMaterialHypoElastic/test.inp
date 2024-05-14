@@ -11,7 +11,7 @@ all
 1, 0, 0, 0
 
 *element, provider=MarmotSingleQpElement, type=MarmotMaterialHypoElastic
-** This is our mateiral wrapping element. It needs a dummy node to be attached 
+** This is our mateiral wrapping element. It needs a dummy node to be attached
 ** to a spatial position.
 ** The type of the element actually specifies the type of requested MarmotMaterial
 1, 1
@@ -21,12 +21,12 @@ all
 
 *step, solver=theSolver, maxInc=1e0, minInc=1e0, maxNumInc=100, maxIter=25, stepLength=1
 setinitialconditions, property=characteristic element length, values='100,'
-dirichlet,  name=prescribed_strain, nSet=all, field=strain symmetric, components='[ 0, x, x, 0, 0, 0 ]', 
-nodeforces, name=prescribed_stress, nSet=all, field=strain symmetric, components='[ x, 0, 0, x, x, x ]' 
+dirichlet,  name=prescribed_strain, nSet=all, field=strain symmetric, components='[ 0, x, x, 0, 0, 0 ]',
+nodeforces, name=prescribed_stress, nSet=all, field=strain symmetric, components='[ x, 0, 0, x, x, x ]'
 
 *step, solver=theSolver, maxInc=1e-1, minInc=1e0, maxNumInc=10, maxIter=25, stepLength=1
-dirichlet, name=prescribed_strain,                                    components='[ -0.2,  x,    x, 0,   0, 0 ]' 
-nodeforces, name=prescribed_stress,                                   components='[ x,    .1,   .2, x,   x, x ]' 
+dirichlet, name=prescribed_strain,                                    components='[ -0.2,  x,    x, 0,   0, 0 ]'
+nodeforces, name=prescribed_stress,                                   components='[ x,    .1,   .2, x,   x, x ]'
 
 *fieldOutput
 create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=0,  saveHistory=True

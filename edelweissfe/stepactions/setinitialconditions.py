@@ -32,8 +32,9 @@
 Pass initial conditions to elements.
 """
 
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
+
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 
 documentation = {
     "property": "The name of the property to be initialized",

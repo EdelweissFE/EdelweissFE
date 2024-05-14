@@ -35,11 +35,11 @@ configuration, overwrite=yes
 
 
 *step, solver=theSolver, maxInc=0.5
-dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0, 
+dirichlet, name=left,   nSet=gen_left,   field=displacement, 1=0.0,
 dirichlet, name=right,  nSet=gen_right,   field=displacement, 1=0.0
-dirichlet, name=bottom, nSet=gen_bottom,   field=displacement, 2=0.0, 
+dirichlet, name=bottom, nSet=gen_bottom,   field=displacement, 2=0.0,
 geostatic, name=geo, elSet=all, p1=-10, h1=150, p2=-5, h2=0, xLateral=1.0, zLateral=1.0
 distributedload, name=dlTop, surface=gen_top, magnitude=10, f(t)=1, type=pressure
 
-*step, solver=theSolver, maxInc=1e-1, 
+*step, solver=theSolver, maxInc=1e-1,
 distributedload, name=dlTop, delta=-10.0, f(t)=t

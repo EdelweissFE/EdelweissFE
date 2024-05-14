@@ -32,13 +32,12 @@
 Inputfileparser for inputfiles employing an Abaqus-like syntax.
 """
 
-import numpy as np
-from os.path import dirname, join
-import textwrap
 import shlex
-from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
-
+import textwrap
 import warnings
+from os.path import dirname, join
+
+from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
 
 typeMappings = {
     "integer": int,
@@ -56,7 +55,10 @@ inputLanguage = {
         {
             "elSet": ("string", "name"),
             "type": ("string", "assign one of the types defined in the elementlibrary"),
-            "provider": ("string", "provider (library) for the element type. Default: Marmot"),
+            "provider": (
+                "string",
+                "provider (library) for the element type. Default: Marmot",
+            ),
             "data": ("numpy integer array", "Abaqus like element definition lines"),
         },
     ),
@@ -64,7 +66,10 @@ inputLanguage = {
         "definition of an element set",
         {
             "elSet": ("string", "name"),
-            "generate": ("string", "set True to generate from data line 1: start-element, end-element, step"),
+            "generate": (
+                "string",
+                "set True to generate from data line 1: start-element, end-element, step",
+            ),
             "data": ("string", "Abaqus like element set definition lines"),
         },
     ),
@@ -72,14 +77,20 @@ inputLanguage = {
         "definition of nodes",
         {
             "nSet": ("string", "name"),
-            "data": ("numpy float array", "Abaqus like node definition lines: label, x, [y], [z]"),
+            "data": (
+                "numpy float array",
+                "Abaqus like node definition lines: label, x, [y], [z]",
+            ),
         },
     ),
     "*nSet": (
         "definition of an element set",
         {
             "nSet": ("string", "name"),
-            "generate": ("string", "set True to generate from data line 1: start-node, end-node, step"),
+            "generate": (
+                "string",
+                "set True to generate from data line 1: start-node, end-node, step",
+            ),
             "data": ("string", "Abaqus like node set definition lines"),
         },
     ),
@@ -120,7 +131,10 @@ inputLanguage = {
         "define an analytical field",
         {
             "name": ("string", "name of analytical field"),
-            "type": ("string", "type of analytical field (currently 'expression' only)"),
+            "type": (
+                "string",
+                "type of analytical field (currently 'expression' only)",
+            ),
             "data": ("string", "definition"),
         },
     ),
@@ -146,7 +160,10 @@ inputLanguage = {
         {
             "name": ("string", "Name of this solver"),
             "solver": ("string", "Solvertype"),
-            "data": ("string", "define options which are passed to the respective solver instance."),
+            "data": (
+                "string",
+                "define options which are passed to the respective solver instance.",
+            ),
         },
     ),
     "*step": (
@@ -160,8 +177,14 @@ inputLanguage = {
             "maxIter": ("integer", "maximum number of iterations"),
             "type": ("string", "(optional) define step type, default = AdaptiveStep"),
             "solver": ("string", "(optional) solver to be used"),
-            "criticalIter": ("integer", "maximum number of iterations to prevent from increasing the increment"),
-            "data": ("string", "define step actions, which are handled by the corresponding stepaction modules"),
+            "criticalIter": (
+                "integer",
+                "maximum number of iterations to prevent from increasing the increment",
+            ),
+            "data": (
+                "string",
+                "define step actions, which are handled by the corresponding stepaction modules",
+            ),
         },
     ),
     "*updateConfiguration": (
@@ -216,7 +239,9 @@ inputLanguage = inputLanguage_
 
 
 def parseInputFile(
-    fileName: str, currentKeyword: str = None, existingFileDict: CaseInsensitiveDict = None
+    fileName: str,
+    currentKeyword: str = None,
+    existingFileDict: CaseInsensitiveDict = None,
 ) -> CaseInsensitiveDict:
     """Parse an Abaqus-like input file to generate a dictionary with its content.
 
@@ -244,12 +269,12 @@ def parseInputFile(
     keyword = currentKeyword
     with open(fileName) as f:
         # filter out empty lines and comments
-        lines = (l.strip() for l in f)
-        lines = (l for l in lines if l and not l.startswith("**"))
+        lines = (line.strip() for line in f)
+        lines = (line for line in lines if line and not line.startswith("**"))
 
-        for l in lines:
-            if l.startswith("*"):
-                lexer = shlex.shlex(l, posix=True)
+        for line in lines:
+            if line.startswith("*"):
+                lexer = shlex.shlex(line, posix=True)
                 lexer.whitespace_split = True
                 lexer.whitespace = ","
 
@@ -280,14 +305,16 @@ def parseInputFile(
                         raise ValueError(
                             '{:}, option {:}: cannot convert "{:}" to {:}'.format(keyword, optKey, val, optionDataType)
                         )
-                    except:
-                        raise
+                    except Exception as e:
+                        raise e
 
                 # special treatment for *include:
                 if keyword.lower() == "*include":
                     includeFile = objectentry["input"]
                     parseInputFile(
-                        join(dirname(fileName), includeFile), currentKeyword=lastkeyword, existingFileDict=fileDict
+                        join(dirname(fileName), includeFile),
+                        currentKeyword=lastkeyword,
+                        existingFileDict=fileDict,
                     )
                     keyword = lastkeyword
                 else:
@@ -298,7 +325,7 @@ def parseInputFile(
                 if "data" not in inputLanguage[keyword][1]:
                     raise KeyError("{:} expects no data lines".format(keyword))
 
-                fileDict[keyword][-1]["data"].append(l)
+                fileDict[keyword][-1]["data"].append(line)
 
     # raise deprecation warning if deprecated jobName option is set in keywords
     keywords = ["*step", "*fieldOutput", "*output"]

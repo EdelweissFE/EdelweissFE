@@ -1014,21 +1014,21 @@
 400, 605, 606, 612, 611, 569, 570, 576, 575
 *Nset, nset=left, generate=True
  577,  612,  1
-*Nset, nset=rBottom, 
+*Nset, nset=rBottom,
  6
-*Nset, nset=rTop, 
+*Nset, nset=rTop,
  1
 *Nset, nset=right, generate=True
   1,  36,   1
 
 
-*material, name=linearelastic, id=le, 
-30000.0, 0.15 
+*material, name=linearelastic, id=le,
+30000.0, 0.15
 
-*section, name=section1, thickness=1.0, material=le, type=plane
+*section, name=section1, thickness=1.0, material=le, type=solid
 all
 
-*job, name=c3d8job, domain=3d, 
+*job, name=c3d8job, domain=3d,
 *solver, solver=NISTParallel, name=theSolver
 *fieldOutput
 create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
@@ -1046,4 +1046,4 @@ configuration, overwrite=yes
 *step, solver=theSolver, maxInc=5e-2, minInc=1e-4, maxNumInc=1000, maxIter=20
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,         field=displacement, 1=0.0, 2=0, 3=0
-dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=1.5707,  
+dirichlet, name=rotRP,  nSet=rBottom,   field=rotation, 1=1.5707,

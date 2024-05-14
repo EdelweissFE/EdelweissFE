@@ -11,7 +11,7 @@ Matrix conversion from COO sparse format to CSR format
 Module ``edelweissfe.numerics.csrgenerator``
 
 .. autoclass:: edelweissfe.numerics.csrgenerator.CSRGenerator
-   :members: 
+   :members:
 
 Gathering efficiently of element results
 ----------------------------------------
@@ -19,7 +19,7 @@ Gathering efficiently of element results
 Module ``edelweissfe.utils.elementresultcollector``
 
 .. autoclass:: edelweissfe.utils.elementresultcollector.ElementResultCollector
-   :members: 
+   :members:
 
 Adaptive time stepping
 ----------------------
@@ -27,4 +27,4 @@ Adaptive time stepping
 Module ``edelweissfe.timesteppers.adaptivetimestepper``
 
 .. autoclass:: edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper
-   :members: 
+   :members:

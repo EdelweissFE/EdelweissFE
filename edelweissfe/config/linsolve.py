@@ -37,7 +37,7 @@ def getDefaultLinSolver():
         from edelweissfe.linsolve.pardiso.pardiso import pardisoSolve
 
         return pardisoSolve
-    except:
+    except ImportError:
         from scipy.sparse.linalg import spsolve
 
         return lambda A, b: spsolve(A, b, use_umfpack=False)

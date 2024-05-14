@@ -30,12 +30,12 @@
 # @author: Matthias Neuner
 """
 Mesh generators are used to create meshes,
-using different methods. 
+using different methods.
 
 Keyword: ``*generator``
 
 .. code-block:: edelweiss
-    :caption: Example: 
+    :caption: Example:
 
     *modelGenerator, generator=theGeneratorType, name=myGeneratorName
         multiple lines of defintion ...

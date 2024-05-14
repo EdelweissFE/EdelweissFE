@@ -26,19 +26,16 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.journal.journal import Journal
-from edelweissfe.utils.misc import convertAssignmentsToStringDictionary, splitLineAtCommas
+import textwrap
+from collections import defaultdict
+from warnings import warn
+
 from edelweissfe.config.stepactions import stepActionFactory
+from edelweissfe.journal.journal import Journal
 from edelweissfe.models.femodel import FEModel
-from collections import OrderedDict, defaultdict
-from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
 from edelweissfe.steps.adaptivestep import AdaptiveStep
 from edelweissfe.steps.base.stepbase import StepBase
-import textwrap
-
-from warnings import warn
+from edelweissfe.utils.fieldoutput import FieldOutputController
 
 
 class StepActionDefinition:
@@ -49,7 +46,12 @@ class StepActionDefinition:
 
 
 class StepDefinition:
-    def __init__(self, stepType: str, stepOptions: dict, stepActionDefinitions: list[StepActionDefinition]):
+    def __init__(
+        self,
+        stepType: str,
+        stepOptions: dict,
+        stepActionDefinitions: list[StepActionDefinition],
+    ):
         self.type = stepType
         self.stepOptions = stepOptions
         self.stepActionDefinitions = stepActionDefinitions
@@ -119,12 +121,12 @@ class StepManager:
         """
 
         def printActionDefinition(intro, options):
-            for l in textwrap.wrap(
+            for line in textwrap.wrap(
                 intro + " [" + ", ".join(("{:}={:}".format(k, v) for k, v in options.items())) + "]",
                 subsequent_indent=" " * (len(intro) + 1),
             ):
                 journal.message(
-                    l,
+                    line,
                     self.identification,
                     2,
                 )
@@ -155,7 +157,12 @@ class StepManager:
                     printActionDefinition('Creating "{:}"'.format(action.name), action.kwargs)
 
                     self.stepActions[action.module][action.name] = stepActionFactory(action.module)(
-                        action.name, action.kwargs, jobInfo, model, fieldOutputController, journal
+                        action.name,
+                        action.kwargs,
+                        jobInfo,
+                        model,
+                        fieldOutputController,
+                        journal,
                     )
 
             try:

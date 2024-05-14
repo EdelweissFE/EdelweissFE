@@ -92,5 +92,5 @@ sdvini,          name=ini2, elSet=all, sdv=2, val=90
 *step, solver=theSolver, maxInc=1e-2, minInc=1e-9, maxNumInc=100000, maxIter=25, stepLength=1
  dirichlet, name=top, nSet=top,      field=displacement,     3=-0.05
 
-*output, type=meshPlot, 
+*output, type=meshPlot,
 figure=2, axSpec=111, c=red, ls=dashed, create=xyData, x=eps_33, y=sig_33

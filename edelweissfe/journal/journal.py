@@ -34,6 +34,7 @@ which can be used troughout EdelweissFE.
 """
 
 import math
+
 from prettytable import PrettyTable
 
 
@@ -153,7 +154,11 @@ class Journal:
             self._fileHandle.write(theLine + "\n")
 
     def printTable(
-        self, table: list[list[str]], senderIdentification: str, level: int = 1, printHeaderRow: bool = True
+        self,
+        table: list[list[str]],
+        senderIdentification: str,
+        level: int = 1,
+        printHeaderRow: bool = True,
     ):
         """Print a pretty table.
 

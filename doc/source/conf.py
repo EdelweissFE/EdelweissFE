@@ -6,6 +6,27 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+# for execution python code in text
+
+try:
+    from StringIO import StringIO  # noqa: F401
+except ImportError:
+    pass
+
+from importlib import import_module
+
+from docutils import nodes
+from docutils.parsers.rst import Directive  # noqa: F401
+from pygments.lexer import RegexLexer
+from pygments.token import Comment, Keyword, Literal, Name, Operator, Text
+from sphinx import addnodes  # noqa: F401
+from sphinx.directives.code import (  # noqa: F401
+    CodeBlock,
+    container_wrapper,
+    dedent_lines,
+)
+from sphinx.highlighting import lexers
+
 project = "EdelweissFE"
 copyright = "2022, Matthias Neuner"
 author = "Matthias Neuner"
@@ -14,8 +35,6 @@ release = "v22.07"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-import os
-import sys
 
 # sys.path.insert(0, os.path.abspath("../../"))
 
@@ -61,27 +80,6 @@ html_static_path = ["_static"]
 html_css_files = [
     "css/custom.css",
 ]
-
-# for execution python code in text
-import sys
-from os.path import basename
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
-
-from importlib import import_module
-from pprint import pformat
-from docutils.parsers.rst import Directive
-from docutils import nodes
-from sphinx import addnodes
-from sphinx.directives.code import CodeBlock, dedent_lines, container_wrapper
-
-from pygments.lexer import RegexLexer
-from pygments.token import *
-
-from sphinx.highlighting import lexers
 
 
 class EdelweissFELexer(RegexLexer):

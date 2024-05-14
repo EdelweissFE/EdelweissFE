@@ -2,28 +2,28 @@
 ***include, input=structured_2mm.inp
 *include, input=structured_4mm.inp
 **
-** 
+**
 ** MATERIALS
-** 
+**
 *material, name=UntereggerRockMassNonLocal, id=urm
 ** Quartzphyllite
 ** pre-peak parameters identified with bayesian logic for 0degree loading angle
 ** post-peak parameters (As, Bs, GFI) estimated
-**	E  				nu 			fcu 		m0 		e  		mg1 		fcy 		GFI 	
-**Ah 				Bh 			Ch 			Dh 		Gh 		As 			Bs 			GSI 		
-**D       	a       
-  56665,     0.2040,  	41.60,    	11.95,  	0.51,   9.943,   	29.53,    
-	0.004467,    1e-05,     8.817,  	 1e-6,    	0,  	40,	2,  			 100,   
+**	E  				nu 			fcu 		m0 		e  		mg1 		fcy 		GFI
+**Ah 				Bh 			Ch 			Dh 		Gh 		As 			Bs 			GSI
+**D       	a
+  56665,     0.2040,  	41.60,    	11.95,  	0.51,   9.943,   	29.53,
+	0.004467,    1e-05,     8.817,  	 1e-6,    	0,  	40,	2,  			 100,
     0.,     	 0.99,  2, 1.005, 5e-5
 *material, name=UntereggerRockMassNonLocal, id=urm-weak
 ** Quartzphyllite
 ** pre-peak parameters identified with bayesian logic for 0degree loading angle
 ** post-peak parameters (As, Bs, GFI) estimated
-**	E  				nu 			fcu 		m0 		e  		mg1 		fcy 		GFI 	
-**Ah 				Bh 			Ch 			Dh 		Gh 		As 			Bs 			GSI 		
-**D       	a       
-  56665,     0.2040,  	33.28,    	11.95,  	0.51,   9.943,   	23.62,    
-    0.004467,    1e-05,     8.817,  	 1e-6,    	0,  	40,	2,  			 100,   
+**	E  				nu 			fcu 		m0 		e  		mg1 		fcy 		GFI
+**Ah 				Bh 			Ch 			Dh 		Gh 		As 			Bs 			GSI
+**D       	a
+  56665,     0.2040,  	33.28,    	11.95,  	0.51,   9.943,   	23.62,
+    0.004467,    1e-05,     8.817,  	 1e-6,    	0,  	40,	2,  			 100,
     0.,     	 0.99,  2, 1.005, 5e-5
 *section, name=section1, material=urm, type=solid
 all
@@ -35,9 +35,9 @@ weak
 
 ***Nset, nset=fixed
 **19
-** 
+**
 ** BOUNDARY CONDITIONS
-** 
+**
 ** Name: BC-Bottom Type: Displacement/Rotation
 
 *job, name=cpe4job, domain=3d, solver=NISTPArcLength
@@ -69,22 +69,22 @@ configuration, overwrite=yes
 *step, maxInc=2e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=bottom,  nSet=bottom,   field=displacement, 3=0.0
-dirichlet, name=origin,  nSet=origin,   field=displacement, 1=0.0, 
+dirichlet, name=origin,  nSet=origin,   field=displacement, 1=0.0,
 **dirichlet, name=adb,  nSet=bottom,   field=nonlocal damage , 1=0.0
-**dirichlet, name=adt,  nSet=top,   field=nonlocal damage , 1=0.0, 
+**dirichlet, name=adt,  nSet=top,   field=nonlocal damage , 1=0.0,
 dirichlet, name=sym,  nSet=sym,   field=displacement, 2=0.0
 distributedload, name=dload, surface=sleeveTop, type=pressure, magnitude=12.5, f(t)=t
 options, category=NISTArcLength, arcLengthController=off
 
 ** ---- STEP WITHOUT SNAPBACK
 ***step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
-**options, category=NISTSolver, extrapolation=linear, 
+**options, category=NISTSolver, extrapolation=linear,
 **options, category=Ensight, intermediateSaveInterval=1
 **dirichlet, name=top,  nSet=top,   field=displacement, 3=-.525
 
 ** ---- STEP WITH SNAPBACK
 *step, maxInc=1e-2, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=1
-options, category=NISTSolver, extrapolation=linear, 
+options, category=NISTSolver, extrapolation=linear,
 options, category=Ensight, intermediateSaveInterval=1
 dirichlet, name=top,  nSet=top,   field=displacement, 3=-0.525
 options, category=NISTArcLength, arcLengthController=indirectcontrol, stopCondition='fieldOutputs["UTop"] < -1.0'

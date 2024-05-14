@@ -26,13 +26,12 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.journal.journal import Journal
-from edelweissfe.numerics.dofmanager import DofVector
-from edelweissfe.models.femodel import FEModel
+from abc import ABC
 
-from abc import ABC, abstractmethod
+from edelweissfe.journal.journal import Journal
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.fieldoutput import FieldOutputController
 
 
 class StepActionBase(ABC):
@@ -94,8 +93,6 @@ class StepActionBase(ABC):
             The journal object for logging.
         """
 
-        pass
-
     def applyAtStepStart(self, model):
         """Is called when a step starts.
 
@@ -106,7 +103,6 @@ class StepActionBase(ABC):
         P
             The current reaction force vector.
         """
-        pass
 
     def applyAtStepEnd(self, model):
         """Is called when a step successfully finished.
@@ -118,7 +114,6 @@ class StepActionBase(ABC):
         P
             The current reaction force vector.
         """
-        pass
 
     def applyAtIncrementStart(self, model, timeStep: TimeStep):
         """Is called when a step increment starts.
@@ -132,4 +127,3 @@ class StepActionBase(ABC):
         increment
             The defintion of the time increment.
         """
-        pass

@@ -15,7 +15,7 @@ nX=25
 nY=50
 
 *fieldOutput
-create=perNode, name=Displacement, elSet=all, field=displacement, result=U, 
+create=perNode, name=Displacement, elSet=all, field=displacement, result=U,
 create=perElement, name=Stress, elSet=all, result=stress, quadraturePoint=1
 create=perElement, name=Strain, elSet=all, result=strain, quadraturePoint=1
 create=perElement, name=Kappa, elSet=all, result=kappa, quadraturePoint=1

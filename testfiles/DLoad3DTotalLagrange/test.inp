@@ -3817,7 +3817,7 @@
   561,  580,  641,  660,  721,  740,  801,  820,  881,  900,  961,  980, 1041, 1060, 1121, 1140
  1201, 1220, 1281, 1300, 1361, 1380, 1441, 1460, 1521, 1522, 1523, 1524, 1525, 1526, 1527, 1528
  1529, 1530, 1531, 1532, 1533, 1534, 1535, 1536, 1537, 1538, 1539, 1540
-*Elset, elset=_loadsurf_S3 
+*Elset, elset=_loadsurf_S3
     1,    2,    3,    4,    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,   16
    17,   18,   19,   20,   81,   82,   83,   84,   85,   86,   87,   88,   89,   90,   91,   92
    93,   94,   95,   96,   97,   98,   99,  100,  161,  162,  163,  164,  165,  166,  167,  168
@@ -3846,7 +3846,7 @@
 *Surface, type=ELEMENT, name=loadsurf
 _loadsurf_S3, S3
 *material, name=stvenantkirchhoffisotropic, id=stvenantkirchhoffisotropic
-5000, 0.25 
+5000, 0.25
 
 *section, name=section1, thickness=1.0, material=stvenantkirchhoffisotropic, type=plane
 all

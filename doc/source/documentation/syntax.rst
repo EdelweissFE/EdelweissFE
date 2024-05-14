@@ -4,9 +4,9 @@ Input file syntax
 Relevant module: ``edelweissfe.utils.inputfileparser.py``
 
 EdelweissFE uses an input file syntax similar to Abaqus, using human readable input files.
-The general syntax makes use of ``*keywords``, possibly with ``option=values`` in the same line and 
-supplemented by data lines. 
-In general, options and data entries are comma separated. 
+The general syntax makes use of ``*keywords``, possibly with ``option=values`` in the same line and
+supplemented by data lines.
+In general, options and data entries are comma separated.
 Indentations and blank lines have no effect.
 
 .. code-block:: edelweiss
@@ -31,7 +31,7 @@ and available keywords can be printed using
     python edelweiss.py --keywords
 
 .. automodule:: edelweissfe.utils.inputfileparser
-   :members: 
+   :members:
 
 Keywords
 ********

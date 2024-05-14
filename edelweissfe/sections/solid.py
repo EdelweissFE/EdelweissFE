@@ -30,6 +30,8 @@
 #
 # @author: Matthias Neuner, Paul Hofer
 
+from edelweissfe.sections.base.sectionbase import Section as SectionBase
+
 """This section represents a classical solid materal section.
 """
 
@@ -38,8 +40,6 @@ documentation = {
     "material": "the material to be assigned",
     "materialParameterFromField, index=[index of material parameter], value=[name of analytical field], type=[either 'setToValue' or 'scale']": "(optional) set or scale a material parameter using the value of the given analytical field; modify the field value using the optional keyword f(p,f)=[...] (p...value of parameter from material definition; f...value of analytical field)",
 }
-
-from edelweissfe.sections.base.sectionbase import Section as SectionBase
 
 
 class Section(SectionBase):

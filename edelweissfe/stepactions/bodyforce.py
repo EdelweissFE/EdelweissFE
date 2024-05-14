@@ -28,6 +28,13 @@
 # Created on Thu Nov 15 13:15:14 2018
 
 # @author: Matthias Neuner
+
+import numpy as np
+import sympy as sp
+
+from edelweissfe.stepactions.base.bodyloadbase import BodyLoadBase
+from edelweissfe.timesteppers.timestep import TimeStep
+
 """
 Simple body force load.
 If not modified in subsequent steps, the load held constant.
@@ -38,11 +45,6 @@ documentation = {
     "delta": "In subsequent steps only: define the updated force vector incrementally",
     "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
-
-from edelweissfe.stepactions.base.bodyloadbase import BodyLoadBase
-from edelweissfe.timesteppers.timestep import TimeStep
-import numpy as np
-import sympy as sp
 
 
 class StepAction(BodyLoadBase):
@@ -66,7 +68,7 @@ class StepAction(BodyLoadBase):
 
     def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self._idle:
-            if stepMagnitude == None:
+            if stepMagnitude is None:
                 # standard case
                 self._forceAtStepStart += self._delta * self._amplitude(1.0)
             else:
@@ -91,7 +93,7 @@ class StepAction(BodyLoadBase):
         self._idle = False
 
     def getCurrentLoad(self, timeStep: TimeStep):
-        if self._idle == True:
+        if self._idle is True:
             t = 1.0
         else:
             t = timeStep.stepProgress

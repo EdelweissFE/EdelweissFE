@@ -28,6 +28,13 @@
 # Created on Wed May 10 13:12:40 2017
 
 # @author: Matthias Neuner
+
+import numpy as np
+import sympy as sp
+
+from edelweissfe.stepactions.base.distributedloadbase import DistributedLoadBase
+from edelweissfe.timesteppers.timestep import TimeStep
+
 """
 Standard distributed load, applied on a surface set.
 If not modified in subsequent steps, the load held constant.
@@ -40,11 +47,6 @@ documentation = {
     "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
     "type": "The load type, e.g., pressure or surface traction; Must be supported by the element type",
 }
-
-from edelweissfe.stepactions.base.distributedloadbase import DistributedLoadBase
-from edelweissfe.timesteppers.timestep import TimeStep
-import numpy as np
-import sympy as sp
 
 
 class StepAction(DistributedLoadBase):
@@ -75,7 +77,7 @@ class StepAction(DistributedLoadBase):
         return self._loadType
 
     def getCurrentLoad(self, timeStep: TimeStep):
-        if self.idle == True:
+        if self.idle is True:
             t = 1.0
         else:
             t = timeStep.stepProgress
@@ -84,7 +86,7 @@ class StepAction(DistributedLoadBase):
 
     def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self.idle:
-            if stepMagnitude == None:
+            if stepMagnitude is None:
                 # standard case
                 self._magnitudeAtStepStart += self.delta * self.amplitude(1.0)
             else:

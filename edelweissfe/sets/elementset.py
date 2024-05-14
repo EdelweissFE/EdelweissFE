@@ -27,9 +27,11 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from edelweissfe.sets.orderedset import ImmutableOrderedSet
 from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
-from edelweissfe.elements.marmotsingleqpelement.element import MarmotMaterialWrappingElement
+from edelweissfe.elements.marmotsingleqpelement.element import (
+    MarmotMaterialWrappingElement,
+)
+from edelweissfe.sets.orderedset import ImmutableOrderedSet
 from edelweissfe.utils.meshtools import extractNodesFromElementSet
 
 

@@ -30,8 +30,10 @@ Created on Sun Jul 23 21:03:23 2017
 
 @author: Matthias Neuner
 """
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
+
 import numpy as np
+
 from edelweissfe.sets.nodeset import NodeSet
 
 
@@ -91,12 +93,14 @@ def extractNodeCoordinatesFromElset(elementSet, displacementResult=False, displa
     elCoordinatesList = []
 
     for element in elementSet:
+
+        # TODO: get rid of try-except block
         try:
             nodeArray = [
                 node.coordinates + displacementResult[node.label - 1, :] * displacementScaleFactor
                 for node in element.nodes
             ][:numberOfNodes]
-        except:
+        except Exception:
             nodeArray = [node.coordinates for node in element.nodes][:numberOfNodes]
         elCoordinatesList.append(np.asarray(nodeArray))
 

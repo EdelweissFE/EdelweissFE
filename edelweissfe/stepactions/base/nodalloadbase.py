@@ -26,13 +26,13 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
+from abc import abstractmethod
+
+import numpy as np
+
+from edelweissfe.sets.nodeset import NodeSet
 from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.config.phenomena import getFieldSize
-import numpy as np
-import sympy as sp
-from abc import ABC, abstractmethod
-from edelweissfe.sets.nodeset import NodeSet
 
 
 class NodalLoadBase(StepActionBase):
@@ -55,4 +55,3 @@ class NodalLoadBase(StepActionBase):
         np.ndarray
             The magnitude.
         """
-        pass

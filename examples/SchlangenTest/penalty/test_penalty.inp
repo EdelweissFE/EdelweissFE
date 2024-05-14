@@ -2,14 +2,14 @@
 210000, 0.2
 
 *material, name=GMCDPFiniteStrain, id=concrete
-**E,        nu,     GcToG,  lbending,   lTorsion,   lJ2          polarRatio,     
+**E,        nu,     GcToG,  lbending,   lTorsion,   lJ2          polarRatio,
 30000.0,    0.15 ,  0.1,     2,           4,       2,          1.499999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4,       13,     4.74,   55,         0.85,           0.0050,       .99,             2,       1.00
-**Ah,       Bh,     Ch,     Dh,         As,     
+**Ah,       Bh,     Ch,     Dh,         As,
 0.08,       0.003,  2.0,    0.000001,   15.0
-**a1,       a2,     a3,     a4,         
-0.5,        0.00,   0.5,     0,           
+**a1,       a2,     a3,     a4,
+0.5,        0.00,   0.5,     0,
 
 *modelGenerator, generator=cubit, name=gen
 cubitCmd        = False
@@ -39,7 +39,7 @@ fieldOutput=CMOD
 fieldOutput=CMSD
 
 *output, type=ensight, name=esExport
-create=perNode,     fieldOutput=displacement 
+create=perNode,     fieldOutput=displacement
 create=perNode,     fieldOutput=nonlocal damage
 create=perElement,  fieldOutput=damage
 configuration, overwrite=yes

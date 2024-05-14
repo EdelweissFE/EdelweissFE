@@ -35,7 +35,9 @@ This module provides an interface to the PARDISO solver provided by the Intel Ma
 """
 
 import os
+
 import numpy as np
+
 cimport numpy as np
 
 

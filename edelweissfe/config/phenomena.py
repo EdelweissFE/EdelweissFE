@@ -29,8 +29,8 @@
 
 # @author: Matthias Neuner
 """
-This module contains the central definition of 
-the known physics, 
+This module contains the central definition of
+the known physics,
 i.e.,
 
  * the available physical fields

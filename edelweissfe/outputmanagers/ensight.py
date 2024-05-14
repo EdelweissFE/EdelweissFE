@@ -28,6 +28,22 @@
 # Created on Sun Jan 15 14:22:48 2017
 
 # @author: Matthias Neuner
+
+import datetime
+import os
+from distutils.util import strtobool
+from io import TextIOBase
+
+import numpy as np
+
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.points.node import Node
+from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.sets.nodeset import NodeSet
+from edelweissfe.utils.fieldoutput import _FieldOutputBase
+from edelweissfe.utils.meshtools import disassembleElsetToEnsightShapes
+
 """
 Output manager for Ensight exports.
 If loaded, it automatically exports all elSets as Ensight parts.
@@ -42,24 +58,6 @@ documentation = {
     "name": "(Optional), default = the field output's name",
     "intermediateSaveInterval": 'Step option in category "Ensight": save .case file every N increments',
 }
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-
-import os
-import datetime
-import numpy as np
-from collections import defaultdict, OrderedDict
-from distutils.util import strtobool
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.points.node import Node
-from edelweissfe.utils.meshtools import disassembleElsetToEnsightShapes
-import edelweissfe.config.phenomena
-from edelweissfe.utils.math import evalModelAccessibleExpression
-from io import TextIOBase
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.utils.fieldoutput import ElementFieldOutput, NodeFieldOutput, FieldOutputController, _FieldOutputBase
-from edelweissfe.sets.elementset import ElementSet
-from edelweissfe.sets.nodeset import NodeSet
 
 
 def writeCFloat(f, ndarray):
@@ -127,7 +125,12 @@ class EnsightUnstructuredPart:
         self.partNumber = partNumber
         self.nodeCoordinateArray = np.asarray([node.coordinates for node in nodes])
 
-    def writeToFile(self, binaryFileHandle=TextIOBase, printNodeLabels: bool = True, printElementLabels: bool = True):
+    def writeToFile(
+        self,
+        binaryFileHandle=TextIOBase,
+        printNodeLabels: bool = True,
+        printElementLabels: bool = True,
+    ):
         """
         Write the part to a file.
 
@@ -161,7 +164,10 @@ class EnsightUnstructuredPart:
         writeCFloat(f, self.nodeCoordinateArray.T)
 
         if extendTo3D:
-            writeCFloat(f, np.zeros(self.nodeCoordinateArray.shape[0] * (3 - self.nodeCoordinateArray.shape[1])))
+            writeCFloat(
+                f,
+                np.zeros(self.nodeCoordinateArray.shape[0] * (3 - self.nodeCoordinateArray.shape[1])),
+            )
 
         for elemType, elements in self.elementTree.items():
             writeC80(f, elemType)
@@ -280,7 +286,11 @@ class EnsightGeometryTrend:
         A list of evolving Ensight Geometries.
     """
 
-    def __init__(self, ensightTimeSet: EnsightTimeSet, ensightGeometryList: list[EnsightGeometry] = None):
+    def __init__(
+        self,
+        ensightTimeSet: EnsightTimeSet,
+        ensightGeometryList: list[EnsightGeometry] = None,
+    ):
         self.timeSet = ensightTimeSet
         self.geometryList = ensightGeometryList if ensightGeometryList is not None else []
 
@@ -333,7 +343,12 @@ class EnsightPerNodeVariable:
         A dictionary defining the values for given Ensight parts.
     """
 
-    def __init__(self, name: str, ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray], varSize: int):
+    def __init__(
+        self,
+        name: str,
+        ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray],
+        varSize: int,
+    ):
         self.name = name
         self.description = name
         self.partsDict = ensightPartsDict or {}  # { EnsightPart: np.array(variableValues) }
@@ -446,7 +461,7 @@ class EnsightChunkWiseCase:
             The time value.
         """
 
-        if not timeAndFileSetNumber in self.timeAndFileSets:
+        if timeAndFileSetNumber not in self.timeAndFileSets:
             self.timeAndFileSets[timeAndFileSetNumber] = EnsightTimeSet(timeAndFileSetNumber, "no description", 0, 1)
         tfSet = self.timeAndFileSets[timeAndFileSetNumber]
         tfSet.timeValues.append(timeValue)
@@ -473,7 +488,7 @@ class EnsightChunkWiseCase:
 
         f = self.fileHandles[ensightGeometry.name]
 
-        if not ensightGeometry.name in self.geometryTrends:
+        if ensightGeometry.name not in self.geometryTrends:
             self.geometryTrends[ensightGeometry.name] = timeAndFileSetNumber
             writeC80(f, "C Binary")
 
@@ -501,8 +516,11 @@ class EnsightChunkWiseCase:
 
         f = self.fileHandles[ensightVariable.name]
 
-        if not ensightVariable.name in self.variableTrends:
-            self.variableTrends[ensightVariable.name] = timeAndFileSetNumber, ensightVariable.varType
+        if ensightVariable.name not in self.variableTrends:
+            self.variableTrends[ensightVariable.name] = (
+                timeAndFileSetNumber,
+                ensightVariable.varType,
+            )
             writeC80(f, "C Binary")
 
         if self.writeTransientSingleFiles:
@@ -554,12 +572,17 @@ class EnsightChunkWiseCase:
             for geometryName, tAndFSetNum in self.geometryTrends.items():
                 cf.write(
                     "model: {:} {:} {:}\n".format(
-                        tAndFSetNum, tAndFSetNum, os.path.join(self.caseFileNamePrefix, geometryName + ".geo")
+                        tAndFSetNum,
+                        tAndFSetNum,
+                        os.path.join(self.caseFileNamePrefix, geometryName + ".geo"),
                     )
                 )
 
             cf.write("VARIABLE\n")
-            for variableName, (tAndFSetNum, variableType) in self.variableTrends.items():
+            for variableName, (
+                tAndFSetNum,
+                variableType,
+            ) in self.variableTrends.items():
                 cf.write(
                     "{:}: {:} {:} {:} {:}.var\n".format(
                         variableType,
@@ -652,7 +675,7 @@ class OutputManager(OutputManagerBase):
         self.geometryParts = self._createGeometryParts(1)
 
     def updateDefinition(self, **kwargs: dict):
-        model = self.model
+        self.model
         # standard, transient jobs accessing the fieldoutput:
 
         # Determine the type
@@ -680,7 +703,9 @@ class OutputManager(OutputManagerBase):
                 if nEntries != len(fieldOutput.associatedSet):
                     raise Exception(
                         "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
-                            variableJob["name"], nEntries, len(variableJob["part"].nodes)
+                            variableJob["name"],
+                            nEntries,
+                            len(variableJob["part"].nodes),
                         )
                     )
 
@@ -693,7 +718,9 @@ class OutputManager(OutputManagerBase):
                 if nEntries != len(variableJob["part"].nodes):
                     raise Exception(
                         "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
-                            variableJob["name"], nEntries, len(variableJob["part"].nodes)
+                            variableJob["name"],
+                            nEntries,
+                            len(variableJob["part"].nodes),
                         )
                     )
 
@@ -847,7 +874,7 @@ class OutputManager(OutputManagerBase):
                 raise Exception(
                     "Ensight Variables need to be excplicity associated with a part, our implicitly through a FieldOutput defined on ElementSets or NodeSets!"
                 )
-        except:
+        except Exception:
             raise Exception(
                 "Ensight Variables need to be excplicity associated with a part, our implicitly through a FieldOutput defined on ElementSets or NodeSets!"
             )

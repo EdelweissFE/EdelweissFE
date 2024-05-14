@@ -27,8 +27,8 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from edelweissfe.sets.orderedset import ImmutableOrderedSet
 from edelweissfe.points.node import Node
+from edelweissfe.sets.orderedset import ImmutableOrderedSet
 
 
 class NodeSet(ImmutableOrderedSet):

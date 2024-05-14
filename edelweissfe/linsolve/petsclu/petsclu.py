@@ -29,8 +29,8 @@
 """
 This module provides an interface to the PetSc LU solver provided by petsc4py.
 """
-from petsc4py import PETSc
 import numpy as np
+from petsc4py import PETSc
 
 
 def petscluSolve(A, b):

@@ -13,5 +13,5 @@ The results of following publications were fully or partially obtained using Ede
 
 [5] M. Neuner, P. Gamnitzer, and G. Hofstetter, “A 3D gradient-enhanced micropolar damage-plasticity approach for modeling quasi-brittle failure of cohesive-frictional materials,” Computers & Structures, vol. 239, p. 106332, Oct. 2020, doi: :doi:`10.1016/j.compstruc.2020.106332`.
 
-[6] M. Neuner, M. Schreter, and G. Hofstetter, “Enhanced Assumed Strain Methods for Implicit Gradient-Enhanced Damage-Plasticity,” PAMM, vol. 18, no. 1, p. e201800054, 2018, 
+[6] M. Neuner, M. Schreter, and G. Hofstetter, “Enhanced Assumed Strain Methods for Implicit Gradient-Enhanced Damage-Plasticity,” PAMM, vol. 18, no. 1, p. e201800054, 2018,
 doi: :doi:`10.1002/pamm.201800054`.

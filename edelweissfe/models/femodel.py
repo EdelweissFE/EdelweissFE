@@ -29,15 +29,16 @@
 
 # @author: Matthias Neuner
 
-import numpy as np
-
-from edelweissfe.fields.nodefield import NodeField
-from edelweissfe.config.phenomena import phenomena, getFieldSize
-from edelweissfe.variables.scalarvariable import ScalarVariable
-from edelweissfe.variables.fieldvariable import FieldVariable
-from edelweissfe.journal.journal import Journal
 import textwrap
 from operator import attrgetter
+
+import numpy as np
+
+from edelweissfe.config.phenomena import getFieldSize, phenomena
+from edelweissfe.fields.nodefield import NodeField
+from edelweissfe.journal.journal import Journal
+from edelweissfe.variables.fieldvariable import FieldVariable
+from edelweissfe.variables.scalarvariable import ScalarVariable
 
 
 class FEModel:
@@ -114,8 +115,6 @@ class FEModel:
 
         theNodeFields = dict()
         for field in phenomena.keys():
-            fieldSize = getFieldSize(field, domainSize)
-
             theNodeField = NodeField(field, getFieldSize(field, domainSize), nodes)
 
             if theNodeField.nodes:
@@ -194,7 +193,10 @@ class FEModel:
         journal
             The journal instance.
         """
-        journal.message("Activating fields on nodes from Elements and Constraints", self.identification)
+        journal.message(
+            "Activating fields on nodes from Elements and Constraints",
+            self.identification,
+        )
         self._populateNodeFieldVariablesFromElements()
         self._populateNodeFieldVariablesFromConstraints()
 
@@ -265,9 +267,9 @@ def printPrettyModelSummary(model: FEModel, journal: Journal):
     identification = "PrettyModelSummary"
 
     def wrapList(theList):
-        for l in textwrap.wrap("[" + ", ".join(theList) + "]"):
+        for line in textwrap.wrap("[" + ", ".join(theList) + "]"):
             journal.message(
-                "  {:<20} ".format(l),
+                "  {:<20} ".format(line),
                 identification,
                 0,
             )

@@ -27,16 +27,27 @@
 #  ---------------------------------------------------------------------
 # Created on Sat Jul 22 14:57:48 2017
 
-## @author: Matthias Neuner
+# @author: Matthias Neuner
+
+import numpy as np
+
+from edelweissfe.fields.nodefield import NodeField
+from edelweissfe.journal.journal import Journal
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.utils.elementresultcollector import ElementResultCollector
+from edelweissfe.utils.math import createMathExpression, createModelAccessibleFunction
+from edelweissfe.utils.misc import isInteger, strToRange
+
 """
-FieldOutputs store all kind of analysis results, 
+FieldOutputs store all kind of analysis results,
 and are defined via the keyword ``*fieldOutput``.
-All fieldOutputs are accessable to all outputmanagers at the end of each 
+All fieldOutputs are accessable to all outputmanagers at the end of each
 increment, step and job.
 Furthermore, they can be exported to ``*.csv`` files at the end of the analysis job.
 
-ATTENTION: 
-    If the results are exported to a .csv file with enabled "saveHistory", 
+ATTENTION:
+    If the results are exported to a .csv file with enabled "saveHistory",
     the time History is automatically appended to the .csv file"
 """
 
@@ -46,29 +57,15 @@ documentation = {
     "result": "e.g., U, P, stress, strain ...",
     "quadraturePoint": "for element based fieldOutputs only, integers or slices",
     "f(x)": "(optional), apply math (in each increment)",
-    "saveHistory": "(optional), save complete History or only last (increment) result. Default: True (node, element) and False (nSet, elSet)",
+    "saveHistory": "(optional), save complete History or only last (increment) result. Default: True (node, element) and False (nSet, elSet)",  # noqa: E501
     "export": "(optional), export the fieldOutput to a file at the end of the job",
     "f_export(x)": "(optional), apply math on the final result (table)",
 }
-
-import numpy as np
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.utils.misc import convertLineToStringDictionary, strToRange, isInteger
-from edelweissfe.utils.meshtools import extractNodesFromElementSet
-from edelweissfe.utils.math import createMathExpression, createModelAccessibleFunction
-from edelweissfe.utils.elementresultcollector import ElementResultCollector
-from edelweissfe.numerics.dofmanager import DofVector
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.journal.journal import Journal
-from numpy import ndarray
-from edelweissfe.fields.nodefield import NodeField, NodeFieldSubset
-from edelweissfe.sets.elementset import ElementSet
 
 
 class _FieldOutputBase:
     """
     Entity of a fieldOutput request.
-
     Carries the history or the latest result.
 
     Parameters
@@ -241,7 +238,7 @@ class _FieldOutputBase:
         raise Exception("setting field output currently not implemented for this type of output!")
 
     def __eq__(self, other):
-        if type(other) == str:
+        if type(other) is str:
             return other == self.name
         return self.getLastResult() == other
 
@@ -291,7 +288,15 @@ class NodeFieldOutput(_FieldOutputBase):
         The definition for this output.
     """
 
-    def __init__(self, name: str, nodeField, result: str, model: FEModel, journal: Journal, **kwargs: dict):
+    def __init__(
+        self,
+        name: str,
+        nodeField,
+        result: str,
+        model: FEModel,
+        journal: Journal,
+        **kwargs: dict,
+    ):
         self.entry = result
 
         self._nodeField = nodeField
@@ -337,7 +342,15 @@ class ElementFieldOutput(_FieldOutputBase):
         The definition for this output.
     """
 
-    def __init__(self, name: str, elSet, resultName: str, model: FEModel, journal: Journal, **kwargs: dict):
+    def __init__(
+        self,
+        name: str,
+        elSet,
+        resultName: str,
+        model: FEModel,
+        journal: Journal,
+        **kwargs: dict,
+    ):
         self.associatedSet = elSet
 
         self.resultName = resultName

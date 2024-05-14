@@ -25,6 +25,9 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+
 """
 Writes a status file during the analysis.
 
@@ -38,10 +41,6 @@ Writes a status file during the analysis.
 documentation = {
     "filename": "(optional), custom filename for the status file; default: 'jobname'.sta",
 }
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.utils.math import createMathExpression
 
 
 class OutputManager(OutputManagerBase):
@@ -100,7 +99,13 @@ class OutputManager(OutputManagerBase):
                 f.write("#\n")
                 f.write(
                     "#{: >5}{: >6}{: >6}{: >10}{: >12}{: >12}    {:<}\n".format(
-                        "step", "inc", "iters", "converged", "time inc", "time end", "notes"
+                        "step",
+                        "inc",
+                        "iters",
+                        "converged",
+                        "time inc",
+                        "time end",
+                        "notes",
                     )
                 )
                 f.write("#\n")
@@ -109,6 +114,12 @@ class OutputManager(OutputManagerBase):
         with open(self.filename, "a") as f:
             f.write(
                 "{: >6}{: >6}{: >6}{: >10}{: >12.3e}{: >12.3e}    # {:<s}\n".format(
-                    d["step"], d["inc"], d["iters"], d["converged"], d["time inc"], d["time end"], d["notes"]
+                    d["step"],
+                    d["inc"],
+                    d["iters"],
+                    d["converged"],
+                    d["time inc"],
+                    d["time end"],
+                    d["notes"],
                 )
             )

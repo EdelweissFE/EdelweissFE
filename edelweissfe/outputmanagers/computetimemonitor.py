@@ -25,6 +25,13 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+
+from collections import defaultdict
+from typing import Union
+
+from edelweissfe.config.timing import createTimingDict, timingTypes
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+
 """
 Prints the compute times per increment to the screen and writes them into a file (optional).
 
@@ -38,15 +45,6 @@ Prints the compute times per increment to the screen and writes them into a file
 documentation = {
     "export": "(optional), filename if compute time should be written in a file",
 }
-
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.config.timing import timingTypes, createTimingDict
-from edelweissfe.models.femodel import FEModel
-import numpy as np
-from collections import defaultdict
-from typing import Union
 
 
 class OutputManager(OutputManagerBase):
@@ -123,7 +121,10 @@ class OutputManager(OutputManagerBase):
     def printIncrementComputingTimes(self, incCompTimeTotal, incCompTimesIndividual):
         self.journal.printTable(
             [
-                ("Time in {:}".format(k), " {:.5e}s ({:>4.1f}%)".format(v, v / incCompTimeTotal * 100))
+                (
+                    "Time in {:}".format(k),
+                    " {:.5e}s ({:>4.1f}%)".format(v, v / incCompTimeTotal * 100),
+                )
                 for k, v in incCompTimesIndividual.items()
             ],
             self.identification,

@@ -32,7 +32,9 @@ This module provides an interface to the SuiteSparse KLU solver.
 """
 
 import numpy as np
+
 cimport numpy as np
+
 
 cdef extern from "kluInterface.h" nogil:
     int solve(double* LHS, int* innerIndices,

@@ -29,13 +29,16 @@
 #
 # @author: Matthias Neuner, Paul Hofer
 
-import numpy as np
-from edelweissfe.utils.misc import convertAssignmentsToStringDictionary, splitLineAtCommas
-from edelweissfe.utils.misc import strCaseCmp
-from edelweissfe.utils.math import createFunction
-from edelweissfe.config.sections import getSectionClass
-
 from abc import ABC, abstractmethod
+
+import numpy as np
+
+from edelweissfe.utils.math import createFunction
+from edelweissfe.utils.misc import (
+    convertAssignmentsToStringDictionary,
+    splitLineAtCommas,
+    strCaseCmp,
+)
 
 
 class Section(ABC):

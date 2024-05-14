@@ -29,15 +29,15 @@
 
 # @author: Matthias Neuner
 
-documentation = {
-    "nSet": "(slave) node set, which is constrained to the reference point",
-    "referencePoint": "(master) reference point",
-}
-
 import numpy as np
 
 from edelweissfe.constraints.base.constraintbase import ConstraintBase
 from edelweissfe.utils.misc import convertLinesToStringDictionary
+
+documentation = {
+    "nSet": "(slave) node set, which is constrained to the reference point",
+    "referencePoint": "(master) reference point",
+}
 
 
 class Constraint(ConstraintBase):
@@ -114,8 +114,6 @@ class Constraint(ConstraintBase):
 
     def update(self, options):
         """No updates are possible for this constraint."""
-
-        pass
 
     def getNumberOfAdditionalNeededScalarVariables(self):
         return self.nConstraints

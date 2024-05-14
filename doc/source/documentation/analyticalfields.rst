@@ -39,5 +39,5 @@ Implementing your own fields
 
 Subclass from the field base class in module ``edelweissfe.analyticalfields.base.analyticalfieldbase``
 
-.. automodule:: edelweissfe.analyticalfields.base.analyticalfieldbase    
-   :members: 
+.. automodule:: edelweissfe.analyticalfields.base.analyticalfieldbase
+   :members:

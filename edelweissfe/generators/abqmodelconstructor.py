@@ -41,16 +41,17 @@ is using the keywords
 employing an Abaqus-like syntax.
 """
 
+import numpy as np
+
+from edelweissfe.config.analyticalfields import getAnalyticalFieldByName
+from edelweissfe.config.constraints import getConstraintClass
+from edelweissfe.config.elementlibrary import getElementClass
+from edelweissfe.config.sections import getSectionClass
+from edelweissfe.models.femodel import FEModel
 from edelweissfe.points.node import Node
 from edelweissfe.sets.elementset import ElementSet
 from edelweissfe.sets.nodeset import NodeSet
-from edelweissfe.config.elementlibrary import getElementClass
-from edelweissfe.utils.misc import isInteger, splitLineAtCommas, convertLinesToFlatArray
-from edelweissfe.config.constraints import getConstraintClass
-from edelweissfe.config.sections import getSectionClass
-from edelweissfe.config.analyticalfields import getAnalyticalFieldByName
-from edelweissfe.models.femodel import FEModel
-import numpy as np
+from edelweissfe.utils.misc import convertLinesToFlatArray, isInteger, splitLineAtCommas
 
 
 class AbqModelConstructor:
@@ -80,8 +81,8 @@ class AbqModelConstructor:
         nodeDefinitions = model.nodes
         for nodeDefs in inputFile["*node"]:
             currNodeDefs = {}
-            for l in nodeDefs["data"]:
-                defLine = splitLineAtCommas(l)
+            for line in nodeDefs["data"]:
+                defLine = splitLineAtCommas(line)
 
                 label = int(defLine[0])
                 coordinates = np.zeros(domainSize)
@@ -105,8 +106,8 @@ class AbqModelConstructor:
             ElementClass = getElementClass(elementProvider)
 
             currElDefs = {}
-            for l in elDefs["data"]:
-                defLine = [int(i) for i in splitLineAtCommas(l)]
+            for line in elDefs["data"]:
+                defLine = [int(i) for i in splitLineAtCommas(line)]
 
                 label = defLine[0]
                 # store nodeObjects in elNodes list
@@ -127,7 +128,7 @@ class AbqModelConstructor:
         for elSetDefinition in inputFile["*elSet"]:
             name = elSetDefinition["elSet"]
 
-            data = [splitLineAtCommas(l) for l in elSetDefinition["data"]]
+            data = [splitLineAtCommas(line) for line in elSetDefinition["data"]]
             # decide if entries are labels or existing nodeSets:
             if isInteger(data[0][0]):
                 elNumbers = [int(num) for line in data for num in line]
@@ -135,7 +136,13 @@ class AbqModelConstructor:
                 if elSetDefinition.get("generate", False):
                     generateDef = elNumbers[0:3]
                     els = [
-                        elements[n] for n in np.arange(generateDef[0], generateDef[1] + 1, generateDef[2], dtype=int)
+                        elements[n]
+                        for n in np.arange(
+                            generateDef[0],
+                            generateDef[1] + 1,
+                            generateDef[2],
+                            dtype=int,
+                        )
                     ]
 
                 elif elSetDefinition.get("boolean", False):
@@ -172,14 +179,19 @@ class AbqModelConstructor:
         for nSetDefinition in inputFile["*nSet"]:
             name = nSetDefinition["nSet"]
 
-            data = [splitLineAtCommas(l) for l in nSetDefinition["data"]]
+            data = [splitLineAtCommas(line) for line in nSetDefinition["data"]]
             if isInteger(data[0][0]):
                 nodes = [int(n) for line in data for n in line]
                 if nSetDefinition.get("generate", False):
                     generateDef = nodes  # nSetDefinition['data'][0][0:3]
                     nodes = [
                         nodeDefinitions[n]
-                        for n in np.arange(generateDef[0], generateDef[1] + 1, generateDef[2], dtype=int)
+                        for n in np.arange(
+                            generateDef[0],
+                            generateDef[1] + 1,
+                            generateDef[2],
+                            dtype=int,
+                        )
                     ]
                 else:
                     nodes = [nodeDefinitions[n] for n in nodes]
@@ -198,9 +210,9 @@ class AbqModelConstructor:
             sType = surfaceDef.get("type", "element").lower()
             surface = {}
             if sType == "element":
-                data = [splitLineAtCommas(l) for l in surfaceDef["data"]]
-                for l in data:
-                    elSet, faceNumber = l
+                data = [splitLineAtCommas(line) for line in surfaceDef["data"]]
+                for line in data:
+                    elSet, faceNumber = line
                     faceNumber = int(faceNumber.replace("S", ""))
                     surface[faceNumber] = model.elementSets[elSet]
 
@@ -231,7 +243,10 @@ class AbqModelConstructor:
 
             materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=float)
 
-            model.materials[materialID] = {"name": materialName, "properties": materialProperties}
+            model.materials[materialID] = {
+                "name": materialName,
+                "properties": materialProperties,
+            }
 
         return model
 
@@ -283,7 +298,7 @@ class AbqModelConstructor:
             try:
                 name = definition.pop("name")
             except KeyError:
-                raise KeyError(f"No name specified for section.")
+                raise KeyError(f"No name specified for section {name}.")
             try:
                 sectionType = definition.pop("type")
             except KeyError:
@@ -294,7 +309,7 @@ class AbqModelConstructor:
                 raise KeyError(f"No data specified for section {name}.")
             try:
                 materialName = definition.pop("material")
-            except:
+            except KeyError:
                 raise KeyError(f"No material specified for section {name}.")
 
             if name in model.sections:

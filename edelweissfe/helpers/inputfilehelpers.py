@@ -26,24 +26,24 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from edelweissfe.utils.fieldoutput import FieldOutputController
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.journal.journal import Journal
 from edelweissfe.config.generators import getGeneratorFunction
+from edelweissfe.config.outputmanagers import getOutputManagerClass
+from edelweissfe.config.solvers import getSolverByName
 from edelweissfe.generators.abqmodelconstructor import AbqModelConstructor
-from edelweissfe.variables.scalarvariable import ScalarVariable
+from edelweissfe.journal.journal import Journal
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.steps.stepmanager import (
+    StepActionDefinition,
+    StepDefinition,
+    StepManager,
+)
+from edelweissfe.utils.fieldoutput import FieldOutputController
 from edelweissfe.utils.misc import (
     convertAssignmentsToStringDictionary,
-    splitLineAtCommas,
     convertLinesToStringDictionary,
+    convertLineToStringDictionary,
+    splitLineAtCommas,
 )
-from edelweissfe.steps.stepmanager import StepManager, StepActionDefinition, StepDefinition
-from edelweissfe.utils.misc import convertLinesToStringDictionary
-from edelweissfe.config.solvers import getSolverByName
-from edelweissfe.config.outputmanagers import getOutputManagerClass
-from edelweissfe.config.outputmanagers import getOutputManagerClass
-from edelweissfe.utils.fieldoutput import FieldOutputController
 from edelweissfe.utils.plotter import Plotter
 
 
@@ -259,7 +259,6 @@ def createOutputManagersFromInputFile(
     list
         The list containing the OutputManager instances.
     """
-    jobName = defaultName
     outputManagers = []
 
     for outputDef in inputfile["*output"]:

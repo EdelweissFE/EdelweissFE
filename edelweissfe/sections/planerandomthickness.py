@@ -1,7 +1,8 @@
-import numpy as np
 import gstools
-from edelweissfe.utils.misc import convertLinesToStringDictionary
+import numpy as np
+
 from edelweissfe.utils.math import createFunction
+from edelweissfe.utils.misc import convertLinesToStringDictionary
 
 
 class Section:

@@ -29,6 +29,13 @@
 
 # @author: Matthias Neuner
 
+import numpy as np
+
+from edelweissfe.numerics.dofmanager import DofManager
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+from edelweissfe.timesteppers.timestep import TimeStep
+from edelweissfe.utils.math import evalModelAccessibleExpression
+
 """
 Indirect (displacement) controller for the NISTArcLength solver
 """
@@ -38,12 +45,6 @@ documentation = {
     "dof2": "Degree of freedom for the constraint ( model access expression )",
     "L": "Final distance (e.g. crack opening)",
 }
-
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.numerics.dofmanager import DofManager
-import numpy as np
-from edelweissfe.utils.math import evalModelAccessibleExpression
 
 
 class StepAction(StepActionBase):
@@ -66,8 +67,6 @@ class StepAction(StepActionBase):
         )
 
         dL = timeStep.stepProgressIncrement * self.L
-
-        denom = self.c.dot(ddU_f[idcs])
 
         ddLambda = (dL - self.c.dot(dU[idcs] + ddU_0[idcs])) / self.c.dot(ddU_f[idcs])
         return ddLambda

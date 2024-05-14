@@ -8,7 +8,7 @@ Mandatory arguments are
     :width: 100%
     :widths: 25 25 40
     :header-rows: 1
- 
+
     * - Option
       - Type
       - Description

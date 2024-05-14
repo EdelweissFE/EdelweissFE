@@ -29,6 +29,14 @@
 
 # @author: Matthias Neuner
 
+import numpy as np
+import sympy as sp
+
+from edelweissfe.config.phenomena import getFieldSize
+from edelweissfe.sets.nodeset import NodeSet
+from edelweissfe.stepactions.base.nodalloadbase import NodalLoadBase
+from edelweissfe.timesteppers.timestep import TimeStep
+
 """
 Apply simple node forces on a nSet.
 """
@@ -40,13 +48,6 @@ documentation = {
     "field": "Field for which the boundary condition is active",
     "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
-
-from edelweissfe.stepactions.base.nodalloadbase import NodalLoadBase
-from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.config.phenomena import getFieldSize
-from edelweissfe.sets.nodeset import NodeSet
-import numpy as np
-import sympy as sp
 
 
 class StepAction(NodalLoadBase):
@@ -114,13 +115,15 @@ class StepAction(NodalLoadBase):
             t = sp.symbols("t")
             amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
         else:
-            amplitude = lambda x: x
+
+            def amplitude(x):
+                return x
 
         return amplitude
 
     def applyAtStepEnd(self, model, stepMagnitude=None):
         if not self._idle:
-            if stepMagnitude == None:
+            if stepMagnitude is None:
                 # standard case
                 self.nodeForcesStepStart += self.nodeForcesDelta * self.amplitude(1.0)
             else:

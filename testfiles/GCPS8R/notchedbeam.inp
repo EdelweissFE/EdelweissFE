@@ -9,7 +9,7 @@ all
 *fieldOutput
 create=perNode, name=load, nSet=topNodes,  field=displacement, result=P
 create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
-create=perNode, name=nonlocalDamage, elSet=all, field=nonlocal damage, result=U, 
+create=perNode, name=nonlocalDamage, elSet=all, field=nonlocal damage, result=U,
 create=perElement, name=stress, elSet=all, result=stress, quadraturePoint=0:4, f(x)='mean(x, axis=1)'
 create=perElement, name=strain, elSet=all, result=strain, quadraturePoint=0:4, f(x)='mean(x, axis=1)'
 create=perElement, name=alphaP, elSet=all, result=alphaP, quadraturePoint=0:4, f(x)='mean(x[:,:], axis=1)'
@@ -30,7 +30,7 @@ create=perElement, fieldOutput=alphaD
 create=perElement, fieldOutput=omega
 configuration, overwrite=yes
 
-*step, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25, 
+*step, maxInc=1e-1, minInc=1e-6, maxNumInc=1000, maxIter=25,
 options, category=NISTSolver, extrapolation=linear
 dirichlet, name=left,  nSet=left,   field=displacement, 1=0.0, 2=0.0
 dirichlet, name=right, nSet=right,  field=displacement, 2=0

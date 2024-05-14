@@ -25,6 +25,12 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
+
+import sympy as sp
+
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+from edelweissfe.timesteppers.timestep import TimeStep
+
 """
 Stepaction to change material properties.
 
@@ -35,11 +41,6 @@ documentation = {
     "index": "The index of the property in the material properties vector",
     "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
-
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.timesteppers.timestep import TimeStep
-import numpy as np
-import sympy as sp
 
 
 class StepAction(StepActionBase):

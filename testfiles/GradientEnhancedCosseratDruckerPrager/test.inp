@@ -1,8 +1,8 @@
-*material, name=GradientEnhancedCosseratDruckerPrager, id=le, 
+*material, name=GradientEnhancedCosseratDruckerPrager, id=le,
 **E,     nu,    GcToG,  lb,   lt,       lj2,        polarRatio,    cohesion,   phi,    psi,    A,          hExpDelta,      hExp,   hDilationExp
 500,  0.12,   .1,      10,   20,        10,          1.49999,         0.4,         25,      5,      0.00,      1,           1000,      0,
 **a1,   a2,     a3,     a4,  lDamage, epsF, omegaMax, derivativeMethod
-0.5,   0.0,   0.5,     0.0,  10,      1e-2,     0.99,   0 
+0.5,   0.0,   0.5,     0.0,  10,      1e-2,     0.99,   0
 
 *section, name=section1, thickness=1.0, material=le, type=plane
 all
@@ -10,8 +10,8 @@ all
 *job, name=gmdruckerpragerjob, domain=2d
 *solver, solver=NISTParallelForMarmotElements, name=theSolver
 *fieldOutput
-create=perNode, name=displacement, elSet=all, field=displacement, result=U, 
-create=perNode, name=micro rotation, elSet=all, field=micro rotation, result=U, 
+create=perNode, name=displacement, elSet=all, field=displacement, result=U,
+create=perNode, name=micro rotation, elSet=all, field=micro rotation, result=U,
 create=perNode, name=umag, elSet=all, field=displacement, result=U, f(x)=' linalg.norm ( x, axis=1 )'
 create=perNode, name=RF, nSet=gen_top, field=displacement, result=P, f(x)='sum(x[:,1])', saveHistory=True, export=RF
 create=perNode, name=U, nSet=gen_top, field=displacement, result=U, f(x)='mean(x[:,1])', saveHistory=True, export=U
@@ -26,11 +26,11 @@ nY=8
 
 *output, type=monitor, name=omegaMon
 fieldOutput=RF
-fieldOutput=alphaP, f(x)='max(x)' 
+fieldOutput=alphaP, f(x)='max(x)'
 
 *output, type=ensight, name=esExport
 configuration, overwrite=True
-create=perNode, fieldOutput=displacement, 
+create=perNode, fieldOutput=displacement,
 create=perNode, fieldOutput=micro rotation,
 create=perElement, fieldOutput=alphaP
 
@@ -39,17 +39,17 @@ figure=1, axSpec=111, c=k, ls=solid, create=xyData, x=time, y=RF
 ** figure=1, axSpec=122, create=perNode, fieldOutput=umag
 
 ** *exportPlots,
-** figure=1, fileName=plot, width=298, heightRatio=1.415 
+** figure=1, fileName=plot, width=298, heightRatio=1.415
 
 *constraint, type=linearizedRigidBody, name=rb1
 nSet=gen_top,
 referencePoint=gen_rightTop
 
 *step, solver=theSolver, maxInc=1e-0, minInc=1e-7, maxNumInc=200, maxIter=12, stepLength=1
-**initializematerial, name=init, elSet=all 
+**initializematerial, name=init, elSet=all
 dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
-dirichlet, name=top, nSet=gen_rightTop, field=displacement, 2=0, 
-dirichlet, name=topR, nSet=gen_rightTop, field=rotation, 1=0, 
+dirichlet, name=top, nSet=gen_rightTop, field=displacement, 2=0,
+dirichlet, name=topR, nSet=gen_rightTop, field=rotation, 1=0,
 
 distributedload, name=dloadt, surface=gen_top, type=pressure, magnitude=0, f(t)=t
 distributedload, name=dloadl, surface=gen_left, type=pressure, magnitude=0, f(t)=t
@@ -57,5 +57,5 @@ distributedload, name=dloadr, surface=gen_right, type=pressure, magnitude=0, f(t
 
 nodeforces, name=cloadTop, nSet=gen_rightTop, field=displacement, 1=-1, f(t)=t
 *step, solver=theSolver, maxInc=5e-2, minInc=1e-7, maxNumInc=500, maxIter=12, stepLength=1
-** dirichlet, name=top, nSet=gen_top, field=displacement, 2=-4, 
+** dirichlet, name=top, nSet=gen_top, field=displacement, 2=-4,
 dirichlet, name=top, field=displacement, 2=-4

@@ -26,10 +26,11 @@
 #  ---------------------------------------------------------------------
 # Created on Sat Jan  21 12:18:10 2017
 
-# @author: Matthias
-from edelweissfe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 from edelweissfe.journal.journal import Journal
 from edelweissfe.timesteppers.timestep import TimeStep
+
+# @author: Matthias
+from edelweissfe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 
 
 class AdaptiveTimeStepper:
@@ -164,6 +165,10 @@ class AdaptiveTimeStepper:
         else:
             self.increment = newIncrement
 
-        self.journal.message("Cutback to increment size {:}".format(self.increment), self.identification, 2)
+        self.journal.message(
+            "Cutback to increment size {:}".format(self.increment),
+            self.identification,
+            2,
+        )
         self.totalIncrements -= 1
         self.nPassedGoodIncrements = 0

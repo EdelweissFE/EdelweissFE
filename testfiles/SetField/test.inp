@@ -24,7 +24,7 @@ create=perElement, elSet=all, result=kappa, name=kappa, quadraturePoint=0:8
 create=perElement, elSet=all, result=kappa, name=kappaMax, quadraturePoint=0:8, f(x)='np.max(x, axis=1)'
 
 *output, type=ensight, name=esExport
-create=perNode, fieldOutput=displacement 
+create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=meanStress
 create=perElement, fieldOutput=kappaMax
 configuration, overwrite=yes

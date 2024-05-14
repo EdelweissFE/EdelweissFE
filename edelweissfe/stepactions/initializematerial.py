@@ -32,9 +32,9 @@
 Let materials initialize themselves (e.g., state vars depending on material parameters...) !
 """
 
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 import numpy as np
 
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
 
 documentation = {}
 

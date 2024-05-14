@@ -28,6 +28,14 @@
 # Created on Mon Jan 23 13:03:09 2017
 
 # @author: Matthias Neuner
+
+import numpy as np
+import sympy as sp
+
+from edelweissfe.config.phenomena import getFieldSize
+from edelweissfe.stepactions.base.dirichletbase import DirichletBase
+from edelweissfe.timesteppers.timestep import TimeStep
+
 """
 Standard Dirichlet boundary condition.
 If not modified in subsequent steps, the BC is held constant.
@@ -40,13 +48,6 @@ documentation = {
     "analyticalField": "(Optional) scales the defined boundary condition",
     "f(t)": "(Optional) define an amplitude in the step progress interval [0...1]",
 }
-
-
-from edelweissfe.stepactions.base.dirichletbase import DirichletBase
-from edelweissfe.timesteppers.timestep import TimeStep
-from edelweissfe.config.phenomena import getFieldSize
-import numpy as np
-import sympy as sp
 
 
 class StepAction(DirichletBase):
@@ -77,8 +78,6 @@ class StepAction(DirichletBase):
 
     def updateStepAction(self, action, jobInfo, model, fieldOutputController, journal):
         self.active = True
-
-        nodeSets = model.nodeSets
 
         self.action = action
 
@@ -152,6 +151,8 @@ class StepAction(DirichletBase):
             t = sp.symbols("t")
             amplitude = sp.lambdify(t, sp.sympify(action["f(t)"]), "numpy")
         else:
-            amplitude = lambda x: x
+
+            def amplitude(x):
+                return x
 
         return amplitude

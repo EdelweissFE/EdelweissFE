@@ -29,8 +29,8 @@
 """
 This module provides an interface to the MUMPS solver.
 """
-from mumps import DMumpsContext
 import numpy as np
+from mumps import DMumpsContext
 
 
 def mumpsSolve(A, b):

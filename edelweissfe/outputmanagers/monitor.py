@@ -28,6 +28,10 @@
 # Created on Sat Jul 22 21:26:01 2017
 
 # @author: Matthias Neuner
+
+from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
+from edelweissfe.utils.math import createMathExpression
+
 """
 A simple monitor to observe results (fieldOutputs) in the console during analysis.
 
@@ -42,10 +46,6 @@ documentation = {
     "fieldOutput": "Name of the field output to be monitored",
     "f(x)": "(Optional), apply a model accessible function on the result",
 }
-
-from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
-from edelweissfe.utils.misc import convertLineToStringDictionary
-from edelweissfe.utils.math import createMathExpression
 
 
 class OutputManager(OutputManagerBase):

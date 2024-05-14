@@ -28,14 +28,15 @@
 # Created on Mon Jan 23 13:03:09 2017
 
 # @author: Matthias Neuner
+
+from edelweissfe.stepactions.base.stepactionbase import StepActionBase
+from edelweissfe.utils.math import execModelAccessibleExpression
+
 """This step action may be used for updating something in the model at the beginning
 of a step.
 """
 
 documentation = {"update": "Model accessible, executable expression"}
-
-from edelweissfe.stepactions.base.stepactionbase import StepActionBase
-from edelweissfe.utils.math import execModelAccessibleExpression
 
 
 class StepAction(StepActionBase):
@@ -61,5 +62,9 @@ class StepAction(StepActionBase):
             return
 
         journal.message("Updating model: {:}".format(self.updateExpression), self.name)
-        execModelAccessibleExpression(self.updateExpression, model, fieldOutputs=fieldOutputController.fieldOutputs)
+        execModelAccessibleExpression(
+            self.updateExpression,
+            model,
+            fieldOutputs=fieldOutputController.fieldOutputs,
+        )
         return model

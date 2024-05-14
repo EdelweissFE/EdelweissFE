@@ -23,7 +23,7 @@ create=perNode, nSet=gen_bottom, field=displacement, result=P, name=RF
 create=perElement, elSet=all, result=strain, name=strain, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
 create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
 
-*output, type=ensight, 
+*output, type=ensight,
 create=perNode, fieldOutput=displacement
 create=perElement, fieldOutput=stress
 create=perElement, fieldOutput=strain

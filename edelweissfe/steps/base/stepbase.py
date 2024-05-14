@@ -32,7 +32,6 @@ Subsequent Steps inherit StepActions, and they may be updated."""
 from edelweissfe.journal.journal import Journal
 from edelweissfe.models.femodel import FEModel
 from edelweissfe.utils.fieldoutput import FieldOutputController
-from collections import defaultdict
 
 
 class StepBase:
@@ -91,5 +90,3 @@ class StepBase:
         FEModel
             The updated model.
         """
-
-        pass

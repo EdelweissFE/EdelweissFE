@@ -30,9 +30,9 @@ Created on Mon Apr 18 17:36:07 2016
 @author: Matthias Neuner
 """
 
-import numpy as np
 import shlex
-from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
+
+import numpy as np
 
 
 def flagDict(configLine):
@@ -143,7 +143,7 @@ def convertLinesToFlatArray(lines: list, dtype: type = float) -> np.ndarray:
         The resulting 1D array.
     """
 
-    theLines = [np.asarray(splitLineAtCommas(l), dtype=dtype) for l in lines]
+    theLines = [np.asarray(splitLineAtCommas(line), dtype=dtype) for line in lines]
     return np.hstack(theLines)
 
 
@@ -188,7 +188,8 @@ def mergeNumpyDataLines(multiLineData: np.ndarray) -> np.ndarray:
 
 
 def strtobool(val: str) -> bool:
-    """-- Implementation from deprecated module distutils.utils -- Convert a string representation of truth to true (1) or false (0).
+    """-- Implementation from deprecated module distutils.utils --
+    Convert a string representation of truth to true (1) or false (0).
     True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
     are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
     'val' is anything else.

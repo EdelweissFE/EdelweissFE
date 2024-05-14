@@ -1,12 +1,12 @@
 *material, name=GMCDP, id=GMCDP
-**E,        nu,     GcToG,  lbending, lJ2          polarRatio,     
+**E,        nu,     GcToG,  lbending, lJ2          polarRatio,
 30000.0,    0.15 ,  1,      2,        2,          1.49999999999999
 **fcu,      fcy,    ftu,    fbu,        Df,             epsF,        omegaMax,     lDamage,     m
 47.4,       13,     4.74,   55,         0.85,           0.0035,       .99,             2,       1.00
-**Ah,       Bh,     Ch,     Dh,         As,     
+**Ah,       Bh,     Ch,     Dh,         As,
 0.08,       0.003,  2.0,    0.000001,   0.75
-**a1,       a2,     a3,     a4,         
-0.5,        0.0,    0.5,     0,           
+**a1,       a2,     a3,     a4,
+0.5,        0.0,    0.5,     0,
 ** 0.5,        0.0,   0.5,     .0,           0.333333332,  0
 **0.75,        -0.25,   0.75,     -.25,           0.333333332,  0
 
@@ -61,6 +61,6 @@ figure=2, fileName=mesh
 
 *step, maxInc=1e-2, minInc=1e-7, maxNumInc=10000, maxIter=25, stepLength=100
 options, category=NISTSolver, extrapolation=linear
-dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0,
 dirichlet, name=bc, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
 dirichlet, name=top, nSet=gen_top, field=displacement, 2=-5
