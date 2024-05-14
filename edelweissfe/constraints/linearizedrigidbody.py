@@ -68,10 +68,10 @@ class Constraint(ConstraintBase):
         slaveNodeSet = nodeSets[rbNset]  # slave node set may contain the reference point
 
         # reference point is removed (if present) and node set is converted to list
-        self.slaveNodes = [node for node in slaveNodeSet ^ rpNodeSet]
+        self.slaveNodes = [node for node in slaveNodeSet if not node == self.rp]
 
-        # list of all nodes from union of slaveNodeSet and rpNodeSet
-        self._nodes = [node for node in slaveNodeSet | rpNodeSet]
+        # list of all nodes including RP at end
+        self._nodes = self.slaveNodes + [self.rp]
 
         nSlaves = len(self.slaveNodes)
         self.slaveNodesFields = [["displacement"]] * nSlaves
