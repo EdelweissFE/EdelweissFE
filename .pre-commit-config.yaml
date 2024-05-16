@@ -8,6 +8,7 @@ repos:
   rev: "v2.3.1"
   hooks:
    - id: autoflake
+     args: ["--remove-all-unused-imports", "--in-place"]
 - repo: https://github.com/psf/black
   rev: "24.4.0"
   hooks:
