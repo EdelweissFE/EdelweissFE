@@ -279,7 +279,6 @@ cdef class MarmotElementWrapper:
     def resetToLastValidState(self,):
         """Reset to the last valid state."""
 
-        pass
 
     def getResultArray(self, result, quadraturePoint, getPersistentView=True):
         """Get the array of a result, possibly as a persistent view which is continiously
