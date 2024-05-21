@@ -25,6 +25,7 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
+import inspect
 from collections import defaultdict
 from time import time
 
@@ -90,6 +91,10 @@ class timeit:
             finally:
                 timer.toc()
                 timeit._currentStackLevel = self._parentStackLevel
+
+        wrapper.__doc__ = theFunction.__doc__
+        wrapper.__module__ = theFunction.__module__
+        wrapper.__signature__ = inspect.signature(theFunction)
 
         return wrapper
 

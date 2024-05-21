@@ -41,7 +41,11 @@ from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 from edelweissfe.points.node import Node
 from edelweissfe.sets.elementset import ElementSet
 from edelweissfe.sets.nodeset import NodeSet
-from edelweissfe.utils.fieldoutput import _FieldOutputBase
+from edelweissfe.utils.fieldoutput import (
+    ElementFieldOutput,
+    NodeFieldOutput,
+    _FieldOutputBase,
+)
 from edelweissfe.utils.meshtools import disassembleElsetToEnsightShapes
 
 """
@@ -349,8 +353,9 @@ class EnsightPerNodeVariable:
         ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray],
         varSize: int,
     ):
-        self.name = name
-        self.description = name
+
+        self.name = name.replace(" ", "_")
+        self.description = self.name
         self.partsDict = ensightPartsDict or {}  # { EnsightPart: np.array(variableValues) }
 
         self.varType = ensightPerNodeVariableTypes[varSize]
@@ -374,8 +379,6 @@ class EnsightPerNodeVariable:
             writeCInt(f, ensightPartID)
             writeC80(f, structureType)
             writeCFloat(f, values.T)
-            # if values.shape[1] < self.variableDimension:
-            #     writeCFloat(f, np.zeros((values.shape[0], self.variableDimension - values.shape[1])))
 
 
 class EnsightPerElementVariable:
@@ -396,12 +399,11 @@ class EnsightPerElementVariable:
     def __init__(
         self,
         name: str,
-        # variableDimension: int,
         ensightPartsDict: dict[EnsightUnstructuredPart, np.ndarray],
         varSize: int,
     ):
-        self.name = name
-        self.description = name
+        self.name = name.replace(" ", "_")
+        self.description = self.name
         self.partsDict = ensightPartsDict
         self.varType = ensightPerElementVariableTypes[varSize]
 
@@ -681,57 +683,144 @@ class OutputManager(OutputManagerBase):
         # Determine the type
         if "create" in kwargs:
             create = kwargs.pop("create")
-
-            variableJob = dict()
             fieldOutput = kwargs.pop("fieldOutput")
-            variableJob["fieldOutput"] = fieldOutput
+            part = None
+            if "nSet" in kwargs:
+                part = self.nSetToEnsightPartMappings[kwargs.pop("nSet")]
+            elif "elSet" in kwargs:
+                part = self.elSetToEnsightPartMappings[kwargs.pop("elSet")]
 
-            variableJob["part"] = self._getTargetPartForFieldOutput(fieldOutput, **kwargs)
-            variableJob["name"] = kwargs.get("name", fieldOutput.name).replace(" ", "_")
+            name = kwargs.get("name", fieldOutput.name).replace(" ", "_")
 
             nEntries, varSize = self._ensureArrayIs2D(fieldOutput.getLastResult()).shape
 
             if self.model.domainSize == 2 and varSize == 2:
                 varSize = 3
 
-            variableJob["varSize"] = varSize
-
             transient = kwargs.get("transient", "True")
             transient = strtobool(transient)
 
             if create == "perElement":
-                if nEntries != len(fieldOutput.associatedSet):
-                    raise Exception(
-                        "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
-                            variableJob["name"],
-                            nEntries,
-                            len(variableJob["part"].nodes),
-                        )
-                    )
-
-                variableJob["elementsOfShape"] = disassembleElsetToEnsightShapes(fieldOutput.associatedSet)
-
-                if transient:
-                    self.transientPerElementJobs.append(variableJob)
-
+                self.createPerElementOutput(fieldOutput, part, name, transient=transient, varSize=varSize)
             elif create == "perNode":
-                if nEntries != len(variableJob["part"].nodes):
-                    raise Exception(
-                        "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
-                            variableJob["name"],
-                            nEntries,
-                            len(variableJob["part"].nodes),
-                        )
-                    )
-
-                if transient:
-                    self.transientPerNodeJobs.append(variableJob)
+                self.createPerNodeOutput(fieldOutput, part, name, transient=transient, varSize=varSize)
 
         if "configuration" in kwargs:
             # ensight output is overwritten by default
             self.overwrite = strtobool(kwargs.get("overwrite", "True"))
             if not self.overwrite:
                 self.exportName = "{:}_{:}".format(self.name, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+
+    def createPerElementOutput(
+        self,
+        fieldOutput: ElementFieldOutput,
+        part: set = None,
+        name: str = None,
+        transient: bool = True,
+        varSize: int = None,
+    ):
+        """Create a per element output job.
+
+        Parameters
+        ----------
+        fieldOutput
+            The field output to export.
+        part
+            The part to which the output belongs. If not specified, the part is determined from the field output.
+        name
+            The name of the output. If not specified, the name of the field output is taken.
+        transient
+            Whether the output is transient.
+        varSize
+            The size of the variable. If not specified, the size of the field output is taken.
+        """
+
+        variableJob = dict()
+        variableJob["fieldOutput"] = fieldOutput
+        variableJob["part"] = part
+        if not name:
+            name = fieldOutput.name
+        variableJob["name"] = name
+        variableJob["transient"] = transient
+
+        nEntries, varSizeFp = self._ensureArrayIs2D(fieldOutput.getLastResult()).shape
+
+        if not part:
+            part = self._getTargetPartForFieldOutput(fieldOutput)
+        variableJob["part"] = part
+
+        if nEntries != len(fieldOutput.associatedSet):
+            print(len(fieldOutput.associatedSet))
+            raise Exception(
+                "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
+                    variableJob["name"], nEntries, len(variableJob["part"].nodes)
+                )
+            )
+
+        if not varSize:
+            varSize = varSizeFp
+        variableJob["varSize"] = varSize
+
+        variableJob["elementsOfShape"] = disassembleElsetToEnsightShapes(fieldOutput.associatedSet)
+
+        if transient:
+            self.transientPerElementJobs.append(variableJob)
+        else:
+            raise Exception("Only transient per element outputs are supported!")
+
+    def createPerNodeOutput(
+        self,
+        fieldOutput: NodeFieldOutput,
+        part: EnsightUnstructuredPart = None,
+        name: str = None,
+        transient: bool = True,
+        varSize: int = None,
+    ):
+        """Create a per node output job.
+
+        Parameters
+        ----------
+        fieldOutput
+            The field output to export.
+        part
+            The part to which the output belongs. If not specified, the part is determined from the field output.
+        name
+            The name of the output. If not specified, the name of the field output is taken.
+        transient
+            Whether the output is transient.
+        varSize
+            The size of the variable. If not specified, the size of the field output is taken.
+        """
+
+        variableJob = dict()
+        variableJob["fieldOutput"] = fieldOutput
+        variableJob["part"] = part
+        if not name:
+            name = fieldOutput.name
+        variableJob["name"] = name
+        variableJob["transient"] = transient
+
+        nEntries, varSizeFp = self._ensureArrayIs2D(fieldOutput.getLastResult()).shape
+        if not varSize:
+            varSize = varSizeFp
+
+        variableJob["varSize"] = varSize
+
+        if not part:
+            part = self._getTargetPartForFieldOutput(fieldOutput)
+        variableJob["part"] = part
+
+        if nEntries != len(variableJob["part"].nodes):
+            raise Exception(
+                "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
+                    variableJob["name"], nEntries, len(variableJob["part"].nodes)
+                )
+            )
+
+        if transient:
+            self.transientPerNodeJobs.append(variableJob)
+        else:
+            raise Exception("Only transient per node outputs are supported!")
 
     def initializeJob(self):
         self.ensightCase = EnsightChunkWiseCase(self.exportName)
@@ -838,7 +927,7 @@ class OutputManager(OutputManagerBase):
 
         return elSetParts + nodeSetParts
 
-    def _getTargetPartForFieldOutput(self, fieldOutput: _FieldOutputBase, **kwargs: dict) -> EnsightUnstructuredPart:
+    def _getTargetPartForFieldOutput(self, fieldOutput: _FieldOutputBase) -> EnsightUnstructuredPart:
         """
         Determine depending on the specified input,
         for which Part the result should be written.
@@ -848,8 +937,6 @@ class OutputManager(OutputManagerBase):
         ----------
         fieldOutput
             The :class:`FieldOutput which contains the result
-        **kwargs
-            The user defined input, which potentially tells us which :class:`EnsightUnstructuredPart instance is the target.
 
         Returns
         -------
@@ -857,24 +944,15 @@ class OutputManager(OutputManagerBase):
             The identified part.
         """
 
-        if "nSet" in kwargs:
-            return self.nSetToEnsightPartMappings[kwargs.pop("nSet")]
-        if "elSet" in kwargs:
-            return self.elSetToEnsightPartMappings[kwargs.pop("elSet")]
+        theSetName = fieldOutput.associatedSet.name
 
-        try:
-            theSetName = fieldOutput.associatedSet.name
+        if isinstance(fieldOutput.associatedSet, NodeSet):
+            return self.nSetToEnsightPartMappings[theSetName]
 
-            if isinstance(fieldOutput.associatedSet, NodeSet):
-                return self.nSetToEnsightPartMappings[theSetName]
+        elif isinstance(fieldOutput.associatedSet, ElementSet):
+            return self.elSetToEnsightPartMappings[theSetName]
 
-            if isinstance(fieldOutput.associatedSet, ElementSet):
-                return self.elSetToEnsightPartMappings[theSetName]
-            else:
-                raise Exception(
-                    "Ensight Variables need to be excplicity associated with a part, our implicitly through a FieldOutput defined on ElementSets or NodeSets!"
-                )
-        except Exception:
+        else:
             raise Exception(
                 "Ensight Variables need to be excplicity associated with a part, our implicitly through a FieldOutput defined on ElementSets or NodeSets!"
             )

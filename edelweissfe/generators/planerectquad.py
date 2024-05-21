@@ -194,6 +194,7 @@ def generateModelData(generatorDefinition, model, journal):
 
     model.elementSets["{:}_core".format(name)] = ElementSet("{:}_core".format(name), np.ravel(elGrid[1:-1, 1:-1]))
 
+    model.elementSets["{:}_all".format(name)] = ElementSet("{:}_all".format(name), np.ravel(elGrid))
     # surfaces
     model.surfaces["{:}_bottom".format(name)] = {1: np.ravel(elGrid[:, 0])}
     model.surfaces["{:}_top".format(name)] = {3: np.ravel(elGrid[:, -1])}

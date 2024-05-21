@@ -25,19 +25,6 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-# Created on Sat Jul 22 14:57:48 2017
-
-# @author: Matthias Neuner
-
-import numpy as np
-
-from edelweissfe.fields.nodefield import NodeField
-from edelweissfe.journal.journal import Journal
-from edelweissfe.models.femodel import FEModel
-from edelweissfe.sets.elementset import ElementSet
-from edelweissfe.utils.elementresultcollector import ElementResultCollector
-from edelweissfe.utils.math import createMathExpression, createModelAccessibleFunction
-from edelweissfe.utils.misc import isInteger, strToRange
 
 """
 FieldOutputs store all kind of analysis results,
@@ -51,9 +38,19 @@ ATTENTION:
     the time History is automatically appended to the .csv file"
 """
 
+from typing import Callable, Union
+
+import numpy as np
+
+from edelweissfe.fields.nodefield import NodeField
+from edelweissfe.journal.journal import Journal
+from edelweissfe.models.femodel import FEModel
+from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.utils.elementresultcollector import ElementResultCollector
+
 documentation = {
     "name": "name of the fieldOutput",
-    "nSet|elSet|node|element|modelData": "entity, for which the fieldOutput is defined",
+    "nSet|elSet|node|element": "entity, for which the fieldOutput is defined",
     "result": "e.g., U, P, stress, strain ...",
     "quadraturePoint": "for element based fieldOutputs only, integers or slices",
     "f(x)": "(optional), apply math (in each increment)",
@@ -76,30 +73,36 @@ class _FieldOutputBase:
         A dictionary containing the model tree.
     journal
         The journal object for logging.
-    **kwargs
-        The definition for this output.
+    saveHistory
+        Save the complete history or only the last result.
+    f_x
+        Apply a math function on the results.
+    export
+        Export the results to a file.
+    fExport_x
+        Apply a math function on the results before exporting.
     """
 
-    def __init__(self, name: str, model: FEModel, journal: Journal, **kwargs: dict):
+    def __init__(
+        self,
+        name: str,
+        model: FEModel,
+        journal: Journal,
+        saveHistory: bool = False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
+    ):
         self.timeTotal = 0.0
         self.name = name
         self.model = model
         self.journal = journal
-        self.appendResults = kwargs.get("saveHistory", False)
+        self.appendResults = saveHistory
         self.result = [] if self.appendResults else None
-
-        if "f(x)" in kwargs:
-            self.f = createMathExpression(kwargs["f(x)"])
-        else:
-            self.f = None
-
+        self.f = f_x
+        self.f_export = fExport_x
         self.timeHistory = []
-
-        self.export = kwargs.get("export", False)
-        if "f_export(x)" in kwargs:
-            self.f_export = createMathExpression(kwargs["f_export(x)"])
-        else:
-            self.f_export = None
+        self.export = export
 
     def getLastResult(
         self,
@@ -284,8 +287,14 @@ class NodeFieldOutput(_FieldOutputBase):
         The model tree instance.
     journal
         The journal object for logging.
-    **kwargs
-        The definition for this output.
+    saveHistory
+        Save the complete history or only the last result.
+    f_x
+        Apply a math function on the results.
+    export
+        Export the results to a file.
+    fExport_x
+        Apply a math function on the results before exporting.
     """
 
     def __init__(
@@ -295,16 +304,17 @@ class NodeFieldOutput(_FieldOutputBase):
         result: str,
         model: FEModel,
         journal: Journal,
-        **kwargs: dict,
+        saveHistory: bool = False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
     ):
         self.entry = result
 
         self._nodeField = nodeField
-
-        # if isinstance(nodeField, NodeFieldSubset):
         self.associatedSet = nodeField.associatedSet
 
-        super().__init__(name, model, journal, **kwargs)
+        super().__init__(name, model, journal, saveHistory, f_x, export, fExport_x)
 
     def updateResults(self, model: FEModel):
         """Update the field output.
@@ -338,30 +348,40 @@ class ElementFieldOutput(_FieldOutputBase):
         The model tree instance.
     journal
         The journal object for logging.
-    **kwargs
-        The definition for this output.
+    saveHistory
+        Save the complete history or only the last result.
+    f_x
+        Apply a math function on the results.
+    export
+        Export the results to a file.
+    fExport_x
+        Apply a math function on the results before exporting.
+    quadraturePoints
+        The list of quadrature points for which the results should be extracted.
     """
 
     def __init__(
         self,
         name: str,
-        elSet,
+        elSet: ElementSet,
         resultName: str,
         model: FEModel,
         journal: Journal,
-        **kwargs: dict,
+        saveHistory: bool = False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
+        quadraturePoints: Union[int, slice, list[int]] = 0,
     ):
         self.associatedSet = elSet
-
         self.resultName = resultName
-        qp = kwargs["quadraturePoint"]
-        self.quadraturePoints = strToRange(qp) if not isInteger(qp) else [int(qp)]
+        self.quadraturePoints = quadraturePoints
 
         self.elementResultCollector = ElementResultCollector(
             list(self.associatedSet), self.quadraturePoints, self.resultName
         )
 
-        super().__init__(name, model, journal, **kwargs)
+        super().__init__(name, model, journal, saveHistory, f_x, export, fExport_x)
 
     def updateResults(self, model: FEModel):
         """Update the field output.
@@ -403,6 +423,10 @@ class ExpressionFieldOutput(_FieldOutputBase):
 
     Parameters
     ----------
+    associatedSet
+        The associated set of nodes or elements.
+    theExpression
+        The expression to be evaluated.
     name
         The name of this FieldOutput.
     nodeField
@@ -413,21 +437,33 @@ class ExpressionFieldOutput(_FieldOutputBase):
         The model tree instance.
     journal
         The journal object for logging.
-    **kwargs
-        The definition for this output.
+    saveHistory
+        Save the complete history or only the last result.
+    f_x
+        Apply a math function on the results.
+    export
+        Export the results to a file.
+    fExport_x
+        Apply a math function on the results before exporting.
     """
 
-    def __init__(self, name: str, model: FEModel, journal: Journal, **kwargs: dict):
-        if "nSet" in kwargs:
-            self.associatedSet = kwargs.pop("nSet")
-        elif "elSet" in kwargs:
-            self.associatedSet = kwargs.pop("elSet")
-        else:
-            raise Exception("All FieldOuputs must be associated with a set!")
+    def __init__(
+        self,
+        associatedSet,
+        theExpression,
+        name: str,
+        model: FEModel,
+        journal: Journal,
+        saveHistory: bool = False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
+    ):
 
-        self.theExpression = createModelAccessibleFunction(kwargs["expression"], model)
+        self.associatedSet = associatedSet
+        self.theExpression = theExpression
 
-        super().__init__(name, model, journal, **kwargs)
+        super().__init__(name, model, journal, saveHistory, f_x, export, fExport_x)
 
     def updateResults(self, model: FEModel):
         """Update the field output.
@@ -454,7 +490,61 @@ class FieldOutputController:
         self.journal = journal
         self.fieldOutputs = {}
 
-    def addExpressionFieldOutput(self, name: str, **kwargs: dict):
+    def addExpressionFieldOutput(
+        self,
+        associatedSet: set,
+        theExpression: Callable,
+        name: str,
+        saveHistory=False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
+    ):
+        """Add a new FieldOutput entry to be computed during the simulation
+
+        Parameters
+        ----------
+        associatedSet
+            The associated set of nodes or elements.
+        theExpression
+            The expression to be evaluated.
+        name
+            The name of this FieldOutput.
+        saveHistory
+            Save the complete history or only the last result.
+        f_x
+            Apply a math function on the results.
+        export
+            Export the results to a file.
+        fExport_x
+            Apply a math function on the results before exporting.
+        """
+
+        if name in self.fieldOutputs:
+            raise Exception("FieldOutput {:} already exists!".format(name))
+
+        self.fieldOutputs[name] = ExpressionFieldOutput(
+            associatedSet,
+            theExpression,
+            name,
+            self.model,
+            self.journal,
+            saveHistory,
+            f_x=f_x,
+            export=export,
+            fExport_x=fExport_x,
+        )
+
+    def addPerNodeFieldOutput(
+        self,
+        name: str,
+        nodeField: NodeField,
+        result: str = None,
+        saveHistory=False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
+    ):
         """Add a new FieldOutput entry to be computed during the simulation
 
         Parameters
@@ -463,38 +553,41 @@ class FieldOutputController:
             The name of this FieldOutput.
         nodeField
             The :class:`NodeField, on which this FieldOutput should operate.
-        resultName
+        result
             The name of the result entry in the :class:`NodeField
-        **kwargs
-            Further definitions of the FieldOutput
+        journal
+            The :class:`Journal instance for logging purposes.
+        saveHistory
+            Save the complete history or only the last result.
+        f_x
+            Apply a math function on the results.
+        export
+            Export the results to a file.
+        fExport_x
+            Apply a math function on the results before exporting.
         """
+
+        if not result:
+            result = name
 
         if name in self.fieldOutputs:
             raise Exception("FieldOutput {:} already exists!".format(name))
 
-        self.fieldOutputs[name] = ExpressionFieldOutput(name, self.model, self.journal, **kwargs)
+        self.fieldOutputs[name] = NodeFieldOutput(
+            name, nodeField, result, self.model, self.journal, saveHistory, f_x, export, fExport_x
+        )
 
-    def addPerNodeFieldOutput(self, name: str, nodeField: NodeField, result: str, **kwargs: dict):
-        """Add a new FieldOutput entry to be computed during the simulation
-
-        Parameters
-        ----------
-        name
-            The name of this FieldOutput.
-        nodeField
-            The :class:`NodeField, on which this FieldOutput should operate.
-        resultName
-            The name of the result entry in the :class:`NodeField
-        **kwargs
-            Further definitions of the FieldOutput
-        """
-
-        if name in self.fieldOutputs:
-            raise Exception("FieldOutput {:} already exists!".format(name))
-
-        self.fieldOutputs[name] = NodeFieldOutput(name, nodeField, result, self.model, self.journal, **kwargs)
-
-    def addPerElementFieldOutput(self, name: str, elSet: ElementSet, resultName: str, **kwargs: dict):
+    def addPerElementFieldOutput(
+        self,
+        name: str,
+        elSet: ElementSet,
+        result: str = None,
+        saveHistory=False,
+        f_x: Callable = None,
+        export: str = None,
+        fExport_x: Callable = None,
+        quadraturePoints=Union[int, slice, list[int]],
+    ):
         """Add a new FieldOutput entry to be computed during the simulation
 
         Parameters
@@ -503,18 +596,31 @@ class FieldOutputController:
             The name of this FieldOutput.
         elSet
             The :class:`ElementSet on which this FieldOutput should operate.
-        resultname
+        result
             The name of the result, which is provided by the Elements in the :class:`ElementSet.
         journal
             The :class:`Journal instance for logging purposes.
-        **kwargs
-            Further definition of the FieldOutput
+        saveHistory
+            Save the complete history or only the last result.
+        f_x
+            Apply a math function on the results.
+        export
+            Export the results to a file.
+        fExport_x
+            Apply a math function on the results before exporting.
+        quadraturePoints
+            The indices of quadrature points for which the results should be extracted.
         """
+
+        if not result:
+            result = name
 
         if name in self.fieldOutputs:
             raise Exception("FieldOutput {:} already exists!".format(name))
 
-        self.fieldOutputs[name] = ElementFieldOutput(name, elSet, resultName, self.model, self.journal, **kwargs)
+        self.fieldOutputs[name] = ElementFieldOutput(
+            name, elSet, result, self.model, self.journal, saveHistory, f_x, export, fExport_x, quadraturePoints
+        )
 
     def initializeJob(self):
         for fieldOutput in self.fieldOutputs.values():

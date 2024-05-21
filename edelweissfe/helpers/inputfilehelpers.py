@@ -38,11 +38,14 @@ from edelweissfe.steps.stepmanager import (
     StepManager,
 )
 from edelweissfe.utils.fieldoutput import FieldOutputController
+from edelweissfe.utils.math import createMathExpression, createModelAccessibleFunction
 from edelweissfe.utils.misc import (
     convertAssignmentsToStringDictionary,
     convertLinesToStringDictionary,
     convertLineToStringDictionary,
+    isInteger,
     splitLineAtCommas,
+    strToRange,
 )
 from edelweissfe.utils.plotter import Plotter
 
@@ -70,11 +73,27 @@ def createFieldOutputFromInputFile(inputfile: dict, model: FEModel, journal: Jou
         for definition in inputfile["*fieldOutput"]:
             for defLine in definition["data"]:
                 kwargs = convertLineToStringDictionary(defLine)
+
                 if "elSet" in kwargs:
                     kwargs["elSet"] = model.elementSets[kwargs["elSet"]]
                 if "nSet" in kwargs:
                     kwargs["nSet"] = model.nodeSets[kwargs["nSet"]]
+
                 name = kwargs.pop("name")
+
+                f_of_x = kwargs.pop("f(x)", None)
+                if f_of_x:
+                    f_of_x = createMathExpression(f_of_x)
+
+                f_export_of_x = kwargs.pop("f_export(x)", None)
+                if f_export_of_x:
+                    f_export_of_x = createMathExpression(f_export_of_x)
+
+                saveHistory = kwargs.pop("saveHistory", True)
+                if saveHistory:
+                    saveHistory = bool(saveHistory)
+
+                export = kwargs.pop("export", False)
 
                 theType = kwargs.pop("create")
 
@@ -92,18 +111,55 @@ def createFieldOutputFromInputFile(inputfile: dict, model: FEModel, journal: Jou
                     if subset:
                         nodeField = nodeField.subset(subset)
 
-                    fieldOutputController.addPerNodeFieldOutput(name, nodeField, result, **kwargs)
+                    fieldOutputController.addPerNodeFieldOutput(
+                        name,
+                        nodeField,
+                        result,
+                        saveHistory=saveHistory,
+                        f_x=f_of_x,
+                        export=export,
+                        fExport_x=f_export_of_x,
+                        **kwargs,
+                    )
 
                 elif theType == "perElement":
                     elSet = kwargs.pop("elSet")
                     result = kwargs.pop("result")
-                    fieldOutputController.addPerElementFieldOutput(name, elSet, result, **kwargs)
+
+                    qp = kwargs.pop("quadraturePoint")
+                    quadraturePoints = strToRange(qp) if not isInteger(qp) else [int(qp)]
+
+                    fieldOutputController.addPerElementFieldOutput(
+                        name,
+                        elSet,
+                        result,
+                        saveHistory=saveHistory,
+                        f_x=f_of_x,
+                        export=export,
+                        fExport_x=f_export_of_x,
+                        quadraturePoints=quadraturePoints,
+                    )
 
                 elif theType == "fromExpression":
-                    # elSet = kwargs.pop("elSet")
-                    # result = kwargs.pop("result")
-                    fieldOutputController.addExpressionFieldOutput(name, **kwargs)
 
+                    if "nSet" in kwargs:
+                        associatedSet = kwargs.pop("nSet")
+                    elif "elSet" in kwargs:
+                        associatedSet = kwargs.pop("elSet")
+                    else:
+                        raise Exception("All FieldOuputs must be associated with a set!")
+
+                    theExpression = createModelAccessibleFunction(kwargs["expression"], model)
+
+                    fieldOutputController.addExpressionFieldOutput(
+                        associatedSet,
+                        theExpression,
+                        name,
+                        saveHistory,
+                        f_of_x,
+                        export=export,
+                        fExport_x=f_export_of_x,
+                    )
                 else:
                     raise Exception("Invalid FieldOuput request: {:}".format(theType))
 
