@@ -84,6 +84,7 @@ Add mamba to your environment:
 .. code-block:: console
    :caption: Step 2
 
+    export EWROOT=$PWD
     export PATH=$EWROOT/mambaforge3/bin:$PATH
     mamba init --all
     exit
@@ -122,8 +123,8 @@ Get Eigen (for EdelweissFE and Marmot):
     cd build
     cmake \
         -DBUILD_TESTING=OFF  \
-        -DINCLUDE_INSTALL_DIR=$(python -c "import sys; print(sys.prefix)")/include \
-        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        -DINCLUDE_INSTALL_DIR=$CONDA_PREFIX/include \
+        -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
         ..
     make install
 
@@ -142,7 +143,7 @@ Get autodiff (for Marmot):
         -DAUTODIFF_BUILD_PYTHON=OFF \
         -DAUTODIFF_BUILD_EXAMPLES=OFF \
         -DAUTODIFF_BUILD_DOCS=OFF \
-        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
         ..
     make install
 
@@ -151,9 +152,10 @@ Get Fastor:
 .. code-block:: console
    :caption: Step 8
 
+    cd $EWROOT
     git clone https://github.com/romeric/Fastor.git
     cd Fastor
-    cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") .
+    cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX .
     make install
     cd ../
 
@@ -168,7 +170,7 @@ Get Marmot:
     mkdir build
     cd build
     cmake \
-        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
         ..
     make install
 

@@ -920,7 +920,7 @@ class NIST:
         """
         for cLoad in nodeForces:
             PExt[
-                self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nodeSet.name]
+                self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[cLoad.field][cLoad.nodeSet]
             ] += cLoad.getCurrentLoad(timeStep).flatten()
         PExt, K = self.computeDistributedLoads(distributedLoads, U_np, PExt, K, timeStep)
         PExt, K = self.computeBodyForces(bodyForces, U_np, PExt, K, timeStep)
@@ -1062,6 +1062,6 @@ class NIST:
         field = dirichlet.field
         components = dirichlet.components
 
-        fieldIndices = self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[field][nSet.name]
+        fieldIndices = self.theDofManager.idcsOfFieldsOnNodeSetsInDofVector[field][nSet]
 
         return fieldIndices.reshape((len(nSet), -1))[:, components].flatten()

@@ -34,8 +34,10 @@ This module contains important classes for describing the global equation system
 
 import numpy as np
 
+from edelweissfe.config.phenomena import phenomena
 from edelweissfe.fields.nodefield import NodeField
 from edelweissfe.points.node import Node
+from edelweissfe.sets.nodeset import NodeSet
 
 
 class VIJSystemMatrix(np.ndarray):
@@ -134,51 +136,114 @@ class DofManager:
 
     def __init__(
         self,
-        nodeFields: list,
+        nodeFields: list[NodeField],
         scalarVariables: list,
         elements: list,
         constraints: list,
         nodeSets: list,
+        initializeVIJPattern=True,
     ):
-        (
-            self.nDof,
-            self.idcsOfFieldVariablesInDofVector,
-            self.idcsOfFieldsInDofVector,
-            self.idcsOfScalarVariablesInDofVector,
-        ) = self._initializeDofVectorStructure(nodeFields, scalarVariables)
 
+        self.nDof = int()  #: The total number of degrees of freedom (and size of the DofVector)
+        self.fields = list()  #: The list of fields which can be found in the Dofvector
+        self.idcsOfFieldsInDofVector = dict()  #: The dictionary mapping the field names to all indices in the DofVector
+        self.idcsOfScalarVariablesInDofVector = (
+            dict()
+        )  #: The dictionary mapping the scalar variables to all indices in the DofVector
+
+        self.idcsOfFieldVariablesInDofVector = (
+            dict()
+        )  #: The dictionary mapping the nodal field variables to the indices in the DofVector
+        self.idcsOfNodeFieldsInDofVector = (
+            dict()
+        )  #: The dictionary mapping the a complete NodeField to the all its indices in the DofVector
+        self.indexToHostObjectMapping = (
+            dict()
+        )  #: The reverse dictionary mapping an index to the Host (e.g., a Node) holding the index's FieldvVariable
+        self.accumulatedElementNDof = (
+            int()
+        )  #: The accumulated number of element dofs (= the sum of all element vector sizes)
+        self.largestNumberOfElNDof = int()  #: The size of the largest of all element dof vectors
+        self.accumulatedConstraintNDof = (
+            int()
+        )  #: The accumulated number of constraint dofs (= the sum of all constraint vector sizes)
+        self.largestNumberOfConstraintNDof = int()  #: The size of the largest of all constraint dof vectors
+
+        self.idcsOfFieldsOnNodeSetsInDofVector = (
+            dict()
+        )  #: The dictionary mapping for each field a NodeSet to the respective indices in the DofVector
+        self.idcsOfElementsInDofVector = dict()  #: The dictionary mapping an element to it's indices in the DofVector
+        self.idcsOfConstraintsInDofVector = (
+            dict()
+        )  #: The dictionary mapping a constraint to it's indices in the DofVector
+
+        self._sizeVIJ = (
+            int()
+        )  #: The number of nonzero entries of the system matrix, resulting from the dense higher order entities contributions
+
+        # initialization:
+
+        self._determineDofsAndTheirIndices(nodeFields, scalarVariables)
+        self._gatherInformationAboutEntities(elements, constraints, nodeSets)
+
+        self.idcsOfFieldsInDofVector = self.idcsOfNodeFieldsInDofVector
         self.fields = self.idcsOfFieldsInDofVector.keys()
 
-        self.indexToNodeMapping = self._determineIndexToNodeMap()
+        self.nAccumulatedNodalFluxesFieldwise = self._computeAccumulatedNodalFluxesFieldWise(self.fields)
+
+        self.idcsOfBasicVariablesInDofVector = (
+            self.idcsOfFieldVariablesInDofVector | self.idcsOfScalarVariablesInDofVector
+        )
+        self.idcsOfHigherOrderEntitiesInDofVector = self.idcsOfElementsInDofVector | self.idcsOfConstraintsInDofVector
+
+        self._sizeVIJ = self._accumulatedElementVIJSize + self._accumulatedConstraintVIJSize
+
+        if initializeVIJPattern:
+            (self.I, self.J, self.idcsOfHigherOrderEntitiesInVIJ) = self._initializeVIJPattern()
+
+    def _determineDofsAndTheirIndices(self, nodeFields: list, scalarVariables: list):
+
+        (
+            self._nDofNodeFields,
+            self.idcsOfFieldVariablesInDofVector,
+            self.idcsOfNodeFieldsInDofVector,
+        ) = self._reserveSpaceForNodeFields(self.nDof, nodeFields)
+
+        self.nDof += self._nDofNodeFields
+
+        self.indexToHostObjectMapping |= self._determineIndexToNodeMap()
+
+        (
+            self._nDofScalarVariables,
+            self.idcsOfScalarVariablesInDofVector,
+        ) = self._reserveSpaceForScalarVariables(self.nDof, scalarVariables)
+
+        self.nDof += self._nDofScalarVariables
+
+    def _gatherInformationAboutEntities(self, elements, constraints, nodeSets):
 
         (
             self.accumulatedElementNDof,
             self._accumulatedElementVIJSize,
             self._nAccumulatedNodalFluxesFieldwiseFromElements,
             self.largestNumberOfElNDof,
-        ) = self._gatherEntitiesInformation(elements)
+        ) = self._gatherElementsInformation(elements)
 
         (
             self.accumulatedConstraintNDof,
             self._accumulatedConstraintVIJSize,
             self._nAccumulatedNodalFluxesFieldwiseFromConstraints,
             self.largestNumberOfConstraintNDof,
-        ) = self._gatherEntitiesInformation(constraints)
-
-        self.nAccumulatedNodalFluxesFieldwise = self._computeAccumulatedNodalFluxesFieldWise(self.fields)
+        ) = self._gatherConstraintsInformation(constraints)
 
         self.idcsOfFieldsOnNodeSetsInDofVector = self._locateFieldsOnNodeSetsInDofVector(nodeSets)
         self.idcsOfElementsInDofVector = self._locateElementsInDofVector(elements)
         self.idcsOfConstraintsInDofVector = self._locateConstraintsInDofVector(constraints)
 
-        self.idcsOfBasicVariablesInDofVector = self._getIndicesOfBasicVariablesInDofVector()
-        self.idcsOfHigherOrderEntitiesInDofVector = self._getIndicesOfAllHigherOrderEntitiesInDofVector()
-
-        self.sizeVIJ = self._computeSizeVIJ()
-        (self.I, self.J, self.idcsOfHigherOrderEntitiesInVIJ) = self._initializeVIJPattern()
-
-    def _initializeDofVectorStructure(
-        self, nodeFields: list, scalarVariables: list
+    def _reserveSpaceForNodeFields(
+        self,
+        idxStart: int,
+        nodeFields: list[NodeField],
     ) -> tuple[int, dict[str, np.ndarray]]:
         """Loop over all nodes to generate the global field-dof indices.
 
@@ -194,7 +259,7 @@ class DofManager:
 
         idcsOfFieldsInDofVector = dict()
         idcsOfNodeFieldVariablesInDofVector = dict()
-        currentIdxInDofVector = 0
+        currentIdxInDofVector = idxStart
 
         for nField in nodeFields:
             nextIdxInDofVector = currentIdxInDofVector + nField.dimension * len(nField.nodes)
@@ -210,17 +275,39 @@ class DofManager:
             }
             currentIdxInDofVector = nextIdxInDofVector
 
-        idcsOfScalarVariablesInDofVector = {
-            scalarVariable: currentIdxInDofVector + i for i, scalarVariable in enumerate(scalarVariables)
-        }
-
-        currentIdxInDofVector += len(idcsOfScalarVariablesInDofVector)
         nDof = currentIdxInDofVector
 
         return (
             nDof,
             idcsOfNodeFieldVariablesInDofVector,
             idcsOfFieldsInDofVector,
+        )
+
+    def _reserveSpaceForScalarVariables(
+        self, idxStart: int, scalarVariables: list
+    ) -> tuple[int, dict[str, np.ndarray]]:
+        """Loop over all ScalarVariables to generate their global indices.
+
+        Returns
+        -------
+        tuple
+            output is a tuple of:
+             * number of total DOFS
+             * dictionary of fields and indices:
+                * field
+                * indices
+        """
+
+        currentIdxInDofVector = idxStart
+
+        idcsOfScalarVariablesInDofVector = {
+            scalarVariable: currentIdxInDofVector + i for i, scalarVariable in enumerate(scalarVariables)
+        }
+
+        nDof = len(idcsOfScalarVariablesInDofVector)
+
+        return (
+            nDof,
             idcsOfScalarVariablesInDofVector,
         )
 
@@ -247,35 +334,6 @@ class DofManager:
                 indexToNodeMapping[index] = fieldVariable.node
 
         return indexToNodeMapping
-
-    # def _countNodalFluxesFieldWise(self, listOfEntities:list) -> dict[str,int]:
-    #     """For the VIJ (COO) system matrix and the Abaqus like convergence test,
-    #     the number of dofs 'entity-wise' is needed:
-    #     = Σ_(elements+constraints) Σ_nodes ( nDof (field) ).
-
-    #     Returns
-    #     -------
-    #     dict
-    #         Number of accumulated fluxes per field:
-    #             - Field
-    #             - Number of accumulated fluxes
-    #     """
-
-    #     # indicesOfFieldsInDofVector = self.idcsOfFieldsInDofVector
-
-    #     accumulatedNumberOfFieldFluxes = {}
-    #     # accumulatedNodalFluxesTotal = 0
-
-    #     for field in indicesOfFieldsInDofVector.keys():
-    #         accumulatedNumberOfFieldFluxes[field] = np.sum(
-    #             [
-    #                 len(self.idcsOfFieldVariablesInDofVector[node.fields[field]])
-    #                 for entity in listOfEntities
-    #                 for node in (entity.nodes)
-    #                 if field in node.fields
-    #             ]
-    #         )
-    #     return accumulatedNumberOfFieldFluxes
 
     def _computeAccumulatedNodalFluxesFieldWise(self, fields: list) -> dict:
         """For the VIJ (COO) system matrix and the Abaqus like convergence test,
@@ -304,7 +362,7 @@ class DofManager:
 
         return nAccumulatedNodalFluxesFieldwise
 
-    def _gatherEntitiesInformation(self, entities: list) -> tuple[int, int, int, int]:
+    def _gatherElementsInformation(self, entities: list) -> tuple[int, int, int, int]:
         """Generates some auxiliary information,
         which may be required by some modules of EdelweissFE.
 
@@ -326,7 +384,7 @@ class DofManager:
         accumulatedEntityVIJSize = 0
         largestNumberOfAnyEntitityDof = 0
 
-        nAccumulatedFluxesFieldwise = dict.fromkeys(self.fields, 0)
+        nAccumulatedFluxesFieldwise = dict.fromkeys(phenomena.keys(), 0)
 
         for e in entities:
             accumulatedEntityNDof += e.nDof
@@ -345,18 +403,28 @@ class DofManager:
             largestNumberOfAnyEntitityDof,
         )
 
-    def _computeSizeVIJ(
-        self,
-    ):
-        """Determine the required size of the VIJ system matrix.
+    def _gatherConstraintsInformation(self, entities: list) -> tuple[int, int, int, int]:
+        """Generates some auxiliary information,
+        which may be required by some modules of EdelweissFE.
+
+        Parameters
+        ----------
+        entities
+           The list of entities, for which the information is gathered.
 
         Returns
         -------
-        int
-            The size of the VIJ system.
+        tuple[int,int]
+            The tuple of
+                - number of accumulated elemental degrees of freedom.
+                - number of accumulated system matrix sizes.
+                - the number of  acummulated fluxes Σ_entities Σ_nodes ( nDof (field) ) for Abaqus-like convergence tests.
+                - largest occuring number of dofs on any element.
         """
 
-        return self._accumulatedElementVIJSize + self._accumulatedConstraintVIJSize
+        return self._gatherElementsInformation(entities)
+
+    # def _analyzeVIJPattern(self,):
 
     def _locateElementsInDofVector(self, elements: list) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
@@ -422,11 +490,10 @@ class DofManager:
         nodeSets = nodeSets
         nodeSetFieldsInDofVector = {}
 
-        for field in self.idcsOfFieldsInDofVector:
+        for field in self.idcsOfNodeFieldsInDofVector:
             nodeSetFieldsInDofVector[field] = dict()
-
             for nSet in nodeSets:
-                nodeSetFieldsInDofVector[field][nSet.name] = np.array(
+                nodeSetFieldsInDofVector[field][nSet] = np.array(
                     [self.idcsOfFieldVariablesInDofVector[node.fields[field]] for node in nSet if field in node.fields],
                     dtype=int,
                 ).flatten()
@@ -448,7 +515,7 @@ class DofManager:
 
         entitiesInVIJ = {}
 
-        sizeVIJ = self.sizeVIJ
+        sizeVIJ = self._sizeVIJ
 
         I = np.zeros(sizeVIJ, dtype=int)  # noqa: E741
         J = np.zeros(sizeVIJ, dtype=int)  # noqa: E741
@@ -469,29 +536,6 @@ class DofManager:
             idxInVIJ += nDofEntity**2
 
         return I, J, entitiesInVIJ
-
-    def _getIndicesOfBasicVariablesInDofVector(self):
-        """
-        Get list of indices of all lower order entitties (variables).
-
-        Returns
-        -------
-        list
-            The indices.
-        """
-        return self.idcsOfFieldVariablesInDofVector | self.idcsOfScalarVariablesInDofVector
-
-    def _getIndicesOfAllHigherOrderEntitiesInDofVector(self):
-        """
-        Get list of indices of all higher order entitties.
-
-        Returns
-        -------
-        list
-            The indices.
-        """
-
-        return self.idcsOfElementsInDofVector | self.idcsOfConstraintsInDofVector
 
     def constructVIJSystemMatrix(
         self,
@@ -540,7 +584,7 @@ class DofManager:
             The attached Node.
         """
 
-        return self.indexToNodeMapping[index]
+        return self.indexToHostObjectMapping[index]
 
     def writeDofVectorToNodeField(self, dofVector, nodeField, resultName):
         """Write the current values of an entire NodeField from the respective locations in a given DofVector.
@@ -564,13 +608,15 @@ class DofManager:
         if resultName not in nodeField:
             nodeField.createFieldValueEntry(resultName)
 
-        nodeField[resultName][:] = dofVector[self.idcsOfFieldsInDofVector[nodeField.name]].reshape(
+        nodeField[resultName][:] = dofVector[self.idcsOfNodeFieldsInDofVector[nodeField.name]].reshape(
             (-1, nodeField.dimension)
         )
 
         return nodeField
 
-    def writeNodeFieldToDofVector(self, dofVector: DofVector, nodeField: NodeField, resultName: str):
+    def writeNodeFieldToDofVector(
+        self, dofVector: DofVector, nodeField: NodeField, resultName: str, nodeSet: NodeSet = None
+    ):
         """Write the current values of an entire NodeField to the respective locations in a given DofVector.
 
 
@@ -582,6 +628,8 @@ class DofManager:
             The NodeField holding the values.
         resultname
             The name of the value entries held by the NodeField.
+        NodeSet
+            The NodeSet to consider. If None, all nodes of the NodeField are considered.
 
         Returns
         -------
@@ -589,6 +637,16 @@ class DofManager:
             The DofVector.
         """
 
-        dofVector[self.idcsOfFieldsInDofVector[nodeField.name]] = nodeField[resultName].flatten()
+        if nodeSet is not None:
+            if nodeSet not in self.idcsOfFieldsOnNodeSetsInDofVector[nodeField.name]:
+                self.idcsOfFieldsOnNodeSetsInDofVector[nodeField.name] |= self._locateFieldsOnNodeSetsInDofVector(
+                    [nodeSet]
+                )
+            dofVector[self.idcsOfFieldsOnNodeSetsInDofVector[nodeField.name][nodeSet]] = nodeField.subset(nodeSet)[
+                resultName
+            ].flatten()
+
+        else:
+            dofVector[self.idcsOfNodeFieldsInDofVector[nodeField.name]] = nodeField[resultName].flatten()
 
         return dofVector

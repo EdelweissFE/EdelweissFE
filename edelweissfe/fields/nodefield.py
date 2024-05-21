@@ -180,6 +180,29 @@ class NodeField:
             idcsOther = [other._indicesOfNodesInArray[n] for n in commonNodes]
             self[fieldValueEntry][idcsHere] = other[fieldValueEntry][idcsOther]
 
+    def addEntriesFromOther(self, other, fieldValueEntries: list[str] = None):
+        """
+        Add values from another NodeField.
+        If the fields differ, the intersection is considered.
+
+        Parameters
+        ----------
+        subset
+            The sub NodeField.
+        fieldValueEntries
+            The list of entries which should be copied. Default: all entries are copied.
+        """
+
+        if not fieldValueEntries:
+            fieldValueEntries = self._values.keys() & other._values.keys()
+
+        commonNodes = self._indicesOfNodesInArray.keys() & other._indicesOfNodesInArray.keys()
+
+        for fieldValueEntry in fieldValueEntries:
+            idcsHere = [self._indicesOfNodesInArray[n] for n in commonNodes]
+            idcsOther = [other._indicesOfNodesInArray[n] for n in commonNodes]
+            self[fieldValueEntry][idcsHere] += other[fieldValueEntry][idcsOther]
+
 
 class NodeFieldSubset(NodeField):
     def __init__(self, parentNodeField, subset):

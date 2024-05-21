@@ -78,8 +78,8 @@ class FEModel:
         elements.
         """
         for element in self.elements.values():
-            for node, nodeFields in zip(element.nodes, element.fields):
-                for field in nodeFields:
+            for node, elementNodeFields in zip(element.nodes, element.fields):
+                for field in elementNodeFields:
                     if field not in node.fields:
                         node.fields[field] = FieldVariable(node, field)
 
