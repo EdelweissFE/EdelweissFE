@@ -140,9 +140,7 @@ by specifying their <code class="docutils literal notranslate"><span class="pre"
 <div class="section" id="bodyforce-bodyforce-loads">
 <h2><code class="docutils literal notranslate"><span class="pre">bodyforce</span></code> - Bodyforce loads<a class="headerlink" href="#bodyforce-bodyforce-loads" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.bodyforce</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.bodyforce"></span><p>Simple body force load.
-If not modified in subsequent steps, the load held constant.</p>
-<table class="docutils align-default" id="id1">
+<span class="target" id="module-edelweissfe.stepactions.bodyforce"></span><table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -206,9 +204,7 @@ bodyforce,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <div class="section" id="dirichlet-standard-dirichlet-bc">
 <h2><code class="docutils literal notranslate"><span class="pre">dirichlet</span></code> - Standard dirichlet BC<a class="headerlink" href="#dirichlet-standard-dirichlet-bc" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.dirichlet</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.dirichlet"></span><p>Standard Dirichlet boundary condition.
-If not modified in subsequent steps, the BC is held constant.</p>
-<table class="docutils align-default" id="id3">
+<span class="target" id="module-edelweissfe.stepactions.dirichlet"></span><table class="docutils align-default" id="id3">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -244,9 +240,7 @@ If not modified in subsequent steps, the BC is held constant.</p>
 <div class="section" id="distributedload-distributed-surface-loads">
 <h2><code class="docutils literal notranslate"><span class="pre">distributedload</span></code> - Distributed surface loads<a class="headerlink" href="#distributedload-distributed-surface-loads" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.distributedload</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.distributedload"></span><p>Standard distributed load, applied on a surface set.
-If not modified in subsequent steps, the load held constant.</p>
-<table class="docutils align-default" id="id4">
+<span class="target" id="module-edelweissfe.stepactions.distributedload"></span><table class="docutils align-default" id="id4">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -397,13 +391,13 @@ configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span c
 
 
 <span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">0.5</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">   nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>, 
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">   nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">right</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_right</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>, 
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">bottom</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>,
 geostatic,<span class="nv"> name</span><span class="ow">=</span><span class="m">geo</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> p1</span><span class="ow">=</span><span class="m">-10</span>,<span class="nv"> h1</span><span class="ow">=</span><span class="m">150</span>,<span class="nv"> p2</span><span class="ow">=</span><span class="m">-5</span>,<span class="nv"> h2</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> xLateral</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> zLateral</span><span class="ow">=</span><span class="m">1.0</span>
 distributedload,<span class="nv"> name</span><span class="ow">=</span><span class="m">dlTop</span>,<span class="nv"> surface</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv"> magnitude</span><span class="ow">=</span><span class="m">10</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">pressure</span>
 
-<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>, 
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-1</span>,
 distributedload,<span class="nv"> name</span><span class="ow">=</span><span class="m">dlTop</span>,<span class="nv"> delta</span><span class="ow">=</span><span class="m">-10.0</span>,<span class="nv"> f(t)</span><span class="ow">=</span><span class="m">t</span>
 </pre></div>
 </div>
@@ -412,8 +406,7 @@ distributedload,<span class="nv"> name</span><span class="ow">=</span><span clas
 <div class="section" id="indirectcontrol-indirect-displacement-control">
 <h2><code class="docutils literal notranslate"><span class="pre">indirectcontrol</span></code> - Indirect displacement control<a class="headerlink" href="#indirectcontrol-indirect-displacement-control" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.indirectcontrol</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.indirectcontrol"></span><p>Indirect (displacement) controller for the NISTArcLength solver</p>
-<table class="docutils align-default" id="id8">
+<span class="target" id="module-edelweissfe.stepactions.indirectcontrol"></span><table class="docutils align-default" id="id8">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id8" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -440,7 +433,7 @@ distributedload,<span class="nv"> name</span><span class="ow">=</span><span clas
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/IndirectDisplacementControl/test.inp</span></code></span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>
 
-<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTPArcLength</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">NISTPArcLen </span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NISTPArcLength</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">NISTPArcLen</span>
 
 <span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">boxGen</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
 <span class="nv">lX     </span><span class="ow">=</span><span class="m"> 100</span>
@@ -452,9 +445,9 @@ distributedload,<span class="nv"> name</span><span class="ow">=</span><span clas
 <span class="nv">elType </span><span class="ow">=</span><span class="m"> GC3D8</span>
 
 <span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gcdp</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">concrete</span>
-<span class="c c-Singleline">**E         nu      fcy         fcu         fbu         ftu         Df          Ah        </span>
-100.0,      0.00,   10,         30,         35,         3.00,       0.85,       0.12,<span class="c c-Singleline"> </span>
-<span class="c c-Singleline">**Bh        Ch      Dh          As          softmod     l           m           omegaMax </span>
+<span class="c c-Singleline">**E         nu      fcy         fcu         fbu         ftu         Df          Ah</span>
+100.0,      0.00,   10,         30,         35,         3.00,       0.85,       0.12,
+<span class="c c-Singleline">**Bh        Ch      Dh          As          softmod     l           m           omegaMax</span>
 0.003,      2.0,    1e-6,       15.0,       .1,         2,          1.05,       1,
 <span class="c c-Singleline">**derivativeMethod, dTThresholdElasticStiffness</span>
 1,                  1e-8
@@ -477,7 +470,7 @@ setfield,<span class="nv">   name</span><span class="ow">=</span><span class="m"
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">Ensight</span>,<span class="nv"> intermediateSaveInterval</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> minDTForOutput</span><span class="ow">=</span><span class="m">0</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTArcLength</span>,<span class="nv"> arcLengthController</span><span class="ow">=</span><span class="m">indirectcontrol</span>,<span class="nv"> stopCondition</span><span class="ow">=</span><span class="s">&#39;fieldOutputs[&quot;I1pMax&quot;] &gt; 0.01&#39;</span>
 
-indirectcontrol,<span class="nv"> dof1</span><span class="ow">=</span><span class="s">&#39;model.nodeSets[&quot;IDC1&quot;][0].fields[&quot;displacement&quot;]&#39;</span>,<span class="nv"> cVector1</span><span class="ow">=</span><span class="s">&#39;[-1,0,0]&#39;</span>,<span class="nv"> dof2</span><span class="ow">=</span><span class="s">&#39;model.nodeSets[&quot;IDC2&quot;][0].fields[&quot;displacement&quot;]&#39;</span>,<span class="nv"> cVector2</span><span class="ow">=</span><span class="s">&#39;[1,0,0]&#39;</span>,<span class="nv"> L</span><span class="ow">=</span><span class="m">1.</span>, 
+indirectcontrol,<span class="nv"> dof1</span><span class="ow">=</span><span class="s">&#39;model.nodeSets[&quot;IDC1&quot;][0].fields[&quot;displacement&quot;]&#39;</span>,<span class="nv"> cVector1</span><span class="ow">=</span><span class="s">&#39;[-1,0,0]&#39;</span>,<span class="nv"> dof2</span><span class="ow">=</span><span class="s">&#39;model.nodeSets[&quot;IDC2&quot;][0].fields[&quot;displacement&quot;]&#39;</span>,<span class="nv"> cVector2</span><span class="ow">=</span><span class="s">&#39;[1,0,0]&#39;</span>,<span class="nv"> L</span><span class="ow">=</span><span class="m">1.</span>,
 
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">leftX</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv">  field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">leftY</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv">  field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.</span>
@@ -486,7 +479,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 
 <span class="k">*fieldOutput</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">    create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
-<span class="nv">name</span><span class="ow">=</span><span class="m">nonlocal_damage</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">nonlocal damage</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U </span>
+<span class="nv">name</span><span class="ow">=</span><span class="m">nonlocal_damage</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">nonlocal damage</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>
 
 <span class="nv">name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 <span class="nv">name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:8</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
@@ -524,11 +517,7 @@ configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span c
 <div class="section" id="indirectcontractioncontrol-indirect-displacement-contraction-ring-control">
 <h2><code class="docutils literal notranslate"><span class="pre">indirectcontractioncontrol</span></code> - Indirect displacement – contraction ring control<a class="headerlink" href="#indirectcontractioncontrol-indirect-displacement-contraction-ring-control" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.indirectcontrol</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.indirectcontractioncontrol"></span><p>Indirect (displacement) controller for the NISTArcLength solver
-uses a ring to control the contraction, e.g., for tunneling simulations.</p>
-<p>Currently 2D only!</p>
-<p>The center is autotically computed from the bounding node coordinates.</p>
-<table class="docutils align-default" id="id10">
+<span class="target" id="module-edelweissfe.stepactions.indirectcontractioncontrol"></span><table class="docutils align-default" id="id10">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id10" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -560,9 +549,7 @@ uses a ring to control the contraction, e.g., for tunneling simulations.</p>
 <div class="section" id="modelupdate-update-the-model">
 <h2><code class="docutils literal notranslate"><span class="pre">modelupdate</span></code> - Update the model<a class="headerlink" href="#modelupdate-update-the-model" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.modelupdate</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.modelupdate"></span><p>This step action may be used for updating something in the model at the beginning
-of a step.</p>
-<table class="docutils align-default" id="id11">
+<span class="target" id="module-edelweissfe.stepactions.modelupdate"></span><table class="docutils align-default" id="id11">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id11" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -583,8 +570,7 @@ of a step.</p>
 <div class="section" id="nodeforces-concentrated-node-forces">
 <h2><code class="docutils literal notranslate"><span class="pre">nodeforces</span></code> - Concentrated node forces<a class="headerlink" href="#nodeforces-concentrated-node-forces" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.nodeforces</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.nodeforces"></span><p>Apply simple node forces on a nSet.</p>
-<table class="docutils align-default" id="id12">
+<span class="target" id="module-edelweissfe.stepactions.nodeforces"></span><table class="docutils align-default" id="id12">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id12" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -656,8 +642,7 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <div class="section" id="setfield-set-a-field-to-a-prescribed-value">
 <h2><code class="docutils literal notranslate"><span class="pre">setfield</span></code> - Set a field to a prescribed value<a class="headerlink" href="#setfield-set-a-field-to-a-prescribed-value" title="Permalink to this heading"></a></h2>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.stepactions.setfield</span></code></p>
-<span class="target" id="module-edelweissfe.stepactions.setfield"></span><p>Set a field (via fieldOutput) to a predefined value.</p>
-<table class="docutils align-default" id="id14">
+<span class="target" id="module-edelweissfe.stepactions.setfield"></span><table class="docutils align-default" id="id14">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id14" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />

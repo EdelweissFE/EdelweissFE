@@ -4,7 +4,7 @@ Constraints
 .. automodule:: edelweissfe.config.constraints
     :members: __doc__
 
-``equalvaluelagrangian`` - Constrain nodal values to equal values 
+``equalvaluelagrangian`` - Constrain nodal values to equal values
 -----------------------------------------------------------------
 
 Module ``edelweissfe.constraints.equalvaluelagrangian``
@@ -20,7 +20,7 @@ Module ``edelweissfe.constraints.equalvaluelagrangian``
     :caption: Example: ``testfiles/EqualValueLagrangianConstraint/test.inp``
 
 
-``equalvaluepenalty`` - Constrain nodal values to equal values 
+``equalvaluepenalty`` - Constrain nodal values to equal values
 --------------------------------------------------------------
 
 Module ``edelweissfe.constraints.equalvaluepenalty``
@@ -89,4 +89,4 @@ Implementing your own constraints
 Subclass from the constraint base class in module ``edelweissfe.constraints.base.constraintbase``
 
 .. automodule:: edelweissfe.constraints.base.constraintbase
-    :members: 
+    :members:

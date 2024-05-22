@@ -3,10 +3,10 @@ Installation
 
 Marmot
 ******
-By default, a working instance of `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_, 
+By default, a working instance of `Marmot <https://github.com/MAteRialMOdelingToolbox/Marmot/>`_,
 containing specific implementations of finite elements and constitutive models,
 is required.
-Marmot itself requires the `Eigen <https://eigen.tuxfamily.org/>`_ library, 
+Marmot itself requires the `Eigen <https://eigen.tuxfamily.org/>`_ library,
 and potentially `Fastor <https://github.com/romeric/Fastor>`_, depending on the requested modules.
 
 Please build Marmot before you build EdelweissFE.
@@ -25,7 +25,7 @@ EdelweissFE depends on several Cython modules, which must be compiled prior to r
 To build EdelweissFE and install it using pip, simply run from within the main folder:
 
 .. code-block:: console
-    
+
     cd ./EdelweissFE
     pip install .
 
@@ -64,7 +64,7 @@ TLDR
 ****
 
 Assuming that you are in an empty directory,
-you can quickly get a working version of EdelweissFE in a Linux based 
+you can quickly get a working version of EdelweissFE in a Linux based
 environment:
 
 Installation steps
@@ -159,7 +159,7 @@ Get Fastor:
     make install
     cd ../
 
-Get Marmot: 
+Get Marmot:
 
 .. code-block:: console
    :caption: Step 9

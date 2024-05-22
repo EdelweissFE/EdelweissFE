@@ -129,9 +129,11 @@ The latter may be used for, e.g., Lagrangian multipliers.</p>
 <dt class="sig sig-object py" id="edelweissfe.variables.fieldvariable.FieldVariable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.variables.fieldvariable.</span></span><span class="sig-name descname"><span class="pre">FieldVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/variables/fieldvariable.html#FieldVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.variables.fieldvariable.FieldVariable" title="Permalink to this definition"></a></dt>
 <dd><p>This is a basic field variable, tied to a spatial position.
-Currently, it is a placeholder used to indicate the presence field variables at a certain location, and associate them with e.g, nodes.
+Currently, it is a placeholder used to indicate the presence field variables at a certain location,
+and associate them with e.g, nodes.
 Furthermore, it allows us to adress them by their unique id (= hash value).
-Unlike ScalarVariables, FieldVariable does not directly holds any results/values, but rather, for performance reasons,
+Unlike ScalarVariables, FieldVariable does not directly holds any results/values,
+but rather, for performance reasons,
 we store results in cumulative Fields, such as NodeField.</p>
 </dd></dl>
 

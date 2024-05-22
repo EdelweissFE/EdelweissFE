@@ -116,7 +116,7 @@
 <span class="sd">    :caption: Example:</span>
 
 <span class="sd">    *element, type=C3D8, provider=marmot</span>
-<span class="sd">        ** el_label, node1, node2, node3, node4, ... </span>
+<span class="sd">        ** el_label, node1, node2, node3, node4, ...</span>
 <span class="sd">        1000,        1,     2,     3,     4,     ...</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -135,7 +135,7 @@
 <span class="sd">        The element provider class type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">provider</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">provider</span> <span class="o">=</span> <span class="s2">&quot;marmot&quot;</span>
 
     <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmot&quot;</span><span class="p">:</span>
@@ -144,7 +144,9 @@
         <span class="k">return</span> <span class="n">MarmotElementWrapper</span>
 
     <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmotsingleqpelement&quot;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotsingleqpelement.element</span> <span class="kn">import</span> <span class="n">MarmotMaterialWrappingElement</span>
+        <span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotsingleqpelement.element</span> <span class="kn">import</span> <span class="p">(</span>
+            <span class="n">MarmotMaterialWrappingElement</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">MarmotMaterialWrappingElement</span></div>
 </pre></div>

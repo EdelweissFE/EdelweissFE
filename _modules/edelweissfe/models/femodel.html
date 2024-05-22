@@ -109,14 +109,16 @@
 
 <span class="c1"># @author: Matthias Neuner</span>
 
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">getFieldSize</span><span class="p">,</span> <span class="n">phenomena</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.fields.nodefield</span> <span class="kn">import</span> <span class="n">NodeField</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">phenomena</span><span class="p">,</span> <span class="n">getFieldSize</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.variables.scalarvariable</span> <span class="kn">import</span> <span class="n">ScalarVariable</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.variables.fieldvariable</span> <span class="kn">import</span> <span class="n">FieldVariable</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.variables.fieldvariable</span> <span class="kn">import</span> <span class="n">FieldVariable</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.variables.scalarvariable</span> <span class="kn">import</span> <span class="n">ScalarVariable</span>
 
 
 <div class="viewcode-block" id="FEModel"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel">[docs]</a><span class="k">class</span> <span class="nc">FEModel</span><span class="p">:</span>
@@ -156,8 +158,8 @@
 <span class="sd">        elements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">nodeFields</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">element</span><span class="o">.</span><span class="n">fields</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">nodeFields</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">elementNodeFields</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">element</span><span class="o">.</span><span class="n">fields</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">elementNodeFields</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
                         <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">FieldVariable</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
 
@@ -193,8 +195,6 @@
 
         <span class="n">theNodeFields</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">phenomena</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">fieldSize</span> <span class="o">=</span> <span class="n">getFieldSize</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">domainSize</span><span class="p">)</span>
-
             <span class="n">theNodeField</span> <span class="o">=</span> <span class="n">NodeField</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">getFieldSize</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">domainSize</span><span class="p">),</span> <span class="n">nodes</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">theNodeField</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
@@ -273,7 +273,10 @@
 <span class="sd">        journal</span>
 <span class="sd">            The journal instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Activating fields on nodes from Elements and Constraints&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">)</span>
+        <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="s2">&quot;Activating fields on nodes from Elements and Constraints&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_populateNodeFieldVariablesFromElements</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_populateNodeFieldVariablesFromConstraints</span><span class="p">()</span>
 
@@ -296,6 +299,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">section</span><span class="o">.</span><span class="n">assignSectionPropertiesToModel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># check if all elements are assigned a material</span>
+        <span class="n">materialAssigned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;hasMaterial&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">materialAssigned</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">elementIds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">elId</span><span class="p">)</span> <span class="k">for</span> <span class="n">elId</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">keys</span><span class="p">()])[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">materialAssigned</span><span class="p">)]</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No material was assigned to element(s) with id(s) </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">elementIds</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FEModel.prepareYourself"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.prepareYourself">[docs]</a>    <span class="k">def</span> <span class="nf">prepareYourself</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the model for a simulation.</span>
@@ -338,9 +347,9 @@
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;PrettyModelSummary&quot;</span>
 
     <span class="k">def</span> <span class="nf">wrapList</span><span class="p">(</span><span class="n">theList</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">theList</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">theList</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">):</span>
             <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
-                <span class="s2">&quot;  </span><span class="si">{:&lt;20}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">l</span><span class="p">),</span>
+                <span class="s2">&quot;  </span><span class="si">{:&lt;20}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">),</span>
                 <span class="n">identification</span><span class="p">,</span>
                 <span class="mi">0</span><span class="p">,</span>
             <span class="p">)</span>

@@ -133,9 +133,7 @@ equations into the global equation system.</p>
 <div class="section" id="equalvaluelagrangian-constrain-nodal-values-to-equal-values">
 <h2><code class="docutils literal notranslate"><span class="pre">equalvaluelagrangian</span></code> - Constrain nodal values to equal values<a class="headerlink" href="#equalvaluelagrangian-constrain-nodal-values-to-equal-values" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">edelweissfe.constraints.equalvaluelagrangian</span></code></p>
-<span class="target" id="module-edelweissfe.constraints.equalvaluelagrangian"></span><p>A lagrangian multiplier based constraint used for constraining nodal values
-of a node set to be equal.</p>
-<table class="docutils align-default" id="id1">
+<span class="target" id="module-edelweissfe.constraints.equalvaluelagrangian"></span><table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -173,7 +171,7 @@ of a node set to be equal.</p>
 <span class="nv">component</span><span class="ow">=</span><span class="m">1</span>
 
 <span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">linearelastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">linearelastic</span>
-30000.0, 0.15 
+30000.0, 0.15
 
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">linearelastic</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
@@ -182,8 +180,8 @@ all
 <span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
 <span class="k">*fieldOutput</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 
@@ -207,9 +205,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <div class="section" id="equalvaluepenalty-constrain-nodal-values-to-equal-values">
 <h2><code class="docutils literal notranslate"><span class="pre">equalvaluepenalty</span></code> - Constrain nodal values to equal values<a class="headerlink" href="#equalvaluepenalty-constrain-nodal-values-to-equal-values" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">edelweissfe.constraints.equalvaluepenalty</span></code></p>
-<span class="target" id="module-edelweissfe.constraints.equalvaluepenalty"></span><p>A penalty based constraint used for constraining nodal values
-of a node set to be equal.</p>
-<table class="docutils align-default" id="id3">
+<span class="target" id="module-edelweissfe.constraints.equalvaluepenalty"></span><table class="docutils align-default" id="id3">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -251,7 +247,7 @@ of a node set to be equal.</p>
 <span class="nv">penalty</span><span class="ow">=</span><span class="m">1e8</span>
 
 <span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">linearelastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">linearelastic</span>
-30000.0, 0.15 
+30000.0, 0.15
 
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">linearelastic</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
@@ -260,8 +256,8 @@ all
 <span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
 
 <span class="k">*fieldOutput</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">P</span>,
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;mean(x, axis=1)&#39;</span>
 
@@ -315,7 +311,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="nv">elType</span><span class="ow">=</span><span class="m">CPS4</span>
 
 <span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">linearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">le</span>
-30000.0, 0.15 
+30000.0, 0.15
 
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> thickness</span><span class="ow">=</span><span class="m">1.0</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">le</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">plane</span>
 all
@@ -374,8 +370,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/RigidBodyConstraintLargeDeformations3D/test.inp</span></code></span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*include</span>,<span class="nv"> input</span><span class="ow">=</span><span class="m">mesh.inp</span>
 
-<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stvenantkirchhoffisotropic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">le</span>, 
-30000.0, 0.15 
+<span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stvenantkirchhoffisotropic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">le</span>,
+30000.0, 0.15
 
 <span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">le</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
 all
@@ -398,7 +394,7 @@ configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span c
 <span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">2e-1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-4</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">10</span>
 options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">linear</span>
 dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">left</span>,<span class="nv">         field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0</span>
-dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">rBottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">3.141</span>,  
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">rotRP</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">rBottom</span>,<span class="nv">   field</span><span class="ow">=</span><span class="m">rotation</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">3.141</span>,
 </pre></div>
 </div>
 </div>
@@ -406,8 +402,7 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <div class="section" id="penaltyindirectcontrol-penalty-based-indirect-control">
 <h2><code class="docutils literal notranslate"><span class="pre">penaltyindirectcontrol</span></code> - Penalty based indirect control<a class="headerlink" href="#penaltyindirectcontrol-penalty-based-indirect-control" title="Permalink to this heading"></a></h2>
 <p>Module <code class="docutils literal notranslate"><span class="pre">edelweissfe.constraints.penaltyindirectcontrol</span></code></p>
-<span class="target" id="module-edelweissfe.constraints.penaltyindirectcontrol"></span><p>A penalty based constraint used for indirect (displacement) control.</p>
-<table class="docutils align-default" id="id9">
+<span class="target" id="module-edelweissfe.constraints.penaltyindirectcontrol"></span><table class="docutils align-default" id="id9">
 <caption><span class="caption-text">Options</span><a class="headerlink" href="#id9" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
@@ -475,7 +470,7 @@ all
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">0:4</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;np.mean(x,axis=1)&#39;</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>, 
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,
 <span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">strain</span>
@@ -521,8 +516,8 @@ If scalar variables are required, the can be created on demand by
 defining
 <a class="reference internal" href="#edelweissfe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables" title="edelweissfe.constraints.base.constraintbase.ConstraintBase.getNumberOfAdditionalNeededScalarVariables"><code class="xref py py-func docutils literal notranslate"><span class="pre">getNumberOfAdditionalNeededScalarVariables()</span></code></a> and
 <a class="reference internal" href="#edelweissfe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables" title="edelweissfe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables"><code class="xref py py-func docutils literal notranslate"><span class="pre">assignAdditionalScalarVariables()</span></code></a>, which are called at the beginning of an analysis.</p>
-<p>If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt (and the stiffness)
-to be of the form</p>
+<p>If scalar variables are used, EdelweissFE expects the layout of the external load vector PExt
+(and the stiffness) to be of the form</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[ node 1 - dofs field 1,</span>
 <span class="go">  node 1 - dofs field 2,</span>
 <span class="go">  node 1 - ... ,</span>

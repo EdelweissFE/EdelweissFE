@@ -4,7 +4,7 @@ Step actions
 .. automodule:: edelweissfe.config.stepactions
    :members: __doc__
 
-``bodyforce`` - Bodyforce loads 
+``bodyforce`` - Bodyforce loads
 -------------------------------
 
 Relevant module: ``edelweissfe.stepactions.bodyforce``
@@ -16,7 +16,7 @@ Relevant module: ``edelweissfe.stepactions.bodyforce``
    :caption: Options:
 
 .. literalinclude:: ../../../testfiles/BodyForce3D/test.inp
-   :language: edelweiss 
+   :language: edelweiss
    :caption: Example: ``testfiles/BodyForce3D/test.inp``
 
 ``dirichlet`` - Standard dirichlet BC
@@ -43,10 +43,10 @@ Relevant module: ``edelweissfe.stepactions.distributedload``
 
 
 .. literalinclude:: ../../../testfiles/DLoad/test.inp
-   :language: edelweiss 
+   :language: edelweiss
    :caption: Example: ``testfiles/DLoad/test.inp``
 
-``geostatic`` - Geostatic stress states 
+``geostatic`` - Geostatic stress states
 ---------------------------------------
 
 Relevant module: ``edelweissfe.stepactions.geostatic``
@@ -59,7 +59,7 @@ Relevant module: ``edelweissfe.stepactions.geostatic``
 
 
 .. literalinclude:: ../../../testfiles/GeoStatic/test.inp
-   :language: edelweiss 
+   :language: edelweiss
    :caption: Example: ``testfiles/GeoStatic/test.inp``
 
 ``indirectcontrol`` - Indirect displacement control
@@ -121,7 +121,7 @@ Relevant module: ``edelweissfe.stepactions.nodeforces``
 
 
 .. literalinclude:: ../../../testfiles/NodeForces/test.inp
-   :language: edelweiss 
+   :language: edelweiss
    :caption: Example: ``testfiles/NodeForces/test.inp``
 
 ``setfield`` - Set a field to a prescribed value
@@ -151,5 +151,5 @@ Implementing your own step actions
 
 Subclass from the step action base class in module ``edelweissfe.stepactions.base.stepactionbase``
 
-.. automodule:: edelweissfe.stepactions.base.stepactionbase    
-   :members: 
+.. automodule:: edelweissfe.stepactions.base.stepactionbase
+   :members:

@@ -65,6 +65,20 @@
 <li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.getNodeForIndexInDofVector()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField"><code class="docutils literal notranslate"><span class="pre">DofManager.writeDofVectorToNodeField()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.writeNodeFieldToDofVector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.accumulatedConstraintNDof"><code class="docutils literal notranslate"><span class="pre">DofManager.accumulatedConstraintNDof</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.accumulatedElementNDof"><code class="docutils literal notranslate"><span class="pre">DofManager.accumulatedElementNDof</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.fields"><code class="docutils literal notranslate"><span class="pre">DofManager.fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfConstraintsInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfConstraintsInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfElementsInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfElementsInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldVariablesInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfFieldVariablesInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldsInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfFieldsInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldsOnNodeSetsInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfFieldsOnNodeSetsInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfNodeFieldsInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfNodeFieldsInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfScalarVariablesInDofVector"><code class="docutils literal notranslate"><span class="pre">DofManager.idcsOfScalarVariablesInDofVector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.indexToHostObjectMapping"><code class="docutils literal notranslate"><span class="pre">DofManager.indexToHostObjectMapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.largestNumberOfConstraintNDof"><code class="docutils literal notranslate"><span class="pre">DofManager.largestNumberOfConstraintNDof</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.largestNumberOfElNDof"><code class="docutils literal notranslate"><span class="pre">DofManager.largestNumberOfElNDof</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.nDof"><code class="docutils literal notranslate"><span class="pre">DofManager.nDof</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a></li>
@@ -126,7 +140,7 @@
 <span class="target" id="module-edelweissfe.numerics.dofmanager"></span><p>This module contains important classes for describing the global equation system by means of a sparse system.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeFields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeFields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializeVIJPattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
 <dd><p>The DofManager</p>
 <blockquote>
 <div><ul class="simple">
@@ -140,7 +154,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nodeFields</strong> (<em>list</em>) – The list of NodeFields which should be represented in the DofVector structure.</p></li>
+<li><p><strong>nodeFields</strong> (<em>list</em><em>[</em><a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField"><em>edelweissfe.fields.nodefield.NodeField</em></a><em>]</em>) – The list of NodeFields which should be represented in the DofVector structure.</p></li>
 <li><p><strong>scalarVariables</strong> (<em>list</em>) – The list of ScalarVariables which should be represented in the DofVector structure.</p></li>
 <li><p><strong>elements</strong> (<em>list</em>) – The list of Elements for which a map to the respective indices should be created.</p></li>
 <li><p><strong>constraints</strong> (<em>list</em>) – The list of Constraints for which a map to the respective indices should be created.</p></li>
@@ -167,7 +181,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField" title="edelweissfe.numerics.dofmanager.DofManager.writeDofVectorToNodeField"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeDofVectorToNodeField</span></code></a>(dofVector, ...)</p></td>
 <td><p>Write the current values of an entire NodeField from the respective locations in a given DofVector.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeNodeFieldToDofVector</span></code></a>(dofVector, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeNodeFieldToDofVector</span></code></a>(dofVector, ...[, ...])</p></td>
 <td><p>Write the current values of an entire NodeField to the respective locations in a given DofVector.</p></td>
 </tr>
 </tbody>
@@ -242,7 +256,7 @@ the location of each entity.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector">
-<span class="sig-name descname"><span class="pre">writeNodeFieldToDofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dofVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.writeNodeFieldToDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">writeNodeFieldToDofVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dofVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager.writeNodeFieldToDofVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.writeNodeFieldToDofVector" title="Permalink to this definition"></a></dt>
 <dd><p>Write the current values of an entire NodeField to the respective locations in a given DofVector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,7 +264,9 @@ the location of each entity.</p>
 <li><p><strong>dofVector</strong> (<a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector" title="edelweissfe.numerics.dofmanager.DofVector"><em>DofVector</em></a>) – The result DofVector.</p></li>
 <li><p><strong>nodeField</strong> (<a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField"><em>NodeField</em></a>) – The NodeField holding the values.</p></li>
 <li><p><strong>resultname</strong> – The name of the value entries held by the NodeField.</p></li>
+<li><p><strong>NodeSet</strong> – The NodeSet to consider. If None, all nodes of the NodeField are considered.</p></li>
 <li><p><strong>resultName</strong> (<em>str</em>) – </p></li>
+<li><p><strong>nodeSet</strong> (<a class="reference internal" href="sets.html#edelweissfe.sets.nodeset.NodeSet" title="edelweissfe.sets.nodeset.NodeSet"><em>NodeSet</em></a>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -260,6 +276,90 @@ the location of each entity.</p>
 <dd class="field-odd"><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector" title="edelweissfe.numerics.dofmanager.DofVector">DofVector</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.accumulatedConstraintNDof">
+<span class="sig-name descname"><span class="pre">accumulatedConstraintNDof</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.accumulatedConstraintNDof" title="Permalink to this definition"></a></dt>
+<dd><p>The accumulated number of constraint dofs (= the sum of all constraint vector sizes)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.accumulatedElementNDof">
+<span class="sig-name descname"><span class="pre">accumulatedElementNDof</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.accumulatedElementNDof" title="Permalink to this definition"></a></dt>
+<dd><p>The accumulated number of element dofs (= the sum of all element vector sizes)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.fields" title="Permalink to this definition"></a></dt>
+<dd><p>The list of fields which can be found in the Dofvector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfConstraintsInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfConstraintsInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfConstraintsInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping a constraint to it’s indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfElementsInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfElementsInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfElementsInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping an element to it’s indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldVariablesInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfFieldVariablesInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldVariablesInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping the nodal field variables to the indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldsInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfFieldsInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldsInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping the field names to all indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldsOnNodeSetsInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfFieldsOnNodeSetsInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfFieldsOnNodeSetsInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping for each field a NodeSet to the respective indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfNodeFieldsInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfNodeFieldsInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfNodeFieldsInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping the a complete NodeField to the all its indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.idcsOfScalarVariablesInDofVector">
+<span class="sig-name descname"><span class="pre">idcsOfScalarVariablesInDofVector</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.idcsOfScalarVariablesInDofVector" title="Permalink to this definition"></a></dt>
+<dd><p>The dictionary mapping the scalar variables to all indices in the DofVector</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.indexToHostObjectMapping">
+<span class="sig-name descname"><span class="pre">indexToHostObjectMapping</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.indexToHostObjectMapping" title="Permalink to this definition"></a></dt>
+<dd><p>The reverse dictionary mapping an index to the Host (e.g., a Node) holding the index’s FieldvVariable</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.largestNumberOfConstraintNDof">
+<span class="sig-name descname"><span class="pre">largestNumberOfConstraintNDof</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.largestNumberOfConstraintNDof" title="Permalink to this definition"></a></dt>
+<dd><p>The size of the largest of all constraint dof vectors</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.largestNumberOfElNDof">
+<span class="sig-name descname"><span class="pre">largestNumberOfElNDof</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.largestNumberOfElNDof" title="Permalink to this definition"></a></dt>
+<dd><p>The size of the largest of all element dof vectors</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager.nDof">
+<span class="sig-name descname"><span class="pre">nDof</span></span><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager.nDof" title="Permalink to this definition"></a></dt>
+<dd><p>The total number of degrees of freedom (and size of the DofVector)</p>
 </dd></dl>
 
 </dd></dl>

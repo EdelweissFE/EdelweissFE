@@ -164,17 +164,35 @@ all individual nodes.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.copyEntriesFromOther" title="edelweissfe.fields.nodefield.NodeField.copyEntriesFromOther"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copyEntriesFromOther</span></code></a>(other[, fieldValueEntries])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.addEntriesFromOther" title="edelweissfe.fields.nodefield.NodeField.addEntriesFromOther"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addEntriesFromOther</span></code></a>(other[, fieldValueEntries])</p></td>
+<td><p>Add values from another NodeField.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.copyEntriesFromOther" title="edelweissfe.fields.nodefield.NodeField.copyEntriesFromOther"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copyEntriesFromOther</span></code></a>(other[, fieldValueEntries])</p></td>
 <td><p>Copy values from another NodeField.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.createFieldValueEntry" title="edelweissfe.fields.nodefield.NodeField.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.createFieldValueEntry" title="edelweissfe.fields.nodefield.NodeField.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
 <td><p>Add an empty entry with given name for the field, e.g, 'U' or 'P' for flux or effort entries.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.subset" title="edelweissfe.fields.nodefield.NodeField.subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset</span></code></a>(subset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeField.subset" title="edelweissfe.fields.nodefield.NodeField.subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset</span></code></a>(subset)</p></td>
 <td><p>Get a view on a subset of the field.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.fields.nodefield.NodeField.addEntriesFromOther">
+<span class="sig-name descname"><span class="pre">addEntriesFromOther</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldValueEntries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/fields/nodefield.html#NodeField.addEntriesFromOther"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.fields.nodefield.NodeField.addEntriesFromOther" title="Permalink to this definition"></a></dt>
+<dd><p>Add values from another NodeField.
+If the fields differ, the intersection is considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subset</strong> – The sub NodeField.</p></li>
+<li><p><strong>fieldValueEntries</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – The list of entries which should be copied. Default: all entries are copied.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.fields.nodefield.NodeField.copyEntriesFromOther">
 <span class="sig-name descname"><span class="pre">copyEntriesFromOther</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldValueEntries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/fields/nodefield.html#NodeField.copyEntriesFromOther"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.fields.nodefield.NodeField.copyEntriesFromOther" title="Permalink to this definition"></a></dt>
@@ -236,13 +254,16 @@ If the fields differ, the intersection is considered.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copyEntriesFromOther</span></code>(other[, fieldValueEntries])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addEntriesFromOther</span></code>(other[, fieldValueEntries])</p></td>
+<td><p>Add values from another NodeField.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copyEntriesFromOther</span></code>(other[, fieldValueEntries])</p></td>
 <td><p>Copy values from another NodeField.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeFieldSubset.createFieldValueEntry" title="edelweissfe.fields.nodefield.NodeFieldSubset.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeFieldSubset.createFieldValueEntry" title="edelweissfe.fields.nodefield.NodeFieldSubset.createFieldValueEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createFieldValueEntry</span></code></a>(name)</p></td>
 <td><p>Add an empty entry with given name for the field, e.g, 'U' or 'P' for flux or effort entries.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeFieldSubset.subset" title="edelweissfe.fields.nodefield.NodeFieldSubset.subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset</span></code></a>(subset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.fields.nodefield.NodeFieldSubset.subset" title="edelweissfe.fields.nodefield.NodeFieldSubset.subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset</span></code></a>(subset)</p></td>
 <td><p>Get a view on a subset of the field.</p></td>
 </tr>
 </tbody>

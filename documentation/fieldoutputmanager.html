@@ -156,8 +156,8 @@ Furthermore, they can be exported to <code class="docutils literal notranslate">
 <p>If the results are exported to a .csv file with enabled “saveHistory”,
 the time History is automatically appended to the .csv file”</p>
 </div>
-<table class="docutils align-default" id="id17">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id17" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id15" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -171,7 +171,7 @@ the time History is automatically appended to the .csv file”</p>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">name</span></code></td>
 <td><p>name of the fieldOutput</p></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nSet|elSet|node|element|modelData</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nSet|elSet|node|element</span></code></td>
 <td><p>entity, for which the fieldOutput is defined</p></td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">result</span></code></td>
@@ -194,8 +194,8 @@ the time History is automatically appended to the .csv file”</p>
 </tr>
 </tbody>
 </table>
-<div class="literal-block-wrapper docutils container" id="id18">
-<div class="code-block-caption"><span class="caption-text">Example file: <code class="docutils literal notranslate"><span class="pre">../../../testfiles/FieldOutput/fieldOutput.inp</span></code></span><a class="headerlink" href="#id18" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text">Example file: <code class="docutils literal notranslate"><span class="pre">../../../testfiles/FieldOutput/fieldOutput.inp</span></code></span><a class="headerlink" href="#id16" title="Permalink to this code"></a></div>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">modleon</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">modleon</span>
 30000.0, 0.15 ,13 , 47.4 ,  55   , 4.74 , 0.85 , 0.12 , 0.003, 2.0, 0.000001, 15.0, 0.10, 1
 
@@ -221,13 +221,13 @@ all
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">stress_top</span>,<span class="nv">                elSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">      result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">                    elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv">          result</span><span class="ow">=</span><span class="m">alphaP</span>,<span class="nv">      quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
 
-<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">meshPlot</span>, 
-<span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">221</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">       fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv">       f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">U2</span>
-<span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">222</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv">             f(x)</span><span class="ow">=</span><span class="s">&#39;x[:,1]&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">S2</span>
-<span class="nv">figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">212</span>,<span class="nv"> c</span><span class="ow">=</span><span class="m">red</span>,<span class="nv"> ls</span><span class="ow">=</span><span class="m">dashed</span>,<span class="nv"> create</span><span class="ow">=</span><span class="m">xyData</span>,<span class="nv"> x</span><span class="ow">=</span><span class="m">time</span>,<span class="nv"> y</span><span class="ow">=</span><span class="m">RF_bottom</span>,<span class="nv"> f(y)</span><span class="ow">=</span><span class="s">&#39;sum ( y[:,:,1], axis=1)&#39;</span>,<span class="nv"> label</span><span class="ow">=</span><span class="m">Sum(RF)</span>
+<span class="c c-Singleline">** *output, type=meshPlot,</span>
+<span class="c c-Singleline">** figure=1, axSpec=221, create=perNode,       fieldOutput=displacement,       f(x)=&#39;x[:,1]&#39;, label=U2</span>
+<span class="c c-Singleline">** figure=1, axSpec=222, create=perElement,    fieldOutput=stress,             f(x)=&#39;x[:,1]&#39;, label=S2</span>
+<span class="c c-Singleline">** figure=1, axSpec=212, c=red, ls=dashed, create=xyData, x=time, y=RF_bottom, f(y)=&#39;sum ( y[:,:,1], axis=1)&#39;, label=Sum(RF)</span>
 
 <span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">myEnsightExport</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>,
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">stress</span>,
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">alphaP</span>,
 configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
@@ -260,13 +260,13 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput" title="edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addExpressionFieldOutput</span></code></a>(name, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput" title="edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addExpressionFieldOutput</span></code></a>(associatedSet, ...)</p></td>
 <td><p>Add a new FieldOutput entry to be computed during the simulation</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput" title="edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addPerElementFieldOutput</span></code></a>(name, elSet, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput" title="edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addPerElementFieldOutput</span></code></a>(name, elSet[, ...])</p></td>
 <td><p>Add a new FieldOutput entry to be computed during the simulation</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput" title="edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addPerNodeFieldOutput</span></code></a>(name, nodeField, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput" title="edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addPerNodeFieldOutput</span></code></a>(name, nodeField[, ...])</p></td>
 <td><p>Add a new FieldOutput entry to be computed during the simulation</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeIncrement" title="edelweissfe.utils.fieldoutput.FieldOutputController.finalizeIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalizeIncrement</span></code></a>()</p></td>
@@ -304,15 +304,18 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput">
-<span class="sig-name descname"><span class="pre">addExpressionFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#FieldOutputController.addExpressionFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">addExpressionFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">associatedSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theExpression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#FieldOutputController.addExpressionFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Add a new FieldOutput entry to be computed during the simulation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>associatedSet</strong> (<em>set</em>) – The associated set of nodes or elements.</p></li>
+<li><p><strong>theExpression</strong> (<em>Callable</em>) – The expression to be evaluated.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
-<li><p><strong>nodeField</strong> – The :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>NodeField, on which this FieldOutput should operate.</p></li>
-<li><p><strong>resultName</strong> – The name of the result entry in the :class:<a href="#id3"><span class="problematic" id="id4">`</span></a>NodeField</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Further definitions of the FieldOutput</p></li>
+<li><p><strong>saveHistory</strong> – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
 </ul>
 </dd>
 </dl>
@@ -320,18 +323,20 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput">
-<span class="sig-name descname"><span class="pre">addPerElementFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#FieldOutputController.addPerElementFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">addPerElementFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.Union[int,</span> <span class="pre">slice,</span> <span class="pre">list[int]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#FieldOutputController.addPerElementFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Add a new FieldOutput entry to be computed during the simulation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
-<li><p><strong>elSet</strong> (<a class="reference internal" href="sets.html#edelweissfe.sets.elementset.ElementSet" title="edelweissfe.sets.elementset.ElementSet"><em>ElementSet</em></a>) – The :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>ElementSet on which this FieldOutput should operate.</p></li>
-<li><p><strong>resultname</strong> – The name of the result, which is provided by the Elements in the :class:<a href="#id7"><span class="problematic" id="id8">`</span></a>ElementSet.</p></li>
-<li><p><strong>journal</strong> – The :class:<a href="#id9"><span class="problematic" id="id10">`</span></a>Journal instance for logging purposes.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Further definition of the FieldOutput</p></li>
-<li><p><strong>resultName</strong> (<em>str</em>) – </p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
+<li><p><strong>elSet</strong> (<a class="reference internal" href="sets.html#edelweissfe.sets.elementset.ElementSet" title="edelweissfe.sets.elementset.ElementSet"><em>ElementSet</em></a>) – The :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>ElementSet on which this FieldOutput should operate.</p></li>
+<li><p><strong>result</strong> (<em>str</em>) – The name of the result, which is provided by the Elements in the :class:<a href="#id3"><span class="problematic" id="id4">`</span></a>ElementSet.</p></li>
+<li><p><strong>journal</strong> – The :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>Journal instance for logging purposes.</p></li>
+<li><p><strong>saveHistory</strong> – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
+<li><p><strong>quadraturePoints</strong> – The indices of quadrature points for which the results should be extracted.</p></li>
 </ul>
 </dd>
 </dl>
@@ -339,17 +344,19 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput">
-<span class="sig-name descname"><span class="pre">addPerNodeFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#FieldOutputController.addPerNodeFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">addPerNodeFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#FieldOutputController.addPerNodeFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Add a new FieldOutput entry to be computed during the simulation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
-<li><p><strong>nodeField</strong> (<a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField"><em>NodeField</em></a>) – The :class:<a href="#id11"><span class="problematic" id="id12">`</span></a>NodeField, on which this FieldOutput should operate.</p></li>
-<li><p><strong>resultName</strong> – The name of the result entry in the :class:<a href="#id13"><span class="problematic" id="id14">`</span></a>NodeField</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Further definitions of the FieldOutput</p></li>
-<li><p><strong>result</strong> (<em>str</em>) – </p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
+<li><p><strong>nodeField</strong> (<a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField"><em>NodeField</em></a>) – The :class:<a href="#id7"><span class="problematic" id="id8">`</span></a>NodeField, on which this FieldOutput should operate.</p></li>
+<li><p><strong>result</strong> (<em>str</em>) – The name of the result entry in the :class:<a href="#id9"><span class="problematic" id="id10">`</span></a>NodeField</p></li>
+<li><p><strong>journal</strong> – The :class:<a href="#id11"><span class="problematic" id="id12">`</span></a>Journal instance for logging purposes.</p></li>
+<li><p><strong>saveHistory</strong> – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
 </ul>
 </dd>
 </dl>
@@ -388,16 +395,19 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput._FieldOutputBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">_FieldOutputBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#_FieldOutputBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput._FieldOutputBase" title="Permalink to this definition"></a></dt>
-<dd><p>Entity of a fieldOutput request.</p>
-<p>Carries the history or the latest result.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">_FieldOutputBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#_FieldOutputBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput._FieldOutputBase" title="Permalink to this definition"></a></dt>
+<dd><p>Entity of a fieldOutput request.
+Carries the history or the latest result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#edelweissfe.models.femodel.FEModel" title="edelweissfe.models.femodel.FEModel"><em>FEModel</em></a>) – A dictionary containing the model tree.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+<li><p><strong>saveHistory</strong> (<em>bool</em>) – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
 </ul>
 </dd>
 </dl>
@@ -531,18 +541,22 @@ Throws an exception if not possible.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput.ElementFieldOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">ElementFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#ElementFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.ElementFieldOutput" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">ElementFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#ElementFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.ElementFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>This is a Element based FieldOutput.
 It operates on ElementSets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
-<li><p><strong>elSet</strong> – The ElementSet on which this FieldOutput operates.</p></li>
-<li><p><strong>resultName</strong> (<em>str</em>) – The name of the result entry in the :class:<a href="#id15"><span class="problematic" id="id16">`</span></a>ElementBase.</p></li>
+<li><p><strong>elSet</strong> (<a class="reference internal" href="sets.html#edelweissfe.sets.elementset.ElementSet" title="edelweissfe.sets.elementset.ElementSet"><em>ElementSet</em></a>) – The ElementSet on which this FieldOutput operates.</p></li>
+<li><p><strong>resultName</strong> (<em>str</em>) – The name of the result entry in the :class:<a href="#id13"><span class="problematic" id="id14">`</span></a>ElementBase.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#edelweissfe.models.femodel.FEModel" title="edelweissfe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree instance.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+<li><p><strong>saveHistory</strong> (<em>bool</em>) – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
+<li><p><strong>quadraturePoints</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>slice</em><em>, </em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – The list of quadrature points for which the results should be extracted.</p></li>
 </ul>
 </dd>
 </dl>
@@ -624,7 +638,7 @@ Will use the current solution and reaction vector if result is a nodal result.</
 
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput.NodeFieldOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">NodeFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#NodeFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.NodeFieldOutput" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">NodeFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeField</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#NodeFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.NodeFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>This is a Node based FieldOutput.
 It operates on NodeFields.</p>
 <dl class="field-list simple">
@@ -635,7 +649,10 @@ It operates on NodeFields.</p>
 <li><p><strong>result</strong> (<em>str</em>) – The name of the result entry in the NodeField.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#edelweissfe.models.femodel.FEModel" title="edelweissfe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree instance.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+<li><p><strong>saveHistory</strong> (<em>bool</em>) – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
 </ul>
 </dd>
 </dl>
@@ -705,18 +722,23 @@ Will use the current solution and reaction vector if result is a nodal result.</
 
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.utils.fieldoutput.ExpressionFieldOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">ExpressionFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#ExpressionFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.ExpressionFieldOutput" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.fieldoutput.</span></span><span class="sig-name descname"><span class="pre">ExpressionFieldOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">associatedSet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theExpression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fExport_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/fieldoutput.html#ExpressionFieldOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.fieldoutput.ExpressionFieldOutput" title="Permalink to this definition"></a></dt>
 <dd><p>This is a Node based FieldOutput.
 It operates on NodeFields.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>associatedSet</strong> – The associated set of nodes or elements.</p></li>
+<li><p><strong>theExpression</strong> – The expression to be evaluated.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – The name of this FieldOutput.</p></li>
 <li><p><strong>nodeField</strong> – The NodeField, on which this FieldOutput operates.</p></li>
 <li><p><strong>result</strong> – The name of the result entry in the NodeField.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models.html#edelweissfe.models.femodel.FEModel" title="edelweissfe.models.femodel.FEModel"><em>FEModel</em></a>) – The model tree instance.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal object for logging.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – The definition for this output.</p></li>
+<li><p><strong>saveHistory</strong> (<em>bool</em>) – Save the complete history or only the last result.</p></li>
+<li><p><strong>f_x</strong> (<em>Callable</em>) – Apply a math function on the results.</p></li>
+<li><p><strong>export</strong> (<em>str</em>) – Export the results to a file.</p></li>
+<li><p><strong>fExport_x</strong> (<em>Callable</em>) – Apply a math function on the results before exporting.</p></li>
 </ul>
 </dd>
 </dl>

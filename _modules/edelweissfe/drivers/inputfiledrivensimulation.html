@@ -114,37 +114,23 @@
 <span class="sd">A ``*job`` definition consists of multiple ``*steps``, associated with that job.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">printPrettyModelSummary</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config</span> <span class="kn">import</span> <span class="n">analyticalfields</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">domainMapping</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.stepactions</span> <span class="kn">import</span> <span class="n">stepActionFactory</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.outputmanagers</span> <span class="kn">import</span> <span class="n">getOutputManagerClass</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.misc</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">convertAssignmentsToStringDictionary</span><span class="p">,</span>
-    <span class="n">splitLineAtCommas</span><span class="p">,</span>
-    <span class="n">convertLinesToStringDictionary</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.plotter</span> <span class="kn">import</span> <span class="n">Plotter</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">StepFailed</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.numerics.dofmanager</span> <span class="kn">import</span> <span class="n">DofVector</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
+
 <span class="kn">from</span> <span class="nn">edelweissfe.config.configurator</span> <span class="kn">import</span> <span class="n">loadConfiguration</span><span class="p">,</span> <span class="n">updateConfiguration</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.steps.stepmanager</span> <span class="kn">import</span> <span class="n">StepManager</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">domainMapping</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.config.solvers</span> <span class="kn">import</span> <span class="n">getSolverByName</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.helpers.inputfilehelpers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">fillFEModelFromInputFile</span><span class="p">,</span>
-    <span class="n">createStepManagerFromInputFile</span><span class="p">,</span>
+    <span class="n">createFieldOutputFromInputFile</span><span class="p">,</span>
     <span class="n">createOutputManagersFromInputFile</span><span class="p">,</span>
+    <span class="n">createPlotterFromInputFile</span><span class="p">,</span>
     <span class="n">createSolversFromInputFile</span><span class="p">,</span>
     <span class="n">createStepManagerFromInputFile</span><span class="p">,</span>
-    <span class="n">createFieldOutputFromInputFile</span><span class="p">,</span>
-    <span class="n">createPlotterFromInputFile</span><span class="p">,</span>
+    <span class="n">fillFEModelFromInputFile</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.stepactions.base.stepactionbase</span> <span class="kn">import</span> <span class="n">StepActionBase</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.solvers</span> <span class="kn">import</span> <span class="n">getSolverByName</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">printPrettyModelSummary</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">StepFailed</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
 
 
 <div class="viewcode-block" id="finiteElementSimulation"><a class="viewcode-back" href="../../../documentation/jobs.html#edelweissfe.drivers.inputfiledrivensimulation.finiteElementSimulation">[docs]</a><span class="k">def</span> <span class="nf">finiteElementSimulation</span><span class="p">(</span>
@@ -290,7 +276,10 @@
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">journal</span><span class="o">.</span><span class="n">printTable</span><span class="p">(</span>
             <span class="p">[</span>
-                <span class="p">(</span><span class="s2">&quot;Job computation time&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:10.4f}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;computationTime&quot;</span><span class="p">])),</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Job computation time&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">{:10.4f}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;computationTime&quot;</span><span class="p">]),</span>
+                <span class="p">),</span>
             <span class="p">],</span>
             <span class="n">identification</span><span class="p">,</span>
             <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>

@@ -1,7 +1,7 @@
 Models
 ======
 .. .. automodule:: edelweissfe.config.solvers
-..    :members: 
+..    :members:
 
 .. .. pprint:: edelweissfe.config.solvers.solverLibrary
 ..    :caption: Currently available:
@@ -11,4 +11,4 @@ Models
 ----------------------------------------------
 
 .. automodule:: edelweissfe.models.femodel
-   :members: 
+   :members:

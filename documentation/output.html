@@ -148,7 +148,7 @@ all
 <span class="nv">nY</span><span class="ow">=</span><span class="m">50</span>
 
 <span class="k">*fieldOutput</span>
-<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>, 
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Displacement</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Stress</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">stress</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Strain</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">strain</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
 <span class="nv">create</span><span class="ow">=</span><span class="m">perElement</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">Kappa</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">kappa</span>,<span class="nv"> quadraturePoint</span><span class="ow">=</span><span class="m">1</span>
@@ -180,9 +180,6 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.ensight">
 <span id="ensight-export-to-ensight-gold-format"></span><h2><code class="docutils literal notranslate"><span class="pre">ensight</span></code> - Export to Ensight Gold format<a class="headerlink" href="#module-edelweissfe.outputmanagers.ensight" title="Permalink to this heading"></a></h2>
-<p>Output manager for Ensight exports.
-If loaded, it automatically exports all elSets as Ensight parts.
-For each part, perNode and perElement results can be exported, which are imported from fieldOutputs.</p>
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Options:</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
@@ -215,16 +212,8 @@ For each part, perNode and perElement results can be exported, which are importe
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.monitor">
 <span id="monitor-monitor-quantities-in-the-terminal"></span><h2><code class="docutils literal notranslate"><span class="pre">monitor</span></code> - Monitor quantities in the terminal<a class="headerlink" href="#module-edelweissfe.outputmanagers.monitor" title="Permalink to this heading"></a></h2>
-<p>A simple monitor to observe results (fieldOutputs) in the console during analysis.</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">cpe4job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">omegaMon</span>
-<span class="nv">    fieldOutput</span><span class="ow">=</span><span class="m">omega</span>,<span class="nv"> f(x)</span><span class="ow">=</span><span class="s">&#39;max(x)&#39;</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default" id="id4">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -268,8 +257,8 @@ options</p>
 </ul>
 </dd>
 </dl>
-<table class="docutils align-default" id="id5">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -303,16 +292,8 @@ options</p>
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.fractureenergyintegrator">
 <span id="fractureenergyintegrator-determine-the-fracture-energy"></span><h2><code class="docutils literal notranslate"><span class="pre">fractureenergyintegrator</span></code> - Determine the fracture energy<a class="headerlink" href="#module-edelweissfe.outputmanagers.fractureenergyintegrator" title="Permalink to this heading"></a></h2>
-<p>A simple integrator to compute the fracture energy by integrating a load-displacement curve.</p>
-<div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">fractureenergyintegrator</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gfi</span>
-<span class="nv">    forceFieldOutput</span><span class="ow">=</span><span class="m">RF</span>,<span class="nv"> displacementFieldOutput</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> fractureArea</span><span class="ow">=</span><span class="s">&#39;100.0*1.0&#39;</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default" id="id7">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -337,10 +318,8 @@ options</p>
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.plotalongpath">
 <span id="plotalongpath-plot-a-result-along-a-line"></span><h2><code class="docutils literal notranslate"><span class="pre">plotalongpath</span></code> - Plot a result along a line<a class="headerlink" href="#module-edelweissfe.outputmanagers.plotalongpath" title="Permalink to this heading"></a></h2>
-<p>Plot result for a nodeSet or an elementSet along the true geometrical distance.
-Corresponds to the plot along path functionality in Abaqus.</p>
-<table class="docutils align-default" id="id8">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id8" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -374,18 +353,8 @@ Corresponds to the plot along path functionality in Abaqus.</p>
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.conditionalstop">
 <span id="conditionalstop-conditional-stop-if-expression-becomes-true"></span><h2><code class="docutils literal notranslate"><span class="pre">conditionalstop</span></code> - Conditional stop if expression becomes true<a class="headerlink" href="#module-edelweissfe.outputmanagers.conditionalstop" title="Permalink to this heading"></a></h2>
-<p>A conditional stop conditions wenn an expression becomes true.
-Useful, e.g., for indirect displacement control.</p>
-<div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">conditionalstop</span>,<span class="nv"> jobName</span><span class="ow">=</span><span class="m">myJob</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">condStop</span>
-<span class="nv">    stop</span><span class="ow">=</span><span class="s">&#39;fieldOutputs[&quot;damage&quot;]  &gt;= .99&#39;</span>
-<span class="nv">    stop</span><span class="ow">=</span><span class="s">&#39;fieldOutputs[&quot;displacement&quot;]  &lt; -5&#39;</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default" id="id10">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id10" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -404,16 +373,8 @@ Useful, e.g., for indirect displacement control.</p>
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.statusfile">
 <span id="statusfile-write-the-status-of-the-simulation-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">statusfile</span></code> - Write the status of the simulation to a file<a class="headerlink" href="#module-edelweissfe.outputmanagers.statusfile" title="Permalink to this heading"></a></h2>
-<p>Writes a status file during the analysis.</p>
-<div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=statusfile, name=status</span>
-<span class="go">    filename=myStatus.sta</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default" id="id12">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id12" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id8">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id8" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -432,16 +393,8 @@ Useful, e.g., for indirect displacement control.</p>
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.meshdatatofile">
 <span id="meshdatatofile-write-the-generated-mesh-data-to-a-file"></span><h2><code class="docutils literal notranslate"><span class="pre">meshdatatofile</span></code> - Write the (generated) mesh data to a file<a class="headerlink" href="#module-edelweissfe.outputmanagers.meshdatatofile" title="Permalink to this heading"></a></h2>
-<p>Writes the (generated) mesh data to a file.</p>
-<div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=meshdatatofile, name=meshdata</span>
-<span class="go">    filename=myMesh.inc</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default" id="id14">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id14" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id9" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -460,16 +413,8 @@ Useful, e.g., for indirect displacement control.</p>
 </div>
 <div class="section" id="module-edelweissfe.outputmanagers.computetimemonitor">
 <span id="computetimemonitor-print-and-write-compute-times-per-increment"></span><h2><code class="docutils literal notranslate"><span class="pre">computetimemonitor</span></code> - Print and write compute times per increment<a class="headerlink" href="#module-edelweissfe.outputmanagers.computetimemonitor" title="Permalink to this heading"></a></h2>
-<p>Prints the compute times per increment to the screen and writes them into a file (optional).</p>
-<div class="literal-block-wrapper docutils container" id="id15">
-<div class="code-block-caption"><span class="caption-text">Example:</span><a class="headerlink" href="#id15" title="Permalink to this code"></a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*output, type=computetimemonitor, name=mycomputetimes</span>
-<span class="go">    export=myComputeTimes</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default" id="id16">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id16" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id10" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />

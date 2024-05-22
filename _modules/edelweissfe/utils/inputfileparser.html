@@ -112,13 +112,12 @@
 <span class="sd">Inputfileparser for inputfiles employing an Abaqus-like syntax.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
-<span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
-
+<span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
+
+<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 
 <span class="n">typeMappings</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -136,7 +135,10 @@
         <span class="p">{</span>
             <span class="s2">&quot;elSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;assign one of the types defined in the elementlibrary&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;provider (library) for the element type. Default: Marmot&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;provider (library) for the element type. Default: Marmot&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;numpy integer array&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like element definition lines&quot;</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
@@ -144,7 +146,10 @@
         <span class="s2">&quot;definition of an element set&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;elSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;set True to generate from data line 1: start-element, end-element, step&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;set True to generate from data line 1: start-element, end-element, step&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like element set definition lines&quot;</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
@@ -152,14 +157,20 @@
         <span class="s2">&quot;definition of nodes&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;nSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;numpy float array&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like node definition lines: label, x, [y], [z]&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;numpy float array&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Abaqus like node definition lines: label, x, [y], [z]&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
     <span class="s2">&quot;*nSet&quot;</span><span class="p">:</span> <span class="p">(</span>
         <span class="s2">&quot;definition of an element set&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;nSet&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;set True to generate from data line 1: start-node, end-node, step&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;set True to generate from data line 1: start-node, end-node, step&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Abaqus like node set definition lines&quot;</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
@@ -200,7 +211,10 @@
         <span class="s2">&quot;define an analytical field&quot;</span><span class="p">,</span>
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;name of analytical field&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;type of analytical field (currently &#39;expression&#39; only)&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type of analytical field (currently &#39;expression&#39; only)&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;definition&quot;</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
@@ -226,7 +240,10 @@
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Name of this solver&quot;</span><span class="p">),</span>
             <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;Solvertype&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define options which are passed to the respective solver instance.&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;define options which are passed to the respective solver instance.&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
     <span class="s2">&quot;*step&quot;</span><span class="p">:</span> <span class="p">(</span>
@@ -240,8 +257,14 @@
             <span class="s2">&quot;maxIter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of iterations&quot;</span><span class="p">),</span>
             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) define step type, default = AdaptiveStep&quot;</span><span class="p">),</span>
             <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;(optional) solver to be used&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;criticalIter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum number of iterations to prevent from increasing the increment&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;define step actions, which are handled by the corresponding stepaction modules&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;criticalIter&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;maximum number of iterations to prevent from increasing the increment&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;define step actions, which are handled by the corresponding stepaction modules&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
         <span class="p">},</span>
     <span class="p">),</span>
     <span class="s2">&quot;*updateConfiguration&quot;</span><span class="p">:</span> <span class="p">(</span>
@@ -296,7 +319,9 @@
 
 
 <div class="viewcode-block" id="parseInputFile"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.parseInputFile">[docs]</a><span class="k">def</span> <span class="nf">parseInputFile</span><span class="p">(</span>
-    <span class="n">fileName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">currentKeyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">existingFileDict</span><span class="p">:</span> <span class="n">CaseInsensitiveDict</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">fileName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">currentKeyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">existingFileDict</span><span class="p">:</span> <span class="n">CaseInsensitiveDict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CaseInsensitiveDict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse an Abaqus-like input file to generate a dictionary with its content.</span>
 
@@ -324,12 +349,12 @@
     <span class="n">keyword</span> <span class="o">=</span> <span class="n">currentKeyword</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="c1"># filter out empty lines and comments</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">))</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">))</span>
 
-        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
-                <span class="n">lexer</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">shlex</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+                <span class="n">lexer</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">shlex</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="n">lexer</span><span class="o">.</span><span class="n">whitespace_split</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">lexer</span><span class="o">.</span><span class="n">whitespace</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span>
 
@@ -360,14 +385,16 @@
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                             <span class="s1">&#39;</span><span class="si">{:}</span><span class="s1">, option </span><span class="si">{:}</span><span class="s1">: cannot convert &quot;</span><span class="si">{:}</span><span class="s1">&quot; to </span><span class="si">{:}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">optKey</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">optionDataType</span><span class="p">)</span>
                         <span class="p">)</span>
-                    <span class="k">except</span><span class="p">:</span>
-                        <span class="k">raise</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">e</span>
 
                 <span class="c1"># special treatment for *include:</span>
                 <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;*include&quot;</span><span class="p">:</span>
                     <span class="n">includeFile</span> <span class="o">=</span> <span class="n">objectentry</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
                     <span class="n">parseInputFile</span><span class="p">(</span>
-                        <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileName</span><span class="p">),</span> <span class="n">includeFile</span><span class="p">),</span> <span class="n">currentKeyword</span><span class="o">=</span><span class="n">lastkeyword</span><span class="p">,</span> <span class="n">existingFileDict</span><span class="o">=</span><span class="n">fileDict</span>
+                        <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileName</span><span class="p">),</span> <span class="n">includeFile</span><span class="p">),</span>
+                        <span class="n">currentKeyword</span><span class="o">=</span><span class="n">lastkeyword</span><span class="p">,</span>
+                        <span class="n">existingFileDict</span><span class="o">=</span><span class="n">fileDict</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="n">keyword</span> <span class="o">=</span> <span class="n">lastkeyword</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -378,7 +405,7 @@
                 <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputLanguage</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:}</span><span class="s2"> expects no data lines&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">))</span>
 
-                <span class="n">fileDict</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+                <span class="n">fileDict</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
     <span class="c1"># raise deprecation warning if deprecated jobName option is set in keywords</span>
     <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*step&quot;</span><span class="p">,</span> <span class="s2">&quot;*fieldOutput&quot;</span><span class="p">,</span> <span class="s2">&quot;*output&quot;</span><span class="p">]</span>

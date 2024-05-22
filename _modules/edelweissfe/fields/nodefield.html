@@ -110,12 +110,10 @@
 <span class="c1"># @author: Matthias Neuner</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">phenomena</span><span class="p">,</span> <span class="n">getFieldSize</span>
 
 <span class="kn">from</span> <span class="nn">edelweissfe.points.node</span> <span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.sets.nodeset</span> <span class="kn">import</span> <span class="n">NodeSet</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.sets.elementset</span> <span class="kn">import</span> <span class="n">ElementSet</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.meshtools</span> <span class="kn">import</span> <span class="n">extractNodesFromElementSet</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.sets.nodeset</span> <span class="kn">import</span> <span class="n">NodeSet</span>
 
 
 <span class="k">class</span> <span class="nc">NodeFieldSubset</span><span class="p">:</span>
@@ -260,7 +258,30 @@
             <span class="bp">self</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">idcsHere</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_indicesOfNodesInArray</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">commonNodes</span><span class="p">]</span>
             <span class="n">idcsOther</span> <span class="o">=</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">_indicesOfNodesInArray</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">commonNodes</span><span class="p">]</span>
-            <span class="bp">self</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][</span><span class="n">idcsHere</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][</span><span class="n">idcsOther</span><span class="p">]</span></div></div>
+            <span class="bp">self</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][</span><span class="n">idcsHere</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][</span><span class="n">idcsOther</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NodeField.addEntriesFromOther"><a class="viewcode-back" href="../../../documentation/fields.html#edelweissfe.fields.nodefield.NodeField.addEntriesFromOther">[docs]</a>    <span class="k">def</span> <span class="nf">addEntriesFromOther</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">fieldValueEntries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add values from another NodeField.</span>
+<span class="sd">        If the fields differ, the intersection is considered.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        subset</span>
+<span class="sd">            The sub NodeField.</span>
+<span class="sd">        fieldValueEntries</span>
+<span class="sd">            The list of entries which should be copied. Default: all entries are copied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fieldValueEntries</span><span class="p">:</span>
+            <span class="n">fieldValueEntries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="n">commonNodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indicesOfNodesInArray</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">_indicesOfNodesInArray</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">fieldValueEntry</span> <span class="ow">in</span> <span class="n">fieldValueEntries</span><span class="p">:</span>
+            <span class="n">idcsHere</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_indicesOfNodesInArray</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">commonNodes</span><span class="p">]</span>
+            <span class="n">idcsOther</span> <span class="o">=</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">_indicesOfNodesInArray</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">commonNodes</span><span class="p">]</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][</span><span class="n">idcsHere</span><span class="p">]</span> <span class="o">+=</span> <span class="n">other</span><span class="p">[</span><span class="n">fieldValueEntry</span><span class="p">][</span><span class="n">idcsOther</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="NodeFieldSubset"><a class="viewcode-back" href="../../../documentation/fields.html#edelweissfe.fields.nodefield.NodeFieldSubset">[docs]</a><span class="k">class</span> <span class="nc">NodeFieldSubset</span><span class="p">(</span><span class="n">NodeField</span><span class="p">):</span>
@@ -297,13 +318,13 @@
 <span class="sd">        list[Node]</span>
 <span class="sd">            The list of subset nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">==</span> <span class="n">Node</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Node</span><span class="p">:</span>
             <span class="n">nodeCandidates</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">subset</span><span class="p">,</span>
             <span class="p">]</span>
-        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">==</span> <span class="n">ElementSet</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ElementSet</span><span class="p">:</span>
             <span class="n">nodeCandidates</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">extractNodeSet</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">==</span> <span class="n">NodeSet</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="ow">is</span> <span class="n">NodeSet</span><span class="p">:</span>
             <span class="n">nodeCandidates</span> <span class="o">=</span> <span class="n">subset</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid subset&quot;</span><span class="p">)</span>

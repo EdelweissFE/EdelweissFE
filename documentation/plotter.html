@@ -124,26 +124,7 @@
   <div class="section" id="plotting">
 <h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading"></a></h1>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.utils.plotter</span></code></p>
-<span class="target" id="module-edelweissfe.utils.plotter"></span><p>Plotting in EdelweissFE through matplotlib can be performed easily
-through a global plotting instance, which is passed to all output managers.
-Output managers may use the plotter for visualizing all kinds of outputs.</p>
-<p>The style of the plots can be configured through
-the keyword <code class="docutils literal notranslate"><span class="pre">*configurePlots</span></code>:</p>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*configurePlots</span>,
-<span class="nv">    figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">211</span>,
-<span class="nv">    figure</span><span class="ow">=</span><span class="m">3</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">111</span>,<span class="nv">  xLabel</span><span class="ow">=</span><span class="m">U1</span>,<span class="nv"> yLabel</span><span class="ow">=</span><span class="m">P2</span>,<span class="nv"> flipX</span><span class="ow">=</span><span class="m">True</span>
-<span class="nv">    figure</span><span class="ow">=</span><span class="m">3</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">111</span>,<span class="nv">  xLabel</span><span class="ow">=</span><span class="m">U1</span>,<span class="nv"> yLabel</span><span class="ow">=</span><span class="m">P2</span>,<span class="nv"> flipX</span><span class="ow">=</span><span class="m">True</span>
-<span class="nv">    figure</span><span class="ow">=</span><span class="m">4</span>,<span class="nv"> axSpec</span><span class="ow">=</span><span class="m">111</span>,<span class="nv"> aspect</span><span class="ow">=</span><span class="m">equal</span>
-</pre></div>
-</div>
-<p>Plots can be exported to .pdf (and png) files using the <code class="docutils literal notranslate"><span class="pre">*exportPlots</span></code> keyword:</p>
-<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*exportPlots</span>,
-<span class="nv">    figure</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> fileName</span><span class="ow">=</span><span class="m">fig1</span>,<span class="nv"> png</span><span class="ow">=</span><span class="m">True</span>
-<span class="nv">    figure</span><span class="ow">=</span><span class="m">2</span>,<span class="nv"> fileName</span><span class="ow">=</span><span class="m">fig2</span>
-</pre></div>
-</div>
-<p>The default style of plots can be configured via a classical rcparams.py file, which may be located in the current working directory.</p>
-<dl class="py class">
+<span class="target" id="module-edelweissfe.utils.plotter"></span><dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.utils.plotter.Plotter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.utils.plotter.</span></span><span class="sig-name descname"><span class="pre">Plotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotConfigurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportJobs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/utils/plotter.html#Plotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.utils.plotter.Plotter" title="Permalink to this definition"></a></dt>
 <dd><p>The unified plotter, which can be accessed and used by all outputmanagers.</p>

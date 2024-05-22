@@ -5,4 +5,4 @@ Fields
 -----------------------------------------
 
 .. automodule:: edelweissfe.fields.nodefield
-   :members: 
+   :members:
