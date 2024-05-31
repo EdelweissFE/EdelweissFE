@@ -67,10 +67,11 @@ class Constraint(ConstraintBase):
             )
 
         self.referencePoint = nodeSets[definition["referencePoint"]][0]
-        self.slaveNodes = nodeSets[rbNset]  # may also contain the RP, doesn't really matter as we remove it
 
-        if self.referencePoint in self.slaveNodes:  # remove the rp from the slave node set
-            self.slaveNodes = [s for s in self.slaveNodes if s is not self.referencePoint]
+        slaveNodeSet = nodeSets[rbNset]  # slave node set may contain the reference point
+
+        # reference point is removed (if present) and node set is converted to list
+        self.slaveNodes = [node for node in slaveNodeSet if not node == self.referencePoint]
 
         nRot = 3
         nSlaves = len(self.slaveNodes)
