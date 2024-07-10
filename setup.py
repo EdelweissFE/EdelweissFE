@@ -212,37 +212,37 @@ if buildPanuaPardiso:
         )
     ]
 
-print("Gather the KLU interface")
-extensions += [
-    Extension(
-        "*",
-        sources=[
-            "edelweissfe/linsolve/klu/klu.pyx",
-            "edelweissfe/linsolve/klu/kluInterface.c",
-        ],
-        include_dirs=[
-            numpy.get_include(),
-        ],
-        libraries=[
-            "klu",
-            "btf",
-            "amd",
-            "colamd",
-            "metis",
-            "cholmod",
-            "camd",
-            "ccolamd",
-            "iomp5",
-            "suitesparseconfig",
-        ],
-        language="c",
-        extra_compile_args=[
-            "-fopenmp",
-            "-Wno-maybe-uninitialized",
-        ],
-        extra_link_args=["-fopenmp"],
-    )
-]
+# print("Gather the KLU interface")
+# extensions += [
+#     Extension(
+#         "*",
+#         sources=[
+#             "edelweissfe/linsolve/klu/klu.pyx",
+#             "edelweissfe/linsolve/klu/kluInterface.c",
+#         ],
+#         include_dirs=[
+#             numpy.get_include(),
+#         ],
+#         libraries=[
+#             "klu",
+#             "btf",
+#             "amd",
+#             "colamd",
+#             "metis",
+#             "cholmod",
+#             "camd",
+#             "ccolamd",
+#             "iomp5",
+#             "suitesparseconfig",
+#         ],
+#         language="c",
+#         extra_compile_args=[
+#             "-fopenmp",
+#             "-Wno-maybe-uninitialized",
+#         ],
+#         extra_link_args=["-fopenmp"],
+#     )
+# ]
 
 print("Now compile!")
 
