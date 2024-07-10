@@ -20,4 +20,4 @@ suitesparse
 sphinx
 sphinx_rtd_theme
 sympy
-vtk
+vtk>=9.1.0
