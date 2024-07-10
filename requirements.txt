@@ -5,15 +5,13 @@ cmake
 compilers
 cython
 docutils=0.16
-gfortran
 gstools
 make
 matplotlib
 numpy
 numpydoc
-petsc4py
-pymumps
-python>=3.9
+# petsc4py
+# pymumps
 pytest
 pyvista
 prettytable
