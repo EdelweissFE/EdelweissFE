@@ -81,6 +81,13 @@ class Constraint(ConstraintBase):
         self.indicesOfRPPhiInP = [nSlaves * nDim + nDim + j for j in range(nRot)]
 
         # all nodes
+
+        slaveNodeSet = nodeSets[rbNset]  # slave node set may contain the reference point
+
+        # reference point is removed (if present) and node set is converted to list
+        self.slaveNodes = [node for node in slaveNodeSet if not node == self.referencePoint]
+
+        # list of all nodes including RP at end
         self._nodes = self.slaveNodes + [self.referencePoint]
 
         self.slaveNodesFields = [["displacement"]] * nSlaves
