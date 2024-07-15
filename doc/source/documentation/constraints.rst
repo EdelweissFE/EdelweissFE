@@ -36,8 +36,8 @@ Module ``edelweissfe.constraints.equalvaluepenalty``
     :caption: Example: ``testfiles/EqualValuePenaltyConstraint/test.inp``
 
 
-``linearizedrigidbody`` - Linearized rigid body constraints in 2D
-------------------------------------------------------------------
+``linearizedrigidbody`` - Linearized rigid body constraints
+-----------------------------------------------------------
 
 Module ``edelweissfe.constraints.linearizedrigidbody``
 
@@ -49,7 +49,15 @@ Module ``edelweissfe.constraints.linearizedrigidbody``
 
 .. literalinclude:: ../../../testfiles/LinearizedRigidBodyConstraint/test.inp
     :language: edelweiss
-    :caption: Example: ``testfiles/LinearizedRigidBodyConstraint/test.inp``
+    :caption: Example 2D: ``testfiles/LinearizedRigidBodyConstraint/test.inp``
+
+.. literalinclude:: ../../../testfiles/LinearizedRigidBodyConstraint2D/test.inp
+    :language: edelweiss
+    :caption: Example 2D: ``testfiles/LinearizedRigidBodyConstraint2D/test.inp``
+
+.. literalinclude:: ../../../testfiles/LinearizedRigidBodyConstraint3D/test.inp
+    :language: edelweiss
+    :caption: Example 3D: ``testfiles/LinearizedRigidBodyConstraint3D/test.inp``
 
 
 ``rigidbody`` - Geometrically exact rigid body constraints in 3D

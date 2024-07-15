@@ -1,0 +1,48 @@
+*modelGenerator, generator=planeRectQuad, name=gen
+l=100
+h=10
+nX=15
+nY=5
+elType=CPS4
+
+*node, nSet=RP
+999999, 150, 5
+
+*material, name=linearElastic, id=myMaterial
+30000.0, 0.15
+
+*section, name=section1, thickness=1.0, material=myMaterial, type=plane
+all
+
+*job, name=myJob, domain=2d
+
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, name=load,  nSet=gen_left, field=displacement, result=P, f(x)='sum(x[:,1])'
+create=perNode, name=displacement, elSet=all, field=displacement, result=U, name=displacement
+
+*output, type=monitor
+fieldOutput=load
+
+*constraint, type=linearizedRigidBody, name=fixedSupport
+nSet=gen_left
+referencePoint=gen_leftTop
+
+*constraint, type=linearizedRigidBody, name=pinnedSupport
+nSet=gen_right
+referencePoint=RP
+
+*output, type=ensight, name=test
+create=perNode, fieldOutput=displacement
+configuration, overwrite=yes
+
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
+options, category=NISTSolver, extrapolation=linear
+dirichlet, name=rotFixedSupport,  nSet=gen_leftTop,   field=rotation, 1=0
+dirichlet, name=movFixedSupport,  nSet=gen_leftTop,   field=displacement, 1=0, 2=0
+dirichlet, name=movPinnedSupport,  nSet=RP,   field=displacement, 1=0, 2=0
+
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-4, maxNumInc=1000, maxIter=4
+options, category=NISTSolver, extrapolation=linear
+distributedload, name=loadTop, surface=gen_top, type=pressure,  magnitude=10.0, f(t)=1
