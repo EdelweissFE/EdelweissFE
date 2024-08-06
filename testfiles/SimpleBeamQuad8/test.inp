@@ -1,0 +1,35 @@
+
+*material, name=linearelastic, id=linearelastic, provider=edelweissmaterial
+13000.0, 0.15
+
+*section, name=section1, thickness=25.0, material=linearelastic, type=plane
+all
+
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=2000
+y0=0, h=150
+elType=Quad8PE
+elProvider=displacementelement
+nX=75
+nY=4
+
+*output, type=monitor
+fieldOutput=RF, f(x)='mean(x[:,1])'
+
+*output, type=ensight, name=esExport8
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+
+*step, solver=theSolver, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+dirichlet, name=bottomleft, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
+dirichlet, name=bottomright, nSet=gen_rightBottom, field=displacement, 2=0
+nodeforces, name=cloadTop, nSet=gen_top, components='0,-132.45', field=displacement
+
+**convergence:  Q4: 22mm, Q8: 23mm, analytisch: 22,8mm

@@ -27,6 +27,7 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
+from edelweissfe.elements.displacementelement.element import DisplacementElement
 from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
 from edelweissfe.elements.marmotsingleqpelement.element import (
     MarmotMaterialWrappingElement,
@@ -52,7 +53,7 @@ class ElementSet(ImmutableOrderedSet):
         label: str,
         elements,
     ):
-        self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement]
+        self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement, DisplacementElement]
 
         super().__init__(label, elements)
         self._nodes = None

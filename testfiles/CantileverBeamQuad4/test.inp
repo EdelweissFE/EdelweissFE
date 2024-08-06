@@ -1,0 +1,45 @@
+
+*material, name=linearelastic, id=linearelastic, provider=edelweissmaterial
+210000.0, 0.15
+
+*section, name=section1, thickness=40.0, material=linearelastic, type=plane
+all
+
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=strain, name=strain, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
+create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:4, f(x)='np.mean(x,axis=1)'
+create=perElement, elSet=all, result=stress, name=stress0, quadraturePoint=0
+create=perElement, elSet=all, result=stress, name=stress1, quadraturePoint=1
+create=perElement, elSet=all, result=stress, name=stress2, quadraturePoint=2
+create=perElement, elSet=all, result=stress, name=stress3, quadraturePoint=3
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=10000
+y0=0, h=100
+elType=Quad4PE
+elProvider=displacementelement
+nX=150
+nY=2
+
+*output, type=monitor
+fieldOutput=RF, f(x)='mean(x[:,1])'
+
+*output, type=ensight, name=esExport
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+create=perElement, fieldOutput=stress0
+create=perElement, fieldOutput=stress1
+create=perElement, fieldOutput=stress2
+create=perElement, fieldOutput=stress3
+
+*step, solver=theSolver, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0
+nodeforces, name=cloadTop, nSet=gen_rightTop, components='0,-1000', field=displacement
+**bodyforce, name=bforce, elSet=all, forceVector='0.0, 1'

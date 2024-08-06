@@ -119,6 +119,7 @@ inputLanguage = {
             "id": ("string", "name of the property"),
             "statevars": ("integer", "(deprecated and ignored) number of statevars"),
             "data": ("numpy float array", "material properties, multiline possible"),
+            "provider": ("string", "material provider"),
         },
     ),
     "*fieldOutput": (

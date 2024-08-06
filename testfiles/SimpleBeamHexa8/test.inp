@@ -1,0 +1,35 @@
+*material, name=LinearElastic, id=linearelastic, provider=edelweissmaterial
+**Isotropic
+**E    nu
+210000, 0.22
+
+*job, name=c3d8job, domain=3d
+*solver, solver=NIST, name=theSolver
+
+*modelGenerator, generator=boxGen, name=gen
+nX      =200
+nY      =2
+nZ      =2
+lX      =2500
+lY      =50
+lZ      =50
+elProvider =displacementelement
+elType  =Hexa8
+
+*section, name=section1, material=linearelastic, type=solid
+all
+
+*fieldOutput
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+
+*output, type=ensight, name=test
+create=perNode, fieldOutput=displacement
+configuration, overwrite=yes
+
+*output, type=monitor
+
+*step, solver=theSolver, maxInc=1e0, minInc=1e-9, maxNumInc=1000, maxIter=25, stepLength=1
+options, category=NISTSolver, extrapolation=off
+dirichlet, name=left,  nSet=gen_leftBack, field=displacement, 1=0.0, 2=0.0, 3=.0
+dirichlet, name=right,  nSet=gen_rightBack, field=displacement, 1=0.0, 2=0.0, 3=.0
+nodeforces, name=top, nSet=gen_front, components='0, 0, -4.16', field=displacement

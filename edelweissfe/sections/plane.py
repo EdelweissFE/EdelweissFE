@@ -65,4 +65,11 @@ class Section(SectionBase):
 
         element.setProperties(elProperties)
         element.initializeElement()
-        element.setMaterial(material["name"], material["properties"])
+        # to make sure all elProviders work
+        if not isinstance(material, dict):
+            element.setMaterial(material)
+        else:
+            try:  # for Marmot
+                element.setMaterial(material["name"], material["properties"])
+            except TypeError:
+                raise Exception("Material provider and element are not compatible!")

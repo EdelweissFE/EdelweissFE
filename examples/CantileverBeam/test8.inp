@@ -1,0 +1,44 @@
+** cantilever beam, steel, l=10000mm, h=100mm, b=40mm, calculation in [N/mm²]
+*material, name=linearelastic, id=linearelastic,
+** elasticity module and poisson's ratio
+210000.0, 0.15
+
+*section, name=section1, thickness=40.0, material=linearelastic, type=plane
+** assign section with 40mm thickness and linear elastic to all elements
+all
+
+** make job
+*job, name=cps4job, domain=2d
+** choose solver
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+** displacement output for all elements
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+
+*modelGenerator, generator=planeRectQuad, name=gen
+** create model: length 10000mm, height 100mm with 300 elements in l direction and 4 in h direction
+x0=0, l=10000
+y0=0, h=100
+elType=Quad8NPE
+** quadrilateral element with 4 nodes, normal integration and plane strain
+** set provider
+elProvider=displacementelement
+nX=300
+nY=4
+
+*output, type=monitor
+fieldOutput=RF, f(x)='mean(x[:,1])'
+
+** create output data to open with paraview
+*output, type=ensight, name=esExport
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+
+** set steps with size between 1 and 1e-8, 1000 iterations and max 25 iterations with step length 100
+*step, solver=theSolver, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+** fix one side (fixed support)
+dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0
+** set load -1000N in one point down
+nodeforces, name=cloadTop, nSet=gen_rightTop, components='0,-1000', field=displacement

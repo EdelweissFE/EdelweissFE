@@ -1,0 +1,55 @@
+
+*material, name=vonmises, id=vonmises, provider=edelweissmaterial
+210000.0, 0.15, 355, 1000, 200, 1400
+
+*section, name=section1, thickness=40.0, material=vonmises, type=plane
+all
+
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=strain, name=strain, quadraturePoint=0:9, f(x)='np.mean(x,axis=1)'
+create=perElement, elSet=all, result=stress, name=stress, quadraturePoint=0:9, f(x)='np.mean(x,axis=1)'
+create=perElement, elSet=all, result=stress, name=stress0, quadraturePoint=0
+create=perElement, elSet=all, result=stress, name=stress1, quadraturePoint=1
+create=perElement, elSet=all, result=stress, name=stress2, quadraturePoint=2
+create=perElement, elSet=all, result=stress, name=stress3, quadraturePoint=3
+create=perElement, elSet=all, result=stress, name=stress4, quadraturePoint=4
+create=perElement, elSet=all, result=stress, name=stress5, quadraturePoint=5
+create=perElement, elSet=all, result=stress, name=stress6, quadraturePoint=6
+create=perElement, elSet=all, result=stress, name=stress7, quadraturePoint=7
+create=perElement, elSet=all, result=stress, name=stress8, quadraturePoint=8
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=10000
+y0=0, h=100
+elType=Quad8PE
+elProvider=displacementelement
+nX=75
+nY=1
+
+*output, type=monitor
+fieldOutput=RF, f(x)='mean(x[:,1])'
+
+*output, type=ensight, name=test
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+create=perElement, fieldOutput=stress
+create=perElement, fieldOutput=strain
+create=perElement, fieldOutput=stress0
+create=perElement, fieldOutput=stress1
+create=perElement, fieldOutput=stress2
+create=perElement, fieldOutput=stress3
+create=perElement, fieldOutput=stress4
+create=perElement, fieldOutput=stress5
+create=perElement, fieldOutput=stress6
+create=perElement, fieldOutput=stress7
+create=perElement, fieldOutput=stress8
+
+*step, solver=theSolver, maxInc=2e-1, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0
+nodeforces, name=cloadTop, nSet=gen_rightTop, components='0,-4000', field=displacement
+bodyforce, name=bforce, elSet=all, forceVector='0.0, -0.000077'

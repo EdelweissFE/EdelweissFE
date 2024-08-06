@@ -40,6 +40,8 @@ In future, elements by other providers or elements directly implemented in Edelw
         1000,        1,     2,     3,     4,     ...
 """
 
+from edelweissfe.utils.misc import strCaseCmp
+
 
 def getElementClass(provider: str = None) -> type:
     """Get the class type of the requested element provider.
@@ -57,6 +59,11 @@ def getElementClass(provider: str = None) -> type:
 
     if provider is None:
         provider = "marmot"
+
+    if strCaseCmp(provider, "displacementelement"):
+        from edelweissfe.elements.displacementelement.element import DisplacementElement
+
+        return DisplacementElement
 
     if provider.lower() == "marmot":
         from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
