@@ -52,9 +52,9 @@ Run a simulation simply by calling
 Example input file
 ******************
 
-.. literalinclude:: ../../testfiles/LinearElasticIsotropic/test.inp
+.. literalinclude:: ../../examples/CantileverBeam/test3D.inp
    :language: edelweiss
-   :caption: File: ``testfiles/LinearElasticIsotropic/test.inp``
+   :caption: File: ``examples/CantileverBeam/test3D.inp``
 
 More example files can be found in the ``testfiles`` folder!
 

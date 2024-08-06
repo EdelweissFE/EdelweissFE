@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>edelweissfe.config.elementlibrary &mdash; EdelweissFE v22.07 documentation</title>
+  <title>edelweissfe.config.materiallibrary &mdash; EdelweissFE v22.07 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
@@ -68,7 +68,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">edelweissfe.config.elementlibrary</li>
+      <li class="breadcrumb-item active">edelweissfe.config.materiallibrary</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,7 +77,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for edelweissfe.config.elementlibrary</h1><div class="highlight"><pre>
+  <h1>Source code for edelweissfe.config.materiallibrary</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
@@ -93,6 +93,7 @@
 <span class="c1">#  University of Innsbruck,</span>
 <span class="c1">#  2017 - today</span>
 <span class="c1">#</span>
+<span class="c1">#  Daniel Reitmair daniel.reitmair@uibk.ac.at</span>
 <span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
 <span class="c1">#</span>
 <span class="c1">#  This file is part of EdelweissFE.</span>
@@ -105,57 +106,48 @@
 <span class="c1">#  The full text of the license can be found in the file LICENSE.md at</span>
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
-<span class="c1"># Created on Tue Jan  17 19:10:42 2017</span>
-
-<span class="c1"># @author: Matthias Neuner</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">EdelweissFE currently supports finite element implementations provided by the Marmot library.</span>
-<span class="sd">In future, elements by other providers or elements directly implemented in EdelweissFE may be added here.</span>
-
-<span class="sd">.. code-block:: edelweiss</span>
-<span class="sd">    :caption: Example:</span>
-
-<span class="sd">    *element, type=C3D8, provider=marmot</span>
-<span class="sd">        ** el_label, node1, node2, node3, node4, ...</span>
-<span class="sd">        1000,        1,     2,     3,     4,     ...</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">edelweissfe.utils.misc</span> <span class="kn">import</span> <span class="n">strCaseCmp</span>
 
 
-<div class="viewcode-block" id="getElementClass"><a class="viewcode-back" href="../../../documentation/elements.html#edelweissfe.config.elementlibrary.getElementClass">[docs]</a><span class="k">def</span> <span class="nf">getElementClass</span><span class="p">(</span><span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the class type of the requested element provider.</span>
+<div class="viewcode-block" id="getMaterialClass"><a class="viewcode-back" href="../../../documentation/materials.html#edelweissfe.config.materiallibrary.getMaterialClass">[docs]</a><span class="k">def</span> <span class="nf">getMaterialClass</span><span class="p">(</span><span class="n">materialName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the the requested material class.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    materialName</span>
+<span class="sd">        The name of the requested material.</span>
 <span class="sd">    provider</span>
-<span class="sd">        The name of the element provider ot load.</span>
+<span class="sd">        The name of the material provider.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    type</span>
-<span class="sd">        The element provider class type.</span>
+<span class="sd">        The material provider class type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">provider</span> <span class="o">=</span> <span class="s2">&quot;marmot&quot;</span>
+        <span class="n">provider</span> <span class="o">=</span> <span class="s2">&quot;MarmotMaterial&quot;</span>
 
-    <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">&quot;displacementelement&quot;</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">edelweissfe.elements.displacementelement.element</span> <span class="kn">import</span> <span class="n">DisplacementElement</span>
+    <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">&quot;marmotmaterial&quot;</span><span class="p">):</span>
 
-        <span class="k">return</span> <span class="n">DisplacementElement</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmot&quot;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotelement.element</span> <span class="kn">import</span> <span class="n">MarmotElementWrapper</span>
+    <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">&quot;edelweissmaterial&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">materialName</span><span class="p">,</span> <span class="s2">&quot;linearelastic&quot;</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">edelweissfe.materials.linearelastic.linearelastic</span> <span class="kn">import</span> <span class="p">(</span>
+                <span class="n">LinearElasticMaterial</span><span class="p">,</span>
+            <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">MarmotElementWrapper</span>
+            <span class="n">material</span> <span class="o">=</span> <span class="n">LinearElasticMaterial</span>
+        <span class="k">elif</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">materialName</span><span class="p">,</span> <span class="s2">&quot;vonmises&quot;</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">edelweissfe.materials.vonmises.vonmises</span> <span class="kn">import</span> <span class="n">VonMisesMaterial</span>
 
-    <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmotsingleqpelement&quot;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotsingleqpelement.element</span> <span class="kn">import</span> <span class="p">(</span>
-            <span class="n">MarmotMaterialWrappingElement</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">material</span> <span class="o">=</span> <span class="n">VonMisesMaterial</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This material type doesn&#39;t exist (yet). Chosen material was: &quot;</span> <span class="o">+</span> <span class="n">materialName</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">MarmotMaterialWrappingElement</span></div>
+        <span class="k">return</span> <span class="n">material</span></div>
 </pre></div>
 
            </div>

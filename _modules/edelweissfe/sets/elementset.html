@@ -107,6 +107,7 @@
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 
+<span class="kn">from</span> <span class="nn">edelweissfe.elements.displacementelement.element</span> <span class="kn">import</span> <span class="n">DisplacementElement</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotelement.element</span> <span class="kn">import</span> <span class="n">MarmotElementWrapper</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.elements.marmotsingleqpelement.element</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">MarmotMaterialWrappingElement</span><span class="p">,</span>
@@ -132,7 +133,7 @@
         <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">elements</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">allowedObjectTypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">MarmotElementWrapper</span><span class="p">,</span> <span class="n">MarmotMaterialWrappingElement</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowedObjectTypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">MarmotElementWrapper</span><span class="p">,</span> <span class="n">MarmotMaterialWrappingElement</span><span class="p">,</span> <span class="n">DisplacementElement</span><span class="p">]</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="kc">None</span>

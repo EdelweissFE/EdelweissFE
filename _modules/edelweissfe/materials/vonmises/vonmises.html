@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>edelweissfe.materials.vonmises.vonmises &mdash; EdelweissFE v22.07 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            EdelweissFE
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../documentation/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">EdelweissFE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">edelweissfe.materials.vonmises.vonmises</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for edelweissfe.materials.vonmises.vonmises</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  _____    _      _              _         _____ _____</span>
+<span class="c1"># | ____|__| | ___| |_      _____(_)___ ___|  ___| ____|</span>
+<span class="c1"># |  _| / _` |/ _ \ \ \ /\ / / _ \ / __/ __| |_  |  _|</span>
+<span class="c1"># | |__| (_| |  __/ |\ V  V /  __/ \__ \__ \  _| | |___</span>
+<span class="c1"># |_____\__,_|\___|_| \_/\_/ \___|_|___/___/_|   |_____|</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Unit of Strength of Materials and Structural Analysis</span>
+<span class="c1">#  University of Innsbruck,</span>
+<span class="c1">#  2017 - today</span>
+<span class="c1">#</span>
+<span class="c1">#  Daniel Reitmair daniel.reitmair@uibk.ac.at</span>
+<span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
+<span class="c1">#</span>
+<span class="c1">#  This file is part of EdelweissFE.</span>
+<span class="c1">#</span>
+<span class="c1">#  This library is free software; you can redistribute it and/or</span>
+<span class="c1">#  modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1">#  License as published by the Free Software Foundation; either</span>
+<span class="c1">#  version 2.1 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#  The full text of the license can be found in the file LICENSE.md at</span>
+<span class="c1">#  the top level directory of EdelweissFE.</span>
+<span class="c1">#  ---------------------------------------------------------------------</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">edelweissfe.materials.base.basehypoelasticmaterial</span> <span class="kn">import</span> <span class="n">BaseHypoElasticMaterial</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">CutbackRequest</span>
+
+<span class="c1"># define variables and functions used in all material dimensions</span>
+<span class="n">IDev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">IDevHalfShear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">maxIter</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># max inner Newton cycles</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-12</span>  <span class="c1"># tolerance</span>
+
+
+<span class="k">def</span> <span class="nf">deviatoric</span><span class="p">(</span><span class="n">stress</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">IDev</span> <span class="o">@</span> <span class="n">stress</span>
+
+
+<span class="k">def</span> <span class="nf">deviatoricNorm</span><span class="p">(</span><span class="n">devStress</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">devStress</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">devStress</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">])))</span>
+
+
+<div class="viewcode-block" id="VonMisesMaterial"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial">[docs]</a><span class="k">class</span> <span class="nc">VonMisesMaterial</span><span class="p">(</span><span class="n">BaseHypoElasticMaterial</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Von Mises plastic material for 3D and 2D plane strain.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    materialProperties</span>
+<span class="sd">        The numpy array containing the material properties.</span>
+
+<span class="sd">    Material properties</span>
+<span class="sd">    -------------------</span>
+<span class="sd">    E</span>
+<span class="sd">        Elasticity module (Young&#39;s modulus).</span>
+<span class="sd">    v</span>
+<span class="sd">        Poisson&#39;s ratio.</span>
+<span class="sd">    fy0</span>
+<span class="sd">        Yield stress.</span>
+<span class="sd">    HLin</span>
+<span class="sd">        Linear plastic hardening parameter.</span>
+<span class="sd">    dfy</span>
+<span class="sd">        Multiplicator for nonlinear isotropic hardening.</span>
+<span class="sd">    delta</span>
+<span class="sd">        Exponent for nonlinear isotropic hardening.</span>
+
+<span class="sd">    Hardening law</span>
+<span class="sd">    -------------</span>
+<span class="sd">    fy(kappa) = fy0 + HLin * kappa + dfy * (1 - exp(-delta * kappa))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nManagedStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns number of needed material state Variables per integration point in the material.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of needed material state Vars.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="c1"># elasticity parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_E</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># set E</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_v</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># set v</span>
+        <span class="c1"># plasticity parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yieldStress</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HLin</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deltaYieldStress</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="c1"># isotropic hardening</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fy</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">kappa_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">yieldStress</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">HLin</span> <span class="o">*</span> <span class="n">kappa_</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaYieldStress</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">kappa_</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="c1"># yield function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">devNorm</span><span class="p">,</span> <span class="n">kappa_</span><span class="p">:</span> <span class="n">devNorm</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fy</span><span class="p">(</span><span class="n">kappa_</span><span class="p">)</span>
+        <span class="c1"># derivative of fy dKappa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dfy_ddKappa</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">kappa_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">HLin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaYieldStress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">kappa_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">))</span>
+
+<div class="viewcode-block" id="VonMisesMaterial.elasticityMatrix"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">elasticityMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initalize a 3D material elasticity matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The elasticity matrix.&quot;&quot;&quot;</span>
+
+        <span class="c1"># 3D elasticity matrix for Hexa8/Hexa20</span>
+        <span class="n">Ei</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_E</span>
+            <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">))</span>
+            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Ei</span></div>
+
+<div class="viewcode-block" id="VonMisesMaterial.assignCurrentStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.assignCurrentStateVars">[docs]</a>    <span class="k">def</span> <span class="nf">assignCurrentStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currentStateVars</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign new current state vars.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        currentStateVars</span>
+<span class="sd">            Array containing the material state vars.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span> <span class="o">=</span> <span class="n">currentStateVars</span></div>
+
+<div class="viewcode-block" id="VonMisesMaterial.computePlaneStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computePlaneStress">[docs]</a>    <span class="k">def</span> <span class="nf">computePlaneStress</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the stresses for a plane stress material.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stress</span>
+<span class="sd">            Vector containing the stresses.</span>
+<span class="sd">        dStressdStrain</span>
+<span class="sd">            Matrix containing dStress/dStrain.</span>
+<span class="sd">        dStrain</span>
+<span class="sd">            Strain vector increment at time step t to t+dTime.</span>
+<span class="sd">        time</span>
+<span class="sd">            Array of step time and total time.</span>
+<span class="sd">        dTime</span>
+<span class="sd">            Current time step size.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Von Mises material with plane stress is currently not possible.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VonMisesMaterial.computeStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeStress">[docs]</a>    <span class="k">def</span> <span class="nf">computeStress</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the stresses for a 3D material.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stress</span>
+<span class="sd">            Vector containing the stresses.</span>
+<span class="sd">        dStressdStrain</span>
+<span class="sd">            Matrix containing dStress/dStrain.</span>
+<span class="sd">        dStrain</span>
+<span class="sd">            Strain vector increment at time step t to t+dTime.</span>
+<span class="sd">        time</span>
+<span class="sd">            Array of step time and total time.</span>
+<span class="sd">        dTime</span>
+<span class="sd">            Current time step size.&quot;&quot;&quot;</span>
+
+        <span class="n">Ei</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elasticityMatrix</span><span class="p">()</span>
+        <span class="c1"># handle zero strain increment</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dStrain</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">14</span><span class="p">:</span>
+            <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
+            <span class="k">return</span>
+        <span class="c1"># elastic predictor</span>
+        <span class="n">trialStress</span> <span class="o">=</span> <span class="n">stress</span> <span class="o">+</span> <span class="n">dStrain</span> <span class="o">@</span> <span class="n">Ei</span>
+        <span class="c1"># deviatoric stress</span>
+        <span class="n">devStress</span> <span class="o">=</span> <span class="n">deviatoric</span><span class="p">(</span><span class="n">trialStress</span><span class="p">)</span>
+        <span class="c1"># norm of deviatoric stress</span>
+        <span class="n">devNorm_</span> <span class="o">=</span> <span class="n">deviatoricNorm</span><span class="p">(</span><span class="n">devStress</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f</span><span class="p">(</span><span class="n">devNorm_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>  <span class="c1"># plastic step</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">deltaKappa</span><span class="p">:</span> <span class="n">devNorm_</span>
+                <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span> <span class="o">*</span> <span class="n">deltaKappa</span>
+                <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">deltaKappa</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">devStress</span> <span class="o">/</span> <span class="n">devNorm_</span>  <span class="c1"># projection direction</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">dKappa</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R</span><span class="p">(</span><span class="n">dKappa</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">counter</span> <span class="o">==</span> <span class="n">maxIter</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">CutbackRequest</span><span class="p">(</span><span class="s2">&quot;Von Mises Newton failed.&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+                <span class="c1"># compute derivative of R with dKappa</span>
+                <span class="n">dR_ddKappa</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dfy_ddKappa</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dKappa</span><span class="p">)</span>
+                <span class="c1"># update dKappa and iteration counter</span>
+                <span class="n">dKappa</span> <span class="o">-=</span> <span class="n">R</span><span class="p">(</span><span class="n">dKappa</span><span class="p">)</span> <span class="o">/</span> <span class="n">dR_ddKappa</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">dLambda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dKappa</span>
+            <span class="c1"># update kappa</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dKappa</span>
+            <span class="n">stress</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">trialStress</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span> <span class="o">*</span> <span class="n">dLambda</span> <span class="o">*</span> <span class="n">n</span>
+            <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Ei</span>
+                <span class="o">-</span> <span class="mf">2.0</span>
+                <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span>
+                <span class="o">*</span> <span class="p">(</span>
+                    <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dfy_ddKappa</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span><span class="p">))</span>
+                    <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span> <span class="o">*</span> <span class="n">dLambda</span> <span class="o">/</span> <span class="n">devNorm_</span>
+                <span class="p">)</span>
+                <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+                <span class="o">-</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_G</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dLambda</span> <span class="o">/</span> <span class="n">devNorm_</span> <span class="o">*</span> <span class="n">IDevHalfShear</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># elastic step</span>
+            <span class="n">stress</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">trialStress</span>
+            <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthias Neuner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -118,6 +118,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.acceptLastState">acceptLastState() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.acceptLastState">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.acceptLastState">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.acceptLastState">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -151,10 +153,10 @@
 </li>
       <li><a href="documentation/analyticalfields.html#edelweissfe.analyticalfields.base.analyticalfieldbase.AnalyticalField">AnalyticalField (class in edelweissfe.analyticalfields.base.analyticalfieldbase)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/models.html#edelweissfe.models.femodel.FEModel.analyticalFields">analyticalFields (edelweissfe.models.femodel.FEModel attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/stepactions.html#edelweissfe.stepactions.base.stepactionbase.StepActionBase.applyAtIncrementStart">applyAtIncrementStart() (edelweissfe.stepactions.base.stepactionbase.StepActionBase method)</a>
 </li>
       <li><a href="documentation/stepactions.html#edelweissfe.stepactions.base.stepactionbase.StepActionBase.applyAtStepEnd">applyAtStepEnd() (edelweissfe.stepactions.base.stepactionbase.StepActionBase method)</a>
@@ -189,6 +191,14 @@
 </li>
       <li><a href="documentation/constraints.html#edelweissfe.constraints.base.constraintbase.ConstraintBase.assignAdditionalScalarVariables">assignAdditionalScalarVariables() (edelweissfe.constraints.base.constraintbase.ConstraintBase method)</a>
 </li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.assignCurrentStateVars">assignCurrentStateVars() (edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial method)</a>
+
+      <ul>
+        <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.assignCurrentStateVars">(edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+</li>
+        <li><a href="documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.assignCurrentStateVars">(edelweissfe.materials.vonmises.vonmises.VonMisesMaterial method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -196,6 +206,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement">BaseElement (class in edelweissfe.elements.base.baseelement)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial">BaseHypoElasticMaterial (class in edelweissfe.materials.base.basehypoelasticmaterial)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -212,6 +226,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.computeBodyForce">computeBodyForce() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeBodyForce">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeBodyForce">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeBodyForce">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -222,6 +238,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.computeDistributedLoad">computeDistributedLoad() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeDistributedLoad">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeDistributedLoad">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeDistributedLoad">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -235,13 +253,29 @@
         <li><a href="documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel.computeElements">(edelweissfe.solvers.nonlinearimplicitstaticparallelmk2.NISTParallel method)</a>
 </li>
       </ul></li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computePlaneStress">computePlaneStress() (edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+
+      <ul>
+        <li><a href="documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computePlaneStress">(edelweissfe.materials.vonmises.vonmises.VonMisesMaterial method)</a>
+</li>
+      </ul></li>
       <li><a href="documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">computeSpatialAveragedFluxes() (edelweissfe.solvers.nonlinearimplicitstatic.NIST method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeStress">computeStress() (edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+
+      <ul>
+        <li><a href="documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeStress">(edelweissfe.materials.vonmises.vonmises.VonMisesMaterial method)</a>
+</li>
+      </ul></li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeStress2D">computeStress2D() (edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+</li>
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.computeYourself">computeYourself() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeYourself">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.computeYourself">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.computeYourself">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -281,11 +315,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement">discardAndChangeIncrement() (edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper method)</a>
 </li>
+      <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement">DisplacementElement (class in edelweissfe.elements.displacementelement.element)</a>
+</li>
       <li><a href="documentation/exceptions.html#edelweissfe.utils.exceptions.DivergingSolution">DivergingSolution</a>
 </li>
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation">dofIndicesPermutation (edelweissfe.elements.base.baseelement.BaseElement property)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.dofIndicesPermutation">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
       </ul></li>
@@ -350,6 +388,13 @@
 
       <ul>
         <li><a href="documentation/generators.html#module-edelweissfe.config.generators">module</a>
+</li>
+      </ul></li>
+      <li>
+    edelweissfe.config.materiallibrary
+
+      <ul>
+        <li><a href="documentation/materials.html#module-edelweissfe.config.materiallibrary">module</a>
 </li>
       </ul></li>
       <li>
@@ -562,8 +607,6 @@
         <li><a href="documentation/output.html#module-edelweissfe.outputmanagers.monitor">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     edelweissfe.outputmanagers.plotalongpath
 
@@ -571,6 +614,8 @@
         <li><a href="documentation/output.html#module-edelweissfe.outputmanagers.plotalongpath">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     edelweissfe.outputmanagers.statusfile
 
@@ -767,6 +812,16 @@
         <li><a href="documentation/variables.html#module-edelweissfe.variables.scalarvariable">module</a>
 </li>
       </ul></li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix">elasticityMatrix() (edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+
+      <ul>
+        <li><a href="documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix">(edelweissfe.materials.vonmises.vonmises.VonMisesMaterial method)</a>
+</li>
+      </ul></li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix2D">elasticityMatrix2D() (edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+</li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrixPlaneStress">elasticityMatrixPlaneStress() (edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial method)</a>
+</li>
       <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput">ElementFieldOutput (class in edelweissfe.utils.fieldoutput)</a>
 </li>
       <li><a href="documentation/utils.html#edelweissfe.utils.elementresultcollector.ElementResultCollector">ElementResultCollector (class in edelweissfe.utils.elementresultcollector)</a>
@@ -780,12 +835,16 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.elNumber">elNumber (edelweissfe.elements.base.baseelement.BaseElement property)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.elNumber">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
       </ul></li>
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.ensightType">ensightType (edelweissfe.elements.base.baseelement.BaseElement property)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.ensightType">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
       </ul></li>
@@ -818,6 +877,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.fields">fields (edelweissfe.elements.base.baseelement.BaseElement property)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.fields">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
         <li><a href="documentation/dofmanager.html#edelweissfe.numerics.dofmanager.DofManager.fields">(edelweissfe.numerics.dofmanager.DofManager attribute)</a>
@@ -825,10 +886,10 @@
       </ul></li>
       <li><a href="documentation/constraints.html#edelweissfe.constraints.base.constraintbase.ConstraintBase.fieldsOnNodes">fieldsOnNodes (edelweissfe.constraints.base.constraintbase.ConstraintBase property)</a>
 </li>
-      <li><a href="documentation/variables.html#edelweissfe.variables.fieldvariable.FieldVariable">FieldVariable (class in edelweissfe.variables.fieldvariable)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="documentation/variables.html#edelweissfe.variables.fieldvariable.FieldVariable">FieldVariable (class in edelweissfe.variables.fieldvariable)</a>
+</li>
       <li><a href="documentation/plotter.html#edelweissfe.utils.plotter.Plotter.finalize">finalize() (edelweissfe.utils.plotter.Plotter method)</a>
 </li>
       <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.finalizeIncrement">finalizeIncrement() (edelweissfe.utils.fieldoutput._FieldOutputBase method)</a>
@@ -858,6 +919,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtCenter">getCoordinatesAtCenter() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getCoordinatesAtCenter">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtCenter">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtCenter">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -866,6 +929,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.getCoordinatesAtQuadraturePoints">getCoordinatesAtQuadraturePoints() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getCoordinatesAtQuadraturePoints">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getCoordinatesAtQuadraturePoints">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getCoordinatesAtQuadraturePoints">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -877,9 +942,11 @@
 </li>
       <li><a href="documentation/plotter.html#edelweissfe.utils.plotter.Plotter.getFig">getFig() (edelweissfe.utils.plotter.Plotter method)</a>
 </li>
+      <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getLastResult">getLastResult() (edelweissfe.utils.fieldoutput._FieldOutputBase method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getLastResult">getLastResult() (edelweissfe.utils.fieldoutput._FieldOutputBase method)</a>
+      <li><a href="documentation/materials.html#edelweissfe.config.materiallibrary.getMaterialClass">getMaterialClass() (in module edelweissfe.config.materiallibrary)</a>
 </li>
       <li><a href="documentation/dofmanager.html#edelweissfe.numerics.dofmanager.DofManager.getNodeForIndexInDofVector">getNodeForIndexInDofVector() (edelweissfe.numerics.dofmanager.DofManager method)</a>
 </li>
@@ -888,6 +955,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.getNumberOfQuadraturePoints">getNumberOfQuadraturePoints() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getNumberOfQuadraturePoints">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getNumberOfQuadraturePoints">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getNumberOfQuadraturePoints">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -896,6 +965,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.getResultArray">getResultArray() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getResultArray">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.getResultArray">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.getResultArray">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -916,6 +987,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.hasMaterial">hasMaterial (edelweissfe.elements.base.baseelement.BaseElement property)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.hasMaterial">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.hasMaterial">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
       </ul></li>
@@ -939,15 +1012,17 @@
 </li>
       <li><a href="documentation/dofmanager.html#edelweissfe.numerics.dofmanager.DofManager.idcsOfScalarVariablesInDofVector">idcsOfScalarVariablesInDofVector (edelweissfe.numerics.dofmanager.DofManager attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/sets.html#edelweissfe.sets.orderedset.ImmutableOrderedSet">ImmutableOrderedSet (class in edelweissfe.sets.orderedset)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/dofmanager.html#edelweissfe.numerics.dofmanager.DofManager.indexToHostObjectMapping">indexToHostObjectMapping (edelweissfe.numerics.dofmanager.DofManager attribute)</a>
 </li>
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.initializeElement">initializeElement() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.initializeElement">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.initializeElement">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.initializeElement">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -980,6 +1055,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/steps.html#edelweissfe.steps.adaptivestep.AdaptiveStep.length">length (edelweissfe.steps.adaptivestep.AdaptiveStep attribute)</a>
+</li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial">LinearElasticMaterial (class in edelweissfe.materials.linearelastic.linearelastic)</a>
 </li>
       <li><a href="documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.linearSolve">linearSolve() (edelweissfe.solvers.nonlinearimplicitstatic.NIST method)</a>
 </li>
@@ -1024,6 +1101,8 @@
         <li><a href="documentation/elements.html#module-edelweissfe.config.elementlibrary">edelweissfe.config.elementlibrary</a>
 </li>
         <li><a href="documentation/generators.html#module-edelweissfe.config.generators">edelweissfe.config.generators</a>
+</li>
+        <li><a href="documentation/materials.html#module-edelweissfe.config.materiallibrary">edelweissfe.config.materiallibrary</a>
 </li>
         <li><a href="documentation/output.html#module-edelweissfe.config.outputmanagers">edelweissfe.config.outputmanagers</a>
 </li>
@@ -1155,6 +1234,8 @@
       <ul>
         <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.nDof">(edelweissfe.elements.base.baseelement.BaseElement property)</a>
 </li>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.nDof">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
         <li><a href="documentation/dofmanager.html#edelweissfe.numerics.dofmanager.DofManager.nDof">(edelweissfe.numerics.dofmanager.DofManager attribute)</a>
@@ -1166,16 +1247,26 @@
 </li>
       <li><a href="documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstaticparallelarclength.NISTPArcLength">NISTPArcLength (class in edelweissfe.solvers.nonlinearimplicitstaticparallelarclength)</a>
 </li>
+      <li><a href="documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.nManagedStateVars">nManagedStateVars (edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial property)</a>
+
+      <ul>
+        <li><a href="documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.nManagedStateVars">(edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial property)</a>
+</li>
+        <li><a href="documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.nManagedStateVars">(edelweissfe.materials.vonmises.vonmises.VonMisesMaterial property)</a>
+</li>
+      </ul></li>
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.nNodes">nNodes (edelweissfe.elements.base.baseelement.BaseElement property)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.nNodes">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
       </ul></li>
-      <li><a href="documentation/points.html#edelweissfe.points.node.Node">Node (class in edelweissfe.points.node)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="documentation/points.html#edelweissfe.points.node.Node">Node (class in edelweissfe.points.node)</a>
+</li>
       <li><a href="documentation/fields.html#edelweissfe.fields.nodefield.NodeField">NodeField (class in edelweissfe.fields.nodefield)</a>
 </li>
       <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.NodeFieldOutput">NodeFieldOutput (class in edelweissfe.utils.fieldoutput)</a>
@@ -1188,6 +1279,8 @@
 
       <ul>
         <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.nodes">(edelweissfe.elements.base.baseelement.BaseElement property)</a>
+</li>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.nodes">(edelweissfe.elements.displacementelement.element.DisplacementElement property)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement property)</a>
 </li>
@@ -1253,6 +1346,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.resetToLastValidState">resetToLastValidState() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.resetToLastValidState">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.resetToLastValidState">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.resetToLastValidState">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -1273,6 +1368,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.setInitialCondition">setInitialCondition() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setInitialCondition">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setInitialCondition">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setInitialCondition">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -1281,6 +1378,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.setMaterial">setMaterial() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setMaterial">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setMaterial">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setMaterial">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -1291,6 +1390,8 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.setNodes">setNodes() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setNodes">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setNodes">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setNodes">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
@@ -1299,19 +1400,21 @@
       <li><a href="documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement.setProperties">setProperties() (edelweissfe.elements.base.baseelement.BaseElement method)</a>
 
       <ul>
+        <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setProperties">(edelweissfe.elements.displacementelement.element.DisplacementElement method)</a>
+</li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotelement.element.MarmotElementWrapper.setProperties">(edelweissfe.elements.marmotelement.element.MarmotElementWrapper method)</a>
 </li>
         <li><a href="documentation/elements.html#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.setProperties">(edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.setResults">setResults() (edelweissfe.utils.fieldoutput._FieldOutputBase method)</a>
 
       <ul>
         <li><a href="documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput.setResults">(edelweissfe.utils.fieldoutput.ElementFieldOutput method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/journal.html#edelweissfe.journal.journal.Journal.setVerbose">setVerbose() (edelweissfe.journal.journal.Journal method)</a>
 </li>
       <li><a href="documentation/plotter.html#edelweissfe.utils.plotter.Plotter.show">show() (edelweissfe.utils.plotter.Plotter method)</a>
@@ -1360,6 +1463,10 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.thickness">thickness (edelweissfe.elements.displacementelement.element.DisplacementElement attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/models.html#edelweissfe.models.femodel.FEModel.time">time (edelweissfe.models.femodel.FEModel attribute)</a>
 </li>
   </ul></td>
@@ -1391,6 +1498,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="documentation/dofmanager.html#edelweissfe.numerics.dofmanager.VIJSystemMatrix">VIJSystemMatrix (class in edelweissfe.numerics.dofmanager)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial">VonMisesMaterial (class in edelweissfe.materials.vonmises.vonmises)</a>
 </li>
   </ul></td>
 </tr></table>
