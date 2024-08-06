@@ -1,0 +1,38 @@
+
+*material, name=linearelastic, id=linearelastic, provider=edelweissmaterial
+13000.0, 0.15
+
+*section, name=section1, thickness=25.0, material=linearelastic, type=plane
+all
+
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=2000
+y0=0, h=150
+elType=Quad4PE
+elProvider=displacementelement
+nX=75
+nY=4
+
+*output, type=monitor
+fieldOutput=RF, f(x)='mean(x[:,1])'
+
+*output, type=ensight, name=esExport
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+
+*step, solver=theSolver, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+dirichlet, name=bottomleft, nSet=gen_leftBottom,  field=displacement, 2=0, 1=0
+dirichlet, name=bottomright, nSet=gen_rightBottom, field=displacement, 2=0
+nodeforces, name=cloadTop, nSet=gen_top, components='0,-263.16', field=displacement
+
+**convergence:  nX=150, nY=8, wmax=~23mm
+**              nX=300, nY=16, wmax=~23mm
+**              nX=600, nY=32, wmax=~23mm
+**              nX=75, nY=4, wmax=~22mm         --> analytical: 22.792mm

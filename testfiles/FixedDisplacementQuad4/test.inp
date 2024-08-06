@@ -1,0 +1,27 @@
+*material, name=linearelastic, id=modleon, provider=edelweissmaterial
+30000.0, 0.15
+
+*section, name=section1, thickness=1.0, material=modleon, type=plane
+all
+
+*job, name=cpe4job, domain=2d
+*solver, solver=NIST, name=theSolver
+*fieldOutput
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=25
+y0=0, h=150
+elType=Quad4PE
+elProvider=displacementelement
+nX=8
+nY=20
+
+*output, type=ensight, name=esExport
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+
+*step, solver=theSolver, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+options, category=NISTSolver, extrapolation=linear
+dirichlet, name=bottom, nSet=gen_bottom,  field=displacement, 2=0, 1=0
+dirichlet, name=top, nSet=gen_top, field=displacement, 2=11.45, 1=3

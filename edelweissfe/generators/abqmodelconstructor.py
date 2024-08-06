@@ -46,6 +46,7 @@ import numpy as np
 from edelweissfe.config.analyticalfields import getAnalyticalFieldByName
 from edelweissfe.config.constraints import getConstraintClass
 from edelweissfe.config.elementlibrary import getElementClass
+from edelweissfe.config.materiallibrary import getMaterialClass
 from edelweissfe.config.sections import getSectionClass
 from edelweissfe.models.femodel import FEModel
 from edelweissfe.points.node import Node
@@ -239,14 +240,19 @@ class AbqModelConstructor:
 
         for materialDef in inputFile["*material"]:
             materialName = materialDef["name"]
+            materialProvider = materialDef.get("provider", None)
             materialID = materialDef.get("id", materialName)
 
             materialProperties = convertLinesToFlatArray(materialDef["data"], dtype=float)
+            materialClass = getMaterialClass(materialName, materialProvider)
 
-            model.materials[materialID] = {
-                "name": materialName,
-                "properties": materialProperties,
-            }
+            if materialClass is None:  # for Marmot
+                model.materials[materialID] = {
+                    "name": materialName,
+                    "properties": materialProperties,
+                }
+            else:  # for DisplacementElement
+                model.materials[materialID] = materialClass(materialProperties)
 
         return model
 

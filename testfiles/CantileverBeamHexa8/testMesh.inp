@@ -1,0 +1,24 @@
+*include, input=mesh.inp
+
+*material, name=linearelastic, id=le
+30000.0, 0.15
+
+*section, name=section1, material=le, type=solid
+all
+
+*job, name=c3d8job, domain=3d
+
+
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, name=displacement, elSet=all, field=displacement, result=U
+
+*output, type=ensight, name=ensightExport
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+
+*step, solver=theSolver, maxInc=1e-1, minInc=1e-5, maxNumInc=1000, maxIter=25, stepLength=1
+**options, category=NISTSolver, extrapolation=linear
+dirichlet, name=top,  nSet=leftbottom, field=displacement, 1=0.0, 2=0.0, 3=.0
+nodeforces, name=cloadTop, nSet=righttop, components='0, 0, 300', field=displacement
