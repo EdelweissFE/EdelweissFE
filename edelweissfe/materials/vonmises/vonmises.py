@@ -93,8 +93,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
     fy(kappa) = fy0 + HLin * kappa + dfy * (1 - exp(-delta * kappa))
     """
 
-    @property
-    def nManagedStateVars(self) -> int:
+    def getNumberOfRequiredStateVars(self) -> int:
         """Returns number of needed material state Variables per integration point in the material.
 
         Returns
@@ -254,3 +253,48 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
         else:  # elastic step
             stress[:] = trialStress
             dStressdStrain[:] = Ei
+
+    def computeUniaxialStress(
+        self,
+        stress: np.ndarray,
+        dStressdStrain: np.ndarray,
+        dStrain: np.ndarray,
+        time: float,
+        dTime: float,
+    ):
+        """Computes the stresses for a uniaxial stress state.
+
+        Parameters
+        ----------
+        stress
+            Vector containing the stresses.
+        dStressdStrain
+            Matrix containing dStress/dStrain.
+        dStrain
+            Strain vector increment at time step t to t+dTime.
+        time
+            Array of step time and total time.
+        dTime
+            Current time step size."""
+
+        raise Exception("Computing uniaxial stress is not possible with this material.")
+
+    def getResult(self, result: str) -> float:
+        """Get the result, as a persistent view which is continiously
+        updated by the material.
+
+        Parameters
+        ----------
+        result
+            The name of the result.
+
+        Returns
+        -------
+        float
+            The result.
+        """
+
+        if result == "kappa":
+            return self.kappaOld
+        else:
+            raise Exception("This result doesn't exist for the current material.")
