@@ -33,7 +33,7 @@ from edelweissfe.materials.base.basehypoelasticmaterial import BaseHypoElasticMa
 
 
 class LinearElasticMaterial(BaseHypoElasticMaterial):
-    """Linear elastic material for 2D plane stress.
+    """Linear elastic material for 2D and 3D cases.
 
     Parameters
     ----------
@@ -47,8 +47,7 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
     v
         Poisson's ratio."""
 
-    @property
-    def nManagedStateVars(self) -> int:
+    def getNumberOfRequiredStateVars(self) -> int:
         """Returns number of needed material state Variables per integration point in the material.
 
         Returns
@@ -210,3 +209,43 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
         Ei = self.elasticityMatrix()
         dStressdStrain[:] = Ei
         stress += Ei @ dStrain
+
+    def computeUniaxialStress(
+        self,
+        stress: np.ndarray,
+        dStressdStrain: np.ndarray,
+        dStrain: np.ndarray,
+        time: float,
+        dTime: float,
+    ):
+        """Computes the stresses for a uniaxial stress state.
+
+        Parameters
+        ----------
+        stress
+            Vector containing the stresses.
+        dStressdStrain
+            Matrix containing dStress/dStrain.
+        dStrain
+            Strain vector increment at time step t to t+dTime.
+        time
+            Array of step time and total time.
+        dTime
+            Current time step size."""
+
+        raise Exception("Computing uniaxial stress is not possible with this material.")
+
+    def getResult(self, result: str) -> float:
+        """Get the result, as a persistent view which is continiously
+        updated by the material.
+
+        Parameters
+        ----------
+        result
+            The name of the result.
+
+        Returns
+        -------
+        float
+            The result.
+        """

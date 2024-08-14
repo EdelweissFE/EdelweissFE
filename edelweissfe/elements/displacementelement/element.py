@@ -467,7 +467,7 @@ class DisplacementElement(BaseElement):
             self._matrixSize = 6
         else:
             self._matrixVoigtIndices = np.arange(self._matrixSize)
-        stateVarsSize = 12 + self.material.nManagedStateVars
+        stateVarsSize = 12 + self.material.getNumberOfRequiredStateVars()
         self._dStressdStrain = np.zeros([self._nInt, self._matrixSize, self._matrixSize])
         self._hasMaterial = True
         self._stateVarsRef = np.zeros([self._nInt, stateVarsSize])

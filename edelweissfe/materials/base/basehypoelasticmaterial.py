@@ -33,9 +33,15 @@ import numpy as np
 
 
 class BaseHypoElasticMaterial(ABC):
+    """Base material class for a hypo elastic material.
 
-    @property
-    def nManagedStateVars(self) -> int:
+    Parameters
+    ----------
+    materialProperties
+        The numpy array containing the material properties for the requested material."""
+
+    @abstractmethod
+    def getNumberOfRequiredStateVars(self) -> int:
         """Returns number of needed material state Variables per integration point in the material.
 
         Returns
@@ -55,3 +61,91 @@ class BaseHypoElasticMaterial(ABC):
         ----------
         currentStateVars
             Array containing the material state vars."""
+
+    @abstractmethod
+    def computePlaneStress(
+        self,
+        stress: np.ndarray,
+        dStressdStrain: np.ndarray,
+        dStrain: np.ndarray,
+        time: float,
+        dTime: float,
+    ):
+        """Computes the stresses for a 2D material with plane stress.
+
+        Parameters
+        ----------
+        stress
+            Vector containing the stresses.
+        dStressdStrain
+            Matrix containing dStress/dStrain.
+        dStrain
+            Strain vector increment at time step t to t+dTime.
+        time
+            Array of step time and total time.
+        dTime
+            Current time step size."""
+
+    @abstractmethod
+    def computeStress(
+        self,
+        stress: np.ndarray,
+        dStressdStrain: np.ndarray,
+        dStrain: np.ndarray,
+        time: float,
+        dTime: float,
+    ):
+        """Computes the stresses for a 3D material/2D material with plane strain.
+
+        Parameters
+        ----------
+        stress
+            Vector containing the stresses.
+        dStressdStrain
+            Matrix containing dStress/dStrain.
+        dStrain
+            Strain vector increment at time step t to t+dTime.
+        time
+            Array of step time and total time.
+        dTime
+            Current time step size."""
+
+    @abstractmethod
+    def computeUniaxialStress(
+        self,
+        stress: np.ndarray,
+        dStressdStrain: np.ndarray,
+        dStrain: np.ndarray,
+        time: float,
+        dTime: float,
+    ):
+        """Computes the stresses for a uniaxial stress state.
+
+        Parameters
+        ----------
+        stress
+            Vector containing the stresses.
+        dStressdStrain
+            Matrix containing dStress/dStrain.
+        dStrain
+            Strain vector increment at time step t to t+dTime.
+        time
+            Array of step time and total time.
+        dTime
+            Current time step size."""
+
+    @abstractmethod
+    def getResult(self, result: str) -> float:
+        """Get the result, as a persistent view which is continiously
+        updated by the material.
+
+        Parameters
+        ----------
+        result
+            The name of the result.
+
+        Returns
+        -------
+        float
+            The result.
+        """
