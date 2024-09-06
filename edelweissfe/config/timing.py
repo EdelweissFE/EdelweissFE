@@ -38,6 +38,7 @@ timingTypes = [
     "dirichlet K",
     "linear solve",
     "convergence check",
+    "output",
 ]
 
 
