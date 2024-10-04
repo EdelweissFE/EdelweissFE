@@ -73,7 +73,7 @@ def writeCInt(f, ndarray):
 
 
 def writeC80(f, string):
-    np.asarray(string, dtype="a80").tofile(f)
+    np.asarray(string, dtype="S80").tofile(f)
 
 
 ensightPerNodeVariableTypes = {
@@ -448,7 +448,7 @@ class EnsightChunkWiseCase:
         self.timeAndFileSets = {}
         self.geometryTrends = {}
         self.variableTrends = {}
-        self.fileHandles = {}
+        self.fileNames = {}
 
         if not os.path.exists(self.caseFileNamePrefix):
             os.mkdir(self.caseFileNamePrefix)
@@ -480,24 +480,28 @@ class EnsightChunkWiseCase:
             The associated time and fileset number.
         """
 
-        if ensightGeometry.name not in self.fileHandles:
+        if ensightGeometry.name not in self.fileNames:
             fileName = os.path.join(
                 self.caseFileNamePrefix,
                 ensightGeometry.name + ".geo",
             )
 
-            self.fileHandles[ensightGeometry.name] = open(fileName, mode="wb")
+            self.fileNames[ensightGeometry.name] = fileName
+            # create empty file
+            with open(fileName, mode="wb") as f:
+                pass
 
-        f = self.fileHandles[ensightGeometry.name]
+        filename = self.fileNames[ensightGeometry.name]
 
-        if ensightGeometry.name not in self.geometryTrends:
-            self.geometryTrends[ensightGeometry.name] = timeAndFileSetNumber
-            writeC80(f, "C Binary")
+        with open(filename, mode="wb") as f:
+            if ensightGeometry.name not in self.geometryTrends:
+                self.geometryTrends[ensightGeometry.name] = timeAndFileSetNumber
+                writeC80(f, "C Binary")
 
-        if self.writeTransientSingleFiles:
-            writeC80(f, "BEGIN TIME STEP")
-            ensightGeometry.writeToFile(f)
-            writeC80(f, "END TIME STEP")
+            if self.writeTransientSingleFiles:
+                writeC80(f, "BEGIN TIME STEP")
+                ensightGeometry.writeToFile(f)
+                writeC80(f, "END TIME STEP")
 
     def writeVariableTrendChunk(self, ensightVariable: EnsightVariableTrend, timeAndFileSetNumber: int = 2):
         """
@@ -511,24 +515,32 @@ class EnsightChunkWiseCase:
             The associated time and fileset number.
         """
 
-        if ensightVariable.name not in self.fileHandles:
+        if ensightVariable.name not in self.fileNames:
+            # create file name
             fileName = os.path.join(self.caseFileNamePrefix, ensightVariable.name + ".var")
 
-            self.fileHandles[ensightVariable.name] = open(fileName, mode="wb")
+            # append to file names
+            self.fileNames[ensightVariable.name] = fileName
 
-        f = self.fileHandles[ensightVariable.name]
+            # create empty file
+            with open(fileName, mode="wb") as f:
+                pass
 
-        if ensightVariable.name not in self.variableTrends:
-            self.variableTrends[ensightVariable.name] = (
-                timeAndFileSetNumber,
-                ensightVariable.varType,
-            )
-            writeC80(f, "C Binary")
+        filename = self.fileNames[ensightVariable.name]
 
-        if self.writeTransientSingleFiles:
-            writeC80(f, "BEGIN TIME STEP")
-            ensightVariable.writeToFile(f)
-            writeC80(f, "END TIME STEP")
+        with open(filename, mode="wb") as f:
+
+            if ensightVariable.name not in self.variableTrends:
+                self.variableTrends[ensightVariable.name] = (
+                    timeAndFileSetNumber,
+                    ensightVariable.varType,
+                )
+                writeC80(f, "C Binary")
+
+            if self.writeTransientSingleFiles:
+                writeC80(f, "BEGIN TIME STEP")
+                ensightVariable.writeToFile(f)
+                writeC80(f, "END TIME STEP")
 
     def finalize(self, replaceTimeValuesByEnumeration: bool = True, closeFileHandes: bool = True):
         """Write the file .case file containing all the required information."
@@ -542,10 +554,6 @@ class EnsightChunkWiseCase:
         """
 
         caseFName = self.caseFileNamePrefix + ".case"
-
-        if closeFileHandes:
-            for f in self.fileHandles.values():
-                f.close()
 
         with open(caseFName, mode="w") as cf:
             cf.write("FORMAT\n")
