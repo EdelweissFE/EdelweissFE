@@ -46,6 +46,7 @@ from edelweissfe.fields.nodefield import NodeField
 from edelweissfe.journal.journal import Journal
 from edelweissfe.models.femodel import FEModel
 from edelweissfe.sets.elementset import ElementSet
+from edelweissfe.sets.orderedset import OrderedSet
 from edelweissfe.utils.elementresultcollector import ElementResultCollector
 
 documentation = {
@@ -449,7 +450,7 @@ class ExpressionFieldOutput(_FieldOutputBase):
 
     def __init__(
         self,
-        associatedSet,
+        associatedSet: OrderedSet | None,
         theExpression,
         name: str,
         model: FEModel,
@@ -475,7 +476,10 @@ class ExpressionFieldOutput(_FieldOutputBase):
             The model tree.
         """
 
-        result = np.reshape(np.asarray(self.theExpression()), (len(self.associatedSet), -1))
+        if self.associatedSet:
+            result = np.reshape(np.asarray(self.theExpression()), (len(self.associatedSet), -1))
+        else:
+            result = np.reshape(np.asarray(self.theExpression()), (1, -1))
 
         return super()._applyResultsPipleline(result)
 

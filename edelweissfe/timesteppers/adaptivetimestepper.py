@@ -96,7 +96,14 @@ class AdaptiveTimeStepper:
         """
 
         # zero increment; return value for first function call
-        yield TimeStep(0, 0.0, 0.0, 0.0, 0.0, self.currentTime)
+        yield TimeStep(
+            self.totalIncrements,
+            0.0,
+            self.finishedStepProgress,
+            0.0,
+            self.stepLength * self.finishedStepProgress,
+            self.currentTime + self.stepLength * self.finishedStepProgress,
+        )
 
         while self.finishedStepProgress < (1.0 - 1e-15):
             if self.totalIncrements >= self.maxNumberIncrements:
@@ -138,15 +145,8 @@ class AdaptiveTimeStepper:
 
         self.allowedToIncreasedNext = False
 
-    def discardAndChangeIncrement(self, scaleFactor: float):
-        """Change increment size between minIncrement and
-        maxIncrement by a given scale factor.
-
-        Parameters
-        ----------
-        scaleFactor
-            The factor for scaling based on the previous increment.
-        """
+    def reduceNextIncrement(self, scaleFactor: float):
+        """Reduce the increment size for the next increment."""
 
         if self.increment == self.minIncrement:
             self.journal.errorMessage("Cannot reduce increment size", self.identification)
@@ -156,7 +156,6 @@ class AdaptiveTimeStepper:
             self.journal.errorMessage("Failed zero increment", self.identification)
             raise ReachedMinIncrementSize()
 
-        self.finishedStepProgress -= self.increment
         newIncrement = self.increment * scaleFactor
         if newIncrement > self.maxIncrement:
             self.increment = self.maxIncrement
@@ -170,5 +169,65 @@ class AdaptiveTimeStepper:
             self.identification,
             2,
         )
+
+    def discardAndChangeIncrement(self, scaleFactor: float):
+        """Change increment size between minIncrement and
+        maxIncrement by a given scale factor.
+
+        Parameters
+        ----------
+        scaleFactor
+            The factor for scaling based on the previous increment.
+        """
+
+        self.finishedStepProgress -= self.increment
         self.totalIncrements -= 1
         self.nPassedGoodIncrements = 0
+
+        self.reduceNextIncrement(scaleFactor)
+
+    def writeRestart(self, restartFile):
+        """Write restart information to a file.
+
+        Parameters
+        ----------
+        restartFile
+            The file to write the restart information to.
+        """
+        f = restartFile
+        f.create_group("timestepper")
+
+        f["timestepper"].attrs["currentTime"] = self.currentTime
+        f["timestepper"].attrs["stepLength"] = self.stepLength
+        f["timestepper"].attrs["startIncrement"] = self.startIncrement
+        f["timestepper"].attrs["maxIncrement"] = self.maxIncrement
+        f["timestepper"].attrs["minIncrement"] = self.minIncrement
+        f["timestepper"].attrs["maxNumberIncrements"] = self.maxNumberIncrements
+        f["timestepper"].attrs["nPassedGoodIncrements"] = self.nPassedGoodIncrements
+        f["timestepper"].attrs["totalIncrements"] = self.totalIncrements
+        f["timestepper"].attrs["finishedStepProgress"] = self.finishedStepProgress
+        f["timestepper"].attrs["increment"] = self.increment
+        f["timestepper"].attrs["allowedToIncreasedNext"] = self.allowedToIncreasedNext
+        f["timestepper"].attrs["dT"] = self.dT
+
+    def readRestart(self, restartFile):
+        """Read restart information from a file.
+
+        Parameters
+        ----------
+        restartFile
+            The file to read the restart information from.
+        """
+        f = restartFile
+        self.currentTime = f["timestepper"].attrs["currentTime"]
+        self.stepLength = f["timestepper"].attrs["stepLength"]
+        self.startIncrement = f["timestepper"].attrs["startIncrement"]
+        self.maxIncrement = f["timestepper"].attrs["maxIncrement"]
+        self.minIncrement = f["timestepper"].attrs["minIncrement"]
+        self.maxNumberIncrements = f["timestepper"].attrs["maxNumberIncrements"]
+        self.nPassedGoodIncrements = f["timestepper"].attrs["nPassedGoodIncrements"]
+        self.totalIncrements = f["timestepper"].attrs["totalIncrements"]
+        self.finishedStepProgress = f["timestepper"].attrs["finishedStepProgress"]
+        self.increment = f["timestepper"].attrs["increment"]
+        self.allowedToIncreasedNext = f["timestepper"].attrs["allowedToIncreasedNext"]
+        self.dT = f["timestepper"].attrs["dT"]

@@ -32,6 +32,7 @@
 import textwrap
 from operator import attrgetter
 
+import h5py
 import numpy as np
 
 from edelweissfe.config.phenomena import getFieldSize, phenomena
@@ -256,11 +257,44 @@ class FEModel:
         for el in self.elements.values():
             el.acceptLastState()
 
-    def storeModel(self, fileHandle):
-        pass
+    def writeRestart(self, restartFile: h5py.File):
+        """Write the current state of the model to a restart file.
 
-    def restoreModel(self, fileHandle):
-        pass
+        Parameters
+        ----------
+        fileName
+            The name of the restart file.
+        """
+
+        f = restartFile
+
+        f.attrs["time"] = self.time
+
+        # node fields
+        f.create_group("nodeFields")
+        for nf in self.nodeFields.values():
+            f["nodeFields"].create_group(nf.name)
+            for entryName, entryValues in nf._values.items():  # TODO
+                f["nodeFields"][nf.name].create_dataset(entryName, data=entryValues)
+
+    def readRestart(self, restartFile: h5py.File):
+        """Read the state of the model from a restart file.
+
+        Parameters
+        ----------
+        fileName
+            The name of the restart file.
+        """
+
+        f = restartFile
+
+        self.time = f.attrs["time"]
+
+        # node fields
+        for nf in self.nodeFields.values():
+            for entryName, entryValues in nf._values.items():
+                entryValues = f["nodeFields"][nf.name][entryName]
+                nf[entryName][:] = entryValues
 
 
 def printPrettyModelSummary(model: FEModel, journal: Journal):
