@@ -36,8 +36,12 @@ import numpy as np
 
 from edelweissfe.config.phenomena import phenomena
 from edelweissfe.fields.nodefield import NodeField
+from edelweissfe.nodecouplingentity.base.nodecouplingentity import (
+    BaseNodeCouplingEntity,
+)
 from edelweissfe.points.node import Node
 from edelweissfe.sets.nodeset import NodeSet
+from edelweissfe.variables.scalarvariable import ScalarVariable
 
 
 class VIJSystemMatrix(np.ndarray):
@@ -137,11 +141,11 @@ class DofManager:
     def __init__(
         self,
         nodeFields: list[NodeField],
-        scalarVariables: list,
-        elements: list,
-        constraints: list,
-        nodeSets: list,
-        initializeVIJPattern=True,
+        scalarVariables: list[ScalarVariable] = [],
+        elements: list[BaseNodeCouplingEntity] = [],
+        constraints: list[BaseNodeCouplingEntity] = [],
+        nodeSets: list[NodeSet] = [],
+        initializeVIJPattern: bool = True,
     ):
 
         self.nDof = int()  #: The total number of degrees of freedom (and size of the DofVector)
@@ -237,7 +241,7 @@ class DofManager:
         ) = self._gatherConstraintsInformation(constraints)
 
         self.idcsOfFieldsOnNodeSetsInDofVector = self._locateFieldsOnNodeSetsInDofVector(nodeSets)
-        self.idcsOfElementsInDofVector = self._locateElementsInDofVector(elements)
+        self.idcsOfElementsInDofVector = self._locateNodeCouplingEntitiesInDofVector(elements)
         self.idcsOfConstraintsInDofVector = self._locateConstraintsInDofVector(constraints)
 
     def _reserveSpaceForNodeFields(
@@ -261,17 +265,17 @@ class DofManager:
         idcsOfNodeFieldVariablesInDofVector = dict()
         currentIdxInDofVector = idxStart
 
-        for nField in nodeFields:
-            nextIdxInDofVector = currentIdxInDofVector + nField.dimension * len(nField.nodes)
-            idcsOfFieldsInDofVector[nField.name] = slice(currentIdxInDofVector, nextIdxInDofVector)
+        for nodeField in nodeFields:
+            nextIdxInDofVector = currentIdxInDofVector + nodeField.dimension * len(nodeField.nodes)
+            idcsOfFieldsInDofVector[nodeField.name] = slice(currentIdxInDofVector, nextIdxInDofVector)
 
             idcsOfNodeFieldVariablesInDofVector |= {
-                n.fields[nField.name]: np.arange(
-                    currentIdxInDofVector + i * nField.dimension,
-                    currentIdxInDofVector + i * nField.dimension + nField.dimension,
+                n.fields[nodeField.name]: np.arange(
+                    currentIdxInDofVector + i * nodeField.dimension,
+                    currentIdxInDofVector + i * nodeField.dimension + nodeField.dimension,
                     dtype=int,
                 )
-                for i, n in enumerate(nField.nodes)
+                for i, n in enumerate(nodeField.nodes)
             }
             currentIdxInDofVector = nextIdxInDofVector
 
@@ -426,7 +430,7 @@ class DofManager:
 
     # def _analyzeVIJPattern(self,):
 
-    def _locateElementsInDofVector(self, elements: list) -> dict:
+    def _locateNodeCouplingEntitiesInDofVector(self, entities: list) -> dict:
         """Creates a dictionary containing the location (indices) of each entity (elements, constraints)
         within the DofVector structure.
 
@@ -438,16 +442,19 @@ class DofManager:
 
         idcsOfElementsInDofVector = {}
 
-        for el in elements:
+        for ent in entities:
             destList = np.hstack(
                 [
                     self.idcsOfFieldVariablesInDofVector[node.fields[nodeField]]
-                    for iNode, node in enumerate(el.nodes)  # for each node of the element..
-                    for nodeField in el.fields[iNode]  # for each field of this node
+                    for iNode, node in enumerate(ent.nodes)  # for each node of the element..
+                    for nodeField in ent.fields[iNode]  # for each field of this node
                 ]
             )  # the index in the global system
 
-            idcsOfElementsInDofVector[el] = destList[el.dofIndicesPermutation]
+            if ent.dofIndicesPermutation is not None:
+                idcsOfElementsInDofVector[ent] = destList[ent.dofIndicesPermutation]
+            else:
+                idcsOfElementsInDofVector[ent] = destList
 
         return idcsOfElementsInDofVector
 

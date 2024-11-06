@@ -142,6 +142,10 @@ cdef class MarmotElementWrapper:
         return self._ensightType
 
     @property
+    def visualizationNodes(self):
+        return self._nodes
+
+    @property
     def hasMaterial(self):
         return self._hasMaterial
 
