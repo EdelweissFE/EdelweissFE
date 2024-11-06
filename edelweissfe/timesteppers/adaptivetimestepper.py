@@ -28,8 +28,6 @@
 
 from edelweissfe.journal.journal import Journal
 from edelweissfe.timesteppers.timestep import TimeStep
-
-# @author: Matthias
 from edelweissfe.utils.exceptions import ReachedMaxIncrements, ReachedMinIncrementSize
 
 
@@ -96,14 +94,15 @@ class AdaptiveTimeStepper:
         """
 
         # zero increment; return value for first function call
-        yield TimeStep(
-            self.totalIncrements,
-            0.0,
-            self.finishedStepProgress,
-            0.0,
-            self.stepLength * self.finishedStepProgress,
-            self.currentTime + self.stepLength * self.finishedStepProgress,
-        )
+        if self.finishedStepProgress == 0.0:
+            yield TimeStep(
+                self.totalIncrements,
+                0.0,
+                self.finishedStepProgress,
+                0.0,
+                self.stepLength * self.finishedStepProgress,
+                self.currentTime + self.stepLength * self.finishedStepProgress,
+            )
 
         while self.finishedStepProgress < (1.0 - 1e-15):
             if self.totalIncrements >= self.maxNumberIncrements:
