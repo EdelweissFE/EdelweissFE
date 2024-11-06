@@ -34,49 +34,21 @@ Implementing your own finite elements can be done easily by subclassing from
 the abstract base class :class:`~BaseElement`.
 """
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 import numpy as np
 
+from edelweissfe.nodecouplingentity.base.nodecouplingentity import (
+    BaseNodeCouplingEntity,
+)
 from edelweissfe.points.node import Node
 
 
-class BaseElement(ABC):
+class BaseElement(BaseNodeCouplingEntity):
     @property
     @abstractmethod
     def elNumber(self) -> int:
         """The unique number of this element"""
-
-    @property
-    @abstractmethod
-    def nNodes(self) -> int:
-        """The number of nodes this element requires"""
-
-    @property
-    @abstractmethod
-    def nodes(self) -> int:
-        """The list of nodes this element holds"""
-
-    @property
-    @abstractmethod
-    def nDof(self) -> int:
-        """The total number of degrees of freedom this element has"""
-
-    @property
-    @abstractmethod
-    def fields(self) -> list[list[str]]:
-        """The list of fields per nodes."""
-
-    @property
-    @abstractmethod
-    def dofIndicesPermutation(self) -> np.ndarray:
-        """The permutation pattern for the residual vector and the stiffness matrix to
-        aggregate all entries in order to resemble the defined fields nodewise."""
-
-    @property
-    @abstractmethod
-    def ensightType(self) -> str:
-        """The shape of the element in Ensight Gold notation."""
 
     @property
     @abstractmethod

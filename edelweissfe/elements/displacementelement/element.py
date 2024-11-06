@@ -377,6 +377,12 @@ class DisplacementElement(BaseElement):
         return self._ensightType
 
     @property
+    def visualizationNodes(self) -> str:
+        """The nodes for visualization."""
+
+        return self._nodes
+
+    @property
     def hasMaterial(self) -> str:
         """Flag to check if a material was assigned to this element."""
 

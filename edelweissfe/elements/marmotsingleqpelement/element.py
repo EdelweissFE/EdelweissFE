@@ -37,6 +37,7 @@ from edelweissfe.elements.marmotsingleqpelement.marmotmaterialgradientenhancedhy
 from edelweissfe.elements.marmotsingleqpelement.marmotmaterialhypoelasticwrapper import (
     MarmotMaterialHypoElasticWrapper,
 )
+from edelweissfe.points.node import Node
 
 marmotMaterialWrappers = {
     "MarmotMaterialHypoElastic": MarmotMaterialHypoElasticWrapper,
@@ -252,3 +253,11 @@ class MarmotMaterialWrappingElement(BaseElement):
             The qp's coordinates."""
 
         return 1
+
+    @property
+    def visualizationNodes(self) -> list[Node]:
+        """The nodes for visualization. Commonly, these are the same as the nodes of the entity.
+        However, in some cases, the visualization nodes are different from the nodes of the entity, e.g., in case of mixed formulations.
+        """
+
+        return self._nodes

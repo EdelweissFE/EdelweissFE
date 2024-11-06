@@ -625,7 +625,7 @@ def createUnstructuredPartFromElementSet(setName, elementSet: list, partID: int)
         if elShape not in elementDict:
             elementDict[elShape] = dict()
         elNodeIndices = []
-        for node in element.nodes:
+        for node in element.visualizationNodes:
             # if the node is already in the dict, get its index,
             # else insert it, and get the current idx = counter. increase the counter
             idx = partNodes.setdefault(node, nodeCounter)
@@ -758,7 +758,6 @@ class OutputManager(OutputManagerBase):
         variableJob["part"] = part
 
         if nEntries != len(fieldOutput.associatedSet):
-            print(len(fieldOutput.associatedSet))
             raise Exception(
                 "Variable {:} result size ({:}) does not match the number of nodes ({:})".format(
                     variableJob["name"], nEntries, len(variableJob["part"].nodes)
