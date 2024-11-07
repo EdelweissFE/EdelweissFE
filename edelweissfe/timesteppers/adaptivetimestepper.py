@@ -95,6 +95,10 @@ class AdaptiveTimeStepper:
 
         while self.finishedStepProgress < (1.0 - 1e-15):
 
+            remainder = 1.0 - self.finishedStepProgress
+            if remainder < self.increment:
+                self.increment = remainder
+
             # # zero increment; return value for first function call
             theIncrement = self.increment if self.incrementCounter > 0 else 0.0
 
@@ -112,9 +116,6 @@ class AdaptiveTimeStepper:
                 endTimeOfIncrementInTotal,
             )
 
-            self.incrementCounter += 1
-            self.nPassedGoodIncrements += 1
-
             if self.incrementCounter > self.maxNumberIncrements:
                 self.journal.errorMessage("Reached maximum number of increments", self.identification)
                 raise ReachedMaxIncrements()
@@ -125,9 +126,8 @@ class AdaptiveTimeStepper:
                     self.increment = self.maxIncrement
             self.allowedToIncreasedNext = True
 
-            remainder = 1.0 - self.finishedStepProgress
-            if remainder < self.increment:
-                self.increment = remainder
+            self.incrementCounter += 1
+            self.nPassedGoodIncrements += 1
 
     def preventIncrementIncrease(
         self,
@@ -196,7 +196,7 @@ class AdaptiveTimeStepper:
         f["timestepper"].attrs["minIncrement"] = self.minIncrement
         f["timestepper"].attrs["maxNumberIncrements"] = self.maxNumberIncrements
         f["timestepper"].attrs["nPassedGoodIncrements"] = self.nPassedGoodIncrements
-        f["timestepper"].attrs["totalIncrements"] = self.incrementCounter
+        f["timestepper"].attrs["incrementCounter"] = self.incrementCounter
         f["timestepper"].attrs["finishedStepProgress"] = self.finishedStepProgress
         f["timestepper"].attrs["increment"] = self.increment
         f["timestepper"].attrs["allowedToIncreasedNext"] = self.allowedToIncreasedNext
@@ -218,7 +218,7 @@ class AdaptiveTimeStepper:
         self.minIncrement = f["timestepper"].attrs["minIncrement"]
         self.maxNumberIncrements = f["timestepper"].attrs["maxNumberIncrements"]
         self.nPassedGoodIncrements = f["timestepper"].attrs["nPassedGoodIncrements"]
-        self.incrementCounter = f["timestepper"].attrs["totalIncrements"]
+        self.incrementCounter = f["timestepper"].attrs["incrementCounter"]
         self.finishedStepProgress = f["timestepper"].attrs["finishedStepProgress"]
         self.increment = f["timestepper"].attrs["increment"]
         self.allowedToIncreasedNext = f["timestepper"].attrs["allowedToIncreasedNext"]
