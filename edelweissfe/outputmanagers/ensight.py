@@ -493,7 +493,7 @@ class EnsightChunkWiseCase:
 
         filename = self.fileNames[ensightGeometry.name]
 
-        with open(filename, mode="wb") as f:
+        with open(filename, mode="ab") as f:
             if ensightGeometry.name not in self.geometryTrends:
                 self.geometryTrends[ensightGeometry.name] = timeAndFileSetNumber
                 writeC80(f, "C Binary")
@@ -528,7 +528,7 @@ class EnsightChunkWiseCase:
 
         filename = self.fileNames[ensightVariable.name]
 
-        with open(filename, mode="wb") as f:
+        with open(filename, mode="ab") as f:
 
             if ensightVariable.name not in self.variableTrends:
                 self.variableTrends[ensightVariable.name] = (
