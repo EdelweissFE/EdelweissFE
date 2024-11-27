@@ -43,6 +43,7 @@ class AdaptiveTimeStepper:
         minIncrement: float,
         maxNumberIncrements: int,
         journal: Journal,
+        increaseFactor=1.1,
     ):
         """
         An increment generator for incremental-iterative simulations.
@@ -65,6 +66,8 @@ class AdaptiveTimeStepper:
             The maximum number of allowed increments.
         journal
             The journal instance for logging purposes.
+        increaseFactor
+            The ratio to increase the increments in case of good convergence.
         """
 
         self.nPassedGoodIncrements = int(0)
@@ -82,6 +85,7 @@ class AdaptiveTimeStepper:
         self.stepLength = stepLength
         self.dT = 0.0
         self.journal = journal
+        self.increaseFactor = increaseFactor
 
     def generateTimeStep(self) -> TimeStep:
         """
@@ -121,7 +125,7 @@ class AdaptiveTimeStepper:
                 raise ReachedMaxIncrements()
 
             if (self.nPassedGoodIncrements >= 3) and self.allowedToIncreasedNext:
-                self.increment *= 1.1
+                self.increment *= self.increaseFactor
                 if self.increment > self.maxIncrement:
                     self.increment = self.maxIncrement
             self.allowedToIncreasedNext = True
