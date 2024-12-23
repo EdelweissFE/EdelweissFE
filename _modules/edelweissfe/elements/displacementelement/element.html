@@ -457,6 +457,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">visualizationNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The nodes for visualization.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hasMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Flag to check if a material was assigned to this element.&quot;&quot;&quot;</span>
 
@@ -547,7 +553,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_matrixSize</span> <span class="o">=</span> <span class="mi">6</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_matrixVoigtIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_matrixSize</span><span class="p">)</span>
-        <span class="n">stateVarsSize</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">nManagedStateVars</span>
+        <span class="n">stateVarsSize</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">getNumberOfRequiredStateVars</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dStressdStrain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrixSize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrixSize</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hasMaterial</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsRef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">,</span> <span class="n">stateVarsSize</span><span class="p">])</span>

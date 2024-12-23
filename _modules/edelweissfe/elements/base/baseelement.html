@@ -114,49 +114,21 @@
 <span class="sd">the abstract base class :class:`~BaseElement`.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">edelweissfe.nodecouplingentity.base.nodecouplingentity</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseNodeCouplingEntity</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.points.node</span> <span class="kn">import</span> <span class="n">Node</span>
 
 
-<div class="viewcode-block" id="BaseElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement">[docs]</a><span class="k">class</span> <span class="nc">BaseElement</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.base.baseelement.BaseElement">[docs]</a><span class="k">class</span> <span class="nc">BaseElement</span><span class="p">(</span><span class="n">BaseNodeCouplingEntity</span><span class="p">):</span>
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The unique number of this element&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of nodes this element requires&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of nodes this element holds&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total number of degrees of freedom this element has&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of fields per nodes.&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">dofIndicesPermutation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The permutation pattern for the residual vector and the stiffness matrix to</span>
-<span class="sd">        aggregate all entries in order to resemble the defined fields nodewise.&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">ensightType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The shape of the element in Ensight Gold notation.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>

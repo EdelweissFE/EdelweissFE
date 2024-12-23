@@ -242,7 +242,7 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 <p>Module <code class="docutils literal notranslate"><span class="pre">edelweissfe.timesteppers.adaptivetimestepper</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.timesteppers.adaptivetimestepper.</span></span><span class="sig-name descname"><span class="pre">AdaptiveTimeStepper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.timesteppers.adaptivetimestepper.</span></span><span class="sig-name descname"><span class="pre">AdaptiveTimeStepper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minIncrement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxNumberIncrements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increaseFactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper" title="Permalink to this definition"></a></dt>
 <dd><p>An increment generator for incremental-iterative simulations.</p>
 <p>Implementation as generator class.</p>
 <dl class="field-list simple">
@@ -255,6 +255,7 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 <li><p><strong>minIncrement</strong> (<em>float</em>) – The minimum size of an increment.</p></li>
 <li><p><strong>maxNumberIncrements</strong> (<em>int</em>) – The maximum number of allowed increments.</p></li>
 <li><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance for logging purposes.</p></li>
+<li><p><strong>increaseFactor</strong> – The ratio to increase the increments in case of good convergence.</p></li>
 </ul>
 </dd>
 </dl>
@@ -273,6 +274,15 @@ or a 2D array for one quadrature point ( shape <code class="docutils literal not
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease" title="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preventIncrementIncrease</span></code></a>()</p></td>
 <td><p>May be called before an increment is requested, to prevent from automatically increasing, e.g.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.readRestart" title="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.readRestart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readRestart</span></code></a>(restartFile)</p></td>
+<td><p>Read restart information from a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.reduceNextIncrement" title="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.reduceNextIncrement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduceNextIncrement</span></code></a>(scaleFactor)</p></td>
+<td><p>Reduce the increment size for the next increment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.writeRestart" title="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.writeRestart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeRestart</span></code></a>(restartFile)</p></td>
+<td><p>Write restart information to a file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -307,6 +317,39 @@ maxIncrement by a given scale factor.</p>
 <span class="sig-name descname"><span class="pre">preventIncrementIncrease</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.preventIncrementIncrease"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease" title="Permalink to this definition"></a></dt>
 <dd><p>May be called before an increment is requested, to prevent from
 automatically increasing, e.g. in case of bad convergency.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.readRestart">
+<span class="sig-name descname"><span class="pre">readRestart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restartFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.readRestart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.readRestart" title="Permalink to this definition"></a></dt>
+<dd><p>Read restart information from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>restartFile</strong> – The file to read the restart information from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.reduceNextIncrement">
+<span class="sig-name descname"><span class="pre">reduceNextIncrement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaleFactor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.reduceNextIncrement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.reduceNextIncrement" title="Permalink to this definition"></a></dt>
+<dd><p>Reduce the increment size for the next increment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scaleFactor</strong> (<em>float</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.writeRestart">
+<span class="sig-name descname"><span class="pre">writeRestart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restartFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/timesteppers/adaptivetimestepper.html#AdaptiveTimeStepper.writeRestart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.writeRestart" title="Permalink to this definition"></a></dt>
+<dd><p>Write restart information to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>restartFile</strong> – The file to write the restart information to.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

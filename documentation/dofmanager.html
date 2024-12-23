@@ -140,7 +140,7 @@
 <span class="target" id="module-edelweissfe.numerics.dofmanager"></span><p>This module contains important classes for describing the global equation system by means of a sparse system.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeFields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializeVIJPattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.numerics.dofmanager.</span></span><span class="sig-name descname"><span class="pre">DofManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeFields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalarVariables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeSets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializeVIJPattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofManager" title="Permalink to this definition"></a></dt>
 <dd><p>The DofManager</p>
 <blockquote>
 <div><ul class="simple">
@@ -155,10 +155,11 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>nodeFields</strong> (<em>list</em><em>[</em><a class="reference internal" href="fields.html#edelweissfe.fields.nodefield.NodeField" title="edelweissfe.fields.nodefield.NodeField"><em>edelweissfe.fields.nodefield.NodeField</em></a><em>]</em>) – The list of NodeFields which should be represented in the DofVector structure.</p></li>
-<li><p><strong>scalarVariables</strong> (<em>list</em>) – The list of ScalarVariables which should be represented in the DofVector structure.</p></li>
-<li><p><strong>elements</strong> (<em>list</em>) – The list of Elements for which a map to the respective indices should be created.</p></li>
-<li><p><strong>constraints</strong> (<em>list</em>) – The list of Constraints for which a map to the respective indices should be created.</p></li>
-<li><p><strong>nodeSets</strong> (<em>list</em>) – The list of NodeSets for which a map to the respective indices should be created.</p></li>
+<li><p><strong>scalarVariables</strong> (<em>list</em><em>[</em><a class="reference internal" href="variables.html#edelweissfe.variables.scalarvariable.ScalarVariable" title="edelweissfe.variables.scalarvariable.ScalarVariable"><em>edelweissfe.variables.scalarvariable.ScalarVariable</em></a><em>]</em>) – The list of ScalarVariables which should be represented in the DofVector structure.</p></li>
+<li><p><strong>elements</strong> (<em>list</em><em>[</em><em>edelweissfe.nodecouplingentity.base.nodecouplingentity.BaseNodeCouplingEntity</em><em>]</em>) – The list of Elements for which a map to the respective indices should be created.</p></li>
+<li><p><strong>constraints</strong> (<em>list</em><em>[</em><em>edelweissfe.nodecouplingentity.base.nodecouplingentity.BaseNodeCouplingEntity</em><em>]</em>) – The list of Constraints for which a map to the respective indices should be created.</p></li>
+<li><p><strong>nodeSets</strong> (<em>list</em><em>[</em><a class="reference internal" href="sets.html#edelweissfe.sets.nodeset.NodeSet" title="edelweissfe.sets.nodeset.NodeSet"><em>edelweissfe.sets.nodeset.NodeSet</em></a><em>]</em>) – The list of NodeSets for which a map to the respective indices should be created.</p></li>
+<li><p><strong>initializeVIJPattern</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -521,7 +522,7 @@ The [] operator allows to access (non-contigouos read, write) at each entities l
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat</span></code>(repeats[, axis])</p></td>
 <td><p>Repeat elements of an array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reshape</span></code>(shape, /, *[, order])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reshape</span></code>(shape, /, *[, order, copy])</p></td>
 <td><p>Returns an array containing the same data with a new shape.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize</span></code>(new_shape[, refcheck])</p></td>
@@ -763,7 +764,7 @@ which</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat</span></code>(repeats[, axis])</p></td>
 <td><p>Repeat elements of an array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reshape</span></code>(shape, /, *[, order])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reshape</span></code>(shape, /, *[, order, copy])</p></td>
 <td><p>Returns an array containing the same data with a new shape.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resize</span></code>(new_shape[, refcheck])</p></td>

@@ -142,19 +142,11 @@ for nodes and scalar degrees of freedem, and it manages the fields.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.models.femodel.FEModel.prepareYourself" title="edelweissfe.models.femodel.FEModel.prepareYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepareYourself</span></code></a>(journal)</p></td>
 <td><p>Prepare the model for a simulation.</p></td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 62%" />
-<col style="width: 38%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>restoreModel</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.models.femodel.FEModel.readRestart" title="edelweissfe.models.femodel.FEModel.readRestart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readRestart</span></code></a>(restartFile)</p></td>
+<td><p>Read the state of the model from a restart file.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>storeModel</strong></p></td>
-<td></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.models.femodel.FEModel.writeRestart" title="edelweissfe.models.femodel.FEModel.writeRestart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeRestart</span></code></a>(restartFile)</p></td>
+<td><p>Write the current state of the model to a restart file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -179,6 +171,34 @@ and initializes elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>journal</strong> (<a class="reference internal" href="journal.html#edelweissfe.journal.journal.Journal" title="edelweissfe.journal.journal.Journal"><em>Journal</em></a>) – The journal instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.readRestart">
+<span class="sig-name descname"><span class="pre">readRestart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restartFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/models/femodel.html#FEModel.readRestart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.readRestart" title="Permalink to this definition"></a></dt>
+<dd><p>Read the state of the model from a restart file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> – The name of the restart file.</p></li>
+<li><p><strong>restartFile</strong> (<em>File</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.models.femodel.FEModel.writeRestart">
+<span class="sig-name descname"><span class="pre">writeRestart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restartFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/models/femodel.html#FEModel.writeRestart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.models.femodel.FEModel.writeRestart" title="Permalink to this definition"></a></dt>
+<dd><p>Write the current state of the model to a restart file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> – The name of the restart file.</p></li>
+<li><p><strong>restartFile</strong> (<em>File</em>) – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

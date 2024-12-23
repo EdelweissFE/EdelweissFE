@@ -113,15 +113,21 @@
 
 
 <div class="viewcode-block" id="BaseHypoElasticMaterial"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial">[docs]</a><span class="k">class</span> <span class="nc">BaseHypoElasticMaterial</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base material class for a hypo elastic material.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">nManagedStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    materialProperties</span>
+<span class="sd">        The numpy array containing the material properties for the requested material.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseHypoElasticMaterial.getNumberOfRequiredStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getNumberOfRequiredStateVars">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getNumberOfRequiredStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns number of needed material state Variables per integration point in the material.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
-<span class="sd">            Number of needed material state Vars.&quot;&quot;&quot;</span>
+<span class="sd">            Number of needed material state Vars.&quot;&quot;&quot;</span></div>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -134,7 +140,95 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        currentStateVars</span>
-<span class="sd">            Array containing the material state vars.&quot;&quot;&quot;</span></div></div>
+<span class="sd">            Array containing the material state vars.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseHypoElasticMaterial.computePlaneStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computePlaneStress">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">computePlaneStress</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the stresses for a 2D material with plane stress.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stress</span>
+<span class="sd">            Vector containing the stresses.</span>
+<span class="sd">        dStressdStrain</span>
+<span class="sd">            Matrix containing dStress/dStrain.</span>
+<span class="sd">        dStrain</span>
+<span class="sd">            Strain vector increment at time step t to t+dTime.</span>
+<span class="sd">        time</span>
+<span class="sd">            Array of step time and total time.</span>
+<span class="sd">        dTime</span>
+<span class="sd">            Current time step size.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseHypoElasticMaterial.computeStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeStress">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">computeStress</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the stresses for a 3D material/2D material with plane strain.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stress</span>
+<span class="sd">            Vector containing the stresses.</span>
+<span class="sd">        dStressdStrain</span>
+<span class="sd">            Matrix containing dStress/dStrain.</span>
+<span class="sd">        dStrain</span>
+<span class="sd">            Strain vector increment at time step t to t+dTime.</span>
+<span class="sd">        time</span>
+<span class="sd">            Array of step time and total time.</span>
+<span class="sd">        dTime</span>
+<span class="sd">            Current time step size.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseHypoElasticMaterial.computeUniaxialStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeUniaxialStress">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">computeUniaxialStress</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the stresses for a uniaxial stress state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stress</span>
+<span class="sd">            Vector containing the stresses.</span>
+<span class="sd">        dStressdStrain</span>
+<span class="sd">            Matrix containing dStress/dStrain.</span>
+<span class="sd">        dStrain</span>
+<span class="sd">            Strain vector increment at time step t to t+dTime.</span>
+<span class="sd">        time</span>
+<span class="sd">            Array of step time and total time.</span>
+<span class="sd">        dTime</span>
+<span class="sd">            Current time step size.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseHypoElasticMaterial.getResult"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getResult">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the result, as a persistent view which is continiously</span>
+<span class="sd">        updated by the material.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        result</span>
+<span class="sd">            The name of the result.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The result.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
 </pre></div>
 
            </div>

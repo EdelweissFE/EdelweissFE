@@ -185,6 +185,7 @@ In future, elements by other providers or elements directly implemented in Edelw
 <dt><strong>nSpatialDimensions</strong></dt><dd></dd>
 <dt><strong>nodeCoordinates</strong></dt><dd></dd>
 <dt><strong>nodes</strong></dt><dd></dd>
+<dt><strong>visualizationNodes</strong></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -356,22 +357,24 @@ for development purposes.</p>
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>If the provides computes residual vectors and stiffness matrices not nodewise, but e.g., fieldwise, this permutation pattern is used to aggregate all entries in order to resemble the defined fields nodewise.</p>
 </dd>
 <dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
 </dd>
 <dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per node which this entity couples.</p>
 </dd>
 <dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.hasMaterial" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.hasMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasMaterial</span></code></a></dt><dd><p>Flag to check if a material was assigned to this element.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this entity has.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this entity couples.</p>
 </dd>
 <dt><strong>nSpatialDimensions</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this currently entity holds.</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.visualizationNodes" title="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.visualizationNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualizationNodes</span></code></a></dt><dd><p>The nodes for visualization.</p>
 </dd>
 </dl>
 </dd>
@@ -595,8 +598,9 @@ Furthermore, create two sets of state vars:</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
-<dd><p>The permutation pattern for the residual vector and the stiffness matrix to
-aggregate all entries in order to resemble the defined fields nodewise.</p>
+<dd><p>If the provides computes residual vectors and stiffness matrices not nodewise, but e.g., fieldwise,
+this permutation pattern is used to aggregate all entries in order to resemble the defined fields nodewise.</p>
+<p>For performance reasons, this is computed once and stored for later use.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -608,13 +612,31 @@ aggregate all entries in order to resemble the defined fields nodewise.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.ensightType" title="Permalink to this definition"></a></dt>
-<dd><p>The shape of the element in Ensight Gold notation.</p>
+<dd><p>The shape of the element in Ensight Gold notation.
+Valid types are:
+point
+bar2
+bar3
+tria3
+tria6
+quad4
+quad8
+tetra4
+tetra10
+pyramid5
+pyramid13
+penta6
+penta15
+hexa8
+hexa20
+nsided
+nfaced</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.fields" title="Permalink to this definition"></a></dt>
-<dd><p>The list of fields per nodes.</p>
+<dd><p>The list of fields per node which this entity couples.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -626,19 +648,28 @@ aggregate all entries in order to resemble the defined fields nodewise.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nDof" title="Permalink to this definition"></a></dt>
-<dd><p>The total number of degrees of freedom this element has</p>
+<dd><p>The total number of degrees of freedom this entity has.
+Not that this information is redundent, as it results from the list of fields on nodes,
+but we keep this redundant information for the sake of performance.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nNodes" title="Permalink to this definition"></a></dt>
-<dd><p>The number of nodes this element requires</p>
+<dd><p>The number of nodes this entity couples.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.nodes" title="Permalink to this definition"></a></dt>
-<dd><p>The list of nodes this element holds</p>
+<dd><p>The list of nodes this currently entity holds.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.visualizationNodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visualizationNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="points.html#edelweissfe.points.node.Node" title="edelweissfe.points.node.Node"><span class="pre">edelweissfe.points.node.Node</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement.visualizationNodes" title="Permalink to this definition"></a></dt>
+<dd><p>The nodes for visualization. Commonly, these are the same as the nodes of the entity.
+However, in some cases, the visualization nodes are different from the nodes of the entity, e.g., in case of mixed formulations.</p>
 </dd></dl>
 
 </dd></dl>
@@ -731,6 +762,8 @@ to be of the form</p>
 <dt><a class="reference internal" href="#edelweissfe.elements.displacementelement.element.DisplacementElement.nNodes" title="edelweissfe.elements.displacementelement.element.DisplacementElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
 </dd>
 <dt><a class="reference internal" href="#edelweissfe.elements.displacementelement.element.DisplacementElement.nodes" title="edelweissfe.elements.displacementelement.element.DisplacementElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementelement.element.DisplacementElement.visualizationNodes" title="edelweissfe.elements.displacementelement.element.DisplacementElement.visualizationNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualizationNodes</span></code></a></dt><dd><p>The nodes for visualization.</p>
 </dd>
 </dl>
 </dd>
@@ -1028,6 +1061,12 @@ In this case it stays the same because we use the nodes exactly like they are.</
 <dd><p>The list of nodes this element holds</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementelement.element.DisplacementElement.visualizationNodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visualizationNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.displacementelement.element.DisplacementElement.visualizationNodes" title="Permalink to this definition"></a></dt>
+<dd><p>The nodes for visualization.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p>The elementType definition has to be of the following form:</p>
@@ -1234,21 +1273,23 @@ to be of the form</p>
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation" title="edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></dt><dd><p>If the provides computes residual vectors and stiffness matrices not nodewise, but e.g., fieldwise, this permutation pattern is used to aggregate all entries in order to resemble the defined fields nodewise.</p>
 </dd>
 <dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.elNumber" title="edelweissfe.elements.base.baseelement.BaseElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.ensightType" title="edelweissfe.elements.base.baseelement.BaseElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.fields" title="edelweissfe.elements.base.baseelement.BaseElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></dt><dd><p>The list of fields per node which this entity couples.</p>
 </dd>
 <dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.hasMaterial" title="edelweissfe.elements.base.baseelement.BaseElement.hasMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasMaterial</span></code></a></dt><dd><p>Flag to check if a material was assigned to this element.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.nDof" title="edelweissfe.elements.base.baseelement.BaseElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></dt><dd><p>The total number of degrees of freedom this entity has.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.nNodes" title="edelweissfe.elements.base.baseelement.BaseElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></dt><dd><p>The number of nodes this entity couples.</p>
 </dd>
-<dt><a class="reference internal" href="#edelweissfe.elements.base.baseelement.BaseElement.nodes" title="edelweissfe.elements.base.baseelement.BaseElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></dt><dd><p>The list of nodes this currently entity holds.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualizationNodes</span></code></dt><dd><p>The nodes for visualization.</p>
 </dd>
 </dl>
 </dd>
@@ -1495,52 +1536,15 @@ updated by the element.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
-<dd><p>The permutation pattern for the residual vector and the stiffness matrix to
-aggregate all entries in order to resemble the defined fields nodewise.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.elNumber">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elNumber</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.elNumber" title="Permalink to this definition"></a></dt>
 <dd><p>The unique number of this element</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.ensightType">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.ensightType" title="Permalink to this definition"></a></dt>
-<dd><p>The shape of the element in Ensight Gold notation.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.fields">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.fields" title="Permalink to this definition"></a></dt>
-<dd><p>The list of fields per nodes.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.hasMaterial">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasMaterial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.hasMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Flag to check if a material was assigned to this element.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.nDof">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.nDof" title="Permalink to this definition"></a></dt>
-<dd><p>The total number of degrees of freedom this element has</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.nNodes">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.nNodes" title="Permalink to this definition"></a></dt>
-<dd><p>The number of nodes this element requires</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.elements.base.baseelement.BaseElement.nodes">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.base.baseelement.BaseElement.nodes" title="Permalink to this definition"></a></dt>
-<dd><p>The list of nodes this element holds</p>
 </dd></dl>
 
 </dd></dl>

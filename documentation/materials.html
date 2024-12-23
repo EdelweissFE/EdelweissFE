@@ -219,17 +219,6 @@ This material needs the following material properties in the correct order</p>
 <dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.materials.linearelastic.linearelastic.</span></span><span class="sig-name descname"><span class="pre">LinearElasticMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/linearelastic/linearelastic.html#LinearElasticMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.nManagedStateVars" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.nManagedStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nManagedStateVars</span></code></a></dt><dd><p>Returns number of needed material state Variables per integration point in the material.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>materialProperties</strong> (<em>ndarray</em>) – </p>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -249,17 +238,31 @@ This material needs the following material properties in the correct order</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeStress2D" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeStress2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeStress2D</span></code></a>(stress, dStressdStrain, ...)</p></td>
 <td><p>Computes the stresses for a 2D material with plane strain.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrix</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeUniaxialStress" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeUniaxialStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeUniaxialStress</span></code></a>(stress, ...)</p></td>
+<td><p>Computes the stresses for a uniaxial stress state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrix</span></code></a>()</p></td>
 <td><p>Initalize a 3D material elasticity matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix2D" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrix2D</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix2D" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrix2D</span></code></a>()</p></td>
 <td><p>Initalize a 2D plane strain material elasticity matrix.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrixPlaneStress" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrixPlaneStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrixPlaneStress</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrixPlaneStress" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrixPlaneStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrixPlaneStress</span></code></a>()</p></td>
 <td><p>Initalize a 2D plane stress material elasticity matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getNumberOfRequiredStateVars" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getNumberOfRequiredStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfRequiredStateVars</span></code></a>()</p></td>
+<td><p>Returns number of needed material state Variables per integration point in the material.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getResult" title="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>(result)</p></td>
+<td><p>Get the result, as a persistent view which is continiously updated by the material.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>materialProperties</strong> (<em>ndarray</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.assignCurrentStateVars">
 <span class="sig-name descname"><span class="pre">assignCurrentStateVars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentStateVars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/linearelastic/linearelastic.html#LinearElasticMaterial.assignCurrentStateVars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.assignCurrentStateVars" title="Permalink to this definition"></a></dt>
@@ -323,6 +326,23 @@ This material needs the following material properties in the correct order</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeUniaxialStress">
+<span class="sig-name descname"><span class="pre">computeUniaxialStress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStressdStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/linearelastic/linearelastic.html#LinearElasticMaterial.computeUniaxialStress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeUniaxialStress" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the stresses for a uniaxial stress state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stress</strong> (<em>ndarray</em>) – Vector containing the stresses.</p></li>
+<li><p><strong>dStressdStrain</strong> (<em>ndarray</em>) – Matrix containing dStress/dStrain.</p></li>
+<li><p><strong>dStrain</strong> (<em>ndarray</em>) – Strain vector increment at time step t to t+dTime.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – Current time step size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix">
 <span class="sig-name descname"><span class="pre">elasticityMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/linearelastic/linearelastic.html#LinearElasticMaterial.elasticityMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.elasticityMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Initalize a 3D material elasticity matrix.</p>
@@ -364,9 +384,9 @@ This material needs the following material properties in the correct order</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.nManagedStateVars">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nManagedStateVars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.nManagedStateVars" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getNumberOfRequiredStateVars">
+<span class="sig-name descname"><span class="pre">getNumberOfRequiredStateVars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/linearelastic/linearelastic.html#LinearElasticMaterial.getNumberOfRequiredStateVars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getNumberOfRequiredStateVars" title="Permalink to this definition"></a></dt>
 <dd><p>Returns number of needed material state Variables per integration point in the material.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -374,6 +394,24 @@ This material needs the following material properties in the correct order</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getResult">
+<span class="sig-name descname"><span class="pre">getResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/linearelastic/linearelastic.html#LinearElasticMaterial.getResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.getResult" title="Permalink to this definition"></a></dt>
+<dd><p>Get the result, as a persistent view which is continiously
+updated by the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>str</em>) – The name of the result.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The result.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -411,17 +449,6 @@ projected stress</p>
 <dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.materials.vonmises.vonmises.</span></span><span class="sig-name descname"><span class="pre">VonMisesMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/vonmises/vonmises.html#VonMisesMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.nManagedStateVars" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.nManagedStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nManagedStateVars</span></code></a></dt><dd><p>Returns number of needed material state Variables per integration point in the material.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>materialProperties</strong> (<em>ndarray</em>) – </p>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -438,11 +465,25 @@ projected stress</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeStress" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeStress</span></code></a>(stress, dStressdStrain, ...)</p></td>
 <td><p>Computes the stresses for a 3D material.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrix</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeUniaxialStress" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeUniaxialStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeUniaxialStress</span></code></a>(stress, ...)</p></td>
+<td><p>Computes the stresses for a uniaxial stress state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elasticityMatrix</span></code></a>()</p></td>
 <td><p>Initalize a 3D material elasticity matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getNumberOfRequiredStateVars" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getNumberOfRequiredStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfRequiredStateVars</span></code></a>()</p></td>
+<td><p>Returns number of needed material state Variables per integration point in the material.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getResult" title="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>(result)</p></td>
+<td><p>Get the result, as a persistent view which is continiously updated by the material.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>materialProperties</strong> (<em>ndarray</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.assignCurrentStateVars">
 <span class="sig-name descname"><span class="pre">assignCurrentStateVars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentStateVars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/vonmises/vonmises.html#VonMisesMaterial.assignCurrentStateVars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.assignCurrentStateVars" title="Permalink to this definition"></a></dt>
@@ -489,6 +530,23 @@ projected stress</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeUniaxialStress">
+<span class="sig-name descname"><span class="pre">computeUniaxialStress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStressdStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/vonmises/vonmises.html#VonMisesMaterial.computeUniaxialStress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeUniaxialStress" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the stresses for a uniaxial stress state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stress</strong> (<em>ndarray</em>) – Vector containing the stresses.</p></li>
+<li><p><strong>dStressdStrain</strong> (<em>ndarray</em>) – Matrix containing dStress/dStrain.</p></li>
+<li><p><strong>dStrain</strong> (<em>ndarray</em>) – Strain vector increment at time step t to t+dTime.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – Current time step size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix">
 <span class="sig-name descname"><span class="pre">elasticityMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/vonmises/vonmises.html#VonMisesMaterial.elasticityMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Initalize a 3D material elasticity matrix.</p>
@@ -502,9 +560,9 @@ projected stress</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.nManagedStateVars">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nManagedStateVars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.nManagedStateVars" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getNumberOfRequiredStateVars">
+<span class="sig-name descname"><span class="pre">getNumberOfRequiredStateVars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/vonmises/vonmises.html#VonMisesMaterial.getNumberOfRequiredStateVars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getNumberOfRequiredStateVars" title="Permalink to this definition"></a></dt>
 <dd><p>Returns number of needed material state Variables per integration point in the material.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -512,6 +570,24 @@ projected stress</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getResult">
+<span class="sig-name descname"><span class="pre">getResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/vonmises/vonmises.html#VonMisesMaterial.getResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getResult" title="Permalink to this definition"></a></dt>
+<dd><p>Get the result, as a persistent view which is continiously
+updated by the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>str</em>) – The name of the result.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The result.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -526,17 +602,6 @@ projected stress</p>
 <dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.materials.base.basehypoelasticmaterial.</span></span><span class="sig-name descname"><span class="pre">BaseHypoElasticMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">materialProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.nManagedStateVars" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.nManagedStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nManagedStateVars</span></code></a></dt><dd><p>Returns number of needed material state Variables per integration point in the material.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>materialProperties</strong> (<em>ndarray</em>) – </p>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -547,8 +612,28 @@ projected stress</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.assignCurrentStateVars" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.assignCurrentStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assignCurrentStateVars</span></code></a>(currentStateVars)</p></td>
 <td><p>Assign new current state vars.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computePlaneStress" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computePlaneStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computePlaneStress</span></code></a>(stress, dStressdStrain, ...)</p></td>
+<td><p>Computes the stresses for a 2D material with plane stress.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeStress" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeStress</span></code></a>(stress, dStressdStrain, ...)</p></td>
+<td><p>Computes the stresses for a 3D material/2D material with plane strain.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeUniaxialStress" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeUniaxialStress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeUniaxialStress</span></code></a>(stress, ...)</p></td>
+<td><p>Computes the stresses for a uniaxial stress state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getNumberOfRequiredStateVars" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getNumberOfRequiredStateVars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfRequiredStateVars</span></code></a>()</p></td>
+<td><p>Returns number of needed material state Variables per integration point in the material.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getResult" title="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>(result)</p></td>
+<td><p>Get the result, as a persistent view which is continiously updated by the material.</p></td>
+</tr>
 </tbody>
 </table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>materialProperties</strong> (<em>ndarray</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.assignCurrentStateVars">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assignCurrentStateVars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentStateVars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial.assignCurrentStateVars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.assignCurrentStateVars" title="Permalink to this definition"></a></dt>
@@ -560,9 +645,60 @@ projected stress</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.nManagedStateVars">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nManagedStateVars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.nManagedStateVars" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computePlaneStress">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computePlaneStress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStressdStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial.computePlaneStress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computePlaneStress" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the stresses for a 2D material with plane stress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stress</strong> (<em>ndarray</em>) – Vector containing the stresses.</p></li>
+<li><p><strong>dStressdStrain</strong> (<em>ndarray</em>) – Matrix containing dStress/dStrain.</p></li>
+<li><p><strong>dStrain</strong> (<em>ndarray</em>) – Strain vector increment at time step t to t+dTime.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – Current time step size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeStress">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeStress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStressdStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial.computeStress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeStress" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the stresses for a 3D material/2D material with plane strain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stress</strong> (<em>ndarray</em>) – Vector containing the stresses.</p></li>
+<li><p><strong>dStressdStrain</strong> (<em>ndarray</em>) – Matrix containing dStress/dStrain.</p></li>
+<li><p><strong>dStrain</strong> (<em>ndarray</em>) – Strain vector increment at time step t to t+dTime.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – Current time step size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeUniaxialStress">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">computeUniaxialStress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStressdStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dStrain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial.computeUniaxialStress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeUniaxialStress" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the stresses for a uniaxial stress state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stress</strong> (<em>ndarray</em>) – Vector containing the stresses.</p></li>
+<li><p><strong>dStressdStrain</strong> (<em>ndarray</em>) – Matrix containing dStress/dStrain.</p></li>
+<li><p><strong>dStrain</strong> (<em>ndarray</em>) – Strain vector increment at time step t to t+dTime.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – Current time step size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getNumberOfRequiredStateVars">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getNumberOfRequiredStateVars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial.getNumberOfRequiredStateVars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getNumberOfRequiredStateVars" title="Permalink to this definition"></a></dt>
 <dd><p>Returns number of needed material state Variables per integration point in the material.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -570,6 +706,24 @@ projected stress</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getResult">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/materials/base/basehypoelasticmaterial.html#BaseHypoElasticMaterial.getResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getResult" title="Permalink to this definition"></a></dt>
+<dd><p>Get the result, as a persistent view which is continiously
+updated by the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>str</em>) – The name of the result.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The result.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>

@@ -116,8 +116,12 @@
 
 <span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">phenomena</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.fields.nodefield</span> <span class="kn">import</span> <span class="n">NodeField</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.nodecouplingentity.base.nodecouplingentity</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseNodeCouplingEntity</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.points.node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">edelweissfe.sets.nodeset</span> <span class="kn">import</span> <span class="n">NodeSet</span>
+<span class="kn">from</span> <span class="nn">edelweissfe.variables.scalarvariable</span> <span class="kn">import</span> <span class="n">ScalarVariable</span>
 
 
 <div class="viewcode-block" id="VIJSystemMatrix"><a class="viewcode-back" href="../../../documentation/dofmanager.html#edelweissfe.numerics.dofmanager.VIJSystemMatrix">[docs]</a><span class="k">class</span> <span class="nc">VIJSystemMatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -217,11 +221,11 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">nodeFields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NodeField</span><span class="p">],</span>
-        <span class="n">scalarVariables</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">nodeSets</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">initializeVIJPattern</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">scalarVariables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScalarVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">BaseNodeCouplingEntity</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">BaseNodeCouplingEntity</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">nodeSets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NodeSet</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">initializeVIJPattern</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nDof</span> <span class="o">=</span> <span class="nb">int</span><span class="p">()</span>  <span class="c1">#: The total number of degrees of freedom (and size of the DofVector)</span>
@@ -317,7 +321,7 @@
         <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gatherConstraintsInformation</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldsOnNodeSetsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateFieldsOnNodeSetsInDofVector</span><span class="p">(</span><span class="n">nodeSets</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfElementsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateElementsInDofVector</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfElementsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateNodeCouplingEntitiesInDofVector</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfConstraintsInDofVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateConstraintsInDofVector</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_reserveSpaceForNodeFields</span><span class="p">(</span>
@@ -341,17 +345,17 @@
         <span class="n">idcsOfNodeFieldVariablesInDofVector</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">currentIdxInDofVector</span> <span class="o">=</span> <span class="n">idxStart</span>
 
-        <span class="k">for</span> <span class="n">nField</span> <span class="ow">in</span> <span class="n">nodeFields</span><span class="p">:</span>
-            <span class="n">nextIdxInDofVector</span> <span class="o">=</span> <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">nField</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-            <span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nField</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">currentIdxInDofVector</span><span class="p">,</span> <span class="n">nextIdxInDofVector</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">nodeField</span> <span class="ow">in</span> <span class="n">nodeFields</span><span class="p">:</span>
+            <span class="n">nextIdxInDofVector</span> <span class="o">=</span> <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">dimension</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodeField</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="n">idcsOfFieldsInDofVector</span><span class="p">[</span><span class="n">nodeField</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">currentIdxInDofVector</span><span class="p">,</span> <span class="n">nextIdxInDofVector</span><span class="p">)</span>
 
             <span class="n">idcsOfNodeFieldVariablesInDofVector</span> <span class="o">|=</span> <span class="p">{</span>
-                <span class="n">n</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">nField</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                    <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
-                    <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span> <span class="o">+</span> <span class="n">nField</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">nodeField</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                    <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
+                    <span class="n">currentIdxInDofVector</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">dimension</span> <span class="o">+</span> <span class="n">nodeField</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
                     <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nField</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodeField</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
             <span class="p">}</span>
             <span class="n">currentIdxInDofVector</span> <span class="o">=</span> <span class="n">nextIdxInDofVector</span>
 
@@ -506,7 +510,7 @@
 
     <span class="c1"># def _analyzeVIJPattern(self,):</span>
 
-    <span class="k">def</span> <span class="nf">_locateElementsInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_locateNodeCouplingEntitiesInDofVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entities</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a dictionary containing the location (indices) of each entity (elements, constraints)</span>
 <span class="sd">        within the DofVector structure.</span>
 
@@ -518,16 +522,19 @@
 
         <span class="n">idcsOfElementsInDofVector</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">:</span>
             <span class="n">destList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">idcsOfFieldVariablesInDofVector</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">nodeField</span><span class="p">]]</span>
-                    <span class="k">for</span> <span class="n">iNode</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>  <span class="c1"># for each node of the element..</span>
-                    <span class="k">for</span> <span class="n">nodeField</span> <span class="ow">in</span> <span class="n">el</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">iNode</span><span class="p">]</span>  <span class="c1"># for each field of this node</span>
+                    <span class="k">for</span> <span class="n">iNode</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ent</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>  <span class="c1"># for each node of the element..</span>
+                    <span class="k">for</span> <span class="n">nodeField</span> <span class="ow">in</span> <span class="n">ent</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">iNode</span><span class="p">]</span>  <span class="c1"># for each field of this node</span>
                 <span class="p">]</span>
             <span class="p">)</span>  <span class="c1"># the index in the global system</span>
 
-            <span class="n">idcsOfElementsInDofVector</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="n">destList</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">dofIndicesPermutation</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ent</span><span class="o">.</span><span class="n">dofIndicesPermutation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">idcsOfElementsInDofVector</span><span class="p">[</span><span class="n">ent</span><span class="p">]</span> <span class="o">=</span> <span class="n">destList</span><span class="p">[</span><span class="n">ent</span><span class="o">.</span><span class="n">dofIndicesPermutation</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">idcsOfElementsInDofVector</span><span class="p">[</span><span class="n">ent</span><span class="p">]</span> <span class="o">=</span> <span class="n">destList</span>
 
         <span class="k">return</span> <span class="n">idcsOfElementsInDofVector</span>
 
