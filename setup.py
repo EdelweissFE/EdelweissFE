@@ -248,7 +248,7 @@ print("Now compile!")
 
 setup(
     name="EdelweissFE",
-    version="v22.09",
+    version="v24.12",
     description="EdelweissFE: A light-weight, platform-independent, parallel finite element framework.",
     license="LGPL-2.1",
     packages=find_packages(),

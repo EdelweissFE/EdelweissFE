@@ -12,6 +12,7 @@ numpy
 numpydoc
 # petsc4py
 # pymumps
+python=3.12
 pytest
 pyvista
 prettytable
