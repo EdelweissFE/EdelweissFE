@@ -1,7 +1,7 @@
 *material, name=LinearElastic, id=myMaterial
 **Transverse Isotropic (plane of isotropy 2-3 -> E2 == E3 ; nu12 == nu13 ; G12 == G13 ; G23 = E2/(2*(1+nu23)))
-**E1  |   E2  |  nu12 | nu23 |  G12  | nx | ny | nz |
-1.8e4,  0.7e4,   0.22,  0.12,  0.73e4,  1,   0,  0
+**E1  |   E2  |  nu12 | nu23 |  G12  | nx1 | ny1 | nz1 | nx2 | ny2 | nz2
+1.8e4,  0.7e4,   0.22,  0.12,  0.73e4,  1,    0,     0,   0,    1,    0
 
 *section, name=section1, material=myMaterial, type=solid
 all

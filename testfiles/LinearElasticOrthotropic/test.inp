@@ -1,7 +1,7 @@
 *material, name=LinearElastic, id=myMaterial
 **Orthotropic
-**E1  |   E2  |   E3  |  nu12 | nu23 |  nu13 |  G12  |  G23  |  G13  | nx | ny | nz |
-1.8e4,  0.7e4,  0.7e4,   0.22,  0.12,   0.22,  0.73e4, 0.25e4, 0.73e4,  1,   0,   0
+**E1  |   E2  |   E3  |  nu12 | nu23 |  nu13 |  G12  |  G23  |  G13  | nx1 | ny1 | nz1 | nx2 | ny2 | nz2 |
+1.8e4,  0.7e4,  0.7e4,   0.22,  0.12,   0.22,  0.73e4, 0.25e4, 0.73e4,  1,    0,    0,    0,    1,    0
 
 *section, name=section1, material=myMaterial, type=solid
 all
