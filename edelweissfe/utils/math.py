@@ -38,8 +38,29 @@ def sigPrinc(x):
     return np.linalg.eig([[x[0], x[3], x[4]], [x[3], x[1], x[5]], [x[4], x[5], x[2]]])[0]
 
 
+def eigVal(x):
+    stress_matrices = np.stack(
+        [x[:, 0], x[:, 3], x[:, 4], x[:, 3], x[:, 1], x[:, 5], x[:, 4], x[:, 5], x[:, 2]], axis=-1
+    ).reshape(-1, 3, 3)
+
+    return np.linalg.eigvalsh(stress_matrices)[:, ::-1]
+
+
+def eigVec(x, i=1):
+    # i specifies which eigenvector to return:
+    #   i = 1 returns the eigenvector corresponding to the largest eigenvalue
+    stress_matrices = np.stack(
+        [x[:, 0], x[:, 3], x[:, 4], x[:, 3], x[:, 1], x[:, 5], x[:, 4], x[:, 5], x[:, 2]], axis=-1
+    ).reshape(-1, 3, 3)
+
+    eigvals, eigvecs = np.linalg.eigh(stress_matrices)
+    return eigvecs[:, :, -i]
+
+
 mathModules = {
     "sigPrinc": sigPrinc,
+    "eigVal": eigVal,
+    "eigVec": eigVec,
     "mean": np.mean,
     "max": np.max,
     "min": np.min,

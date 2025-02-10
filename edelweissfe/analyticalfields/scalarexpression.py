@@ -25,8 +25,7 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""Define a field using a sclar expression.
-"""
+"""Define a field using a sclar expression."""
 
 import numpy as np
 
