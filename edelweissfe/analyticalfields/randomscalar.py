@@ -25,8 +25,7 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""Define a random field using the GSTools library.
-"""
+"""Define a random field using the GSTools library."""
 
 import gstools
 import numpy as np

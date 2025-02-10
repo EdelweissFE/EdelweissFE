@@ -25,8 +25,7 @@
 #  The full text of the license can be found in the file LICENSE.md at
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
-"""Use PyVista to interpolate from vtk data.
-"""
+"""Use PyVista to interpolate from vtk data."""
 
 import numpy as np
 import pyvista
