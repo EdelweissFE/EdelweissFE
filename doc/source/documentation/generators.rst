@@ -36,6 +36,18 @@ Relevant module ``edelweissfe.generators.planerectquad``
     :language: edelweiss
     :caption: Example: ``testfiles/NodeForces/test.inp``
 
+``pipegen`` - A 3D pipe mesh generator
+--------------------------------------
+
+Relevant module ``edelweissfe.generators.pipegen``
+
+.. pprint:: edelweissfe.generators.boxgen.documentation
+   :caption: Options:
+
+.. literalinclude:: ../../../testfiles/PipeGen/test.inp
+    :language: edelweiss
+    :caption: Example: ``testfiles/PipeGen/test.inp``
+
 ``cubit`` - A cubit mesh generator
 ----------------------------------
 

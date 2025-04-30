@@ -1,0 +1,36 @@
+*material, name=LinearElastic, id=linearelastic
+2.1e4, 0.22
+
+*job, name=c3d8job, domain=3d
+*solver, solver=NIST, name=theSolver
+
+*modelGenerator, generator=pipeGen, name=gen
+nT      =1
+nC      =8
+nY      =30
+x0      =10
+y0      =50
+z0      =100
+lT      =10
+Ro(y)   =200.-0.1*y
+phi     =90
+lY      =1000
+exG     =False
+elType  =C3D20
+
+*section, name=section1, material=linearelastic, type=solid
+all
+
+*fieldOutput
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+
+*output, type=ensight, name=test
+create=perNode, fieldOutput=displacement
+configuration, overwrite=yes
+
+*output, type=monitor
+
+*step, solver=theSolver, maxInc=1, minInc=1e-9, maxNumInc=1000, maxIter=25, stepLength=1
+options, category=NISTSolver, extrapolation=off
+dirichlet, name=Bottom,  nSet=gen_bottom, field=displacement, 1=0.0, 2=0.0, 3=.0
+nodeforces, name=cloadTop, nSet=gen_inner, components='0.3, 0, 0.3', field=displacement
