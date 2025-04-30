@@ -34,7 +34,7 @@ from edelweissfe.analyticalfields.base.analyticalfieldbase import (
     AnalyticalField as AnalyticalFieldBase,
 )
 from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
-from edelweissfe.utils.misc import convertLinesToStringDictionary
+from edelweissfe.utils.misc import convertLinesToStringDictionary, strCaseCmp
 
 documentation = {
     "model": "(Optional) default = Gaussian",
@@ -55,17 +55,35 @@ class AnalyticalField(AnalyticalFieldBase):
         self.domainSize = model.domainSize
 
         modelType = options.get("model", "Gaussian")
-        mean = float(options.get("mean", 0.0))
-        variance = float(options.get("variance", 1.0))
-        lengthScale = float(options.get("lengthScale", 10.0))
-        seed = int(options.get("seed", 0))
 
-        modelMethod = getattr(gstools, modelType)
-        model = modelMethod(
-            dim=self.domainSize,
-            var=variance,
-            len_scale=lengthScale,
-        )
+        if strCaseCmp(modelType, "Gaussian"):
+            variance = float(options.get("variance", 1.0))
+            lengthScale = float(options.get("lengthScale", 10.0))
+
+            # modelMethod = getattr(gstools, modelType)
+            model = gstools.Gaussian(
+                dim=self.domainSize,
+                var=variance,
+                len_scale=lengthScale,
+            )
+        elif strCaseCmp(modelType, "Matern"):
+            mean = float(options.get("mean", 0.0))
+            variance = float(options.get("variance", 1.0))
+            lengthScale = float(options.get("lengthScale", 10.0))
+            nu = float(options.get("nu", 1.0))
+
+            # modelMethod = getattr(gstools, modelType)
+            model = gstools.covmodel.Matern(
+                dim=self.domainSize,
+                var=variance,
+                len_scale=lengthScale,
+                nu=nu,
+            )
+        else:
+            raise NotImplementedError(f"Model type {modelType} not implemented.")
+
+        mean = float(options.get("mean", 0.0))
+        seed = int(options.get("seed", 0))
         self.srf = gstools.SRF(model, seed=seed, mean=mean)
 
         return
