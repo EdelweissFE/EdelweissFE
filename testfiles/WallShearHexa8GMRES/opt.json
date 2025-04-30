@@ -1,0 +1,4 @@
+{
+"precondopts": {"presmoother": ["block_gauss_seidel", {"iterations": 15}], "postsmoother": ["block_gauss_seidel", {"iterations": 15}]},
+"linsolveopts": {"maxiter": 1, "restart": 1500}
+}
