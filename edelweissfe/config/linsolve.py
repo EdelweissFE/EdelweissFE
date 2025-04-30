@@ -43,7 +43,7 @@ def getDefaultLinSolver():
         return lambda A, b: spsolve(A, b, use_umfpack=False)
 
 
-def getLinSolverByName(linsolverName):
+def getLinSolverByName(linsolverName, opts):
     if linsolverName.lower() == "superlu":
         from scipy.sparse.linalg import spsolve
 
@@ -76,5 +76,11 @@ def getLinSolverByName(linsolverName):
         from edelweissfe.linsolve.mumps.mumps import mumpsSolve
 
         return mumpsSolve
+    elif linsolverName.lower() == "gmres":
+        from edelweissfe.linsolve.gmres.gmres import Gmres
+
+        gm = Gmres(opts)
+
+        return gm.gmresSolve
     else:
         raise AttributeError("invalid linear solver {:} requested".format(linsolverName))

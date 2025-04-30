@@ -29,6 +29,7 @@
 
 # @author: Matthias Neuner
 
+import json
 from time import time as getCurrentTime
 
 import numpy as np
@@ -75,6 +76,7 @@ class NIST:
         "defaultMaxGrowingIter": 10,
         "extrapolation": "linear",
         "linsolver": "pardiso",
+        "linsolverConfigFile": "",
     }
 
     def __init__(self, jobInfo, journal, **kwargs):
@@ -169,8 +171,12 @@ class NIST:
             pass
 
         extrapolation = self.options["extrapolation"]
+        linsolverOptions = self.options["linsolverConfigFile"]
+        linsolverOptionDict = json.load(open(linsolverOptions, "r")) if linsolverOptions else ""
         self.linSolver = (
-            getLinSolverByName(self.options["linsolver"]) if "linsolver" in self.options else getDefaultLinSolver()
+            getLinSolverByName(self.options["linsolver"], linsolverOptionDict)
+            if "linsolver" in self.options
+            else getDefaultLinSolver()
         )
 
         maxIter = step.maxIter
