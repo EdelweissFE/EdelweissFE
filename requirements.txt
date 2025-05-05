@@ -11,6 +11,7 @@ matplotlib
 numpy
 numpydoc
 # petsc4py
+pyamg
 # pymumps
 python=3.12
 pytest
