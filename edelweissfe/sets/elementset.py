@@ -27,13 +27,18 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
-from edelweissfe.elements.displacementelement.element import DisplacementElement
-from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
-from edelweissfe.elements.marmotsingleqpelement.element import (
-    MarmotMaterialWrappingElement,
-)
+from edelweissfe.elements.base.baseelement import BaseElement
 from edelweissfe.sets.orderedset import ImmutableOrderedSet
 from edelweissfe.utils.meshtools import extractNodesFromElementSet
+
+marmot = True
+try:
+    from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
+    from edelweissfe.elements.marmotsingleqpelement.element import (
+        MarmotMaterialWrappingElement,
+    )
+except ModuleNotFoundError:
+    marmot = False
 
 
 class ElementSet(ImmutableOrderedSet):
@@ -53,7 +58,9 @@ class ElementSet(ImmutableOrderedSet):
         label: str,
         elements,
     ):
-        self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement, DisplacementElement]
+        self.allowedObjectTypes = [BaseElement]
+        if marmot:
+            self.allowedObjectTypes.extend([MarmotElementWrapper, MarmotMaterialWrappingElement])
 
         super().__init__(label, elements)
         self._nodes = None

@@ -66,13 +66,21 @@ def getElementClass(provider: str = None) -> type:
         return DisplacementElement
 
     if provider.lower() == "marmot":
-        from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
+        try:
+            from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
+        except ImportError:
+            raise NotImplementedError("MarmotElementWrapper not found, maybe you built EdelweissFE without Marmot")
 
         return MarmotElementWrapper
 
     if provider.lower() == "marmotsingleqpelement":
-        from edelweissfe.elements.marmotsingleqpelement.element import (
-            MarmotMaterialWrappingElement,
-        )
+        try:
+            from edelweissfe.elements.marmotsingleqpelement.element import (
+                MarmotMaterialWrappingElement,
+            )
+        except ImportError:
+            raise NotImplementedError(
+                "MarmotMaterialWrappingElement not found, maybe you built EdelweissFE without Marmot"
+            )
 
         return MarmotMaterialWrappingElement

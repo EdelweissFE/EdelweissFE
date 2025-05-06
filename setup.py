@@ -51,9 +51,16 @@ print("EdelweissFE setup")
 print("System prefix: " + sys.prefix)
 print("*" * 80)
 
+# default is to build with Marmot
+buildWithMarmot = False if expanduser(os.environ.get("BUILD_WITH_MARMOT", "0")) == "0" else True
 marmot_dir = expanduser(os.environ.get("MARMOT_INSTALL_DIR", default_install_prefix))
+
 mkl_include = expanduser(os.environ.get("MKL_INCLUDE_DIR", join(default_install_prefix, "include")))
+
+# optional linear solvers
 buildPanuaPardiso = True if expanduser(os.environ.get("BUILD_PANUA_PARDISO", "0")) == "1" else False
+buildKLU = True if expanduser(os.environ.get("BUILD_KLU", "0")) == "1" else False
+
 
 print("Marmot install directory (overwrite via environment var. MARMOT_INSTALL_DIR):")
 print(marmot_dir)
@@ -61,63 +68,66 @@ print("MKL include directory (overwrite via environment var. MKL_INCLUDE_DIR):")
 print(mkl_include)
 print("*" * 80)
 
-print("Gather the extension for the MarmotElement base element, linked to the Marmot library")
-extensions = [
-    Extension(
-        "*",
-        sources=["edelweissfe/elements/marmotelement/element.pyx"],
-        include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
-        libraries=["Marmot"],
-        library_dirs=[join(marmot_dir, "lib")],
-        runtime_library_dirs=[join(marmot_dir, "lib")],
-        language="c++",
-    )
-]
+extensions = []
 
-print(
-    "Gather the extension for the single quadrature point element using MarmotMaterials, linked to the Marmot library"
-)
-extensions += [
-    Extension(
-        "*",
-        sources=[
-            "edelweissfe/elements/marmotsingleqpelement/marmot.pyx",
-        ],
-        include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
-        libraries=["Marmot"],
-        library_dirs=[join(marmot_dir, "lib")],
-        runtime_library_dirs=[join(marmot_dir, "lib")],
-        language="c++",
-    )
-]
+if buildWithMarmot:
+    print("Gather the extension for the MarmotElement base element, linked to the Marmot library")
+    extensions += [
+        Extension(
+            "*",
+            sources=["edelweissfe/elements/marmotelement/element.pyx"],
+            include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
+            libraries=["Marmot"],
+            library_dirs=[join(marmot_dir, "lib")],
+            runtime_library_dirs=[join(marmot_dir, "lib")],
+            language="c++",
+        )
+    ]
 
-extensions += [
-    Extension(
-        "*",
-        sources=[
-            "edelweissfe/elements/marmotsingleqpelement/marmotmaterialhypoelasticwrapper.pyx",
-        ],
-        include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
-        libraries=["Marmot"],
-        library_dirs=[join(marmot_dir, "lib")],
-        runtime_library_dirs=[join(marmot_dir, "lib")],
-        language="c++",
+    print(
+        "Gather the extension for the single quadrature point element using MarmotMaterials, linked to the Marmot library"
     )
-]
+    extensions += [
+        Extension(
+            "*",
+            sources=[
+                "edelweissfe/elements/marmotsingleqpelement/marmot.pyx",
+            ],
+            include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
+            libraries=["Marmot"],
+            library_dirs=[join(marmot_dir, "lib")],
+            runtime_library_dirs=[join(marmot_dir, "lib")],
+            language="c++",
+        )
+    ]
 
-extensions += [
-    Extension(
-        "*",
-        sources=[
-            "edelweissfe/elements/marmotsingleqpelement/marmotmaterialgradientenhancedhypoelasticwrapper.pyx",
-        ],
-        include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
-        libraries=["Marmot"],
-        library_dirs=[join(marmot_dir, "lib")],
-        runtime_library_dirs=[join(marmot_dir, "lib")],
-        language="c++",
-    )
-]
+    extensions += [
+        Extension(
+            "*",
+            sources=[
+                "edelweissfe/elements/marmotsingleqpelement/marmotmaterialhypoelasticwrapper.pyx",
+            ],
+            include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
+            libraries=["Marmot"],
+            library_dirs=[join(marmot_dir, "lib")],
+            runtime_library_dirs=[join(marmot_dir, "lib")],
+            language="c++",
+        )
+    ]
+
+    extensions += [
+        Extension(
+            "*",
+            sources=[
+                "edelweissfe/elements/marmotsingleqpelement/marmotmaterialgradientenhancedhypoelasticwrapper.pyx",
+            ],
+            include_dirs=[join(marmot_dir, "include"), numpy.get_include()],
+            libraries=["Marmot"],
+            library_dirs=[join(marmot_dir, "lib")],
+            runtime_library_dirs=[join(marmot_dir, "lib")],
+            language="c++",
+        )
+    ]
 
 print("Gather the extension for the fast element result collector")
 extensions += [
@@ -154,20 +164,21 @@ extensions += [
     )
 ]
 
-print("Gather the extension for the NISTParallel (MarmotElements only) solver")
-extensions += [
-    Extension(
-        "*",
-        sources=["edelweissfe/solvers/nonlinearimplicitstaticparallel.pyx"],
-        include_dirs=[numpy.get_include()] + [join(marmot_dir, "include")],
-        language="c++",
-        extra_compile_args=[
-            "-fopenmp",
-            "-Wno-maybe-uninitialized",
-        ],
-        extra_link_args=["-fopenmp"],
-    )
-]
+if buildWithMarmot:
+    print("Gather the extension for the NISTParallel (MarmotElements only) solver")
+    extensions += [
+        Extension(
+            "*",
+            sources=["edelweissfe/solvers/nonlinearimplicitstaticparallel.pyx"],
+            include_dirs=[numpy.get_include()] + [join(marmot_dir, "include")],
+            language="c++",
+            extra_compile_args=[
+                "-fopenmp",
+                "-Wno-maybe-uninitialized",
+            ],
+            extra_link_args=["-fopenmp"],
+        )
+    ]
 
 print("Gather the pardiso interface")
 extensions += [
@@ -212,37 +223,38 @@ if buildPanuaPardiso:
         )
     ]
 
-# print("Gather the KLU interface")
-# extensions += [
-#     Extension(
-#         "*",
-#         sources=[
-#             "edelweissfe/linsolve/klu/klu.pyx",
-#             "edelweissfe/linsolve/klu/kluInterface.c",
-#         ],
-#         include_dirs=[
-#             numpy.get_include(),
-#         ],
-#         libraries=[
-#             "klu",
-#             "btf",
-#             "amd",
-#             "colamd",
-#             "metis",
-#             "cholmod",
-#             "camd",
-#             "ccolamd",
-#             "iomp5",
-#             "suitesparseconfig",
-#         ],
-#         language="c",
-#         extra_compile_args=[
-#             "-fopenmp",
-#             "-Wno-maybe-uninitialized",
-#         ],
-#         extra_link_args=["-fopenmp"],
-#     )
-# ]
+if buildKLU:
+    print("Gather the KLU interface")
+    extensions += [
+        Extension(
+            "*",
+            sources=[
+                "edelweissfe/linsolve/klu/klu.pyx",
+                "edelweissfe/linsolve/klu/kluInterface.c",
+            ],
+            include_dirs=[
+                numpy.get_include(),
+            ],
+            libraries=[
+                "klu",
+                "btf",
+                "amd",
+                "colamd",
+                "metis",
+                "cholmod",
+                "camd",
+                "ccolamd",
+                "iomp5",
+                "suitesparseconfig",
+            ],
+            language="c",
+            extra_compile_args=[
+                "-fopenmp",
+                "-Wno-maybe-uninitialized",
+            ],
+            extra_link_args=["-fopenmp"],
+        )
+    ]
 
 print("Now compile!")
 

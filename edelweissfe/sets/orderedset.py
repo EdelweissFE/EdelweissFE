@@ -65,7 +65,7 @@ class OrderedSet(UserDict):
     def checkObjectType(self, obj):
         """Checks if the object type is allowed in the OrderedSet"""
 
-        return type(obj) in self.allowedObjectTypes
+        return isinstance(obj, tuple(self.allowedObjectTypes))
 
     def forceIter(self, item_s):
         """Return an iterator object for item_s even if item_s itself is not iterable"""
