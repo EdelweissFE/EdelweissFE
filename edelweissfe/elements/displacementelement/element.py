@@ -318,16 +318,16 @@ class DisplacementElement(BaseElement):
 
     optional Parameters
     -------------------
-    The following attributes are also included in the elementtype definition:
+    The following attributes are also included in the elType definition:
 
         R
-            reduced integration for element, in elementtype[5].
+            reduced integration for element, in elType[5].
         E
-            extended integration for element, in elementtype[5].
+            extended integration for element, in elType[5].
         PE
-            use plane strain for 2D elements, in elementtype[6:8] or [5:7].
+            use plane strain for 2D elements, in elType[6:8] or [5:7].
         PS
-            use plane stress for 2D elements, in elementtype[6:8] or [5:7].
+            use plane stress for 2D elements, in elType[6:8] or [5:7].
 
     If R or E is not given by the user, we assume regular increment.
     If PE or PS is not given by the user, we assume PE."""
@@ -389,12 +389,12 @@ class DisplacementElement(BaseElement):
         return self._hasMaterial
 
     def __init__(self, elementType: str, elNumber: int):
-        self.elementtype = elementType[0].upper() + elementType[1:5].lower() + elementType[5:].upper()
+        self.elType = elementType[0].upper() + elementType[1:5].lower() + elementType[5:].upper()
         self._elNumber = elNumber
         try:
-            if len(self.elementtype) > 5 and self.elementtype[5].lower() == "n":  # normal integration
-                self.elementtype = self.elementtype.replace("N", "").replace("n", "")
-            properties = elLibrary[self.elementtype]
+            if len(self.elType) > 5 and self.elType[5].lower() == "n":  # normal integration
+                self.elType = self.elType.replace("N", "").replace("n", "")
+            properties = elLibrary[self.elType]
         except KeyError:
             raise Exception("This element type doesn't exist.")
         self._nNodes = properties["nNodes"]
@@ -442,7 +442,7 @@ class DisplacementElement(BaseElement):
             Thickness of 2D elements.
         """
 
-        if self.elementtype[0] == "Q":
+        if self.elType[0] == "Q":
             self._t = elementProperties[0]  # thickness
 
     def initializeElement(
