@@ -16,6 +16,7 @@ build and test:
   stage: build and test
   image: mambaorg/micromamba:latest
   script:
-    - mamba install --file requirements.txt
+    - micromamba install python=3.12
+    - micromamba install --file requirements.txt
     - BUILD_WITH_MARMOT=0 pip install .
     - run_tests_edelweissfe testfiles/
