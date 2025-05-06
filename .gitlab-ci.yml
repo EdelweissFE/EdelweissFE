@@ -1,5 +1,6 @@
 stages:
   - linting
+  - build and test
 
 linting:
   stage: linting
@@ -10,3 +11,11 @@ linting:
     - isort --check-only --profile black .
     - black --check --line-length 120 .
     - flake8 --ignore=E203,E501 --extend-ignore=W503 --max-line-length=120  .
+
+build and test:
+  stage: build and test
+  image: mambaorg/micromamba:latest
+  script:
+    - mamba install --file requirements.txt
+    - BUILD_WITH_MARMOT=0 pip install .
+    - run_tests_edelweissfe testfiles/
