@@ -13,7 +13,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           use-mamba: true
-          miniforge-variant: Mambaforge
+          miniforge-variant: Miniforge
           miniforge-version: latest
           activate-environment: anaconda-client-env
 
