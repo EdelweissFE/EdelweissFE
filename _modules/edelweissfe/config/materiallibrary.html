@@ -107,10 +107,10 @@
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.misc</span> <span class="kn">import</span> <span class="n">strCaseCmp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">strCaseCmp</span>
 
 
-<div class="viewcode-block" id="getMaterialClass"><a class="viewcode-back" href="../../../documentation/materials.html#edelweissfe.config.materiallibrary.getMaterialClass">[docs]</a><span class="k">def</span> <span class="nf">getMaterialClass</span><span class="p">(</span><span class="n">materialName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<div class="viewcode-block" id="getMaterialClass"><a class="viewcode-back" href="../../../documentation/materials.html#edelweissfe.config.materiallibrary.getMaterialClass">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">getMaterialClass</span><span class="p">(</span><span class="n">materialName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the the requested material class.</span>
 
 <span class="sd">    Parameters</span>
@@ -135,13 +135,13 @@
 
     <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">&quot;edelweissmaterial&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">materialName</span><span class="p">,</span> <span class="s2">&quot;linearelastic&quot;</span><span class="p">):</span>
-            <span class="kn">from</span> <span class="nn">edelweissfe.materials.linearelastic.linearelastic</span> <span class="kn">import</span> <span class="p">(</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.materials.linearelastic.linearelastic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
                 <span class="n">LinearElasticMaterial</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="n">material</span> <span class="o">=</span> <span class="n">LinearElasticMaterial</span>
         <span class="k">elif</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">materialName</span><span class="p">,</span> <span class="s2">&quot;vonmises&quot;</span><span class="p">):</span>
-            <span class="kn">from</span> <span class="nn">edelweissfe.materials.vonmises.vonmises</span> <span class="kn">import</span> <span class="n">VonMisesMaterial</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.materials.vonmises.vonmises</span><span class="w"> </span><span class="kn">import</span> <span class="n">VonMisesMaterial</span>
 
             <span class="n">material</span> <span class="o">=</span> <span class="n">VonMisesMaterial</span>
         <span class="k">else</span><span class="p">:</span>

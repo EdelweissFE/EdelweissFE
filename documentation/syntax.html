@@ -61,6 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linsolvers.html">Linear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -394,17 +395,9 @@ keyword is currently active.</p></li>
 <td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
 <td><p>define spatial domain: 1d, 2d, 3d</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linsolver</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
-<td><p>(optional) define linear solver, standard = superlu</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
 <td><p>(optional) name of job, standard = defaultJob</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solver</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
-<td><p>(optional) define solver, standard = NIST</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">starttime</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
@@ -637,7 +630,35 @@ keyword is currently active.</p></li>
 </tbody>
 </table>
 <table class="colwidths-given docutils align-default" id="id17" style="width: 100%">
-<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*step</span></code> : definition of job steps</span><a class="headerlink" href="#id17" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*solver</span></code> : definition of a solver</span><a class="headerlink" href="#id17" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>name of this solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solver</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>solver type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>(optional) define options which are passed to the respective solver instance.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id18" style="width: 100%">
+<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*step</span></code> : definition of job steps</span><a class="headerlink" href="#id18" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 28%" />
 <col style="width: 28%" />
@@ -684,8 +705,8 @@ keyword is currently active.</p></li>
 </tr>
 </tbody>
 </table>
-<table class="colwidths-given docutils align-default" id="id18" style="width: 100%">
-<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*surface</span></code> : definition of surface set</span><a class="headerlink" href="#id18" title="Permalink to this table"></a></caption>
+<table class="colwidths-given docutils align-default" id="id19" style="width: 100%">
+<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*surface</span></code> : definition of surface set</span><a class="headerlink" href="#id19" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 28%" />
 <col style="width: 28%" />
@@ -712,8 +733,8 @@ keyword is currently active.</p></li>
 </tr>
 </tbody>
 </table>
-<table class="colwidths-given docutils align-default" id="id19" style="width: 100%">
-<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*updateconfiguration</span></code> : update an configuration</span><a class="headerlink" href="#id19" title="Permalink to this table"></a></caption>
+<table class="colwidths-given docutils align-default" id="id20" style="width: 100%">
+<caption><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">*updateconfiguration</span></code> : update an configuration</span><a class="headerlink" href="#id20" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 28%" />
 <col style="width: 28%" />

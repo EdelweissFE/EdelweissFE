@@ -55,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linsolvers.html">Linear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analyticalfields.html">Analytical fields</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Constraints</a></li>
@@ -66,6 +67,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Generators</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#boxgen-a-3d-box-mesh-generator"><code class="docutils literal notranslate"><span class="pre">boxgen</span></code> - A 3D box mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#planerectquad-a-2d-plane-rectangular-mesh-generator"><code class="docutils literal notranslate"><span class="pre">planerectquad</span></code> - A 2D plane rectangular mesh generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipegen-a-3d-pipe-mesh-generator"><code class="docutils literal notranslate"><span class="pre">pipegen</span></code> - A 3D pipe mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cubit-a-cubit-mesh-generator"><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#findclosestnode-find-the-closest-node"><code class="docutils literal notranslate"><span class="pre">findclosestnode</span></code> - Find the closest node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#executepythoncode-script-model-generation-using-python"><code class="docutils literal notranslate"><span class="pre">executepythoncode</span></code> - Script model generation using Python</a></li>
@@ -358,12 +360,101 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </div>
 </div>
 </div>
+<div class="section" id="pipegen-a-3d-pipe-mesh-generator">
+<h2><code class="docutils literal notranslate"><span class="pre">pipegen</span></code> - A 3D pipe mesh generator<a class="headerlink" href="#pipegen-a-3d-pipe-mesh-generator" title="Permalink to this heading"></a></h2>
+<p>Relevant module <code class="docutils literal notranslate"><span class="pre">edelweissfe.generators.pipegen</span></code></p>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">x0</span></code></td>
+<td><p>(optional) origin at x axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">y0</span></code></td>
+<td><p>(optional) origin at y axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">z0</span></code></td>
+<td><p>(optional) origin at z axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">lX</span></code></td>
+<td><p>(optional) length of the body along x axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">lY</span></code></td>
+<td><p>(optional) length of the body along y axis</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">lZ</span></code></td>
+<td><p>(optional) length of the body along z axis</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nX</span></code></td>
+<td><p>(optional) number of elements along x</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">nY</span></code></td>
+<td><p>(optional) number of elements along y</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">nZ</span></code></td>
+<td><p>(optional) number of elements along z</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">elType</span></code></td>
+<td><p>type of element</p></td>
+</tr>
+</tbody>
+</table>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/PipeGen/test.inp</span></code></span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LinearElastic</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">linearelastic</span>
+2.1e4, 0.22
+
+<span class="k">*job</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">c3d8job</span>,<span class="nv"> domain</span><span class="ow">=</span><span class="m">3d</span>
+<span class="k">*solver</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">NIST</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">theSolver</span>
+
+<span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">pipeGen</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
+<span class="nv">nT      </span><span class="ow">=</span><span class="m">1</span>
+<span class="nv">nC      </span><span class="ow">=</span><span class="m">8</span>
+<span class="nv">nY      </span><span class="ow">=</span><span class="m">30</span>
+<span class="nv">x0      </span><span class="ow">=</span><span class="m">10</span>
+<span class="nv">y0      </span><span class="ow">=</span><span class="m">50</span>
+<span class="nv">z0      </span><span class="ow">=</span><span class="m">100</span>
+<span class="nv">lT      </span><span class="ow">=</span><span class="m">10</span>
+<span class="nv">Ro(y)   </span><span class="ow">=</span><span class="m">200.-0.1*y</span>
+<span class="nv">phi     </span><span class="ow">=</span><span class="m">90</span>
+<span class="nv">lY      </span><span class="ow">=</span><span class="m">1000</span>
+<span class="nv">exG     </span><span class="ow">=</span><span class="m">False</span>
+<span class="nv">elType  </span><span class="ow">=</span><span class="m">C3D20</span>
+
+<span class="k">*section</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">section1</span>,<span class="nv"> material</span><span class="ow">=</span><span class="m">linearelastic</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">solid</span>
+all
+
+<span class="k">*fieldOutput</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> elSet</span><span class="ow">=</span><span class="m">all</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> result</span><span class="ow">=</span><span class="m">U</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">displacement</span>
+
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">ensight</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">test</span>
+<span class="nv">create</span><span class="ow">=</span><span class="m">perNode</span>,<span class="nv"> fieldOutput</span><span class="ow">=</span><span class="m">displacement</span>
+configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span class="m">yes</span>
+
+<span class="k">*output</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">monitor</span>
+
+<span class="k">*step</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-9</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">1000</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>
+options,<span class="nv"> category</span><span class="ow">=</span><span class="m">NISTSolver</span>,<span class="nv"> extrapolation</span><span class="ow">=</span><span class="m">off</span>
+dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">Bottom</span>,<span class="nv">  nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.0</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">.0</span>
+nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">cloadTop</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_inner</span>,<span class="nv"> components</span><span class="ow">=</span><span class="s">&#39;0.3, 0, 0.3&#39;</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="cubit-a-cubit-mesh-generator">
 <h2><code class="docutils literal notranslate"><span class="pre">cubit</span></code> - A cubit mesh generator<a class="headerlink" href="#cubit-a-cubit-mesh-generator" title="Permalink to this heading"></a></h2>
 <p>Relevant module <code class="docutils literal notranslate"><span class="pre">edelweissfe.generators.cubit</span></code></p>
 <span class="target" id="module-edelweissfe.generators.cubit"></span><p>Interface to Cubit. Generate mesh using Cubit .jou files.</p>
-<table class="docutils align-default" id="id7">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id7" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id9" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -403,8 +494,8 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </tr>
 </tbody>
 </table>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/CubitGen/test.inp</span></code></span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/CubitGen/test.inp</span></code></span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*material</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">LINEARELASTIC</span>,<span class="nv"> id</span><span class="ow">=</span><span class="m">mat1</span>
  35000, 0.2
 
@@ -453,8 +544,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <h2><code class="docutils literal notranslate"><span class="pre">findclosestnode</span></code> - Find the closest node<a class="headerlink" href="#findclosestnode-find-the-closest-node" title="Permalink to this heading"></a></h2>
 <p>Relevant module <code class="docutils literal notranslate"><span class="pre">edelweissfe.generators.findclosestnode</span></code></p>
 <span class="target" id="module-edelweissfe.generators.findclosestnode"></span><p>Find the node closest to a given spatial position, and store it in an existing or new node set.</p>
-<table class="docutils align-default" id="id9">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id9" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id11">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id11" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -478,8 +569,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <h2><code class="docutils literal notranslate"><span class="pre">executepythoncode</span></code> - Script model generation using Python<a class="headerlink" href="#executepythoncode-script-model-generation-using-python" title="Permalink to this heading"></a></h2>
 <p>Relevant module <code class="docutils literal notranslate"><span class="pre">edelweissfe.generators.executepythoncode</span></code></p>
 <span class="target" id="module-edelweissfe.generators.executepythoncode"></span><p>Directly execute Python code to create the model tree.</p>
-<table class="docutils align-default" id="id10">
-<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id10" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id12">
+<caption><span class="caption-text">Options:</span><a class="headerlink" href="#id12" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -492,8 +583,8 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <tbody>
 </tbody>
 </table>
-<div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/PythonCodeModelGeneration/test.inp</span></code></span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">Example: <code class="docutils literal notranslate"><span class="pre">testfiles/PythonCodeModelGeneration/test.inp</span></code></span><a class="headerlink" href="#id13" title="Permalink to this code"></a></div>
 <div class="highlight-edelweiss notranslate"><div class="highlight"><pre><span></span><span class="k">*modelGenerator</span>,<span class="nv"> generator</span><span class="ow">=</span><span class="m">planeRectQuad</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">gen</span>
 <span class="nv">elType</span><span class="ow">=</span><span class="m">CPS8R</span>
 <span class="nv">nX</span><span class="ow">=</span><span class="m">20</span>

@@ -109,20 +109,20 @@
 
 <span class="c1"># @author: Matthias Neuner</span>
 
-<span class="kn">import</span> <span class="nn">textwrap</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span>
 
-<span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">getFieldSize</span><span class="p">,</span> <span class="n">phenomena</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.fields.nodefield</span> <span class="kn">import</span> <span class="n">NodeField</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.variables.fieldvariable</span> <span class="kn">import</span> <span class="n">FieldVariable</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.variables.scalarvariable</span> <span class="kn">import</span> <span class="n">ScalarVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.config.phenomena</span><span class="w"> </span><span class="kn">import</span> <span class="n">getFieldSize</span><span class="p">,</span> <span class="n">phenomena</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.fields.nodefield</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeField</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.variables.fieldvariable</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.variables.scalarvariable</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScalarVariable</span>
 
 
-<div class="viewcode-block" id="FEModel"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel">[docs]</a><span class="k">class</span> <span class="nc">FEModel</span><span class="p">:</span>
+<div class="viewcode-block" id="FEModel"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FEModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is is a standard finite element model tree.</span>
 <span class="sd">    It takes care of the correct number of variables,</span>
 <span class="sd">    for nodes and scalar degrees of freedem, and it manages the fields.</span>
@@ -136,7 +136,7 @@
 
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;FEModel&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1">#: Current time of the model.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Nodes in the model.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Elements in the model.</span>
@@ -152,7 +152,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">additionalParameters</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">#: Additional information.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domainSize</span> <span class="o">=</span> <span class="n">dimension</span>  <span class="c1">#: Spatial dimension of the model</span>
 
-    <span class="k">def</span> <span class="nf">_populateNodeFieldVariablesFromElements</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_populateNodeFieldVariablesFromElements</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates FieldVariables on Nodes depending on the all</span>
@@ -164,7 +164,7 @@
                     <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
                         <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">FieldVariable</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_populateNodeFieldVariablesFromConstraints</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_populateNodeFieldVariablesFromConstraints</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates FieldVariables on Nodes depending on the all</span>
@@ -177,7 +177,7 @@
                     <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
                         <span class="n">node</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">FieldVariable</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_createNodeFieldsFromNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">nodeSets</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NodeField</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_createNodeFieldsFromNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">nodeSets</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NodeField</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Bundle nodal FieldVariables together in contiguous NodeFields.</span>
 
 <span class="sd">        Parameters</span>
@@ -203,7 +203,7 @@
 
         <span class="k">return</span> <span class="n">theNodeFields</span>
 
-    <span class="k">def</span> <span class="nf">_linkFieldVariableObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_linkFieldVariableObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Link NodeFields to individual FieldVariable objects.</span>
 
 <span class="sd">        Parameters</span>
@@ -220,7 +220,7 @@
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">_requestAdditionalScalarVariable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_requestAdditionalScalarVariable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new scalar variables</span>
 
 <span class="sd">        Parameters</span>
@@ -239,7 +239,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ScalarVariable</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_createAndAssignScalarVariableForConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_createAndAssignScalarVariableForConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create ScalarVariables for constraints.</span>
 
 <span class="sd">        Parameters</span>
@@ -266,7 +266,7 @@
 
             <span class="n">constraint</span><span class="o">.</span><span class="n">assignAdditionalScalarVariables</span><span class="p">(</span><span class="n">scalarVariables</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_prepareVariablesAndFields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepareVariablesAndFields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare all variables and fields for a simulation.</span>
 
 <span class="sd">        Parameters</span>
@@ -288,7 +288,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">scalarVariables</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_createAndAssignScalarVariableForConstraints</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_prepareElements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepareElements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare elements for a simulation.</span>
 <span class="sd">        In detail, sections are assigned.</span>
 
@@ -307,7 +307,7 @@
             <span class="n">elementIds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">elId</span><span class="p">)</span> <span class="k">for</span> <span class="n">elId</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">keys</span><span class="p">()])[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">materialAssigned</span><span class="p">)]</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No material was assigned to element(s) with id(s) </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">elementIds</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FEModel.prepareYourself"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.prepareYourself">[docs]</a>    <span class="k">def</span> <span class="nf">prepareYourself</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
+<div class="viewcode-block" id="FEModel.prepareYourself"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.prepareYourself">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">prepareYourself</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the model for a simulation.</span>
 <span class="sd">        Creates the variables, bundles the fields,</span>
 <span class="sd">        and initializes elements.</span>
@@ -322,7 +322,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepareVariablesAndFields</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepareElements</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FEModel.advanceToTime"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.advanceToTime">[docs]</a>    <span class="k">def</span> <span class="nf">advanceToTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="FEModel.advanceToTime"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.advanceToTime">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">advanceToTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Accept the current state of the model and sub instances, and</span>
 <span class="sd">        set the new time.</span>
 
@@ -337,7 +337,7 @@
         <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">el</span><span class="o">.</span><span class="n">acceptLastState</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FEModel.writeRestart"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.writeRestart">[docs]</a>    <span class="k">def</span> <span class="nf">writeRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
+<div class="viewcode-block" id="FEModel.writeRestart"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.writeRestart">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">writeRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the current state of the model to a restart file.</span>
 
 <span class="sd">        Parameters</span>
@@ -357,7 +357,7 @@
             <span class="k">for</span> <span class="n">entryName</span><span class="p">,</span> <span class="n">entryValues</span> <span class="ow">in</span> <span class="n">nf</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c1"># TODO</span>
                 <span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodeFields&quot;</span><span class="p">][</span><span class="n">nf</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">entryName</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">entryValues</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FEModel.readRestart"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.readRestart">[docs]</a>    <span class="k">def</span> <span class="nf">readRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
+<div class="viewcode-block" id="FEModel.readRestart"><a class="viewcode-back" href="../../../documentation/models.html#edelweissfe.models.femodel.FEModel.readRestart">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">readRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the state of the model from a restart file.</span>
 
 <span class="sd">        Parameters</span>
@@ -377,10 +377,10 @@
                 <span class="n">nf</span><span class="p">[</span><span class="n">entryName</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">entryValues</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">printPrettyModelSummary</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">printPrettyModelSummary</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;PrettyModelSummary&quot;</span>
 
-    <span class="k">def</span> <span class="nf">wrapList</span><span class="p">(</span><span class="n">theList</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapList</span><span class="p">(</span><span class="n">theList</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">theList</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">):</span>
             <span class="n">journal</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
                 <span class="s2">&quot;  </span><span class="si">{:&lt;20}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">),</span>

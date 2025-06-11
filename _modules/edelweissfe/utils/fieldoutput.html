@@ -118,16 +118,16 @@
 <span class="sd">    the time History is automatically appended to the .csv file&quot;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.fields.nodefield</span> <span class="kn">import</span> <span class="n">NodeField</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.sets.elementset</span> <span class="kn">import</span> <span class="n">ElementSet</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.sets.orderedset</span> <span class="kn">import</span> <span class="n">OrderedSet</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.elementresultcollector</span> <span class="kn">import</span> <span class="n">ElementResultCollector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.fields.nodefield</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeField</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.models.femodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">FEModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.sets.elementset</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.sets.orderedset</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.elementresultcollector</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementResultCollector</span>
 
 <span class="n">documentation</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;name of the fieldOutput&quot;</span><span class="p">,</span>
@@ -141,7 +141,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="_FieldOutputBase"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase">[docs]</a><span class="k">class</span> <span class="nc">_FieldOutputBase</span><span class="p">:</span>
+<div class="viewcode-block" id="_FieldOutputBase"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">_FieldOutputBase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Entity of a fieldOutput request.</span>
 <span class="sd">    Carries the history or the latest result.</span>
@@ -164,7 +164,7 @@
 <span class="sd">        Apply a math function on the results before exporting.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
@@ -185,7 +185,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">timeHistory</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">export</span> <span class="o">=</span> <span class="n">export</span>
 
-<div class="viewcode-block" id="_FieldOutputBase.getLastResult"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getLastResult">[docs]</a>    <span class="k">def</span> <span class="nf">getLastResult</span><span class="p">(</span>
+<div class="viewcode-block" id="_FieldOutputBase.getLastResult"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getLastResult">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getLastResult</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the last result, no matter if the history is stored or not.</span>
@@ -198,7 +198,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">appendResults</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div>
 
-<div class="viewcode-block" id="_FieldOutputBase.getResultHistory"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getResultHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getResultHistory</span><span class="p">(</span>
+<div class="viewcode-block" id="_FieldOutputBase.getResultHistory"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getResultHistory">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getResultHistory</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the history.</span>
@@ -216,7 +216,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="_FieldOutputBase.getTimeHistory"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getTimeHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getTimeHistory</span><span class="p">(</span>
+<div class="viewcode-block" id="_FieldOutputBase.getTimeHistory"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.getTimeHistory">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getTimeHistory</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the time history.</span>
@@ -229,7 +229,7 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeHistory</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_applyResultsPipleline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_applyResultsPipleline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the pipeline of operations onto the results.</span>
 <span class="sd">        Called by inheriting classes.</span>
 
@@ -249,7 +249,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="_FieldOutputBase.writeLastResult"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.writeLastResult">[docs]</a>    <span class="k">def</span> <span class="nf">writeLastResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="_FieldOutputBase.writeLastResult"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.writeLastResult">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">writeLastResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update file output.</span>
 
 <span class="sd">        Parameters</span>
@@ -276,7 +276,7 @@
                 <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="_FieldOutputBase.initializeJob"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.initializeJob">[docs]</a>    <span class="k">def</span> <span class="nf">initializeJob</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="_FieldOutputBase.initializeJob"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.initializeJob">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">initializeJob</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initalize everything. Will also update the results</span>
 <span class="sd">        based on the proved start time and solution.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -287,11 +287,11 @@
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">export</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">initializeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initializeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">export</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writeLastResult</span><span class="p">()</span>
 
-<div class="viewcode-block" id="_FieldOutputBase.finalizeIncrement"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.finalizeIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">finalizeIncrement</span><span class="p">(</span>
+<div class="viewcode-block" id="_FieldOutputBase.finalizeIncrement"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.finalizeIncrement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">finalizeIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize an increment, i.e. store the current results.&quot;&quot;&quot;</span>
@@ -300,17 +300,17 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">export</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writeLastResult</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">finalizeStep</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finalizeStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">finalizeJob</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finalizeJob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="_FieldOutputBase.setResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.setResults">[docs]</a>    <span class="k">def</span> <span class="nf">setResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="_FieldOutputBase.setResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput._FieldOutputBase.setResults">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modifies a result at it&#39;s origin, if possible.</span>
 <span class="sd">        Throws an exception if not possible.</span>
 
@@ -321,37 +321,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;setting field output currently not implemented for this type of output!&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">other</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">!=</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">+</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastResult</span><span class="p">()</span> <span class="o">-</span> <span class="n">other</span></div>
 
 
-<div class="viewcode-block" id="NodeFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.NodeFieldOutput">[docs]</a><span class="k">class</span> <span class="nc">NodeFieldOutput</span><span class="p">(</span><span class="n">_FieldOutputBase</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.NodeFieldOutput">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NodeFieldOutput</span><span class="p">(</span><span class="n">_FieldOutputBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a Node based FieldOutput.</span>
 <span class="sd">    It operates on NodeFields.</span>
@@ -378,7 +378,7 @@
 <span class="sd">        Apply a math function on the results before exporting.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">nodeField</span><span class="p">,</span>
@@ -397,7 +397,7 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="n">saveHistory</span><span class="p">,</span> <span class="n">f_x</span><span class="p">,</span> <span class="n">export</span><span class="p">,</span> <span class="n">fExport_x</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NodeFieldOutput.updateResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.NodeFieldOutput.updateResults">[docs]</a>    <span class="k">def</span> <span class="nf">updateResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeFieldOutput.updateResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.NodeFieldOutput.updateResults">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">updateResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the field output.</span>
 <span class="sd">        Will use the current solution and reaction vector if result is a nodal result.</span>
 
@@ -412,7 +412,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_applyResultsPipleline</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ElementFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput">[docs]</a><span class="k">class</span> <span class="nc">ElementFieldOutput</span><span class="p">(</span><span class="n">_FieldOutputBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ElementFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ElementFieldOutput</span><span class="p">(</span><span class="n">_FieldOutputBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a Element based FieldOutput.</span>
 <span class="sd">    It operates on ElementSets.</span>
@@ -441,7 +441,7 @@
 <span class="sd">        The list of quadrature points for which the results should be extracted.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">elSet</span><span class="p">:</span> <span class="n">ElementSet</span><span class="p">,</span>
@@ -464,7 +464,7 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="n">saveHistory</span><span class="p">,</span> <span class="n">f_x</span><span class="p">,</span> <span class="n">export</span><span class="p">,</span> <span class="n">fExport_x</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ElementFieldOutput.updateResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput.updateResults">[docs]</a>    <span class="k">def</span> <span class="nf">updateResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ElementFieldOutput.updateResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput.updateResults">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">updateResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the field output.</span>
 <span class="sd">        Will use the current solution and reaction vector if result is a nodal result.</span>
 
@@ -478,7 +478,7 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_applyResultsPipleline</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ElementFieldOutput.setResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput.setResults">[docs]</a>    <span class="k">def</span> <span class="nf">setResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="ElementFieldOutput.setResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ElementFieldOutput.setResults">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modifies a result at it&#39;s origin, if possible.</span>
 <span class="sd">        Throws an exception if not possible.</span>
 
@@ -497,7 +497,7 @@
                 <span class="n">el</span><span class="o">.</span><span class="n">acceptLastState</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="ExpressionFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ExpressionFieldOutput">[docs]</a><span class="k">class</span> <span class="nc">ExpressionFieldOutput</span><span class="p">(</span><span class="n">_FieldOutputBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ExpressionFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ExpressionFieldOutput">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ExpressionFieldOutput</span><span class="p">(</span><span class="n">_FieldOutputBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a Node based FieldOutput.</span>
 <span class="sd">    It operates on NodeFields.</span>
@@ -528,7 +528,7 @@
 <span class="sd">        Apply a math function on the results before exporting.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">associatedSet</span><span class="p">:</span> <span class="n">OrderedSet</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">theExpression</span><span class="p">,</span>
@@ -546,7 +546,7 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="n">saveHistory</span><span class="p">,</span> <span class="n">f_x</span><span class="p">,</span> <span class="n">export</span><span class="p">,</span> <span class="n">fExport_x</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ExpressionFieldOutput.updateResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ExpressionFieldOutput.updateResults">[docs]</a>    <span class="k">def</span> <span class="nf">updateResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ExpressionFieldOutput.updateResults"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.ExpressionFieldOutput.updateResults">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">updateResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the field output.</span>
 <span class="sd">        Will use the current solution and reaction vector if result is a nodal result.</span>
 
@@ -564,17 +564,17 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_applyResultsPipleline</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="FieldOutputController"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController">[docs]</a><span class="k">class</span> <span class="nc">FieldOutputController</span><span class="p">:</span>
+<div class="viewcode-block" id="FieldOutputController"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FieldOutputController</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The central module for managing field outputs, which can be used by output managers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span> <span class="o">=</span> <span class="n">journal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputs</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="FieldOutputController.addExpressionFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput">[docs]</a>    <span class="k">def</span> <span class="nf">addExpressionFieldOutput</span><span class="p">(</span>
+<div class="viewcode-block" id="FieldOutputController.addExpressionFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.addExpressionFieldOutput">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">addExpressionFieldOutput</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">associatedSet</span><span class="p">:</span> <span class="nb">set</span><span class="p">,</span>
         <span class="n">theExpression</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
@@ -619,7 +619,7 @@
             <span class="n">fExport_x</span><span class="o">=</span><span class="n">fExport_x</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FieldOutputController.addPerNodeFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput">[docs]</a>    <span class="k">def</span> <span class="nf">addPerNodeFieldOutput</span><span class="p">(</span>
+<div class="viewcode-block" id="FieldOutputController.addPerNodeFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.addPerNodeFieldOutput">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">addPerNodeFieldOutput</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">nodeField</span><span class="p">:</span> <span class="n">NodeField</span><span class="p">,</span>
@@ -661,7 +661,7 @@
             <span class="n">name</span><span class="p">,</span> <span class="n">nodeField</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="p">,</span> <span class="n">saveHistory</span><span class="p">,</span> <span class="n">f_x</span><span class="p">,</span> <span class="n">export</span><span class="p">,</span> <span class="n">fExport_x</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FieldOutputController.addPerElementFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput">[docs]</a>    <span class="k">def</span> <span class="nf">addPerElementFieldOutput</span><span class="p">(</span>
+<div class="viewcode-block" id="FieldOutputController.addPerElementFieldOutput"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.addPerElementFieldOutput">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">addPerElementFieldOutput</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">elSet</span><span class="p">:</span> <span class="n">ElementSet</span><span class="p">,</span>
@@ -706,11 +706,11 @@
             <span class="n">name</span><span class="p">,</span> <span class="n">elSet</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journal</span><span class="p">,</span> <span class="n">saveHistory</span><span class="p">,</span> <span class="n">f_x</span><span class="p">,</span> <span class="n">export</span><span class="p">,</span> <span class="n">fExport_x</span><span class="p">,</span> <span class="n">quadraturePoints</span>
         <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">initializeJob</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initializeJob</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">fieldOutput</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">fieldOutput</span><span class="o">.</span><span class="n">initializeJob</span><span class="p">()</span>
 
-<div class="viewcode-block" id="FieldOutputController.finalizeIncrement"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">finalizeIncrement</span><span class="p">(</span>
+<div class="viewcode-block" id="FieldOutputController.finalizeIncrement"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeIncrement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">finalizeIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize all field outputs at the end of an increment.&quot;&quot;&quot;</span>
@@ -718,7 +718,7 @@
         <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">output</span><span class="o">.</span><span class="n">finalizeIncrement</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FieldOutputController.finalizeStep"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeStep">[docs]</a>    <span class="k">def</span> <span class="nf">finalizeStep</span><span class="p">(</span>
+<div class="viewcode-block" id="FieldOutputController.finalizeStep"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeStep">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">finalizeStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize all field outputs at the end of a step.&quot;&quot;&quot;</span>
@@ -726,7 +726,7 @@
         <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">output</span><span class="o">.</span><span class="n">finalizeStep</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FieldOutputController.initializeStep"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.initializeStep">[docs]</a>    <span class="k">def</span> <span class="nf">initializeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldOutputController.initializeStep"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.initializeStep">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">initializeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initalize an step.</span>
 
 <span class="sd">        Parameters</span>
@@ -738,7 +738,7 @@
         <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOutputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">output</span><span class="o">.</span><span class="n">initializeStep</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FieldOutputController.finalizeJob"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeJob">[docs]</a>    <span class="k">def</span> <span class="nf">finalizeJob</span><span class="p">(</span>
+<div class="viewcode-block" id="FieldOutputController.finalizeJob"><a class="viewcode-back" href="../../../documentation/fieldoutputmanager.html#edelweissfe.utils.fieldoutput.FieldOutputController.finalizeJob">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">finalizeJob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize all field outputs at the end of a job.&quot;&quot;&quot;</span>

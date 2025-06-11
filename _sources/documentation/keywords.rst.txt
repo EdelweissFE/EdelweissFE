@@ -135,15 +135,9 @@
     * - ``domain``
       - ``string``
       - define spatial domain: 1d, 2d, 3d
-    * - ``linsolver``
-      - ``string``
-      - (optional) define linear solver, standard = superlu
     * - ``name``
       - ``string``
       - (optional) name of job, standard = defaultJob
-    * - ``solver``
-      - ``string``
-      - (optional) define solver, standard = NIST
     * - ``starttime``
       - ``float``
       - (optional) start time of job, standard = 0.0
@@ -294,6 +288,24 @@
     * - ``type``
       - ``string``
       - type of the section
+      
+.. list-table:: ``*solver`` : definition of a solver
+    :width: 100%
+    :widths: 25 25 40
+    :header-rows: 1
+
+    * - Option
+      - Type
+      - Description
+    * - ``name``
+      - ``string``
+      - name of this solver
+    * - ``solver``
+      - ``string``
+      - solver type
+    * - ``data``
+      - ``string``
+      - (optional) define options which are passed to the respective solver instance.
 
 .. list-table:: ``*step`` : definition of job steps
     :width: 100%

@@ -109,16 +109,16 @@
 
 <span class="c1"># @author: Matthias Neuner</span>
 
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">distutils.spawn</span> <span class="kn">import</span> <span class="n">find_executable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">distutils.spawn</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_executable</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Plotting in EdelweissFE through matplotlib can be performed easily</span>
@@ -175,7 +175,7 @@
 <span class="n">defaultLineStyleCycle</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">((</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;0-3-2&quot;</span><span class="p">,</span> <span class="s2">&quot;0-3-1-1-1&quot;</span><span class="p">,</span> <span class="s2">&quot;0-1-1&quot;</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="Plotter"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter">[docs]</a><span class="k">class</span> <span class="nc">Plotter</span><span class="p">:</span>
+<div class="viewcode-block" id="Plotter"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Plotter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The unified plotter, which can be accessed and used by all outputmanagers.</span>
 
@@ -189,7 +189,7 @@
 <span class="sd">        The list of jobs to export plots at the end of a simulations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span> <span class="n">plotConfigurations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">exportJobs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">journal</span><span class="p">:</span> <span class="n">Journal</span><span class="p">,</span> <span class="n">plotConfigurations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">exportJobs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plotConfigurations</span> <span class="o">=</span> <span class="n">plotConfigurations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exportJobs</span> <span class="o">=</span> <span class="n">exportJobs</span>
 
@@ -222,14 +222,14 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;plotterRcParams.py&quot;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found plotterRcParams.py&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-            <span class="kn">import</span> <span class="nn">plotterRcParams</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">plotterRcParams</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plotterRcParams</span><span class="o">.</span><span class="n">rcParams</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">figsWithAxes</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># {figID : (figure, {axesDict})}</span>
         <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rcParams</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Plotter.getAx"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.getAx">[docs]</a>    <span class="k">def</span> <span class="nf">getAx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axSpec</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">111</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
+<div class="viewcode-block" id="Plotter.getAx"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.getAx">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getAx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axSpec</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">111</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or create a figure with axes if it doesn&#39;t exist yet.</span>
 
 <span class="sd">        Parameters</span>
@@ -256,7 +256,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figsWithAxes</span><span class="p">[</span><span class="n">figureID</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">axSpec</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Plotter.getFig"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.getFig">[docs]</a>    <span class="k">def</span> <span class="nf">getFig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<div class="viewcode-block" id="Plotter.getFig"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.getFig">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getFig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or create a figure doesn&#39;t exist yet.</span>
 
 <span class="sd">        Parameters</span>
@@ -274,7 +274,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figsWithAxes</span><span class="p">[</span><span class="n">figureID</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Plotter.plotXYData"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.plotXYData">[docs]</a>    <span class="k">def</span> <span class="nf">plotXYData</span><span class="p">(</span>
+<div class="viewcode-block" id="Plotter.plotXYData"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.plotXYData">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">plotXYData</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -325,7 +325,7 @@
                 <span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">plotDefinition</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Plotter.configurePlotter"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.configurePlotter">[docs]</a>    <span class="k">def</span> <span class="nf">configurePlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotter.configurePlotter"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.configurePlotter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">configurePlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set global options of the plotter.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">configEntry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotConfigurations</span><span class="p">:</span>
@@ -352,7 +352,7 @@
             <span class="k">if</span> <span class="s2">&quot;grid&quot;</span> <span class="ow">in</span> <span class="n">configEntry</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Plotter.exportPlots"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.exportPlots">[docs]</a>    <span class="k">def</span> <span class="nf">exportPlots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotter.exportPlots"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.exportPlots">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">exportPlots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Export all plots according to the export job definitions.&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">exportJob</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exportJobs</span><span class="p">:</span>
@@ -365,7 +365,7 @@
                 <span class="n">exportJob</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
             <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_fancyFigSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">heightRatio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fancyFigSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">heightRatio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a fancy figure size compatible with matplotlib specs.&quot;&quot;&quot;</span>
 
         <span class="n">fig_width_pt</span> <span class="o">=</span> <span class="n">width</span>
@@ -376,7 +376,7 @@
         <span class="n">fig_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">fig_size</span>
 
-<div class="viewcode-block" id="Plotter.exportFigure"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.exportFigure">[docs]</a>    <span class="k">def</span> <span class="nf">exportFigure</span><span class="p">(</span>
+<div class="viewcode-block" id="Plotter.exportFigure"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.exportFigure">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">exportFigure</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">fileName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">figureID</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -411,12 +411,12 @@
         <span class="k">if</span> <span class="n">png</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Plotter.finalize"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.finalize">[docs]</a>    <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span>
+<div class="viewcode-block" id="Plotter.finalize"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.finalize">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">finalize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize and export plots.&quot;&quot;&quot;</span>
 
-        <span class="kn">import</span> <span class="nn">warnings</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
@@ -434,7 +434,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">exportPlots</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Plotter.show"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span>
+<div class="viewcode-block" id="Plotter.show"><a class="viewcode-back" href="../../../documentation/plotter.html#edelweissfe.utils.plotter.Plotter.show">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the plots!&quot;&quot;&quot;</span>

@@ -109,12 +109,12 @@
 <span class="sd">have a distinct (physical) runtime, and may contain multiple StepActions.</span>
 <span class="sd">Subsequent Steps inherit StepActions, and they may be updated.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.models.femodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">FEModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.fieldoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldOutputController</span>
 
 
-<div class="viewcode-block" id="StepBase"><a class="viewcode-back" href="../../../../documentation/steps.html#edelweissfe.steps.base.stepbase.StepBase">[docs]</a><span class="k">class</span> <span class="nc">StepBase</span><span class="p">:</span>
+<div class="viewcode-block" id="StepBase"><a class="viewcode-back" href="../../../../documentation/steps.html#edelweissfe.steps.base.stepbase.StepBase">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">StepBase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a simulation step.</span>
 
@@ -142,7 +142,7 @@
 <span class="sd">        Additional options for the step.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
@@ -156,7 +156,7 @@
     <span class="p">):</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="StepBase.solve"><a class="viewcode-back" href="../../../../documentation/steps.html#edelweissfe.steps.base.stepbase.StepBase.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span>
+<div class="viewcode-block" id="StepBase.solve"><a class="viewcode-back" href="../../../../documentation/steps.html#edelweissfe.steps.base.stepbase.StepBase.solve">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FEModel</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

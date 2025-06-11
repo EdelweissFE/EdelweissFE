@@ -107,12 +107,12 @@
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">UserDict</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MappingProxyType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingProxyType</span>
 
 
-<div class="viewcode-block" id="OrderedSet"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet">[docs]</a><span class="k">class</span> <span class="nc">OrderedSet</span><span class="p">(</span><span class="n">UserDict</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedSet"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">OrderedSet</span><span class="p">(</span><span class="n">UserDict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An ordered set.</span>
 
 <span class="sd">    Parameters</span>
@@ -125,7 +125,7 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; consider removing type checking! &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">item_s</span><span class="p">,</span>
@@ -142,12 +142,12 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item_s</span><span class="p">)</span>
 
-<div class="viewcode-block" id="OrderedSet.checkObjectType"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet.checkObjectType">[docs]</a>    <span class="k">def</span> <span class="nf">checkObjectType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedSet.checkObjectType"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet.checkObjectType">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">checkObjectType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the object type is allowed in the OrderedSet&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowedObjectTypes</span></div>
 
-<div class="viewcode-block" id="OrderedSet.forceIter"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet.forceIter">[docs]</a>    <span class="k">def</span> <span class="nf">forceIter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_s</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedSet.forceIter"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet.forceIter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">forceIter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an iterator object for item_s even if item_s itself is not iterable&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item_s</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
@@ -155,53 +155,53 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">iter</span><span class="p">([</span><span class="n">item_s</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="OrderedSet.add"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_s</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedSet.add"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.OrderedSet.add">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an item or an iterable of items to the OrderedSet&quot;&quot;&quot;</span>
 
         <span class="c1"># add items</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">forceIter</span><span class="p">(</span><span class="n">item_s</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkObjectType</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You tried to add an item with wrong type: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="c1"># define &amp;</span>
-    <span class="k">def</span> <span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;You can only compare OrderedSets with matching types&quot;</span><span class="p">)</span>
 
     <span class="c1"># define ^</span>
-    <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">^</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;You can only compare OrderedSets with matching types&quot;</span><span class="p">)</span>
 
     <span class="c1"># define |</span>
-    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;You can only compare OrderedSets with matching types&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">type_</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">type_</span><span class="o">.</span><span class="vm">__module__</span>
         <span class="n">qualname</span> <span class="o">=</span> <span class="n">type_</span><span class="o">.</span><span class="vm">__qualname__</span>
@@ -212,7 +212,7 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ImmutableOrderedSet"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.ImmutableOrderedSet">[docs]</a><span class="k">class</span> <span class="nc">ImmutableOrderedSet</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">):</span>
+<div class="viewcode-block" id="ImmutableOrderedSet"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.ImmutableOrderedSet">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ImmutableOrderedSet</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An immutable ordered set.</span>
 
 <span class="sd">    Parameters</span>
@@ -223,7 +223,7 @@
 <span class="sd">        A list of items.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">item_s</span><span class="p">,</span>
@@ -243,13 +243,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
-<div class="viewcode-block" id="ImmutableOrderedSet.add"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.ImmutableOrderedSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_s</span><span class="p">):</span>
+<div class="viewcode-block" id="ImmutableOrderedSet.add"><a class="viewcode-back" href="../../../documentation/sets.html#edelweissfe.sets.orderedset.ImmutableOrderedSet.add">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_s</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> items cannot be changed&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> items cannot be changed&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2"> items cannot be changed&quot;</span><span class="p">)</span></div>
 </pre></div>
 

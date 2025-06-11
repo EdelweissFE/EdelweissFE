@@ -8,6 +8,7 @@ Documentation
    jobs
    models
    solvers
+   linsolvers
    steps
    analyticalfields
    constraints

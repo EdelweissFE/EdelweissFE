@@ -107,17 +107,17 @@
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">lin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lin</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.elements.base.baseelement</span> <span class="kn">import</span> <span class="n">BaseElement</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.elements.displacementelement.elementmatrices</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.base.baseelement</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseElement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.displacementelement.elementmatrices</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">computeBOperator</span><span class="p">,</span>
     <span class="n">computeJacobian</span><span class="p">,</span>
     <span class="n">computeNOperator</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.points.node</span> <span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.points.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.caseinsensitivedict</span><span class="w"> </span><span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 
 <span class="c1"># element parameters 2D</span>
 <span class="n">w1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">/</span> <span class="mi">9</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
@@ -374,7 +374,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="DisplacementElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement">[docs]</a><span class="k">class</span> <span class="nc">DisplacementElement</span><span class="p">(</span><span class="n">BaseElement</span><span class="p">):</span>
+<div class="viewcode-block" id="DisplacementElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">DisplacementElement</span><span class="p">(</span><span class="n">BaseElement</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This element can be used for EdelweissFE.</span>
 <span class="sd">    The element currently only allows calculations with node forces and given displacements.</span>
 
@@ -413,37 +413,37 @@
 <span class="sd">    If PE or PS is not given by the user, we assume PE.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">elNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The unique number of this element&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elNumber</span>  <span class="c1"># return number</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of nodes this element requires&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of nodes this element holds&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nDof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The total number of degrees of freedom this element has&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nDof</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of fields per nodes.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">dofIndicesPermutation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dofIndicesPermutation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The permutation pattern for the residual vector and the stiffness matrix to</span>
 <span class="sd">        aggregate all entries in order to resemble the defined fields nodewise.</span>
 <span class="sd">        In this case it stays the same because we use the nodes exactly like they are.&quot;&quot;&quot;</span>
@@ -451,24 +451,24 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofIndices</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ensightType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ensightType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The shape of the element in Ensight Gold notation.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensightType</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">visualizationNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visualizationNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The nodes for visualization.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">hasMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Flag to check if a material was assigned to this element.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hasMaterial</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elNumber</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elementtype</span> <span class="o">=</span> <span class="n">elementType</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">elementType</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="n">elementType</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_elNumber</span> <span class="o">=</span> <span class="n">elNumber</span>
         <span class="k">try</span><span class="p">:</span>
@@ -495,7 +495,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;displacement&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nNodes</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dStrain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
 
-<div class="viewcode-block" id="DisplacementElement.setNodes"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setNodes">[docs]</a>    <span class="k">def</span> <span class="nf">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Node</span><span class="p">]):</span>
+<div class="viewcode-block" id="DisplacementElement.setNodes"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setNodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Node</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign the nodes to the element.</span>
 
 <span class="sd">        Parameters</span>
@@ -508,7 +508,7 @@
         <span class="n">_nodesCoordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">.</span><span class="n">coordinates</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>  <span class="c1"># get node coordinates</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodesCoordinates</span> <span class="o">=</span> <span class="n">_nodesCoordinates</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># nodes given column-wise: x-coordinate - y-coordinate</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.setProperties"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setProperties">[docs]</a>    <span class="k">def</span> <span class="nf">setProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="DisplacementElement.setProperties"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setProperties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a set of properties to the element.</span>
 
 <span class="sd">        Parameters</span>
@@ -525,7 +525,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">elementtype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Q&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">elementProperties</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># thickness</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.initializeElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.initializeElement">[docs]</a>    <span class="k">def</span> <span class="nf">initializeElement</span><span class="p">(</span>
+<div class="viewcode-block" id="DisplacementElement.initializeElement"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.initializeElement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">initializeElement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initalize the element to be ready for computing.&quot;&quot;&quot;</span>
@@ -538,7 +538,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodesCoordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nNodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nSpatialDimensions</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.setMaterial"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">setMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+<div class="viewcode-block" id="DisplacementElement.setMaterial"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setMaterial">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a material.</span>
 
 <span class="sd">        Parameters</span>
@@ -569,7 +569,7 @@
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">,</span> <span class="n">stateVarsSize</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.setInitialCondition"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setInitialCondition">[docs]</a>    <span class="k">def</span> <span class="nf">setInitialCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="DisplacementElement.setInitialCondition"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.setInitialCondition">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setInitialCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign initial conditions.</span>
 
 <span class="sd">        Parameters</span>
@@ -582,7 +582,7 @@
 
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Setting an initial condition is not possible with this element provider.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.computeDistributedLoad"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeDistributedLoad">[docs]</a>    <span class="k">def</span> <span class="nf">computeDistributedLoad</span><span class="p">(</span>
+<div class="viewcode-block" id="DisplacementElement.computeDistributedLoad"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeDistributedLoad">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeDistributedLoad</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">loadType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -617,7 +617,7 @@
 
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Applying a distributed load is currently not possible with this element provider.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.computeYourself"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeYourself">[docs]</a>    <span class="k">def</span> <span class="nf">computeYourself</span><span class="p">(</span>
+<div class="viewcode-block" id="DisplacementElement.computeYourself"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeYourself">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeYourself</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">K_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -672,7 +672,7 @@
             <span class="c1"># update strain in stateVars</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">6</span><span class="p">:</span><span class="mi">12</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dStrain</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.computeBodyForce"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeBodyForce">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForce</span><span class="p">(</span>
+<div class="viewcode-block" id="DisplacementElement.computeBodyForce"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.computeBodyForce">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeBodyForce</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</span>
@@ -697,7 +697,7 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">):</span>
             <span class="n">P</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">load</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="n">lin</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.acceptLastState"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.acceptLastState">[docs]</a>    <span class="k">def</span> <span class="nf">acceptLastState</span><span class="p">(</span>
+<div class="viewcode-block" id="DisplacementElement.acceptLastState"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.acceptLastState">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">acceptLastState</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Accept the computed state (in nonlinear iteration schemes).&quot;&quot;&quot;</span>
@@ -705,12 +705,12 @@
         <span class="c1"># copy every array in array (complete copying)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsRef</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_stateVarsTemp</span><span class="p">[</span><span class="n">i</span><span class="p">][:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.resetToLastValidState"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.resetToLastValidState">[docs]</a>    <span class="k">def</span> <span class="nf">resetToLastValidState</span><span class="p">(</span>
+<div class="viewcode-block" id="DisplacementElement.resetToLastValidState"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.resetToLastValidState">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">resetToLastValidState</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset to the last valid state.&quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.getResultArray"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getResultArray">[docs]</a>    <span class="k">def</span> <span class="nf">getResultArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quadraturePoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="DisplacementElement.getResultArray"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getResultArray">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getResultArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quadraturePoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">getPersistentView</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the array of a result, possibly as a persistent view which is continiously</span>
 <span class="sd">        updated by the element.</span>
 
@@ -731,7 +731,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateVars</span><span class="p">[</span><span class="n">quadraturePoint</span><span class="p">][</span><span class="n">result</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.getCoordinatesAtCenter"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getCoordinatesAtCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="DisplacementElement.getCoordinatesAtCenter"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getCoordinatesAtCenter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getCoordinatesAtCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the underlying MarmotElement centroid coordinates.</span>
 
 <span class="sd">        Returns</span>
@@ -743,7 +743,7 @@
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodesCoordinates</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.getNumberOfQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getNumberOfQuadraturePoints">[docs]</a>    <span class="k">def</span> <span class="nf">getNumberOfQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DisplacementElement.getNumberOfQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getNumberOfQuadraturePoints">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getNumberOfQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the number of Quadrature points the element has.</span>
 
 <span class="sd">        Returns</span>
@@ -754,7 +754,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nInt</span></div>
 
-<div class="viewcode-block" id="DisplacementElement.getCoordinatesAtQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getCoordinatesAtQuadraturePoints">[docs]</a>    <span class="k">def</span> <span class="nf">getCoordinatesAtQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="DisplacementElement.getCoordinatesAtQuadraturePoints"><a class="viewcode-back" href="../../../../documentation/elements.html#edelweissfe.elements.displacementelement.element.DisplacementElement.getCoordinatesAtQuadraturePoints">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getCoordinatesAtQuadraturePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the underlying MarmotElement qp coordinates.</span>
 
 <span class="sd">        Returns</span>

@@ -112,12 +112,12 @@
 <span class="sd">Inputfileparser for inputfiles employing an Abaqus-like syntax.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">shlex</span>
-<span class="kn">import</span> <span class="nn">textwrap</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.caseinsensitivedict</span><span class="w"> </span><span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 
 <span class="n">typeMappings</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -319,7 +319,7 @@
 <span class="n">inputLanguage</span> <span class="o">=</span> <span class="n">inputLanguage_</span>
 
 
-<div class="viewcode-block" id="parseInputFile"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.parseInputFile">[docs]</a><span class="k">def</span> <span class="nf">parseInputFile</span><span class="p">(</span>
+<div class="viewcode-block" id="parseInputFile"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.parseInputFile">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parseInputFile</span><span class="p">(</span>
     <span class="n">fileName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">currentKeyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">existingFileDict</span><span class="p">:</span> <span class="n">CaseInsensitiveDict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -430,7 +430,7 @@
     <span class="k">return</span> <span class="n">fileDict</span></div>
 
 
-<div class="viewcode-block" id="printKeywords"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.printKeywords">[docs]</a><span class="k">def</span> <span class="nf">printKeywords</span><span class="p">():</span>
+<div class="viewcode-block" id="printKeywords"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.printKeywords">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">printKeywords</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the input file language set.&quot;&quot;&quot;</span>
 
     <span class="n">kwString</span> <span class="o">=</span> <span class="s2">&quot;    </span><span class="si">{:}</span><span class="s2">    &quot;</span>
@@ -451,7 +451,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="printKeywordsRST"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.printKeywordsRST">[docs]</a><span class="k">def</span> <span class="nf">printKeywordsRST</span><span class="p">():</span>
+<div class="viewcode-block" id="printKeywordsRST"><a class="viewcode-back" href="../../../documentation/syntax.html#edelweissfe.utils.inputfileparser.printKeywordsRST">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">printKeywordsRST</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the input file language set in an RST conform format.&quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="p">(</span><span class="n">kwDoc</span><span class="p">,</span> <span class="n">optiondict</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">inputLanguage</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>

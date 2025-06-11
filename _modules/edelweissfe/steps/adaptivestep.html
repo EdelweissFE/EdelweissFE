@@ -106,16 +106,16 @@
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.steps.base.stepbase</span> <span class="kn">import</span> <span class="n">StepBase</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.timesteppers.adaptivetimestepper</span> <span class="kn">import</span> <span class="n">AdaptiveTimeStepper</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.timesteppers.timestep</span> <span class="kn">import</span> <span class="n">TimeStep</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.caseinsensitivedict</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.models.femodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">FEModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.steps.base.stepbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">StepBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.timesteppers.adaptivetimestepper</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdaptiveTimeStepper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.timesteppers.timestep</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.caseinsensitivedict</span><span class="w"> </span><span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.fieldoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldOutputController</span>
 
 
-<div class="viewcode-block" id="AdaptiveStep"><a class="viewcode-back" href="../../../documentation/steps.html#edelweissfe.steps.adaptivestep.AdaptiveStep">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveStep</span><span class="p">(</span><span class="n">StepBase</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveStep"><a class="viewcode-back" href="../../../documentation/steps.html#edelweissfe.steps.adaptivestep.AdaptiveStep">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AdaptiveStep</span><span class="p">(</span><span class="n">StepBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A standard adaptive incremental step to be used in nonlinear simulations.</span>
 
@@ -141,7 +141,7 @@
     <span class="n">defaultCriticalIter</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">defaultMaxGrowingIter</span> <span class="o">=</span> <span class="mi">10</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
@@ -195,7 +195,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">stepActions</span>
 
-<div class="viewcode-block" id="AdaptiveStep.solve"><a class="viewcode-back" href="../../../documentation/steps.html#edelweissfe.steps.adaptivestep.AdaptiveStep.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span>
+<div class="viewcode-block" id="AdaptiveStep.solve"><a class="viewcode-back" href="../../../documentation/steps.html#edelweissfe.steps.adaptivestep.AdaptiveStep.solve">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
@@ -218,15 +218,15 @@
             <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">outputManagers</span><span class="p">:</span>
                 <span class="n">manager</span><span class="o">.</span><span class="n">finalizeStep</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">getTimeStep</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTimeStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeStep</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span><span class="o">.</span><span class="n">generateTimeStep</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cutbackFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cutbackFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span><span class="o">.</span><span class="n">discardAndChangeIncrement</span><span class="p">(</span><span class="n">cutbackFactor</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">preventIncrementIncrease</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">preventIncrementIncrease</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span><span class="o">.</span><span class="n">preventIncrementIncrease</span><span class="p">()</span></div>

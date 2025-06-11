@@ -55,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jobs.html">Inputfile driven simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linsolvers.html">Linear solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Analytical fields</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#scalarexpression-field-defined-by-expression"><code class="docutils literal notranslate"><span class="pre">scalarexpression</span></code> - Field defined by expression</a></li>
@@ -272,11 +273,25 @@ configuration,<span class="nv"> overwrite</span><span class="ow">=</span><span c
 <span class="nv">lengthscale </span><span class="ow">=</span><span class="m"> 10</span>
 <span class="nv">seed        </span><span class="ow">=</span><span class="m"> 2</span>
 
+<span class="k">*AnalyticalField</span>,<span class="nv"> name</span><span class="ow">=</span><span class="m">AnalyticalField-02</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">randomScalar</span>
+<span class="nv">model       </span><span class="ow">=</span><span class="m"> Matern</span>
+<span class="nv">mean        </span><span class="ow">=</span><span class="m"> 0.01</span>
+<span class="nv">variance    </span><span class="ow">=</span><span class="m"> 0.000001</span>
+<span class="nv">lengthscale </span><span class="ow">=</span><span class="m"> 3</span>
+<span class="nv">nu          </span><span class="ow">=</span><span class="m"> 0.2</span>
+<span class="nv">seed        </span><span class="ow">=</span><span class="m"> 3</span>
+
 <span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>
 setfield,<span class="nv">   name</span><span class="ow">=</span><span class="m">sf</span>,<span class="nv">  fieldOutput</span><span class="ow">=</span><span class="m">kappa</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">analyticalField</span>,<span class="nv"> value</span><span class="ow">=</span><span class="m">AnalyticalField-01</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">x0u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_left</span>,<span class="nv">      field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 1</span><span class="ow">=</span><span class="m">0.</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">y0u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_bottom</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">0.</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">z0u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_back</span>,<span class="nv">      field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 3</span><span class="ow">=</span><span class="m">0.</span>
+
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-2</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>
+dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">y1u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-0.5</span>
+
+<span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>
+setfield,<span class="nv">   name</span><span class="ow">=</span><span class="m">sf2</span>,<span class="nv">  fieldOutput</span><span class="ow">=</span><span class="m">kappa</span>,<span class="nv"> type</span><span class="ow">=</span><span class="m">analyticalField</span>,<span class="nv"> value</span><span class="ow">=</span><span class="m">AnalyticalField-02</span>
 
 <span class="k">*step</span>,<span class="nv"> maxInc</span><span class="ow">=</span><span class="m">1e-0</span>,<span class="nv"> minInc</span><span class="ow">=</span><span class="m">1e-2</span>,<span class="nv"> maxNumInc</span><span class="ow">=</span><span class="m">100</span>,<span class="nv"> maxIter</span><span class="ow">=</span><span class="m">25</span>,<span class="nv"> stepLength</span><span class="ow">=</span><span class="m">1</span>,<span class="nv"> solver</span><span class="ow">=</span><span class="m">theSolver</span>
 dirichlet,<span class="nv">  name</span><span class="ow">=</span><span class="m">y1u</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_top</span>,<span class="nv">    field</span><span class="ow">=</span><span class="m">displacement</span>,<span class="nv"> 2</span><span class="ow">=</span><span class="m">-0.5</span>

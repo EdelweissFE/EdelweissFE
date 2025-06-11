@@ -106,15 +106,15 @@
 <span class="c1">#  ---------------------------------------------------------------------</span>
 <span class="c1"># Created on Sat Jan  21 12:18:10 2017</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.timesteppers.timestep</span> <span class="kn">import</span> <span class="n">TimeStep</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">ReachedMaxIncrements</span><span class="p">,</span> <span class="n">ReachedMinIncrementSize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.timesteppers.timestep</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReachedMaxIncrements</span><span class="p">,</span> <span class="n">ReachedMinIncrementSize</span>
 
 
-<div class="viewcode-block" id="AdaptiveTimeStepper"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveTimeStepper</span><span class="p">:</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AdaptiveTimeStepper</span><span class="p">:</span>
     <span class="n">identification</span> <span class="o">=</span> <span class="s2">&quot;AdaptiveTimeStepper&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">currentTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">stepLength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -167,7 +167,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span> <span class="o">=</span> <span class="n">journal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increaseFactor</span> <span class="o">=</span> <span class="n">increaseFactor</span>
 
-<div class="viewcode-block" id="AdaptiveTimeStepper.generateTimeStep"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep">[docs]</a>    <span class="k">def</span> <span class="nf">generateTimeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeStep</span><span class="p">:</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.generateTimeStep"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.generateTimeStep">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generateTimeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeStep</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the next increment.</span>
 
@@ -213,7 +213,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">incrementCounter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nPassedGoodIncrements</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="AdaptiveTimeStepper.preventIncrementIncrease"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease">[docs]</a>    <span class="k">def</span> <span class="nf">preventIncrementIncrease</span><span class="p">(</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.preventIncrementIncrease"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.preventIncrementIncrease">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">preventIncrementIncrease</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;May be called before an increment is requested, to prevent from</span>
@@ -221,7 +221,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">allowedToIncreasedNext</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="AdaptiveTimeStepper.reduceNextIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.reduceNextIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">reduceNextIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.reduceNextIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.reduceNextIncrement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reduceNextIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reduce the increment size for the next increment.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">increment</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">minIncrement</span><span class="p">:</span>
@@ -242,7 +242,7 @@
             <span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AdaptiveTimeStepper.discardAndChangeIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.discardAndChangeIncrement"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.discardAndChangeIncrement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">discardAndChangeIncrement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Change increment size between minIncrement and</span>
 <span class="sd">        maxIncrement by a given scale factor.</span>
 
@@ -262,7 +262,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">reduceNextIncrement</span><span class="p">(</span><span class="n">scaleFactor</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AdaptiveTimeStepper.writeRestart"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.writeRestart">[docs]</a>    <span class="k">def</span> <span class="nf">writeRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.writeRestart"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.writeRestart">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">writeRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write restart information to a file.</span>
 
 <span class="sd">        Parameters</span>
@@ -286,7 +286,7 @@
         <span class="n">f</span><span class="p">[</span><span class="s2">&quot;timestepper&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;allowedToIncreasedNext&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowedToIncreasedNext</span>
         <span class="n">f</span><span class="p">[</span><span class="s2">&quot;timestepper&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;dT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dT</span></div>
 
-<div class="viewcode-block" id="AdaptiveTimeStepper.readRestart"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.readRestart">[docs]</a>    <span class="k">def</span> <span class="nf">readRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveTimeStepper.readRestart"><a class="viewcode-back" href="../../../documentation/utils.html#edelweissfe.timesteppers.adaptivetimestepper.AdaptiveTimeStepper.readRestart">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">readRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restartFile</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read restart information from a file.</span>
 
 <span class="sd">        Parameters</span>

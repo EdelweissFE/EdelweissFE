@@ -109,22 +109,23 @@
 
 <span class="c1"># @author: Matthias Neuner</span>
 
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.config.linsolve</span> <span class="kn">import</span> <span class="n">getDefaultLinSolver</span><span class="p">,</span> <span class="n">getLinSolverByName</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.timing</span> <span class="kn">import</span> <span class="n">createTimingDict</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.constraints.base.constraintbase</span> <span class="kn">import</span> <span class="n">ConstraintBase</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.numerics.csrgenerator</span> <span class="kn">import</span> <span class="n">CSRGenerator</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.numerics.dofmanager</span> <span class="kn">import</span> <span class="n">DofManager</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.outputmanagers.base.outputmanagerbase</span> <span class="kn">import</span> <span class="n">OutputManagerBase</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.stepactions.base.stepactionbase</span> <span class="kn">import</span> <span class="n">StepActionBase</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.timesteppers.timestep</span> <span class="kn">import</span> <span class="n">TimeStep</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.config.linsolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">getDefaultLinSolver</span><span class="p">,</span> <span class="n">getLinSolverByName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.config.timing</span><span class="w"> </span><span class="kn">import</span> <span class="n">createTimingDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.constraints.base.constraintbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstraintBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.models.femodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">FEModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.numerics.csrgenerator</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSRGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.numerics.dofmanager</span><span class="w"> </span><span class="kn">import</span> <span class="n">DofManager</span><span class="p">,</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">VIJSystemMatrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.outputmanagers.base.outputmanagerbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputManagerBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.stepactions.base.stepactionbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">StepActionBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.timesteppers.timestep</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ConditionalStop</span><span class="p">,</span>
     <span class="n">CutbackRequest</span><span class="p">,</span>
     <span class="n">DivergingSolution</span><span class="p">,</span>
@@ -133,10 +134,10 @@
     <span class="n">ReachedMinIncrementSize</span><span class="p">,</span>
     <span class="n">StepFailed</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.fieldoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldOutputController</span>
 
 
-<div class="viewcode-block" id="NIST"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST">[docs]</a><span class="k">class</span> <span class="nc">NIST</span><span class="p">:</span>
+<div class="viewcode-block" id="NIST"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NIST</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the Nonlinear Implicit STatic -- solver.</span>
 
 <span class="sd">    Parameters</span>
@@ -155,9 +156,10 @@
         <span class="s2">&quot;defaultMaxGrowingIter&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
         <span class="s2">&quot;extrapolation&quot;</span><span class="p">:</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
         <span class="s2">&quot;linsolver&quot;</span><span class="p">:</span> <span class="s2">&quot;pardiso&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;linsolverConfigFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">journal</span> <span class="o">=</span> <span class="n">journal</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fieldCorrectionTolerances</span> <span class="o">=</span> <span class="n">jobInfo</span><span class="p">[</span><span class="s2">&quot;fieldCorrectionTolerance&quot;</span><span class="p">]</span>
@@ -167,7 +169,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NISTOptions</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_updateOptions</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_updateOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">updatedOptions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_updateOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">updatedOptions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">journal</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update options of the solver using a string dict</span>
 
 <span class="sd">        Parameters</span>
@@ -185,7 +187,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Invalid option </span><span class="si">{:}</span><span class="s2"> for </span><span class="si">{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">))</span>
 
-<div class="viewcode-block" id="NIST.solveStep"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.solveStep">[docs]</a>    <span class="k">def</span> <span class="nf">solveStep</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.solveStep"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.solveStep">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solveStep</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">step</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span>
@@ -249,8 +251,12 @@
             <span class="k">pass</span>
 
         <span class="n">extrapolation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;extrapolation&quot;</span><span class="p">]</span>
+        <span class="n">linsolverOptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;linsolverConfigFile&quot;</span><span class="p">]</span>
+        <span class="n">linsolverOptionDict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">linsolverOptions</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="n">linsolverOptions</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linSolver</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">getLinSolverByName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;linsolver&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;linsolver&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="k">else</span> <span class="n">getDefaultLinSolver</span><span class="p">()</span>
+            <span class="n">getLinSolverByName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;linsolver&quot;</span><span class="p">],</span> <span class="n">linsolverOptionDict</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;linsolver&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
+            <span class="k">else</span> <span class="n">getDefaultLinSolver</span><span class="p">()</span>
         <span class="p">)</span>
 
         <span class="n">maxIter</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">maxIter</span>
@@ -403,7 +409,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">identification</span><span class="p">,</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NIST.solveIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.solveIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">solveIncrement</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.solveIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.solveIncrement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solveIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">U_n</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">dU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -529,7 +535,7 @@
 
         <span class="k">return</span> <span class="n">U_np</span><span class="p">,</span> <span class="n">dU</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">iterationCounter</span><span class="p">,</span> <span class="n">incrementResidualHistory</span></div>
 
-<div class="viewcode-block" id="NIST.computeDistributedLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads">[docs]</a>    <span class="k">def</span> <span class="nf">computeDistributedLoads</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.computeDistributedLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeDistributedLoads">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeDistributedLoads</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -579,7 +585,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;distributed loads&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
-<div class="viewcode-block" id="NIST.computeBodyForces"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">[docs]</a>    <span class="k">def</span> <span class="nf">computeBodyForces</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.computeBodyForces"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeBodyForces">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeBodyForces</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">bodyForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -628,7 +634,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;body forces&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
-<div class="viewcode-block" id="NIST.applyDirichletK"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichletK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VIJSystemMatrix</span><span class="p">:</span>
+<div class="viewcode-block" id="NIST.applyDirichletK"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyDirichletK">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">applyDirichletK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VIJSystemMatrix</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the global stiffness matrix</span>
 <span class="sd">        Is called by solveStep() before solving the global system.</span>
 <span class="sd">        http://stackoverflux.com/questions/12129948/scipy-sparse-set-row-to-zeros</span>
@@ -664,7 +670,7 @@
 
         <span class="k">return</span> <span class="n">K</span></div>
 
-<div class="viewcode-block" id="NIST.applyDirichlet"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet">[docs]</a>    <span class="k">def</span> <span class="nf">applyDirichlet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">]):</span>
+<div class="viewcode-block" id="NIST.applyDirichlet"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyDirichlet">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">applyDirichlet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span> <span class="n">dirichlets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the dirichlet bcs on the residual vector</span>
 <span class="sd">        Is called by solveStep() before solving the global equatuon system.</span>
 
@@ -694,7 +700,7 @@
 
         <span class="k">return</span> <span class="n">R</span></div>
 
-<div class="viewcode-block" id="NIST.checkConvergence"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.checkConvergence">[docs]</a>    <span class="k">def</span> <span class="nf">checkConvergence</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.checkConvergence"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.checkConvergence">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">checkConvergence</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">R</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
         <span class="n">ddU</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -796,7 +802,7 @@
 
         <span class="k">return</span> <span class="n">convergedAtAll</span><span class="p">,</span> <span class="n">nodesWithLargestResidual</span></div>
 
-<div class="viewcode-block" id="NIST.linearSolve"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.linearSolve">[docs]</a>    <span class="k">def</span> <span class="nf">linearSolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="NIST.linearSolve"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.linearSolve">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">linearSolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve the linear equation system.</span>
 
 <span class="sd">        Parameters</span>
@@ -822,7 +828,7 @@
 
         <span class="k">return</span> <span class="n">ddU</span></div>
 
-<div class="viewcode-block" id="NIST.assembleStiffnessCSR"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.assembleStiffnessCSR">[docs]</a>    <span class="k">def</span> <span class="nf">assembleStiffnessCSR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
+<div class="viewcode-block" id="NIST.assembleStiffnessCSR"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.assembleStiffnessCSR">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assembleStiffnessCSR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">VIJSystemMatrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a CSR matrix from VIJ format.</span>
 
 <span class="sd">        Parameters</span>
@@ -840,7 +846,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">computationTimes</span><span class="p">[</span><span class="s2">&quot;CSR generation&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span>
         <span class="k">return</span> <span class="n">KCsr</span></div>
 
-<div class="viewcode-block" id="NIST.computeSpatialAveragedFluxes"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">[docs]</a>    <span class="k">def</span> <span class="nf">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="NIST.computeSpatialAveragedFluxes"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeSpatialAveragedFluxes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeSpatialAveragedFluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the spatial averaged flux for every field</span>
 <span class="sd">        Is usually called by checkConvergence().</span>
 
@@ -863,7 +869,7 @@
 
         <span class="k">return</span> <span class="n">spatialAveragedFluxes</span></div>
 
-<div class="viewcode-block" id="NIST.computeElements"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeElements">[docs]</a>    <span class="k">def</span> <span class="nf">computeElements</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.computeElements"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.computeElements">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeElements</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -920,7 +926,7 @@
 
         <span class="k">return</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">F</span></div>
 
-<div class="viewcode-block" id="NIST.assembleConstraints"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints">[docs]</a>    <span class="k">def</span> <span class="nf">assembleConstraints</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.assembleConstraints"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.assembleConstraints">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assembleConstraints</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConstraintBase</span><span class="p">],</span>
         <span class="n">U_np</span><span class="p">:</span> <span class="n">DofVector</span><span class="p">,</span>
@@ -972,7 +978,7 @@
 
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
-<div class="viewcode-block" id="NIST.assembleLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.assembleLoads">[docs]</a>    <span class="k">def</span> <span class="nf">assembleLoads</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.assembleLoads"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.assembleLoads">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assembleLoads</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">nodeForces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
         <span class="n">distributedLoads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StepActionBase</span><span class="p">],</span>
@@ -1016,7 +1022,7 @@
 
         <span class="k">return</span> <span class="n">PExt</span><span class="p">,</span> <span class="n">K</span></div>
 
-<div class="viewcode-block" id="NIST.extrapolateLastIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement">[docs]</a>    <span class="k">def</span> <span class="nf">extrapolateLastIncrement</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.extrapolateLastIncrement"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.extrapolateLastIncrement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">extrapolateLastIncrement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">extrapolation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">timeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span>
@@ -1057,7 +1063,7 @@
 
         <span class="k">return</span> <span class="n">dU</span><span class="p">,</span> <span class="n">isExtrapolatedIncrement</span></div>
 
-<div class="viewcode-block" id="NIST.checkDivergingSolution"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.checkDivergingSolution">[docs]</a>    <span class="k">def</span> <span class="nf">checkDivergingSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incrementResidualHistory</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NIST.checkDivergingSolution"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.checkDivergingSolution">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">checkDivergingSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incrementResidualHistory</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">maxGrowingIter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the iterative solution scheme is diverging.</span>
 
 <span class="sd">        Parameters</span>
@@ -1077,7 +1083,7 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="NIST.printResidualOutlierNodes"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes">[docs]</a>    <span class="k">def</span> <span class="nf">printResidualOutlierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residualOutliers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<div class="viewcode-block" id="NIST.printResidualOutlierNodes"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.printResidualOutlierNodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">printResidualOutlierNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residualOutliers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Print which nodes have the largest residuals.</span>
 
 <span class="sd">        Parameters</span>
@@ -1097,7 +1103,7 @@
                 <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NIST.applyStepActionsAtStepStart"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+<div class="viewcode-block" id="NIST.applyStepActionsAtStepStart"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepStart">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">applyStepActionsAtStepStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should be appliet at the start a step.</span>
 
 <span class="sd">        Parameters</span>
@@ -1112,7 +1118,7 @@
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">action</span><span class="o">.</span><span class="n">applyAtStepStart</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NIST.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
+<div class="viewcode-block" id="NIST.applyStepActionsAtStepEnd"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtStepEnd">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">applyStepActionsAtStepEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should finish a step.</span>
 
 <span class="sd">        Parameters</span>
@@ -1127,7 +1133,7 @@
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">action</span><span class="o">.</span><span class="n">applyAtStepEnd</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NIST.applyStepActionsAtIncrementStart"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart">[docs]</a>    <span class="k">def</span> <span class="nf">applyStepActionsAtIncrementStart</span><span class="p">(</span>
+<div class="viewcode-block" id="NIST.applyStepActionsAtIncrementStart"><a class="viewcode-back" href="../../../documentation/solvers.html#edelweissfe.solvers.nonlinearimplicitstatic.NIST.applyStepActionsAtIncrementStart">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">applyStepActionsAtIncrementStart</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">:</span> <span class="n">TimeStep</span><span class="p">,</span> <span class="n">stepActions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepActionBase</span><span class="p">]</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when all step actions should be applied at the start of a step.</span>
@@ -1146,7 +1152,7 @@
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">stepActionType</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">action</span><span class="o">.</span><span class="n">applyAtIncrementStart</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">findDirichletIndices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirichlet</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findDirichletIndices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirichlet</span><span class="p">):</span>
         <span class="n">nSet</span> <span class="o">=</span> <span class="n">dirichlet</span><span class="o">.</span><span class="n">nSet</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">dirichlet</span><span class="o">.</span><span class="n">field</span>
         <span class="n">components</span> <span class="o">=</span> <span class="n">dirichlet</span><span class="o">.</span><span class="n">components</span>

@@ -114,12 +114,12 @@
 <span class="sd">A ``*job`` definition consists of multiple ``*steps``, associated with that job.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">getCurrentTime</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.config.configurator</span> <span class="kn">import</span> <span class="n">loadConfiguration</span><span class="p">,</span> <span class="n">updateConfiguration</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.phenomena</span> <span class="kn">import</span> <span class="n">domainMapping</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.config.solvers</span> <span class="kn">import</span> <span class="n">getSolverByName</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.helpers.inputfilehelpers</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.config.configurator</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadConfiguration</span><span class="p">,</span> <span class="n">updateConfiguration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.config.phenomena</span><span class="w"> </span><span class="kn">import</span> <span class="n">domainMapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.config.solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">getSolverByName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.helpers.inputfilehelpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">createFieldOutputFromInputFile</span><span class="p">,</span>
     <span class="n">createOutputManagersFromInputFile</span><span class="p">,</span>
     <span class="n">createPlotterFromInputFile</span><span class="p">,</span>
@@ -127,13 +127,13 @@
     <span class="n">createStepManagerFromInputFile</span><span class="p">,</span>
     <span class="n">fillFEModelFromInputFile</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.journal.journal</span> <span class="kn">import</span> <span class="n">Journal</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.models.femodel</span> <span class="kn">import</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">printPrettyModelSummary</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">StepFailed</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.fieldoutput</span> <span class="kn">import</span> <span class="n">FieldOutputController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.journal.journal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Journal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.models.femodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">FEModel</span><span class="p">,</span> <span class="n">printPrettyModelSummary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">StepFailed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.fieldoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldOutputController</span>
 
 
-<div class="viewcode-block" id="finiteElementSimulation"><a class="viewcode-back" href="../../../documentation/jobs.html#edelweissfe.drivers.inputfiledrivensimulation.finiteElementSimulation">[docs]</a><span class="k">def</span> <span class="nf">finiteElementSimulation</span><span class="p">(</span>
+<div class="viewcode-block" id="finiteElementSimulation"><a class="viewcode-back" href="../../../documentation/jobs.html#edelweissfe.drivers.inputfiledrivensimulation.finiteElementSimulation">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">finiteElementSimulation</span><span class="p">(</span>
     <span class="n">inputfile</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">suppressPlots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">FEModel</span><span class="p">,</span> <span class="n">FieldOutputController</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is core function of the finite element analysis.</span>
@@ -233,7 +233,7 @@
     <span class="n">solvers</span> <span class="o">=</span> <span class="n">createSolversFromInputFile</span><span class="p">(</span><span class="n">inputfile</span><span class="p">,</span> <span class="n">jobInfo</span><span class="p">,</span> <span class="n">journal</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">solvers</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
         <span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;Warning, not defining a Solver is deprecated; Define solver using *solver keyword&quot;</span><span class="p">,</span>

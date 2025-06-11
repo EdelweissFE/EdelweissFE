@@ -107,10 +107,10 @@
 <span class="c1">#  the top level directory of EdelweissFE.</span>
 <span class="c1">#  ---------------------------------------------------------------------</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">edelweissfe.materials.base.basehypoelasticmaterial</span> <span class="kn">import</span> <span class="n">BaseHypoElasticMaterial</span>
-<span class="kn">from</span> <span class="nn">edelweissfe.utils.exceptions</span> <span class="kn">import</span> <span class="n">CutbackRequest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.materials.base.basehypoelasticmaterial</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseHypoElasticMaterial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">CutbackRequest</span>
 
 <span class="c1"># define variables and functions used in all material dimensions</span>
 <span class="n">IDev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -137,15 +137,15 @@
 <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-12</span>  <span class="c1"># tolerance</span>
 
 
-<span class="k">def</span> <span class="nf">deviatoric</span><span class="p">(</span><span class="n">stress</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">deviatoric</span><span class="p">(</span><span class="n">stress</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">IDev</span> <span class="o">@</span> <span class="n">stress</span>
 
 
-<span class="k">def</span> <span class="nf">deviatoricNorm</span><span class="p">(</span><span class="n">devStress</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">deviatoricNorm</span><span class="p">(</span><span class="n">devStress</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">devStress</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">devStress</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">])))</span>
 
 
-<div class="viewcode-block" id="VonMisesMaterial"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial">[docs]</a><span class="k">class</span> <span class="nc">VonMisesMaterial</span><span class="p">(</span><span class="n">BaseHypoElasticMaterial</span><span class="p">):</span>
+<div class="viewcode-block" id="VonMisesMaterial"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VonMisesMaterial</span><span class="p">(</span><span class="n">BaseHypoElasticMaterial</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Von Mises plastic material for 3D and 2D plane strain.</span>
 
 <span class="sd">    Parameters</span>
@@ -173,7 +173,7 @@
 <span class="sd">    fy(kappa) = fy0 + HLin * kappa + dfy * (1 - exp(-delta * kappa))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="VonMisesMaterial.getNumberOfRequiredStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getNumberOfRequiredStateVars">[docs]</a>    <span class="k">def</span> <span class="nf">getNumberOfRequiredStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VonMisesMaterial.getNumberOfRequiredStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getNumberOfRequiredStateVars">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getNumberOfRequiredStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns number of needed material state Variables per integration point in the material.</span>
 
 <span class="sd">        Returns</span>
@@ -183,7 +183,7 @@
 
         <span class="k">return</span> <span class="mi">1</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materialProperties</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="c1"># elasticity parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_E</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># set E</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_v</span> <span class="o">=</span> <span class="n">materialProperties</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># set v</span>
@@ -204,7 +204,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dfy_ddKappa</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">kappa_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">HLin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaYieldStress</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">kappa_</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">))</span>
 
-<div class="viewcode-block" id="VonMisesMaterial.elasticityMatrix"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">elasticityMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="VonMisesMaterial.elasticityMatrix"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.elasticityMatrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">elasticityMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initalize a 3D material elasticity matrix.</span>
 
 <span class="sd">        Returns</span>
@@ -229,7 +229,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">Ei</span></div>
 
-<div class="viewcode-block" id="VonMisesMaterial.assignCurrentStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.assignCurrentStateVars">[docs]</a>    <span class="k">def</span> <span class="nf">assignCurrentStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currentStateVars</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="VonMisesMaterial.assignCurrentStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.assignCurrentStateVars">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assignCurrentStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currentStateVars</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign new current state vars.</span>
 
 <span class="sd">        Parameters</span>
@@ -239,7 +239,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">kappaOld</span> <span class="o">=</span> <span class="n">currentStateVars</span></div>
 
-<div class="viewcode-block" id="VonMisesMaterial.computePlaneStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computePlaneStress">[docs]</a>    <span class="k">def</span> <span class="nf">computePlaneStress</span><span class="p">(</span>
+<div class="viewcode-block" id="VonMisesMaterial.computePlaneStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computePlaneStress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computePlaneStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -264,7 +264,7 @@
 
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Von Mises material with plane stress is currently not possible.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="VonMisesMaterial.computeStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeStress">[docs]</a>    <span class="k">def</span> <span class="nf">computeStress</span><span class="p">(</span>
+<div class="viewcode-block" id="VonMisesMaterial.computeStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeStress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -334,7 +334,7 @@
             <span class="n">stress</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">trialStress</span>
             <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span></div>
 
-<div class="viewcode-block" id="VonMisesMaterial.computeUniaxialStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeUniaxialStress">[docs]</a>    <span class="k">def</span> <span class="nf">computeUniaxialStress</span><span class="p">(</span>
+<div class="viewcode-block" id="VonMisesMaterial.computeUniaxialStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.computeUniaxialStress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeUniaxialStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -359,7 +359,7 @@
 
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Computing uniaxial stress is not possible with this material.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="VonMisesMaterial.getResult"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getResult">[docs]</a>    <span class="k">def</span> <span class="nf">getResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="VonMisesMaterial.getResult"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.vonmises.vonmises.VonMisesMaterial.getResult">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">getResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the result, as a persistent view which is continiously</span>
 <span class="sd">        updated by the material.</span>
 

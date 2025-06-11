@@ -113,12 +113,12 @@
 <span class="sd">which can be used troughout EdelweissFE.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<span class="kn">from</span> <span class="nn">prettytable</span> <span class="kn">import</span> <span class="n">PrettyTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prettytable</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrettyTable</span>
 
 
-<div class="viewcode-block" id="Journal"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal">[docs]</a><span class="k">class</span> <span class="nc">Journal</span><span class="p">:</span>
+<div class="viewcode-block" id="Journal"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Journal</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This class provides an interface to present messages to the user via console</span>
 <span class="sd">    output and/or file output.</span>
 <span class="sd">    Information messages can be sorted by the importance level.</span>
@@ -134,7 +134,7 @@
 <span class="sd">        Suppress certain levels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -145,13 +145,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setNewLineWidth</span><span class="p">(</span><span class="n">newWidth</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">leftColumn</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">setFileOutput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileHandle</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setFileOutput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileHandle</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">fileHandle</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span> <span class="o">=</span> <span class="n">fileHandle</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Journal.setNewLineWidth"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.setNewLineWidth">[docs]</a>    <span class="k">def</span> <span class="nf">setNewLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newWidth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">leftColumn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">):</span>
+<div class="viewcode-block" id="Journal.setNewLineWidth"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.setNewLineWidth">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setNewLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newWidth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">leftColumn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the line width of the log file.</span>
 
 <span class="sd">        Parameters</span>
@@ -178,7 +178,7 @@
             <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;     {{:&lt;</span><span class="si">{:}</span><span class="s2">}}{{:&gt;</span><span class="si">{:}</span><span class="s2">}} &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">leftColumn</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rightColumn</span> <span class="o">-</span> <span class="mi">2</span><span class="p">),</span>
         <span class="p">}</span></div>
 
-<div class="viewcode-block" id="Journal.message"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.message">[docs]</a>    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Journal.message"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.message">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write message to log.</span>
 
 <span class="sd">        Parameters</span>
@@ -204,7 +204,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">theLine</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Journal.errorMessage"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.errorMessage">[docs]</a>    <span class="k">def</span> <span class="nf">errorMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errorMessage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Journal.errorMessage"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.errorMessage">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">errorMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errorMessage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Print an error message.</span>
 
 <span class="sd">        Parameters</span>
@@ -221,7 +221,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">theLine</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Journal.printSeperationLine"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.printSeperationLine">[docs]</a>    <span class="k">def</span> <span class="nf">printSeperationLine</span><span class="p">(</span>
+<div class="viewcode-block" id="Journal.printSeperationLine"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.printSeperationLine">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">printSeperationLine</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a seperation file to log.&quot;&quot;&quot;</span>
@@ -233,7 +233,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fileHandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">theLine</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Journal.printTable"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.printTable">[docs]</a>    <span class="k">def</span> <span class="nf">printTable</span><span class="p">(</span>
+<div class="viewcode-block" id="Journal.printTable"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.printTable">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">printTable</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">table</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -267,19 +267,19 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">rowBar</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">printPrettyTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prettyTable</span><span class="p">:</span> <span class="n">PrettyTable</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">printPrettyTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prettyTable</span><span class="p">:</span> <span class="n">PrettyTable</span><span class="p">,</span> <span class="n">senderIdentification</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">prettyTable</span><span class="o">.</span><span class="n">min_table_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span>
         <span class="n">prettyTable</span><span class="o">.</span><span class="n">max_table_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftColumn</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">prettyTable</span><span class="p">),</span> <span class="n">senderIdentification</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Journal.setVerbose"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.setVerbose">[docs]</a>    <span class="k">def</span> <span class="nf">setVerbose</span><span class="p">(</span>
+<div class="viewcode-block" id="Journal.setVerbose"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.setVerbose">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setVerbose</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set highest verbosity.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_suppressLvl</span> <span class="o">=</span> <span class="mi">3</span></div>
 
-<div class="viewcode-block" id="Journal.squelch"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.squelch">[docs]</a>    <span class="k">def</span> <span class="nf">squelch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+<div class="viewcode-block" id="Journal.squelch"><a class="viewcode-back" href="../../../documentation/journal.html#edelweissfe.journal.journal.Journal.squelch">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">squelch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Suppress all messages.</span>
 
 <span class="sd">        Parameters</span>
