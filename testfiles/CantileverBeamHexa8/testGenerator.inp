@@ -13,8 +13,8 @@ nZ      =2
 lX      =500
 lY      =5
 lZ      =5
-elProvider =displacementelement
-elType  =Hexa8N
+elProvider =edelweiss
+elType  =C3D8N
 
 *section, name=section1, material=linearelastic, type=solid
 all

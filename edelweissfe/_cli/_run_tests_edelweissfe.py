@@ -116,6 +116,10 @@ def main():
             print("Test {:50} [grey]SKIPPED[/]: ".format(directory) + str(e))
             continue
 
+        except ModuleNotFoundError as e:
+            print("Test {:50} [grey]SKIPPED[/]: ".format(directory) + str(e))
+            continue
+
         except Exception as e:
             print("Test {:50} [red]FAILED[/]: ".format(directory) + str(e))
             failedTests += 1

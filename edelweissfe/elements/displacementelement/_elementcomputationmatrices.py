@@ -14,7 +14,6 @@
 #  2017 - today
 #
 #  Daniel Reitmair daniel.reitmair@uibk.ac.at
-#  Matthias Neuner matthias.neuner@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -48,7 +47,12 @@ def computeJacobian(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarra
     nNodes
         Number of nodes the element has.
     dim
-        Dimension the element has."""
+        Dimension the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested Jacobian matrix."""
 
     if dim == 2:
         if nNodes == 4:
@@ -80,7 +84,12 @@ def computeBOperator(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarr
     nNodes
         Number of nodes the element has.
     dim
-        Dimension the element has."""
+        Dimension the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested B operator."""
 
     if dim == 2:
         if nNodes == 4:
@@ -111,7 +120,11 @@ def computeNOperator(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, nInt: int, 
         Number of nodes the element has.
     dim
         Dimension the element has.
-    """
+
+    Returns
+    -------
+    np.ndarray
+        The shape functions at the given coordinates."""
 
     N = np.zeros([nInt, nNodes])
     if dim == 2:
@@ -200,7 +213,23 @@ def computeNOperator(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, nInt: int, 
 
 
 def _J2D4(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the Jacobi matrix for a Quad4 element."""
+    """Get the Jacobi matrix for a Quad4 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested Jacobian matrix."""
 
     J = np.zeros([nInt, 2, 2])
     # calc all parameters for the X and Y functions (Q4)
@@ -221,7 +250,23 @@ def _J2D4(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
 
 
 def _J2D8(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the Jacobi matrix for a Quad8 element."""
+    """Get the Jacobi matrix for a Quad8 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested Jacobian matrix."""
 
     J = np.zeros([nInt, 2, 2])
     # calc all parameters for the X and Y functions (Q8)
@@ -259,7 +304,25 @@ def _J2D8(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
 
 
 def _J3D8(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the Jacobi matrix for a Hexa8 element."""
+    """Get the Jacobi matrix for a Hexa8 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    z
+        Local coordinates zeta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested Jacobian matrix."""
 
     J = np.zeros([nInt, 3, 3])
     # calc all parameters for the X and Y functions (H8)
@@ -304,7 +367,25 @@ def _J3D8(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: i
 
 
 def _J3D20(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the Jacobi matrix for a Hexa20 element."""
+    """Get the Jacobi matrix for a Hexa20 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    z
+        Local coordinates zeta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested Jacobian matrix."""
 
     J = np.zeros([nInt, 3, 3])
     # calc all parameters for the X and Y functions (H20)
@@ -460,7 +541,23 @@ def _J3D20(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: 
 
 
 def _B2D4(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the B operator for a Quad4 element."""
+    """Get the B operator for a linear Quad4 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested B operator."""
 
     Bi = np.zeros([nInt, 3, 8])
     # [a] matrix that connects strain and displacement derivatives
@@ -504,7 +601,23 @@ def _B2D4(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
 
 
 def _B2D8(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the B operator for a Quad8 element."""
+    """Get the B operator for a linear Quad8 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested B operator."""
 
     Bi = np.zeros([nInt, 3, 16])
     # [a] matrix that connects strain and displacement derivatives
@@ -564,7 +677,25 @@ def _B2D8(xi: np.ndarray, eta: np.ndarray, x: np.ndarray, nInt: int):
 
 
 def _B3D8(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the B operator for a Hexa8 element."""
+    """Get the B operator for a linear Hexa8 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    z
+        Local coordinates zeta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested B operator."""
 
     Bi = np.zeros([nInt, 6, 24])
     # [a] matrix that connects strain and displacement derivatives
@@ -687,7 +818,25 @@ def _B3D8(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: i
 
 
 def _B3D20(xi: np.ndarray, eta: np.ndarray, z: np.ndarray, x: np.ndarray, nInt: int):
-    """Get the B operator for a Hexa20 element."""
+    """Get the B operator for a linear Hexa20 element.
+
+    Parameters
+    ----------
+    xi
+        Local coordinates xi for the integration points.
+    eta
+        Local coordinates eta for the integration points.
+    z
+        Local coordinates zeta for the integration points.
+    x
+        Coordinates of the element points.
+    nInt
+        Number of quadrature points the element has.
+
+    Returns
+    -------
+    np.ndarray
+        The requested B operator."""
 
     Bi = np.zeros([nInt, 6, 60])
     # [a] matrix that connects strain and displacement derivatives

@@ -9,4 +9,5 @@ In the course of several years of development, following people contributed sign
 * Alexander Dummer, Innsbruck University
 * Paul Hofer, Innsbruck University
 * Thomas Mader, Innsbruck University
+* Daniel Reitmair, Innsbruck University
 * Magdalena Schreter, Innsbruck University

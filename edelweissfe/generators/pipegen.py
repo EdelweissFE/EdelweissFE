@@ -75,7 +75,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     exG = options.get("exG", True)
     if np.abs(phi) > 360:
         raise Exception("The angle can't be higher than 360° or lower than -360°.")
-    elType = getElementClass(options.get("elProvider", None))
+    elType = getElementClass(options["elType"], options.get("elProvider", None))
 
     testEl = elType(options["elType"], 0)
     if nY < 4 and testEl.nNodes == 20:

@@ -14,7 +14,6 @@
 #  2017 - today
 #
 #  Daniel Reitmair daniel.reitmair@uibk.ac.at
-#  Matthias Neuner matthias.neuner@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -128,7 +127,7 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
     def computePlaneStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -139,7 +138,7 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -150,14 +149,14 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
 
         Ei = self.elasticityMatrixPlaneStress()
         index = [0, 1, 3]
-        dStressdStrain[:] = Ei
+        dStress_dStrain[:] = Ei
         stress[index] += Ei @ dStrain[index]
         dStrain[2] = -self._v / (1 - self._v) * (dStrain[0] + dStrain[1])  # dStrain33 for plane stress
 
     def computeStress2D(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -168,7 +167,7 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -179,14 +178,14 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
 
         Ei = self.elasticityMatrix2D()
         index = [0, 1, 3]
-        dStressdStrain[:] = Ei
+        dStress_dStrain[:] = Ei
         stress[index] += Ei @ dStrain[index]
         stress[2] = self._v * (stress[0] + stress[1])  # stress33 for plane strain
 
     def computeStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -197,7 +196,7 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -207,13 +206,13 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
             Current time step size."""
 
         Ei = self.elasticityMatrix()
-        dStressdStrain[:] = Ei
+        dStress_dStrain[:] = Ei
         stress += Ei @ dStrain
 
     def computeUniaxialStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -224,7 +223,7 @@ class LinearElasticMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.

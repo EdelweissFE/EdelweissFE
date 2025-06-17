@@ -1,4 +1,4 @@
-*material, name=vonmises, id=vonmises, provider=edelweissmaterial
+*material, name=vonmises, id=vonmises, provider=edelweiss
 **Isotropic in N and mm
 **E    nu
 2.1e4, 0.22, 355, 1000, 200, 1400
@@ -13,8 +13,8 @@ nZ      =2
 lX      =1000
 lY      =1000
 lZ      =5
-elProvider =displacementelement
-elType  =Hexa8
+elProvider =edelweiss
+elType  =C3D8
 
 *section, name=section1, material=vonmises, type=solid
 all
