@@ -94,7 +94,6 @@
 <span class="c1">#  2017 - today</span>
 <span class="c1">#</span>
 <span class="c1">#  Daniel Reitmair daniel.reitmair@uibk.ac.at</span>
-<span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
 <span class="c1">#</span>
 <span class="c1">#  This file is part of EdelweissFE.</span>
 <span class="c1">#</span>
@@ -111,6 +110,8 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">CutbackRequest</span>
+
 
 <div class="viewcode-block" id="BaseHypoElasticMaterial"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaseHypoElasticMaterial</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base material class for a hypo elastic material.</span>
@@ -119,6 +120,10 @@
 <span class="sd">    ----------</span>
 <span class="sd">    materialProperties</span>
 <span class="sd">        The numpy array containing the material properties for the requested material.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">materialProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The properties the material has.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseHypoElasticMaterial.getNumberOfRequiredStateVars"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.getNumberOfRequiredStateVars">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getNumberOfRequiredStateVars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -146,7 +151,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">computePlaneStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -157,20 +162,58 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>
 <span class="sd">        time</span>
 <span class="sd">            Array of step time and total time.</span>
 <span class="sd">        dTime</span>
-<span class="sd">            Current time step size.&quot;&quot;&quot;</span></div>
+<span class="sd">            Current time step size.&quot;&quot;&quot;</span>
+
+        <span class="n">dStress_dStrain3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+        <span class="n">dStrain</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dStrain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dStrain</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">stress3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">6</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">computeStress</span><span class="p">(</span><span class="n">stress3D</span><span class="p">,</span> <span class="n">dStress_dStrain3D</span><span class="p">,</span> <span class="n">dStrain</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dTime</span><span class="p">)</span>
+            <span class="n">residual</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">stress3D</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># make S33 the residual</span>
+            <span class="k">if</span> <span class="n">residual</span> <span class="o">&lt;</span> <span class="mf">1e-11</span> <span class="ow">or</span> <span class="p">(</span><span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">7</span> <span class="ow">and</span> <span class="n">residual</span> <span class="o">&lt;</span> <span class="mf">1e-8</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="n">revTangent</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">dStress_dStrain3D</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">revTangent</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">revTangent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e10</span><span class="p">:</span>
+                <span class="n">revTangent</span> <span class="o">=</span> <span class="mf">1e10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">revTangent</span><span class="p">)</span>
+            <span class="n">dStrain</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-=</span> <span class="n">revTangent</span> <span class="o">*</span> <span class="n">stress3D</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">13</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CutbackRequest</span><span class="p">(</span><span class="s2">&quot;Plane Stress Newton failed.&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">stress</span><span class="p">[:]</span> <span class="o">+=</span> <span class="n">stress3D</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">dStress_dStrain3D</span>
+        <span class="n">dStress_dStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">],</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseHypoElasticMaterial.computeStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.base.basehypoelasticmaterial.BaseHypoElasticMaterial.computeStress">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">computeStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -181,7 +224,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>
@@ -194,7 +237,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">computeUniaxialStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -205,7 +248,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>

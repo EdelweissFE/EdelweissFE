@@ -1,3 +1,21 @@
+.. list-table:: ``*advancedmaterial`` : definition of an advanced material
+    :width: 100%
+    :widths: 25 25 40
+    :header-rows: 1
+
+    * - Option
+      - Type
+      - Description
+    * - ``data``
+      - ``string``
+      - material description, multiline possible
+    * - ``id``
+      - ``string``
+      - name of the property
+    * - ``name``
+      - ``string``
+      - name of the property
+
 .. list-table:: ``*analyticalfield`` : define an analytical field
     :width: 100%
     :widths: 25 25 40
@@ -288,7 +306,7 @@
     * - ``type``
       - ``string``
       - type of the section
-      
+
 .. list-table:: ``*solver`` : definition of a solver
     :width: 100%
     :widths: 25 25 40

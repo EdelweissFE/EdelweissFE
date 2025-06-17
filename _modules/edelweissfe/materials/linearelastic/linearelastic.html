@@ -94,7 +94,6 @@
 <span class="c1">#  2017 - today</span>
 <span class="c1">#</span>
 <span class="c1">#  Daniel Reitmair daniel.reitmair@uibk.ac.at</span>
-<span class="c1">#  Matthias Neuner matthias.neuner@uibk.ac.at</span>
 <span class="c1">#</span>
 <span class="c1">#  This file is part of EdelweissFE.</span>
 <span class="c1">#</span>
@@ -208,7 +207,7 @@
 <div class="viewcode-block" id="LinearElasticMaterial.computePlaneStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computePlaneStress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computePlaneStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -219,7 +218,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>
@@ -230,14 +229,14 @@
 
         <span class="n">Ei</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elasticityMatrixPlaneStress</span><span class="p">()</span>
         <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-        <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
+        <span class="n">dStress_dStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
         <span class="n">stress</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Ei</span> <span class="o">@</span> <span class="n">dStrain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="n">dStrain</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_v</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dStrain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dStrain</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># dStrain33 for plane stress</span></div>
 
 <div class="viewcode-block" id="LinearElasticMaterial.computeStress2D"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeStress2D">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeStress2D</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -248,7 +247,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>
@@ -259,14 +258,14 @@
 
         <span class="n">Ei</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elasticityMatrix2D</span><span class="p">()</span>
         <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-        <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
+        <span class="n">dStress_dStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
         <span class="n">stress</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="n">Ei</span> <span class="o">@</span> <span class="n">dStrain</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="n">stress</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span> <span class="o">*</span> <span class="p">(</span><span class="n">stress</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">stress</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># stress33 for plane strain</span></div>
 
 <div class="viewcode-block" id="LinearElasticMaterial.computeStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeStress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -277,7 +276,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>
@@ -287,13 +286,13 @@
 <span class="sd">            Current time step size.&quot;&quot;&quot;</span>
 
         <span class="n">Ei</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elasticityMatrix</span><span class="p">()</span>
-        <span class="n">dStressdStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
+        <span class="n">dStress_dStrain</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ei</span>
         <span class="n">stress</span> <span class="o">+=</span> <span class="n">Ei</span> <span class="o">@</span> <span class="n">dStrain</span></div>
 
 <div class="viewcode-block" id="LinearElasticMaterial.computeUniaxialStress"><a class="viewcode-back" href="../../../../documentation/materials.html#edelweissfe.materials.linearelastic.linearelastic.LinearElasticMaterial.computeUniaxialStress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">computeUniaxialStress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">stress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">dStressdStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dStress_dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">dStrain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">dTime</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -304,7 +303,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        stress</span>
 <span class="sd">            Vector containing the stresses.</span>
-<span class="sd">        dStressdStrain</span>
+<span class="sd">        dStress_dStrain</span>
 <span class="sd">            Matrix containing dStress/dStrain.</span>
 <span class="sd">        dStrain</span>
 <span class="sd">            Strain vector increment at time step t to t+dTime.</span>

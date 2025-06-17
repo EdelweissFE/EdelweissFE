@@ -19,6 +19,7 @@
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -72,8 +73,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#edelweissfe.elements.marmotsingleqpelement.element.MarmotMaterialWrappingElement"><code class="docutils literal notranslate"><span class="pre">MarmotMaterialWrappingElement</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#provider-displacementelement">Provider <code class="docutils literal notranslate"><span class="pre">displacementelement</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.elements.displacementelement.element.DisplacementElement"><code class="docutils literal notranslate"><span class="pre">DisplacementElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#provider-edelweiss">Provider <code class="docutils literal notranslate"><span class="pre">edelweiss</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#geometrically-linear-element">Geometrically linear element</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#total-lagrange-element">Total Lagrange element</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#implementing-your-own-elements">Implementing your own elements</a><ul>
@@ -143,11 +145,14 @@ In future, elements by other providers or elements directly implemented in Edelw
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="edelweissfe.config.elementlibrary.getElementClass">
-<span class="sig-prename descclassname"><span class="pre">edelweissfe.config.elementlibrary.</span></span><span class="sig-name descname"><span class="pre">getElementClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/config/elementlibrary.html#getElementClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.config.elementlibrary.getElementClass" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">edelweissfe.config.elementlibrary.</span></span><span class="sig-name descname"><span class="pre">getElementClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/config/elementlibrary.html#getElementClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.config.elementlibrary.getElementClass" title="Permalink to this definition"></a></dt>
 <dd><p>Get the class type of the requested element provider.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>provider</strong> (<em>str</em>) – The name of the element provider ot load.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elType</strong> (<em>str</em>) – A string identifying the requested element formulation.</p></li>
+<li><p><strong>provider</strong> (<em>str</em>) – The name of the element provider ot load.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The element provider class type.</p>
@@ -720,8 +725,30 @@ nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m"
 </div>
 </div>
 </div>
-<div class="section" id="provider-displacementelement">
-<h2>Provider <code class="docutils literal notranslate"><span class="pre">displacementelement</span></code><a class="headerlink" href="#provider-displacementelement" title="Permalink to this heading"></a></h2>
+<div class="section" id="provider-edelweiss">
+<h2>Provider <code class="docutils literal notranslate"><span class="pre">edelweiss</span></code><a class="headerlink" href="#provider-edelweiss" title="Permalink to this heading"></a></h2>
+<p>The element type definition has to be of the following form:</p>
+<p><strong>Elements</strong></p>
+<p>One of the following element types needs to be included in the definition (<code class="docutils literal notranslate"><span class="pre">type</span></code> in .inp file).</p>
+<ul class="simple">
+<li><p><strong>CPE4</strong>    - quadrilateral 2D element with 4 nodes and plane strain.</p></li>
+<li><p><strong>CPE8</strong>    - quadrilateral 2D element with 8 nodes and plane strain.</p></li>
+<li><p><strong>CPS4</strong>    - quadrilateral 2D element with 4 nodes and plane stress.</p></li>
+<li><p><strong>CPS8</strong>    - quadrilateral 2D element with 8 nodes and plane stress.</p></li>
+<li><p><strong>C3D8</strong>    - hexahedron 3D element with 8 nodes.</p></li>
+<li><p><strong>C3D20</strong>    - hexahedron 3D element with 20 nodes.</p></li>
+</ul>
+<p><strong>additional Parameters</strong></p>
+<p>The following optional Parameters are also included in the element type definition:</p>
+<ul class="simple">
+<li><p><strong>R</strong>     - reduced integration for element, at the end of elementType.</p></li>
+<li><p><strong>E</strong>     - extended integration for element, at the end of elementType.</p></li>
+<li><p><strong>N</strong>     - (optional) regular integration, at the end of elementType.</p></li>
+<li><p><strong>TL</strong>    - use the total Lagrangian element, before integration type.</p></li>
+</ul>
+<div class="section" id="geometrically-linear-element">
+<h3>Geometrically linear element<a class="headerlink" href="#geometrically-linear-element" title="Permalink to this heading"></a></h3>
+<p>This element uses a geometrically linear approach for the computation.</p>
 <p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.elements.displacementelement.element</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="edelweissfe.elements.displacementelement.element.DisplacementElement">
@@ -1070,26 +1097,9 @@ In this case it stays the same because we use the nodes exactly like they are.</
 
 </dd></dl>
 
-<p>The elementType definition has to be of the following form:</p>
-<p><strong>Elements</strong></p>
-<p>One of the following element types needs to be included in the definition (<code class="docutils literal notranslate"><span class="pre">elementType[0:5]</span></code>).</p>
-<ul class="simple">
-<li><p><strong>Quad4</strong>    - quadrilateral 2D element with 4 nodes.</p></li>
-<li><p><strong>Quad8</strong>    - quadrilateral 2D element with 8 nodes.</p></li>
-<li><p><strong>Hexa8</strong>    - hexahedron 3D element with 8 nodes.</p></li>
-</ul>
-<p><strong>additional Parameters</strong></p>
-<p>The following optional Parameters are also included in the element type definition.</p>
-<ul class="simple">
-<li><p><strong>R</strong>     - reduced integration for element, in <code class="docutils literal notranslate"><span class="pre">elementType[5]</span></code>, currently possible for Q8 and Q4.</p></li>
-<li><p><strong>E</strong>     - extended integration for element, in <code class="docutils literal notranslate"><span class="pre">elementType[5]</span></code>, currently possible for Q4.</p></li>
-<li><p><strong>PE</strong>    - use plane strain for 2D elements, in <code class="docutils literal notranslate"><span class="pre">elementType[6:8]</span></code> or <code class="docutils literal notranslate"><span class="pre">elementType[5:7]</span></code>.</p></li>
-<li><p><strong>PS</strong>    - use plane stress for 2D elements, in <code class="docutils literal notranslate"><span class="pre">elementType[6:8]</span></code> or <code class="docutils literal notranslate"><span class="pre">elementType[5:7]</span></code>.</p></li>
-</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If R or E is not given by the user, we assume regular integration.</p>
-<p>If PE or PS is not given by the user, we assume PE.</p>
 </div>
 <p>Example of the usage of a quadrilateral element with 4 nodes, regular integration and plane strain.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
@@ -1241,6 +1251,379 @@ dirichlet,<span class="nv"> name</span><span class="ow">=</span><span class="m">
 <span class="c c-Singleline">** set load in z to 0.012N for all the points on right back</span>
 nodeforces,<span class="nv"> name</span><span class="ow">=</span><span class="m">cloadTop</span>,<span class="nv"> nSet</span><span class="ow">=</span><span class="m">gen_rightBack</span>,<span class="nv"> components</span><span class="ow">=</span><span class="s">&#39;0, 0, .012&#39;</span>,<span class="nv"> field</span><span class="ow">=</span><span class="m">displacement</span>
 </pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This element is only compatible with the material provider <code class="docutils literal notranslate"><span class="pre">edelweiss</span></code>!</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This element works with the Cauchy stress <span class="math notranslate nohighlight">\(\sigma\)</span> and the tangent <span class="math notranslate nohighlight">\(\frac{d\sigma}{d\varepsilon}\)</span>, where
+<span class="math notranslate nohighlight">\(\varepsilon\)</span> stands for the linearized strain tensor!</p>
+</div>
+</div>
+<div class="section" id="total-lagrange-element">
+<h3>Total Lagrange element<a class="headerlink" href="#total-lagrange-element" title="Permalink to this heading"></a></h3>
+<p>This element is geometrically nonlinear and uses the total Lagrange algorithm for finite strain.</p>
+<p>Relevant module: <code class="docutils literal notranslate"><span class="pre">edelweissfe.elements.displacementtlelement.element</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">edelweissfe.elements.displacementtlelement.element.</span></span><span class="sig-name descname"><span class="pre">DisplacementTLElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement" title="Permalink to this definition"></a></dt>
+<dd><p>Finite elements in EdelweissFE should be derived from this
+base class in order to follow the general interface.</p>
+<p>EdelweissFE expects the layout of the internal and external load vectors, P, PExt, (and the stiffness)
+to be of the form</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[ node 1 - dofs field 1,</span>
+<span class="go">  node 1 - dofs field 2,</span>
+<span class="go">  node 1 - ... ,</span>
+<span class="go">  node 1 - dofs field n,</span>
+<span class="go">  node 2 - dofs field 1,</span>
+<span class="go">  ... ,</span>
+<span class="go">  node N - dofs field n].</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elementType</strong> (<em>str</em>) – A string identifying the requested element formulation.</p></li>
+<li><p><strong>elNumber</strong> (<em>int</em>) – A unique integer label used for all kinds of purposes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.dofIndicesPermutation" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.dofIndicesPermutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dofIndicesPermutation</span></code></a></dt><dd><p>The permutation pattern for the residual vector and the stiffness matrix to aggregate all entries in order to resemble the defined fields nodewise.</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.elNumber" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.elNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elNumber</span></code></a></dt><dd><p>The unique number of this element</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.ensightType" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.ensightType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensightType</span></code></a></dt><dd><p>The shape of the element in Ensight Gold notation.</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.fields" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fields</span></code></a></dt><dd><p>The list of fields per nodes.</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.hasMaterial" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.hasMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasMaterial</span></code></a></dt><dd><p>Flag to check if a material was assigned to this element.</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nDof" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nDof"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nDof</span></code></a></dt><dd><p>The total number of degrees of freedom this element has</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nNodes" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nNodes</span></code></a></dt><dd><p>The number of nodes this element requires</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nodes" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></dt><dd><p>The list of nodes this element holds</p>
+</dd>
+<dt><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.visualizationNodes" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.visualizationNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualizationNodes</span></code></a></dt><dd><p>The nodes for visualization.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.acceptLastState" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.acceptLastState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acceptLastState</span></code></a>()</p></td>
+<td><p>Accept the computed state (in nonlinear iteration schemes).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeBodyForce" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeBodyForce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeBodyForce</span></code></a>(P, K, load, U, time, dTime)</p></td>
+<td><p>Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeDistributedLoad" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeDistributedLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeDistributedLoad</span></code></a>(loadType, P, K, ...)</p></td>
+<td><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeYourself" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeYourself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">computeYourself</span></code></a>(K_, P, U, dU, time, dTime)</p></td>
+<td><p>Evaluate the residual and stiffness matrix for given time, field, and field increment due to a displacement or load.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtCenter" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtCenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtCenter</span></code></a>()</p></td>
+<td><p>Compute the underlying MarmotElement centroid coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtQuadraturePoints" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCoordinatesAtQuadraturePoints</span></code></a>()</p></td>
+<td><p>Compute the underlying MarmotElement qp coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getNumberOfQuadraturePoints" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getNumberOfQuadraturePoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNumberOfQuadraturePoints</span></code></a>()</p></td>
+<td><p>Get the number of Quadrature points the element has.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getResultArray" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getResultArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResultArray</span></code></a>(result, quadraturePoint[, ...])</p></td>
+<td><p>Get the array of a result, possibly as a persistent view which is continiously updated by the element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.initializeElement" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.initializeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initializeElement</span></code></a>()</p></td>
+<td><p>Initalize the element to be ready for computing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.resetToLastValidState" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.resetToLastValidState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetToLastValidState</span></code></a>()</p></td>
+<td><p>Reset to the last valid state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setInitialCondition" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setInitialCondition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setInitialCondition</span></code></a>(stateType, values)</p></td>
+<td><p>Assign initial conditions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setMaterial" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaterial</span></code></a>(material)</p></td>
+<td><p>Assign a material.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setNodes" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setNodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setNodes</span></code></a>(nodes)</p></td>
+<td><p>Assign the nodes to the element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setProperties" title="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProperties</span></code></a>(elementProperties)</p></td>
+<td><p>Assign a set of properties to the element.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.acceptLastState">
+<span class="sig-name descname"><span class="pre">acceptLastState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.acceptLastState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.acceptLastState" title="Permalink to this definition"></a></dt>
+<dd><p>Accept the computed state (in nonlinear iteration schemes).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeBodyForce">
+<span class="sig-name descname"><span class="pre">computeBodyForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.computeBodyForce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeBodyForce" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a body force load.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>ndarray</em>) – The external load vector to be defined.</p></li>
+<li><p><strong>K</strong> (<em>ndarray</em>) – The stiffness matrix to be defined.</p></li>
+<li><p><strong>load</strong> (<em>ndarray</em>) – The magnitude (or vector) describing the load.</p></li>
+<li><p><strong>U</strong> (<em>ndarray</em>) – The current solution vector.</p></li>
+<li><p><strong>time</strong> (<em>ndarray</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – The time increment.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeDistributedLoad">
+<span class="sig-name descname"><span class="pre">computeDistributedLoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faceID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.computeDistributedLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeDistributedLoad" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate residual and stiffness for given time, field, and field increment due to a surface load.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loadType</strong> (<em>str</em>) – The type of load.</p></li>
+<li><p><strong>P</strong> (<em>ndarray</em>) – The external load vector to be defined.</p></li>
+<li><p><strong>K</strong> (<em>ndarray</em>) – The stiffness matrix to be defined.</p></li>
+<li><p><strong>faceID</strong> (<em>int</em>) – The number of the elements face this load acts on.</p></li>
+<li><p><strong>load</strong> (<em>ndarray</em>) – The magnitude (or vector) describing the load.</p></li>
+<li><p><strong>U</strong> (<em>ndarray</em>) – The current solution vector.</p></li>
+<li><p><strong>time</strong> (<em>ndarray</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – The time increment.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeYourself">
+<span class="sig-name descname"><span class="pre">computeYourself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dU</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.computeYourself"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.computeYourself" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate the residual and stiffness matrix for given time, field, and field increment due to a displacement or load.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>ndarray</em>) – The external load vector gets calculated.</p></li>
+<li><p><strong>K</strong> – The stiffness matrix gets calculated.</p></li>
+<li><p><strong>U</strong> (<em>ndarray</em>) – The current solution vector.</p></li>
+<li><p><strong>dU</strong> (<em>ndarray</em>) – The current solution vector increment.</p></li>
+<li><p><strong>time</strong> (<em>ndarray</em>) – Array of step time and total time.</p></li>
+<li><p><strong>dTime</strong> (<em>float</em>) – The time increment.</p></li>
+<li><p><strong>K_</strong> (<em>ndarray</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtCenter">
+<span class="sig-name descname"><span class="pre">getCoordinatesAtCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.getCoordinatesAtCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtCenter" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the underlying MarmotElement centroid coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The element’s central coordinates.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtQuadraturePoints">
+<span class="sig-name descname"><span class="pre">getCoordinatesAtQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.getCoordinatesAtQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getCoordinatesAtQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the underlying MarmotElement qp coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The element’s qp coordinates.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getNumberOfQuadraturePoints">
+<span class="sig-name descname"><span class="pre">getNumberOfQuadraturePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.getNumberOfQuadraturePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getNumberOfQuadraturePoints" title="Permalink to this definition"></a></dt>
+<dd><p>Get the number of Quadrature points the element has.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of Quadrature points.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nInt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getResultArray">
+<span class="sig-name descname"><span class="pre">getResultArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quadraturePoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getPersistentView</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.getResultArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.getResultArray" title="Permalink to this definition"></a></dt>
+<dd><p>Get the array of a result, possibly as a persistent view which is continiously
+updated by the element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>result</strong> (<em>str</em>) – The name of the result.</p></li>
+<li><p><strong>quadraturePoint</strong> (<em>int</em>) – The number of the quadrature point.</p></li>
+<li><p><strong>getPersistentView</strong> (<em>bool</em>) – If true, the returned array should be continiously updated by the element.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The result.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.initializeElement">
+<span class="sig-name descname"><span class="pre">initializeElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.initializeElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.initializeElement" title="Permalink to this definition"></a></dt>
+<dd><p>Initalize the element to be ready for computing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.resetToLastValidState">
+<span class="sig-name descname"><span class="pre">resetToLastValidState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.resetToLastValidState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.resetToLastValidState" title="Permalink to this definition"></a></dt>
+<dd><p>Reset to the last valid state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setInitialCondition">
+<span class="sig-name descname"><span class="pre">setInitialCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.setInitialCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setInitialCondition" title="Permalink to this definition"></a></dt>
+<dd><p>Assign initial conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stateType</strong> (<em>str</em>) – The type of initial state.</p></li>
+<li><p><strong>values</strong> (<em>ndarray</em>) – The numpy array describing the initial state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setMaterial">
+<span class="sig-name descname"><span class="pre">setMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.setMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setMaterial" title="Permalink to this definition"></a></dt>
+<dd><p>Assign a material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>material</strong> (<em>type</em>) – An initalized instance of a material.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setNodes">
+<span class="sig-name descname"><span class="pre">setNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.setNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setNodes" title="Permalink to this definition"></a></dt>
+<dd><p>Assign the nodes to the element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>list</em><em>[</em><a class="reference internal" href="points.html#edelweissfe.points.node.Node" title="edelweissfe.points.node.Node"><em>edelweissfe.points.node.Node</em></a><em>]</em>) – A list of nodes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setProperties">
+<span class="sig-name descname"><span class="pre">setProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementProperties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/elements/displacementtlelement/element.html#DisplacementTLElement.setProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.setProperties" title="Permalink to this definition"></a></dt>
+<dd><p>Assign a set of properties to the element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>elementProperties</strong> (<em>ndarray</em>) – A numpy array containing the element properties.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.thickness">
+<span class="sig-name descname"><span class="pre">thickness</span></span><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.thickness" title="Permalink to this definition"></a></dt>
+<dd><p>Thickness of 2D elements.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.dofIndicesPermutation">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dofIndicesPermutation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.dofIndicesPermutation" title="Permalink to this definition"></a></dt>
+<dd><p>The permutation pattern for the residual vector and the stiffness matrix to
+aggregate all entries in order to resemble the defined fields nodewise.
+In this case it stays the same because we use the nodes exactly like they are.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.elNumber">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elNumber</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.elNumber" title="Permalink to this definition"></a></dt>
+<dd><p>The unique number of this element</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.ensightType">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensightType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.ensightType" title="Permalink to this definition"></a></dt>
+<dd><p>The shape of the element in Ensight Gold notation.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.fields">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.fields" title="Permalink to this definition"></a></dt>
+<dd><p>The list of fields per nodes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.hasMaterial">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasMaterial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.hasMaterial" title="Permalink to this definition"></a></dt>
+<dd><p>Flag to check if a material was assigned to this element.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nDof">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nDof</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nDof" title="Permalink to this definition"></a></dt>
+<dd><p>The total number of degrees of freedom this element has</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nNodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nNodes" title="Permalink to this definition"></a></dt>
+<dd><p>The number of nodes this element requires</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.nodes" title="Permalink to this definition"></a></dt>
+<dd><p>The list of nodes this element holds</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.visualizationNodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visualizationNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#edelweissfe.elements.displacementtlelement.element.DisplacementTLElement.visualizationNodes" title="Permalink to this definition"></a></dt>
+<dd><p>The nodes for visualization.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This element is only compatible with the material provider <code class="docutils literal notranslate"><span class="pre">edelweiss</span></code>!</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For hyperelastic materials, this element works with the second Piola-Kirchhoff stress <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> and the tangent
+<span class="math notranslate nohighlight">\(\frac{d\mathbf{S}}{d\mathbf{E}}\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{E}\)</span> stands for the Green-Lagrange strain tensor!</p>
+<p>For other materials, this element works with the Kirchhoff stress <span class="math notranslate nohighlight">\(\tau\)</span> and the tangent
+<span class="math notranslate nohighlight">\(\frac{d\tau}{d\mathbf{F}}\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> stands for the deformation gradient!</p>
 </div>
 </div>
 </div>

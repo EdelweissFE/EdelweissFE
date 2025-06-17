@@ -120,14 +120,23 @@
 <span class="sd">        1000,        1,     2,     3,     4,     ...</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.displacementelement.element</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: F401</span>
+    <span class="n">DisplacementElement</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.displacementtlelement.element</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: F401</span>
+    <span class="n">DisplacementTLElement</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">elLibrary</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.utils.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">strCaseCmp</span>
 
 
-<div class="viewcode-block" id="getElementClass"><a class="viewcode-back" href="../../../documentation/elements.html#edelweissfe.config.elementlibrary.getElementClass">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">getElementClass</span><span class="p">(</span><span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<div class="viewcode-block" id="getElementClass"><a class="viewcode-back" href="../../../documentation/elements.html#edelweissfe.config.elementlibrary.getElementClass">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">getElementClass</span><span class="p">(</span><span class="n">elType</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the class type of the requested element provider.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    elType</span>
+<span class="sd">        A string identifying the requested element formulation.</span>
 <span class="sd">    provider</span>
 <span class="sd">        The name of the element provider ot load.</span>
 
@@ -140,22 +149,27 @@
     <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">provider</span> <span class="o">=</span> <span class="s2">&quot;marmot&quot;</span>
 
-    <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">&quot;displacementelement&quot;</span><span class="p">):</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.displacementelement.element</span><span class="w"> </span><span class="kn">import</span> <span class="n">DisplacementElement</span>
+    <span class="k">if</span> <span class="n">strCaseCmp</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">&quot;edelweiss&quot;</span><span class="p">):</span>
 
-        <span class="k">return</span> <span class="n">DisplacementElement</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">elLibrary</span><span class="p">[</span><span class="n">elType</span><span class="p">][</span><span class="s2">&quot;elClass&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Edelweiss element not found in library.&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmot&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmot&quot;</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.marmotelement.element</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarmotElementWrapper</span>
 
         <span class="k">return</span> <span class="n">MarmotElementWrapper</span>
 
-    <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmotsingleqpelement&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;marmotsingleqpelement&quot;</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">edelweissfe.elements.marmotsingleqpelement.element</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">MarmotMaterialWrappingElement</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">MarmotMaterialWrappingElement</span></div>
+        <span class="k">return</span> <span class="n">MarmotMaterialWrappingElement</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This element provider doesn&#39;t exist!&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
