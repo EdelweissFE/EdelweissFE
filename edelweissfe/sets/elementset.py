@@ -28,6 +28,7 @@
 #  ---------------------------------------------------------------------
 
 from edelweissfe.elements.displacementelement.element import DisplacementElement
+from edelweissfe.elements.displacementtlelement.element import DisplacementTLElement
 from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
 from edelweissfe.elements.marmotsingleqpelement.element import (
     MarmotMaterialWrappingElement,
@@ -53,7 +54,12 @@ class ElementSet(ImmutableOrderedSet):
         label: str,
         elements,
     ):
-        self.allowedObjectTypes = [MarmotElementWrapper, MarmotMaterialWrappingElement, DisplacementElement]
+        self.allowedObjectTypes = [
+            MarmotElementWrapper,
+            MarmotMaterialWrappingElement,
+            DisplacementElement,
+            DisplacementTLElement,
+        ]
 
         super().__init__(label, elements)
         self._nodes = None

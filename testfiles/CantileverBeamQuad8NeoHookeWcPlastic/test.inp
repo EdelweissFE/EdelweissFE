@@ -1,0 +1,35 @@
+*material, name=neohookewcplastic, id=neohookewcplastic, provider=edelweiss
+91304.34783, 100000., 260, 70, 320, 9
+
+*section, name=section1, thickness=40.0, material=neohookewcplastic, type=plane
+all
+
+*job, name=cps4job, domain=2d
+*solver, solver=NIST, name=theSolver
+
+*fieldOutput
+create=perNode, nSet=gen_bottom, result=P, field=displacement, name=RF
+create=perNode, elSet=all, field=displacement, result=U, name=displacement
+create=perElement, elSet=all, result=energy, name=energyQP1, quadraturePoint=0
+create=perElement, elSet=all, result=kappa, name=kappa, quadraturePoint=0:8, f(x)=' max (x, axis=1) '
+
+*modelGenerator, generator=planeRectQuad, name=gen
+x0=0, l=1000
+y0=0, h=100
+elType=CPE8TL
+elProvider=edelweiss
+nX=20
+nY=2
+
+*output, type=monitor
+fieldOutput=RF, f(x)='mean(x[:,1])'
+
+*output, type=ensight, name=testWC
+configuration, overwrite=yes
+create=perNode,    fieldOutput=displacement
+create=perElement, fieldOutput=energyQP1
+create=perElement, fieldOutput=kappa
+
+*step, solver=theSolver, maxInc=1e-0, minInc=1e-8, maxNumInc=1000, maxIter=25, stepLength=100
+dirichlet, name=left, nSet=gen_left,  field=displacement, 2=0, 1=0
+nodeforces, name=cloadTop, nSet=gen_rightTop, components='0,-25000', field=displacement

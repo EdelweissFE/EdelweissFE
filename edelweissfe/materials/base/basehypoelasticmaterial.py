@@ -14,7 +14,6 @@
 #  2017 - today
 #
 #  Daniel Reitmair daniel.reitmair@uibk.ac.at
-#  Matthias Neuner matthias.neuner@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -31,6 +30,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
+from edelweissfe.utils.exceptions import CutbackRequest
+
 
 class BaseHypoElasticMaterial(ABC):
     """Base material class for a hypo elastic material.
@@ -39,6 +40,10 @@ class BaseHypoElasticMaterial(ABC):
     ----------
     materialProperties
         The numpy array containing the material properties for the requested material."""
+
+    @property
+    def materialProperties(self) -> np.ndarray:
+        """The properties the material has."""
 
     @abstractmethod
     def getNumberOfRequiredStateVars(self) -> int:
@@ -66,7 +71,7 @@ class BaseHypoElasticMaterial(ABC):
     def computePlaneStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -77,7 +82,7 @@ class BaseHypoElasticMaterial(ABC):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -86,11 +91,49 @@ class BaseHypoElasticMaterial(ABC):
         dTime
             Current time step size."""
 
+        dStress_dStrain3D = np.zeros([6, 6])
+        dStrain[2] = -dStrain[0] - dStrain[1]
+        counter = 1
+        while True:
+            stress3D = np.zeros([6])
+            self.computeStress(stress3D, dStress_dStrain3D, dStrain, time, dTime)
+            residual = abs(stress3D[2])  # make S33 the residual
+            if residual < 1e-11 or (counter > 7 and residual < 1e-8):
+                break
+            revTangent = 1.0 / dStress_dStrain3D[2, 2]
+            if np.isnan(revTangent) or np.abs(revTangent) > 1e10:
+                revTangent = 1e10 * np.sign(revTangent)
+            dStrain[2] -= revTangent * stress3D[2]
+            counter += 1
+            if counter > 13:
+                raise CutbackRequest("Plane Stress Newton failed.", 0.5)
+        stress[:] += stress3D
+        C = dStress_dStrain3D
+        dStress_dStrain[:] = np.array(
+            [
+                [
+                    C[0, 0] - C[2, 0] * C[0, 2] / C[2, 2],
+                    C[0, 1] - C[2, 1] * C[0, 2] / C[2, 2],
+                    C[0, 3] - C[2, 3] * C[0, 2] / C[2, 2],
+                ],
+                [
+                    C[1, 0] - C[2, 0] * C[1, 2] / C[2, 2],
+                    C[1, 1] - C[2, 1] * C[1, 2] / C[2, 2],
+                    C[1, 3] - C[2, 3] * C[1, 2] / C[2, 2],
+                ],
+                [
+                    C[3, 0] - C[2, 0] * C[3, 2] / C[2, 2],
+                    C[3, 1] - C[2, 1] * C[3, 2] / C[2, 2],
+                    C[3, 3] - C[2, 3] * C[3, 2] / C[2, 2],
+                ],
+            ]
+        )
+
     @abstractmethod
     def computeStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -101,7 +144,7 @@ class BaseHypoElasticMaterial(ABC):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -114,7 +157,7 @@ class BaseHypoElasticMaterial(ABC):
     def computeUniaxialStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -125,7 +168,7 @@ class BaseHypoElasticMaterial(ABC):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.

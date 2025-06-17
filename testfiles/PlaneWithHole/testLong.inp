@@ -649,7 +649,7 @@ all
     639,   2.20095706,   14.8376474
     640,           0.,      15.9375
     641,  0.736015141,   14.9819317
-*Element, type=Quad8RPE, provider=displacementelement
+*Element, type=CPE8RPE, provider=edelweiss
  1,   1,   9,  79,  36, 226, 227, 228, 229
  2,   9,  10,  80,  79, 230, 231, 232, 227
  3,  10,  11,  81,  80, 233, 234, 235, 231

@@ -14,7 +14,6 @@
 #  2017 - today
 #
 #  Daniel Reitmair daniel.reitmair@uibk.ac.at
-#  Matthias Neuner matthias.neuner@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -162,7 +161,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
     def computePlaneStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -173,7 +172,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -182,12 +181,12 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
         dTime
             Current time step size."""
 
-        raise Exception("Von Mises material with plane stress is currently not possible.")
+        super().computePlaneStress(stress, dStress_dStrain, dStrain, time, dTime)
 
     def computeStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -198,7 +197,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.
@@ -210,7 +209,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
         Ei = self.elasticityMatrix()
         # handle zero strain increment
         if np.linalg.norm(dStrain) < 10**-14:
-            dStressdStrain[:] = Ei
+            dStress_dStrain[:] = Ei
             return
         # elastic predictor
         trialStress = stress + dStrain @ Ei
@@ -239,7 +238,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
             # update kappa
             self.kappaOld[0] += dKappa
             stress[:] = trialStress - 2.0 * self._G * dLambda * n
-            dStressdStrain[:] = (
+            dStress_dStrain[:] = (
                 Ei
                 - 2.0
                 * self._G
@@ -252,12 +251,12 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
             )
         else:  # elastic step
             stress[:] = trialStress
-            dStressdStrain[:] = Ei
+            dStress_dStrain[:] = Ei
 
     def computeUniaxialStress(
         self,
         stress: np.ndarray,
-        dStressdStrain: np.ndarray,
+        dStress_dStrain: np.ndarray,
         dStrain: np.ndarray,
         time: float,
         dTime: float,
@@ -268,7 +267,7 @@ class VonMisesMaterial(BaseHypoElasticMaterial):
         ----------
         stress
             Vector containing the stresses.
-        dStressdStrain
+        dStress_dStrain
             Matrix containing dStress/dStrain.
         dStrain
             Strain vector increment at time step t to t+dTime.

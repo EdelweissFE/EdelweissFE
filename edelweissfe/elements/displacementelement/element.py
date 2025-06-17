@@ -14,7 +14,6 @@
 #  2017 - today
 #
 #  Daniel Reitmair daniel.reitmair@uibk.ac.at
-#  Matthias Neuner matthias.neuner@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -31,267 +30,15 @@ import numpy as np
 import numpy.linalg as lin
 
 from edelweissfe.elements.base.baseelement import BaseElement
-from edelweissfe.elements.displacementelement.elementmatrices import (
+from edelweissfe.elements.displacementelement._elementcomputationmatrices import (
     computeBOperator,
     computeJacobian,
     computeNOperator,
 )
+from edelweissfe.elements.library import elLibrary
+from edelweissfe.materials.base.basehyperelasticmaterial import BaseHyperElasticMaterial
 from edelweissfe.points.node import Node
 from edelweissfe.utils.caseinsensitivedict import CaseInsensitiveDict
-
-# element parameters 2D
-w1 = (5 / 9) ** 2
-w2 = (5 / 9) * (8 / 9)
-w3 = (8 / 9) ** 2
-# element parameters 3D
-s8 = 1 / np.sqrt(3) * np.array([-1, 1, 1, -1])  # get s
-t8 = 1 / np.sqrt(3) * np.array([-1, -1, 1, 1])  # get z
-s20 = np.array([-1, 0, 1])  # get s
-t20 = np.array([-1, -1, -1, 0, 0, 0, 1, 1, 1])  # get t
-w1H = (5 / 9) ** 3
-w2H = (5 / 9) ** 2 * (8 / 9)
-w3H = (5 / 9) * (8 / 9) ** 2
-w4H = (8 / 9) ** 3
-wI = np.array([w1H, w2H, w1H])
-wII = np.array([w2H, w3H, w2H])
-# Element library
-elLibrary = CaseInsensitiveDict(
-    Quad4=dict(
-        nNodes=4,
-        nDof=8,
-        dofIndices=np.arange(0, 8),
-        ensightType="quad4",
-        nSpatialDimensions=2,
-        nInt=4,
-        xi=1 / np.sqrt(3) * np.array([1, 1, -1, -1]),
-        eta=1 / np.sqrt(3) * np.array([1, -1, -1, 1]),
-        zeta=None,
-        w=np.ones(4),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=True,
-    ),
-    Quad4R=dict(
-        nNodes=4,
-        nDof=8,
-        dofIndices=np.arange(0, 8),
-        ensightType="quad4",
-        nSpatialDimensions=2,
-        nInt=1,
-        xi=np.array([0]),
-        eta=np.array([0]),
-        zeta=None,
-        w=np.array([4]),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=True,
-    ),
-    Quad4E=dict(
-        nNodes=4,
-        nDof=8,
-        dofIndices=np.arange(0, 8),
-        ensightType="quad4",
-        nSpatialDimensions=2,
-        nInt=9,
-        xi=np.sqrt(0.6) * np.array([0, -1, -1, 1, 1, -1, 0, 1, 0]),
-        eta=np.sqrt(0.6) * np.array([0, -1, 1, 1, -1, 0, 1, 0, -1]),
-        zeta=None,
-        w=np.array([w3, w1, w1, w1, w1, w2, w2, w2, w2]),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=True,
-    ),
-    Quad8=dict(
-        nNodes=8,
-        nDof=16,
-        dofIndices=np.arange(0, 16),
-        ensightType="quad8",
-        nSpatialDimensions=2,
-        nInt=9,
-        xi=np.sqrt(0.6) * np.array([0, -1, -1, 1, 1, -1, 0, 1, 0]),
-        eta=np.sqrt(0.6) * np.array([0, -1, 1, 1, -1, 0, 1, 0, -1]),
-        zeta=None,
-        w=np.array([w3, w1, w1, w1, w1, w2, w2, w2, w2]),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=True,
-    ),
-    Quad8R=dict(
-        nNodes=8,
-        nDof=16,
-        dofIndices=np.arange(0, 16),
-        ensightType="quad8",
-        nSpatialDimensions=2,
-        nInt=4,
-        xi=1 / np.sqrt(3) * np.array([1, 1, -1, -1]),
-        eta=1 / np.sqrt(3) * np.array([1, -1, -1, 1]),
-        zeta=None,
-        w=np.ones(4),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=True,
-    ),
-    Quad4PS=dict(
-        nNodes=4,
-        nDof=8,
-        dofIndices=np.arange(0, 8),
-        ensightType="quad4",
-        nSpatialDimensions=2,
-        nInt=4,
-        xi=1 / np.sqrt(3) * np.array([1, 1, -1, -1]),
-        eta=1 / np.sqrt(3) * np.array([1, -1, -1, 1]),
-        zeta=None,
-        w=np.ones(4),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=False,
-    ),
-    Quad4RPS=dict(
-        nNodes=4,
-        nDof=8,
-        dofIndices=np.arange(0, 8),
-        ensightType="quad4",
-        nSpatialDimensions=2,
-        nInt=1,
-        xi=np.array([0]),
-        eta=np.array([0]),
-        zeta=None,
-        w=np.array([4]),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=False,
-    ),
-    Quad4EPS=dict(
-        nNodes=4,
-        nDof=8,
-        dofIndices=np.arange(0, 8),
-        ensightType="quad4",
-        nSpatialDimensions=2,
-        nInt=9,
-        xi=np.sqrt(0.6) * np.array([0, -1, -1, 1, 1, -1, 0, 1, 0]),
-        eta=np.sqrt(0.6) * np.array([0, -1, 1, 1, -1, 0, 1, 0, -1]),
-        zeta=None,
-        w=np.array([w3, w1, w1, w1, w1, w2, w2, w2, w2]),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=False,
-    ),
-    Quad8PS=dict(
-        nNodes=8,
-        nDof=16,
-        dofIndices=np.arange(0, 16),
-        ensightType="quad8",
-        nSpatialDimensions=2,
-        nInt=9,
-        xi=np.sqrt(0.6) * np.array([0, -1, -1, 1, 1, -1, 0, 1, 0]),
-        eta=np.sqrt(0.6) * np.array([0, -1, 1, 1, -1, 0, 1, 0, -1]),
-        zeta=None,
-        w=np.array([w3, w1, w1, w1, w1, w2, w2, w2, w2]),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=False,
-    ),
-    Quad8RPS=dict(
-        nNodes=8,
-        nDof=16,
-        dofIndices=np.arange(0, 16),
-        ensightType="quad8",
-        nSpatialDimensions=2,
-        nInt=4,
-        xi=1 / np.sqrt(3) * np.array([1, 1, -1, -1]),
-        eta=1 / np.sqrt(3) * np.array([1, -1, -1, 1]),
-        zeta=None,
-        w=np.ones(4),
-        matSize=3,
-        index=np.array([0, 1, 3]),
-        plStrain=False,
-    ),
-    Hexa8=dict(
-        nNodes=8,
-        nDof=24,
-        dofIndices=np.arange(0, 24),
-        ensightType="hexa8",
-        nSpatialDimensions=3,
-        nInt=8,
-        xi=1 / np.sqrt(3) * np.hstack([-np.ones(4), np.ones(4)]),
-        eta=np.hstack([t8, t8]),
-        zeta=np.hstack([s8, s8]),
-        w=np.ones(8),
-        matSize=6,
-        index=np.arange(6),
-        plStrain=None,
-    ),
-    Hexa8R=dict(
-        nNodes=8,
-        nDof=24,
-        dofIndices=np.arange(0, 24),
-        ensightType="hexa8",
-        nSpatialDimensions=3,
-        nInt=1,
-        xi=np.array([0]),
-        eta=np.array([0]),
-        zeta=np.array([0]),
-        w=np.array([8]),
-        matSize=6,
-        index=np.arange(6),
-        plStrain=None,
-    ),
-    Hexa8E=dict(
-        nNodes=8,
-        nDof=24,
-        dofIndices=np.arange(0, 24),
-        ensightType="hexa8",
-        nSpatialDimensions=3,
-        nInt=27,
-        xi=np.sqrt(0.6) * np.hstack([-np.ones(9), np.zeros(9), np.ones(9)]),
-        eta=np.sqrt(0.6) * np.hstack([t20, t20, t20]),
-        zeta=np.sqrt(0.6) * np.hstack([s20 for i in range(9)]),
-        w=np.hstack([wI, wII, wI, wII, np.array([w3H, w4H, w3H]), wII, wI, wII, wI]),
-        matSize=6,
-        index=np.arange(6),
-        plStrain=None,
-    ),
-    Hexa20=dict(
-        nNodes=20,
-        nDof=60,
-        dofIndices=np.arange(0, 60),
-        ensightType="hexa20",
-        nSpatialDimensions=3,
-        nInt=27,
-        xi=np.sqrt(0.6) * np.hstack([-np.ones(9), np.zeros(9), np.ones(9)]),
-        eta=np.sqrt(0.6) * np.hstack([t20, t20, t20]),
-        zeta=np.sqrt(0.6) * np.hstack([s20 for i in range(9)]),
-        w=np.hstack([wI, wII, wI, wII, np.array([w3H, w4H, w3H]), wII, wI, wII, wI]),
-        matSize=6,
-        index=np.arange(6),
-        plStrain=None,
-    ),
-    Hexa20R=dict(
-        nNodes=20,
-        nDof=60,
-        dofIndices=np.arange(0, 60),
-        ensightType="hexa20",
-        nSpatialDimensions=3,
-        nInt=8,
-        xi=1 / np.sqrt(3) * np.hstack([-np.ones(4), np.ones(4)]),
-        eta=np.hstack([t8, t8]),
-        zeta=np.hstack([s8, s8]),
-        w=np.ones(8),
-        matSize=6,
-        index=np.arange(6),
-        plStrain=None,
-    ),
-)
-# add variations
-elLibrary.update(
-    {
-        "Quad4PE": elLibrary["Quad4"],
-        "Quad4RPE": elLibrary["Quad4R"],
-        "Quad4EPE": elLibrary["Quad4E"],
-        "Quad8PE": elLibrary["Quad8"],
-        "Quad8RPE": elLibrary["Quad8R"],
-    }
-)
 
 
 class DisplacementElement(BaseElement):
@@ -309,28 +56,31 @@ class DisplacementElement(BaseElement):
 
     Elements
     --------
-        Quad4
-            quadrilateral element with 4 nodes.
-        Quad8
-            quadrilateral element with 8 nodes.
-        Hexa8
+        CPE4
+            quadrilateral element with 4 nodes and plane strain.
+        CPE8
+            quadrilateral element with 8 nodes and plane strain.
+        CPS4
+            quadrilateral element with 4 nodes and plane stress.
+        CPS8
+            quadrilateral element with 8 nodes and plane stress.
+        C3D8
             hexahedron element with 8 nodes.
+        C3D20
+            hexahedron element with 20 nodes.
 
     optional Parameters
     -------------------
-    The following attributes are also included in the elementtype definition:
+    The following attributes are also included in the elType definition:
 
         R
-            reduced integration for element, in elementtype[5].
+            reduced integration for element, at the end of elType.
         E
-            extended integration for element, in elementtype[5].
-        PE
-            use plane strain for 2D elements, in elementtype[6:8] or [5:7].
-        PS
-            use plane stress for 2D elements, in elementtype[6:8] or [5:7].
+            extended integration for element, at the end of elType.
+        N
+            (optional) regular integration for element, at the end of elType.
 
-    If R or E is not given by the user, we assume regular increment.
-    If PE or PS is not given by the user, we assume PE."""
+    If R or E is not given by the user, we assume regular increment."""
 
     @property
     def elNumber(self) -> int:
@@ -389,14 +139,10 @@ class DisplacementElement(BaseElement):
         return self._hasMaterial
 
     def __init__(self, elementType: str, elNumber: int):
-        self.elementtype = elementType[0].upper() + elementType[1:5].lower() + elementType[5:].upper()
+        properties = elLibrary[elementType]
+        if eval(properties["elClass"]) is not DisplacementElement:
+            raise Exception("Something went wrong with the element initialization!")
         self._elNumber = elNumber
-        try:
-            if len(self.elementtype) > 5 and self.elementtype[5].lower() == "n":  # normal integration
-                self.elementtype = self.elementtype.replace("N", "").replace("n", "")
-            properties = elLibrary[self.elementtype]
-        except KeyError:
-            raise Exception("This element type doesn't exist.")
         self._nNodes = properties["nNodes"]
         self._nDof = properties["nDof"]
         self._dofIndices = properties["dofIndices"]
@@ -442,7 +188,7 @@ class DisplacementElement(BaseElement):
             Thickness of 2D elements.
         """
 
-        if self.elementtype[0] == "Q":
+        if self.nSpatialDimensions == 2:
             self._t = elementProperties[0]  # thickness
 
     def initializeElement(
@@ -488,6 +234,10 @@ class DisplacementElement(BaseElement):
             for i in range(self._nInt)
         ]
         self._stateVarsTemp = np.zeros([self._nInt, stateVarsSize])
+        if issubclass(type(self.material), BaseHyperElasticMaterial):  # check if material is hyperelastic
+            self._isHyperelastic = True
+        else:
+            self._isHyperelastic = False
 
     def setInitialCondition(self, stateType: str, values: np.ndarray):
         """Assign initial conditions.
@@ -574,11 +324,14 @@ class DisplacementElement(BaseElement):
             # get stress and strain
             stress = self._stateVarsTemp[i][0:6]
             self.material.assignCurrentStateVars(self._stateVarsTemp[i][12:])
-            # use 3D for 2D planeStrain
-            if not self.planeStrain and self.nSpatialDimensions == 2:
-                self.material.computePlaneStress(stress, self._dStressdStrain[i], self._dStrain[i], time, dTime)
-            else:
-                self.material.computeStress(stress, self._dStressdStrain[i], self._dStrain[i], time, dTime)
+            if not self._isHyperelastic:
+                # use 3D for 2D planeStrain
+                if not self.planeStrain and self.nSpatialDimensions == 2:
+                    self.material.computePlaneStress(stress, self._dStressdStrain[i], self._dStrain[i], time, dTime)
+                else:
+                    self.material.computeStress(stress, self._dStressdStrain[i], self._dStrain[i], time, dTime)
+            elif self._isHyperelastic:
+                raise Exception("Please use the nonlinear element (displacementtlelement) for hyperelastic materials.")
             # C material tangent
             C = self._dStressdStrain[i][self._matrixVoigtIndices][:, self._matrixVoigtIndices]
             # B operator
@@ -649,7 +402,11 @@ class DisplacementElement(BaseElement):
             The result.
         """
 
-        return self._stateVars[quadraturePoint][result]
+        try:
+            return self._stateVars[quadraturePoint][result]
+        except KeyError:  # result in material
+            self.material.assignCurrentStateVars(self._stateVarsRef[quadraturePoint][12:])
+            return self.material.getResult(result)
 
     def getCoordinatesAtCenter(self) -> np.ndarray:
         """Compute the underlying MarmotElement centroid coordinates.

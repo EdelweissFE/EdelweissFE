@@ -1,4 +1,4 @@
-*material, name=LinearElastic, id=linearelastic, provider=edelweissmaterial
+*material, name=LinearElastic, id=linearelastic, provider=edelweiss
 **Isotropic in N and mm
 **E    nu
 2.1e4, 0.22
@@ -13,8 +13,8 @@ nZ      =1
 lX      =1000
 lY      =1000
 lZ      =5
-elProvider =displacementelement
-elType  =Hexa20
+elProvider =edelweiss
+elType  =C3D20
 
 *section, name=section1, material=linearelastic, type=solid
 all

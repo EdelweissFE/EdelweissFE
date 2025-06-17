@@ -1,5 +1,5 @@
 
-*material, name=linearelastic, id=linearelastic, provider=edelweissmaterial
+*material, name=linearelastic, id=linearelastic, provider=edelweiss
 13000.0, 0.15
 
 *section, name=section1, thickness=25.0, material=linearelastic, type=plane
@@ -15,8 +15,8 @@ create=perNode, elSet=all, field=displacement, result=U, name=displacement
 *modelGenerator, generator=planeRectQuad, name=gen
 x0=0, l=2000
 y0=0, h=150
-elType=Quad4PE
-elProvider=displacementelement
+elType=CPE4
+elProvider=edelweiss
 nX=75
 nY=4
 

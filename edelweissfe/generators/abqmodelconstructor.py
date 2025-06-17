@@ -52,7 +52,12 @@ from edelweissfe.models.femodel import FEModel
 from edelweissfe.points.node import Node
 from edelweissfe.sets.elementset import ElementSet
 from edelweissfe.sets.nodeset import NodeSet
-from edelweissfe.utils.misc import convertLinesToFlatArray, isInteger, splitLineAtCommas
+from edelweissfe.utils.misc import (
+    convertLinesToFlatArray,
+    convertLinesToMixedDictionary,
+    isInteger,
+    splitLineAtCommas,
+)
 
 
 class AbqModelConstructor:
@@ -104,7 +109,7 @@ class AbqModelConstructor:
         for elDefs in inputFile["*element"]:
             elementType = elDefs["type"]
             elementProvider = elDefs.get("provider")
-            ElementClass = getElementClass(elementProvider)
+            ElementClass = getElementClass(elementType, elementProvider)
 
             currElDefs = {}
             for line in elDefs["data"]:
@@ -240,6 +245,8 @@ class AbqModelConstructor:
 
         for materialDef in inputFile["*material"]:
             materialName = materialDef["name"]
+            if "advanced" in materialName:
+                raise Exception("Please use the *advancedmaterial keyword for advanced materials!")
             materialProvider = materialDef.get("provider", None)
             materialID = materialDef.get("id", materialName)
 
@@ -251,6 +258,40 @@ class AbqModelConstructor:
                     "name": materialName,
                     "properties": materialProperties,
                 }
+            else:  # for DisplacementElement
+                model.materials[materialID] = materialClass(materialProperties)
+
+        return model
+
+    def createAdvancedMaterialsFromInputFile(self, model, inputFile):
+        """Collects advanced material defintions from the input file.
+        Creates instances of advanced materials.
+
+        Parameters
+        ----------
+        model
+            A dictionary containing the model tree.
+        inputFile
+            A dictionary contaning the input file tree.
+
+        Returns
+        -------
+        dict
+            The updated model tree.
+        """
+
+        for materialDef in inputFile["*advancedmaterial"]:
+            materialName = materialDef["name"]
+            if "advanced" not in materialName:
+                raise Exception("The keyword *advancedmaterial only allows the use of advanced materials!")
+            materialProvider = materialDef.get("provider", None)
+            materialID = materialDef.get("id", materialName)
+
+            materialProperties = convertLinesToMixedDictionary(materialDef["data"])
+            materialClass = getMaterialClass(materialName, materialProvider)
+
+            if materialClass is None:  # for Marmot
+                raise Exception("Advanced materials are currently not possible with this material provider!")
             else:  # for DisplacementElement
                 model.materials[materialID] = materialClass(materialProperties)
 

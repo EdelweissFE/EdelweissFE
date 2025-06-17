@@ -7,7 +7,7 @@ The ``linsolverConfigFile`` needs to be in ``.json`` format.
 Choose a linsolver after the ``*solver`` keyword:
 
 .. code-block:: edelweiss
-	
+
     *solver, solver=NIST, name=theSolver
     linsolver=gmres
     linsolverConfigFile=opt.json
@@ -44,7 +44,7 @@ Choose a linsolver after the ``*solver`` keyword:
     * - ``gmres``
       - ✗
       - ``edelweissfe.linsolve.gmres.gmres``
-      
+
 Currently, only the linsolver ``gmres`` allows the use of an optional configuration file ``linsolverConfigFile``.
 
 Choose the options for the linsolver (in this case ``gmres``) in an extra file:
@@ -52,9 +52,9 @@ Choose the options for the linsolver (in this case ``gmres``) in an extra file:
 .. code-block:: json
 
     	{
-	"precondopts": 
+	"precondopts":
 	{
-	"presmoother": ["block_gauss_seidel", {"iterations": 15}], 
+	"presmoother": ["block_gauss_seidel", {"iterations": 15}],
 	"postsmoother": ["block_gauss_seidel", {"iterations": 15}],
 	},
 	"linsolveopts": {"maxiter": 1, "restart": 1500}
