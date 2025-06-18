@@ -274,7 +274,7 @@
     273,          10.,           5.,           0.
     274,          10.,          7.5,           0.
     275,          10.,          10.,           0.
-*Element, type=Hexa8N, provider=displacementelement
+*Element, type=C3D8N, provider=edelweiss
   1,  56,  57,  62,  61,   1,   2,   7,   6
   2,  57,  58,  63,  62,   2,   3,   8,   7
   3,  58,  59,  64,  63,   3,   4,   9,   8

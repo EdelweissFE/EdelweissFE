@@ -91,8 +91,34 @@ def convertAssignmentsToStringDictionary(assignments: list) -> dict:
     return resultDict
 
 
+def convertLinesToMixedDictionary(lines: list) -> dict:
+    """Create a mixed dictionary from a list of strings containing multiple assignments in
+    the form a=b. All strings containing evaluatable values will be evaluated.
+    All other dictionary values stay the same.
+
+    Parameters
+    ----------
+    lines
+        The list of strings containing the assignments.
+
+    Returns
+    -------
+    dict
+        The resulting dictionary.
+    """
+
+    dictionary = convertLineToStringDictionary(",".join(lines)).copy()
+    for key, value in dictionary.items():
+        try:
+            dictionary[key] = eval(value)
+        except NameError:
+            pass
+
+    return dictionary
+
+
 def convertLineToStringDictionary(line: str) -> dict:
-    """Create a dictionary from a string containing multiple assigmnents in
+    """Create a dictionary from a string containing multiple assignments in
     the form a=b.
 
     Parameters
@@ -112,7 +138,7 @@ def convertLineToStringDictionary(line: str) -> dict:
 
 
 def convertLinesToStringDictionary(lines: list) -> dict:
-    """Create a dictionary from a list of strings containing multiple assigmnents in
+    """Create a dictionary from a list of strings containing multiple assignments in
     the form a=b.
 
     Parameters

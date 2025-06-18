@@ -119,7 +119,16 @@ inputLanguage = {
             "id": ("string", "name of the property"),
             "statevars": ("integer", "(deprecated and ignored) number of statevars"),
             "data": ("numpy float array", "material properties, multiline possible"),
-            "provider": ("string", "material provider"),
+            "provider": ("string", "material provider, default: marmotmaterial"),
+        },
+    ),
+    "*advancedmaterial": (
+        "definition of a advanced material",
+        {
+            "name": ("string", "name of the corresponding advanced material"),
+            "id": ("string", "name of the property"),
+            "data": ("string", "definition lines for the advanced material"),
+            "provider": ("string", "material provider, default: marmotmaterial"),
         },
     ),
     "*fieldOutput": (

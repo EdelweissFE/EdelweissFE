@@ -103,7 +103,7 @@ def generateModelData(generatorDefinition: dict, model: FEModel, journal) -> dic
     nX = int(options.get("nX", 1))
     nY = int(options.get("nY", 1))
     nZ = int(options.get("nZ", 1))
-    elType = getElementClass(options.get("elProvider", None))
+    elType = getElementClass(options["elType"], options.get("elProvider", None))
 
     testEl = elType(
         options["elType"],

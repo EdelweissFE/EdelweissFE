@@ -14,7 +14,6 @@
 #  2017 - today
 #
 #  Daniel Reitmair daniel.reitmair@uibk.ac.at
-#  Matthias Neuner matthias.neuner@uibk.ac.at
 #
 #  This file is part of EdelweissFE.
 #
@@ -53,7 +52,7 @@ def getMaterialClass(materialName: str, provider: str = None) -> type:
 
         return None
 
-    if strCaseCmp(provider, "edelweissmaterial"):
+    if strCaseCmp(provider, "edelweiss"):
         if strCaseCmp(materialName, "linearelastic"):
             from edelweissfe.materials.linearelastic.linearelastic import (
                 LinearElasticMaterial,
@@ -64,6 +63,60 @@ def getMaterialClass(materialName: str, provider: str = None) -> type:
             from edelweissfe.materials.vonmises.vonmises import VonMisesMaterial
 
             material = VonMisesMaterial
+        elif strCaseCmp(materialName, "neohookewa"):
+            from edelweissfe.materials.neohooke.neohookepencegouformulationa import (
+                NeoHookeanWaMaterial,
+            )
+
+            material = NeoHookeanWaMaterial
+        elif strCaseCmp(materialName, "neohookewb"):
+            from edelweissfe.materials.neohooke.neohookepencegouformulationb import (
+                NeoHookeanWbMaterial,
+            )
+
+            material = NeoHookeanWbMaterial
+        elif strCaseCmp(materialName, "neohookewc"):
+            from edelweissfe.materials.neohooke.neohookepencegouformulationc import (
+                NeoHookeanWcMaterial,
+            )
+
+            material = NeoHookeanWcMaterial
+        elif strCaseCmp(materialName, "hyperelasticadvanced"):
+            from edelweissfe.materials.hyperelasticadvanced.hyperelasticadvanced import (
+                HyperelasticAdvancedMaterial,
+            )
+
+            material = HyperelasticAdvancedMaterial
+        elif strCaseCmp(materialName, "hyperelasticadvancedi2extended"):
+            from edelweissfe.materials.hyperelasticadvanced.hyperelasticadvancedi2extended import (
+                HyperelasticAdvancedI2ExtendedMaterial,
+            )
+
+            material = HyperelasticAdvancedI2ExtendedMaterial
+        elif strCaseCmp(materialName, "neohookewaplastic"):
+            from edelweissfe.materials.neohookeplastic.neohookepencegouformulationaplastic import (
+                NeoHookeanWaPlasticMaterial,
+            )
+
+            material = NeoHookeanWaPlasticMaterial
+        elif strCaseCmp(materialName, "neohookewbplastic"):
+            from edelweissfe.materials.neohookeplastic.neohookepencegouformulationbplastic import (
+                NeoHookeanWbPlasticMaterial,
+            )
+
+            material = NeoHookeanWbPlasticMaterial
+        elif strCaseCmp(materialName, "neohookewcplastic"):
+            from edelweissfe.materials.neohookeplastic.neohookepencegouformulationcplastic import (
+                NeoHookeanWcPlasticMaterial,
+            )
+
+            material = NeoHookeanWcPlasticMaterial
+        elif strCaseCmp(materialName, "hyperplasticadvanced"):
+            from edelweissfe.materials.hyperplasticadvanced.hyperplasticadvanced import (
+                HyperplasticAdvancedMaterial,
+            )
+
+            material = HyperplasticAdvancedMaterial
         else:
             raise Exception("This material type doesn't exist (yet). Chosen material was: " + materialName)
 

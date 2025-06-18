@@ -84,7 +84,7 @@ def generateModelData(generatorDefinition, model, journal):
     l = float(options.get("l", 1.0))  # noqa: E741
     nX = int(options.get("nX", 10))
     nY = int(options.get("nY", 10))
-    elType = getElementClass(options.get("elProvider", None))
+    elType = getElementClass(options["elType"], options.get("elProvider", None))
 
     testEl = elType(
         options["elType"],
