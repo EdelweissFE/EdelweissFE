@@ -63,7 +63,7 @@ class MarmotMaterialWrappingElement(BaseElement):
             The Marmot material class which should be represented, e.g., MarmotMaterialHypoElastic.
         elNumber
             The number of the element."""
-
+        self._elType = "MarmotMaterialWrappingElement"
         self._elNumber = elNumber
         self._materialType = materialType
         self._nNodes = 1
@@ -77,6 +77,10 @@ class MarmotMaterialWrappingElement(BaseElement):
         ]
         self._nDof = self._marmotMaterialWrapper.nU
         self._dofIndicesPermutation = np.arange(0, self._nDof, 1, dtype=int)
+
+    @property
+    def elType(self):
+        return self._elType
 
     @property
     def elNumber(self):

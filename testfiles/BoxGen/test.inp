@@ -1,4 +1,4 @@
-*material, name=LinearElastic, id=myMaterial, provider=edelweissmaterial
+*material, name=LinearElastic, id=myMaterial, provider=edelweiss
 **Isotropic
 **E    nu
 1.8e4, 0.22
@@ -13,8 +13,8 @@ nZ      =2
 lX      =20
 lY      =40
 lZ      =1
-elProvider =displacementelement
-elType  =Hexa20R
+elProvider =edelweiss
+elType  =C3D20R
 
 *output, type=meshdatatofile, name=meshdata
 filename=myExportedMesh.inc

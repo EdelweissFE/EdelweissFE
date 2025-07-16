@@ -133,6 +133,12 @@ class DisplacementTLElement(BaseElement):
     If R or E is not given by the user, we assume regular increment."""
 
     @property
+    def elType(self) -> str:
+        """The unique element type identifier."""
+
+        return self._elType
+
+    @property
     def elNumber(self) -> int:
         """The unique number of this element"""
 
@@ -189,6 +195,7 @@ class DisplacementTLElement(BaseElement):
         return self._hasMaterial
 
     def __init__(self, elementType: str, elNumber: int):
+        self._elType = elementType
         properties = elLibrary[elementType]
         if eval(properties["elClass"]) is not DisplacementTLElement:
             raise Exception("Something went wrong with the element initialization!")

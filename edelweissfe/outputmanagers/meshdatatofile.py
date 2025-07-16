@@ -105,7 +105,7 @@ class OutputManager(OutputManagerBase):
             [elementTypes.add(element.elType) for element in model.elements.values()]
             providers = set()
             [
-                providers.add("MARMOT" if not isinstance(element, BaseElement) else "DISPLACEMENTELEMENT")
+                providers.add("MARMOT" if not isinstance(element, BaseElement) else "EDELWEISS")
                 for element in model.elements.values()
             ]
 
