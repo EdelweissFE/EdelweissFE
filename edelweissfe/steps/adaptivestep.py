@@ -71,7 +71,7 @@ class AdaptiveStep(StepBase):
         solver,
         outputManagers: list,
         stepActions: dict,
-        **kwargs
+        **kwargs,
     ):
         kwargs = CaseInsensitiveDict(kwargs)
         self.number = number  #: The (unique) number of the step.
