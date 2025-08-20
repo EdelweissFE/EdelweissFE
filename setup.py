@@ -247,15 +247,6 @@ if buildPanuaPardiso:
 print("Now compile!")
 
 setup(
-    name="EdelweissFE",
-    version="v24.12",
-    description="EdelweissFE: A light-weight, platform-independent, parallel finite element framework.",
-    license="LGPL-2.1",
-    packages=find_packages(),
-    include_package_data=True,
-    author="Matthias Neuner",
-    author_email="matthias.neuner@uibk.ac.at",
-    url="https://github.com/EdelweissFE/EdelweissFE",
     cmdclass={"build_ext": build_ext},
     entry_points={
         "console_scripts": [
