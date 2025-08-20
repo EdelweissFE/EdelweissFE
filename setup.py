@@ -35,7 +35,7 @@ from os.path import expanduser, join
 
 import numpy
 from Cython.Build import build_ext, cythonize
-from setuptools import find_packages, setup
+from setuptools import setup
 from setuptools.extension import Extension
 
 directives = {
@@ -248,12 +248,6 @@ print("Now compile!")
 
 setup(
     cmdclass={"build_ext": build_ext},
-    entry_points={
-        "console_scripts": [
-            "edelweissfe=edelweissfe._cli._edelweissfe:main",
-            "run_tests_edelweissfe=edelweissfe._cli._run_tests_edelweissfe:main",
-        ],
-    },
     ext_modules=cythonize(extensions, compiler_directives=directives, annotate=True, language_level=3),
 )
 
