@@ -140,12 +140,12 @@ you can quickly get a working version of EdelweissFE in a Linux based
 environment:</p>
 <div class="section" id="installation-steps">
 <h3>Installation steps<a class="headerlink" href="#installation-steps" title="Permalink to this heading"></a></h3>
-<p>If necessary, get <a class="reference external" href="https://github.com/mamba-org/mamba">mamba</a>:</p>
+<p>If necessary, get <a class="reference external" href="https://www.anaconda.com/">Anaconda</a></p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Step 1</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> curl -L -O \</span>
-<span class="go">     https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh</span>
-<span class="go"> bash Mambaforge-Linux-x86_64.sh -b -p ./mambaforge3</span>
+<span class="go">     https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh</span>
+<span class="go"> bash Miniforge3-Linux-aarch64.sh -b -p ./miniforge3</span>
 </pre></div>
 </div>
 </div>
@@ -154,7 +154,7 @@ environment:</p>
 <div class="code-block-caption"><span class="caption-text">Step 2</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export EWROOT=$PWD</span>
 <span class="go"> export PATH=$EWROOT/mambaforge3/bin:$PATH</span>
-<span class="go"> mamba init --all</span>
+<span class="go"> conda init --all</span>
 <span class="go"> exit</span>
 </pre></div>
 </div>
@@ -163,7 +163,7 @@ environment:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Step 3</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> export EWROOT=$PWD</span>
-<span class="go"> mamba activate</span>
+<span class="go"> conda activate</span>
 </pre></div>
 </div>
 </div>
