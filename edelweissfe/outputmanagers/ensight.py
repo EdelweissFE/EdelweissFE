@@ -31,6 +31,7 @@
 
 import datetime
 import os
+from collections import defaultdict
 from distutils.util import strtobool
 from io import TextIOBase
 
@@ -677,8 +678,8 @@ class OutputManager(OutputManagerBase):
         self.elSetToEnsightPartMappings = {}
         self.nSetToEnsightPartMappings = {}
 
-        self.transientPerNodeJobs = []
-        self.transientPerElementJobs = []
+        self._transientPerNodeVariableJobs = defaultdict(list)
+        self._transientPerElementVariableJobs = defaultdict(list)
 
         self.exportName = name
 
@@ -771,7 +772,7 @@ class OutputManager(OutputManagerBase):
         variableJob["elementsOfShape"] = disassembleElsetToEnsightShapes(fieldOutput.associatedSet)
 
         if transient:
-            self.transientPerElementJobs.append(variableJob)
+            self._transientPerElementVariableJobs[variableJob["name"]].append(variableJob)
         else:
             raise Exception("Only transient per element outputs are supported!")
 
@@ -825,7 +826,7 @@ class OutputManager(OutputManagerBase):
             )
 
         if transient:
-            self.transientPerNodeJobs.append(variableJob)
+            self._transientPerNodeVariableJobs[variableJob["name"]].append(variableJob)
         else:
             raise Exception("Only transient per node outputs are supported!")
 
@@ -863,33 +864,37 @@ class OutputManager(OutputManagerBase):
         self.timeAtLastOutput = model.time
         self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, model.time)
 
-        for perNodeJob in self.transientPerNodeJobs:
-            # resultTypeLength = perNodeJob["varSize"]
-            jobName = perNodeJob["name"]
-            result = self._ensureArrayIs2D(perNodeJob["fieldOutput"].getLastResult())
+        resultsByParts = {}
+        for resultName, perNodeVariableJobs in self._transientPerNodeVariableJobs.items():
+            for perNodeVariableJob in perNodeVariableJobs:
+                result = self._ensureArrayIs2D(perNodeVariableJob["fieldOutput"].getLastResult())
 
-            if self.model.domainSize == 2 and result.shape[1] == 2:
-                result = self._make2DVector3D(result)
+                if self.model.domainSize == 2 and result.shape[1] == 2:
+                    result = self._make2DVector3D(result)
 
-            partsDict = {perNodeJob["part"].partNumber: ("coordinates", result)}
-            enSightVar = EnsightPerNodeVariable(jobName, partsDict, perNodeJob["varSize"])
-            self.ensightCase.writeVariableTrendChunk(enSightVar, self.transientTAndFSetNumber)
-            del enSightVar
+                resultsByParts[perNodeVariableJob["part"].partNumber] = ("coordinates", result)
+            enSightVariable = EnsightPerNodeVariable(resultName, resultsByParts, perNodeVariableJob["varSize"])
+            self.ensightCase.writeVariableTrendChunk(enSightVariable, self.transientTAndFSetNumber)
+            del enSightVariable
 
-        for perElementJob in self.transientPerElementJobs:
-            name = perElementJob["name"]
-            part = perElementJob["part"]
-            elementsOfShape = perElementJob["elementsOfShape"]
-            result = self._ensureArrayIs2D(perElementJob["fieldOutput"].getLastResult())
+        for resultName, perElementVariableJobs in self._transientPerElementVariableJobs.items():
+            resultsByParts = {}
+            for perElementVariableJob in perElementVariableJobs:
+                part = perElementVariableJob["part"]
+                elementsOfShape = perElementVariableJob["elementsOfShape"]
+                result = self._ensureArrayIs2D(perElementVariableJob["fieldOutput"].getLastResult())
 
-            if self.model.domainSize == 2 and result.shape[1] == 2:
-                result = self._make2DVector3D(result)
+                if self.model.domainSize == 2 and result.shape[1] == 2:
+                    result = self._make2DVector3D(result)
 
-            varDict = {shape: result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items()}
-            partsDict = {part.partNumber: varDict}
-            enSightVar = EnsightPerElementVariable(name, partsDict, perElementJob["varSize"])
-            self.ensightCase.writeVariableTrendChunk(enSightVar, self.transientTAndFSetNumber)
-            del enSightVar
+                partResultsByElementShape = {
+                    shape: result[elIndicesOfShape] for shape, elIndicesOfShape in elementsOfShape.items()
+                }
+                resultsByParts[part.partNumber] = partResultsByElementShape
+
+            enSightVariable = EnsightPerElementVariable(resultName, resultsByParts, perElementVariableJob["varSize"])
+            self.ensightCase.writeVariableTrendChunk(enSightVariable, self.transientTAndFSetNumber)
+            del enSightVariable
 
         # intermediate save of the case
         if self.intermediateSaveInterval:
