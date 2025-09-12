@@ -113,6 +113,18 @@ class DofVector(np.ndarray):
         except Exception:
             return super().__setitem__(key, value)
 
+    def copy(self):
+        """Create a copy of the DofVector, including the entitiesInDofVector mapping.
+
+        Returns
+        -------
+        DofVector
+            The copied DofVector.
+        """
+        newDofVector = super().copy().view(DofVector)
+        newDofVector.entitiesInDofVector = self.entitiesInDofVector.copy()
+        return newDofVector
+
 
 class DofManager:
     """
