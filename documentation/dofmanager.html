@@ -82,7 +82,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofManager.nDof"><code class="docutils literal notranslate"><span class="pre">DofManager.nDof</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector"><code class="docutils literal notranslate"><span class="pre">DofVector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector.copy"><code class="docutils literal notranslate"><span class="pre">DofVector.copy()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#edelweissfe.numerics.dofmanager.VIJSystemMatrix"><code class="docutils literal notranslate"><span class="pre">VIJSystemMatrix</span></code></a></li>
 </ul>
 </li>
@@ -466,8 +469,8 @@ The [] operator allows to access (non-contigouos read, write) at each entities l
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">conjugate</span></code>()</p></td>
 <td><p>Return the complex conjugate, element-wise.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>([order])</p></td>
-<td><p>Return a copy of the array.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector.copy" title="edelweissfe.numerics.dofmanager.DofVector.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
+<td><p>Create a copy of the DofVector, including the entitiesInDofVector mapping.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumprod</span></code>([axis, dtype, out])</p></td>
 <td><p>Return the cumulative product of the elements along the given axis.</p></td>
@@ -596,6 +599,20 @@ The [] operator allows to access (non-contigouos read, write) at each entities l
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="edelweissfe.numerics.dofmanager.DofVector.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/edelweissfe/numerics/dofmanager.html#DofVector.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#edelweissfe.numerics.dofmanager.DofVector.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Create a copy of the DofVector, including the entitiesInDofVector mapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The copied DofVector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#edelweissfe.numerics.dofmanager.DofVector" title="edelweissfe.numerics.dofmanager.DofVector">DofVector</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
