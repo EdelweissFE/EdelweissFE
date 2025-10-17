@@ -70,14 +70,14 @@ environment:
 Installation steps
 __________________
 
-If necessary, get `mamba <https://github.com/mamba-org/mamba>`_:
+If necessary, get `Anaconda <https://www.anaconda.com/>`_
 
 .. code-block:: console
    :caption: Step 1
 
     curl -L -O \
-        https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
-    bash Mambaforge-Linux-x86_64.sh -b -p ./mambaforge3
+        https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh
+    bash Miniforge3-Linux-aarch64.sh -b -p ./miniforge3
 
 Add mamba to your environment:
 
@@ -86,7 +86,7 @@ Add mamba to your environment:
 
     export EWROOT=$PWD
     export PATH=$EWROOT/mambaforge3/bin:$PATH
-    mamba init --all
+    conda init --all
     exit
 
 Restart shell and activate mamba
@@ -95,7 +95,7 @@ Restart shell and activate mamba
    :caption: Step 3
 
     export EWROOT=$PWD
-    mamba activate
+    conda activate
 
 Get EdelweissFE:
 

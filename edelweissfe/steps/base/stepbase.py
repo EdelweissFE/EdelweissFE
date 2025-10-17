@@ -72,7 +72,7 @@ class StepBase:
         solver,
         outputManagers: list,
         stepActions: dict,
-        **kwargs
+        **kwargs,
     ):
         pass
 
