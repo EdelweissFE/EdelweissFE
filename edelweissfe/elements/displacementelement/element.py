@@ -83,6 +83,12 @@ class DisplacementElement(BaseElement):
     If R or E is not given by the user, we assume regular increment."""
 
     @property
+    def elType(self) -> str:
+        """The unique element type identifier."""
+
+        return self._elType
+
+    @property
     def elNumber(self) -> int:
         """The unique number of this element"""
 
@@ -142,6 +148,7 @@ class DisplacementElement(BaseElement):
         properties = elLibrary[elementType]
         if eval(properties["elClass"]) is not DisplacementElement:
             raise Exception("Something went wrong with the element initialization!")
+        self._elType = elementType
         self._elNumber = elNumber
         self._nNodes = properties["nNodes"]
         self._nDof = properties["nDof"]

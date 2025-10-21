@@ -47,6 +47,11 @@ from edelweissfe.points.node import Node
 class BaseElement(BaseNodeCouplingEntity):
     @property
     @abstractmethod
+    def elType(self) -> str:
+        """The unique element type identifier."""
+
+    @property
+    @abstractmethod
     def elNumber(self) -> int:
         """The unique number of this element"""
 

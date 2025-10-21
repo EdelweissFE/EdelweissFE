@@ -26,6 +26,7 @@
 #  the top level directory of EdelweissFE.
 #  ---------------------------------------------------------------------
 
+from edelweissfe.elements.base.baseelement import BaseElement
 from edelweissfe.models.femodel import FEModel
 from edelweissfe.outputmanagers.base.outputmanagerbase import OutputManagerBase
 
@@ -102,9 +103,14 @@ class OutputManager(OutputManagerBase):
             # first, get all element types
             elementTypes = set()
             [elementTypes.add(element.elType) for element in model.elements.values()]
+            providers = set()
+            [
+                providers.add("MARMOT" if not isinstance(element, BaseElement) else "EDELWEISS")
+                for element in model.elements.values()
+            ]
 
-            for elementType in elementTypes:
-                f.write("*ELEMENT, TYPE={:}\n".format(elementType))
+            for elementType, provider in zip(elementTypes, providers):
+                f.write("*ELEMENT, TYPE={:}, PROVIDER={:}\n".format(elementType, provider))
                 for elementID in model.elements:
                     if model.elements[elementID].elType == elementType:
                         f.write("{:>5},".format(elementID))

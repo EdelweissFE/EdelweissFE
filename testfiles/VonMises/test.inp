@@ -1,4 +1,4 @@
-*material, name=VonMises, id=myMaterial
+*material, name=VonMises, id=myMaterial, provider=edelweiss
 210000, 0.3, 550, 1000, 200, 1400
 
 *section, name=section1, material=myMaterial, type=plane, thickness=1
@@ -13,6 +13,7 @@ h=10
 nX=2
 nY=2
 elType=CPE4
+elProvider=edelweiss
 
 ***fieldOutput
 **elSet=all, field=displacement, result=U, name=displacement

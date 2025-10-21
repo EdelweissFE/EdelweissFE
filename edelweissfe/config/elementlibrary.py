@@ -76,15 +76,23 @@ def getElementClass(elType: str, provider: str = None) -> type:
         except KeyError:
             raise Exception("Edelweiss element not found in library.")
 
-    elif provider.lower() == "marmot":
-        from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
+    if provider.lower() == "marmot":
+        try:
+            from edelweissfe.elements.marmotelement.element import MarmotElementWrapper
+        except ImportError:
+            raise NotImplementedError("MarmotElementWrapper not found, maybe you built EdelweissFE without Marmot")
 
         return MarmotElementWrapper
 
-    elif provider.lower() == "marmotsingleqpelement":
-        from edelweissfe.elements.marmotsingleqpelement.element import (
-            MarmotMaterialWrappingElement,
-        )
+    if provider.lower() == "marmotsingleqpelement":
+        try:
+            from edelweissfe.elements.marmotsingleqpelement.element import (
+                MarmotMaterialWrappingElement,
+            )
+        except ImportError:
+            raise NotImplementedError(
+                "MarmotMaterialWrappingElement not found, maybe you built EdelweissFE without Marmot"
+            )
 
         return MarmotMaterialWrappingElement
 

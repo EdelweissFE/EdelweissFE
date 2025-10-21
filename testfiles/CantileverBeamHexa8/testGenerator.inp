@@ -1,4 +1,4 @@
-*material, name=LinearElastic, id=linearelastic
+*material, name=LinearElastic, id=linearelastic, provider=edelweissmaterial
 **Isotropic
 **E    nu
 1.8e4, 0.22
