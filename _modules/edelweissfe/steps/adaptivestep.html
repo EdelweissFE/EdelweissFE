@@ -140,6 +140,7 @@
     <span class="n">defaultMaxIter</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">defaultCriticalIter</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">defaultMaxGrowingIter</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">defaultCutbackFactor</span> <span class="o">=</span> <span class="mf">0.25</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -182,6 +183,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">maxGrowIter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;maxGrowIter&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultMaxGrowingIter</span>
         <span class="p">)</span>  <span class="c1">#: The number of residual growths before the increment is discarded.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutbackFactor</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;cutbackFactor&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultCutbackFactor</span>
+        <span class="p">)</span>  <span class="c1">#: Factor by which the increment size is reduced if no convergence was achieved.</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">incrementGenerator</span> <span class="o">=</span> <span class="n">AdaptiveTimeStepper</span><span class="p">(</span>
             <span class="n">model</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
