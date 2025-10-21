@@ -191,6 +191,10 @@ inputLanguage = {
                 "integer",
                 "maximum number of iterations to prevent from increasing the increment",
             ),
+            "cutbackFactor": (
+                "float",
+                "factor by which the increment size is reduced if no convergence was achieved",
+            ),
             "data": (
                 "string",
                 "define step actions, which are handled by the corresponding stepaction modules",

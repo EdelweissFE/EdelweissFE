@@ -182,6 +182,7 @@ class NIST:
         maxIter = step.maxIter
         criticalIter = step.criticalIter
         maxGrowingIter = step.maxGrowIter
+        cutbackFactor = step.cutbackFactor
 
         # nodes = model.nodes
         # elements = model.elements
@@ -245,7 +246,7 @@ class NIST:
 
                 except CutbackRequest as e:
                     self.journal.message(str(e), self.identification, 1)
-                    step.discardAndChangeIncrement(max(e.cutbackSize, 0.25))
+                    step.discardAndChangeIncrement(max(e.cutbackSize, cutbackFactor))
                     prevTimeStep = None
 
                     statusInfoDict["iters"] = np.inf
@@ -262,7 +263,7 @@ class NIST:
 
                 except (ReachedMaxIterations, DivergingSolution) as e:
                     self.journal.message(str(e), self.identification, 1)
-                    step.discardAndChangeIncrement(0.25)
+                    step.discardAndChangeIncrement(cutbackFactor)
                     prevTimeStep = None
 
                     statusInfoDict["iters"] = np.inf
@@ -279,6 +280,7 @@ class NIST:
 
                 else:
                     prevTimeStep = timeStep
+
                     if iterationCounter >= criticalIter:
                         step.preventIncrementIncrease()
 
