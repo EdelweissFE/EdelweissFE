@@ -22,57 +22,10 @@ jobs:
         run: |
           mamba install --file requirements.txt
 
-      - name: Install Eigen
-        shell: bash -l {0}
-        run: |
-          git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git
-          cd eigen
-          mkdir build
-          cd build
-          cmake -DBUILD_TESTING=OFF  -DINCLUDE_INSTALL_DIR=$CONDA_PREFIX/include -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX ..
-          make install
-          cd ../..
-
-      - name: Install Autodiff
-        shell: bash -l {0}
-        run: |
-          git clone --branch v1.1.0 https://github.com/autodiff/autodiff.git
-          cd autodiff
-          mkdir build
-          cd build
-          cmake -DAUTODIFF_BUILD_TESTS=OFF \
-            -DAUTODIFF_BUILD_PYTHON=OFF \
-            -DAUTODIFF_BUILD_EXAMPLES=OFF \
-            -DAUTODIFF_BUILD_DOCS=OFF \
-            -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
-            ..
-          make install
-          cd ../..
-
-      - name: Install Fastor
-        shell: bash -l {0}
-        run: |
-          git clone https://github.com/romeric/Fastor.git
-          cd Fastor
-          cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX .
-          make install
-          cd ..
-
-      - name: Install Marmot
-        shell: bash -l {0}
-        run: |
-          git clone --recurse-submodules https://github.com/MAteRialMOdelingToolbox/Marmot/
-          cd Marmot
-          mkdir build
-          cd build
-          cmake -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX ..
-          make install
-          cd ../../
-
       - name: Build EdelweissFE
         shell: bash -l {0}
         run: |
-          pip install .
+          BUILD_WITHOUT_MARMOT=1 python -m pip install .
 
       - name: Run tests
         shell: bash -l {0}
