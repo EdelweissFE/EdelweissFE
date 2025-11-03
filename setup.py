@@ -52,7 +52,9 @@ print("System prefix: " + sys.prefix)
 print("*" * 80)
 
 # default is to build with Marmot
-buildWithMarmot = False if expanduser(os.environ.get("BUILD_WITH_MARMOT", "0")) == "0" else True
+buildWithMarmot = True if expanduser(os.environ.get("BUILD_WITHOUT_MARMOT", "0")) == "0" else False
+print("Build with Marmot support(overwrite via environment var. BUILD_WITHOUT_MARMOT): " + str(buildWithMarmot))
+
 marmot_dir = expanduser(os.environ.get("MARMOT_INSTALL_DIR", default_install_prefix))
 
 mkl_include = expanduser(os.environ.get("MKL_INCLUDE_DIR", join(default_install_prefix, "include")))
