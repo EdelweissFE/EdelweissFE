@@ -864,8 +864,8 @@ class OutputManager(OutputManagerBase):
         self.timeAtLastOutput = model.time
         self.ensightCase.setCurrentTime(self.transientTAndFSetNumber, model.time)
 
-        resultsByParts = {}
         for resultName, perNodeVariableJobs in self._transientPerNodeVariableJobs.items():
+            resultsByParts = {}
             for perNodeVariableJob in perNodeVariableJobs:
                 result = self._ensureArrayIs2D(perNodeVariableJob["fieldOutput"].getLastResult())
 
