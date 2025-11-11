@@ -38,11 +38,12 @@ cdef class ElementResultCollector:
 
     cdef public  resultsTable
 
+    cdef list quadraturePoints
     cdef int nGauss, nEls, nSize
     cdef double[:, :, ::1] res_
     cdef double** resultPointers
 
-    def __init__(self, elements:list, quadraturePoints:range, result:str):
+    def __init__(self, elements:list, quadraturePoints, result:str):
         """
         A cdef class for collecting element results (by using the permanent results pointer (i.e., a numpy array)
         in large array of all elements and all quadrature points.
@@ -69,13 +70,17 @@ cdef class ElementResultCollector:
         # hotfix for cython compile error associated with 'range' typing of argument quadraturePoints
         # this is due to a bug in in cython 0.29.xx and should be fixed in cython 3.x.x
         # https://github.com/cython/cython/issues/4002
-        quadraturePoints:range
+        #
+        # Update November 11th 2025: This is no longer needed, since we explicitly cast quadraturePoints to list
+        #
+        # quadraturePoints:range
 
         self.nEls = len(elements)
-        self.nGauss = len(quadraturePoints)
+        self.quadraturePoints = list(quadraturePoints)
+        self.nGauss = len(self.quadraturePoints)
 
         # assemble a 2d list of all permanent result arrays (=continously updated np arrays)
-        resultsPointerList = [ [ el.getResultArray(result, qp, getPersistentView=True) for qp in quadraturePoints ] for el in elements ]
+        resultsPointerList = [ [ el.getResultArray(result, qp, getPersistentView=True) for qp in self.quadraturePoints ] for el in elements ]
         self.nSize = resultsPointerList[0][0].shape[0]
 
         # allocate an equivalent 2D C-array for the pointers to each elements results
