@@ -1,0 +1,47 @@
+{
+  "title": "EdelweissFE: A light-weight, platform-independent, parallel finite element framework",
+  "description": "EdelweissFE is a light-weight, platform-independent, parallel finite element framework. By default, it makes use of the Marmot library for finite element and constitutive model formulations. It aims to be an easy-to-understand yet efficient environment for developing finite elements and constitutive models, a flexible tool for coupled problems and special techniques, and an efficient tool for nonlinear simulations up to medium sized problems (~10^5 DOFs). Documentation: https://edelweissfe.github.io/EdelweissFE/.",
+  "upload_type": "software",
+  "version": "v25.11",
+  "publication_date": "2025-11-12",
+  "language": "eng",
+  "access_right": "open",
+  "license": "lgpl-2.1-or-later",
+  "keywords": [
+    "finite-elements",
+    "finite-element-method",
+    "nonlinear-mechanics",
+    "constitutive-models",
+    "geomechanics",
+    "plasticity",
+    "damage",
+    "parallel-computing",
+    "cython",
+    "python"
+  ],
+  "creators": [
+    { "name": "Neuner, Matthias", "affiliation": "University of Innsbruck;Stanford University;BOKU University", "orcid": "0000-0003-2221-8089" },
+    { "name": "Dummer, Alexander", "affiliation": "University of Innsbruck;University of Colorado Boulder", "orcid": "0000-0002-1998-1705" },
+    { "name": "Daniel, Reitmair", "affiliation": "University of Innsbruck", "orcid": "" },
+    { "name": "Schreter-Fleichhacker, Magdalena", "affiliation": "University of Innsbruck;Technical University Munich", "orcid": "0000-0003-3888-4086"},
+    { "name": "Hofer, Paul", "affiliation": "University of Innsbruck", "orcid": "0009-0001-6589-7993"}
+  ],
+  "contributors": [
+    { "name": "Basche, Konstantin", "affiliation": "University of Innsbruck", "type": "ProjectMember", "orcid": "" },
+    { "name": "Thiel, Johannes", "affiliation": "University of Innsbruck", "type": "ProjectMember", "orcid": ""}
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/EdelweissFE/EdelweissFE/releases/tag/v25.11",
+      "relation": "isSupplementTo"
+    },
+    {
+      "identifier": "https://github.com/EdelweissFE/EdelweissFE",
+      "relation": "isAlternateIdentifier"
+    },
+    {
+      "identifier": "https://edelweissfe.github.io/EdelweissFE/",
+      "relation": "isDocumentedBy"
+    }
+  ]
+}
