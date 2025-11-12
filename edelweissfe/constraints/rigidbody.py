@@ -108,6 +108,8 @@ class Constraint(ConstraintBase):
 
         self.nRot = 3
 
+        self._reactions = np.zeros(self.nRot + self.nDim)
+
     @property
     def nodes(self) -> list:
         return self._nodes
@@ -241,6 +243,8 @@ class Constraint(ConstraintBase):
         # start and end of Lambda in P
         L0, LF = nU, nU + nDim
 
+        self._reactions.fill(0.0)
+
         for i in range(nSlaves):
             d0 = self.distancesSlaveNodeRP[i]
             indcsUNode = self.indicesOfSlaveNodesInP[i]
@@ -275,3 +279,6 @@ class Constraint(ConstraintBase):
 
             L0 += nDim
             LF += nDim
+
+            self._reactions[0 : self.nDim] += Lambda
+            self._reactions[self.nDim :] += np.cross(T @ d0, Lambda)
