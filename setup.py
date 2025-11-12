@@ -52,8 +52,8 @@ print("System prefix: " + sys.prefix)
 print("*" * 80)
 
 # default is to build with Marmot
-buildWithMarmot = True if expanduser(os.environ.get("BUILD_WITHOUT_MARMOT", "0")) == "0" else False
-print("Build with Marmot support(overwrite via environment var. BUILD_WITHOUT_MARMOT): " + str(buildWithMarmot))
+buildWithoutMarmot = True if expanduser(os.environ.get("BUILD_WITHOUT_MARMOT", "0")) == "1" else False
+print("Build with Marmot support (overwrite via environment var. BUILD_WITHOUT_MARMOT): " + str(not buildWithoutMarmot))
 
 marmot_dir = expanduser(os.environ.get("MARMOT_INSTALL_DIR", default_install_prefix))
 
@@ -72,7 +72,7 @@ print("*" * 80)
 
 extensions = []
 
-if buildWithMarmot:
+if not buildWithoutMarmot:
     print("Gather the extension for the MarmotElement base element, linked to the Marmot library")
     extensions += [
         Extension(
@@ -166,7 +166,7 @@ extensions += [
     )
 ]
 
-if buildWithMarmot:
+if not buildWithoutMarmot:
     print("Gather the extension for the NISTParallel (MarmotElements only) solver")
     extensions += [
         Extension(
