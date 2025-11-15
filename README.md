@@ -3,7 +3,7 @@
 
 # EdelweissFE: A light-weight, platform-independent, parallel finite element framework.
 
-## Important: This project has been moved to our new organization Edelweiss Numerics: 
+# Important: This project has been moved to our new organization Edelweiss Numerics
 please visit (https://github.com/Edelweiss-Numerics)
 
 <p align="center">
